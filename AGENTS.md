@@ -2,11 +2,23 @@
 
 ## Scope and Completion
 
-Complete the current request, relevant verification, and affected documentation. Reuse authorization already given for that task; ask only when an unresolved choice materially changes scope or consequences. Preserve unrelated user changes.
+Complete the current request, relevant verification, and documentation needed to use or maintain the change. Ordinary task completion does not authorize project closeout. Reuse authorization already given for that task; ask only when an unresolved choice materially changes scope or consequences. Preserve unrelated user changes.
 
 Read only relevant guidance: [CONTRIBUTING.md](CONTRIBUTING.md) for development, [HANDOFF.md](HANDOFF.md) for prior status, and the [release checklist](docs/release/release-checklist.md) when preparing a release. Historical plans and branch prompts are reference material, not current assignments or standing approval gates. Apply skills to the workflow they actually support; current user instructions take precedence over skill recommendations.
 
-The maintained checkout is `main`, currently HoopTrace 2.0. Read HANDOFF and check the actual branch before continuing. Use temporary worktrees only when isolation is needed, then integrate and clean them up. Keep build and test evidence tied to its actual application source commit; later documentation commits do not change APK provenance.
+The maintained checkout is `main`, currently HoopTrace 2.0. Read HANDOFF and check the actual branch before continuing. Use temporary worktrees only when isolation is needed. Integrate changes only within current authorization; worktree archival and project cleanup belong to explicitly requested closeout. Keep build and test evidence tied to its actual application source commit; later documentation commits do not change APK provenance.
+
+## 项目收尾：仅由用户明确触发
+
+只有用户以当前行动指令明确要求“做项目收尾”“执行项目收尾工作”“给本轮项目收尾”等同义事项时，才启动 [CONTRIBUTING.md 的项目收尾流程](CONTRIBUTING.md#项目收尾流程)。授权仅覆盖这次指定任务或阶段，不延续到后续开发任务；用户暂停或撤销后立即停止收尾。
+
+“继续”“完成这个功能”“实现计划”“完成除部署外的工作”“检查一下”“可以了”及普通完成汇报均不构成收尾授权。引用、示例、讨论或修改收尾规则中的上述措辞也不构成执行指令。没有明确指令时，不主动发起收尾，也不在每次任务结束时要求用户确认是否收尾。
+
+未触发收尾时，禁止以任务结束、索引 Dirty/Stale、刷新阈值、技能建议或维持干净工作区为由：执行 AOCI Maintain、Entry 更新、认知优化、初始化、迁移、Curation 或治理资产修复；更新交接／收尾记录；为收尾暂存或提交；清理、归档工作树、验证证据、缓存或开发服务。不得自动修改正式 AOCI 卷、Baseline、Scope 或其他治理配置。
+
+完成需求本身的源码、必要使用文档、格式化、测试、构建及内容／链接检查照常进行；本次操作造成的临时设备设置或资源占用须及时恢复，不等待收尾授权。按需读取已有 AOCI 合同和认知用于理解代码不属于收尾，但不得借读取触发写入、治理或修复；只为修改规则等局部文档任务，不额外启动全库认知读取。未维护的索引继续标为 Dirty/Stale，不冒称当前对齐；必要时在普通交付中简短说明待用户要求收尾后处理，不创建 AOCI 待办写入。
+
+明确收尾后，顺序为：核对本轮范围与授权 → 检查改动及适用验证 → 保存来源与更新必要交接文档 → 处理本轮临时资源 → 最终稳定状态下维护 AOCI 并证明对齐 → 审查差异并本地提交 → 按已有授权整合或推送 → 汇报实际结果与剩余事项。完整步骤、跳过条件和安全边界见 CONTRIBUTING。收尾默认允许本轮改动的本地提交；合并、推送、PR、tag、发布、部署、远端或共享资源删除仍须各自的明确授权，已暂停事项继续暂停。用户直接单独要求其中一项时，仅执行该项，不据此扩展成整套收尾。
 
 ## Project Structure
 
@@ -42,7 +54,7 @@ Keep startup evidence tied to its source commit, build mode, renderer, and devic
 
 Delegate independent, bounded work when useful. Create worktrees only when isolation is needed. Wait only for an actual dependency; use completion notifications or bounded waits instead of fixed sleeps and repeated unchanged polls.
 
-Use short imperative commits, such as `fix: guard replay navigation`. Report the result, actual verification, and remaining blockers. Merging, pushing, and publishing follow authorization for the current task; historical release instructions do not grant it.
+When committing is authorized, use short imperative commits, such as `fix: guard replay navigation`. Report the result, actual verification, and remaining blockers. Project closeout follows the explicit trigger above; merging, pushing, and publishing follow their own authorization for the current task. Historical release instructions do not grant it.
 
 <!-- aoci:begin -->
 ## AOCI 仓库认知
@@ -67,9 +79,11 @@ Entry 的语义必须来自模型对真实证据的理解。不得仅依据路�
 
 ### 最小使用入口
 
+以下入口不自行授予执行权限。认知读取按需进行；所有收尾写入入口只在“项目收尾：仅由用户明确触发”规定的授权范围内使用。机器状态和 Guide 决定已授权操作怎样安全执行，不能替用户触发收尾。
+
 - `aoci_rules`：取得当前AOCI版本的会话运行合同。
 - `aoci_overview`：建立或恢复本仓库的完整认知。
-- `aoci_maintain`：受管理对象达到最终稳定状态后检查认知是否需要维护。
+- `aoci_maintain`：用户明确要求项目收尾或单独授权本轮 AOCI 维护，且受管理对象达到最终稳定状态后，检查认知是否需要维护。
 - `aoci_update_entry`：提交与当前证据和源码摘要绑定的完整语义更新批次。
 - `aoci_report`：仅当当前布局和工具状态支持时，在证据不足、无法可靠生成语义时登记待办，不猜写。
 
@@ -79,12 +93,14 @@ Entry 的语义必须来自模型对真实证据的理解。不得仅依据路�
 
 ### 建立、生成和恢复认知
 
+本节只规定确实需要 AOCI 认知时的读取与恢复协议，不要求为每个局部任务机械读取全库。正式资产建立、补全和任何治理写入仍受上述明确授权门禁约束；未授权时从任务相关源码继续工作，并如实保留认知不可靠状态。已经启动的读取链遵守完整交付协议，但其结果不触发收尾。
+
 1. 每个新的 Agent Run 开始时，应先判断：
 
    - 本仓库是否已经存在可用的完整AOCI索引；
    - 当前上下文中是否已有与本仓库根、当前索引版本和当前AOCI服务相匹配，并且模型仍可可靠使用的完整仓库认知。
 
-2. 仓库已经存在可用的完整索引，但当前Run没有可靠完整认知时，先调用 `aoci_rules`，再调用 `aoci_overview`。
+2. 当前任务确实需要使用完整 AOCI 认知，仓库已经存在可用的完整索引，但当前Run没有可靠完整认知时，先调用 `aoci_rules`，再调用 `aoci_overview`。
 
    完整认知仍可靠时直接复用。局部不确定本身不要求机械重读系统全貌。
 
@@ -110,7 +126,7 @@ Entry 的语义必须来自模型对真实证据的理解。不得仅依据路�
 
    不在本文件中自行重建或硬编码完整索引生成状态机。
 
-4. 在长程任务中，模型负责保留当前认知收据并正确使用刷新门禁：
+4. 在使用完整 AOCI 认知的长程任务中，模型负责保留当前认知收据并正确使用刷新门禁；当前任务无需使用完整认知时，不因阶段切换而额外启动全库读取：
 
    - Host报告上下文压缩或模型已知系统全貌丢失时，执行上述强制 `context_compaction` 重载规则；AOCI不能自行推断Host事件；
    - 进入真正的主要阶段时声明 `phase_transition`，不得把函数、测试运行或小步骤当作阶段；
@@ -122,7 +138,7 @@ Entry 的语义必须来自模型对真实证据的理解。不得仅依据路�
 
 5. 纯只读问答、分析、版本核验，或没有产生受AOCI管理对象变化的任务，不需要调用维护工具。当前AOCI版本是任意`aoci_overview` check_only或`aoci_maintain`响应里的`cognition_receipt.mcp_service_version`；二进制路径是项目`.mcp.json`里的`command`，CLI不必在PATH上。
 
-6. 发生受AOCI管理对象变化时，待其达到本次任务的最终稳定状态后，只调用一次 `aoci_maintain`。不要在每次中间修改后逐文件维护。
+6. 发生受AOCI管理对象变化时，不自动执行维护。只有用户明确要求本轮项目收尾或单独授权本轮 AOCI 维护，才在受管理对象达到最终稳定状态后调用一次 `aoci_maintain` 开始维护。未获授权则保留待维护状态，不调用 Maintain、Update、Report、治理校验或优化来消除它。不要在每次中间修改后逐文件维护。已授权维护的后续完整批次按第7条继续；不要求用户逐批确认。
 
 7. 若维护结果返回真实语义候选，Host 模型必须基于每个候选绑定的对象和必要证据，独立创作完整标签与F/R/A/S更新。通过 `aoci_update_entry` 一次提交当前机器签发批次的完整候选集合，同时原样保留每项 `source_sha256`、`candidate_id` 与对应domain批次身份。`max_entries`只限制单次请求和原子事务，不限制logical plan、Whole-Index或Managed Scope。`remaining`非零时，在当前批次成功Apply后重新调用Maintain并从新preimage继续；绝不能为满足transport上限缩减Index覆盖或自行截取返回批次。
 
@@ -135,9 +151,9 @@ Entry 的语义必须来自模型对真实证据的理解。不得仅依据路�
    - 冲突、审批、人工裁决、权限和安全信号不得忽略；
    - 已经对齐后不得重复维护或重复写入；`refresh_ready_for_overview` 是checkpoint事实，由Agent决定是否为下一阶段请求普通完整Overview。
 
-   维护完成后如果又修改了任何受管理对象，之前的维护结果失效，应在新的最终稳定状态重新完成收尾。
+   维护完成后如果又修改了任何受管理对象，之前的维护结果失效。同一次已授权收尾中产生的修正，在新的最终稳定状态重新维护；收尾结束后的新开发任务不继承旧授权，须等待新的明确收尾指令。
 
-9. 用户只限制业务文件范围，但没有明确禁止仓库托管资产时，AOCI托管资产可以在收尾阶段为保持认知一致而更新，并应在审计和提交中与业务文件区分。
+9. 用户已明确授权本轮项目收尾或单独授权本轮 AOCI 维护，且没有明确禁止仓库托管资产时，AOCI托管资产可以在授权范围内为保持认知一致而更新，并应在审计和提交中与业务文件区分。只授权业务修改、普通任务完成或更新仓库规则，不构成托管资产写入授权。
 
    用户明确禁止修改 `aoci.txt`、`.aoci`、元数据或任何额外文件时，以用户限制为准，不得写入，并如实报告剩余不一致。
 
