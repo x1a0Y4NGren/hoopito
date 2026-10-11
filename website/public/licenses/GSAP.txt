@@ -1,0 +1,11 @@
+GSAP and ScrollTrigger 3.15.0
+Library notice: Copyright 2008-2026, GreenSock. All rights reserved.
+Standard license notice: Copyright (c) 2025 Webflow. All rights reserved.
+
+Distributed under the Standard "No Charge" GSAP License, not the MIT License.
+The license allows implementation on websites and digital interfaces, subject
+to its terms and restrictions. The upstream license and notices continue to
+apply to the bundled library.
+
+Authoritative license: https://gsap.com/community/standard-license/
+Package metadata: https://www.npmjs.com/package/gsap/v/3.15.0

@@ -20,6 +20,8 @@
 
 ## 本地环境
 
+介绍网站在 `website/` 独立维护，使用 Node.js 24 与 npm 锁文件。网站开发、素材生成和浏览器验证见 [`website/README.md`](website/README.md)；网站文案不写入 Flutter ARB。网站改动运行类型检查、演示测试、静态构建与浏览器测试，纯网站文档按文档矩阵验证。App 文件未变时无需重建 APK。
+
 当前基准工具链为 Flutter `3.41.9` stable、Dart `3.11.5` 和 Java 17。
 锁定配置以 `.github/workflows/flutter-ci.yml` 和 `pubspec.lock` 为准；无需为了普通维护升级依赖。
 

@@ -18,6 +18,8 @@ HoopTrace 是一款为篮球爱好者准备的离线单挑记录与复盘工具�
 
 **[下载 v2.0.0](https://github.com/x1a0Y4NGren/hooptrace/releases/tag/v2.0.0)** · [查看本次更新](docs/release/v2.0.0-release-notes.md) · [安装与备份](docs/release/v2.0.0-upgrade.md) · [隐私说明](PRIVACY.md) · [参与贡献](CONTRIBUTING.md)
 
+介绍与下载网站位于 [`website/`](website/README.md)，提供中英文页面、桌面连续 3D 球场和手机二维投篮演示，独立于 Flutter 构建。预览与实际验收状态见[网站验收记录](website/VERIFICATION.md)。
+
 > **安装提示：v2 使用新的正式签名，不能覆盖安装历史 v1。** 若旧版有需要保留的记录，请先导出完整 JSON，确认文件已保存在应用之外，再卸载旧版、安装 v2 并恢复。卸载会移除应用私有数据；CSV 和战报图片不能恢复数据库。
 
 **HoopTrace 2.0** 串起开赛、现场记录、赛后总结和球员成长：比赛／历史／球员三个主入口，目标分 1～999 可直接输入，赛后可关联档案、再来一场或分享战报。新的 C「独眼球怪」标识配合静音 Q 弹启动，替换恢复与安全副本回退都先保护当前数据。

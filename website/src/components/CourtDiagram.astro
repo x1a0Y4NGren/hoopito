@@ -1,0 +1,56 @@
+---
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<svg
+  data-demo-court
+  class="demo-court"
+  viewBox="0 0 600 560"
+  role="img"
+  aria-label={label}
+>
+  <defs>
+    <radialGradient id="court-warm">
+      <stop stop-color="#302015" />
+      <stop offset="1" stop-color="#141516" />
+    </radialGradient>
+    <pattern
+      id="court-grain"
+      width="36"
+      height="36"
+      patternUnits="userSpaceOnUse"
+    >
+      <path d="M0 18h36M18 0v36" stroke="#ffffff" stroke-opacity=".025" />
+    </pattern>
+  </defs>
+  <rect x="28" y="28" width="544" height="504" fill="url(#court-warm)" />
+  <rect x="28" y="28" width="544" height="504" fill="url(#court-grain)" />
+  <g stroke="#F4F3EF" stroke-opacity=".58" fill="none" stroke-width="2">
+    <path d="M28 28h544v504H28zM206 28v210h188V28M28 532h544" />
+    <path d="M206 238a94 94 0 0 0 188 0M206 238a94 94 0 0 1 188 0" />
+    <path d="M57 28v105a243 243 0 0 0 486 0V28M234 532a66 66 0 0 1 132 0" />
+    <path d="M258 65h84" stroke-width="4" />
+    <circle cx="300" cy="82" r="16" stroke="#FF5A1F" stroke-width="4" />
+  </g>
+  <g data-demo-selection {...{ hidden: '' }}>
+    <circle r="20" fill="#FF5A1F" fill-opacity=".1" stroke="#FF5A1F" />
+    <path d="M-7 0h14M0-7v14" stroke="#FF5A1F" />
+  </g>
+  <g data-demo-marker {...{ hidden: '' }}>
+    <circle r="24" fill="#64A6FF" fill-opacity=".12" />
+    <circle r="8" fill="#64A6FF" />
+    <circle r="14" fill="none" stroke="#64A6FF" />
+  </g>
+  <g data-demo-ball {...{ hidden: '' }}>
+    <circle r="11" fill="#FF5A1F" />
+    <path
+      d="M-11 0h22M0-11v22M-7-9q14 9 0 18"
+      fill="none"
+      stroke="#101112"
+      stroke-width="1.5"
+    />
+  </g>
+</svg>

@@ -1,0 +1,98 @@
+---
+import '../styles/site.css';
+import { content, type Locale } from '../data/content';
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  privacy?: boolean;
+}
+const {
+  locale,
+  title = content[locale].title,
+  description = content[locale].description,
+  privacy = false,
+} = Astro.props;
+const c = content[locale];
+const production =
+  process.env.VERCEL_ENV === 'production' && !!process.env.SITE_URL;
+const zhPath = privacy ? '/privacy/' : '/';
+const enPath = privacy ? '/en/privacy/' : '/en/';
+const origin = Astro.site ?? Astro.url.origin;
+---
+
+<!doctype html>
+<html lang={c.lang} data-scene="2d" data-motion="full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101112" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content={production ? 'index,follow' : 'noindex,nofollow'}
+    />
+    <link rel="icon" type="image/webp" href="/brand/mark.webp" />
+    <link
+      rel="preload"
+      href="/fonts/barlow-bold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    {locale === 'zh' && (
+      <link
+        rel="preload"
+        href="/fonts/noto-sc.woff2"
+        as="font"
+        type="font/woff2"
+        crossorigin
+      />
+    )}
+    <link rel="alternate" hreflang="zh-CN" href={new URL(zhPath, origin)} />
+    <link rel="alternate" hreflang="en" href={new URL(enPath, origin)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(zhPath, origin)} />
+    {production && (
+      <link
+        rel="canonical"
+        href={new URL(locale === 'zh' ? zhPath : enPath, origin)}
+      />
+    )}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="HoopTrace" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={locale === 'zh' ? 'zh_CN' : 'en_US'} />
+    <meta
+      property="og:locale:alternate"
+      content={locale === 'zh' ? 'en_US' : 'zh_CN'}
+    />
+    <meta property="og:image" content={new URL('/brand/share.png', origin)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL('/brand/share.png', origin)} />
+    <style is:inline>
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto !important;
+        }
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body class:list={[locale, privacy && 'privacy-page']}>
+    <a class="skip-link" href="#main">
+      {c.skip}
+    </a>
+    <slot />
+  </body>
+</html>

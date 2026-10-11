@@ -1,0 +1,10 @@
+.astro/
+.vercel/
+dist/
+node_modules/
+test-results/
+output/
+playwright-report/
+.env
+.env.*
+!.env.example

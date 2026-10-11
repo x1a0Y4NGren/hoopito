@@ -1,0 +1,69 @@
+name: Website CI
+
+on:
+  push:
+    branches: [main]
+    paths: ['website/**', '.github/workflows/website-ci.yml']
+  pull_request:
+    branches: [main]
+    paths: ['website/**', '.github/workflows/website-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: website-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  website:
+    name: Types, demo tests, static build, budgets and browsers
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Check website formatting
+        run: npm run format:check
+
+      - name: Check types and Astro templates
+        run: npm run check
+
+      - name: Test the demo scoring and reset contract
+        run: npm test
+
+      - name: Build the static preview and enforce resource budgets
+        run: npm run build
+
+      - name: Install browser engines
+        run: npx playwright install --with-deps --no-shell chromium firefox webkit
+
+      - name: Test desktop, mobile, bilingual and fallback behavior
+        run: npm run test:e2e
+
+      - name: Check whitespace
+        run: git diff --check
+
+      - name: Preserve browser reports and visual evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: hooptrace-website-browser-evidence
+          path: website/output/playwright/
+          if-no-files-found: ignore
+          retention-days: 14
