@@ -164,14 +164,12 @@ summary:focus-visible {
   overflow: hidden;
   pointer-events: none;
 }
-.court-poster {
+.arena-light {
   position: absolute;
-  right: -12%;
-  top: 12%;
-  width: 78%;
-  height: 90%;
-  object-fit: contain;
-  opacity: 0.84;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 78% 56%, #ff5a1f18, transparent 48%),
+    radial-gradient(ellipse at 68% 12%, #f4f3ef08, transparent 42%), var(--ink);
   transition: opacity 0.8s;
 }
 .scene-shade {
@@ -192,7 +190,7 @@ summary:focus-visible {
 html[data-scene='3d'] #court-canvas {
   opacity: 1;
 }
-html[data-scene='3d'] .court-poster {
+html[data-scene='3d'] .arena-light {
   opacity: 0;
 }
 .page-grain {
@@ -265,25 +263,6 @@ nav a:hover,
     0.95rem Noto,
     Arial,
     sans-serif;
-}
-.motion-toggle {
-  position: fixed;
-  bottom: 24px;
-  right: var(--gutter);
-  z-index: 25;
-  min-height: 48px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px 15px;
-  border: 1px solid var(--line);
-  background: rgba(16, 17, 18, 0.88);
-  backdrop-filter: blur(12px);
-  font-size: 0.75rem;
-}
-.motion-toggle[aria-pressed='true'] {
-  border-color: var(--orange);
-  color: var(--orange);
 }
 .hero {
   min-height: 100svh;
@@ -418,6 +397,7 @@ nav a:hover,
   color: #656966;
 }
 .court-coordinate {
+  display: none;
   position: absolute;
   right: var(--gutter);
   bottom: 140px;
@@ -425,6 +405,9 @@ nav a:hover,
   line-height: 1.4;
   text-align: right;
   color: var(--muted);
+}
+html[data-scene='3d'] .court-coordinate {
+  display: block;
 }
 .hero-floor {
   display: flex;
@@ -1215,17 +1198,8 @@ html[data-scene='3d'][data-interactive='true'] main > section:not(.experience) {
   font-size: 0.7rem;
   color: var(--muted);
 }
-html[data-motion='reduced'] *,
-html[data-motion='reduced'] *::before,
-html[data-motion='reduced'] *::after {
-  animation: none !important;
-  transition: none !important;
-}
-html[data-motion='reduced'] {
-  scroll-behavior: auto;
-}
-@media (min-width: 1024px) {
-  html[data-motion='full'] {
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html {
     scroll-behavior: smooth;
   }
 }
@@ -1257,13 +1231,13 @@ html[data-motion='reduced'] {
 }
 @media (max-width: 1023px) {
   .hero {
-    min-height: 900px;
+    min-height: max(780px, 100svh);
     padding-top: 120px;
   }
   .hero-copy {
     width: 100%;
     padding-top: 65px;
-    padding-bottom: 160px;
+    padding-bottom: 90px;
   }
   .hero h1 {
     font-size: clamp(3rem, 7.5vw, 5.7rem);
@@ -1273,13 +1247,6 @@ html[data-motion='reduced'] {
   }
   .hero-lead {
     max-width: 470px;
-  }
-  .court-poster {
-    width: 90%;
-    height: 65%;
-    top: 35%;
-    right: -16%;
-    opacity: 0.5;
   }
   .scene-shade {
     background:
@@ -1404,19 +1371,9 @@ html[data-motion='reduced'] {
     min-width: 48px;
     font-size: 0.8rem;
   }
-  .motion-toggle {
-    right: 16px;
-    bottom: 16px;
-    font-size: 0.65rem;
-    padding: 8px 12px;
-  }
-  .motion-toggle > .icon {
-    width: 18px;
-    height: 18px;
-  }
   .hero {
     padding-top: 103px;
-    min-height: 880px;
+    min-height: max(720px, 100svh);
     padding-bottom: 20px;
   }
   .hero-topline {
@@ -1427,7 +1384,7 @@ html[data-motion='reduced'] {
   }
   .hero-copy {
     padding-top: 48px;
-    padding-bottom: 215px;
+    padding-bottom: 80px;
   }
   .hero .eyebrow {
     font-size: 0.75rem;
@@ -1468,13 +1425,6 @@ html[data-motion='reduced'] {
   }
   .hero-tags li + li::before {
     padding-inline: 10px;
-  }
-  .court-poster {
-    width: 120%;
-    height: 60%;
-    right: -28%;
-    top: 48%;
-    opacity: 0.64;
   }
   .court-coordinate {
     font-size: 0.65rem;
@@ -1905,8 +1855,5 @@ html[data-motion='reduced'] {
   .landscape-device,
   .portrait-device {
     transform: none;
-  }
-  .court-poster {
-    transition: none;
   }
 }

@@ -7,6 +7,7 @@ import sharp from 'sharp';
 import subsetFont from 'subset-font';
 import QRCode from 'qrcode';
 import { release } from '../src/data/release.ts';
+import { courtTextures } from '../src/data/court-materials.ts';
 
 const websiteRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const repositoryRoot = dirname(websiteRoot);
@@ -48,6 +49,39 @@ async function output(destination, bytes, provenance) {
 async function localSource(path) {
   const bytes = await readFile(join(repositoryRoot, path));
   return { bytes, source: path, source_sha256: sha256(bytes) };
+}
+
+const materialRecord = 'website/assets/materials/generation.json';
+const materialProvenance = await localSource(materialRecord);
+const materialGeneration = JSON.parse(
+  materialProvenance.bytes.toString('utf8'),
+);
+for (const [id, maximumSize, quality] of [
+  ['maple', 2048, 88],
+  ['metal', 1024, 80],
+  ['glass', 512, 75],
+]) {
+  const asset = materialGeneration.assets.find((entry) => entry.id === id);
+  if (!asset) throw new Error(`Missing generated court material: ${id}`);
+  const source = await localSource(`website/assets/materials/${asset.source}`);
+  const optimized = await sharp(source.bytes)
+    .resize(maximumSize, maximumSize, {
+      fit: 'inside',
+      withoutEnlargement: true,
+    })
+    .webp({ quality, effort: 6 })
+    .toBuffer();
+  const metadata = await sharp(optimized).metadata();
+  await output(courtTextures[id].slice(1), optimized, {
+    source: source.source,
+    source_sha256: source.source_sha256,
+    generation_record: materialRecord,
+    generation_record_sha256: materialProvenance.source_sha256,
+    generated_with: materialGeneration.tool,
+    generation_mode: materialGeneration.mode,
+    dimensions_px: [metadata.width, metadata.height],
+    transformation: `Proportional resize up to ${maximumSize}px; WebP quality ${quality}; no baked scene lighting or court markings added`,
+  });
 }
 
 async function sourceFiles(directory) {
@@ -300,37 +334,6 @@ await output('brand/release-qr.svg', Buffer.from(qr), {
   payload: release.releaseUrl,
   transformation:
     'QR code generated with qrcode; four-module quiet zone preserved',
-  license: 'MIT (repository-generated graphic)',
-});
-
-const court = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="960" viewBox="0 0 1200 960">
-<defs>
-  <radialGradient id="arena"><stop stop-color="#4A2113" stop-opacity=".55"/><stop offset="1" stop-color="#080A0C" stop-opacity="0"/></radialGradient>
-  <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1C1B1B"/><stop offset="1" stop-color="#0C0F12"/></linearGradient>
-  <linearGradient id="line" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#FF5A1F"/><stop offset=".4" stop-color="#C8623B"/><stop offset="1" stop-color="#6B3727"/></linearGradient>
-  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
-</defs>
-<ellipse cx="670" cy="425" rx="490" ry="390" fill="url(#arena)"/>
-<path d="M120 700 566 330 1100 542 631 946Z" fill="url(#floor)" stroke="#4C2A20" stroke-width="2"/>
-<g transform="matrix(1.17 .46 -.64 .53 565 348)" fill="none" stroke="url(#line)" stroke-width="4">
-  <path d="M0 0H430V640H0Z M122 0V194H308V0 M122 194A93 93 0 0 0 308 194 M66 0V50A153 153 0 0 0 364 50V0"/>
-  <circle cx="215" cy="32" r="16" stroke="#F4F3EF" stroke-width="3"/>
-  <path d="M147 640A68 68 0 0 1 283 640"/>
-</g>
-<path d="M607 523 617 263 734 283 724 543" fill="#191C1F" stroke="#33373B" stroke-width="2"/>
-<path d="M602 261 751 286 748 351 600 326Z" fill="#0E151B" fill-opacity=".84" stroke="#91999B" stroke-width="3"/>
-<path d="M650 293 700 302 699 326 650 317Z" fill="none" stroke="#E0DCD4" stroke-width="2"/>
-<ellipse cx="679" cy="345" rx="37" ry="12" fill="none" stroke="#FF5A1F" stroke-width="6"/>
-<path d="M645 350 658 398 698 408 713 356M655 353 664 400M669 356 676 403M685 358 687 405M701 356 697 406M652 377 708 387" fill="none" stroke="#E9E2D7" stroke-opacity=".55" stroke-width="1.7"/>
-<ellipse cx="679" cy="347" rx="42" ry="18" fill="#FF5A1F" opacity=".28" filter="url(#glow)"/>
-<path d="M235 636 819 866" stroke="#FF5A1F" stroke-opacity=".55" stroke-width="2"/>
-</svg>`;
-await output('brand/court-poster.svg', Buffer.from(court), {
-  source: 'scripts/prepare-assets.mjs',
-  source_sha256: scriptSha256,
-  transformation:
-    'Original procedural vector illustration of a half court; product-independent first-paint background',
-  dimensions_px: [1200, 960],
   license: 'MIT (repository-generated graphic)',
 });
 

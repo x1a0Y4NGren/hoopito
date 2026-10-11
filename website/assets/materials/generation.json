@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "generated_at": "2026-10-11",
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "purpose": "HoopTrace desktop night-court materials; runtime lights, painted lines and component geometry remain in Three.js.",
+  "assets": [
+    {
+      "id": "maple",
+      "source": "source/maple-floor.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR base-color texture for a real-time 3D premium basketball hardwood court. Generate one square 2048x2048 texture of exquisite kiln-dried Canadian hard maple gym flooring: long slender straight parallel planks running vertically, 14 to 18 boards across the square, staggered tightly fitted end joints, delicate authentic fine wood fibers and sparse understated grain curls, natural subtle variations of pale honey, warm cream and toasted beige between boards. Immaculately maintained satin polyurethane surface, refined craftsmanship. Camera exactly orthographic overhead; every pixel shows the flat material at the same scale. Uniform neutral diffuse lighting, absolutely NO directional highlights, shadows, shading gradient, ambient occlusion, perspective, scene objects, court paint, logos, typography, borders or watermark. This must be a physically useful albedo tile, not a photograph of a room. Continuous grain and plank joints align at all four edges for seamless repeating. Texture should contain realistic high-frequency detail but no exaggerated dark cracks or dramatic zebra-striping. No baked gloss, light pools or reflections; these will be rendered in Three.js."
+    },
+    {
+      "id": "metal",
+      "source": "source/graphite-metal.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR material texture for real-time 3D basketball arena light poles, hoop supports and backboard frames. Generate one square 2048x2048 orthographic, perfectly flat close-up texture of premium warm graphite powder-coated aluminum and steel, extremely fine satin micrograin with restrained subtle brushed direction, tiny believable surface flecks and delicate barely visible machining scratches. Neutral medium charcoal gray base, very subtle local variation, immaculate well-made hardware. Even neutral diffuse illumination across the whole texture. It must tile seamlessly on all four edges. NO lighting gradients, highlights, glow, shadows, scene objects, rivets, frames, holes, text, logos, watermark or perspective. Entire image is only the material surface. Surface brightness should be around neutral medium gray so the 3D material tint can determine the final graphite color; do not make a nearly black square. No giant scratches or weathered rusty damage."
+    },
+    {
+      "id": "glass",
+      "source": "source/glass-detail.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: subtle grayscale micro-surface detail tile for a tempered-glass basketball backboard and frosted LED lens, to be used as a tiny bump-map in real-time 3D rather than as a picture. Generate one square 1024x1024 flat orthographic texture of pristine finely etched optical glass: neutral medium gray image with extremely subtle delicate frost grain and a few hairline manufacturing microstriations, restrained microscopic tactile detail, smooth immaculate premium surface. Uniform lighting; seamless tiling in both directions. The contrast must be very low and completely uniform in overall brightness, no macro pattern or cracks. NO transparency checkerboard, panels, board shape, frames, printed court target, basketball, scene objects, reflections, highlights, directional shadows, color, perspective, text, logos, border or watermark. This is a grayscale material detail/height tile, not a photograph or an illustration of a glass object."
+    }
+  ]
+}

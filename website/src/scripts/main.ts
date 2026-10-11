@@ -8,10 +8,8 @@ const root = document.documentElement;
 const select = <T extends Element>(selector: string) =>
   document.querySelector<T>(selector)!;
 const canvas = select<HTMLCanvasElement>('#court-canvas');
-const motionButton = select<HTMLButtonElement>('[data-motion-toggle]');
 const desktop = matchMedia('(min-width: 1024px) and (pointer: fine)');
 const systemMotion = matchMedia('(prefers-reduced-motion: reduce)');
-let manualReduced = false;
 let scene: CourtScene | undefined;
 let abort: AbortController | undefined;
 let deadline: ReturnType<typeof setTimeout> | undefined;
@@ -22,7 +20,7 @@ let sceneFailed = false;
 let disposed = false;
 let state = initialDemoState();
 let journey = 0;
-const reduced = () => manualReduced || systemMotion.matches;
+const reduced = () => systemMotion.matches;
 const blue = select<HTMLElement>('[data-blue-score]');
 const record = select<HTMLButtonElement>('[data-record]');
 const reset = select<HTMLButtonElement>('[data-reset]');
@@ -182,15 +180,7 @@ function hasWebGL2() {
   }
 }
 async function startScene() {
-  if (
-    disposed ||
-    sceneFailed ||
-    abort ||
-    scene ||
-    !desktop.matches ||
-    reduced()
-  )
-    return;
+  if (disposed || sceneFailed || abort || scene || !desktop.matches) return;
   if (!hasWebGL2()) {
     stopScene('webgl-unavailable');
     return;
@@ -206,6 +196,7 @@ async function startScene() {
     if (controller.signal.aborted || disposed) return;
     const created = await createCourtScene(canvas, {
       signal: controller.signal,
+      motionEnabled: !reduced(),
       onPoint: choose,
       onFailure: (reason) => {
         if (abort === controller) stopScene(reason);
@@ -220,6 +211,7 @@ async function startScene() {
     }
     clearTimeout(deadline);
     scene = created;
+    scene.setMotionEnabled(!reduced());
     root.dataset.scene = '3d';
     scene.setJourney(journey);
     if (state.hasLocation) scene.setMadePoint(state.point);
@@ -276,13 +268,10 @@ function onScroll() {
 window.addEventListener('scroll', onScroll, { passive: true });
 window.addEventListener('resize', onScroll, { passive: true });
 function applyMotion() {
-  root.dataset.motion = reduced() ? 'reduced' : 'full';
-  motionButton.setAttribute('aria-pressed', String(reduced()));
-  motionButton.hidden = false;
   reveals?.revert();
   reveals = undefined;
+  scene?.setMotionEnabled(!reduced());
   if (reduced()) {
-    stopScene();
     if (state.phase === 'shooting') completeShot();
   } else {
     reveals = gsap.context(() => {
@@ -297,14 +286,10 @@ function applyMotion() {
           });
         });
     });
-    void startScene();
   }
+  void startScene();
   updateJourney();
 }
-motionButton.addEventListener('click', () => {
-  manualReduced = !manualReduced;
-  applyMotion();
-});
 systemMotion.addEventListener('change', applyMotion);
 desktop.addEventListener('change', () => {
   if (desktop.matches) void startScene();

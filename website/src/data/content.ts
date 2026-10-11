@@ -8,7 +8,6 @@ export const content = {
       '免费的离线篮球单挑记录与复盘工具。记比分、留落点、看赛果，把每一场对决变成自己的成长记录。Android 版现已开放下载。',
     skip: '跳到正文',
     nav: ['体验', '复盘', '下载'],
-    motion: '精简动效',
     hero: {
       eyebrow: '为每一场 1v1 而生',
       lines: ['每一球，', '都有迹可循。'],
@@ -133,7 +132,7 @@ export const content = {
         ],
         [
           '网页演示',
-          '投篮演示只使用虚构比分和位置。其状态保存在当前页面内存中，刷新页面后重置，不保存到服务器或本地持久存储。动效开关也只对当前页面生效。',
+          '投篮演示只使用虚构比分和位置。其状态保存在当前页面内存中，刷新页面后重置，不保存到服务器或本地持久存储。',
         ],
         [
           '外部下载与链接',
@@ -159,7 +158,6 @@ export const content = {
       'A free, offline app for 1v1 basketball. Keep score, mark your shots, review the game, and build your own player history. Available for Android.',
     skip: 'Skip to content',
     nav: ['Experience', 'Review', 'Download'],
-    motion: 'Reduce motion',
     hero: {
       eyebrow: 'MADE FOR EVERY 1v1',
       lines: ['Every play', 'leaves a trace.'],
@@ -293,7 +291,7 @@ export const content = {
         ],
         [
           'The browser demo',
-          'The shot demo uses fictional scores and locations. State exists only in the current page memory, resets when you reload, and is not persisted locally or sent to a server. The motion toggle also applies only to the current page.',
+          'The shot demo uses fictional scores and locations. State exists only in the current page memory, resets when you reload, and is not persisted locally or sent to a server.',
         ],
         [
           'Downloads and external links',

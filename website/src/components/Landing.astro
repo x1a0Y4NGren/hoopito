@@ -15,14 +15,7 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
 
 <Layout locale={locale}>
   <div class="scene-background" aria-hidden="true">
-    <img
-      class="court-poster"
-      src="/brand/court-poster.svg"
-      alt=""
-      width="1200"
-      height="960"
-      fetchpriority="high"
-    />
+    <div class="arena-light"></div>
     <canvas id="court-canvas"></canvas>
     <div class="scene-shade"></div>
   </div>
@@ -56,10 +49,6 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
       </a>
     </nav>
   </header>
-  <button class="motion-toggle" data-motion-toggle aria-pressed="false" hidden>
-    <Icon name="motion" />
-    <span>{c.motion}</span>
-  </button>
   <main id="main">
     <section id="hero" class="hero chapter">
       <div class="hero-topline">

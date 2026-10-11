@@ -142,6 +142,7 @@ for (const locale of locales) {
   test(`${locale.lang}: a recorded shot scores once and creates one location`, async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(`${locale.path}#experience`);
     await expectReset(page);
@@ -275,6 +276,9 @@ test('mobile loads only local resources and never imports the 3D renderer', asyn
   await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
   expect(requested.some((url) => threeChunk.test(url))).toBe(false);
   expect(
+    requested.some((url) => new URL(url).pathname.startsWith('/textures/')),
+  ).toBe(false);
+  expect(
     requested
       .filter((url) => /^https?:/.test(url))
       .every((url) => new URL(url).origin === origin),
@@ -286,45 +290,29 @@ test('mobile loads only local resources and never imports the 3D renderer', asyn
   }
 });
 
-test(
-  'system reduced motion and the user toggle retain a working two-dimensional demo',
-  { lock: 'webgl-renderer' },
-  async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    const requested: string[] = [];
-    page.on('request', (request) => requested.push(request.url()));
-    await page.goto('/');
-    await expect(page.locator('html')).toHaveAttribute(
-      'data-motion',
-      'reduced',
-    );
-    await expect(page.locator('[data-motion-toggle]')).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-    await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
-    expect(requested.some((url) => threeChunk.test(url))).toBe(false);
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await expect(page.locator('html')).toHaveAttribute('data-motion', 'full');
-    await page.locator('[data-motion-toggle]').click();
-    await expect(page.locator('html')).toHaveAttribute(
-      'data-motion',
-      'reduced',
-    );
-    await page.locator('[data-motion-toggle]').click();
-    await expect(page.locator('html')).toHaveAttribute('data-motion', 'full');
-    await page.locator('[data-motion-toggle]').click();
-    await expect(page.locator('html')).toHaveAttribute(
-      'data-motion',
-      'reduced',
-    );
-    await page.locator('#experience').scrollIntoViewIfNeeded();
-    await page.locator('[data-point-preset="right"]').click();
-    await page.locator('[data-record]').click();
-    await expect(page.locator('[data-demo-marker]')).toBeVisible();
-    await expectDownload(page);
-  },
-);
+test('a system motion change during a mobile shot completes once and still permits reset', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const requested: string[] = [];
+  page.on('request', (request) => requested.push(request.url()));
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
+  expect(requested.some((url) => threeChunk.test(url))).toBe(false);
+  await page.locator('#experience').scrollIntoViewIfNeeded();
+  await page.locator('[data-point-preset="right"]').click();
+  await page.locator('[data-record]').click();
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(page.locator('[data-demo-marker]')).toBeVisible();
+  await expect(page.locator('[data-blue-score]')).toHaveText('8');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.locator('[data-reset]').click();
+  await expectReset(page);
+  await page.waitForTimeout(1800);
+  await expectReset(page);
+  await expectDownload(page);
+});
 
 for (const locale of locales) {
   test(`${locale.lang}: 200 percent text remains usable on a narrow viewport`, async ({
@@ -407,6 +395,82 @@ test('a failed 3D module never hides the download or blocks the demo', async ({
   await page.locator('[data-record]').click();
   await expect(page.locator('[data-blue-score]')).toHaveText('8');
 });
+
+test(
+  'a missing court texture keeps the introduction, download and scoring usable',
+  { lock: 'webgl-renderer' },
+  async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'Desktop material lifecycle runs in Chromium.',
+    );
+    await allowSoftwareWebGL(page);
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    let requested = false;
+    await page.route('**/textures/maple-albedo.webp', async (route) => {
+      requested = true;
+      await route.abort('failed');
+    });
+    await page.goto('/');
+    await expect.poll(() => requested).toBe(true);
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
+    await expect(page.locator('#court-canvas')).not.toHaveAttribute(
+      'data-scene-ready',
+      'true',
+    );
+    await expectDownload(page);
+    await page.locator('#experience').scrollIntoViewIfNeeded();
+    await page.locator('[data-point-preset="center"]').click();
+    await page.locator('[data-record]').click();
+    await expect(page.locator('[data-blue-score]')).toHaveText('8');
+    await page.locator('[data-reset]').click();
+    await expectReset(page);
+    expect(errors).toEqual([]);
+  },
+);
+
+test(
+  'slow court textures time out without late 3D activation',
+  { lock: 'webgl-renderer' },
+  async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'Desktop material lifecycle runs in Chromium.',
+    );
+    await allowSoftwareWebGL(page);
+    let requested = false;
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.route('**/textures/maple-albedo.webp', async (route) => {
+      requested = true;
+      await gate;
+      await route.continue().catch(() => {});
+    });
+    try {
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
+      await expect.poll(() => requested).toBe(true);
+      await expectDownload(page);
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '2d', {
+        timeout: 11_000,
+      });
+      release();
+      await page.waitForLoadState('networkidle');
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
+      await expect(page.locator('#court-canvas')).not.toHaveAttribute(
+        'data-scene-ready',
+        'true',
+      );
+      expect(errors).toEqual([]);
+    } finally {
+      release();
+    }
+  },
+);
 
 test('slow 3D initialization gives up after eight seconds and does not activate late', async ({
   page,
@@ -491,7 +555,7 @@ test(
 );
 
 test(
-  'a shot recorded while 3D loads survives scene initialization and motion fallback',
+  'a shot recorded while 3D loads survives scene initialization and system motion changes',
   { lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(
@@ -523,13 +587,330 @@ test(
       await page.screenshot({
         path: testInfo.outputPath('zh-CN-1440-startup-completed-shot-3d.png'),
       });
-      await page.locator('[data-motion-toggle]').click();
-      await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
-      await expect(page.locator('[data-demo-marker]')).toBeVisible();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
       await expect(page.locator('[data-blue-score]')).toHaveText('8');
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+      await page.setViewportSize({ width: 390, height: 844 });
+      await expect(page.locator('[data-demo-marker]')).toBeVisible();
     } finally {
       release();
     }
+  },
+);
+
+test(
+  'court remains antialiased and interactive without HDR multisampling',
+  { lock: 'webgl-renderer' },
+  async ({ browser }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'GPU pipeline runs in Chromium.',
+    );
+    const context = await browser.newContext({
+      viewport: { width: 1440, height: 900 },
+      deviceScaleFactor: 2,
+      reducedMotion: 'reduce',
+    });
+    try {
+      const page = await context.newPage();
+      await allowSoftwareWebGL(page);
+      await page.addInitScript(() => {
+        const original =
+          WebGL2RenderingContext.prototype.getInternalformatParameter;
+        WebGL2RenderingContext.prototype.getInternalformatParameter = function (
+          target,
+          format,
+          name,
+        ) {
+          // Simulate the capability boundary, retaining real WebGL rendering and shaders.
+          if (format === this.RGBA16F && name === this.SAMPLES)
+            return new Int32Array();
+          return original.call(this, target, format, name);
+        };
+      });
+      const errors: string[] = [];
+      page.on('pageerror', (error) => errors.push(error.message));
+      page.on('console', (message) => {
+        if (message.type() === 'error') errors.push(message.text());
+      });
+      await page.goto(`${origin}/`);
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+      await expect(page.locator('#court-canvas')).toHaveAttribute(
+        'data-antialias',
+        'fxaa',
+      );
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await expect
+        .poll(() =>
+          page
+            .locator('#court-canvas')
+            .evaluate((canvas: HTMLCanvasElement) => [
+              canvas.width,
+              canvas.height,
+            ]),
+        )
+        .toEqual([2560, 1600]);
+      await page
+        .locator('#experience')
+        .evaluate((section) =>
+          section.scrollIntoView({ behavior: 'instant', block: 'start' }),
+        );
+      await page.locator('[data-point-preset="center"]').focus();
+      await page.keyboard.press('Enter');
+      await page.locator('[data-record]').focus();
+      await page.keyboard.press('Enter');
+      await expect(page.locator('[data-blue-score]')).toHaveText('8');
+      await expect(page.locator('[data-demo-marker]')).toBeVisible();
+      await page.screenshot({
+        path: testInfo.outputPath('court-fxaa-resized.png'),
+      });
+      await page.locator('[data-reset]').click();
+      await expectReset(page);
+      expect(errors).toEqual([]);
+    } finally {
+      await context.close();
+    }
+  },
+);
+
+for (const scale of [1, 2]) {
+  test(
+    `court rendering at ${scale}x density antialiases its actual scene buffer`,
+    { lock: 'webgl-renderer' },
+    async ({ browser }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== 'chromium',
+        'GPU pipeline runs in Chromium.',
+      );
+      const context = await browser.newContext({
+        viewport: { width: 1440, height: 900 },
+        deviceScaleFactor: scale,
+        reducedMotion: 'reduce',
+      });
+      try {
+        const page = await context.newPage();
+        await allowSoftwareWebGL(page);
+        await page.addInitScript(() => {
+          const buffers: { samples: number; width: number; height: number }[] =
+            [];
+          Reflect.set(window, 'hooptraceRenderbuffers', buffers);
+          const original =
+            WebGL2RenderingContext.prototype.renderbufferStorageMultisample;
+          WebGL2RenderingContext.prototype.renderbufferStorageMultisample =
+            function (target, samples, format, width, height) {
+              buffers.push({ samples, width, height });
+              return original.call(
+                this,
+                target,
+                samples,
+                format,
+                width,
+                height,
+              );
+            };
+        });
+        const errors: string[] = [];
+        page.on('pageerror', (error) => errors.push(error.message));
+        page.on('console', (message) => {
+          if (
+            message.type() === 'error' &&
+            /shader|WebGL|GL_INVALID|framebuffer/i.test(message.text())
+          )
+            errors.push(message.text());
+        });
+        await page.goto(`${origin}/`);
+        await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+        const pixels = await page
+          .locator('#court-canvas')
+          .evaluate((canvas: HTMLCanvasElement) => ({
+            width: canvas.width,
+            height: canvas.height,
+            antialias: canvas.dataset.antialias,
+            buffers: Reflect.get(window, 'hooptraceRenderbuffers') as {
+              samples: number;
+              width: number;
+              height: number;
+            }[],
+          }));
+        // Native density must reach the final canvas, including Retina displays.
+        expect(pixels.width).toBeGreaterThanOrEqual(1440 * scale);
+        expect(pixels.height).toBeGreaterThanOrEqual(900 * scale);
+        // A multisampled 512px reflection alone does not antialias the visible scene.
+        expect(pixels.antialias).toMatch(/^(msaa-[24]|fxaa)$/);
+        if (pixels.antialias !== 'fxaa')
+          expect(
+            pixels.buffers.some(
+              (buffer) =>
+                buffer.samples >= 2 &&
+                buffer.width === pixels.width &&
+                buffer.height === pixels.height,
+            ),
+          ).toBe(true);
+        await page.screenshot({
+          path: testInfo.outputPath(`court-${scale}x-hero.png`),
+        });
+        await page
+          .locator('#experience')
+          .evaluate((section) =>
+            section.scrollIntoView({ behavior: 'instant', block: 'start' }),
+          );
+        await page.locator('[data-point-preset="center"]').click();
+        await page.locator('[data-record]').click();
+        await expect(page.locator('[data-blue-score]')).toHaveText('8');
+        await page.screenshot({
+          path: testInfo.outputPath(`court-${scale}x-demo.png`),
+        });
+        // CDP updates DPR silently; a real viewport change emits the browser resize notification.
+        // Exercise the same renderer while changing both density and window dimensions.
+        const nextScale = scale === 1 ? 2 : 1;
+        const nextWidth = 1441;
+        const session = await context.newCDPSession(page);
+        await session.send('Emulation.setDeviceMetricsOverride', {
+          width: nextWidth,
+          height: 900,
+          deviceScaleFactor: nextScale,
+          mobile: false,
+        });
+        await expect
+          .poll(() => page.evaluate(() => window.devicePixelRatio))
+          .toBe(nextScale);
+        await expect
+          .poll(() =>
+            page
+              .locator('#court-canvas')
+              .evaluate((canvas: HTMLCanvasElement) => [
+                canvas.width,
+                canvas.height,
+              ]),
+          )
+          .toEqual([nextWidth * nextScale, 900 * nextScale]);
+        await expect
+          .poll(() =>
+            page
+              .locator('#court-canvas')
+              .evaluate((canvas: HTMLCanvasElement) => {
+                const gl = canvas.getContext('webgl2')!;
+                const color = Array.from(
+                  gl.getInternalformatParameter(
+                    gl.RENDERBUFFER,
+                    gl.RGBA16F,
+                    gl.SAMPLES,
+                  ) as Int32Array,
+                );
+                const depth = Array.from(
+                  gl.getInternalformatParameter(
+                    gl.RENDERBUFFER,
+                    gl.DEPTH_COMPONENT24,
+                    gl.SAMPLES,
+                  ) as Int32Array,
+                );
+                const wanted = Math.max(
+                  0,
+                  ...color.filter(
+                    (value) =>
+                      value >= 2 &&
+                      value <= (window.devicePixelRatio >= 1.5 ? 2 : 4) &&
+                      depth.includes(value),
+                  ),
+                );
+                const buffers = Reflect.get(
+                  window,
+                  'hooptraceRenderbuffers',
+                ) as { samples: number; width: number; height: number }[];
+                return wanted
+                  ? canvas.dataset.antialias === `msaa-${wanted}` &&
+                      buffers.some(
+                        (buffer) =>
+                          buffer.samples === wanted &&
+                          buffer.width === canvas.width &&
+                          buffer.height === canvas.height,
+                      )
+                  : canvas.dataset.antialias === 'fxaa';
+              }),
+          )
+          .toBe(true);
+        await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+        await expect(page.locator('[data-blue-score]')).toHaveText('8');
+        await session.detach();
+        expect(errors).toEqual([]);
+      } finally {
+        await context.close();
+      }
+    },
+  );
+}
+
+test(
+  'system motion preferences keep the same court, stop idle drawing and resume animation',
+  { lock: 'webgl-renderer' },
+  async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'Renderer lifecycle runs in Chromium.',
+    );
+    await allowSoftwareWebGL(page);
+    await page.addInitScript(() => {
+      const state = window as unknown as { hooptraceDrawCalls: number };
+      state.hooptraceDrawCalls = 0;
+      for (const method of ['drawElements', 'drawArrays'] as const) {
+        const original = WebGL2RenderingContext.prototype[method];
+        Reflect.set(
+          WebGL2RenderingContext.prototype,
+          method,
+          function (this: WebGL2RenderingContext, ...args: unknown[]) {
+            state.hooptraceDrawCalls += 1;
+            return Reflect.apply(original, this, args);
+          },
+        );
+      }
+    });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+    // Keep the actual renderer context: preference changes must not dispose/recreate the scene.
+    await page.evaluate(() => {
+      const canvas =
+        document.querySelector<HTMLCanvasElement>('#court-canvas')!;
+      Reflect.set(window, 'hooptraceContext', canvas.getContext('webgl2'));
+    });
+    const count = () =>
+      page.evaluate(() => Reflect.get(window, 'hooptraceDrawCalls') as number);
+    await page.waitForTimeout(250);
+    const idle = await count();
+    await page.waitForTimeout(250);
+    expect(await count()).toBe(idle);
+    await page
+      .locator('#experience')
+      .evaluate((section) =>
+        section.scrollIntoView({ behavior: 'instant', block: 'start' }),
+      );
+    await expect.poll(count).toBeGreaterThan(idle);
+    await page.locator('[data-point-preset="center"]').click();
+    await page.locator('[data-record]').click();
+    await expect(page.locator('[data-blue-score]')).toHaveText('8');
+    await expect(page.locator('[data-record]')).toBeDisabled();
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    const resumed = await count();
+    await expect.poll(count).toBeGreaterThan(resumed);
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+    expect(
+      await page.evaluate(
+        () =>
+          document
+            .querySelector<HTMLCanvasElement>('#court-canvas')!
+            .getContext('webgl2') === Reflect.get(window, 'hooptraceContext'),
+      ),
+    ).toBe(true);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.waitForTimeout(250);
+    const quiet = await count();
+    await page.waitForTimeout(250);
+    expect(await count()).toBe(quiet);
+    await page.locator('[data-reset]').click();
+    await expectReset(page);
+    await expect.poll(count).toBeGreaterThan(quiet);
   },
 );
 

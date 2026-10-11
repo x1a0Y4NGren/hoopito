@@ -1,6 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { resolve, relative, extname, sep } from 'node:path';
 import { gzipSync, brotliCompressSync, constants } from 'node:zlib';
+import { courtTextures } from '../src/data/court-materials.ts';
 
 // Measure the generated HTML and its resource graph, rather than guessing from source sizes.
 const dist = resolve(process.argv[2] || 'dist');
@@ -142,6 +143,8 @@ try {
       'Missing desktop court chunks: the 3D incremental budget cannot be verified.',
     );
   const desktop = await graph(courtRoots);
+  // TextureLoader/fetch URLs are not JS imports. Charge their shared scene registry as well.
+  for (const url of Object.values(courtTextures)) desktop.add(localPath(url));
   for (const file of baseline) desktop.delete(file);
   const reports = [
     {

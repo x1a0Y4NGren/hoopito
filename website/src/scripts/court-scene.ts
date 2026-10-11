@@ -4,8 +4,13 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
+import { CopyShader } from 'three/addons/shaders/CopyShader.js';
 import { Reflector } from 'three/addons/objects/Reflector.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { createCourtHardware } from './court-hardware';
+import { loadCourtTextures } from './court-textures';
 import type {
   CourtPoint,
   CourtScene,
@@ -22,7 +27,6 @@ const WIDTH = 15;
 const LENGTH = 14;
 const RIM = new THREE.Vector3(0, 3.05, -5.3);
 const AMBER = new THREE.Color('#FF5A1F');
-const IVORY = new THREE.Color('#F4F3EF');
 const clamp = (value: number) => THREE.MathUtils.clamp(value, 0, 1);
 const worldPoint = (point: CourtPoint) =>
   new THREE.Vector3(
@@ -51,6 +55,7 @@ export async function createCourtScene(
   let paused = false;
   let failed = false;
   let ready = false;
+  let motionEnabled = options.motionEnabled;
   let quality: 'high' | 'low' = 'high';
   let journey = 0;
   let flight: gsap.core.Timeline | undefined;
@@ -62,7 +67,7 @@ export async function createCourtScene(
   let sampleTotal = 0;
   let slowWindows = 0;
   let pendingLowQuality = false;
-  const intro = { progress: 0 };
+  const intro = { progress: motionEnabled ? 0 : 1 };
   const aim = new THREE.Vector3();
   const pointer = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
@@ -70,6 +75,10 @@ export async function createCourtScene(
   const intersection = new THREE.Vector3();
 
   const own = <T extends { dispose(): void }>(resource: T): T => {
+    if (disposed) {
+      resource.dispose();
+      return resource;
+    }
     disposables.add(resource);
     return resource;
   };
@@ -145,6 +154,7 @@ export async function createCourtScene(
     canvas.removeEventListener('pointerup', onPointerUp);
     canvas.removeEventListener('webglcontextlost', onContextLost);
     window.removeEventListener('resize', resize);
+    resolutionQuery?.removeEventListener('change', onResolutionChange);
     options.signal.removeEventListener('abort', onAbort);
     for (const resource of disposables) resource.dispose();
     disposables.clear();
@@ -157,12 +167,17 @@ export async function createCourtScene(
   // Declared before setup so cancellation also works during shader compilation.
   let reflection: Reflector | undefined;
   let bloom: UnrealBloomPass | undefined;
+  let fallbackAA: ShaderPass | undefined;
+  let scenePass: AntialiasedScenePass | undefined;
+  let supportedSamples: number[] = [];
+  let resolutionQuery: MediaQueryList | undefined;
   let paint: THREE.ShaderMaterial | undefined;
   let selection: THREE.Group | undefined;
   let madeMarker: THREE.Group | undefined;
   let ball: THREE.Group | undefined;
   let idleBall: THREE.Group | undefined;
   let keyLight: THREE.SpotLight | undefined;
+  let hardware: ReturnType<typeof createCourtHardware> | undefined;
   let positions: THREE.CatmullRomCurve3 | undefined;
   let targets: THREE.CatmullRomCurve3 | undefined;
   const desiredCamera = new THREE.Vector3();
@@ -170,23 +185,72 @@ export async function createCourtScene(
   const nearCamera = new THREE.Vector3(3.65, 0.42, 2.85);
   const nearTarget = new THREE.Vector3(2.96, 0.14, 1.9);
 
+  function requestRender() {
+    if (!disposed && !paused && ready && !animationFrame)
+      animationFrame = requestAnimationFrame(render);
+  }
+
+  function monitorResolution() {
+    resolutionQuery?.removeEventListener('change', onResolutionChange);
+    resolutionQuery = matchMedia(
+      `(resolution: ${window.devicePixelRatio || 1}dppx)`,
+    );
+    resolutionQuery.addEventListener('change', onResolutionChange);
+  }
+
+  function onResolutionChange() {
+    if (disposed) return;
+    monitorResolution();
+    resize();
+  }
+
   function resize() {
     if (disposed || !renderer || !composer) return;
     const width = Math.max(1, canvas.clientWidth || window.innerWidth);
     const height = Math.max(1, canvas.clientHeight || window.innerHeight);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio || 1, quality === 'high' ? 1.5 : 1),
+    // Reduce optional effects under load, preserving the court's native pixel density.
+    const desiredRatio = Math.min(2, window.devicePixelRatio || 1);
+    // Bound allocation on very large displays; retain native pixels at ordinary desktop sizes.
+    const pixelRatio = Math.min(
+      desiredRatio,
+      Math.max(1, Math.sqrt(6_000_000 / (width * height))),
     );
+    // Retina already supplies four physical pixels per CSS pixel. Select the
+    // supported sample count again when zoom or a move between displays changes density.
+    const sampleLimit = pixelRatio >= 1.5 ? 2 : 4;
+    const samples = Math.max(
+      0,
+      ...supportedSamples.filter((value) => value >= 2 && value <= sampleLimit),
+    );
+    if (scenePass && scenePass.target.samples !== samples) {
+      scenePass.target.dispose();
+      scenePass.target.samples = samples;
+    }
+    if (fallbackAA) fallbackAA.enabled = samples === 0;
+    canvas.dataset.antialias = samples ? `msaa-${samples}` : 'fxaa';
+    renderer.setPixelRatio(pixelRatio);
     renderer.setSize(width, height, false);
     composer.setPixelRatio(renderer.getPixelRatio());
     composer.setSize(width, height);
+    // Bloom is deliberately soft; its blur buffers need not match the sharp scene's Retina resolution.
+    const bloomScale = Math.min(1, 1280 / (width * pixelRatio));
+    bloom?.setSize(
+      width * pixelRatio * bloomScale,
+      height * pixelRatio * bloomScale,
+    );
+    fallbackAA?.uniforms.resolution.value.set(
+      1 / (width * pixelRatio),
+      1 / (height * pixelRatio),
+    );
+    canvas.dataset.pixelRatio = pixelRatio.toFixed(2);
     previousFrame = 0;
     sampleStart = 0;
     sampleCount = 0;
     sampleTotal = 0;
     updateCamera();
+    requestRender();
   }
 
   function updateCamera() {
@@ -237,6 +301,8 @@ export async function createCourtScene(
     if (reflection) reflection.visible = false;
     if (bloom) bloom.enabled = false;
     if (renderer) renderer.shadowMap.enabled = false;
+    // Invalidate Three's light-state shader variant as well as its shadow render.
+    if (keyLight) keyLight.castShadow = false;
     canvas.dataset.quality = quality;
     options.onQualityChange?.(quality);
     slowWindows = 0;
@@ -244,14 +310,15 @@ export async function createCourtScene(
   }
 
   function render(now: number) {
+    animationFrame = 0;
     if (disposed || paused || !ready || !renderer || !composer) return;
     try {
       updateCamera();
-      if (idleBall) {
+      if (idleBall && motionEnabled) {
         idleBall.rotation.y = now * 0.00012;
         idleBall.rotation.z = 0.18 + Math.sin(now * 0.0002) * 0.035;
       }
-      if (selection?.visible) {
+      if (selection?.visible && motionEnabled) {
         const pulse = 1 + Math.sin(now * 0.003) * 0.025;
         selection.scale.set(pulse, 1, pulse);
       }
@@ -261,6 +328,8 @@ export async function createCourtScene(
       return;
     }
 
+    // Accessibility uses on-demand frames, whose gaps are not performance samples.
+    if (!motionEnabled) return;
     // Windowed measurements exclude background gaps, startup and resize samples.
     if (previousFrame) {
       sampleTotal += now - previousFrame;
@@ -284,7 +353,7 @@ export async function createCourtScene(
       sampleTotal = 0;
     }
     if (pendingLowQuality) lowerQuality();
-    animationFrame = requestAnimationFrame(render);
+    requestRender();
   }
 
   options.signal.addEventListener('abort', onAbort, { once: true });
@@ -295,7 +364,8 @@ export async function createCourtScene(
   try {
     renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: true,
+      // Geometry is antialiased offscreen; the final fullscreen quad needs no MSAA.
+      antialias: false,
       alpha: false,
       powerPreference: 'high-performance',
     });
@@ -303,15 +373,29 @@ export async function createCourtScene(
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.15;
     renderer.shadowMap.enabled = true;
+    // Lights and court hardware are static. Rebuild their shadow only when the animated ball changes.
+    renderer.shadowMap.autoUpdate = false;
+    renderer.shadowMap.needsUpdate = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.setClearColor('#101112', 1);
     renderer.debug.onShaderError = () => fail('initialization');
-    const gl = renderer.getContext();
+    // Three r186 creates a WebGL2 context; the installed declarations also retain the legacy union.
+    const gl = renderer.getContext() as WebGL2RenderingContext;
     const debug = gl.getExtension('WEBGL_debug_renderer_info');
     canvas.dataset.renderer = debug
       ? String(gl.getParameter(debug.UNMASKED_RENDERER_WEBGL))
       : String(gl.getParameter(gl.RENDERER));
     canvas.dataset.quality = quality;
+
+    const textures = await loadCourtTextures(options.signal, own);
+    if (disposed || options.signal.aborted)
+      throw new DOMException('Scene aborted', 'AbortError');
+    for (const texture of Object.values(textures)) {
+      texture.anisotropy = Math.min(
+        8,
+        renderer.capabilities.getMaxAnisotropy(),
+      );
+    }
 
     const pmrem = new THREE.PMREMGenerator(renderer);
     const room = new RoomEnvironment();
@@ -321,19 +405,6 @@ export async function createCourtScene(
     room.dispose();
     pmrem.dispose();
 
-    const steel = material({
-      color: '#1B2023',
-      roughness: 0.34,
-      metalness: 0.8,
-    });
-    const rimSurface = material({
-      color: '#FF5A1F',
-      roughness: 0.28,
-      metalness: 0.45,
-      emissive: '#FF5A1F',
-      emissiveIntensity: 0.22,
-    });
-    const white = material({ color: IVORY, roughness: 0.76 });
     const emissiveAmber = material({
       color: AMBER,
       emissive: AMBER,
@@ -382,21 +453,6 @@ export async function createCourtScene(
     box([0.035, 0.026, 16], [8.5, -0.024, 0], emissiveAmber);
     box([0.035, 0.026, 16], [-8.5, -0.024, 0], emissiveAmber);
     box([17.05, 0.026, 0.035], [0, -0.024, 8], emissiveAmber);
-    for (const x of [-8.4, 8.4]) {
-      for (const z of [-6, 3]) {
-        box([0.08, 9, 0.08], [x, 4.35, z], steel);
-        box([1.35, 0.07, 0.22], [x * 0.94, 8.82, z], steel);
-        box(
-          [1.24, 0.025, 0.17],
-          [x * 0.94, 8.77, z],
-          material({
-            color: '#F4F3EF',
-            emissive: '#F4F3EF',
-            emissiveIntensity: 2.2,
-          }),
-        );
-      }
-    }
 
     reflection = add(
       new Reflector(own(new THREE.PlaneGeometry(WIDTH, LENGTH)), {
@@ -404,24 +460,27 @@ export async function createCourtScene(
         textureWidth: 512,
         textureHeight: 512,
         clipBias: 0.003,
+        // The reflection is softly filtered beneath the wood, so it needs no MSAA.
+        multisample: 0,
       }),
     );
     reflection.rotation.x = -Math.PI / 2;
     reflection.position.y = -0.002;
     own(reflection);
 
-    const woodTexture = own(makeWoodTexture());
-    woodTexture.colorSpace = THREE.SRGBColorSpace;
-    woodTexture.wrapS = woodTexture.wrapT = THREE.RepeatWrapping;
-    woodTexture.repeat.set(3, 2);
+    const woodTexture = textures.maple;
+    // The source tile depicts roughly a two-metre patch, rather than oversized striped boards.
+    woodTexture.repeat.set(WIDTH / 2, LENGTH / 2);
+    const woodHeight = own(woodTexture.clone());
+    woodHeight.colorSpace = THREE.NoColorSpace;
     const wood = own(
-      new THREE.MeshPhysicalMaterial({
-        color: '#737267',
+      new THREE.MeshStandardMaterial({
+        color: '#AE9F85',
         map: woodTexture,
-        roughness: 0.38,
-        metalness: 0.06,
-        clearcoat: 0.35,
-        clearcoatRoughness: 0.38,
+        bumpMap: woodHeight,
+        bumpScale: 0.002,
+        roughness: 0.34,
+        metalness: 0.025,
         transparent: true,
         opacity: 0.91,
         depthWrite: false,
@@ -433,16 +492,16 @@ export async function createCourtScene(
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = 0.004;
     floor.receiveShadow = true;
-    const paintTexture = own(makeCourtPaint());
     paint = own(
       new THREE.ShaderMaterial({
-        uniforms: { uPaint: { value: paintTexture }, uReveal: { value: 0 } },
+        uniforms: { uReveal: { value: 0 } },
         vertexShader: courtVertex,
         fragmentShader: courtFragment,
         transparent: true,
         depthWrite: false,
         polygonOffset: true,
         polygonOffsetFactor: -1,
+        toneMapped: false,
       }),
     );
     const lines = add(
@@ -467,53 +526,13 @@ export async function createCourtScene(
     box([0.055, 0.035, 14], [-7.58, 0.01, 0], blue);
     box([0.055, 0.035, 14], [7.58, 0.01, 0], red);
 
-    // Freestanding regulation-height goal, built from ordinary court hardware.
-    const hoop = add(new THREE.Group());
-    box([1.45, 0.45, 1.3], [0, 0.19, -7.45], steel, hoop);
-    box([0.28, 4.05, 0.3], [0, 2, -7.65], steel, hoop);
-    tube(
-      [
-        new THREE.Vector3(0, 3.82, -7.65),
-        new THREE.Vector3(0, 4.03, -6.6),
-        new THREE.Vector3(0, 3.77, -5.75),
-      ],
-      0.11,
-      steel,
-      hoop,
-    );
-    const glass = own(
-      new THREE.MeshPhysicalMaterial({
-        color: '#AEC3CA',
-        roughness: 0.08,
-        metalness: 0.04,
-        transparent: true,
-        opacity: 0.23,
-        depthWrite: false,
-        clearcoat: 1,
-        side: THREE.DoubleSide,
-      }),
-    );
-    box([1.8, 1.05, 0.035], [0, 3.72, -5.77], glass, hoop);
-    for (const x of [-0.915, 0.915])
-      box([0.038, 1.11, 0.06], [x, 3.72, -5.77], steel, hoop);
-    for (const y of [3.175, 4.265])
-      box([1.85, 0.038, 0.06], [0, y, -5.77], steel, hoop);
-    for (const x of [-0.295, 0.295])
-      box([0.028, 0.445, 0.014], [x, 3.4, -5.742], white, hoop);
-    for (const y of [3.19, 3.61])
-      box([0.61, 0.028, 0.014], [0, y, -5.742], white, hoop);
-    box([0.15, 0.12, 0.32], [0, 3.055, -5.57], rimSurface, hoop);
-    const rim = add(
-      new THREE.Mesh(
-        own(new THREE.TorusGeometry(0.225, 0.016, 12, 64)),
-        rimSurface,
-      ),
-      hoop,
-    );
-    rim.rotation.x = Math.PI / 2;
-    rim.position.copy(RIM);
-    rim.castShadow = true;
-    makeNet(hoop, white, tube);
+    hardware = createCourtHardware({
+      own,
+      metalMap: textures.metal,
+      glassMap: textures.glass,
+      rim: RIM,
+    });
+    add(hardware.group);
 
     const leather = own(makeLeatherTexture());
     leather.colorSpace = THREE.SRGBColorSpace;
@@ -593,18 +612,66 @@ export async function createCourtScene(
       0.28,
     );
 
-    composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
+    // Query the actual HDR/depth formats rather than assuming MAX_SAMPLES also applies to them.
+    const colorSamples = Array.from(
+      (gl.getInternalformatParameter(
+        gl.RENDERBUFFER,
+        gl.RGBA16F,
+        gl.SAMPLES,
+      ) as Int32Array | null) ?? new Int32Array(),
+    );
+    const depthSamples = Array.from(
+      (gl.getInternalformatParameter(
+        gl.RENDERBUFFER,
+        gl.DEPTH_COMPONENT24,
+        gl.SAMPLES,
+      ) as Int32Array | null) ?? new Int32Array(),
+    );
+    supportedSamples = colorSamples.filter((value) =>
+      depthSamples.includes(value),
+    );
+    composer = new EffectComposer(
+      renderer,
+      new THREE.WebGLRenderTarget(1, 1, {
+        type: THREE.HalfFloatType,
+        depthBuffer: false,
+      }),
+    );
+    // Only geometry needs multisampling. Bloom and output use ordinary HDR buffers,
+    // avoiding repeated multisample resolves for every fullscreen postprocessing pass.
+    scenePass = own(
+      new AntialiasedScenePass(
+        scene,
+        camera,
+        new THREE.WebGLRenderTarget(1, 1, {
+          type: THREE.HalfFloatType,
+          resolveDepthBuffer: false,
+        }),
+      ),
+    );
+    composer.addPass(scenePass);
     bloom = own(
       new UnrealBloomPass(new THREE.Vector2(1024, 768), 0.28, 0.4, 1.1),
     );
+    // Three r186's bloom dispose omits this material.
+    own(bloom.materialHighPassFilter);
     composer.addPass(bloom);
     composer.addPass(own(new OutputPass()));
+    fallbackAA = own(new ShaderPass(FXAAShader));
+    composer.addPass(fallbackAA);
     resize();
     // Compile upfront before main reveals the canvas; no frame-blocking asset fetch.
-    await renderer.compileAsync(scene, camera);
+    const previousTarget = renderer.getRenderTarget();
+    renderer.setRenderTarget(scenePass.target);
+    try {
+      await renderer.compileAsync(scene, camera);
+    } finally {
+      if (!disposed) renderer.setRenderTarget(previousTarget);
+    }
     if (disposed || options.signal.aborted)
       throw new DOMException('Scene aborted', 'AbortError');
+    // Viewport or display density may have changed while shader compilation was pending.
+    resize();
     composer.render();
     if (failed) throw new Error('Court shaders could not initialize');
     ready = true;
@@ -612,12 +679,14 @@ export async function createCourtScene(
     options.onQualityChange?.(quality);
     canvas.addEventListener('pointerup', onPointerUp);
     window.addEventListener('resize', resize, { passive: true });
-    introduction = gsap.to(intro, {
-      progress: 1,
-      duration: 2.2,
-      ease: 'power2.out',
-    });
-    animationFrame = requestAnimationFrame(render);
+    monitorResolution();
+    if (motionEnabled)
+      introduction = gsap.to(intro, {
+        progress: 1,
+        duration: 2.2,
+        ease: 'power2.out',
+      });
+    requestRender();
   } catch (error) {
     dispose();
     throw error;
@@ -638,22 +707,31 @@ export async function createCourtScene(
     if (selection) selection.visible = false;
     if (madeMarker) madeMarker.visible = false;
     if (ball) ball.visible = false;
+    hardware?.setNetImpact(0);
+    if (renderer) renderer.shadowMap.needsUpdate = true;
+    requestRender();
   }
 
   return {
     setJourney(progress) {
       if (disposed) return;
-      journey = clamp(progress);
+      const next = motionEnabled
+        ? clamp(progress)
+        : Math.round(clamp(progress) * 4) / 4;
+      if (journey === next) return;
+      journey = next;
       if (journey >= 0.01 && intro.progress < 1) {
         introduction?.kill();
         intro.progress = 1;
       }
       updateCamera();
+      requestRender();
     },
     selectPoint(point) {
       if (disposed || !selection) return;
       selection.visible = point !== null;
       if (point) selection.position.copy(worldPoint(point));
+      requestRender();
     },
     setMadePoint(point) {
       if (disposed) return;
@@ -666,6 +744,11 @@ export async function createCourtScene(
     shoot(point) {
       if (disposed || !ball || !madeMarker || !selection) return;
       reset();
+      if (!motionEnabled) {
+        madeMarker.position.copy(worldPoint(point));
+        madeMarker.visible = true;
+        return;
+      }
       const launch = worldPoint(point);
       launch.y = 1.2;
       const apex = launch.clone().lerp(RIM, 0.5);
@@ -700,6 +783,7 @@ export async function createCourtScene(
           onUpdate() {
             if (disposed) return;
             arc.getPoint(motion.progress, flyingBall.position);
+            if (renderer) renderer.shadowMap.needsUpdate = true;
             flyingBall.rotation.set(
               motion.progress * Math.PI * 3.4,
               motion.progress * Math.PI * 1.8,
@@ -714,11 +798,15 @@ export async function createCourtScene(
           ease: 'power2.in',
           onUpdate() {
             flyingBall.position.y = RIM.y - motion.fall * 0.95;
+            hardware?.setNetImpact(Math.sin(motion.fall * Math.PI));
+            if (renderer) renderer.shadowMap.needsUpdate = true;
             flightTrail.material.uniforms.uOpacity!.value =
               (1 - motion.fall) * 0.86;
           },
           onComplete() {
             flyingBall.visible = false;
+            hardware?.setNetImpact(0);
+            if (renderer) renderer.shadowMap.needsUpdate = true;
             marker.position.copy(worldPoint(point));
             marker.scale.set(1, 1, 1);
             marker.visible = true;
@@ -728,11 +816,32 @@ export async function createCourtScene(
       if (paused) flight.pause();
     },
     reset,
+    setMotionEnabled(enabled) {
+      if (disposed || motionEnabled === enabled) return;
+      motionEnabled = enabled;
+      previousFrame = 0;
+      sampleStart = 0;
+      sampleCount = 0;
+      sampleTotal = 0;
+      slowWindows = 0;
+      if (!enabled) {
+        introduction?.kill();
+        intro.progress = 1;
+        flight?.kill();
+        removeTrail();
+        if (ball) ball.visible = false;
+        hardware?.setNetImpact(0);
+        if (renderer) renderer.shadowMap.needsUpdate = true;
+        selection?.scale.set(1, 1, 1);
+      }
+      requestRender();
+    },
     setPaused(nextPaused) {
       if (disposed || paused === nextPaused) return;
       paused = nextPaused;
       if (paused) {
         cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
         flight?.pause();
         introduction?.pause();
       } else {
@@ -742,7 +851,7 @@ export async function createCourtScene(
         sampleTotal = 0;
         flight?.resume();
         introduction?.resume();
-        animationFrame = requestAnimationFrame(render);
+        requestRender();
       }
     },
     dispose() {
@@ -752,100 +861,41 @@ export async function createCourtScene(
   };
 }
 
-function makeWoodTexture() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
-  const context = canvas.getContext('2d');
-  if (!context) throw new Error('Court texture could not initialize');
-  context.fillStyle = '#666052';
-  context.fillRect(0, 0, 512, 512);
-  for (let board = 0; board < 16; board += 1) {
-    const shade = 85 + ((board * 23) % 25);
-    context.fillStyle = `rgb(${shade + 10},${shade + 6},${shade - 6})`;
-    context.fillRect(board * 32, 0, 31, 512);
-    context.strokeStyle = 'rgba(19,15,10,.28)';
-    context.lineWidth = 0.65;
-    for (let grain = 0; grain < 6; grain += 1) {
-      context.beginPath();
-      context.moveTo(board * 32 + grain * 5.2, 0);
-      for (let y = 0; y <= 512; y += 12) {
-        context.lineTo(
-          board * 32 + grain * 5.2 + Math.sin(y * 0.034 + board) * 0.9,
-          y,
-        );
-      }
-      context.stroke();
-    }
-    context.fillStyle = 'rgba(9,8,7,.2)';
-    const seam = (board * 137) % 512;
-    context.fillRect(board * 32, seam, 32, 1);
-  }
-  return new THREE.CanvasTexture(canvas);
-}
+/** Resolve scene edges once, then keep all postprocessing buffers single-sampled. */
+class AntialiasedScenePass extends RenderPass {
+  private readonly copy = new ShaderPass(CopyShader);
 
-function makeCourtPaint() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 1024;
-  const context = canvas.getContext('2d');
-  if (!context) throw new Error('Court paint could not initialize');
-  const x = (world: number) => (world / WIDTH + 0.5) * 1024;
-  const y = (world: number) => (world / LENGTH + 0.5) * 1024;
-  context.strokeStyle = '#F4F3EF';
-  context.lineWidth = 3.2;
-  context.lineCap = 'round';
-  context.strokeRect(4, 4, 1016, 1016);
-  context.strokeRect(
-    x(-2.45),
-    y(-7) + 4,
-    x(2.45) - x(-2.45),
-    y(-1.2) - y(-7) - 4,
-  );
-  context.beginPath();
-  context.ellipse(
-    x(0),
-    y(-1.2),
-    (1.8 / WIDTH) * 1024,
-    (1.8 / LENGTH) * 1024,
-    0,
-    0,
-    Math.PI * 2,
-  );
-  context.stroke();
-  context.beginPath();
-  context.moveTo(x(-6.65), y(-7));
-  context.lineTo(x(-6.65), y(-5.3));
-  for (let step = 0; step <= 96; step += 1) {
-    const angle = -Math.PI / 2 + (step / 96) * Math.PI;
-    context.lineTo(x(Math.sin(angle) * 6.65), y(-5.3 + Math.cos(angle) * 6.65));
+  constructor(
+    scene: THREE.Scene,
+    camera: THREE.Camera,
+    readonly target: THREE.WebGLRenderTarget,
+  ) {
+    super(scene, camera);
   }
-  context.lineTo(x(6.65), y(-7));
-  context.stroke();
-  context.beginPath();
-  context.ellipse(
-    x(0),
-    y(7),
-    (1.8 / WIDTH) * 1024,
-    (1.8 / LENGTH) * 1024,
-    0,
-    Math.PI,
-    Math.PI * 2,
-  );
-  context.stroke();
-  context.strokeStyle = '#FF5A1F';
-  context.beginPath();
-  for (let step = 0; step <= 32; step += 1) {
-    const angle = -Math.PI / 2 + (step / 32) * Math.PI;
-    const px = x(Math.sin(angle) * 1.25);
-    const py = y(-5.3 + Math.cos(angle) * 1.25);
-    if (!step) context.moveTo(px, py);
-    else context.lineTo(px, py);
+
+  override setSize(width: number, height: number) {
+    this.target.setSize(width, height);
   }
-  context.stroke();
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  return texture;
+
+  override render(
+    renderer: THREE.WebGLRenderer,
+    writeBuffer: THREE.WebGLRenderTarget,
+    readBuffer: THREE.WebGLRenderTarget,
+    deltaTime: number,
+    maskActive: boolean,
+  ) {
+    const toScreen = this.renderToScreen;
+    this.renderToScreen = false;
+    super.render(renderer, writeBuffer, this.target, deltaTime, maskActive);
+    this.renderToScreen = toScreen;
+    this.copy.renderToScreen = toScreen;
+    this.copy.render(renderer, readBuffer, this.target, deltaTime, maskActive);
+  }
+
+  override dispose() {
+    this.target.dispose();
+    this.copy.dispose();
+  }
 }
 
 function makeLeatherTexture() {
@@ -912,38 +962,4 @@ function createMarker(
     group.add(tick);
   }
   return group;
-}
-
-function makeNet(
-  parent: THREE.Group,
-  surface: THREE.Material,
-  tube: (
-    points: THREE.Vector3[],
-    radius: number,
-    surface: THREE.Material,
-    parent?: THREE.Object3D,
-    closed?: boolean,
-  ) => THREE.Mesh,
-) {
-  const levels = 4;
-  const strands = 12;
-  for (let strand = 0; strand < strands; strand += 1) {
-    for (const direction of [-1, 1]) {
-      const points: THREE.Vector3[] = [];
-      for (let level = 0; level <= levels; level += 1) {
-        const angle =
-          (strand / strands) * Math.PI * 2 +
-          (direction * level * Math.PI) / strands;
-        const radius = 0.222 - level * 0.02;
-        points.push(
-          new THREE.Vector3(
-            Math.cos(angle) * radius,
-            3.025 - level * 0.13,
-            RIM.z + Math.sin(angle) * radius,
-          ),
-        );
-      }
-      tube(points, 0.004, surface, parent);
-    }
-  }
 }

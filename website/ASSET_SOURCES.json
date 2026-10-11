@@ -17,6 +17,54 @@
   },
   "assets": [
     {
+      "output": "public/textures/maple-albedo.webp",
+      "bytes": 125366,
+      "sha256": "30c348cbbb737185574bda2aa5d5021c4b71df8972301c69792c2c0408f7ad98",
+      "source": "website/assets/materials/source/maple-floor.png",
+      "source_sha256": "18eea0259025e23903f2b34459311dbfac1b8af035a04646652225bbd4ce4c0d",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "56985afe2fb22b8b496ec31440061506ff787dc841b16c5cd83ef5babea233be",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "transformation": "Proportional resize up to 2048px; WebP quality 88; no baked scene lighting or court markings added"
+    },
+    {
+      "output": "public/textures/graphite-metal.webp",
+      "bytes": 210262,
+      "sha256": "81cad42c752ce38265731c89ac1ef8b62cddb79a57f07a6c818471e5d7fc7a79",
+      "source": "website/assets/materials/source/graphite-metal.png",
+      "source_sha256": "5729c160eb122d2acfeb69fe6afcbbdc71df8c72fc592140771defd4d1172f70",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "56985afe2fb22b8b496ec31440061506ff787dc841b16c5cd83ef5babea233be",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "transformation": "Proportional resize up to 1024px; WebP quality 80; no baked scene lighting or court markings added"
+    },
+    {
+      "output": "public/textures/glass-detail.webp",
+      "bytes": 31446,
+      "sha256": "b160119764bdb2a2fd7c2554d4ef668d72133c9150bacd3a654983a57578fe57",
+      "source": "website/assets/materials/source/glass-detail.png",
+      "source_sha256": "71ea4f8ffdf7392d1ba07770a292d6e3d7a829db0b5b89a300fc897a6a010b21",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "56985afe2fb22b8b496ec31440061506ff787dc841b16c5cd83ef5babea233be",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        512,
+        512
+      ],
+      "transformation": "Proportional resize up to 512px; WebP quality 75; no baked scene lighting or court markings added"
+    },
+    {
       "output": "public/screenshots/zh/home.webp",
       "bytes": 30606,
       "sha256": "889889d4c29eb135cf82245e12f65f8310154f0632391f4764451ad92fd00e21",
@@ -185,7 +233,7 @@
     {
       "output": "public/brand/favicon.png",
       "bytes": 5152,
-      "sha256": "5b40e6c1f8c54831e81fe0b9da1dbc650c26e38915eea10475025bb60828855e",
+      "sha256": "254e8e37944898cfd200f189d7abf650f92334c17fb781c181c66f247b74f813",
       "source": "assets/icons/hooptrace-app-icon-foreground.png",
       "source_sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8",
       "approval_record": "docs/design/brand/source.json",
@@ -231,8 +279,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 114760,
-      "sha256": "d7eeeb59a04008c8d1e5e7360beb33f234af6b5a05f7801de7750f4c5275e178",
+      "bytes": 114080,
+      "sha256": "e38b344d25636c51e9f25c0175b0ed1218c3b9349a7e6e4c2d0e989c7bcbce5a",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -551,7 +599,6 @@
         25805,
         25918,
         25919,
-        25928,
         25968,
         25972,
         25991,
@@ -641,11 +688,9 @@
         31561,
         31574,
         31614,
-        31616,
         31639,
         31649,
         31726,
-        31934,
         31995,
         32034,
         32047,
@@ -757,15 +802,15 @@
         },
         {
           "path": "src/components/Icon.astro",
-          "sha256": "958634f72e2d4258318b3175b69c96bec3bff2b40c517672091c6b2041a1abd7"
+          "sha256": "1454ad92dbb02bedd50eb8302172f619068ecb32fb2dbd2a2b008e4a8546828d"
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "f68c0a98a6fed1016e09092aec6ba5573f81b8d0cfa139a06a3a7370c1cb6909"
+          "sha256": "b82ab8dd12aef129cd676a5bdf85b5328a1b7de4bec654c3c011d6694b1e6ce7"
         },
         {
           "path": "src/components/Layout.astro",
-          "sha256": "6ffc9d943aa28a628ab68ac717d8afcf4e7e70759b26b8ec145ac2f15084b34b"
+          "sha256": "75237da80b338447359399f95bea051fdeebca82ccd3453e3dad52a1adfde75e"
         },
         {
           "path": "src/components/Privacy.astro",
@@ -773,7 +818,11 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "150544036caad96694b57b4ae0386e8fed4337ed2eab1202514f74d046e578a2"
+          "sha256": "aa64eede234c3dcb17a6c52dc7bb21cd9f8d4c17d122cad11c1b3de1b430590e"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "9cf5ae5f72ab2f8842ec2cc41fcc70a08206cbff2145dc684934d7f2a6fc6b00"
         },
         {
           "path": "src/data/release.ts",
@@ -804,8 +853,16 @@
           "sha256": "7c4728b6e8bcbcf62405fe49a953e28d1a7217d634937b2e5f4ae7b9fd509120"
         },
         {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "3bca61c447ade2a1a67b1cf3fa48bbff2fd2be85abe1b7c433d09de49d1a4d9e"
+        },
+        {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "211fe015c68d3ec85d98b2f5c428af53495b127047daf546a8724b4f5e3b58ba"
+          "sha256": "46e9880c32d20d6eb67938e98ff5358e08e15a0d2a0c54911150c667bfc53f45"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "788c0ede6d080190c96b4b29b76395d4869ac7019e561a8a7da107ef3e8f5d02"
         },
         {
           "path": "src/scripts/demo-state.ts",
@@ -813,15 +870,15 @@
         },
         {
           "path": "src/scripts/main.ts",
-          "sha256": "573e3ee242b0cc8a74550916e3c70fbc0d39a2b896246a6fc42194b9944972a1"
+          "sha256": "f89b1863e2c8b2a409618056121216bd863b4671e8e3eda1a4f22267719fdfdd"
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e5faaa24ab9efb81c673f1dce3c09e8cd3d605ce980990fe6abd03dfb541ba5c"
+          "sha256": "b198cc0fb5b5d496a2785ff26228954f916b5f2053e5f14b4d1a968a624ecaa8"
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "f483106d111e2c92da64fc44fe4906350b2cfbb9407c6808fcdd00c20ea5f38d"
+          "sha256": "c1b0f1b4489d5d9ac66f20ed22a74b1a0f3cf3a2bd8b97fa0509eb6550ec59c8"
         }
       ],
       "license": "SIL-OFL-1.1",
@@ -857,24 +914,11 @@
       "license": "MIT (repository-generated graphic)"
     },
     {
-      "output": "public/brand/court-poster.svg",
-      "bytes": 1948,
-      "sha256": "a3fdde64c9d7851a1108b585287d53736c3eaf2487960b4f2fd44794f18b976d",
-      "source": "scripts/prepare-assets.mjs",
-      "source_sha256": "a9f3963a2e0eda7d8f3fc512b214271411f64fdf5dbc005476ac3f161e8e322d",
-      "transformation": "Original procedural vector illustration of a half court; product-independent first-paint background",
-      "dimensions_px": [
-        1200,
-        960
-      ],
-      "license": "MIT (repository-generated graphic)"
-    },
-    {
       "output": "public/brand/share.png",
       "bytes": 112737,
       "sha256": "bc80e205003172236842c9a2156197b2096c94b478c519ad80a9dd284df8688e",
       "source": "scripts/prepare-assets.mjs",
-      "source_sha256": "a9f3963a2e0eda7d8f3fc512b214271411f64fdf5dbc005476ac3f161e8e322d",
+      "source_sha256": "47db5e7e7f2d8c2d19cce1e75bbbe611fdcbb98e29cd9ca59208b99c2e157afe",
       "source_dependencies": [
         {
           "source": "assets/icons/hooptrace-app-icon-foreground.png",
@@ -936,7 +980,7 @@
       "source": "node_modules/sharp/LICENSE",
       "source_sha256": "73ba74dfaa520b49a401b5d21459a8523a146f3b7518a833eea5efa85130bf68",
       "package": "sharp",
-      "version": "0.34.5",
+      "version": "0.35.5",
       "license": "Apache-2.0",
       "transformation": "Verbatim upstream package license"
     },
