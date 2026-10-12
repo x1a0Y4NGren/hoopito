@@ -9,14 +9,14 @@
 - License：MIT
 - Source：`https://github.com/x1a0Y4NGren/hoopito`
 - Issue tracker：`https://github.com/x1a0Y4NGren/hoopito/issues`
-- Published Android release：原 HoopTrace `2.0.0`，versionCode `4`，Git tag `v2.0.0`；历史 `1.0.0` 为 versionCode `2`，`0.1.0` 是已被取代的原型版本
+- Published Android release：Hoopito · 球豆 `2.0.1`，versionCode `5`，Git tag `v2.0.1`；历史 HoopTrace `2.0.0` 为 versionCode `4`，`1.0.0` 为 versionCode `2`
 - Platform：Flutter，Android 优先
 
 Application ID 已脱离 Flutter 模板的 `com.example` 命名，并与 GitHub Pages 命名空间对应。v1.0.0 已正式发布后不可再更改。
 
 ## 当前发布状态
 
-原 HoopTrace v2.0.0 Android APK 已通过 GitHub Release 发布，来源见[发行记录](v2.0.0-release-record.md)，公开文件 `HoopTrace-v2.0.0-android.apk` 保留原名称。当前源码使用 Hoopito · 球豆名称，尚不代表新名称 APK 已发布。本文是 F-Droid 准备记录，不代表已经进入官方 F-Droid 仓库；后续 F-Droid 工作仍需单独完成且不得改变已发布版本。
+Hoopito · 球豆 v2.0.1 Android 正式 APK 已通过 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1) 发布，公开文件为 `Hoopito-v2.0.1-android.apk`，来源见[发行记录](v2.0.1-release-record.md)。原 HoopTrace v2.0.0 文件和验收记录保留历史名称。本文仍是 F-Droid 准备记录，**尚未在官方 F-Droid 仓库发布**；后续渠道工作需单独完成，不改变已发布版本。
 
 ## 构建工具链
 
@@ -92,16 +92,18 @@ git diff --exit-code -- THIRD_PARTY_NOTICES.md
 
 - `fastlane/metadata/android/en-US/short_description.txt`
 - `fastlane/metadata/android/en-US/full_description.txt`
-- `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`（已发布 v2 为 `4.txt`）
+- `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`（当前 v2.0.1 为 `5.txt`，历史 v2.0.0 为 `4.txt`）
 - 对应的 `zh-CN` 文件
 - 两个 locale 的 `images/icon.png`
 - 两个 locale 的 4 张手机截图：主页、计分、复盘和历史
 
-现有截图来自原 HoopTrace Android 模拟器版本，使用虚构球员和演示对局，不包含个人信息；保留真实截图与来源记录。新名称发行前应采集并检查当前 APK 的截图，并确保 release tag 中包含最终 metadata。
+当前双语八张截图直接来自正式签名 v2.0.1 APK 在专用 API36 模拟器上的实际画面，全部使用合成球员与对局，逐张按原始分辨率检查后原样复制。版本、摘要、拍摄状态及原始证据见[截图来源](v2.0.1-screenshots.json)与[维护清单](screenshots-checklist.md)；旧八张 PNG 与[历史来源](v2.0.0-screenshots.json)保留在版本化目录。
+
+正式 APK 与签名 tag 的应用提交固定为 `4ecd960e5af1f6b12124a43e330d67efb628281b`。新截图与宣传文档在正式包验收后更新，其提交独立于 APK 来源；不能为了更新宣传素材移动签名 tag。后续 F-Droid recipe 应分别核对构建源码与元数据来源。
 
 ## 源码与 tag 要求
 
-- 每个公开 `versionName` 必须有唯一 tag；当前已发布版本为原 HoopTrace `v2.0.0`。
+- 每个公开 `versionName` 必须有唯一 tag；当前已发布版本为 Hoopito · 球豆 `v2.0.1`。
 - tag 必须指向用于构建发布 APK 的干净提交。
 - GitHub source archive 应能在无私有文件、无预下载构建产物的环境中完成构建。
 - `pubspec.lock` 必须提交，避免解析到不同依赖版本。

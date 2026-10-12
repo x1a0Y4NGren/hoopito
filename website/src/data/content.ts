@@ -28,8 +28,8 @@ export const content = {
         ['落点记录', '记住从哪里出手'],
         ['随时撤回', '修正也有迹可循'],
       ],
-      caption: 'v2.0 · 更名前的真实计分界面',
-      alt: '更名前的 HoopTrace 中文横屏计分界面，蓝红两队记分按钮与中央半场',
+      caption: 'v2.0.1 · 正式包真实计分界面',
+      alt: '球豆中文横屏计分界面，蓝红两队记分按钮与中央半场',
       foot: '为球场现场设计。大触控区域，清晰的蓝红对阵。',
     },
     demo: {
@@ -61,9 +61,9 @@ export const content = {
       body: '看清比分如何变化，回到关键回合，把每场比赛关联到自己的球员档案。对决结束，记录继续积累。',
       summary: '一场比赛，完整回看',
       history: '每场对决，都有归处',
-      captureNote: 'v2.0 · 品牌更名前的真实截图',
-      summaryAlt: '更名前的 HoopTrace 中文赛果页，显示最终比分与比分走势',
-      historyAlt: '更名前的 HoopTrace 中文比赛历史列表',
+      captureNote: 'v2.0.1 · 正式包真实截图',
+      summaryAlt: '球豆中文赛果页，显示最终比分与比分走势',
+      historyAlt: '球豆中文比赛历史列表',
       details: [
         ['赛果与复盘', '比分走势、关键回合、已确认落点。'],
         ['球员成长', '关联档案，看生涯记录与比赛比较。'],
@@ -81,7 +81,7 @@ export const content = {
       size: '约 {size} MiB',
       system: 'Android {version} 及以上',
       install:
-        '当前下载为更名前的 HoopTrace v2.0.0，安装后仍显示旧名。下载后，在系统提示中允许此来源安装。',
+        '当前下载为 Hoopito · 球豆 v2.0.1。下载后，在系统提示中允许此来源安装。已安装 v2.0.0 可直接覆盖升级，保留数据和设置。',
       qr: '手机扫码，打开官方发行页',
       verify: '核对 SHA-256',
       upgrade: '从旧 v1 升级？先保存 JSON 备份。',
@@ -103,6 +103,10 @@ export const content = {
       [
         '怎样保护自己的记录？',
         '在设置中导出完整 JSON，并把文件保存在 App 之外。自动备份需要你主动启用并授权目录；内部安全副本不能防止卸载或设备丢失。',
+      ],
+      [
+        '更名前的备份还能导入吗？',
+        '球豆可以导入旧 HoopTrace 与新 Hoopito JSON，自动备份同时保留新旧文件前缀。旧 App 不能导入新名称的备份，请先升级再恢复。',
       ],
       [
         '可以在 iPhone 上安装吗？',
@@ -180,8 +184,8 @@ export const content = {
         ['SHOT LOCATIONS', 'Remember where you shot'],
         ['UNDO ANYTIME', 'Corrections leave a trace'],
       ],
-      caption: 'v2.0 · Actual screen before the rename',
-      alt: 'Pre-rename HoopTrace English landscape scoring screen with blue and red score controls and a half-court',
+      caption: 'v2.0.1 · Actual Release screen',
+      alt: 'Hoopito English landscape scoring screen with blue and red score controls and a half-court',
       foot: 'Designed for courtside use. Large touch targets. A clear blue-and-red matchup.',
     },
     demo: {
@@ -214,10 +218,10 @@ export const content = {
       body: 'Follow the score changes. Return to the key plays. Link each game to your player profile. The game ends. Your record keeps growing.',
       summary: 'One game. A clearer picture.',
       history: 'A home for every matchup.',
-      captureNote: 'v2.0 · Actual capture before the rename',
+      captureNote: 'v2.0.1 · Actual Release captures',
       summaryAlt:
-        'Pre-rename HoopTrace English match summary with final score and score flow',
-      historyAlt: 'Pre-rename HoopTrace English match history list',
+        'Hoopito English match summary with final score and score flow',
+      historyAlt: 'Hoopito English match history list',
       details: [
         ['GAME REVIEW', 'Score flow, key plays, and confirmed shot locations.'],
         [
@@ -241,7 +245,7 @@ export const content = {
       size: 'About {size} MiB',
       system: 'Android {version} and later',
       install:
-        'The current download is the pre-rename HoopTrace v2.0.0 and still displays that name. Download the APK and allow installation from this source when Android asks.',
+        'The current download is Hoopito v2.0.1. Download the APK and allow installation from this source when Android asks. Install over v2.0.0 to keep your data and settings.',
       qr: 'Scan to open the official release on your phone',
       verify: 'Verify SHA-256',
       upgrade: 'Coming from v1? Save your JSON backup first.',
@@ -263,6 +267,10 @@ export const content = {
       [
         'How do I protect my records?',
         'Export a complete JSON backup in Settings and save it outside the app. Automatic backups require your opt-in and a directory you authorize. Internal safety copies cannot protect against uninstalling or losing your device.',
+      ],
+      [
+        'Can I import backups from before the rename?',
+        'Hoopito accepts old HoopTrace and new Hoopito JSON. Automatic retention recognizes both file prefixes. Older apps cannot import newly branded backups; upgrade before restoring them.',
       ],
       [
         'Can I install it on an iPhone?',

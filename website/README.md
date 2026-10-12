@@ -9,10 +9,10 @@
 
 当前品牌中文为「球豆」、英文为「Hoopito」，共享名称为「Hoopito · 球豆」，
 大写字标为 `HOOPITO`；npm 包名为 `hoopito-website`。已批准的 C 独眼球怪
-保持原图与几何。下载仍指向更名前已发布的 `HoopTrace-v2.0.0-android.apk`，
-其文件名、签名与 SHA-256 保持原样；GitHub 仓库已更名为 `x1a0Y4NGren/hoopito`，原仓库地址保留跳转。
-页面明确说明安装后仍显示旧名；历史 App 截图保留真实像素与拍摄来源，
-不重绘其中的 `HOOPTRACE`。原始 ImageGen 提示词、来源图与历史验收记录保留当时名称。
+保持原图与几何。下载指向已公开的 `Hoopito-v2.0.1-android.apk`，安装名称为
+Hoopito／球豆。GitHub 仓库已更名为 `x1a0Y4NGren/hoopito`，原仓库地址保留跳转。
+当前八张双语截图直接来自同一正式签名包，保留原始像素与系统栏；旧截图按版本
+归档。原始 ImageGen 提示词、来源图与历史验收记录保留当时名称。
 
 ## 本地开发与验证
 
@@ -166,8 +166,10 @@ Android 实机验收需由使用者打开预览，记录型号、浏览器和结
 正反向和快速滚动、横竖屏、语言切换、选择位置记分及动画中重置、下载入口。
 自动测试不能替代这项实际体验；未收到实机报告时保持待验。
 
-截图拍摄记录来自 [v2.0.0 截图来源](../docs/release/v2.0.0-screenshots.json)，
-包含其真实 Debug 构建来源，不能据此更改正式 APK 的来源。
+当前截图来自 [v2.0.1 截图来源](../docs/release/v2.0.1-screenshots.json)，
+绑定正式 APK 的源码 `4ecd960`、摘要、设备、合成数据和拍摄时间。
+[v2.0.0 历史截图](../docs/release/v2.0.0-screenshots.json)保留真实 Debug 来源，
+后续网站提交不改变任何 APK 的构建来源。
 字体 OFL 与第三方许可随资源保留，详见
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。GSAP 使用其标准许可。
 
@@ -178,10 +180,11 @@ SHA-256、发行页与项目链接。发布新 App 后先核对官方 Release �
 再更新此配置、双语相关文案并运行 `npm run assets`，让二维码和页面保持一致。
 APK 直接从 GitHub Release 下载，不复制进网站目录。
 
-首版对应正式 v2.0.0，支持 Android 7.0／API 24 及以上。
+当前下载为正式 v2.0.1，支持 Android 7.0／API 24 及以上，同证覆盖升级 v2.0.0。
 旧 v1 到 v2 使用不同签名，不能覆盖安装；须先把完整 JSON 保存到 App 外，
 确认文件已保存，再卸载旧版、安装并恢复。CSV 和图片不能完整恢复。
-该提示与当前 [发行记录](../docs/release/v2.0.0-release-record.md) 保持一致。
+新 App 可导入旧 HoopTrace 与新 Hoopito JSON；旧 App 不能导入新名称备份。
+这些提示与当前 [发行记录](../docs/release/v2.0.1-release-record.md) 保持一致。
 
 ## Vercel 预览与正式域名
 
@@ -191,20 +194,19 @@ Vercel 项目 Root Directory 设置为 `website`，Node.js 为 24.x，安装命�
 `dist/`、`.vercel/`、浏览器报告和本地环境变量文件不提交。
 
 既有 Vercel 项目已更名为 `hoopito-website`，项目身份保持不变，所属空间为
-`xyr175-9459s-projects`。网站分支的预览地址：
-[既有 HoopTrace 品牌预览](https://hooptrace-website-git-codex-hooptr-9f2c9c-xyr175-9459s-projects.vercel.app/)。
-GitHub 与 Vercel 项目已更名；下列旧预览属于此前部署，不代表当前品牌修改已上线。新的受保护预览将在正式 APK 与截图验收后更新。
+`xyr175-9459s-projects`。当前网站源码已整合至 `main`，新的受保护 Preview
+将从最终 `main` 的 `codex/hoopito-website` 分支部署并记录实际地址。
+旧品牌预览仅属于历史部署，来源保留在 [VERIFICATION.md](VERIFICATION.md)。
 项目保留 Vercel Authentication；账号登录后可访问，也可通过 Deployment 页面
 的 Share 功能创建有期限的分享链接。分享凭据不写入源码或验证报告。
 分支地址随该分支成功部署更新；每次部署的不可变地址与实际 Git 提交可在
 Vercel Deployment 详情和构建日志中核对。`output/vercel/` 保存已验收部署的
 来源清单、构建日志与浏览器证据。此前工作区上传、已提交文件上传和 Git
-自动预览的来源记录分别保留，不能用后续提交替代。对应源码已提交并推送至 GitHub 的
-[`codex/hooptrace-website`](https://github.com/x1a0Y4NGren/hoopito/tree/codex/hooptrace-website)
-分支，尚未合入 `main` 或发布正式域名。
+自动预览的来源记录分别保留，不能用后续提交替代。当前 App 与网站源码已合入并推送
+`main`；新的预览分支为 `codex/hoopito-website`，正式域名尚未发布。
 
 项目已连接 `x1a0Y4NGren/hoopito`，自动部署沿用 blog 的 GitHub → Vercel
-工作流。推送 `codex/hooptrace-website` 等非生产分支会自动生成 Preview。
+工作流。推送 `codex/hoopito-website` 等非生产分支会自动生成 Preview。
 `main` 仍是 Production 分支，但 `vercel.json` 的 `git.deploymentEnabled.main=false` 阻止自动生产部署；当前范围仅为网站分支的预览验收，继续保留
 禁止搜索收录设置。源码整合到 `main` 不构成正式上线。正式上线须另行授权解除部署保护并配置 `SITE_URL`。
 

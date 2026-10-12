@@ -23,7 +23,7 @@ const test = base.extend({
 });
 
 const apk =
-  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.0/HoopTrace-v2.0.0-android.apk';
+  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk';
 const origin = 'http://127.0.0.1:4321';
 const locales = [
   {
@@ -246,9 +246,7 @@ for (const locale of locales) {
       'Hoopito · 球豆',
     );
     await expect(page.locator('.hero-lead')).toContainText(locale.brand);
-    await expect(page.locator('.install-note')).toContainText(
-      'HoopTrace v2.0.0',
-    );
+    await expect(page.locator('.install-note')).toContainText('v2.0.1');
     await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
     await expectDownload(page);
     for (const id of ['hero', 'scoring', 'experience', 'replay', 'download']) {
@@ -387,7 +385,7 @@ for (const locale of locales) {
     await page.goto(`${origin}${locale.path}`);
     await expect(page.locator('h1')).toHaveText(locale.title);
     await expectDownload(page);
-    await expect(page.locator('#download')).toContainText('2.0.0');
+    await expect(page.locator('#download')).toContainText('2.0.1');
     await expect(page.locator('#download')).toContainText('JSON');
     await expect(page.locator('[data-record]')).toBeDisabled();
     await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');

@@ -1,8 +1,8 @@
 # Hoopito · 球豆 screenshot checklist / 截图清单
 
-Current branding is Hoopito · 球豆. The recorded 2.0 captures below remain original
-HoopTrace images with their original provenance. Capture the current branded APK
-for a future release; do not relabel old captures as new UI evidence. See
+The current eight selected images come from the official signed Hoopito · 球豆
+v2.0.1 APK. Original HoopTrace v2.0.0 images are archived separately with their
+original provenance; they are not evidence of the current UI. See
 [naming and compatibility](../design/brand/naming-and-compatibility.md).
 
 Screenshots are release metadata and visual evidence; they do not replace flow,
@@ -12,12 +12,67 @@ selected release image at full resolution before committing it.
 截图属于发行元数据与视觉证据，不能代替流程、持久化或平台测试。只能使用虚构
 球员名称，提交前必须逐张按原始分辨率检查选中的发行图。
 
-Updated / 更新：2026-10-03。The checkboxes below describe the recorded capture
-and inspection scope, not every route × locale × theme combination or release
-readiness. 勾选仅表示下述实际采集与检查范围，不代表全部页面、语言、主题组合
-均验收，也不表示发布就绪。
+Updated / 更新：2026-10-12。The current and historical scopes below remain
+separate. Checkboxes describe only their stated capture and inspection scope,
+not every route × locale × theme combination. 当前正式包与历史候选的范围分别
+记录；勾选不代表全部页面、语言、主题组合均验收。
 
-## Required matrix / 必需矩阵
+## Current v2.0.1 selection / 当前正式版选图
+
+Application source and signed tag: `4ecd960e5af1f6b12124a43e330d67efb628281b`.
+Build: MAIN Release, officially signed, Android `2.0.1+5`.
+APK SHA-256: `c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9`.
+The installed package hash matches that official APK. Later screenshot,
+documentation and website commits do not change its application source.
+
+Device: dedicated `Hoopito_Brand_API36` x86_64 emulator, API 36, synthetic
+Android user 0. Portrait captures are 1080×1920, landscape scoring is 1920×1080,
+density 420 and font scale 1.0. The device's physical 1080×2400 viewport was
+overridden to 1080×1920; this is an emulator configuration, not physical hardware.
+
+| Locale / 语言 | Current Fastlane selection / 当前选图 | Theme / 主题 |
+| --- | --- | --- |
+| zh-CN | `1-home.png`, `2-scoring.png`, `3-summary.png`, `4-history.png` | Light / 浅色 |
+| en-US | `1-home.png`, `2-scoring.png`, `3-summary.png`, `4-history.png` | Dark / 深色 |
+
+- [x] Home, scoring, summary and history captured in both languages from the
+      installed official signed APK, with synthetic names and matches only.
+- [x] All eight actual PNGs were inspected at original resolution and accepted;
+      no crop, repaint or mock rendering was applied, and system bars remain.
+- [x] Fastlane PNG hashes and dimensions match the original captures and the
+      [v2.0.1 provenance record](v2.0.1-screenshots.json).
+- [x] Capture-time lifecycle, scores, locale, theme and import availability are
+      recorded independently of the later final database copy.
+- [x] Original v2.0.0 PNGs remain byte-identical under `screenshots/v2.0.0/`;
+      their [historical record](v2.0.0-screenshots.json) retains the source commit,
+      APK and capture metadata, plus each former Fastlane `original_path`.
+
+English captures show one 8:11 match: scoring is active, while home, summary and
+history are finished. They precede the legacy JSON merge. Chinese home, history
+and summary follow that merge and record the 8:11 match and imported 2:3 match;
+the summary and visible home card focus on 8:11. Chinese scoring is a separate
+active 7:8 match. All three use `scoresOnly`, disabled timers and zero confirmed
+field-goal locations. Seven effective field goals and two pause events belong
+to the 8:11 match; the 7:8 match has six effective field goals.
+
+Raw PNG/XML/capture metadata and chronological commands are under
+`D:/DevCache/HoopitoArtifacts/issue-6-20261012/device-api36/`.
+The provenance record binds each selected PNG to those actual captures and
+records its synthetic fixture. Broader flow and signing acceptance remains in
+the [v2.0.1 release record](v2.0.1-release-record.md).
+
+This selection establishes only the eight routes/locales/themes above at 100%
+text scale. It does not establish a new 200% text-scale or large-window matrix,
+physical-device or foldable behavior, or natural 24-hour backup scheduling.
+
+## Historical v2.0.0 scope / 历史截图验收范围
+
+The remaining sections preserve the 2026-10-03 capture and review scope. Their
+Debug APKs, supplementary large-text captures and former release paths describe
+that historical work, not a rerun against v2.0.1. The eight selected originals
+now resolve through the versioned paths in `v2.0.0-screenshots.json`.
+
+### Required matrix / 必需矩阵
 
 - [x] Simplified Chinese and English in the selected release images.
 - [x] Warm light and charcoal dark themes in the inspected captures.
@@ -38,7 +93,7 @@ readiness. 勾选仅表示下述实际采集与检查范围，不代表全部页
 - [x] Android 16 edge-to-edge in the inspected images, with content clear of
       retained system bars.
 
-## Privacy and fidelity / 隐私与真实性
+### Privacy and fidelity / 隐私与真实性
 
 - [x] No real names, notes, file paths, notifications, account identifiers,
       serial numbers, or other app content in the system recents/background.
@@ -54,7 +109,7 @@ readiness. 勾选仅表示下述实际采集与检查范围，不代表全部页
 - [ ] Confirm final production icon/assets as part of the remaining release
       metadata and signing checks.
 
-## Capture record / 拍摄记录
+### Capture record / 拍摄记录
 
 For each final image record commit, build type, emulator/device, API, viewport,
 locale, theme, text scale, route/state, and source test fixture. Re-capture after
@@ -102,4 +157,5 @@ Latest Replay correction: source `94bb58e094736dfeaf42e524e308236de876a059`, MAI
 Overview reads 13% · 1/8 for the same 8:11 fixture; Chinese/English 200% analytics,
 lazy scoring flow (including its end) and key possessions were inspected.
 The English portrait stays one column; before-fix 3c images are issue evidence.
-The eight unchanged Fastlane pages retain their truthful 3a source above.
+The eight images originally selected for Fastlane retain their truthful 3a
+source above; their original pixels now live under `screenshots/v2.0.0/`.

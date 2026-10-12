@@ -2,27 +2,28 @@
 
 当前产品英文名为 **Hoopito**，中文名为 **球豆**；双语并列使用 **Hoopito · 球豆**。原产品名 HoopTrace 仅在升级兼容标识、已发布文件和历史来源中保留。
 
-## 待办：改名尚未完全同步
+## Issue #6 同步进展
 
-记录日期：2026-10-12。状态：**本地实现已完成，对外同步未完成**。
+记录日期：2026-10-12。源码、正式 APK、远端名称和当前素材已完成，受保护 Preview 与本机目录迁移正在执行。
 
 GitHub 跟踪：[Issue #6：同步 Hoopito · 球豆品牌更名到源码、部署、发行及宣传素材](https://github.com/x1a0Y4NGren/hoopito/issues/6)。后续进展在 Issue 中更新，本文保留名称规则与兼容约束。
 
-项目已从 HoopTrace 改名为 Hoopito · 球豆；App、网站、当前源码命名及现行文档已在本地更新，但改名尚未完整同步到远端源码、网站预览、正式安装包和宣传素材。用户通过现有下载与部分入口仍会看到旧名称。
+项目已从 HoopTrace 改名为 Hoopito · 球豆；正式 v2.0.1 安装名称为英文 Hoopito、中文球豆。签名 tag 与 APK 来源固定为 `4ecd960e5af1f6b12124a43e330d67efb628281b`；后续网站、截图和文档提交不改变该来源。实际范围见[发行记录](../../release/v2.0.1-release-record.md)。
 
-- [ ] 提交并按授权推送改名源码，确认远端当前文档与实现使用新品牌。
+- [x] 改名源码合入并推送 main，对应 App 五项 CI 全部通过。
 - [ ] 更新网站预览，核对双语页面、分享图、隐私页和下载说明；预览继续禁止搜索收录。
-- [ ] 在后续正式发行中提供使用新名称的安装包；版本／versionCode 递增，继续使用既有签名和安装身份，不覆盖或改标已发布 v2.0.0 文件。
-- [ ] 在正式包上验证覆盖升级既有 v2、已有数据与设置读取、旧备份导入及新旧自动备份共存；记录实际构建来源与环境。
-- [ ] 从新品牌的实际 App 构建重新采集双语截图，更新网站、商店元数据及宣传入口；保留旧截图的历史来源。
-- [ ] 新 APK 发布后集中更新下载配置、版本、APK 链接、SHA-256、发行说明及二维码，确认页面说明与实际安装名称一致。
-- [ ] 核对 GitHub 仓库、Vercel 项目等对外名称与地址；需要改动时同步连接、引用和跳转，不能只替换链接文本。
+- [x] 发布新名称正式 APK，版本 2.0.1+5，沿用既有 v2 签名和安装身份；旧 v2.0.0 文件未覆盖。
+- [x] 正式包 API24 全新安装、API36 同证覆盖升级、真实冷启动、旧 JSON 导入及混合备份保留通过。
+- [x] 正式包八张双语原图用于当前商店、网站和宣传入口；旧原图与历史来源按版本保留。
+- [x] 新 APK 已公开回读，网站版本、文件大小、APK 链接、SHA-256、说明及二维码同步正式资产。
+- [x] GitHub 仓库与 Vercel 项目已更名，既有身份、连接与保护保留，Git remote 与当前链接同步。
+- [ ] 完整 checkout 迁移至 `D:/GitHub/hoopito`，验证 Codex 项目和本机 MCP／Hook 入口。
 
 完成标准：当前对外页面、远端源码、可下载安装包及当前宣传素材均一致使用 Hoopito／球豆，相关链接有效。下文列出的升级兼容标识、历史发行文件与来源记录继续保留原名称，不属于漏改。
 
 本轮 Issue #6 已获授权实施：提交、整合并推送 main，发布 2.0.1+5 正式 APK，更新受保护的网站预览，并更名 GitHub／Vercel 项目及本机入口。网站生产上线、商店发布和项目收尾不在范围内。
 
-当前安排：按实际验证逐项完成同步；未完成的对外动作继续保持待办，不以本地修改代替发布或部署结果。
+未完成项按实际结果更新；网站生产上线保持暂停。
 
 ## 当前名称
 
@@ -33,7 +34,7 @@ GitHub 跟踪：[Issue #6：同步 Hoopito · 球豆品牌更名到源码、部�
 - 当前图标资源：`assets/icons/hoopito-app-icon*.png`。继续使用已审核的 C「独眼球怪」，不改变原图、原生／Flutter 几何或启动动效。
 - 当前诊断和发行工具环境变量：`HOOPITO_*`；启动 Profile 开关为 `HOOPITO_ENTRY_PROFILE`。
 - 当前启动参数：`--hoopito-entry-motion=<mode>`、`--hoopito-entry-animation=disabled`；Dart 同时接受原 `--hooptrace-...` 参数以兼容既有调用。
-- 未来发行 APK：`Hoopito-v<version>-android.apk`。实际版本、签名和产物来源仍须按[发行清单](../../release/release-checklist.md)核验。
+- 当前正式 APK：`Hoopito-v2.0.1-android.apk`；后续遵循 `Hoopito-v<version>-android.apk`。实际版本、签名和产物来源按[发行清单](../../release/release-checklist.md)核验。
 
 ## 升级与数据兼容
 
@@ -44,7 +45,7 @@ GitHub 跟踪：[Issue #6：同步 Hoopito · 球豆品牌更名到源码、部�
 | Android | Application ID 与原生 namespace：`io.github.x1a0y4ngren.hooptrace`；原生包路径、MethodChannel 和 WorkManager 标识沿用既有值。 |
 | iOS | 既有 bundle ID 与原生通道。 |
 | 本地数据 | `hooptrace.sqlite`、私有安全副本目录 `hooptrace-safety-backups`、已有偏好键、数据库 schema 3 和 JSON 格式 2。 |
-| 正式签名 | 继续使用已有正式 keystore 与证书；默认 `.hooptrace/signing/hooptrace-release.jks` 和 alias `hooptrace` 保留。改名不授权生成或替换密钥。 |
+| 正式签名 | v2 使用既有 `.hooptrace/signing/hooptrace-v2-release.jks` 和原 alias，证书 SHA-256 为 `2820ba06e898be1152d38536492282127e9fb0734a0863bb42db63f8a75611dd`。历史 v1 keystore 与 alias 继续保留。改名不生成或替换密钥。 |
 | 仓库与工作区 | 当前仓库为 [`x1a0Y4NGren/hoopito`](https://github.com/x1a0Y4NGren/hoopito)；本机 checkout、已有分支和外部证据路径按实际位置使用。 |
 
 保持应用身份与证书后，后续正式版本才可覆盖升级已发布的 v2。历史 v1 与 v2 使用不同正式签名的安装限制仍然适用，见[安装与备份](../../release/v2.0.0-upgrade.md)。改名不触发数据库迁移，也不改变完整备份、恢复、安全副本、离线或隐私契约。

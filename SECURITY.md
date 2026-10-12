@@ -2,15 +2,22 @@
 
 ## Supported versions / 支持版本
 
-Security fixes are provided for the latest official release of Hoopito (formerly
-HoopTrace; Chinese name: 球豆). The published v2.0.0 APK retains its original
-HoopTrace name. Actual
-release provenance and verification scope are recorded in the release record;
+Security fixes are provided for the latest official release of Hoopito (Chinese
+name: 球豆), currently v2.0.1 / Android 2.0.1+5. Actual release provenance and
+verification scope are recorded in the release record;
 local Debug packages and unsigned artifacts do not establish a production release.
 
-Hoopito · 球豆（原名 HoopTrace）仅为最新正式版本提供安全修复；2.0 的实际发行来源与验收范围见发行记录，
+Hoopito · 球豆仅为最新正式版本提供安全修复，当前为 v2.0.1／Android 2.0.1+5。实际发行来源与验收范围见发行记录，
 本地 Debug 包和未签名复现产物不代表正式发行。发行状态与已知范围见
-[发行记录 / Release record](docs/release/v2.0.0-release-record.md)。
+[发行记录 / Release record](docs/release/v2.0.1-release-record.md)。
+
+The signed v2.0.1 tag and APK retain application source commit
+`4ecd960e5af1f6b12124a43e330d67efb628281b`; later documentation and promotional
+asset commits do not change that provenance. Historical HoopTrace releases keep
+their original names and verification records.
+
+v2.0.1 签名 tag 与 APK 的应用来源固定为上述提交；后续文档与宣传素材提交不改变该来源。
+历史 HoopTrace 发行保留原名与验收记录。
 
 ## Report privately / 私密报告
 

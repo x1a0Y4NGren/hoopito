@@ -21,7 +21,7 @@ const fontTools = createRequire(
 );
 const fontverter = fontTools('fontverter');
 const hb = await fontTools('harfbuzzjs');
-const sourceRecord = 'docs/release/v2.0.0-screenshots.json';
+const sourceRecord = 'docs/release/v2.0.1-screenshots.json';
 const screenshots = JSON.parse(
   await readFile(join(repositoryRoot, sourceRecord), 'utf8'),
 );
@@ -539,7 +539,7 @@ const { captures: _, ...screenshotProvenance } = screenshots;
 const manifest = {
   version: 1,
   generated_by: 'node scripts/prepare-assets.mjs',
-  note: 'Original application assets are never rewritten. Screenshot provenance describes their actual debug capture commit and APK, independently of the published APK linked by this website.',
+  note: 'Original application assets are never rewritten. Current screenshots were captured directly from the published signed v2.0.1 Release APK. Its application source commit is independent of later website and documentation commits.',
   screenshot_record: sourceRecord,
   screenshot_record_sha256: sha256(
     await readFile(join(repositoryRoot, sourceRecord)),

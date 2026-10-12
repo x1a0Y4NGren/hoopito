@@ -1,0 +1,618 @@
+{
+  "source_commit": "4ecd960e5af1f6b12124a43e330d67efb628281b",
+  "build_type": "MAIN Release (officially signed)",
+  "apk_file_name": "Hoopito-v2.0.1-android.apk",
+  "apk_sha256": "c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9",
+  "apk_bytes": 76441047,
+  "certificate_sha256": "2820ba06e898be1152d38536492282127e9fb0734a0863bb42db63f8a75611dd",
+  "application_id": "io.github.x1a0y4ngren.hooptrace",
+  "version_name": "2.0.1",
+  "version_code": 5,
+  "schema": 3,
+  "json_format": 2,
+  "device": "Hoopito_Brand_API36 dedicated x86_64 emulator",
+  "api": 36,
+  "synthetic_android_user": 0,
+  "capture_method": "Unmodified adb exec-out screencap -p from the installed official signed Release APK; byte-identical copies, no crop or mock rendering",
+  "privacy": "All player names, player IDs and match data are synthetic; original system bars retained",
+  "scope": "Eight bilingual release images from three independent synthetic matches. English captures precede the legacy JSON merge; Chinese captures follow it. This record describes screenshot provenance, not physical-device behavior, a foldable hinge or natural 24-hour scheduling.",
+  "external_evidence_root": "D:/DevCache/HoopitoArtifacts/issue-6-20261012/device-api36",
+  "installed_package_proof": "final-installed-package-proof.json",
+  "installed_package_proof_sha256": "c42ec633c2b870b4c745e05bd7d85e71901767d964e038b48aa51a041d7a4f3c",
+  "fixture_record": "final-screenshot-fixtures-db/rows.json",
+  "fixture_record_sha256": "cb9e4119208db7ceb90163a5206e99072215601584e7b043f9684bb82d88df46",
+  "chronological_actions": "commands.ndjson",
+  "captures": [
+    {
+      "path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/1-home.png",
+      "source_capture": "release-zh-light-home",
+      "png_sha256": "daf38debd56e1eea3823ecd0a12836ca93773b335f3514fb5ce07edec5450094",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "zh",
+      "theme": "light",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x2400\r\nOverride size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-12T14:13:40.977500+00:00",
+      "route": "home",
+      "capture_record": "release-zh-light-home.capture.json",
+      "capture_record_sha256": "0c9db2b944104c8c4c10ab0fda81872f71dae240459df7514cc90f931938277a",
+      "ui_xml": "release-zh-light-home.xml",
+      "ui_xml_sha256": "713f6289b1fce3e2899edf7a01d3543d10f188b53b55f6b15c7adb98f1bd1038",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1791813362363281",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791813362,
+            "started_at": 1791813362,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": "89cb8ac5-2af8-41fd-8d59-7a5667e7e7d0"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "8c1980df-b499-471f-a8c9-540038e5d776"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 9,
+            "effective_field_goal_count": 7,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "finished"
+          },
+          {
+            "id": "match-1791809957606242",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791809957,
+            "started_at": 1791809957,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": null
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": null
+              }
+            ],
+            "scores": {
+              "blue": 2,
+              "red": 3
+            },
+            "effective_event_count": 2,
+            "effective_field_goal_count": 2,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "database_match_ids_at_capture": [
+          "match-1791813362363281",
+          "match-1791809957606242"
+        ],
+        "displayed_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "capture_state_note": "Captured after the normal legacy HoopTrace JSON merge. Both finished matches are present; the summary and visible home card focus on the first match, while history displays both.",
+        "evidence_source": "Readonly final-screenshot-fixtures-db/rows.json, each actual UI XML and capture metadata, and chronological commands.ndjson; capture-time lifecycle and import availability override later final database state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/2-scoring.png",
+      "source_capture": "release-zh-light-scoring",
+      "png_sha256": "f5bf3a800564d4e81a3b386b3c7246b50a4b9c4956fa3d82dccce2db05c32ddf",
+      "dimensions_px": [
+        1920,
+        1080
+      ],
+      "locale": "zh",
+      "theme": "light",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x2400\r\nOverride size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-12T14:16:43.262763+00:00",
+      "route": "scoring",
+      "capture_record": "release-zh-light-scoring.capture.json",
+      "capture_record_sha256": "82b5152d3276f1cf01d70451170ce6c0bbad498882b849c5ae6cc279d5b66843",
+      "ui_xml": "release-zh-light-scoring.xml",
+      "ui_xml_sha256": "20c4668f0075ba95443078715d6661f2d23a7db44de20881fc534001367b2982",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1791814514518375",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791814514,
+            "started_at": 1791814514,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": "89cb8ac5-2af8-41fd-8d59-7a5667e7e7d0"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "8c1980df-b499-471f-a8c9-540038e5d776"
+              }
+            ],
+            "scores": {
+              "blue": 7,
+              "red": 8
+            },
+            "effective_event_count": 6,
+            "effective_field_goal_count": 6,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "active"
+          }
+        ],
+        "database_match_ids_at_capture": [
+          "match-1791813362363281",
+          "match-1791809957606242",
+          "match-1791814514518375"
+        ],
+        "displayed_match_ids_at_capture": [
+          "match-1791814514518375"
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": "match-1791814514518375",
+        "capture_state_note": "A new independent Chinese scoring match is active. The two earlier finished matches remain in the database but are not displayed in this scoring capture.",
+        "evidence_source": "Readonly final-screenshot-fixtures-db/rows.json, each actual UI XML and capture metadata, and chronological commands.ndjson; capture-time lifecycle and import availability override later final database state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png",
+      "source_capture": "release-zh-light-summary",
+      "png_sha256": "f67c8fe521ce501530751956aef7bb02b3ec133dc0c60d1057aa6bec48a9f78f",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "zh",
+      "theme": "light",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x2400\r\nOverride size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-12T14:14:21.758229+00:00",
+      "route": "summary",
+      "capture_record": "release-zh-light-summary.capture.json",
+      "capture_record_sha256": "31492f923f5a07e5850c3c449e7c43175f33961a5faf219392e8432a45fccd4b",
+      "ui_xml": "release-zh-light-summary.xml",
+      "ui_xml_sha256": "fdc0ec6b414cda2484ec1961a70814a7da4cd57bbf0c568f60514628d8d8ddc7",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1791813362363281",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791813362,
+            "started_at": 1791813362,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": "89cb8ac5-2af8-41fd-8d59-7a5667e7e7d0"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "8c1980df-b499-471f-a8c9-540038e5d776"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 9,
+            "effective_field_goal_count": 7,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "finished"
+          },
+          {
+            "id": "match-1791809957606242",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791809957,
+            "started_at": 1791809957,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": null
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": null
+              }
+            ],
+            "scores": {
+              "blue": 2,
+              "red": 3
+            },
+            "effective_event_count": 2,
+            "effective_field_goal_count": 2,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "database_match_ids_at_capture": [
+          "match-1791813362363281",
+          "match-1791809957606242"
+        ],
+        "displayed_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "capture_state_note": "Captured after the normal legacy HoopTrace JSON merge. Both finished matches are present; the summary and visible home card focus on the first match, while history displays both.",
+        "evidence_source": "Readonly final-screenshot-fixtures-db/rows.json, each actual UI XML and capture metadata, and chronological commands.ndjson; capture-time lifecycle and import availability override later final database state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/4-history.png",
+      "source_capture": "release-zh-light-history",
+      "png_sha256": "41202eb77a1176321f01142d2416df5147a55cb6d51d5fa38ed7a267ddef64a2",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "zh",
+      "theme": "light",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x2400\r\nOverride size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-12T14:14:16.212998+00:00",
+      "route": "history",
+      "capture_record": "release-zh-light-history.capture.json",
+      "capture_record_sha256": "ac6213796099883980eb6794e3289abd9b5e6daff9e8e648766326c0e6d27413",
+      "ui_xml": "release-zh-light-history.xml",
+      "ui_xml_sha256": "c480f82ac91df549ae1281d9876174af5501146abaaa8eb0f011e3fa823ea5e3",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1791813362363281",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791813362,
+            "started_at": 1791813362,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": "89cb8ac5-2af8-41fd-8d59-7a5667e7e7d0"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "8c1980df-b499-471f-a8c9-540038e5d776"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 9,
+            "effective_field_goal_count": 7,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "finished"
+          },
+          {
+            "id": "match-1791809957606242",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791809957,
+            "started_at": 1791809957,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": null
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": null
+              }
+            ],
+            "scores": {
+              "blue": 2,
+              "red": 3
+            },
+            "effective_event_count": 2,
+            "effective_field_goal_count": 2,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "database_match_ids_at_capture": [
+          "match-1791813362363281",
+          "match-1791809957606242"
+        ],
+        "displayed_match_ids_at_capture": [
+          "match-1791813362363281",
+          "match-1791809957606242"
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "capture_state_note": "Captured after the normal legacy HoopTrace JSON merge. Both finished matches are present; the summary and visible home card focus on the first match, while history displays both.",
+        "evidence_source": "Readonly final-screenshot-fixtures-db/rows.json, each actual UI XML and capture metadata, and chronological commands.ndjson; capture-time lifecycle and import availability override later final database state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/1-home.png",
+      "source_capture": "release-en-dark-home",
+      "png_sha256": "5aa7212f5e3346d62052bb9979246ea9f381674d06fb74c31b65213f99e36436",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "en",
+      "theme": "dark",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x2400\r\nOverride size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-12T14:09:22.407291+00:00",
+      "route": "home",
+      "capture_record": "release-en-dark-home.capture.json",
+      "capture_record_sha256": "66aa7b67c538feb0496232ddc0fae914069bf68b1aa58617359c9179196471d5",
+      "ui_xml": "release-en-dark-home.xml",
+      "ui_xml_sha256": "8f81699aed04f55f50b0cd2a74a67ff2aa67ac28b0a6638612b5f052910c89de",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1791813362363281",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791813362,
+            "started_at": 1791813362,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": "89cb8ac5-2af8-41fd-8d59-7a5667e7e7d0"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "8c1980df-b499-471f-a8c9-540038e5d776"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 9,
+            "effective_field_goal_count": 7,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "database_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "displayed_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "capture_state_note": "Captured before the legacy JSON merge; only the first match was present. The scoring capture is active even though the later final SQLite copy records it as finished.",
+        "evidence_source": "Readonly final-screenshot-fixtures-db/rows.json, each actual UI XML and capture metadata, and chronological commands.ndjson; capture-time lifecycle and import availability override later final database state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/2-scoring.png",
+      "source_capture": "release-en-dark-scoring",
+      "png_sha256": "99c9473f712c166b23e9fa8a04c0c14f765608674cf9eca22a2badf14190262e",
+      "dimensions_px": [
+        1920,
+        1080
+      ],
+      "locale": "en",
+      "theme": "dark",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x2400\r\nOverride size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-12T14:07:43.700215+00:00",
+      "route": "scoring",
+      "capture_record": "release-en-dark-scoring.capture.json",
+      "capture_record_sha256": "b6c2fb0fc744d15bfe8bfd5df6bfef7e4d514426ed592f73194a13a50c9ba5f1",
+      "ui_xml": "release-en-dark-scoring.xml",
+      "ui_xml_sha256": "19d5d0122fc607ce8f60648fd57a5e915c36478c57760a09cea193e9f04fde46",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1791813362363281",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791813362,
+            "started_at": 1791813362,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": "89cb8ac5-2af8-41fd-8d59-7a5667e7e7d0"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "8c1980df-b499-471f-a8c9-540038e5d776"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 9,
+            "effective_field_goal_count": 7,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "active"
+          }
+        ],
+        "database_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "displayed_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": "match-1791813362363281",
+        "capture_state_note": "Captured before the legacy JSON merge; only the first match was present. The scoring capture is active even though the later final SQLite copy records it as finished.",
+        "evidence_source": "Readonly final-screenshot-fixtures-db/rows.json, each actual UI XML and capture metadata, and chronological commands.ndjson; capture-time lifecycle and import availability override later final database state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/3-summary.png",
+      "source_capture": "release-en-dark-summary",
+      "png_sha256": "8dc7e0fad6954e0962fba9a9b52b29f9b5147731f4847ce8d35020dbbb44f281",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "en",
+      "theme": "dark",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x2400\r\nOverride size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-12T14:09:16.829796+00:00",
+      "route": "summary",
+      "capture_record": "release-en-dark-summary.capture.json",
+      "capture_record_sha256": "e34f4f5655807088ded9cb25157b5c85d4e90633d3117f6fba7b49aa5171a428",
+      "ui_xml": "release-en-dark-summary.xml",
+      "ui_xml_sha256": "eca5eef68d5c445fe8c0eceb4234682994fc27858a9ada7970c407de5d9022ae",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1791813362363281",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791813362,
+            "started_at": 1791813362,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": "89cb8ac5-2af8-41fd-8d59-7a5667e7e7d0"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "8c1980df-b499-471f-a8c9-540038e5d776"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 9,
+            "effective_field_goal_count": 7,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "database_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "displayed_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "capture_state_note": "Captured before the legacy JSON merge; only the first match was present. The scoring capture is active even though the later final SQLite copy records it as finished.",
+        "evidence_source": "Readonly final-screenshot-fixtures-db/rows.json, each actual UI XML and capture metadata, and chronological commands.ndjson; capture-time lifecycle and import availability override later final database state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/4-history.png",
+      "source_capture": "release-en-dark-history",
+      "png_sha256": "b9b778fe57f792330560430aefef3da8b5d557f4f66d11f497829688d572b107",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "en",
+      "theme": "dark",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x2400\r\nOverride size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-12T14:09:27.944034+00:00",
+      "route": "history",
+      "capture_record": "release-en-dark-history.capture.json",
+      "capture_record_sha256": "8a5b4b942a94f98c3393b3ecb95cbdd0a91c230fdf4ed13d9b2c9c1f91b7f194",
+      "ui_xml": "release-en-dark-history.xml",
+      "ui_xml_sha256": "3f3f4d8c63e39adc23171e0a309157acdd2f223e5d43f7a96f44304c609a6776",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1791813362363281",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1791813362,
+            "started_at": 1791813362,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Bean",
+                "player_profile_id": "89cb8ac5-2af8-41fd-8d59-7a5667e7e7d0"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "8c1980df-b499-471f-a8c9-540038e5d776"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 9,
+            "effective_field_goal_count": 7,
+            "confirmed_field_goal_location_count": 0,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "database_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "displayed_match_ids_at_capture": [
+          "match-1791813362363281"
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "capture_state_note": "Captured before the legacy JSON merge; only the first match was present. The scoring capture is active even though the later final SQLite copy records it as finished.",
+        "evidence_source": "Readonly final-screenshot-fixtures-db/rows.json, each actual UI XML and capture metadata, and chronological commands.ndjson; capture-time lifecycle and import availability override later final database state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    }
+  ]
+}

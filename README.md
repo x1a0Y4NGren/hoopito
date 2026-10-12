@@ -16,9 +16,9 @@ Hoopito（中文名：球豆）是一款为篮球爱好者准备的离线单挑�
 
 > **永久承诺：Hoopito · 球豆官方项目将始终免费并保持开源。** 官方版本不会加入付费墙、订阅、广告或闭源核心功能。
 
-**[下载 v2.0.0](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.0)** · [查看本次更新](docs/release/v2.0.0-release-notes.md) · [安装与备份](docs/release/v2.0.0-upgrade.md) · [隐私说明](PRIVACY.md) · [参与贡献](CONTRIBUTING.md)
+**[下载 v2.0.1 APK](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk)** · [查看本次更新](docs/release/v2.0.1-release-notes.md) · [安装与备份](docs/release/v2.0.1-release-notes.md#中文) · [隐私说明](PRIVACY.md) · [参与贡献](CONTRIBUTING.md)
 
-当前源码与介绍网站使用新名称 **Hoopito · 球豆**。公开下载仍是以 **HoopTrace** 发布的 v2.0.0，APK 名称、签名、校验和与历史截图保持原样；本次改名不代表已经发布新 APK。名称用法与升级兼容标识见[品牌与兼容性](docs/design/brand/naming-and-compatibility.md)。
+正式版 **Hoopito · 球豆 v2.0.1** 已发布。保留既有 v2 正式证书与安装身份，可直接覆盖升级 v2.0.0，继续读取原有比赛、设置和备份。新版本接受旧 HoopTrace 与新 Hoopito JSON；**旧 App 不能导入以 Hoopito 名称导出的 JSON**。历史发行文件和旧截图保留真实来源，名称与兼容标识见[品牌与兼容性](docs/design/brand/naming-and-compatibility.md)。
 
 介绍与下载网站位于 [`website/`](website/README.md)，提供中英文页面、桌面连续 3D 球场和手机二维投篮演示，独立于 Flutter 构建。预览与实际验收状态见[网站验收记录](website/VERIFICATION.md)。
 
@@ -26,20 +26,20 @@ Hoopito（中文名：球豆）是一款为篮球爱好者准备的离线单挑�
 
 **Hoopito · 球豆** 沿用 2.0 的开赛、现场记录、赛后总结和球员成长流程：比赛／历史／球员三个主入口，目标分 1～999 可直接输入，赛后可关联档案、再来一场或分享战报。C「独眼球怪」标识配合静音 Q 弹启动，替换恢复与安全副本回退都先保护当前数据。
 
-已发布版本为 **`2.0.0+4`**，当前源码保持数据库 schema 3、JSON 格式 2。该发行的实际构建、CI、设备和公开下载核验的提交及文件哈希统一记录在[发行记录](docs/release/v2.0.0-release-record.md)，历史候选证据保留各自来源。自动备份默认关闭；自然 24 小时调度未实测，系统后台任务不保证准点执行。
+已发布版本为 **`2.0.1+5`**，数据库 schema 3、JSON 格式 2 不变。实际构建、CI、专用模拟器和公开下载核验的来源及文件哈希统一记录在[发行记录](docs/release/v2.0.1-release-record.md)，历史候选证据保留各自来源。自动备份默认关闭；自然 24 小时调度未实测，系统后台任务不保证准点执行。
 
 ## 先看比赛，不看说明书
 
 <p align="center">
-  <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/2-scoring.png" width="96%" alt="HoopTrace 2.0 Android 横屏计分页">
+  <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/2-scoring.png" width="96%" alt="球豆 2.0.1 Android 横屏计分页">
 </p>
 
 <p align="center">
-  <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/1-home.png" width="45%" alt="HoopTrace 2.0 比赛首页">
-  <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png" width="45%" alt="HoopTrace 2.0 赛果与比分走势">
+  <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/1-home.png" width="45%" alt="球豆 2.0.1 比赛首页">
+  <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png" width="45%" alt="球豆 2.0.1 赛果与比分走势">
 </p>
 
-<p align="center"><sub>原 HoopTrace 2.0 的实际 Android 画面，使用虚构球员与演示对局；保留改名前的截图来源。截图来自独立对局，拍摄版本与状态见<a href="docs/release/v2.0.0-screenshots.json">截图记录</a>。</sub></p>
+<p align="center"><sub>正式签名 v2.0.1 APK 在专用 API36 模拟器上的实际画面，使用虚构球员与对局，原始像素与系统栏保留。计分与赛果来自独立合成对局，双语八张原图的版本与拍摄状态见<a href="docs/release/v2.0.1-screenshots.json">截图记录</a>。</sub></p>
 
 ## 三步打完一场球
 
@@ -69,8 +69,8 @@ Hoopito（中文名：球豆）是一款为篮球爱好者准备的离线单挑�
 
 ## 当前阵容
 
-- 已发布版本：[HoopTrace `v2.0.0`](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.0)，Android `2.0.0+4`，使用新的正式签名；历史 v1 不能直接覆盖安装。
-- 发行应用源码 `dd1a315`，主分支持续维护 2.0；数据库 schema 3、JSON 格式 2。后续文档与 AOCI 提交不改变发行 APK 来源，构建与验收记录见[发行记录](docs/release/v2.0.0-release-record.md)。
+- 已发布版本：[Hoopito · 球豆 `v2.0.1`](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1)，Android `2.0.1+5`，沿用 v2 正式签名，可直接覆盖升级 v2.0.0；历史 v1 不能直接覆盖安装。
+- 发行应用源码与签名 tag 指向 `4ecd960e5af1f6b12124a43e330d67efb628281b`，主分支持续维护 2.0；数据库 schema 3、JSON 格式 2。后续文档、截图与网站宣传提交独立于 APK 构建提交，不改变发行来源，详见[发行记录](docs/release/v2.0.1-release-record.md)。
 - 当前平台：Android 优先，最低 Android API 24，目标 Android API 36。
 - Android Application ID：`io.github.x1a0y4ngren.hooptrace`，改名后保留以支持覆盖升级和已有本地数据。
 - iOS 无签名编译已纳入 CI，但尚未完成真机验收和正式发布。

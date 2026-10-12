@@ -1,19 +1,33 @@
 {
   "version": 1,
   "generated_by": "node scripts/prepare-assets.mjs",
-  "note": "Original application assets are never rewritten. Screenshot provenance describes their actual debug capture commit and APK, independently of the published APK linked by this website.",
-  "screenshot_record": "docs/release/v2.0.0-screenshots.json",
-  "screenshot_record_sha256": "fb29d06bc65327f771a9340a463423f2bca838ad0b852ca501bb831488d20368",
+  "note": "Original application assets are never rewritten. Current screenshots were captured directly from the published signed v2.0.1 Release APK. Its application source commit is independent of later website and documentation commits.",
+  "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+  "screenshot_record_sha256": "a1f86ce96060abb493f4ec2f057bdd8f6fa035d3608258a9c97eca62f38c0fa8",
   "screenshot_provenance": {
-    "source_commit": "3a0166c3a4a510e76a3093142a8b2d559ba7be93",
-    "build_type": "MAIN Debug",
-    "apk_sha256": "6e08827d8a9f2dc1d30d0d1e54b66e3f4950d720bcad831c63a57d36e62d4cda",
-    "device": "Pixel_API_36 x86_64 emulator",
+    "source_commit": "4ecd960e5af1f6b12124a43e330d67efb628281b",
+    "build_type": "MAIN Release (officially signed)",
+    "apk_file_name": "Hoopito-v2.0.1-android.apk",
+    "apk_sha256": "c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9",
+    "apk_bytes": 76441047,
+    "certificate_sha256": "2820ba06e898be1152d38536492282127e9fb0734a0863bb42db63f8a75611dd",
+    "application_id": "io.github.x1a0y4ngren.hooptrace",
+    "version_name": "2.0.1",
+    "version_code": 5,
+    "schema": 3,
+    "json_format": 2,
+    "device": "Hoopito_Brand_API36 dedicated x86_64 emulator",
     "api": 36,
-    "synthetic_android_user": 10,
-    "capture_method": "Unmodified adb exec-out screencap -p; no crop or mock rendering",
-    "privacy": "All player names and match data are synthetic; system bars retained",
-    "scope": "Eight release images from three independent synthetic matches; this record does not prove production signing, a physical foldable hinge, or natural 24-hour scheduling"
+    "synthetic_android_user": 0,
+    "capture_method": "Unmodified adb exec-out screencap -p from the installed official signed Release APK; byte-identical copies, no crop or mock rendering",
+    "privacy": "All player names, player IDs and match data are synthetic; original system bars retained",
+    "scope": "Eight bilingual release images from three independent synthetic matches. English captures precede the legacy JSON merge; Chinese captures follow it. This record describes screenshot provenance, not physical-device behavior, a foldable hinge or natural 24-hour scheduling.",
+    "external_evidence_root": "D:/DevCache/HoopitoArtifacts/issue-6-20261012/device-api36",
+    "installed_package_proof": "final-installed-package-proof.json",
+    "installed_package_proof_sha256": "c42ec633c2b870b4c745e05bd7d85e71901767d964e038b48aa51a041d7a4f3c",
+    "fixture_record": "final-screenshot-fixtures-db/rows.json",
+    "fixture_record_sha256": "cb9e4119208db7ceb90163a5206e99072215601584e7b043f9684bb82d88df46",
+    "chronological_actions": "commands.ndjson"
   },
   "assets": [
     {
@@ -274,13 +288,13 @@
     },
     {
       "output": "public/art/scene-poster-compact.webp",
-      "bytes": 21830,
-      "sha256": "1c2f75df9a5706d873e228432247240f81789e95af0171e8b7eb31bc272c1417",
+      "bytes": 21792,
+      "sha256": "a6f1752f7f40bb45638931a3ab08f3ede91b8d9106f3fa794a283c4da147d0b5",
       "source": "website/assets/art/source/scene-poster-compact.webp",
-      "source_sha256": "b0d54afcd7b812bd5f856af08145ffa9b374464c493891e1521faeeba2ea3946",
+      "source_sha256": "8d49af5a3950054288fcba91e8d67dbec1438f8840ad940dfaed0370c0288b10",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "f5683c06763f32325f7be9c3554de31396af6b3cc785bd23738b2182d87e9575",
-      "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "f8a63bd1052a4ab77ccb0966020a93f762831f2c2cce8967f378ddfe5f2c715e",
+      "captured_with": "154.0.8037.98; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
@@ -352,13 +366,13 @@
     },
     {
       "output": "public/art/scene-poster-standard.webp",
-      "bytes": 33532,
-      "sha256": "6a051fc521794a54698f879199e6d45a7d7778df7883be4bbc847516ccf15932",
+      "bytes": 33250,
+      "sha256": "28a09ebb026224e10ea64005a6a6d3854b94b615cf7f1dccf827f5206d6e9301",
       "source": "website/assets/art/source/scene-poster-standard.webp",
-      "source_sha256": "2b8a169467994ec49c00f2f82c727ed351292f60b1c6b0229a88c420b1ce48e1",
+      "source_sha256": "e73bb43af91a973adfc7851fc6ed2df44a806b0c157d28c72b423a82debc82a4",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "f5683c06763f32325f7be9c3554de31396af6b3cc785bd23738b2182d87e9575",
-      "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "f8a63bd1052a4ab77ccb0966020a93f762831f2c2cce8967f378ddfe5f2c715e",
+      "captured_with": "154.0.8037.98; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
@@ -430,13 +444,13 @@
     },
     {
       "output": "public/art/scene-poster-wide.webp",
-      "bytes": 51376,
-      "sha256": "4734cbf300f47a5d696b4b8df97e9356bd0532415226ecad0500e253f6d4fb94",
+      "bytes": 51024,
+      "sha256": "c3b57dc669efedf59befd8cac49b740a2c4006c1df5e2087a7422ed8c5b66b32",
       "source": "website/assets/art/source/scene-poster-wide.webp",
-      "source_sha256": "a5386b1e67c1f7acb0fccc585460bb8808448cf91b01dd87f287599a7dd997e7",
+      "source_sha256": "759dc5d48627417466311a195782edbb7f98636d3096d171e968c05c957a7fad",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "f5683c06763f32325f7be9c3554de31396af6b3cc785bd23738b2182d87e9575",
-      "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "f8a63bd1052a4ab77ccb0966020a93f762831f2c2cce8967f378ddfe5f2c715e",
+      "captured_with": "154.0.8037.98; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
@@ -508,10 +522,10 @@
     },
     {
       "output": "public/screenshots/zh/home.webp",
-      "bytes": 30606,
-      "sha256": "889889d4c29eb135cf82245e12f65f8310154f0632391f4764451ad92fd00e21",
+      "bytes": 27370,
+      "sha256": "7fcefaa30c2ef15eb4e554814d82d341356f04ce7bbb9eadf02be5c96627ec81",
       "source": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/1-home.png",
-      "source_sha256": "397bffe8b292966fce22c109ac1c6b31bb99b97cc2c7a7c5bf4500ee3ca6cb89",
+      "source_sha256": "daf38debd56e1eea3823ecd0a12836ca93773b335f3514fb5ce07edec5450094",
       "transformation": "Lossless WebP encoding; original dimensions and all system bars retained; no cropping or repainting",
       "dimensions_px": [
         1080,
@@ -519,37 +533,37 @@
       ],
       "locale": "zh",
       "theme": "light",
-      "screenshot_record": "docs/release/v2.0.0-screenshots.json",
-      "source_capture": "final-api36-zh-light-home",
-      "captured_at_utc": "2026-10-02T07:21:45.330690+00:00",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-zh-light-home",
+      "captured_at_utc": "2026-10-12T14:13:40.977500+00:00",
       "synthetic_only": true,
       "license": "MIT (repository artwork)"
     },
     {
       "output": "public/screenshots/zh/scoring.webp",
-      "bytes": 27818,
-      "sha256": "d5f5fa088fb85da9ba8082669d496fabf388400f4acacccbbc1b41ad29e5f240",
+      "bytes": 28674,
+      "sha256": "93576be5d28d94953d852505f7041cd5a39e4c03d000251f44d6608039c3199c",
       "source": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/2-scoring.png",
-      "source_sha256": "342733461c87afbc73482505ed119843ec68a2c0107f2b638ddf1d5fd429973c",
+      "source_sha256": "f5bf3a800564d4e81a3b386b3c7246b50a4b9c4956fa3d82dccce2db05c32ddf",
       "transformation": "Lossless WebP encoding; original dimensions and all system bars retained; no cropping or repainting",
       "dimensions_px": [
         1920,
         1080
       ],
       "locale": "zh",
-      "theme": "dark",
-      "screenshot_record": "docs/release/v2.0.0-screenshots.json",
-      "source_capture": "final-api36-zh-dark-scoring",
-      "captured_at_utc": "2026-10-02T07:32:44.667918+00:00",
+      "theme": "light",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-zh-light-scoring",
+      "captured_at_utc": "2026-10-12T14:16:43.262763+00:00",
       "synthetic_only": true,
       "license": "MIT (repository artwork)"
     },
     {
       "output": "public/screenshots/zh/summary.webp",
-      "bytes": 24732,
-      "sha256": "8b945a5b185309153085f9bd344cf47362f8025485f0d3a5f2ea3968e7f13c8c",
+      "bytes": 23656,
+      "sha256": "bc0b7e14dc5ad7f3c950cbab93d6e3e74beca436a251d91d094853db08102d15",
       "source": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png",
-      "source_sha256": "7297f899ff4ba644b5811f4c9533f265fc6580361848ceec66e2307cd1fd6032",
+      "source_sha256": "f67c8fe521ce501530751956aef7bb02b3ec133dc0c60d1057aa6bec48a9f78f",
       "transformation": "Lossless WebP encoding; original dimensions and all system bars retained; no cropping or repainting",
       "dimensions_px": [
         1080,
@@ -557,18 +571,18 @@
       ],
       "locale": "zh",
       "theme": "light",
-      "screenshot_record": "docs/release/v2.0.0-screenshots.json",
-      "source_capture": "final-api36-zh-light-summary",
-      "captured_at_utc": "2026-10-02T07:21:21.830068+00:00",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-zh-light-summary",
+      "captured_at_utc": "2026-10-12T14:14:21.758229+00:00",
       "synthetic_only": true,
       "license": "MIT (repository artwork)"
     },
     {
       "output": "public/screenshots/zh/history.webp",
-      "bytes": 40410,
-      "sha256": "bd5bc8f8e77117e5981a50019fc97de2e181194fb5d3c7770952ac4d249d9291",
+      "bytes": 39242,
+      "sha256": "f0d539351bdb2a4df8024cf00aeb4e578badbced5cba10df22f9c49316b7c038",
       "source": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/4-history.png",
-      "source_sha256": "17b7483a7a4d1739056c23f9bf429588aa7379cac0fec3d0ee0f12a42c4b3823",
+      "source_sha256": "41202eb77a1176321f01142d2416df5147a55cb6d51d5fa38ed7a267ddef64a2",
       "transformation": "Lossless WebP encoding; original dimensions and all system bars retained; no cropping or repainting",
       "dimensions_px": [
         1080,
@@ -576,18 +590,18 @@
       ],
       "locale": "zh",
       "theme": "light",
-      "screenshot_record": "docs/release/v2.0.0-screenshots.json",
-      "source_capture": "final-api36-zh-light-history",
-      "captured_at_utc": "2026-10-02T07:21:25.775557+00:00",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-zh-light-history",
+      "captured_at_utc": "2026-10-12T14:14:16.212998+00:00",
       "synthetic_only": true,
       "license": "MIT (repository artwork)"
     },
     {
       "output": "public/screenshots/en/home.webp",
-      "bytes": 37482,
-      "sha256": "8aba1b76a2702f2ef7b74b58c000def1bae6cd85b70375d08fc2aacc3dc3ffb0",
+      "bytes": 28990,
+      "sha256": "84b4bc19f2d22b5f9bebe0631070e7942fb8755e5815a322689a885ecbd02464",
       "source": "fastlane/metadata/android/en-US/images/phoneScreenshots/1-home.png",
-      "source_sha256": "82f5b2ae9e5083e04b7570b926da513f3979b47e71508be6cee154e89558ea35",
+      "source_sha256": "5aa7212f5e3346d62052bb9979246ea9f381674d06fb74c31b65213f99e36436",
       "transformation": "Lossless WebP encoding; original dimensions and all system bars retained; no cropping or repainting",
       "dimensions_px": [
         1080,
@@ -595,18 +609,18 @@
       ],
       "locale": "en",
       "theme": "dark",
-      "screenshot_record": "docs/release/v2.0.0-screenshots.json",
-      "source_capture": "final-api36-en-dark-home",
-      "captured_at_utc": "2026-10-02T07:24:53.149621+00:00",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-en-dark-home",
+      "captured_at_utc": "2026-10-12T14:09:22.407291+00:00",
       "synthetic_only": true,
       "license": "MIT (repository artwork)"
     },
     {
       "output": "public/screenshots/en/scoring.webp",
-      "bytes": 27294,
-      "sha256": "8aa2a3581b59a731ecba4d8bf3f22c468c193361ee23c585f342fee21a0206d9",
+      "bytes": 33472,
+      "sha256": "92369a117a6aa85ddc92f283d1d89dbccfff8ca2976087debb8172a54c7997ce",
       "source": "fastlane/metadata/android/en-US/images/phoneScreenshots/2-scoring.png",
-      "source_sha256": "10dd539ce29119bbfff905469965f3c7cf0499a30dbe55a26735278e73b4d733",
+      "source_sha256": "99c9473f712c166b23e9fa8a04c0c14f765608674cf9eca22a2badf14190262e",
       "transformation": "Lossless WebP encoding; original dimensions and all system bars retained; no cropping or repainting",
       "dimensions_px": [
         1920,
@@ -614,18 +628,18 @@
       ],
       "locale": "en",
       "theme": "dark",
-      "screenshot_record": "docs/release/v2.0.0-screenshots.json",
-      "source_capture": "final-api36-en-dark-scoring",
-      "captured_at_utc": "2026-10-02T07:24:56.750229+00:00",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-en-dark-scoring",
+      "captured_at_utc": "2026-10-12T14:07:43.700215+00:00",
       "synthetic_only": true,
       "license": "MIT (repository artwork)"
     },
     {
       "output": "public/screenshots/en/summary.webp",
-      "bytes": 28422,
-      "sha256": "c249d83d960a4196956716b209c39d78530ff503db11322fd60aa9ffc93d5a50",
+      "bytes": 24772,
+      "sha256": "1d8ac9485dc447feacfa3db4ace634068b73df1d2448fb9745df071f08568b51",
       "source": "fastlane/metadata/android/en-US/images/phoneScreenshots/3-summary.png",
-      "source_sha256": "f4b3871c0734ec64c424535b655b763cfc80f2b459fbaf0e483ccb3d4e4653fd",
+      "source_sha256": "8dc7e0fad6954e0962fba9a9b52b29f9b5147731f4847ce8d35020dbbb44f281",
       "transformation": "Lossless WebP encoding; original dimensions and all system bars retained; no cropping or repainting",
       "dimensions_px": [
         1080,
@@ -633,18 +647,18 @@
       ],
       "locale": "en",
       "theme": "dark",
-      "screenshot_record": "docs/release/v2.0.0-screenshots.json",
-      "source_capture": "final-api36-en-dark-summary",
-      "captured_at_utc": "2026-10-02T07:26:45.354775+00:00",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-en-dark-summary",
+      "captured_at_utc": "2026-10-12T14:09:16.829796+00:00",
       "synthetic_only": true,
       "license": "MIT (repository artwork)"
     },
     {
       "output": "public/screenshots/en/history.webp",
-      "bytes": 33414,
-      "sha256": "f42dcc7d2e71cc403a0231f3a3b26f0573b6e3935f3c594b931375d195ee0ec2",
+      "bytes": 44408,
+      "sha256": "bb8d673309da582f7904ba7553bbbe1718d1beb5a2063bee52cecd0d12702548",
       "source": "fastlane/metadata/android/en-US/images/phoneScreenshots/4-history.png",
-      "source_sha256": "9bee80b729054f3fc591d699fa5194418b876fbdb1aa95d3d00f2846ad895aa7",
+      "source_sha256": "b9b778fe57f792330560430aefef3da8b5d557f4f66d11f497829688d572b107",
       "transformation": "Lossless WebP encoding; original dimensions and all system bars retained; no cropping or repainting",
       "dimensions_px": [
         1080,
@@ -652,9 +666,9 @@
       ],
       "locale": "en",
       "theme": "dark",
-      "screenshot_record": "docs/release/v2.0.0-screenshots.json",
-      "source_capture": "final-api36-en-dark-history",
-      "captured_at_utc": "2026-10-02T07:27:48.394016+00:00",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-en-dark-history",
+      "captured_at_utc": "2026-10-12T14:09:27.944034+00:00",
       "synthetic_only": true,
       "license": "MIT (repository artwork)"
     },
@@ -721,8 +735,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 114924,
-      "sha256": "d490ab7c6902b4d2054e50049befe319d03660f443a3f3a792409c2d7fbdb1a6",
+      "bytes": 114880,
+      "sha256": "1d797b4a2489b454ef9da212378808a672cc5b146df14dd3555c7a651e79c4c8",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -867,7 +881,6 @@
         20146,
         20165,
         20171,
-        20173,
         20174,
         20195,
         20197,
@@ -1101,7 +1114,6 @@
         28857,
         29255,
         29256,
-        29260,
         29366,
         29420,
         29575,
@@ -1156,6 +1168,7 @@
         32487,
         32493,
         32500,
+        32512,
         32593,
         32622,
         32773,
@@ -1269,7 +1282,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "3fff457a915420c39360aee35dabf0191ed4f8d808ccee0b55dc6d8c7c795730"
+          "sha256": "edb73946bee6b9a5d2f02669f0a63a91fee199b2d340308aa18d43d4d33c451d"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -1277,7 +1290,7 @@
         },
         {
           "path": "src/data/release.ts",
-          "sha256": "8ed8a9ce62fbb49e865b807d495b0508a6a8bf963f9a502f50446fec669a7a2d"
+          "sha256": "283cca1484cd25f0465d7a7f438739e9d6e0702739cfa6fb2a6bef144de618b6"
         },
         {
           "path": "src/pages/en/index.astro",
@@ -1329,7 +1342,7 @@
         },
         {
           "path": "src/scripts/main.ts",
-          "sha256": "86ce8497b39affef1e8a91a8f8c9144877fb7537be4cc54d0fd57161667e6a3d"
+          "sha256": "65f8d7335104d46d3c351b58379fad1332ce02c8d27ea004cb4ce11045b8e678"
         },
         {
           "path": "src/scripts/scene-contract.ts",
@@ -1354,29 +1367,29 @@
     },
     {
       "output": "public/fonts/OFL-Barlow.txt",
-      "bytes": 4469,
-      "sha256": "e1d28aeb8efb0f18e2c27e73592a86cf890df3c27c1351bd3dbdb434322f854f",
+      "bytes": 4376,
+      "sha256": "10b0e6bb43166a50fbe7cde2895bd7f703738a5da843acb5c97c95dc9ea26817",
       "source": "assets/fonts/OFL.txt",
-      "source_sha256": "e1d28aeb8efb0f18e2c27e73592a86cf890df3c27c1351bd3dbdb434322f854f",
+      "source_sha256": "10b0e6bb43166a50fbe7cde2895bd7f703738a5da843acb5c97c95dc9ea26817",
       "transformation": "Verbatim license copy",
       "license": "SIL-OFL-1.1"
     },
     {
       "output": "public/fonts/OFL-NotoSansSC.txt",
-      "bytes": 4393,
-      "sha256": "88f117575237307bdd86a17ef15e21790fc9a662fe4dfb103ca1ca077f0d9982",
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
       "source": "assets/fonts/OFL-NotoSansSC.txt",
-      "source_sha256": "88f117575237307bdd86a17ef15e21790fc9a662fe4dfb103ca1ca077f0d9982",
+      "source_sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
       "transformation": "Verbatim license copy",
       "license": "SIL-OFL-1.1"
     },
     {
       "output": "public/brand/release-qr.svg",
-      "bytes": 2031,
-      "sha256": "69c93512f7d464f337fec0afc043f66d32e7e415f8b2f0d90fbd3727f92f8991",
+      "bytes": 1965,
+      "sha256": "24e7d323e3739ff96410513f38c2cd0d0b74cac6f974906d281b77f4007c65de",
       "source": "src/data/release.ts",
-      "source_sha256": "8ed8a9ce62fbb49e865b807d495b0508a6a8bf963f9a502f50446fec669a7a2d",
-      "payload": "https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.0",
+      "source_sha256": "283cca1484cd25f0465d7a7f438739e9d6e0702739cfa6fb2a6bef144de618b6",
+      "payload": "https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1",
       "transformation": "QR code generated with qrcode; four-module quiet zone preserved",
       "license": "MIT (repository-generated graphic)"
     },
@@ -1385,7 +1398,7 @@
       "bytes": 112963,
       "sha256": "b74a382dbdedb119fab75e8b0d2f2c07153cbfe1ec1646e35f0add5921572cfa",
       "source": "scripts/prepare-assets.mjs",
-      "source_sha256": "f0a437899e016a8c417de2388578b5c5e4fde7c84178c085e6f8c8f24ae40639",
+      "source_sha256": "f89755de848f9e2ed6e734a4196d579010a8a50984b59a06fbdadebb900b374e",
       "source_dependencies": [
         {
           "source": "assets/icons/hoopito-app-icon-foreground.png",
@@ -1401,7 +1414,7 @@
         },
         {
           "source": "website/public/fonts/noto-sc.woff2",
-          "sha256": "d490ab7c6902b4d2054e50049befe319d03660f443a3f3a792409c2d7fbdb1a6"
+          "sha256": "1d797b4a2489b454ef9da212378808a672cc5b146df14dd3555c7a651e79c4c8"
         },
         {
           "source": "assets/fonts/BarlowCondensed-Medium.ttf",

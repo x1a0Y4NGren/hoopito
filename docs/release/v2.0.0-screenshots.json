@@ -8,9 +8,11 @@
   "capture_method": "Unmodified adb exec-out screencap -p; no crop or mock rendering",
   "privacy": "All player names and match data are synthetic; system bars retained",
   "scope": "Eight release images from three independent synthetic matches; this record does not prove production signing, a physical foldable hinge, or natural 24-hour scheduling",
+  "archive_note": "During the Hoopito rename, these original v2.0.0 PNGs were copied byte for byte to versioned archive paths. original_path preserves each former Fastlane location. This is a path migration, not a recapture; source commit, build type, APK hash, pixels and capture metadata are unchanged.",
   "captures": [
     {
-      "path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/1-home.png",
+      "path": "docs/release/screenshots/v2.0.0/zh-CN/1-home.png",
+      "original_path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/1-home.png",
       "source_capture": "final-api36-zh-light-home",
       "png_sha256": "397bffe8b292966fce22c109ac1c6b31bb99b97cc2c7a7c5bf4500ee3ca6cb89",
       "dimensions_px": [
@@ -60,7 +62,8 @@
       "review": "Root inspected the original-resolution actual PNG; accepted"
     },
     {
-      "path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/2-scoring.png",
+      "path": "docs/release/screenshots/v2.0.0/zh-CN/2-scoring.png",
+      "original_path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/2-scoring.png",
       "source_capture": "final-api36-zh-dark-scoring",
       "png_sha256": "342733461c87afbc73482505ed119843ec68a2c0107f2b638ddf1d5fd429973c",
       "dimensions_px": [
@@ -110,7 +113,8 @@
       "review": "Root inspected the original-resolution actual PNG; accepted"
     },
     {
-      "path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png",
+      "path": "docs/release/screenshots/v2.0.0/zh-CN/3-summary.png",
+      "original_path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png",
       "source_capture": "final-api36-zh-light-summary",
       "png_sha256": "7297f899ff4ba644b5811f4c9533f265fc6580361848ceec66e2307cd1fd6032",
       "dimensions_px": [
@@ -160,7 +164,8 @@
       "review": "Root inspected the original-resolution actual PNG; accepted"
     },
     {
-      "path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/4-history.png",
+      "path": "docs/release/screenshots/v2.0.0/zh-CN/4-history.png",
+      "original_path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/4-history.png",
       "source_capture": "final-api36-zh-light-history",
       "png_sha256": "17b7483a7a4d1739056c23f9bf429588aa7379cac0fec3d0ee0f12a42c4b3823",
       "dimensions_px": [
@@ -210,7 +215,8 @@
       "review": "Root inspected the original-resolution actual PNG; accepted"
     },
     {
-      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/1-home.png",
+      "path": "docs/release/screenshots/v2.0.0/en-US/1-home.png",
+      "original_path": "fastlane/metadata/android/en-US/images/phoneScreenshots/1-home.png",
       "source_capture": "final-api36-en-dark-home",
       "png_sha256": "82f5b2ae9e5083e04b7570b926da513f3979b47e71508be6cee154e89558ea35",
       "dimensions_px": [
@@ -285,7 +291,8 @@
       "review": "Root inspected the original-resolution actual PNG; accepted"
     },
     {
-      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/2-scoring.png",
+      "path": "docs/release/screenshots/v2.0.0/en-US/2-scoring.png",
+      "original_path": "fastlane/metadata/android/en-US/images/phoneScreenshots/2-scoring.png",
       "source_capture": "final-api36-en-dark-scoring",
       "png_sha256": "10dd539ce29119bbfff905469965f3c7cf0499a30dbe55a26735278e73b4d733",
       "dimensions_px": [
@@ -335,7 +342,8 @@
       "review": "Root inspected the original-resolution actual PNG; accepted"
     },
     {
-      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/3-summary.png",
+      "path": "docs/release/screenshots/v2.0.0/en-US/3-summary.png",
+      "original_path": "fastlane/metadata/android/en-US/images/phoneScreenshots/3-summary.png",
       "source_capture": "final-api36-en-dark-summary",
       "png_sha256": "f4b3871c0734ec64c424535b655b763cfc80f2b459fbaf0e483ccb3d4e4653fd",
       "dimensions_px": [
@@ -385,7 +393,8 @@
       "review": "Root inspected the original-resolution actual PNG; accepted"
     },
     {
-      "path": "fastlane/metadata/android/en-US/images/phoneScreenshots/4-history.png",
+      "path": "docs/release/screenshots/v2.0.0/en-US/4-history.png",
+      "original_path": "fastlane/metadata/android/en-US/images/phoneScreenshots/4-history.png",
       "source_capture": "final-api36-en-dark-history",
       "png_sha256": "9bee80b729054f3fc591d699fa5194418b876fbdb1aa95d3d00f2846ad895aa7",
       "dimensions_px": [

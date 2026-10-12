@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "captured_at": "2026-10-12T11:14:43.699Z",
+  "captured_at": "2026-10-12T14:41:21.553Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "browser": "154.0.8037.98",
   "source_inputs": [
@@ -65,13 +65,13 @@
     {
       "id": "compact",
       "source": "source/scene-poster-compact.webp",
-      "source_sha256": "b0d54afcd7b812bd5f856af08145ffa9b374464c493891e1521faeeba2ea3946",
+      "source_sha256": "8d49af5a3950054288fcba91e8d67dbec1438f8840ad940dfaed0370c0288b10",
       "pose": {
         "chapter": "hero",
         "progress": 0,
         "active": true
       },
-      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 492,
       "height": 678,
@@ -81,13 +81,13 @@
     {
       "id": "standard",
       "source": "source/scene-poster-standard.webp",
-      "source_sha256": "2b8a169467994ec49c00f2f82c727ed351292f60b1c6b0229a88c420b1ce48e1",
+      "source_sha256": "e73bb43af91a973adfc7851fc6ed2df44a806b0c157d28c72b423a82debc82a4",
       "pose": {
         "chapter": "hero",
         "progress": 0,
         "active": true
       },
-      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 691,
       "height": 810,
@@ -97,13 +97,13 @@
     {
       "id": "wide",
       "source": "source/scene-poster-wide.webp",
-      "source_sha256": "a5386b1e67c1f7acb0fccc585460bb8808448cf91b01dd87f287599a7dd997e7",
+      "source_sha256": "759dc5d48627417466311a195782edbb7f98636d3096d171e968c05c957a7fad",
       "pose": {
         "chapter": "hero",
         "progress": 0,
         "active": true
       },
-      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 922,
       "height": 990,

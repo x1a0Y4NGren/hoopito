@@ -1,6 +1,10 @@
 /android/gradlew text eol=lf
 /android/gradlew.bat text eol=crlf
 /tool/release/*.sh text eol=lf
+/website/** text=auto eol=lf
+/website/public/** -text
+/docs/release/*-screenshots.json text eol=lf
+/assets/fonts/OFL*.txt text eol=lf
 /THIRD_PARTY_NOTICES.md whitespace=-trailing-space,-space-before-tab
 /third_party/sqlite/sqlite3.c text eol=lf whitespace=-trailing-space
 /third_party/sqlite/sqlite3.h text eol=lf whitespace=-trailing-space
