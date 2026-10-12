@@ -293,7 +293,7 @@
       "source": "website/assets/art/source/scene-poster-compact.webp",
       "source_sha256": "8d49af5a3950054288fcba91e8d67dbec1438f8840ad940dfaed0370c0288b10",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "f8a63bd1052a4ab77ccb0966020a93f762831f2c2cce8967f378ddfe5f2c715e",
+      "capture_record_sha256": "e4ea2f35c5d5e71571d666c16d2927ecf1488dd0c6f0653755476e3b6e6174d3",
       "captured_with": "154.0.8037.98; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -350,7 +350,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "621c4511cb43178016e051605ab85b10e08fca40bfa41c719f6496019083c1ca"
+          "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
         }
       ],
       "pose": {
@@ -371,7 +371,7 @@
       "source": "website/assets/art/source/scene-poster-standard.webp",
       "source_sha256": "e73bb43af91a973adfc7851fc6ed2df44a806b0c157d28c72b423a82debc82a4",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "f8a63bd1052a4ab77ccb0966020a93f762831f2c2cce8967f378ddfe5f2c715e",
+      "capture_record_sha256": "e4ea2f35c5d5e71571d666c16d2927ecf1488dd0c6f0653755476e3b6e6174d3",
       "captured_with": "154.0.8037.98; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -428,7 +428,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "621c4511cb43178016e051605ab85b10e08fca40bfa41c719f6496019083c1ca"
+          "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
         }
       ],
       "pose": {
@@ -449,7 +449,7 @@
       "source": "website/assets/art/source/scene-poster-wide.webp",
       "source_sha256": "759dc5d48627417466311a195782edbb7f98636d3096d171e968c05c957a7fad",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "f8a63bd1052a4ab77ccb0966020a93f762831f2c2cce8967f378ddfe5f2c715e",
+      "capture_record_sha256": "e4ea2f35c5d5e71571d666c16d2927ecf1488dd0c6f0653755476e3b6e6174d3",
       "captured_with": "154.0.8037.98; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -506,7 +506,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "621c4511cb43178016e051605ab85b10e08fca40bfa41c719f6496019083c1ca"
+          "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
         }
       ],
       "pose": {

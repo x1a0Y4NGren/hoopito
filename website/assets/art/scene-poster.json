@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "captured_at": "2026-10-12T14:41:21.553Z",
+  "captured_at": "2026-10-12T14:49:47.376Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "browser": "154.0.8037.98",
   "source_inputs": [
@@ -58,7 +58,7 @@
     },
     {
       "path": "package-lock.json",
-      "sha256": "621c4511cb43178016e051605ab85b10e08fca40bfa41c719f6496019083c1ca"
+      "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
     }
   ],
   "captures": [
