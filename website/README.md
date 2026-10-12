@@ -143,14 +143,14 @@ Vercel 项目 Root Directory 设置为 `website`，Node.js 为 24.x，安装命�
 `dist/`、`.vercel/`、浏览器报告和本地环境变量文件不提交。
 
 Vercel 预览工作已恢复，项目为 `hooptrace-website`，所属空间为
-`xyr175-9459s-projects`。当前预览地址：
-[HoopTrace Preview](https://hooptrace-website-cmw2vt051-xyr175-9459s-projects.vercel.app/)。
+`xyr175-9459s-projects`。网站分支的预览地址：
+[HoopTrace Preview](https://hooptrace-website-git-codex-hooptr-9f2c9c-xyr175-9459s-projects.vercel.app/)。
 项目保留 Vercel Authentication；账号登录后可访问，也可通过 Deployment 页面
 的 Share 功能创建有期限的分享链接。分享凭据不写入源码或验证报告。
-当前预览从源码提交 `35332483724d7efc3d6c03c3bf1056f3d2d1d586` 提取
-59 个网站构建文件上传，并记录 Git 提交信息；`output/vercel/` 中的来源清单
-保存提交、完整文件 SHA-256 和部署文件集合。此前工作区预览的来源记录继续
-保留，不能用后续提交替代。对应源码已提交并推送至 GitHub 的
+分支地址随该分支成功部署更新；每次部署的不可变地址与实际 Git 提交可在
+Vercel Deployment 详情和构建日志中核对。`output/vercel/` 保存已验收部署的
+来源清单、构建日志与浏览器证据。此前工作区上传、已提交文件上传和 Git
+自动预览的来源记录分别保留，不能用后续提交替代。对应源码已提交并推送至 GitHub 的
 [`codex/hooptrace-website`](https://github.com/x1a0Y4NGren/hooptrace/tree/codex/hooptrace-website)
 分支，尚未合入 `main` 或发布正式域名。
 
