@@ -13,44 +13,144 @@ const { label } = Astro.props;
   aria-label={label}
 >
   <defs>
-    <radialGradient id="court-warm">
-      <stop stop-color="#302015" />
-      <stop offset="1" stop-color="#141516" />
+    <linearGradient id="court-surface" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#342a22" />
+      <stop offset=".42" stop-color="#211c19" />
+      <stop offset="1" stop-color="#121516" />
+    </linearGradient>
+    <radialGradient id="court-spotlight" cx="50%" cy="0%" r="90%">
+      <stop stop-color="#e6a36e" stop-opacity=".22" />
+      <stop offset=".58" stop-color="#e6a36e" stop-opacity=".025" />
+      <stop offset="1" stop-color="#e6a36e" stop-opacity="0" />
     </radialGradient>
     <pattern
-      id="court-grain"
-      width="36"
-      height="36"
+      id="court-planks"
+      width="52"
+      height="126"
       patternUnits="userSpaceOnUse"
     >
-      <path d="M0 18h36M18 0v36" stroke="#ffffff" stroke-opacity=".025" />
+      <path d="M0 0V126M26 0V126" stroke="#ccb394" stroke-opacity=".04" />
+      <path d="M0 34H26M26 93H52" stroke="#ccb394" stroke-opacity=".035" />
     </pattern>
+    <radialGradient id="demo-ball-color" cx="28%" cy="20%">
+      <stop stop-color="#fdb274" />
+      <stop offset=".5" stop-color="#dc6d30" />
+      <stop offset="1" stop-color="#763213" />
+    </radialGradient>
+    <linearGradient id="court-edge" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#e5a170" stop-opacity=".55" />
+      <stop offset=".48" stop-color="#e5a170" stop-opacity=".06" />
+      <stop offset="1" stop-color="#e5a170" stop-opacity=".28" />
+    </linearGradient>
   </defs>
-  <rect x="28" y="28" width="544" height="504" fill="url(#court-warm)" />
-  <rect x="28" y="28" width="544" height="504" fill="url(#court-grain)" />
-  <g stroke="#F4F3EF" stroke-opacity=".58" fill="none" stroke-width="2">
-    <path d="M28 28h544v504H28zM206 28v210h188V28M28 532h544" />
-    <path d="M206 238a94 94 0 0 0 188 0M206 238a94 94 0 0 1 188 0" />
-    <path d="M57 28v105a243 243 0 0 0 486 0V28M234 532a66 66 0 0 1 132 0" />
-    <path d="M258 65h84" stroke-width="4" />
-    <circle cx="300" cy="82" r="16" stroke="#FF5A1F" stroke-width="4" />
+  <rect
+    x="15"
+    y="15"
+    width="570"
+    height="530"
+    rx="6"
+    fill="#0b0e0f"
+    stroke="url(#court-edge)"
+  />
+  <rect x="28" y="28" width="544" height="504" fill="url(#court-surface)" />
+  <rect x="28" y="28" width="544" height="504" fill="url(#court-planks)" />
+  <rect x="28" y="28" width="544" height="504" fill="url(#court-spotlight)" />
+  <path d="M206 28V238H394V28Z" fill="#ead5b8" fill-opacity=".025" />
+  <g
+    stroke="#e8e1d6"
+    stroke-opacity=".64"
+    fill="none"
+    stroke-width="2.2"
+    stroke-linejoin="round"
+  >
+    <path d="M28 28H572V532H28ZM206 28V238H394V28" />
+    <path d="M206 238A94 94 0 0 0 394 238" />
+    <path
+      d="M206 238A94 94 0 0 1 394 238"
+      stroke-dasharray="8 9"
+      stroke-opacity=".28"
+    />
+    <path d="M57 28V133A243 243 0 0 0 543 133V28M234 532A66 66 0 0 1 366 532" />
+    <path d="M258 64H342" stroke-width="5" stroke="#c7cdd0" />
+    <path d="M300 65V75" stroke="#c7cdd0" />
+  </g>
+  <g
+    data-demo-net
+    transform="translate(300 82)"
+    fill="none"
+    stroke="#eee4d6"
+    stroke-opacity=".6"
+    stroke-width="1.3"
+  >
+    <path d="M-16 3L-10 33H10L16 3M-12 4L6 33M-6 4L10 25M0 4L11 16M6 4L-10 25M12 4L-6 33M0 4L-11 16M-14 13H14M-12 23H12" />
+  </g>
+  <ellipse
+    cx="300"
+    cy="82"
+    rx="16"
+    ry="7"
+    fill="none"
+    stroke="#ee945e"
+    stroke-width="3.8"
+  />
+  <g
+    opacity=".12"
+    fill="#e3d7c9"
+    font-family="Barlow, sans-serif"
+    font-size="22"
+    text-anchor="middle"
+    letter-spacing="6"
+  >
+    <text x="303" y="425">
+      HOOPTRACE
+    </text>
   </g>
   <g data-demo-selection {...{ hidden: '' }}>
-    <circle r="20" fill="#FF5A1F" fill-opacity=".1" stroke="#FF5A1F" />
-    <path d="M-7 0h14M0-7v14" stroke="#FF5A1F" />
+    <circle
+      class="aim-halo"
+      r="31"
+      fill="#e7a272"
+      fill-opacity=".055"
+      stroke="#e7a272"
+      stroke-opacity=".22"
+    />
+    <circle
+      r="20"
+      fill="#e7a272"
+      fill-opacity=".12"
+      stroke="#e7a272"
+      stroke-width="1.4"
+    />
+    <circle r="4" fill="#e7a272" />
+    <path
+      d="M-30 0H-24M24 0H30M0-30V-24M0 24V30"
+      stroke="#e7a272"
+      stroke-width="1.4"
+    />
   </g>
   <g data-demo-marker {...{ hidden: '' }}>
-    <circle r="24" fill="#64A6FF" fill-opacity=".12" />
-    <circle r="8" fill="#64A6FF" />
-    <circle r="14" fill="none" stroke="#64A6FF" />
-  </g>
-  <g data-demo-ball {...{ hidden: '' }}>
-    <circle r="11" fill="#FF5A1F" />
-    <path
-      d="M-11 0h22M0-11v22M-7-9q14 9 0 18"
-      fill="none"
-      stroke="#101112"
+    <circle
+      r="29"
+      fill="#79acdf"
+      fill-opacity=".06"
+      stroke="#79acdf"
+      stroke-opacity=".2"
+    />
+    <circle
+      r="18"
+      fill="#79acdf"
+      fill-opacity=".13"
+      stroke="#79acdf"
       stroke-width="1.5"
     />
+    <circle r="7" fill="#79acdf" />
+    <path d="M-3 0L-1 3L4-3" fill="none" stroke="#0c1720" stroke-width="1.6" />
+  </g>
+  <g data-demo-ball {...{ hidden: '' }}>
+    <circle r="12" fill="url(#demo-ball-color)" />
+    <g fill="none" stroke="#442417" stroke-width="1.35">
+      <path d="M-12 0H12M0-12V12M-8-9Q8 0-8 9M8-9Q-8 0 8 9" />
+      <circle r="11.5" />
+    </g>
   </g>
 </svg>

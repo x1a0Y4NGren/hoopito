@@ -73,6 +73,8 @@ export const courtFragment = /* glsl */ `
     float leadingEdge = 1.0 - smoothstep(uReveal - 0.05, uReveal + 0.05, 1.0 - vUv.y);
     float trace = 1.0 - smoothstep(0.0, 0.028, abs(1.0 - vUv.y - uReveal));
     gl_FragColor = vec4(color * (1.0 + trace * 1.8), coverage * leadingEdge);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
   }
 `;
 
@@ -95,5 +97,7 @@ export const trailFragment = /* glsl */ `
     float circumference = 0.5 + 0.5 * sin(vUv.y * 6.2831853);
     vec3 amber = mix(vec3(1.0, 0.16, 0.025), vec3(1.0, 0.72, 0.27), tail);
     gl_FragColor = vec4(amber * 2.7, tail * head * circumference * uOpacity);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
   }
 `;

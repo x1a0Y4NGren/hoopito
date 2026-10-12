@@ -11,11 +11,34 @@ const { locale } = Astro.props;
 const c = content[locale];
 const screen = (name: string) => `/screenshots/${locale}/${name}.webp`;
 const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
+const sampleLabel =
+  locale === 'zh' ? '示例走势 · 宣传图形' : 'SAMPLE FLOW · ILLUSTRATION';
 ---
 
 <Layout locale={locale}>
   <div class="scene-background" aria-hidden="true">
     <div class="arena-light"></div>
+    <picture class="scene-poster">
+      <source
+        media="(min-width: 1600px) and (pointer: fine)"
+        srcset="/art/scene-poster-wide.webp"
+      />
+      <source
+        media="(min-width: 1200px) and (pointer: fine)"
+        srcset="/art/scene-poster-standard.webp"
+      />
+      <source
+        media="(min-width: 1024px) and (pointer: fine)"
+        srcset="/art/scene-poster-compact.webp"
+      />
+      <img
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E"
+        alt=""
+        width="691"
+        height="810"
+        fetchpriority="high"
+      />
+    </picture>
     <canvas id="court-canvas"></canvas>
     <div class="scene-shade"></div>
   </div>
@@ -51,102 +74,177 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
   </header>
   <main id="main">
     <section id="hero" class="hero chapter">
-      <div class="hero-topline">
-        <span>
-          <i></i> {c.hero.eyebrow}
-        </span>
-        <span class="display">01 : 01 / OFFLINE BASKETBALL</span>
-      </div>
-      <div class="hero-copy">
-        <p class="eyebrow">KEEP THE GAME. KEEP THE TRACE.</p>
-        <h1>
-          {c.hero.lines.map((line, i) => (
-            <span>
-              {line}
-              {locale === 'en' && i === 0 ? ' ' : ''}
-            </span>
-          ))}
-        </h1>
-        <p class="hero-lead">{c.hero.lead}</p>
-        <div class="hero-actions">
-          <a class="button button-orange" data-download href={release.apkUrl}>
-            {c.hero.download}
-            <Icon name="download" />
-          </a>
-          <a class="text-link" href="#scoring">
-            {c.hero.explore}
-            <Icon name="arrow" />
-          </a>
+      <div class="hero-stage" data-story-stage="hero">
+        <div class="hero-art" aria-hidden="true">
+          <picture class="hero-arena">
+            <source
+              media="(min-width: 1024px)"
+              type="image/avif"
+              srcset="/art/arena-wide-960.avif 960w, /art/arena-wide-1600.avif 1600w"
+              sizes="100vw"
+            />
+            <source
+              type="image/avif"
+              srcset="/art/arena-tall-480.avif 480w, /art/arena-tall-768.avif 768w"
+              sizes="100vw"
+            />
+            <source
+              media="(min-width: 1024px)"
+              type="image/webp"
+              srcset="/art/arena-wide-960.webp 960w, /art/arena-wide-1600.webp 1600w"
+              sizes="100vw"
+            />
+            <img
+              src="/art/arena-tall-480.webp"
+              srcset="/art/arena-tall-480.webp 480w, /art/arena-tall-768.webp 768w"
+              sizes="100vw"
+              alt=""
+              width="768"
+              height="1152"
+              fetchpriority="high"
+            />
+          </picture>
+          <picture class="hero-ball">
+            <source
+              media="(min-width: 1024px)"
+              srcset="/art/basketball-900.webp"
+            />
+            <img
+              src="/art/basketball-480.webp"
+              srcset="/art/basketball-480.webp 480w, /art/basketball-768.webp 768w"
+              sizes="(min-width: 1024px) 52vw, 320px"
+              alt=""
+              width="900"
+              height="900"
+              fetchpriority="high"
+            />
+          </picture>
+          <div class="hero-art-shade"></div>
         </div>
-        <ul class="hero-tags">
-          {c.hero.tags.map((tag) => (
-            <li>{tag}</li>
-          ))}
-        </ul>
-      </div>
-      <span class="court-coordinate display" aria-hidden="true">
-        15.00 × 14.00
-        <br />
-        THE COURT IS YOURS.
-      </span>
-      <div class="hero-floor">
-        <a href="#scoring">
-          <span class="scroll-line"></span>
-          {c.hero.scroll}
-        </a>
-        <span>{c.hero.note}</span>
-        <span class="display">V{release.version}</span>
-      </div>
-    </section>
-    <section id="scoring" class="scoring chapter content-width">
-      <div class="section-top">
-        <span class="chapter-number display">{c.scoring.number}</span>
-        <span class="eyebrow">{c.scoring.eyebrow}</span>
-        <span class="section-rule"></span>
-        <span class="display section-code">COURTSIDE / LIVE</span>
-      </div>
-      <div class="section-intro">
-        <h2 data-reveal>
-          {c.scoring.title.map((line) => (
-            <span>{line}</span>
-          ))}
-        </h2>
-        <p data-reveal>{c.scoring.body}</p>
-      </div>
-      <figure class="scoring-display" data-reveal>
-        <div class="screen-label display">
-          <span>LIVE MATCH</span>
+        <div class="hero-topline">
           <span>
-            BLUE <i></i> VS <i></i> RED
+            <i></i>
+            {c.hero.eyebrow}
+          </span>
+          <span class="display">01 : 01 / AFTER HOURS</span>
+        </div>
+        <div class="hero-copy stage-heading">
+          <p class="eyebrow hero-kicker" data-hero-line>
+            KEEP THE GAME. KEEP THE TRACE.
+          </p>
+          <h1>
+            {c.hero.lines.map((line, i) => (
+              <span data-hero-line class:list={[i === 1 && 'hero-accent']}>
+                {line}
+                {locale === 'en' && i === 0 ? ' ' : ''}
+              </span>
+            ))}
+          </h1>
+          <p class="hero-lead" data-hero-line>
+            {c.hero.lead}
+          </p>
+          <div class="hero-actions">
+            <a class="button button-orange" data-download href={release.apkUrl}>
+              {c.hero.download}
+              <Icon name="download" />
+            </a>
+            <a class="text-link" href="#scoring">
+              {c.hero.explore}
+              <Icon name="arrow" />
+            </a>
+          </div>
+          <ul class="hero-tags">
+            {c.hero.tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="hero-scene-caption" aria-hidden="true">
+          <span class="caption-line"></span>
+          <span class="display">
+            THE MOMENT.
+            <br />
+            THE GAME.
+            <br />
+            THE TRACE.
           </span>
         </div>
-        <div class="landscape-device">
-          <span class="device-camera"></span>
-          <img
-            src={screen('scoring')}
-            alt={c.scoring.alt}
-            width="1920"
-            height="1080"
-            loading="lazy"
-            decoding="async"
-          />
+        <div class="hero-floor">
+          <a href="#scoring">
+            <span class="scroll-line"></span>
+            {c.hero.scroll}
+          </a>
+          <span>{c.hero.note}</span>
+          <span class="display">V{release.version}</span>
         </div>
-        <figcaption>
-          {c.scoring.caption}
-          <span class="display">REAL APP / REAL RECORDS</span>
-        </figcaption>
-      </figure>
+      </div>
+    </section>
+
+    <section id="scoring" class="scoring chapter content-width">
+      <div class="scoring-stage" data-story-stage="scoring">
+        <div class="section-top">
+          <span class="chapter-number display">{c.scoring.number}</span>
+          <span class="eyebrow">{c.scoring.eyebrow}</span>
+          <span class="section-rule"></span>
+          <span class="display section-code">COURTSIDE / LIVE</span>
+        </div>
+        <div class="section-intro stage-heading">
+          <h2>
+            {c.scoring.title.map((line) => (
+              <span>{line}</span>
+            ))}
+          </h2>
+          <p>{c.scoring.body}</p>
+        </div>
+        <figure class="scoring-display stage-visual">
+          <div class="device-aura" aria-hidden="true"></div>
+          <div class="screen-label display">
+            <span>
+              <i class="live-dot"></i>LIVE MATCH
+            </span>
+            <span>
+              BLUE <i></i> VS <i></i> RED
+            </span>
+          </div>
+          <div class="landscape-device" data-story-device>
+            <span class="device-camera"></span>
+            <img
+              src={screen('scoring')}
+              alt={c.scoring.alt}
+              width="1920"
+              height="1080"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="device-glass" aria-hidden="true"></span>
+          </div>
+          <div class="score-callouts" aria-hidden="true">
+            {c.scoring.features.map(([title], i) => (
+              <div data-score-callout>
+                <span class="callout-point"></span>
+                <span class="display">0{i + 1}</span>
+                <span>{title}</span>
+              </div>
+            ))}
+          </div>
+          <figcaption>
+            {c.scoring.caption}
+            <span class="display">REAL APP / REAL RECORDS</span>
+          </figcaption>
+        </figure>
+      </div>
       <div class="feature-strip">
         {c.scoring.features.map(([title, body], i) => (
-          <div data-reveal>
+          <article data-story-detail>
             <span class="display feature-index">0{i + 1}</span>
             <strong>{title}</strong>
             <p>{body}</p>
-          </div>
+          </article>
         ))}
       </div>
       <p class="section-foot">{c.scoring.foot}</p>
     </section>
+
     <section id="experience" class="experience chapter content-width" data-demo>
       <div class="section-top">
         <span class="chapter-number display">{c.demo.number}</span>
@@ -156,7 +254,7 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
       </div>
       <div class="demo-layout">
         <div class="demo-controls">
-          <h2 data-reveal>
+          <h2>
             {c.demo.title.map((line) => (
               <span>{line}</span>
             ))}
@@ -167,14 +265,20 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
             {c.demo.label}
           </p>
           <div class="demo-score">
-            <div>
+            <div class="score-team blue-team">
               <span class="blue-label">{c.demo.blue}</span>
               <strong data-blue-score class="display">
                 6
               </strong>
             </div>
-            <span class="score-separator display">:</span>
-            <div>
+            <div class="score-center">
+              <span class="display">
+                1 <i>v</i> 1
+              </span>
+              <span class="score-separator display">:</span>
+              <span class="display">HALF COURT</span>
+            </div>
+            <div class="score-team red-team">
               <span class="red-label">{c.demo.red}</span>
               <strong data-red-score class="display">
                 6
@@ -218,6 +322,10 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
           </noscript>
         </div>
         <div class="demo-map">
+          <div class="map-topline display">
+            <span>THE SHOT LAB</span>
+            <span>01 / 01</span>
+          </div>
           <CourtDiagram label={c.demo.courtLabel} />
           <div class="map-label display">
             <span>HALF COURT / 1v1</span>
@@ -225,68 +333,127 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
           </div>
         </div>
       </div>
+      <div class="trace-bridge" aria-hidden="true">
+        <span class="display">ONE SHOT</span>
+        <span></span>
+        <span class="display">A TRACE THAT STAYS</span>
+      </div>
     </section>
+
     <section id="replay" class="replay chapter content-width">
-      <div class="section-top">
-        <span class="chapter-number display">{c.replay.number}</span>
-        <span class="eyebrow">{c.replay.eyebrow}</span>
-        <span class="section-rule"></span>
-        <span class="display section-code">AFTER THE GAME</span>
-      </div>
-      <div class="section-intro">
-        <h2 data-reveal>
-          {c.replay.title.map((line) => (
-            <span>{line}</span>
-          ))}
-        </h2>
-        <p data-reveal>{c.replay.body}</p>
-      </div>
-      <div class="replay-layout">
-        <div class="replay-visual">
-          <span class="replay-word display" aria-hidden="true">
-            AFTER
-            <br />
-            THE GAME.
-          </span>
-          <figure class="portrait-device summary-device" data-reveal>
-            <img
-              src={screen('summary')}
-              alt={c.replay.summaryAlt}
-              width="1080"
-              height="1920"
-              loading="lazy"
-              decoding="async"
-            />
-            <figcaption>{c.replay.summary}</figcaption>
-          </figure>
-          <figure class="portrait-device history-device" data-reveal>
-            <img
-              src={screen('history')}
-              alt={c.replay.historyAlt}
-              width="1080"
-              height="1920"
-              loading="lazy"
-              decoding="async"
-            />
-            <figcaption>{c.replay.history}</figcaption>
-          </figure>
+      <div class="replay-stage" data-story-stage="replay">
+        <div class="section-top">
+          <span class="chapter-number display">{c.replay.number}</span>
+          <span class="eyebrow">{c.replay.eyebrow}</span>
+          <span class="section-rule"></span>
+          <span class="display section-code">AFTER THE BUZZER</span>
         </div>
-        <div class="replay-details">
-          {c.replay.details.map(([title, body], i) => (
-            <div data-reveal>
-              <span class="display">0{i + 1}</span>
-              <div>
-                <h3>{title}</h3>
-                <p>{body}</p>
+        <div class="replay-layout">
+          <div class="replay-copy stage-heading">
+            <h2>
+              {c.replay.title.map((line) => (
+                <span>{line}</span>
+              ))}
+            </h2>
+            <p class="section-body">{c.replay.body}</p>
+            <figure class="replay-graph" data-replay-graph>
+              <figcaption>
+                <span class="display">THE GAME, UNFOLDED.</span>
+                <span>{sampleLabel}</span>
+              </figcaption>
+              <svg
+                viewBox="0 0 420 152"
+                role="img"
+                aria-label={
+                  locale === 'zh'
+                    ? '示例走势：蓝方从六分增加到八分，红方保持六分'
+                    : 'Illustrative flow: Blue goes from six to eight points, Red stays at six'
+                }
+              >
+                <defs>
+                  <linearGradient id="replay-fill" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#79acdf" stop-opacity=".24" />
+                    <stop offset="1" stop-color="#79acdf" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path class="graph-grid" d="M20 28H397M20 69H397M20 110H397" />
+                <path d="M20 69H316V28H397V136H20Z" fill="url(#replay-fill)" />
+                <path class="graph-red" d="M20 69H397" />
+                <path
+                  class="graph-blue"
+                  data-example-path
+                  d="M20 69H316V28H397"
+                />
+                <circle cx="397" cy="28" r="5" fill="#79acdf" />
+                <circle cx="397" cy="69" r="4" fill="#dd8176" />
+                <text x="16" y="149">
+                  6 : 6
+                </text>
+                <text x="360" y="149">
+                  8 : 6
+                </text>
+              </svg>
+            </figure>
+          </div>
+          <div class="replay-visual stage-visual">
+            <div class="replay-orbit" aria-hidden="true"></div>
+            <figure
+              class="portrait-device summary-device"
+              data-replay-device="summary"
+            >
+              <div class="portrait-shell">
+                <img
+                  src={screen('summary')}
+                  alt={c.replay.summaryAlt}
+                  width="1080"
+                  height="1920"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="device-glass" aria-hidden="true"></span>
               </div>
-              <Icon name="arrow" />
-            </div>
-          ))}
-          <p class="fine-print">{c.replay.foot}</p>
+              <figcaption>
+                <span class="display">01 / REVIEW</span>
+                {c.replay.summary}
+              </figcaption>
+            </figure>
+            <figure
+              class="portrait-device history-device"
+              data-replay-device="history"
+            >
+              <div class="portrait-shell">
+                <img
+                  src={screen('history')}
+                  alt={c.replay.historyAlt}
+                  width="1080"
+                  height="1920"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="device-glass" aria-hidden="true"></span>
+              </div>
+              <figcaption>
+                <span class="display">02 / HISTORY</span>
+                {c.replay.history}
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </div>
+      <div class="replay-details">
+        {c.replay.details.map(([title, body], i) => (
+          <article data-story-detail>
+            <span class="display">0{i + 1}</span>
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </article>
+        ))}
+      </div>
+      <p class="fine-print replay-foot">{c.replay.foot}</p>
     </section>
+
     <section id="download" class="download chapter">
+      <div class="download-halo" aria-hidden="true"></div>
       <div class="content-width">
         <div class="section-top">
           <span class="chapter-number display">{c.download.number}</span>
@@ -295,25 +462,40 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
           <span class="display section-code">READY WHEN YOU ARE</span>
         </div>
         <div class="download-layout">
-          <div>
-            <img
-              class="download-mark"
-              src="/brand/mark.webp"
-              alt=""
-              width="90"
-              height="90"
-              loading="lazy"
-            />
-            <h2 data-reveal>{c.download.title[0]}</h2>
+          <div class="download-invitation">
+            <div class="download-brand">
+              <img
+                class="download-mark"
+                src="/brand/mark.webp"
+                alt=""
+                width="90"
+                height="90"
+                loading="lazy"
+              />
+              <span class="display">
+                A COURT.
+                <br />A RIVAL.
+                <br />
+                YOUR RECORD.
+              </span>
+            </div>
+            <h2>{c.download.title[0]}</h2>
             <p class="download-lead">{c.download.body}</p>
+            <div class="download-signature" aria-hidden="true">
+              <span class="display">KEEP THE GAME.</span>
+              <span class="display">KEEP THE TRACE.</span>
+            </div>
           </div>
           <div class="download-package">
-            <div class="version-line">
-              <span class="display">
-                HOOPTRACE{' '}
-                <b>{release.version.split('.').slice(0, 2).join('.')}</b>
-              </span>
+            <div class="package-heading">
+              <span class="eyebrow">ANDROID RELEASE</span>
               <span class="release-tag">v{release.version}</span>
+            </div>
+            <div class="version-line">
+              <span class="display">HOOPTRACE</span>
+              <b class="display">
+                {release.version.split('.').slice(0, 2).join('.')}
+              </b>
             </div>
             <p class="package-meta">
               {c.download.system.replace('{version}', release.minimumAndroid)}
@@ -332,10 +514,37 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
               <Icon name="arrow" />
             </a>
             <p class="install-note">{c.download.install}</p>
-            <details class="checksum">
-              <summary>{c.download.verify}</summary>
-              <code>{release.sha256}</code>
-            </details>
+            <div class="package-bottom">
+              <div>
+                <details class="checksum">
+                  <summary>
+                    {c.download.verify}
+                    <Icon name="plus" />
+                  </summary>
+                  <code>{release.sha256}</code>
+                </details>
+                <div class="download-extras">
+                  <a href={release.repositoryUrl}>
+                    <Icon name="github" />
+                    {c.download.source}
+                  </a>
+                  <a href={release.issuesUrl}>
+                    {c.download.feedback}
+                    <Icon name="arrow" />
+                  </a>
+                </div>
+              </div>
+              <div class="qr-block">
+                <img
+                  src="/brand/release-qr.svg"
+                  alt={c.download.qr}
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                />
+                <span>{c.download.qr}</span>
+              </div>
+            </div>
             <details class="upgrade">
               <summary>
                 {c.download.upgrade}
@@ -343,30 +552,13 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
               </summary>
               <p>{c.download.upgradeBody}</p>
             </details>
-            <div class="download-extras">
-              <a href={release.repositoryUrl}>
-                <Icon name="github" />
-                {c.download.source}
-              </a>
-              <a href={release.issuesUrl}>
-                {c.download.feedback}
-                <Icon name="arrow" />
-              </a>
-            </div>
-            <div class="qr-block">
-              <img
-                src="/brand/release-qr.svg"
-                alt={c.download.qr}
-                width="96"
-                height="96"
-                loading="lazy"
-              />
-              <span>{c.download.qr}</span>
-            </div>
           </div>
         </div>
         <div class="faq">
-          <h3>{c.faqTitle}</h3>
+          <div>
+            <span class="eyebrow">BEFORE TIP-OFF</span>
+            <h3>{c.faqTitle}</h3>
+          </div>
           <div>
             {c.faq.map(([question, answer], i) => (
               <details>
@@ -385,7 +577,9 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
   </main>
   <footer class="site-footer content-width">
     <div class="footer-heading">
-      <span class="display">HOOPTRACE.</span>
+      <span class="display">
+        HOOPTRACE<span>.</span>
+      </span>
       <p>{c.footer.line}</p>
       <a href="#hero" aria-label={c.footer.back}>
         <Icon name="arrow" />
@@ -395,7 +589,8 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
       <p>
         <span>{c.footer.credit}</span>
         <a href={release.authorUrl}>
-          x1a0Y4NGren <Icon name="arrow" />
+          x1a0Y4NGren
+          <Icon name="arrow" />
         </a>
       </p>
       <div>

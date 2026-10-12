@@ -2,7 +2,7 @@ name: Website CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, codex/hooptrace-website]
     paths: ['website/**', '.github/workflows/website-ci.yml']
   pull_request:
     branches: [main]

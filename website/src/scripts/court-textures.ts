@@ -22,7 +22,9 @@ export async function loadCourtTextures(signal: AbortSignal, own: Owner) {
       const texture = own(new THREE.Texture(bitmap));
       texture.flipY = false;
       texture.colorSpace =
-        name === 'glass' ? THREE.NoColorSpace : THREE.SRGBColorSpace;
+        name === 'glass' || name === 'leatherDetail'
+          ? THREE.NoColorSpace
+          : THREE.SRGBColorSpace;
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
       texture.needsUpdate = true;
       return [name, texture] as const;

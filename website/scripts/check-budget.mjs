@@ -2,6 +2,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { resolve, relative, extname, sep } from 'node:path';
 import { gzipSync, brotliCompressSync, constants } from 'node:zlib';
 import { courtTextures } from '../src/data/court-materials.ts';
+import { selectImageResource } from './responsive-images.mjs';
 
 // Measure the generated HTML and its resource graph, rather than guessing from source sizes.
 const dist = resolve(process.argv[2] || 'dist');
@@ -70,11 +71,30 @@ async function graph(start, set = new Set()) {
   return set;
 }
 
-async function initialResources(page) {
+async function initialResources(page, viewport) {
   const file = resolve(dist, page);
   const html = (await bytes(file)).toString('utf8');
   const resources = [file];
-  for (const match of html.matchAll(/<(?:script|link|img|source)\b[^>]*>/g)) {
+  const standaloneHtml = html.replace(
+    /<picture\b[^>]*>([\s\S]*?)<\/picture>/g,
+    (_, picture) => {
+      const imageTag = picture.match(/<img\b[^>]*>/)?.[0];
+      if (!imageTag) throw new Error('Picture has no fallback image');
+      const image = attributes(imageTag);
+      if (image.loading !== 'lazy') {
+        const sources = [...picture.matchAll(/<source\b[^>]*>/g)].map((match) =>
+          attributes(match[0]),
+        );
+        resources.push(
+          localPath(selectImageResource(image, sources, viewport), page),
+        );
+      }
+      return '';
+    },
+  );
+  for (const match of standaloneHtml.matchAll(
+    /<(?:script|link|img|source)\b[^>]*>/g,
+  )) {
     const tag = match[0];
     const attr = attributes(tag);
     if (tag.startsWith('<script') && attr.src)
@@ -86,7 +106,7 @@ async function initialResources(page) {
       resources.push(localPath(attr.href, page));
     }
     if (tag.startsWith('<img') && attr.loading !== 'lazy' && attr.src)
-      resources.push(localPath(attr.src, page));
+      resources.push(localPath(selectImageResource(attr, [], viewport), page));
     // Inline CSS background assets are requested independently of HTML images.
   }
   for (const match of html.matchAll(
@@ -132,9 +152,26 @@ async function measure(files) {
 }
 
 try {
-  const zh = await initialResources('index.html');
-  const en = await initialResources('en/index.html');
-  const baseline = new Set([...zh, ...en]);
+  const mobileReports = [];
+  const baseline = new Set();
+  for (const page of ['index.html', 'en/index.html']) {
+    for (const width of [390, 768])
+      for (const dpr of [1, 2])
+        for (const avif of [true, false]) {
+          const resources = await initialResources(page, {
+            width,
+            dpr,
+            avif,
+            pointer: 'coarse',
+          });
+          resources.forEach((file) => baseline.add(file));
+          mobileReports.push({
+            label: `Mobile initial ${page === 'index.html' ? 'zh-CN' : 'en'} ${width}px ${dpr}x ${avif ? 'AVIF' : 'WebP'}`,
+            budget: budgets.mobile,
+            ...(await measure(resources)),
+          });
+        }
+  }
   const courtRoots = (await list(dist)).filter((file) =>
     /court-(?:scene|engine)[^/\\]*\.js$/.test(file),
   );
@@ -147,22 +184,31 @@ try {
   for (const url of Object.values(courtTextures)) desktop.add(localPath(url));
   for (const file of baseline) desktop.delete(file);
   const reports = [
-    {
-      label: 'Mobile initial zh-CN',
-      budget: budgets.mobile,
-      ...(await measure(zh)),
-    },
-    {
-      label: 'Mobile initial en',
-      budget: budgets.mobile,
-      ...(await measure(en)),
-    },
+    ...mobileReports,
     {
       label: 'Desktop 3D additional',
       budget: budgets.desktop,
       ...(await measure(desktop)),
     },
   ];
+  for (const width of [1440, 1920])
+    for (const avif of [true, false]) {
+      const extra = new Set(desktop);
+      const initial = await initialResources('index.html', {
+        width,
+        dpr: 1,
+        avif,
+        pointer: 'fine',
+      });
+      initial.forEach((file) => {
+        if (!baseline.has(file)) extra.add(file);
+      });
+      reports.push({
+        label: `Desktop scene + initial art ${width}px ${avif ? 'AVIF' : 'WebP'}`,
+        budget: budgets.desktop,
+        ...(await measure(extra)),
+      });
+    }
   let failed = false;
   for (const report of reports) {
     const ok = report.gzip <= report.budget;

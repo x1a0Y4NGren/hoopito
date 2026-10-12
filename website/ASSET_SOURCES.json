@@ -17,36 +17,36 @@
   },
   "assets": [
     {
-      "output": "public/textures/maple-albedo.webp",
-      "bytes": 125366,
-      "sha256": "30c348cbbb737185574bda2aa5d5021c4b71df8972301c69792c2c0408f7ad98",
-      "source": "website/assets/materials/source/maple-floor.png",
-      "source_sha256": "18eea0259025e23903f2b34459311dbfac1b8af035a04646652225bbd4ce4c0d",
+      "output": "public/textures/maple-albedo-v2.webp",
+      "bytes": 34802,
+      "sha256": "6cc0b455d19e6aca5ff893bea0124a99b3923b52e870f7f309f85ed8b83ab0ba",
+      "source": "website/assets/materials/source/maple-floor-v2.png",
+      "source_sha256": "942ac328eb3b464ce460155b407d65c641325c0ffd451a67efddddcc08997b16",
       "generation_record": "website/assets/materials/generation.json",
-      "generation_record_sha256": "56985afe2fb22b8b496ec31440061506ff787dc841b16c5cd83ef5babea233be",
-      "generated_with": "image_gen.imagegen",
-      "generation_mode": "built-in",
-      "dimensions_px": [
-        1254,
-        1254
-      ],
-      "transformation": "Proportional resize up to 2048px; WebP quality 88; no baked scene lighting or court markings added"
-    },
-    {
-      "output": "public/textures/graphite-metal.webp",
-      "bytes": 210262,
-      "sha256": "81cad42c752ce38265731c89ac1ef8b62cddb79a57f07a6c818471e5d7fc7a79",
-      "source": "website/assets/materials/source/graphite-metal.png",
-      "source_sha256": "5729c160eb122d2acfeb69fe6afcbbdc71df8c72fc592140771defd4d1172f70",
-      "generation_record": "website/assets/materials/generation.json",
-      "generation_record_sha256": "56985afe2fb22b8b496ec31440061506ff787dc841b16c5cd83ef5babea233be",
+      "generation_record_sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296",
       "generated_with": "image_gen.imagegen",
       "generation_mode": "built-in",
       "dimensions_px": [
         1024,
         1024
       ],
-      "transformation": "Proportional resize up to 1024px; WebP quality 80; no baked scene lighting or court markings added"
+      "transformation": "Proportional resize up to 1024px; WebP quality 72; no scene lighting or court markings added"
+    },
+    {
+      "output": "public/textures/graphite-metal-v2.webp",
+      "bytes": 43126,
+      "sha256": "334f8e281a983af69e0b371f844e90b9ec09ccb7b04377b45a5bb114d5074fa8",
+      "source": "website/assets/materials/source/graphite-metal-v2.png",
+      "source_sha256": "69a59fc6dba5b1a11331c473714c9c835a5742a98ed6ec4a8de9e64ebf5d0045",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        768,
+        768
+      ],
+      "transformation": "Proportional resize up to 768px; WebP quality 65; no scene lighting or court markings added"
     },
     {
       "output": "public/textures/glass-detail.webp",
@@ -55,14 +55,456 @@
       "source": "website/assets/materials/source/glass-detail.png",
       "source_sha256": "71ea4f8ffdf7392d1ba07770a292d6e3d7a829db0b5b89a300fc897a6a010b21",
       "generation_record": "website/assets/materials/generation.json",
-      "generation_record_sha256": "56985afe2fb22b8b496ec31440061506ff787dc841b16c5cd83ef5babea233be",
+      "generation_record_sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296",
       "generated_with": "image_gen.imagegen",
       "generation_mode": "built-in",
       "dimensions_px": [
         512,
         512
       ],
-      "transformation": "Proportional resize up to 512px; WebP quality 75; no baked scene lighting or court markings added"
+      "transformation": "Proportional resize up to 512px; WebP quality 75; no scene lighting or court markings added"
+    },
+    {
+      "output": "public/textures/basketball-leather.webp",
+      "bytes": 163980,
+      "sha256": "04a30cc6e31bfc4c316ca5c362e658f25c338e8b2a21a70e6a47c2ceddbea121",
+      "source": "website/assets/materials/source/basketball-leather-v2.png",
+      "source_sha256": "892d68d6e9f8ea59a0d078fc26b6bb9b3a54c51f812c31dff33437567a8b7473",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "transformation": "Proportional resize up to 1024px; WebP quality 72; no scene lighting or court markings added"
+    },
+    {
+      "output": "public/textures/basketball-microdetail.webp",
+      "bytes": 50498,
+      "sha256": "cb268ffcddf728067628907e6fbd15238747cba5a7a713615e6986f6eaaf2ff5",
+      "source": "website/assets/materials/source/basketball-leather-v2.png",
+      "source_sha256": "892d68d6e9f8ea59a0d078fc26b6bb9b3a54c51f812c31dff33437567a8b7473",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        512,
+        512
+      ],
+      "transformation": "Proportional resize up to 512px; grayscale microdetail; WebP quality 68; no scene lighting or court markings added"
+    },
+    {
+      "output": "public/art/arena-wide-960.avif",
+      "bytes": 11171,
+      "sha256": "0a914c8043e341b068bf6b2c2096c0cb6c23c8e359f055d8fbe9e0fc05ff941c",
+      "source": "website/assets/art/source/arena-wide.png",
+      "source_sha256": "5602794ce48f37b28bde3ca3999f3832f1455c4f51b5e026e285b1ded46fb23f",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        960,
+        411
+      ],
+      "transformation": "Proportional resize to 960px; AVIF quality 42; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-wide-960.webp",
+      "bytes": 19236,
+      "sha256": "ce9fb62b76aeb25b1baeb113c5f29fdfccb9a6775a07e3c9ee51aad165675f72",
+      "source": "website/assets/art/source/arena-wide.png",
+      "source_sha256": "5602794ce48f37b28bde3ca3999f3832f1455c4f51b5e026e285b1ded46fb23f",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        960,
+        411
+      ],
+      "transformation": "Proportional resize to 960px; WEBP quality 65; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-wide-1600.avif",
+      "bytes": 23250,
+      "sha256": "9ecaf9c35dd63e4617074d33fbc8eeb7ab567cc5e430e945816ffdbd0e32ceed",
+      "source": "website/assets/art/source/arena-wide.png",
+      "source_sha256": "5602794ce48f37b28bde3ca3999f3832f1455c4f51b5e026e285b1ded46fb23f",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        1600,
+        686
+      ],
+      "transformation": "Proportional resize to 1600px; AVIF quality 42; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-wide-1600.webp",
+      "bytes": 43210,
+      "sha256": "d4f858d1ba1973cdc3e3c8dec31f34a227203e393a5f639959038334e4f297e2",
+      "source": "website/assets/art/source/arena-wide.png",
+      "source_sha256": "5602794ce48f37b28bde3ca3999f3832f1455c4f51b5e026e285b1ded46fb23f",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        1600,
+        686
+      ],
+      "transformation": "Proportional resize to 1600px; WEBP quality 65; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-tall-480.avif",
+      "bytes": 13881,
+      "sha256": "4faafdf5eb7cee7a6f8ee8e5e6e8fbcc0131277410bbc6d88333bf0c581fef7e",
+      "source": "website/assets/art/source/arena-tall.png",
+      "source_sha256": "eb96fcac658c83f8d46191ffc8341fd5b9fe042690a1994c6802324bc3c9efeb",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        480,
+        853
+      ],
+      "transformation": "Proportional resize to 480px; AVIF quality 42; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-tall-480.webp",
+      "bytes": 24264,
+      "sha256": "0174b315b7b8787a2f3c99b853dbf2c2b2eeef670a3b01bf6181deb43e83f323",
+      "source": "website/assets/art/source/arena-tall.png",
+      "source_sha256": "eb96fcac658c83f8d46191ffc8341fd5b9fe042690a1994c6802324bc3c9efeb",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        480,
+        853
+      ],
+      "transformation": "Proportional resize to 480px; WEBP quality 65; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-tall-768.avif",
+      "bytes": 27044,
+      "sha256": "c6551149f4b4dabd6645022f671e41253f18ded311d1574c6350810c72719708",
+      "source": "website/assets/art/source/arena-tall.png",
+      "source_sha256": "eb96fcac658c83f8d46191ffc8341fd5b9fe042690a1994c6802324bc3c9efeb",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        768,
+        1365
+      ],
+      "transformation": "Proportional resize to 768px; AVIF quality 42; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-tall-768.webp",
+      "bytes": 48482,
+      "sha256": "7a1df442abf1bf2fb9669faf92bd6e3c4b2a66ec7497022108456b999b848a3a",
+      "source": "website/assets/art/source/arena-tall.png",
+      "source_sha256": "eb96fcac658c83f8d46191ffc8341fd5b9fe042690a1994c6802324bc3c9efeb",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        768,
+        1365
+      ],
+      "transformation": "Proportional resize to 768px; WEBP quality 65; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/basketball-480.webp",
+      "bytes": 50414,
+      "sha256": "bf9488bc0b766025beff12af840a39532446d07e0b0f8389cfddf8243eefb2b8",
+      "source": "website/assets/art/source/basketball.png",
+      "source_sha256": "08a9d751c6c20b26884cdcf043aa691db6649301fa35e91cd178c5750bf672f2",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        480,
+        462
+      ],
+      "transformation": "Proportional resize to 480px; WEBP quality 72; original alpha retained; no text or interface compositing"
+    },
+    {
+      "output": "public/art/basketball-768.webp",
+      "bytes": 106120,
+      "sha256": "1d68352e86930fb6eda8e9db98e497a8447ec9489af064012df57b02807469eb",
+      "source": "website/assets/art/source/basketball.png",
+      "source_sha256": "08a9d751c6c20b26884cdcf043aa691db6649301fa35e91cd178c5750bf672f2",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        768,
+        739
+      ],
+      "transformation": "Proportional resize to 768px; WEBP quality 66; original alpha retained; no text or interface compositing"
+    },
+    {
+      "output": "public/art/basketball-900.webp",
+      "bytes": 146692,
+      "sha256": "87ab523f704a735e803d4716adce573e97878c64573fffa5bfb65f31aac9c1e9",
+      "source": "website/assets/art/source/basketball.png",
+      "source_sha256": "08a9d751c6c20b26884cdcf043aa691db6649301fa35e91cd178c5750bf672f2",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        900,
+        866
+      ],
+      "transformation": "Proportional resize to 900px; WEBP quality 72; original alpha retained; no text or interface compositing"
+    },
+    {
+      "output": "public/art/scene-poster-compact.webp",
+      "bytes": 21830,
+      "sha256": "1c2f75df9a5706d873e228432247240f81789e95af0171e8b7eb31bc272c1417",
+      "source": "website/assets/art/source/scene-poster-compact.webp",
+      "source_sha256": "b0d54afcd7b812bd5f856af08145ffa9b374464c493891e1521faeeba2ea3946",
+      "capture_record": "website/assets/art/scene-poster.json",
+      "capture_record_sha256": "9e7fee2d888fcbaf8b8c50839c188ce308d66605f8d5412333f703660fa1bbeb",
+      "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "source_inputs": [
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "6a29273b57000c27d14832b268c5bd229736f82f417b6088a007c53f1f8e751c"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "c505ffd1c1323de8185bf610140eb73c1a91644ee5fc1298c25582fc1beccfe1"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "f6f98117d8e6d12b938d2c44ab27119d0e202d8d4401f46ae5e258880b4c706c"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "1767f8f6406a5c6dc79cf2ca5f250c737d83c1b446801730d1a1c74d059ebc73"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "43678f24f3a34d208a77cd04dac7d40d92a0d647ef89781b9c4666d1705b0445"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/styles/site.css",
+          "sha256": "5b28593e1d0d763b0ee8140edbaa24bbf3d2f08be489c1c08bb6737fd945885b"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "5bd6530f52087b337b4d2391ea64dfe3eecb50f7c90dbd6efdc30d46c2b95933"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "assets/materials/generation.json",
+          "sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "1362c580bec64009efeb46424596119f143425a76e1503cb42d0e623c050c478"
+        }
+      ],
+      "pose": {
+        "chapter": "hero",
+        "progress": 0,
+        "active": true
+      },
+      "dimensions_px": [
+        492,
+        678
+      ],
+      "transformation": "WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained"
+    },
+    {
+      "output": "public/art/scene-poster-standard.webp",
+      "bytes": 33532,
+      "sha256": "6a051fc521794a54698f879199e6d45a7d7778df7883be4bbc847516ccf15932",
+      "source": "website/assets/art/source/scene-poster-standard.webp",
+      "source_sha256": "2b8a169467994ec49c00f2f82c727ed351292f60b1c6b0229a88c420b1ce48e1",
+      "capture_record": "website/assets/art/scene-poster.json",
+      "capture_record_sha256": "9e7fee2d888fcbaf8b8c50839c188ce308d66605f8d5412333f703660fa1bbeb",
+      "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "source_inputs": [
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "6a29273b57000c27d14832b268c5bd229736f82f417b6088a007c53f1f8e751c"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "c505ffd1c1323de8185bf610140eb73c1a91644ee5fc1298c25582fc1beccfe1"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "f6f98117d8e6d12b938d2c44ab27119d0e202d8d4401f46ae5e258880b4c706c"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "1767f8f6406a5c6dc79cf2ca5f250c737d83c1b446801730d1a1c74d059ebc73"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "43678f24f3a34d208a77cd04dac7d40d92a0d647ef89781b9c4666d1705b0445"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/styles/site.css",
+          "sha256": "5b28593e1d0d763b0ee8140edbaa24bbf3d2f08be489c1c08bb6737fd945885b"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "5bd6530f52087b337b4d2391ea64dfe3eecb50f7c90dbd6efdc30d46c2b95933"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "assets/materials/generation.json",
+          "sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "1362c580bec64009efeb46424596119f143425a76e1503cb42d0e623c050c478"
+        }
+      ],
+      "pose": {
+        "chapter": "hero",
+        "progress": 0,
+        "active": true
+      },
+      "dimensions_px": [
+        691,
+        810
+      ],
+      "transformation": "WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained"
+    },
+    {
+      "output": "public/art/scene-poster-wide.webp",
+      "bytes": 51376,
+      "sha256": "4734cbf300f47a5d696b4b8df97e9356bd0532415226ecad0500e253f6d4fb94",
+      "source": "website/assets/art/source/scene-poster-wide.webp",
+      "source_sha256": "a5386b1e67c1f7acb0fccc585460bb8808448cf91b01dd87f287599a7dd997e7",
+      "capture_record": "website/assets/art/scene-poster.json",
+      "capture_record_sha256": "9e7fee2d888fcbaf8b8c50839c188ce308d66605f8d5412333f703660fa1bbeb",
+      "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "source_inputs": [
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "6a29273b57000c27d14832b268c5bd229736f82f417b6088a007c53f1f8e751c"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "c505ffd1c1323de8185bf610140eb73c1a91644ee5fc1298c25582fc1beccfe1"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "f6f98117d8e6d12b938d2c44ab27119d0e202d8d4401f46ae5e258880b4c706c"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "1767f8f6406a5c6dc79cf2ca5f250c737d83c1b446801730d1a1c74d059ebc73"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "43678f24f3a34d208a77cd04dac7d40d92a0d647ef89781b9c4666d1705b0445"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/styles/site.css",
+          "sha256": "5b28593e1d0d763b0ee8140edbaa24bbf3d2f08be489c1c08bb6737fd945885b"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "5bd6530f52087b337b4d2391ea64dfe3eecb50f7c90dbd6efdc30d46c2b95933"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "assets/materials/generation.json",
+          "sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "1362c580bec64009efeb46424596119f143425a76e1503cb42d0e623c050c478"
+        }
+      ],
+      "pose": {
+        "chapter": "hero",
+        "progress": 0,
+        "active": true
+      },
+      "dimensions_px": [
+        922,
+        990
+      ],
+      "transformation": "WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained"
     },
     {
       "output": "public/screenshots/zh/home.webp",
@@ -279,8 +721,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 114080,
-      "sha256": "e38b344d25636c51e9f25c0175b0ed1218c3b9349a7e6e4c2d0e989c7bcbce5a",
+      "bytes": 114616,
+      "sha256": "6f41b0a075c40afeccfccfd9fe74271ceb1d7d78aebfaeff5dd63f98b4af1143",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -452,6 +894,8 @@
         20813,
         20837,
         20840,
+        20843,
+        20845,
         20851,
         20854,
         20855,
@@ -519,6 +963,7 @@
         22336,
         22343,
         22495,
+        22686,
         22768,
         22788,
         22791,
@@ -561,6 +1006,7 @@
         24402,
         24403,
         24405,
+        24418,
         24490,
         24515,
         24535,
@@ -798,7 +1244,7 @@
       "text_sources": [
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "3acbe2a418236144b73a49f3847cca82d58e8049d1fc27e25a05b1adc717dd9d"
+          "sha256": "52124e9ed320a25543f84711596ff46925736ac474712f529da1f0b6446bf9e3"
         },
         {
           "path": "src/components/Icon.astro",
@@ -806,7 +1252,7 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "b82ab8dd12aef129cd676a5bdf85b5328a1b7de4bec654c3c011d6694b1e6ce7"
+          "sha256": "5bd6530f52087b337b4d2391ea64dfe3eecb50f7c90dbd6efdc30d46c2b95933"
         },
         {
           "path": "src/components/Layout.astro",
@@ -822,7 +1268,7 @@
         },
         {
           "path": "src/data/court-materials.ts",
-          "sha256": "9cf5ae5f72ab2f8842ec2cc41fcc70a08206cbff2145dc684934d7f2a6fc6b00"
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
         },
         {
           "path": "src/data/release.ts",
@@ -853,32 +1299,48 @@
           "sha256": "7c4728b6e8bcbcf62405fe49a953e28d1a7217d634937b2e5f4ae7b9fd509120"
         },
         {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "f6f98117d8e6d12b938d2c44ab27119d0e202d8d4401f46ae5e258880b4c706c"
+        },
+        {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "3bca61c447ade2a1a67b1cf3fa48bbff2fd2be85abe1b7c433d09de49d1a4d9e"
+          "sha256": "c505ffd1c1323de8185bf610140eb73c1a91644ee5fc1298c25582fc1beccfe1"
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "46e9880c32d20d6eb67938e98ff5358e08e15a0d2a0c54911150c667bfc53f45"
+          "sha256": "6a29273b57000c27d14832b268c5bd229736f82f417b6088a007c53f1f8e751c"
         },
         {
           "path": "src/scripts/court-textures.ts",
-          "sha256": "788c0ede6d080190c96b4b29b76395d4869ac7019e561a8a7da107ef3e8f5d02"
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
         },
         {
           "path": "src/scripts/demo-state.ts",
           "sha256": "f18e27c74a1c0664b44da841fe36b9e06bfae62b5bbde417b7d6a6fb00a45a8d"
         },
         {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
           "path": "src/scripts/main.ts",
-          "sha256": "f89b1863e2c8b2a409618056121216bd863b4671e8e3eda1a4f22267719fdfdd"
+          "sha256": "a11189c87f64a791c9d57fe5c72599878f092a2520b64e09c85d48efe294bd93"
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "b198cc0fb5b5d496a2785ff26228954f916b5f2053e5f14b4d1a968a624ecaa8"
+          "sha256": "1767f8f6406a5c6dc79cf2ca5f250c737d83c1b446801730d1a1c74d059ebc73"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "c1b0f1b4489d5d9ac66f20ed22a74b1a0f3cf3a2bd8b97fa0509eb6550ec59c8"
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "43678f24f3a34d208a77cd04dac7d40d92a0d647ef89781b9c4666d1705b0445"
         }
       ],
       "license": "SIL-OFL-1.1",
@@ -918,7 +1380,7 @@
       "bytes": 112737,
       "sha256": "bc80e205003172236842c9a2156197b2096c94b478c519ad80a9dd284df8688e",
       "source": "scripts/prepare-assets.mjs",
-      "source_sha256": "47db5e7e7f2d8c2d19cce1e75bbbe611fdcbb98e29cd9ca59208b99c2e157afe",
+      "source_sha256": "09f94199e35cb70ac1114852542e2b3d59fce558af1c26969a7c39c3807f76d0",
       "source_dependencies": [
         {
           "source": "assets/icons/hooptrace-app-icon-foreground.png",

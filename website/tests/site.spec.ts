@@ -21,6 +21,40 @@ const locales = [
 ] as const;
 const threeChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
 
+test('cinematic stages unpin cleanly when the viewport or system motion changes', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      type: string,
+      ...args: unknown[]
+    ) {
+      return type === 'webgl2'
+        ? null
+        : Reflect.apply(original, this, [type, ...args]);
+    } as typeof original;
+  });
+  await page.goto('/');
+  await expect(page.locator('[data-point-preset="center"]')).toBeEnabled();
+  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator('.pin-spacer')).toHaveCount(0);
+  await expectNoOverflow(page);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(page.locator('.pin-spacer')).toHaveCount(0);
+  await expect(page.locator('h1')).toBeVisible();
+  await expectDownload(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await page.locator('.nav-download').click();
+  await expect(page).toHaveURL(/#download$/);
+  await expect(page.locator('.download-package')).toBeInViewport();
+});
+
 async function expectDownload(page: Page) {
   await expect(page.locator('[data-download]').first()).toBeVisible();
   for (const link of await page.locator('[data-download]').all()) {
@@ -408,7 +442,7 @@ test(
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
     let requested = false;
-    await page.route('**/textures/maple-albedo.webp', async (route) => {
+    await page.route('**/textures/maple-albedo-v2.webp', async (route) => {
       requested = true;
       await route.abort('failed');
     });
@@ -446,7 +480,7 @@ test(
     });
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
-    await page.route('**/textures/maple-albedo.webp', async (route) => {
+    await page.route('**/textures/maple-albedo-v2.webp', async (route) => {
       requested = true;
       await gate;
       await route.continue().catch(() => {});
@@ -646,12 +680,13 @@ test(
         .poll(() =>
           page
             .locator('#court-canvas')
-            .evaluate((canvas: HTMLCanvasElement) => [
-              canvas.width,
-              canvas.height,
-            ]),
+            .evaluate(
+              (canvas: HTMLCanvasElement) =>
+                canvas.width === canvas.clientWidth * 2 &&
+                canvas.height === canvas.clientHeight * 2,
+            ),
         )
-        .toEqual([2560, 1600]);
+        .toBe(true);
       await page
         .locator('#experience')
         .evaluate((section) =>
@@ -727,6 +762,8 @@ for (const scale of [1, 2]) {
           .evaluate((canvas: HTMLCanvasElement) => ({
             width: canvas.width,
             height: canvas.height,
+            cssWidth: canvas.clientWidth,
+            cssHeight: canvas.clientHeight,
             antialias: canvas.dataset.antialias,
             buffers: Reflect.get(window, 'hooptraceRenderbuffers') as {
               samples: number;
@@ -734,10 +771,10 @@ for (const scale of [1, 2]) {
               height: number;
             }[],
           }));
-        // Native density must reach the final canvas, including Retina displays.
-        expect(pixels.width).toBeGreaterThanOrEqual(1440 * scale);
-        expect(pixels.height).toBeGreaterThanOrEqual(900 * scale);
-        // A multisampled 512px reflection alone does not antialias the visible scene.
+        // Native density reaches the actual visible scene region without a full-screen buffer.
+        expect(pixels.width).toBe(Math.round(pixels.cssWidth * scale));
+        expect(pixels.height).toBe(Math.round(pixels.cssHeight * scale));
+        expect(pixels.cssWidth).toBeLessThan(1440);
         expect(pixels.antialias).toMatch(/^(msaa-[24]|fxaa)$/);
         if (pixels.antialias !== 'fxaa')
           expect(
@@ -780,12 +817,15 @@ for (const scale of [1, 2]) {
           .poll(() =>
             page
               .locator('#court-canvas')
-              .evaluate((canvas: HTMLCanvasElement) => [
-                canvas.width,
-                canvas.height,
-              ]),
+              .evaluate(
+                (canvas: HTMLCanvasElement) =>
+                  canvas.width ===
+                    Math.round(canvas.clientWidth * window.devicePixelRatio) &&
+                  canvas.height ===
+                    Math.round(canvas.clientHeight * window.devicePixelRatio),
+              ),
           )
-          .toEqual([nextWidth * nextScale, 900 * nextScale]);
+          .toBe(true);
         await expect
           .poll(() =>
             page
@@ -935,8 +975,10 @@ test(
       'data-interactive',
       'true',
     );
-    // This visible court point is on the canvas, away from the DOM scoring controls.
-    await page.mouse.click(1030, 520);
+    // The shared SVG court provides the same pointer interaction on desktop and mobile.
+    await page
+      .locator('[data-demo-court]')
+      .click({ position: { x: 180, y: 250 } });
     await expect(page.locator('[data-record]')).toBeEnabled();
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');

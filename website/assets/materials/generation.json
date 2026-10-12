@@ -1,24 +1,74 @@
 {
-  "version": 1,
-  "generated_at": "2026-10-11",
+  "version": 2,
+  "generated_at": "2026-10-12",
   "tool": "image_gen.imagegen",
   "mode": "built-in",
-  "purpose": "HoopTrace desktop night-court materials; runtime lights, painted lines and component geometry remain in Three.js.",
+  "purpose": "Cinematic indoor HoopTrace court materials. Neutral generated material color and microdetail tiles; runtime lighting, paint and geometry remain in Three.js.",
+  "previous_generation_record": "generation-v1.json",
   "assets": [
     {
       "id": "maple",
-      "source": "source/maple-floor.png",
-      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR base-color texture for a real-time 3D premium basketball hardwood court. Generate one square 2048x2048 texture of exquisite kiln-dried Canadian hard maple gym flooring: long slender straight parallel planks running vertically, 14 to 18 boards across the square, staggered tightly fitted end joints, delicate authentic fine wood fibers and sparse understated grain curls, natural subtle variations of pale honey, warm cream and toasted beige between boards. Immaculately maintained satin polyurethane surface, refined craftsmanship. Camera exactly orthographic overhead; every pixel shows the flat material at the same scale. Uniform neutral diffuse lighting, absolutely NO directional highlights, shadows, shading gradient, ambient occlusion, perspective, scene objects, court paint, logos, typography, borders or watermark. This must be a physically useful albedo tile, not a photograph of a room. Continuous grain and plank joints align at all four edges for seamless repeating. Texture should contain realistic high-frequency detail but no exaggerated dark cracks or dramatic zebra-striping. No baked gloss, light pools or reflections; these will be rendered in Three.js."
+      "source": "source/maple-floor-v2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless 1024 by 1024 PBR base color texture for a premium indoor basketball arena hardwood court. A perfectly flat orthographic overhead material swatch made entirely of exquisite fine-grained hard maple boards. Use slender parallel boards running vertically, approximately twenty-four tightly fitted boards across the image, restrained staggered end joints and delicate authentic fibers. Quiet natural pale honey, cream and light toasted beige, with very subtle local variation. Immaculate craftsmanship, satin sealed wood. Uniform neutral diffuse illumination with constant overall brightness across the tile. Real high-frequency wood detail, refined thin seams without dark cracks, and very few understated curls. All four edges must repeat seamlessly. Every pixel depicts only the flat surface. No room or scene, no perspective, no big wide planks, no giant grain whorls, no dramatic zebra stripes, no court markings, no logos or text. No baked highlights, shadows, glossy reflections, ambient occlusion, vignettes or lighting gradients; lighting and paint will be rendered at runtime. No watermark.",
+      "conversion": {
+        "maximum_size": 1024,
+        "quality": 72,
+        "color_space": "srgb"
+      },
+      "source_sha256": "942ac328eb3b464ce460155b407d65c641325c0ffd451a67efddddcc08997b16",
+      "source_dimensions_px": [1254, 1254]
     },
     {
       "id": "metal",
-      "source": "source/graphite-metal.png",
-      "prompt": "Use case: photorealistic-natural. Asset type: seamless PBR material texture for real-time 3D basketball arena light poles, hoop supports and backboard frames. Generate one square 2048x2048 orthographic, perfectly flat close-up texture of premium warm graphite powder-coated aluminum and steel, extremely fine satin micrograin with restrained subtle brushed direction, tiny believable surface flecks and delicate barely visible machining scratches. Neutral medium charcoal gray base, very subtle local variation, immaculate well-made hardware. Even neutral diffuse illumination across the whole texture. It must tile seamlessly on all four edges. NO lighting gradients, highlights, glow, shadows, scene objects, rivets, frames, holes, text, logos, watermark or perspective. Entire image is only the material surface. Surface brightness should be around neutral medium gray so the 3D material tint can determine the final graphite color; do not make a nearly black square. No giant scratches or weathered rusty damage."
+      "source": "source/graphite-metal-v2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless 1024 by 1024 PBR base color tile for premium indoor basketball arena hoop hardware and ceiling luminaires. Perfectly flat orthographic material swatch of pristine satin graphite powder-coated steel with exceptionally fine uniform micrograin. Neutral medium charcoal gray, approximately RGB 125 with only tiny subtle grain variations. Very fine barely perceptible brushed direction and delicate microscopic manufacturing texture, quiet and luxurious rather than distressed. Completely even neutral diffuse illumination, same average brightness across the whole tile, seamless at all four edges. Entire image is only the flat material surface. No rusty bronze or brown color, no coarse scratches, no visible sanding streaks, no big chips, no metallic sparkles, no rivets or hardware objects, no lighting gradients, specular highlights, shadows or reflections, no perspective, no text, logos, frame, border or watermark. Material color, specular response and light will be determined by runtime rendering.",
+      "conversion": {
+        "maximum_size": 768,
+        "quality": 65,
+        "color_space": "srgb"
+      },
+      "source_sha256": "69a59fc6dba5b1a11331c473714c9c835a5742a98ed6ec4a8de9e64ebf5d0045",
+      "source_dimensions_px": [1254, 1254]
     },
     {
       "id": "glass",
       "source": "source/glass-detail.png",
-      "prompt": "Use case: photorealistic-natural. Asset type: subtle grayscale micro-surface detail tile for a tempered-glass basketball backboard and frosted LED lens, to be used as a tiny bump-map in real-time 3D rather than as a picture. Generate one square 1024x1024 flat orthographic texture of pristine finely etched optical glass: neutral medium gray image with extremely subtle delicate frost grain and a few hairline manufacturing microstriations, restrained microscopic tactile detail, smooth immaculate premium surface. Uniform lighting; seamless tiling in both directions. The contrast must be very low and completely uniform in overall brightness, no macro pattern or cracks. NO transparency checkerboard, panels, board shape, frames, printed court target, basketball, scene objects, reflections, highlights, directional shadows, color, perspective, text, logos, border or watermark. This is a grayscale material detail/height tile, not a photograph or an illustration of a glass object."
+      "generation_record": "generation-v1.json",
+      "conversion": {
+        "maximum_size": 512,
+        "quality": 75,
+        "color_space": "linear"
+      },
+      "source_sha256": "71ea4f8ffdf7392d1ba07770a292d6e3d7a829db0b5b89a300fc897a6a010b21",
+      "source_dimensions_px": [1254, 1254],
+      "prompt": "Use case: photorealistic-natural. Asset type: subtle grayscale micro-surface detail tile for a tempered-glass basketball backboard and frosted LED lens, to be used as a tiny bump-map in real-time 3D rather than as a picture. Generate one square 1024x1024 flat orthographic texture of pristine finely etched optical glass: neutral medium gray image with extremely subtle delicate frost grain and a few hairline manufacturing microstriations, restrained microscopic tactile detail, smooth immaculate premium surface. Uniform lighting; seamless tiling in both directions. The contrast must be very low and completely uniform in overall brightness, no macro pattern or cracks. NO transparency checkerboard, panels, board shape, frames, printed court target, basketball, scene objects, reflections, highlights, directional shadows, color, perspective, text, logos, border or watermark. This is a grayscale material detail/height tile, not a photograph or an illustration of a glass object.",
+      "original_generated_at": "2026-10-11"
+    },
+    {
+      "id": "leather",
+      "source": "source/basketball-leather-v2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless 2048 by 2048 PBR basketball leather base color material swatch. Perfectly flat orthographic extremely detailed close-up of authentic premium burnt orange basketball pebbled leather. Entire square contains a dense and consistent fine tactile pattern of tiny rounded irregular polygonal pebbles, with shallow narrow darker orange creases between them. Uniform warm ochre-copper orange color, accurate basketball leather with restrained natural variation. The pebbles are approximately ten to fourteen pixels across in the 2048 pixel image, yielding many tiny scales across the tile. Flat uniform neutral diffuse illumination, no directional lighting or large-scale brightness variation. It must tile seamlessly at all four edges. No spherical basketball shape, no black rubber ball seams, no letters or brand, no court, no floor, no object silhouette, no baked rim light or shiny reflections, no shadows or vignette, no dramatic pores, giant stones or reptile scales. No watermark. This color texture will be wrapped onto a 3D basketball; sphere geometry, seams, shading and highlights are implemented separately.",
+      "conversion": {
+        "maximum_size": 1024,
+        "quality": 72,
+        "color_space": "srgb"
+      },
+      "source_sha256": "892d68d6e9f8ea59a0d078fc26b6bb9b3a54c51f812c31dff33437567a8b7473",
+      "source_dimensions_px": [1254, 1254]
+    },
+    {
+      "id": "leatherDetail",
+      "source": "source/basketball-leather-v2.png",
+      "generated_source_id": "leather",
+      "conversion": {
+        "maximum_size": 512,
+        "quality": 68,
+        "grayscale": true,
+        "color_space": "linear"
+      },
+      "source_sha256": "892d68d6e9f8ea59a0d078fc26b6bb9b3a54c51f812c31dff33437567a8b7473",
+      "source_dimensions_px": [1254, 1254],
+      "derivation": "Grayscale encoding of the generated basketball leather color source; no independent image generation. Used as a linear microdetail bump map."
     }
   ]
 }

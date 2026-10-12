@@ -57,20 +57,21 @@ const materialGeneration = JSON.parse(
   materialProvenance.bytes.toString('utf8'),
 );
 for (const [id, maximumSize, quality] of [
-  ['maple', 2048, 88],
-  ['metal', 1024, 80],
+  ['maple', 1024, 72],
+  ['metal', 768, 65],
   ['glass', 512, 75],
+  ['leather', 1024, 72],
+  ['leatherDetail', 512, 68],
 ]) {
   const asset = materialGeneration.assets.find((entry) => entry.id === id);
   if (!asset) throw new Error(`Missing generated court material: ${id}`);
   const source = await localSource(`website/assets/materials/${asset.source}`);
-  const optimized = await sharp(source.bytes)
-    .resize(maximumSize, maximumSize, {
-      fit: 'inside',
-      withoutEnlargement: true,
-    })
-    .webp({ quality, effort: 6 })
-    .toBuffer();
+  let conversion = sharp(source.bytes).resize(maximumSize, maximumSize, {
+    fit: 'inside',
+    withoutEnlargement: true,
+  });
+  if (id === 'leatherDetail') conversion = conversion.grayscale();
+  const optimized = await conversion.webp({ quality, effort: 6 }).toBuffer();
   const metadata = await sharp(optimized).metadata();
   await output(courtTextures[id].slice(1), optimized, {
     source: source.source,
@@ -80,7 +81,83 @@ for (const [id, maximumSize, quality] of [
     generated_with: materialGeneration.tool,
     generation_mode: materialGeneration.mode,
     dimensions_px: [metadata.width, metadata.height],
-    transformation: `Proportional resize up to ${maximumSize}px; WebP quality ${quality}; no baked scene lighting or court markings added`,
+    transformation: `Proportional resize up to ${maximumSize}px; ${id === 'leatherDetail' ? 'grayscale microdetail; ' : ''}WebP quality ${quality}; no scene lighting or court markings added`,
+  });
+}
+
+const artRecord = 'website/assets/art/generation.json';
+const artProvenance = await localSource(artRecord);
+const artGeneration = JSON.parse(artProvenance.bytes.toString('utf8'));
+for (const asset of artGeneration.assets) {
+  const source = await localSource(`website/assets/art/${asset.source}`);
+  const widths =
+    asset.id === 'arena-wide'
+      ? [960, 1600]
+      : asset.id === 'arena-tall'
+        ? [480, 768]
+        : [480, 768, 900];
+  for (const width of widths) {
+    for (const format of asset.transparent ? ['webp'] : ['avif', 'webp']) {
+      const image = sharp(source.bytes).resize({
+        width,
+        withoutEnlargement: true,
+      });
+      const quality = asset.transparent
+        ? width === 768
+          ? 66
+          : 72
+        : format === 'avif'
+          ? 42
+          : 65;
+      const optimized = await image[format]({
+        quality,
+        effort: format === 'avif' ? 6 : 6,
+      }).toBuffer();
+      const metadata = await sharp(optimized).metadata();
+      await output(`art/${asset.id}-${width}.${format}`, optimized, {
+        source: source.source,
+        source_sha256: source.source_sha256,
+        generation_record: artRecord,
+        generation_record_sha256: artProvenance.source_sha256,
+        generated_with: artGeneration.tool,
+        generation_mode: artGeneration.mode,
+        dimensions_px: [metadata.width, metadata.height],
+        transformation: `Proportional resize to ${width}px; ${format.toUpperCase()} quality ${quality}; ${asset.transparent ? 'original alpha retained' : 'cinematic background plate'}; no text or interface compositing`,
+      });
+    }
+  }
+}
+
+const posterRecord = 'website/assets/art/scene-poster.json';
+const posterProvenance = await localSource(posterRecord);
+const posterGeneration = JSON.parse(posterProvenance.bytes.toString('utf8'));
+for (const input of posterGeneration.source_inputs) {
+  const current = await localSource(`website/${input.path}`);
+  if (current.source_sha256 !== input.sha256)
+    throw new Error(
+      `Stale scene poster source: ${input.path}. Build and export the current scene before preparing assets.`,
+    );
+}
+for (const capture of posterGeneration.captures) {
+  const source = await localSource(`website/assets/art/${capture.source}`);
+  if (source.source_sha256 !== capture.source_sha256)
+    throw new Error(
+      `Scene poster changed outside its capture record: ${capture.id}`,
+    );
+  const optimized = await sharp(source.bytes)
+    .webp({ quality: 80, effort: 6 })
+    .toBuffer();
+  await output(`art/scene-poster-${capture.id}.webp`, optimized, {
+    source: source.source,
+    source_sha256: source.source_sha256,
+    capture_record: posterRecord,
+    capture_record_sha256: posterProvenance.source_sha256,
+    captured_with: `${posterGeneration.browser}; ${capture.renderer}; ${capture.engine}`,
+    source_inputs: posterGeneration.source_inputs,
+    pose: capture.pose,
+    dimensions_px: [capture.width, capture.height],
+    transformation:
+      'WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained',
   });
 }
 

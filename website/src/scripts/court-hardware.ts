@@ -26,11 +26,13 @@ export function createCourtHardware({
 }: CourtHardwareOptions): {
   group: THREE.Group;
   setNetImpact(value: number): void;
+  setCeilingVisibility(value: number): void;
 } {
   const group = new THREE.Group();
   group.name = 'court-hardware';
   const batches = new Map<string, GeometryBatch>();
   const impact = { value: 0 };
+  const ceilingMeshes: THREE.Mesh<THREE.BufferGeometry, THREE.Material>[] = [];
   const netLength = 0.53;
   const netTop = rim.y - 0.033;
   const netAnchor = new THREE.Vector3(rim.x, netTop, rim.z);
@@ -81,7 +83,7 @@ export function createCourtHardware({
     emissiveIntensity: 0.08,
   });
   const lens = finish(
-    'led-optics',
+    'ceiling-optics',
     {
       color: '#FFF7E7',
       roughness: 0.17,
@@ -90,6 +92,8 @@ export function createCourtHardware({
       emissiveIntensity: 1.8,
       bumpMap: glassMap,
       bumpScale: 0.0003,
+      transparent: true,
+      depthWrite: false,
     },
     false,
   );
@@ -220,112 +224,129 @@ export function createCourtHardware({
     batches.get(batch)!.parts.push(geometry);
   }
 
-  for (const x of [-8.4, 8.4]) {
-    const sign = Math.sign(x);
-    for (const z of [-6, 3]) {
-      block([0.48, 0.08, 0.48], [x, 0.052, z], steel, 0.023);
-      cylinder(0.11, 0.13, 0.16, [x, 0.16, z], steel);
-      cylinder(0.046, 0.085, 8.02, [x, 4.21, z], steel, undefined, 32);
-      cylinder(0.09, 0.09, 0.07, [x, 0.34, z], brushed);
-      cylinder(0.065, 0.065, 0.055, [x, 4.1, z], brushed);
-      for (const dx of [-0.17, 0.17]) {
-        for (const dz of [-0.17, 0.17]) {
-          cylinder(
-            0.025,
-            0.025,
-            0.029,
-            [x + dx, 0.106, z + dz],
-            brushed,
-            undefined,
-            6,
-          );
-          place(
-            new THREE.TorusGeometry(0.029, 0.004, 6, 20),
-            brushed,
-            new THREE.Vector3(x + dx, 0.09, z + dz),
-            new THREE.Euler(Math.PI / 2, 0, 0),
-          );
-        }
-      }
-      block([0.075, 0.31, 0.017], [x, 0.68, z + 0.083], steel, 0.007);
-      for (const y of [0.55, 0.81])
-        cylinder(
-          0.007,
-          0.007,
-          0.011,
-          [x, y, z + 0.096],
-          brushed,
-          new THREE.Euler(Math.PI / 2, 0, 0),
-          8,
-        );
-
-      pipe(
-        [
-          new THREE.Vector3(x, 8.17, z),
-          new THREE.Vector3(x - sign * 0.32, 8.4, z),
-          new THREE.Vector3(x - sign * 0.78, 8.43, z),
-          new THREE.Vector3(x - sign * 1.02, 8.43, z),
-        ],
-        0.043,
-        steel,
+  // Suspended indoor luminaires and acoustic architecture, rather than streetlight poles.
+  // The ceiling details use simple boxes: the near basket keeps the fine hardware budget.
+  // Remote dark trusses carry a fixed ambient graphite finish. Their geometry
+  // supplies the silhouette; per-pixel physical lighting adds no useful close-up detail.
+  const architecture = 'arena-structure';
+  batches.set(architecture, {
+    material: own(new THREE.MeshBasicMaterial({ color: '#0B1318' })),
+    parts: [],
+    castShadow: false,
+  });
+  const ceilingStructure = 'ceiling-structure';
+  batches.set(ceilingStructure, {
+    material: own(
+      new THREE.MeshBasicMaterial({
+        color: '#0B1318',
+        transparent: true,
+        depthWrite: false,
+      }),
+    ),
+    parts: [],
+    castShadow: false,
+  });
+  const ceilingMetal = finish(
+    'ceiling-metal',
+    {
+      color: '#B4BDC0',
+      map: metalMap,
+      roughness: 0.31,
+      metalness: 0.92,
+      transparent: true,
+      depthWrite: false,
+    },
+    false,
+  );
+  const acoustic = finish(
+    'acoustic-panels',
+    {
+      color: '#20282B',
+      roughness: 0.98,
+      metalness: 0,
+    },
+    false,
+  );
+  const warmStrip = finish(
+    'arena-guidance-light',
+    {
+      color: '#B88550',
+      emissive: '#BC7234',
+      emissiveIntensity: 0.72,
+      roughness: 0.65,
+      metalness: 0.04,
+    },
+    false,
+  );
+  for (const z of [-10, -3, 5]) {
+    block([26.7, 0.19, 0.17], [0, 8.85, z], ceilingStructure, 0.012);
+    block([26.7, 0.095, 0.095], [0, 8.25, z], ceilingStructure, 0.009);
+    for (let bay = -12; bay <= 12; bay += 3) {
+      beam(
+        new THREE.Vector3(bay, 8.25, z),
+        new THREE.Vector3(bay + 1.5, 8.85, z),
+        0.027,
+        ceilingStructure,
       );
       beam(
-        new THREE.Vector3(x - sign * 0.02, 7.97, z),
-        new THREE.Vector3(x - sign * 0.78, 8.37, z),
-        0.021,
-        brushed,
+        new THREE.Vector3(bay + 1.5, 8.85, z),
+        new THREE.Vector3(bay + 3, 8.25, z),
+        0.027,
+        ceilingStructure,
       );
-      cylinder(0.058, 0.058, 0.08, [x, 8.18, z], brushed);
-
-      for (const offset of [-0.19, 0.19]) {
-        const head = new THREE.Matrix4().compose(
-          new THREE.Vector3(x - sign * 1.05, 8.37, z + offset),
-          new THREE.Quaternion().setFromEuler(
-            new THREE.Euler(0, 0, -sign * 0.12),
-          ),
-          new THREE.Vector3(1, 1, 1),
+    }
+    for (const x of [-6.4, 0, 6.4]) {
+      // Shallow graphite housing, satin bezel, segmented opal diffuser, and hanger rods.
+      block([2.15, 0.13, 0.48], [x, 7.85, z], ceilingStructure, 0.025);
+      block([2.02, 0.03, 0.43], [x, 7.776, z], ceilingMetal, 0.012);
+      block([1.94, 0.012, 0.365], [x, 7.754, z], lens, 0.008);
+      for (const direction of [-1, 1]) {
+        cylinder(
+          0.012,
+          0.012,
+          0.84,
+          [x + direction * 0.8, 8.29, z],
+          ceilingStructure,
+          undefined,
+          8,
         );
-        block([0.61, 0.125, 0.3], [0, 0, 0], steel, 0.034, head);
-        block([0.53, 0.025, 0.247], [0, -0.063, 0], brushed, 0.012, head);
-        block([0.488, 0.012, 0.206], [0, -0.081, 0], lens, 0.005, head);
-        // A wraparound diffuser lets the optics read from the elevated hero camera.
-        for (const edge of [-1, 1]) {
-          block(
-            [0.6, 0.018, 0.008],
-            [0, -0.047, edge * 0.153],
-            lens,
-            0.003,
-            head,
-          );
-          block(
-            [0.008, 0.018, 0.294],
-            [edge * 0.307, -0.047, 0],
-            lens,
-            0.003,
-            head,
-          );
-        }
-        for (let fin = 0; fin < 9; fin += 1)
-          block(
-            [0.021, 0.055, 0.247],
-            [(fin - 4) * 0.059, 0.078, 0],
-            steel,
-            0.006,
-            head,
-          );
-        for (const ledX of [-0.185, -0.062, 0.062, 0.185]) {
-          for (const ledZ of [-0.055, 0.055]) {
-            place(
-              new THREE.SphereGeometry(0.026, 12, 8),
-              lens,
-              new THREE.Vector3(ledX, -0.086, ledZ),
-              undefined,
-              new THREE.Vector3(1, 0.45, 1),
-              head,
-            );
-          }
-        }
+        block(
+          [0.008, 0.018, 0.43],
+          [x + direction * 1.01, 7.755, z],
+          ceilingStructure,
+          0.002,
+        );
       }
+      for (let segment = -4; segment <= 4; segment += 1)
+        block(
+          [0.012, 0.014, 0.37],
+          [x + segment * 0.193, 7.744, z],
+          ceilingStructure,
+          0.002,
+        );
+    }
+  }
+  // Rear wall ribs and copper guidance lights remain readable behind the hero ball.
+  for (let x = -12; x <= 12; x += 1.5) {
+    block([0.64, 5.7, 0.085], [x, 3.85, -13.29], acoustic, 0.004);
+    block([0.045, 7.2, 0.14], [x + 0.68, 3.9, -13.19], architecture, 0.006);
+  }
+  for (const x of [-11.3, 11.3]) {
+    block([0.12, 0.018, 17], [x, 0.028, -0.5], warmStrip, 0.003);
+    // Retracted courtside seating: low silhouettes, without high-cost remote detail.
+    for (let row = 0; row < 3; row += 1) {
+      block(
+        [0.64, 0.09, 11.8],
+        [x + Math.sign(x) * row * 0.56, 0.26 + row * 0.22, -1.9],
+        architecture,
+        0.015,
+      );
+      block(
+        [0.095, 0.24, 11.8],
+        [x + Math.sign(x) * (row * 0.56 + 0.27), 0.42 + row * 0.22, -1.9],
+        acoustic,
+        0.018,
+      );
     }
   }
 
@@ -606,16 +627,26 @@ export function createCourtHardware({
     const mesh = new THREE.Mesh(own(geometry), batch.material);
     mesh.name = name;
     mesh.castShadow = batch.castShadow;
-    mesh.receiveShadow = name !== 'led-optics' && name !== 'glass-panel';
+    mesh.receiveShadow = !name.startsWith('ceiling-') && name !== 'glass-panel';
     group.add(mesh);
+    if (name.startsWith('ceiling-')) ceilingMeshes.push(mesh);
   }
 
   return {
     group,
     setNetImpact(value) {
       impact.value = Number.isFinite(value)
+        ? THREE.MathUtils.clamp(value, -0.2, 1)
+        : 0;
+    },
+    setCeilingVisibility(value) {
+      const opacity = Number.isFinite(value)
         ? THREE.MathUtils.clamp(value, 0, 1)
         : 0;
+      for (const mesh of ceilingMeshes) {
+        mesh.visible = opacity > 0.001;
+        mesh.material.opacity = opacity;
+      }
     },
   };
 }
