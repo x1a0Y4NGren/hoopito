@@ -154,12 +154,14 @@ Vercel 预览工作已恢复，项目为 `hooptrace-website`，所属空间为
 [`codex/hooptrace-website`](https://github.com/x1a0Y4NGren/hooptrace/tree/codex/hooptrace-website)
 分支，尚未合入 `main` 或发布正式域名。
 
-自动部署沿用 blog 的 GitHub → Vercel 工作流。连接已有项目时先在 GitHub 的
-Settings → Applications → Installed GitHub Apps → Vercel → Configure 中
-授予 `hooptrace` 仓库访问权，再使用 `vercel git connect` 连接该仓库。
-当前连接返回缺少 GitHub 集成授权，须完成这一步后才能自动部署。
-默认 `main` 是 Production 分支，其余分支产生 Preview；在网站合入 `main`
-并配置正式 `SITE_URL` 之前，部署网站分支时显式选择 Preview。
+项目已连接 `x1a0Y4NGren/hooptrace`，自动部署沿用 blog 的 GitHub → Vercel
+工作流。推送 `codex/hooptrace-website` 等非生产分支会自动生成 Preview。
+`main` 是 Production 分支；当前范围仅为网站分支的预览验收，继续保留
+禁止搜索收录设置。正式上线须另行授权合入 `main` 并配置 `SITE_URL`。
+
+重新连接已有项目时，先在 GitHub 的 Settings → Applications →
+Installed GitHub Apps → Vercel → Configure 中确认仓库访问权，再使用
+`vercel git connect https://github.com/x1a0Y4NGren/hooptrace.git`。
 
 本机 CLI 已完成登录；认证配置独立保存在忽略的 `.vercel/cli-state/`。
 在使用 CLI 时显式指定 `--global-config` 指向该目录、
