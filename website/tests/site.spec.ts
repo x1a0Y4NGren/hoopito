@@ -1030,10 +1030,28 @@ test(
     });
     const count = () =>
       page.evaluate(() => Reflect.get(window, 'hooptraceDrawCalls') as number);
-    await page.waitForTimeout(250);
-    const idle = await count();
-    await page.waitForTimeout(250);
-    expect(await count()).toBe(idle);
+    const idleDrawCount = async () => {
+      // Pin removal and canvas resizing can request a final frame after the
+      // media event. Software rendering may delay it past a fixed 250ms pause.
+      // Require an actual quiet interval; continuous drawing still fails.
+      await expect
+        .poll(
+          async () => {
+            const before = await count();
+            await page.waitForTimeout(350);
+            return {
+              quiet: (await count()) === before,
+              state: await page
+                .locator('#court-canvas')
+                .getAttribute('data-rendering'),
+            };
+          },
+          { timeout: 5_000, intervals: [100] },
+        )
+        .toEqual({ quiet: true, state: 'idle' });
+      return count();
+    };
+    const idle = await idleDrawCount();
     await page
       .locator('#experience')
       .evaluate((section) =>
@@ -1057,10 +1075,7 @@ test(
       ),
     ).toBe(true);
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.waitForTimeout(250);
-    const quiet = await count();
-    await page.waitForTimeout(250);
-    expect(await count()).toBe(quiet);
+    const quiet = await idleDrawCount();
     await page.locator('[data-reset]').click();
     await expectReset(page);
     await expect.poll(count).toBeGreaterThan(quiet);
