@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/clock_state.dart';
-import 'package:hooptrace/core/domain/clock/clock_engine.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/clock_state.dart';
+import 'package:hoopito/core/domain/clock/clock_engine.dart';
 
 void main() {
   final anchor = DateTime.utc(2026, 8, 23, 10);

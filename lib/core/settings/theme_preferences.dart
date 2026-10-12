@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database.dart';
 
 /// The persisted appearance choice. [system] deliberately remains the safe
 /// default so a user's platform setting is respected until they choose a

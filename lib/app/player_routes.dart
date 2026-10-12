@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/players/player_career_page.dart';
-import 'package:hooptrace/features/players/player_comparison_page.dart';
-import 'package:hooptrace/features/players/player_editor_page.dart';
-import 'package:hooptrace/features/players/player_list_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/players/player_career_page.dart';
+import 'package:hoopito/features/players/player_comparison_page.dart';
+import 'package:hoopito/features/players/player_editor_page.dart';
+import 'package:hoopito/features/players/player_list_page.dart';
 
 List<RouteBase> buildPlayerRoutes() => [
   GoRoute(

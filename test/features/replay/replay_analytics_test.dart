@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/replay/replay_controller.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/replay/replay_controller.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
 
 void main() {
   test('replay timeline sorts by occurredAt with stable input tie-breaks', () {

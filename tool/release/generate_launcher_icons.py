@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Normalize and regenerate HoopTrace launcher icon resources."""
+"""Normalize and regenerate Hoopito launcher icon resources."""
 
 from __future__ import annotations
 
@@ -13,9 +13,9 @@ from PIL import Image, ImageDraw
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FOREGROUND = ROOT / 'assets/icons/hooptrace-app-icon-foreground.png'
-MASTER = ROOT / 'assets/icons/hooptrace-app-icon.png'
-MONOCHROME = ROOT / 'assets/icons/hooptrace-app-icon-monochrome.png'
+FOREGROUND = ROOT / 'assets/icons/hoopito-app-icon-foreground.png'
+MASTER = ROOT / 'assets/icons/hoopito-app-icon.png'
+MONOCHROME = ROOT / 'assets/icons/hoopito-app-icon-monochrome.png'
 IOS_CATALOG = ROOT / 'ios/Runner/Assets.xcassets/AppIcon.appiconset'
 ANDROID_RES = ROOT / 'android/app/src/main/res'
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database.dart';
 
 enum AppLanguagePreference { chinese, english }
 

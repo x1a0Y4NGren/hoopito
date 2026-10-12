@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/analytics/player_comparison.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/players/player_comparison_controller.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/analytics/player_comparison.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/players/player_comparison_controller.dart';
 
 class PlayerComparisonPage extends StatelessWidget {
   const PlayerComparisonPage({
@@ -39,7 +39,7 @@ class PlayerComparisonPage extends StatelessWidget {
       body: ListenableBuilder(
         listenable: controller,
         builder: (context, child) => SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+          padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
           child: _ComparisonBody(controller: controller),
         ),
       ),
@@ -59,12 +59,12 @@ class _ComparisonBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _ModeControls(controller: controller),
-        const SizedBox(height: HoopTraceSpacing.section),
+        const SizedBox(height: HoopitoSpacing.section),
         if (controller.mode == PlayerComparisonMode.matchPair)
           _MatchControls(controller: controller)
         else
           _WindowControls(controller: controller),
-        const SizedBox(height: HoopTraceSpacing.section),
+        const SizedBox(height: HoopitoSpacing.section),
         if (controller.isLoading)
           _LoadingState(label: l10n.playerComparisonLoading)
         else if (controller.error != null)
@@ -550,7 +550,7 @@ class _ComparisonReportView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: HoopTraceSpacing.section),
+        const SizedBox(height: HoopitoSpacing.section),
         EditorialSectionRule(label: l10n.playerComparisonConfirmedZones),
         const SizedBox(height: 8),
         Text(l10n.playerComparisonConfirmedZonesNote),
@@ -642,7 +642,7 @@ class _EvidenceRow extends StatelessWidget {
     };
     final valueStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
       color: editorial.ink,
-      fontFamily: HoopTraceTypography.displayFamily,
+      fontFamily: HoopitoTypography.displayFamily,
       fontWeight: FontWeight.w700,
       fontFeatures: const [FontFeature.tabularFigures()],
     );

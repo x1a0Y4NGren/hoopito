@@ -1,11 +1,11 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/repositories/match_lifecycle_repository.dart';
-import 'package:hooptrace/core/data/repositories/player_career_repository.dart';
-import 'package:hooptrace/core/domain/analytics/player_career_aggregate.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/repositories/match_lifecycle_repository.dart';
+import 'package:hoopito/core/data/repositories/player_career_repository.dart';
+import 'package:hoopito/core/domain/analytics/player_career_aggregate.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 import '../../test_helpers/test_database.dart';
 

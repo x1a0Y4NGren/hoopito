@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/analytics/player_comparison.dart';
-import 'package:hooptrace/features/players/player_comparison_controller.dart';
+import 'package:hoopito/core/domain/analytics/player_comparison.dart';
+import 'package:hoopito/features/players/player_comparison_controller.dart';
 
 void main() {
   test(

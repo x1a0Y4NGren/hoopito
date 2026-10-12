@@ -2,10 +2,10 @@ import 'dart:ui' show SemanticsAction;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
 
 const _edit = Key('pregame-target-edit');
 const _input = Key('pregame-target-input');
@@ -273,7 +273,7 @@ Future<void> _openSettings(
       locale: Locale(language),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: buildHoopTraceTheme(brightness: brightness),
+      theme: buildHoopitoTheme(brightness: brightness),
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(
           context,

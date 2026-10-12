@@ -3,11 +3,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/provider_router.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/features/players/player_comparison_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/provider_router.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/features/players/player_comparison_page.dart';
 
 import '../test_helpers/test_database.dart';
 

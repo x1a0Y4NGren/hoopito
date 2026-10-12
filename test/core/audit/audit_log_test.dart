@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/audit/audit_diff.dart';
-import 'package:hooptrace/core/audit/audit_log_entry.dart';
+import 'package:hoopito/core/audit/audit_diff.dart';
+import 'package:hoopito/core/audit/audit_log_entry.dart';
 
 void main() {
   test('audit entry stores before and after values', () {

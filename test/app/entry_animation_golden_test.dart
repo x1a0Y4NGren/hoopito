@@ -3,10 +3,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/entry/entry_creature.dart';
-import 'package:hooptrace/app/entry/hoop_trace_entry_gate.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/entry/entry_creature.dart';
+import 'package:hoopito/app/entry/hoopito_entry_gate.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
 
 import '../support/golden_fonts.dart';
 
@@ -14,9 +14,9 @@ void main() {
   late ui.Image image;
 
   setUpAll(() async {
-    await loadHoopTraceGoldenFonts();
+    await loadHoopitoGoldenFonts();
     final data = await rootBundle.load(
-      'assets/icons/hooptrace-app-icon-foreground.png',
+      'assets/icons/hoopito-app-icon-foreground.png',
     );
     final codec = await ui.instantiateImageCodec(
       data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
@@ -74,7 +74,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final label = tester.getRect(find.byKey(hoopTraceEntryWaitingKey));
+      final label = tester.getRect(find.byKey(hoopitoEntryWaitingKey));
       expect(label.left, greaterThanOrEqualTo(0));
       expect(label.right, lessThanOrEqualTo(320));
       expect(label.top, greaterThanOrEqualTo(0));
@@ -89,7 +89,7 @@ void main() {
       await expectLater(
         find.byKey(_goldenKey),
         matchesGoldenFile(
-          hoopTraceGoldenFile('entry_waiting_${language}_compact'),
+          hoopitoGoldenFile('entry_waiting_${language}_compact'),
         ),
       );
       expect(tester.takeException(), isNull);
@@ -114,7 +114,7 @@ Widget _harness({
   bool waiting = false,
   double textScale = 1,
 }) => MaterialApp(
-  theme: buildHoopTraceTheme(),
+  theme: buildHoopitoTheme(),
   locale: Locale(language),
   localizationsDelegates: AppLocalizations.localizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
@@ -127,7 +127,7 @@ Widget _harness({
         key: _goldenKey,
         child: ColoredBox(
           color: Theme.of(context).colorScheme.surface,
-          child: HoopTraceEntryFrame(
+          child: HoopitoEntryFrame(
             image: image,
             mode: EntryMotionMode.standard,
             progress: progress,

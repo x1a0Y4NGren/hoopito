@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
 
 void main() {
   testWidgets('configuration rail is flat and contains no nested surfaces', (
@@ -290,7 +290,7 @@ void main() {
         tester.view.physicalSize = size;
         tester.view.devicePixelRatio = 1;
         await tester.pumpWidget(
-          MaterialApp(theme: buildHoopTraceTheme(), home: const PregamePage()),
+          MaterialApp(theme: buildHoopitoTheme(), home: const PregamePage()),
         );
         await tester.pump();
 
@@ -321,7 +321,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: MediaQuery(
@@ -353,7 +353,7 @@ void main() {
       for (final brightness in [Brightness.light, Brightness.dark]) {
         await tester.pumpWidget(
           MaterialApp(
-            theme: buildHoopTraceTheme(brightness: brightness),
+            theme: buildHoopitoTheme(brightness: brightness),
             home: const PregamePage(),
           ),
         );
@@ -386,7 +386,7 @@ void main() {
     }
 
     for (final brightness in [Brightness.light, Brightness.dark]) {
-      final scheme = buildHoopTraceTheme(brightness: brightness).colorScheme;
+      final scheme = buildHoopitoTheme(brightness: brightness).colorScheme;
       expect(
         contrast(scheme.primary, scheme.onPrimary),
         greaterThanOrEqualTo(4.5),
@@ -448,7 +448,7 @@ void main() {
     'team groups and start expose accessible semantics and 48dp targets',
     (tester) async {
       await tester.pumpWidget(
-        MaterialApp(theme: buildHoopTraceTheme(), home: const PregamePage()),
+        MaterialApp(theme: buildHoopitoTheme(), home: const PregamePage()),
       );
       await tester.pump();
 

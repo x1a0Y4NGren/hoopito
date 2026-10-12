@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
 
 class HalfCourtGeometry {
   const HalfCourtGeometry._();
@@ -120,13 +120,13 @@ class CourtPainter extends CustomPainter {
     this.hiddenShotLocationIds = const <String>{},
     this.transientMarkers = const <TransientShotMarker>[],
     this.eraserMarkers = const <EraserShotMarker>[],
-    this.surfaceColor = HoopTraceColors.cream,
-    this.lineColor = HoopTraceColors.ink,
-    this.accentColor = HoopTraceColors.orange,
-    this.eraserColor = HoopTraceColors.ink,
-    this.teamBlueColor = HoopTraceColors.blue,
-    this.teamRedColor = HoopTraceColors.red,
-    this.markerRingColor = HoopTraceColors.ink,
+    this.surfaceColor = HoopitoColors.cream,
+    this.lineColor = HoopitoColors.ink,
+    this.accentColor = HoopitoColors.orange,
+    this.eraserColor = HoopitoColors.ink,
+    this.teamBlueColor = HoopitoColors.blue,
+    this.teamRedColor = HoopitoColors.red,
+    this.markerRingColor = HoopitoColors.ink,
   });
 
   final List<ScoringShotLocation> shotLocations;

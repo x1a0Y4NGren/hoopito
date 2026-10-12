@@ -3,19 +3,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/data/repositories/player_career_repository.dart';
-import 'package:hooptrace/core/data/repositories/player_repository.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/home/home_page.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/data/repositories/player_career_repository.dart';
+import 'package:hoopito/core/data/repositories/player_repository.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/home/home_page.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
 import 'package:integration_test/integration_test.dart';
 
 void main() {
@@ -27,7 +27,7 @@ void main() {
     'recovers commands and an active match after file database reopen',
     (tester) async {
       final directory = (await tester.runAsync(
-        () => Directory.systemTemp.createTemp('hooptrace-v2-file-recovery-'),
+        () => Directory.systemTemp.createTemp('hoopito-v2-file-recovery-'),
       ))!;
       final file = File(
         '${directory.path}${Platform.pathSeparator}synthetic.sqlite',
@@ -211,7 +211,7 @@ void main() {
       });
 
       await tester.pumpWidget(
-        HoopTraceApp(database: openDatabase!, showEntryAnimation: false),
+        HoopitoApp(database: openDatabase!, showEntryAnimation: false),
       );
       await _waitFor(tester, find.byKey(homeResumeKey));
       expect(find.textContaining(redName), findsAtLeastNWidgets(1));

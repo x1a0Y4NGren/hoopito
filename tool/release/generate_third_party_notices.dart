@@ -17,7 +17,7 @@ Future<void> main() async {
   final packages =
       (config['packages'] as List<dynamic>)
           .cast<Map<String, dynamic>>()
-          .where((entry) => entry['name'] != 'hooptrace')
+          .where((entry) => entry['name'] != 'hoopito')
           .toList()
         ..sort(
           (left, right) =>

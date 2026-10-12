@@ -1,30 +1,32 @@
-# HoopTrace
+# Hoopito · 球豆
 
 <p align="center">
-  <img src="assets/icons/hooptrace-app-icon.png" width="160" alt="HoopTrace 独眼篮球小怪物应用图标">
+  <img src="assets/icons/hoopito-app-icon.png" width="160" alt="Hoopito · 球豆独眼篮球小怪物应用图标">
 </p>
 
-[![Flutter CI](https://github.com/x1a0Y4NGren/hooptrace/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/x1a0Y4NGren/hooptrace/actions/workflows/flutter-ci.yml)
-[![GitHub Release](https://img.shields.io/github/v/release/x1a0Y4NGren/hooptrace)](https://github.com/x1a0Y4NGren/hooptrace/releases/latest)
+[![Flutter CI](https://github.com/x1a0Y4NGren/hoopito/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/x1a0Y4NGren/hoopito/actions/workflows/flutter-ci.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/x1a0Y4NGren/hoopito)](https://github.com/x1a0Y4NGren/hoopito/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-2f2a25.svg)](LICENSE)
 
-> 把注意力留给球场，把比分、落点和复盘交给 HoopTrace。
+> 把注意力留给球场，把比分、落点和复盘交给球豆。
 
-HoopTrace 是一款为篮球爱好者准备的离线单挑记录与复盘工具。一台手机横过来，就能记比分、犯规、比赛事件和投篮落点；打完球再回头看看比分走势、出手分布和关键回合，弄明白哪一片篮筐今天格外不给面子。
+Hoopito（中文名：球豆）是一款为篮球爱好者准备的离线单挑记录与复盘工具。一台手机横过来，就能记比分、犯规、比赛事件和投篮落点；打完球再回头看看比分走势、出手分布和关键回合，弄明白哪一片篮筐今天格外不给面子。
 
 球可以打铁，记录不能糊涂。
 
-> **永久承诺：HoopTrace 官方项目将始终免费并保持开源。** 官方版本不会加入付费墙、订阅、广告或闭源核心功能。
+> **永久承诺：Hoopito · 球豆官方项目将始终免费并保持开源。** 官方版本不会加入付费墙、订阅、广告或闭源核心功能。
 
-**[下载 v2.0.0](https://github.com/x1a0Y4NGren/hooptrace/releases/tag/v2.0.0)** · [查看本次更新](docs/release/v2.0.0-release-notes.md) · [安装与备份](docs/release/v2.0.0-upgrade.md) · [隐私说明](PRIVACY.md) · [参与贡献](CONTRIBUTING.md)
+**[下载 v2.0.0](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.0)** · [查看本次更新](docs/release/v2.0.0-release-notes.md) · [安装与备份](docs/release/v2.0.0-upgrade.md) · [隐私说明](PRIVACY.md) · [参与贡献](CONTRIBUTING.md)
+
+当前源码与介绍网站使用新名称 **Hoopito · 球豆**。公开下载仍是以 **HoopTrace** 发布的 v2.0.0，APK 名称、签名、校验和与历史截图保持原样；本次改名不代表已经发布新 APK。名称用法与升级兼容标识见[品牌与兼容性](docs/design/brand/naming-and-compatibility.md)。
 
 介绍与下载网站位于 [`website/`](website/README.md)，提供中英文页面、桌面连续 3D 球场和手机二维投篮演示，独立于 Flutter 构建。预览与实际验收状态见[网站验收记录](website/VERIFICATION.md)。
 
 > **安装提示：v2 使用新的正式签名，不能覆盖安装历史 v1。** 若旧版有需要保留的记录，请先导出完整 JSON，确认文件已保存在应用之外，再卸载旧版、安装 v2 并恢复。卸载会移除应用私有数据；CSV 和战报图片不能恢复数据库。
 
-**HoopTrace 2.0** 串起开赛、现场记录、赛后总结和球员成长：比赛／历史／球员三个主入口，目标分 1～999 可直接输入，赛后可关联档案、再来一场或分享战报。新的 C「独眼球怪」标识配合静音 Q 弹启动，替换恢复与安全副本回退都先保护当前数据。
+**Hoopito · 球豆** 沿用 2.0 的开赛、现场记录、赛后总结和球员成长流程：比赛／历史／球员三个主入口，目标分 1～999 可直接输入，赛后可关联档案、再来一场或分享战报。C「独眼球怪」标识配合静音 Q 弹启动，替换恢复与安全副本回退都先保护当前数据。
 
-本次版本为 **`2.0.0+4`**，数据库 schema 3、JSON 格式 2。实际构建、CI、设备和公开下载核验的提交及文件哈希统一记录在[发行记录](docs/release/v2.0.0-release-record.md)，历史候选证据保留各自来源。自动备份默认关闭；自然 24 小时调度未实测，系统后台任务不保证准点执行。
+已发布版本为 **`2.0.0+4`**，当前源码保持数据库 schema 3、JSON 格式 2。该发行的实际构建、CI、设备和公开下载核验的提交及文件哈希统一记录在[发行记录](docs/release/v2.0.0-release-record.md)，历史候选证据保留各自来源。自动备份默认关闭；自然 24 小时调度未实测，系统后台任务不保证准点执行。
 
 ## 先看比赛，不看说明书
 
@@ -37,7 +39,7 @@ HoopTrace 是一款为篮球爱好者准备的离线单挑记录与复盘工具�
   <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png" width="45%" alt="HoopTrace 2.0 赛果与比分走势">
 </p>
 
-<p align="center"><sub>2.0 的实际 Android 画面，使用虚构球员与演示对局。截图来自独立对局，拍摄版本与状态见<a href="docs/release/v2.0.0-screenshots.json">截图记录</a>。</sub></p>
+<p align="center"><sub>原 HoopTrace 2.0 的实际 Android 画面，使用虚构球员与演示对局；保留改名前的截图来源。截图来自独立对局，拍摄版本与状态见<a href="docs/release/v2.0.0-screenshots.json">截图记录</a>。</sub></p>
 
 ## 三步打完一场球
 
@@ -67,10 +69,10 @@ HoopTrace 是一款为篮球爱好者准备的离线单挑记录与复盘工具�
 
 ## 当前阵容
 
-- 当前版本：[HoopTrace `v2.0.0`](https://github.com/x1a0Y4NGren/hooptrace/releases/tag/v2.0.0)，Android `2.0.0+4`，使用新的正式签名；历史 v1 不能直接覆盖安装。
+- 已发布版本：[HoopTrace `v2.0.0`](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.0)，Android `2.0.0+4`，使用新的正式签名；历史 v1 不能直接覆盖安装。
 - 发行应用源码 `dd1a315`，主分支持续维护 2.0；数据库 schema 3、JSON 格式 2。后续文档与 AOCI 提交不改变发行 APK 来源，构建与验收记录见[发行记录](docs/release/v2.0.0-release-record.md)。
 - 当前平台：Android 优先，最低 Android API 24，目标 Android API 36。
-- Android Application ID：`io.github.x1a0y4ngren.hooptrace`。
+- Android Application ID：`io.github.x1a0y4ngren.hooptrace`，改名后保留以支持覆盖升级和已有本地数据。
 - iOS 无签名编译已纳入 CI，但尚未完成真机验收和正式发布。
 - 界面完整支持简体中文和英文；首次打开默认中文，用户可在设置中切换英文。主题可跟随系统或固定为浅色/深色。
 
@@ -92,8 +94,8 @@ HoopTrace 是一款为篮球爱好者准备的离线单挑记录与复盘工具�
 - Android SDK，包含可用的模拟器或 Android 设备
 
 ```powershell
-git clone https://github.com/x1a0Y4NGren/hooptrace.git
-cd hooptrace
+git clone https://github.com/x1a0Y4NGren/hoopito.git
+cd hoopito
 flutter pub get
 flutter doctor -v
 flutter run -d <device-id>
@@ -127,12 +129,12 @@ Release APK 必须使用项目维护者保管的正式密钥签名。仓库不�
 
 官方发布渠道：
 
-1. [GitHub Releases](https://github.com/x1a0Y4NGren/hooptrace/releases) 提供签名 APK、校验和与源码归档。
-2. 完成可复现构建核验后申请进入 F-Droid，准备说明见 [F-Droid Notes](docs/release/fdroid-notes.md)。这是 HoopTrace 为保持 GitHub 与 F-Droid 安装包签名一致而设置的项目门槛，并非 F-Droid 收录的一般性要求。
+1. [GitHub Releases](https://github.com/x1a0Y4NGren/hoopito/releases) 提供签名 APK、校验和与源码归档。
+2. 完成可复现构建核验后申请进入 F-Droid，准备说明见 [F-Droid Notes](docs/release/fdroid-notes.md)。这是 Hoopito · 球豆为保持 GitHub 与 F-Droid 安装包签名一致而设置的项目门槛，并非 F-Droid 收录的一般性要求。
 
-HoopTrace 不计划同时分发两个签名不同的官方 Android 包。F-Droid 首发前必须验证由相同源码重现并匹配 GitHub 上游签名 APK；在此之前，唯一的官方 APK 渠道是 GitHub Releases。这样可避免用户切换渠道时被迫卸载应用并承担本地数据丢失风险。
+Hoopito · 球豆不计划同时分发两个签名不同的官方 Android 包。F-Droid 首发前必须验证由相同源码重现并匹配 GitHub 上游签名 APK；在此之前，唯一的官方 APK 渠道是 GitHub Releases。这样可避免用户切换渠道时被迫卸载应用并承担本地数据丢失风险。
 
-不要从未知来源安装声称由 HoopTrace 官方发布的 APK。正式版本应能对应到本仓库中的签名 Git tag 和 GitHub Release。
+不要从未知来源安装声称由 Hoopito · 球豆官方发布的 APK。正式版本应能对应到本仓库中的签名 Git tag 和 GitHub Release。
 
 ## 逛仓库不迷路
 
@@ -149,11 +151,11 @@ Bug、想法、文档改进和代码贡献都欢迎。提交 Issue 或 Pull Requ
 
 ## 设计与动效资产
 
-HoopTrace `v2.0.0` 使用统一的“黑场编辑部”界面：近黑比赛顶栏、冷白内容面和克制的竞技橙共同维持信息层级，红蓝只负责表达球队与比赛数据。比分、计时和现场操作优先保证快速辨认，不让装饰抢走比赛注意力。
+Hoopito · 球豆沿用 2.0 的“黑场编辑部”界面：近黑比赛顶栏、冷白内容面和克制的竞技橙共同维持信息层级，红蓝只负责表达球队与比赛数据。比分、计时和现场操作优先保证快速辨认，不让装饰抢走比赛注意力。
 
 2.0 统一使用已审核的 C「独眼球怪」平台图标和启动画面；Flutter 启动层采用原图纹理网格，提供约一秒的 Q 弹跳跃、上半部水波与收尾余波，全程静音。原图与资源来源见[品牌记录](docs/design/brand/README.md)，设计参数、预览及设备验收范围见[启动动效记录](docs/design/brand/entry-motion.md)。
 
-`assets/animations/paint_ball.json` 与 `assets/animations/paint_splash.json` 是为 HoopTrace 原创的、自包含 Lottie JSON 动效，不含外部资源，随应用本地打包并支持离线运行。运行时使用 `lottie 3.3.3`，其 MIT 许可文本记录在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+`assets/animations/paint_ball.json` 与 `assets/animations/paint_splash.json` 是项目原创的、自包含 Lottie JSON 动效，不含外部资源，随应用本地打包并支持离线运行。运行时使用 `lottie 3.3.3`，其 MIT 许可文本记录在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ## 许可证
 

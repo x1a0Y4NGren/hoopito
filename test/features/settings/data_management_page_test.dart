@@ -4,12 +4,12 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/export_coordinator.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/features/settings/data_management_page.dart';
-import 'package:hooptrace/features/settings/settings_controller.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/features/settings/data_management_page.dart';
+import 'package:hoopito/features/settings/settings_controller.dart';
 
 import '../../test_helpers/test_database.dart';
 import '../../test_helpers/safety_backup_storage.dart';

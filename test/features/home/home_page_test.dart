@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/clock/clock_engine.dart';
-import 'package:hooptrace/core/domain/entities/clock_state.dart';
-import 'package:hooptrace/core/domain/entities/match.dart' as domain_match;
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/home/home_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/clock/clock_engine.dart';
+import 'package:hoopito/core/domain/entities/clock_state.dart';
+import 'package:hoopito/core/domain/entities/match.dart' as domain_match;
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/home/home_page.dart';
 
 void main() {
   testWidgets('a restored untimed match does not claim its clock is paused', (
@@ -59,7 +59,7 @@ void main() {
     );
 
     expect(find.byType(EditorialScaffold), findsOneWidget);
-    expect(find.text('HOOPTRACE'), findsOneWidget);
+    expect(find.text('HOOPITO'), findsOneWidget);
     expect(find.byKey(const Key('home-editorial-hero')), findsOneWidget);
     expect(find.byKey(homeStartScoringKey), findsOneWidget);
     expect(find.byKey(homeResumeKey), findsNothing);
@@ -286,7 +286,7 @@ Future<void> _pumpHome(
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: buildHoopTraceTheme(brightness: brightness),
+      theme: buildHoopitoTheme(brightness: brightness),
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaler: textScaler),
         child: child!,

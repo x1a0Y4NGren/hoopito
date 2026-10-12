@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/settings/language_preferences.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/core/settings/theme_preferences.dart';
-import 'package:hooptrace/features/settings/settings_controller.dart';
-import 'package:hooptrace/features/settings/settings_error_message.dart';
-import 'package:hooptrace/features/settings/settings_action_tile.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/settings/language_preferences.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/core/settings/theme_preferences.dart';
+import 'package:hoopito/features/settings/settings_controller.dart';
+import 'package:hoopito/features/settings/settings_error_message.dart';
+import 'package:hoopito/features/settings/settings_action_tile.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
@@ -113,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (controller.busy) const LinearProgressIndicator(minHeight: 2),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+              padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
               children: [
                 _SettingsSection(
                   title: l10n.settingsAppearanceSection,
@@ -373,7 +373,7 @@ class _MotionPreviewState extends State<_MotionPreview> {
     final reduced =
         widget.preference == MotionPreference.reduced ||
         media?.accessibleNavigation == true;
-    final motion = Theme.of(context).extension<HoopTraceMotionTheme>();
+    final motion = Theme.of(context).extension<HoopitoMotionTheme>();
     final duration = systemDisabled
         ? Duration.zero
         : reduced
@@ -573,7 +573,7 @@ class _SettingsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+      padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

@@ -6,10 +6,10 @@ import 'package:drift/drift.dart' show InsertMode;
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
-import 'package:hooptrace/core/data/repositories/rule_template_repository.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
+import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
 
 import '../../test_helpers/test_database.dart';
 
@@ -112,7 +112,7 @@ void main() {
     'startup repairs old file triggers before writing built-in rules',
     () async {
       final directory = await Directory.systemTemp.createTemp(
-        'hooptrace-old-dirty-trigger-',
+        'hoopito-old-dirty-trigger-',
       );
       addTearDown(() => directory.delete(recursive: true));
       final file = File('${directory.path}/synthetic.sqlite');

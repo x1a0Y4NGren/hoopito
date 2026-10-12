@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/analytics/player_career_aggregate.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/players/player_career_controller.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/analytics/player_career_aggregate.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/players/player_career_controller.dart';
 
 class PlayerCareerPage extends StatelessWidget {
   const PlayerCareerPage({
@@ -56,7 +56,7 @@ class PlayerCareerPage extends StatelessWidget {
       body: ListenableBuilder(
         listenable: controller,
         builder: (context, child) => SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+          padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
           child: _CareerBody(
             controller: controller,
             player: player,
@@ -408,7 +408,7 @@ class _Delta extends StatelessWidget {
             '${positive ? '+' : ''}${value.toStringAsFixed(1)}',
             style: TextStyle(
               color: color,
-              fontFamily: HoopTraceTypography.displayFamily,
+              fontFamily: HoopitoTypography.displayFamily,
               fontWeight: FontWeight.w800,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
@@ -675,7 +675,7 @@ class _TrendRow extends StatelessWidget {
                 TextSpan(
                   text: '${trend.fieldGoalMade}/${trend.fieldGoalAttempts}',
                   style: const TextStyle(
-                    fontFamily: HoopTraceTypography.displayFamily,
+                    fontFamily: HoopitoTypography.displayFamily,
                     fontWeight: FontWeight.w700,
                     fontFeatures: [FontFeature.tabularFigures()],
                   ),
@@ -684,7 +684,7 @@ class _TrendRow extends StatelessWidget {
                 TextSpan(
                   text: '${trend.freeThrowMade}/${trend.freeThrowAttempts}',
                   style: const TextStyle(
-                    fontFamily: HoopTraceTypography.displayFamily,
+                    fontFamily: HoopitoTypography.displayFamily,
                     fontWeight: FontWeight.w700,
                     fontFeatures: [FontFeature.tabularFigures()],
                   ),
@@ -697,7 +697,7 @@ class _TrendRow extends StatelessWidget {
             '${MaterialLocalizations.of(context).formatShortDate(trend.playedAt.toLocal())}',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: editorial.mutedInk,
-              fontFamily: HoopTraceTypography.displayFamily,
+              fontFamily: HoopitoTypography.displayFamily,
               fontWeight: FontWeight.w800,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
@@ -764,7 +764,7 @@ class _TrendResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final numericStyle = Theme.of(context).textTheme.titleLarge?.copyWith(
-      fontFamily: HoopTraceTypography.displayFamily,
+      fontFamily: HoopitoTypography.displayFamily,
       fontWeight: FontWeight.w800,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
@@ -862,7 +862,7 @@ class _ZoneMetric extends StatelessWidget {
           Text(
             '$value',
             style: const TextStyle(
-              fontFamily: HoopTraceTypography.displayFamily,
+              fontFamily: HoopitoTypography.displayFamily,
               fontWeight: FontWeight.w800,
               fontFeatures: [FontFeature.tabularFigures()],
             ),

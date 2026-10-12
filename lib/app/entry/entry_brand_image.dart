@@ -1,10 +1,10 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/services.dart';
-import 'package:hooptrace/app/entry/entry_motion_pose.dart';
-import 'package:hooptrace/core/diagnostics/startup_diagnostics.dart';
+import 'package:hoopito/app/entry/entry_motion_pose.dart';
+import 'package:hoopito/core/diagnostics/startup_diagnostics.dart';
 
-const entryBrandAsset = 'assets/icons/hooptrace-app-icon-foreground.png';
+const entryBrandAsset = 'assets/icons/hoopito-app-icon-foreground.png';
 
 /// Decode for the physical size of the fixed native/Flutter canvas. The
 /// approved source remains unchanged and the caller owns the returned image.

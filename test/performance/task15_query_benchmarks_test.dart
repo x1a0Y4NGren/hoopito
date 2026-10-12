@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/match_view_data_mapper.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
+import 'package:hoopito/app/match_view_data_mapper.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
 
 import '../test_helpers/test_database.dart';
 

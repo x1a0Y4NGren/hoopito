@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
 
 import '../test_helpers/test_database.dart';
 

@@ -258,9 +258,7 @@ for (const capture of screenshots.captures) {
   });
 }
 
-const logo = await localSource(
-  'assets/icons/hooptrace-app-icon-foreground.png',
-);
+const logo = await localSource('assets/icons/hoopito-app-icon-foreground.png');
 const brandApproval = JSON.parse(
   await readFile(join(repositoryRoot, 'docs/design/brand/source.json'), 'utf8'),
 );
@@ -420,6 +418,7 @@ const bold = await readFile(
 const medium = await readFile(
   join(repositoryRoot, 'assets/fonts/BarlowCondensed-Medium.ttf'),
 );
+const shareNoto = await fontverter.convert(notoSubset, 'sfnt');
 const share = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
 <defs>
   <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#16191C"/><stop offset="1" stop-color="#080A0C"/></linearGradient>
@@ -431,7 +430,8 @@ const share = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"
   <path d="M0 0H340V630H0Z M95 0V190H245V0 M95 190A75 75 0 0 0 245 190 M42 0V42A130 130 0 0 0 298 42V0"/>
 </g>
 <path d="M64 73H118" stroke="#FF5A1F" stroke-width="4"/>
-${glyphPaths(medium, 'HOOPTRACE', { x: 137, y: 86, size: 31, tracking: 5, color: '#F4F3EF' })}
+${glyphPaths(medium, 'HOOPITO', { x: 137, y: 86, size: 31, tracking: 5, color: '#F4F3EF' })}
+${glyphPaths(shareNoto, '· 球豆', { x: 281, y: 86, size: 25, color: '#F4F3EF' })}
 ${glyphPaths(bold, 'EVERY SHOT.', { x: 62, y: 264, size: 115, color: '#F4F3EF' })}
 ${glyphPaths(bold, 'LEAVES A TRACE.', { x: 62, y: 390, size: 115, color: '#FF5A1F' })}
 ${glyphPaths(medium, 'OFFLINE 1v1 BASKETBALL', { x: 66, y: 467, size: 29, tracking: 3, color: '#AAA9A5' })}
@@ -448,15 +448,21 @@ await output(
     source_dependencies: [
       { source: logo.source, sha256: logo.source_sha256 },
       { source: 'assets/fonts/BarlowCondensed-Bold.ttf', sha256: sha256(bold) },
+      { source: noto.source, sha256: noto.source_sha256 },
+      {
+        source: 'website/public/fonts/noto-sc.woff2',
+        sha256: sha256(notoSubset),
+      },
       {
         source: 'assets/fonts/BarlowCondensed-Medium.ttf',
         sha256: sha256(medium),
       },
     ],
     transformation:
-      'Original SVG composition rasterized to PNG; embedded approved logo only scaled; Barlow lettering converted to glyph paths for portable rendering',
+      'Original SVG composition rasterized to PNG; embedded approved logo only scaled; Barlow and Noto Sans SC lettering converted to glyph paths for portable rendering',
     dimensions_px: [1200, 630],
-    license: 'MIT (repository graphic), SIL-OFL-1.1 (Barlow glyphs)',
+    license:
+      'MIT (repository graphic), SIL-OFL-1.1 (Barlow and Noto Sans SC glyphs)',
   },
 );
 

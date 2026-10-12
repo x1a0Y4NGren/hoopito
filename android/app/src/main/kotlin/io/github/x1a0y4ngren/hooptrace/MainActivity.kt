@@ -183,9 +183,9 @@ class MainActivity : FlutterActivity() {
             "io.github.x1a0y4ngren.hooptrace/entry_renderer"
         private const val ENTRY_MOTION_PREFERENCES = "entry_motion_preference"
         private const val ENTRY_MOTION_KEY = "motion"
-        private const val ENTRY_MOTION_ARGUMENT_PREFIX = "--hooptrace-entry-motion="
+        private const val ENTRY_MOTION_ARGUMENT_PREFIX = "--hoopito-entry-motion="
         private const val ENTRY_ANIMATION_DISABLED_ARGUMENT =
-            "--hooptrace-entry-animation=disabled"
+            "--hoopito-entry-animation=disabled"
         private var entryAnimationClaimed = false
     }
 }

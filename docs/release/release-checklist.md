@@ -1,4 +1,4 @@
-# HoopTrace Release Checklist
+# Hoopito · 球豆 Release Checklist
 
 本清单适用于 GitHub Release，并包含后续 F-Droid 提交所需的前置核验。每个发行版从干净的 `main` 和唯一签名 tag 构建。
 
@@ -12,9 +12,9 @@
 - [ ] 将 `pubspec.yaml` 的 `version` 更新为目标 `versionName+versionCode`。
 - [ ] 同步 `lib/app/app_metadata.dart` 中用于备份清单的版本号。
 - [ ] 将 `CHANGELOG.md` 的 Unreleased 内容归入目标版本和发布日期。
-- [ ] 确认 Android Application ID 仍为 `io.github.x1a0y4ngren.hooptrace`。
+- [ ] 确认 Android Application ID 仍为 `io.github.x1a0y4ngren.hooptrace`；保留原签名、原生技术标识和本地数据名称，遵守[品牌与兼容性](../design/brand/naming-and-compatibility.md)。
 - [ ] 同步 README 中的当前正式版本、下载与更新说明链接、功能描述和真实界面截图；不得保留上个版本或发布候选文案。
-- [ ] 确认应用显示名、图标、MIT License 和 PRIVACY 均为最终版本。
+- [ ] 确认显示名使用英文 Hoopito、中文球豆，双语并列使用 Hoopito · 球豆；图标、MIT License 和 PRIVACY 均为最终版本。
 - [ ] 搜索源码中的 `TODO`、模板标识、测试域名和调试开关并逐项评估。
 
 ## 2. 依赖、隐私与权限
@@ -75,7 +75,7 @@ flutter build apk --debug
 - [ ] 首次发布可运行 `tool/release/setup_android_signing.ps1`，在仓库外创建 keystore 并生成被忽略的签名配置。
 - [ ] 在未提交的 `android/key.properties` 中配置 `storeFile`、`storePassword`、`keyAlias` 和 `keyPassword`。
 - [ ] 运行 `tool/release/build_android_release.ps1`，从干净提交生成签名 APK、证书记录、权限记录和 `SHA256SUMS`。
-- [ ] 确认没有为上游发布设置 `allowUnsignedRelease` 或 `HOOPTRACE_ALLOW_UNSIGNED_RELEASE`。
+- [ ] 确认没有为上游发布设置 `allowUnsignedRelease` 或 `HOOPITO_ALLOW_UNSIGNED_RELEASE`。
 - [ ] 使用 `apksigner verify --verbose --print-certs <apk>` 验证签名和证书指纹。
 - [ ] 将首次正式签名证书 SHA-256 指纹写入维护者的离线发布记录，后续版本必须一致。
 - [ ] 计算 `SHA256SUMS`，至少覆盖发布 APK。
@@ -106,7 +106,7 @@ flutter build apk --debug
 
 - [ ] 以版本 tag 创建非草稿 Release。
 - [ ] 发布说明包含主要变化、升级说明、隐私声明链接和已知限制。
-- [ ] 上传正式签名 APK 和 `SHA256SUMS`。
+- [ ] 上传正式签名 APK 和 `SHA256SUMS`；新发行 APK 命名为 `Hoopito-v<version>-android.apk`，既有 `HoopTrace-v2.0.0-android.apk` 保留原名。
 - [ ] 保留 GitHub 自动生成的 source code archives。
 - [ ] 明确 Android 优先状态以及 iOS 尚未正式发布。
 - [ ] 从公开 Release 页面重新下载 APK，核验 SHA-256 和签名后安装冒烟测试。

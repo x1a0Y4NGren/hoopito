@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'package:hooptrace/app/design_system/editorial_motion.dart';
-import 'package:hooptrace/app/design_system/editorial_theme.dart';
-import 'package:hooptrace/app/design_system/editorial_tokens.dart';
+import 'package:hoopito/app/design_system/editorial_motion.dart';
+import 'package:hoopito/app/design_system/editorial_theme.dart';
+import 'package:hoopito/app/design_system/editorial_tokens.dart';
 
-export 'package:hooptrace/app/design_system/editorial_color_helpers.dart';
-export 'package:hooptrace/app/design_system/editorial_motion.dart';
-export 'package:hooptrace/app/design_system/editorial_theme.dart';
-export 'package:hooptrace/app/design_system/editorial_tokens.dart';
+export 'package:hoopito/app/design_system/editorial_color_helpers.dart';
+export 'package:hoopito/app/design_system/editorial_motion.dart';
+export 'package:hoopito/app/design_system/editorial_theme.dart';
+export 'package:hoopito/app/design_system/editorial_tokens.dart';
 
-ThemeData buildHoopTraceTheme({Brightness brightness = Brightness.light}) {
+ThemeData buildHoopitoTheme({Brightness brightness = Brightness.light}) {
   final isDark = brightness == Brightness.dark;
   final editorial = isDark
-      ? const HoopTraceEditorialTheme.dark()
-      : const HoopTraceEditorialTheme.light();
+      ? const HoopitoEditorialTheme.dark()
+      : const HoopitoEditorialTheme.light();
   final colorScheme =
       ColorScheme.fromSeed(
         seedColor: editorial.arenaAccent,
@@ -51,20 +51,20 @@ ThemeData buildHoopTraceTheme({Brightness brightness = Brightness.light}) {
   final textTheme = fallbackTextTheme
       .copyWith(
         bodyLarge: fallbackTextTheme.bodyLarge?.copyWith(
-          fontSize: HoopTraceTypography.body,
+          fontSize: HoopitoTypography.body,
           height: 1.45,
         ),
         bodyMedium: fallbackTextTheme.bodyMedium?.copyWith(
-          fontSize: HoopTraceTypography.label,
+          fontSize: HoopitoTypography.label,
           height: 1.45,
         ),
         labelLarge: fallbackTextTheme.labelLarge?.copyWith(
-          fontSize: HoopTraceTypography.label,
+          fontSize: HoopitoTypography.label,
           fontWeight: FontWeight.w700,
           letterSpacing: 0.4,
         ),
         titleLarge: fallbackTextTheme.titleLarge?.copyWith(
-          fontSize: HoopTraceTypography.title,
+          fontSize: HoopitoTypography.title,
           fontWeight: FontWeight.w700,
         ),
       )
@@ -128,7 +128,7 @@ ThemeData buildHoopTraceTheme({Brightness brightness = Brightness.light}) {
       ),
     ),
     listTileTheme: const ListTileThemeData(
-      minVerticalPadding: HoopTraceSpacing.compact,
+      minVerticalPadding: HoopitoSpacing.compact,
       minTileHeight: 48,
       shape: RoundedRectangleBorder(),
     ),
@@ -166,8 +166,8 @@ ThemeData buildHoopTraceTheme({Brightness brightness = Brightness.light}) {
     extensions: [
       editorial,
       isDark
-          ? const HoopTraceMotionTheme.dark()
-          : const HoopTraceMotionTheme.light(),
+          ? const HoopitoMotionTheme.dark()
+          : const HoopitoMotionTheme.light(),
     ],
   );
 }

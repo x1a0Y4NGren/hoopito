@@ -44,7 +44,7 @@ def baseline():
     }
 
 
-def successful_after(before):
+def successful_after(before, brand='hoopito'):
     after = copy.deepcopy(before)
     after.update(android_epoch_start=186401, android_epoch_end=186402,
                  uptime_seconds=96401)
@@ -52,7 +52,7 @@ def successful_after(before):
     after['settings']['backup.automatic.dirty'] = False
     after['settings'].pop('backup.automatic.dirtySince')
     after['settings']['backup.automatic.lastBackupAt'] = '1970-01-03T03:46:40.000Z'
-    name = 'hooptrace-auto-19700103-034640.json'
+    name = f'{brand}-auto-19700103-034640.json'
     after['settings']['backup.automatic.lastBackupPath'] = TREE + '/document/' + name
     after['provider_files'] = [{'display_name': name, 'sha256': 'c' * 64,
                                 'json_envelope_valid': True}]
@@ -66,6 +66,14 @@ def successful_after(before):
 
 
 class ObserverEvidenceTest(unittest.TestCase):
+    def test_new_and_legacy_backup_names_both_prove_a_natural_write(self):
+        before = baseline()
+        for brand in ('hoopito', 'hooptrace'):
+            with self.subTest(brand=brand):
+                report = self.verify(before, successful_after(before, brand),
+                                     restored_sha256='c' * 64)
+                self.assertEqual(report['status'], 'passed')
+
     def test_stable_host_copy_closes_files_before_windows_cleanup(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -92,7 +100,7 @@ class ObserverEvidenceTest(unittest.TestCase):
             finally:
                 connection.close()
             output.rename(root / 'closed.sqlite')
-            self.assertFalse(any(root.glob('hooptrace-observer-*')))
+            self.assertFalse(any(root.glob('hoopito-observer-*')))
 
     def test_natural_early_noop_success_does_not_hide_later_backup(self):
         before = baseline()
@@ -249,6 +257,24 @@ class ObserverEvidenceTest(unittest.TestCase):
         damaged = payload.replace(b'"matches":[]', b'"matches":[{}]')
         with self.assertRaises(ValueError):
             observer.validate_json_envelope(damaged)
+
+    def test_manifest_accepts_both_brand_names_and_rejects_other_apps(self):
+        data = {'matches': []}
+        for brand in ('Hoopito', 'HoopTrace', 'AnotherApp'):
+            with self.subTest(brand=brand):
+                manifest = {'appName': brand, 'appVersion': '2.0.0+4',
+                            'formatVersion': 2, 'schemaVersion': 3,
+                            'exportedAt': '2026-10-12T00:00:00.000Z',
+                            'recordCounts': {'matches': 0}}
+                manifest['checksum'] = observer.sha256(observer.encode({
+                    'manifest': manifest, 'data': data,
+                }))
+                payload = observer.encode({'manifest': manifest, 'data': data})
+                if brand == 'AnotherApp':
+                    with self.assertRaises(ValueError):
+                        observer.validate_json_envelope(payload)
+                else:
+                    self.assertTrue(observer.validate_json_envelope(payload)['json_envelope_valid'])
 
     def test_output_rejects_repo_paths_and_existing_evidence(self):
         with self.assertRaises(ValueError):

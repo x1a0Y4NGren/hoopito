@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-10-12
+
+### Changed
+
+- 项目正式更名为 Hoopito · 球豆，同步 App、启动标签、网站、文档和当前宣传素材；保留已批准的独眼球怪 Logo。
+- 新 JSON 导出标识为 Hoopito，导出文件使用 hoopito 前缀；继续支持旧 HoopTrace 备份及新旧自动备份共存。
+- 保留 v2 安装身份、正式签名、数据库与设置，支持覆盖升级；旧 App 无法导入新品牌导出的 JSON。
+
+详情见[双语发行说明](docs/release/v2.0.1-release-notes.md)。
+
 ## [2.0.0] - 2026-10-09
 
 主要变化见[双语发行说明](docs/release/v2.0.0-release-notes.md)，实际构建和验证见[发行记录](docs/release/v2.0.0-release-record.md)，安装与备份步骤见[升级指南](docs/release/v2.0.0-upgrade.md)。
@@ -91,7 +101,8 @@
 - 计分页顶部信息在小屏横屏和长球员名称下保持稳定布局。
 - 未配置正式密钥时，上游 Release 构建明确失败；未签名构建必须显式选择。
 
-[Unreleased]: https://github.com/x1a0Y4NGren/hooptrace/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/x1a0Y4NGren/hoopito/compare/v2.0.1...HEAD
+[2.0.1]: docs/release/v2.0.1-release-notes.md
 [2.0.0]: docs/release/v2.0.0-release-notes.md
 [1.0.0]: https://github.com/x1a0Y4NGren/hooptrace/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/x1a0Y4NGren/hooptrace/releases/tag/v0.1.0

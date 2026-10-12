@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/entry/entry_renderer_ready.dart';
+import 'package:hoopito/app/entry/entry_renderer_ready.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

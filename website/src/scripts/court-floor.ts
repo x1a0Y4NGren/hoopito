@@ -146,7 +146,7 @@ export function createCourtFloor({
       toneMapped: true,
     }),
   );
-  surface.customProgramCacheKey = () => 'hooptrace-cached-maple-light-v1';
+  surface.customProgramCacheKey = () => 'hoopito-cached-maple-light-v1';
   surface.onBeforeCompile = (shader) => {
     shader.uniforms.uFloorLight = strength;
     shader.vertexShader = shader.vertexShader

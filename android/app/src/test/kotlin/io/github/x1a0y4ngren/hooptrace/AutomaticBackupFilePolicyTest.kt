@@ -6,6 +6,15 @@ import org.junit.Test
 
 class AutomaticBackupFilePolicyTest {
     @Test
+    fun rebrandOwnsBothPrefixesWithoutExpandingRetentionToManualFiles() {
+        for (prefix in listOf("hoopito", "hooptrace")) {
+            assertTrue(AutomaticBackupFilePolicy.isOwnedDocument("$prefix-auto-20261012.json", "application/json"))
+            assertFalse(AutomaticBackupFilePolicy.isAutomaticBackupFile("$prefix-backup-20261012.json"))
+            assertFalse(AutomaticBackupFilePolicy.isAutomaticBackupFile("../$prefix-auto-20261012.json"))
+        }
+    }
+
+    @Test
     fun onlyAutomaticJsonDocumentsAreOwnedByRetention() {
         assertTrue(
             AutomaticBackupFilePolicy.isOwnedDocument(

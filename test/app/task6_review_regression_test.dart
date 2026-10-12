@@ -6,25 +6,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' show Value;
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_en.dart';
-import 'package:hooptrace/app/provider_router.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/features/history/history_page.dart';
-import 'package:hooptrace/features/home/home_page.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
-import 'package:hooptrace/features/summary/match_summary_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_en.dart';
+import 'package:hoopito/app/provider_router.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/features/history/history_page.dart';
+import 'package:hoopito/features/home/home_page.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
+import 'package:hoopito/features/summary/match_summary_page.dart';
 
 import '../test_helpers/test_database.dart';
 
@@ -284,7 +284,7 @@ void main() {
       ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(database)],
         child: MaterialApp.router(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -970,7 +970,7 @@ Widget _routerHost(
         automaticBackupServiceProvider.overrideWithValue(automaticBackup),
     ],
     child: MaterialApp.router(
-      theme: buildHoopTraceTheme(),
+      theme: buildHoopitoTheme(),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/repositories/player_comparison_repository.dart';
-import 'package:hooptrace/core/domain/analytics/player_comparison.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/repositories/player_comparison_repository.dart';
+import 'package:hoopito/core/domain/analytics/player_comparison.dart';
 
 import '../../test_helpers/test_database.dart';
 

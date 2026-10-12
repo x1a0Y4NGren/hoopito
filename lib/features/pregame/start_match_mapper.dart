@@ -1,7 +1,7 @@
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
 
 class PregameSetupValidationException implements Exception {
   PregameSetupValidationException(this.result);

@@ -44,10 +44,10 @@ const sampleLabel =
   </div>
   <div class="page-grain" aria-hidden="true"></div>
   <header class="site-header">
-    <a class="wordmark" href="#hero" aria-label="HoopTrace">
+    <a class="wordmark" href="#hero" aria-label="Hoopito · 球豆">
       <img src="/brand/mark.webp" alt="" width="40" height="40" />
       <span>
-        HOOPTRACE<span class="wordmark-dot">.</span>
+        HOOPITO<span class="wordmark-dot">.</span>
       </span>
     </a>
     <nav aria-label={locale === 'zh' ? '主要导航' : 'Main navigation'}>
@@ -415,6 +415,8 @@ const sampleLabel =
               <figcaption>
                 <span class="display">01 / REVIEW</span>
                 {c.replay.summary}
+                <br />
+                <small>{c.replay.captureNote}</small>
               </figcaption>
             </figure>
             <figure
@@ -435,6 +437,8 @@ const sampleLabel =
               <figcaption>
                 <span class="display">02 / HISTORY</span>
                 {c.replay.history}
+                <br />
+                <small>{c.replay.captureNote}</small>
               </figcaption>
             </figure>
           </div>
@@ -492,7 +496,7 @@ const sampleLabel =
               <span class="release-tag">v{release.version}</span>
             </div>
             <div class="version-line">
-              <span class="display">HOOPTRACE</span>
+              <span class="display">HOOPITO</span>
               <b class="display">
                 {release.version.split('.').slice(0, 2).join('.')}
               </b>
@@ -578,7 +582,7 @@ const sampleLabel =
   <footer class="site-footer content-width">
     <div class="footer-heading">
       <span class="display">
-        HOOPTRACE<span>.</span>
+        HOOPITO<span>.</span>
       </span>
       <p>{c.footer.line}</p>
       <a href="#hero" aria-label={c.footer.back}>

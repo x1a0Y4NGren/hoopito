@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
 /// One confirmation contract for scoring, replay and later corrections.
 Future<TrackingCoverage?> confirmRecordingCoverage(

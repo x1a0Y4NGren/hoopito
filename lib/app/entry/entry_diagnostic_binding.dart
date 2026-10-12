@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:hooptrace/core/diagnostics/startup_diagnostics.dart';
+import 'package:hoopito/core/diagnostics/startup_diagnostics.dart';
 
 /// Profile-only framework spans include deferred frames that are not submitted
 /// to the engine and therefore cannot appear in FrameTiming raster samples.

@@ -1,17 +1,17 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/repositories/player_repository.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/home/home_page.dart';
-import 'package:hooptrace/features/players/player_career_page.dart';
-import 'package:hooptrace/features/players/player_comparison_page.dart';
-import 'package:hooptrace/features/players/player_list_page.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
-import 'package:hooptrace/features/summary/match_summary_page.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/repositories/player_repository.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/home/home_page.dart';
+import 'package:hoopito/features/players/player_career_page.dart';
+import 'package:hoopito/features/players/player_comparison_page.dart';
+import 'package:hoopito/features/players/player_list_page.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
+import 'package:hoopito/features/summary/match_summary_page.dart';
 import 'package:integration_test/integration_test.dart';
 
 void main() {
@@ -40,7 +40,7 @@ void main() {
         Player(id: opponentId, nickname: opponentName, createdAt: createdAt),
       );
 
-      await tester.pumpWidget(HoopTraceApp(database: database));
+      await tester.pumpWidget(HoopitoApp(database: database));
       await _pumpUntilFound(tester, find.byKey(homeStartScoringKey));
 
       await _playAndFinishLinkedMatch(

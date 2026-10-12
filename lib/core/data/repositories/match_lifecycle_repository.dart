@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
 /// Owns history-only lifecycle operations that are deliberately separate from
 /// the live command kernel. Archive is reversible organization; permanent

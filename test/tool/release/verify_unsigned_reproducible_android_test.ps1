@@ -26,8 +26,8 @@ function Assert-Throws {
 }
 
 $testBase = [IO.Path]::GetFullPath("D:\temp")
-$workspace = Join-Path $testBase ("hooptrace-reproducibility-test-" + [guid]::NewGuid().ToString("N"))
-$source = Join-Path $workspace "hooptrace-reproducible-source"
+$workspace = Join-Path $testBase ("hoopito-reproducibility-test-" + [guid]::NewGuid().ToString("N"))
+$source = Join-Path $workspace "hoopito-reproducible-source"
 $token = [guid]::NewGuid().ToString("N")
 New-Item -ItemType Directory -Path $workspace | Out-Null
 try {
@@ -44,7 +44,7 @@ try {
     Assert-Throws { Get-SafeCanonicalSource -WorkspaceRoot $workspace -RepoRoot $repoRoot } "already exists"
     Assert-Throws { Remove-OwnedCanonicalSource -WorkspaceRoot $workspace -SourcePath $source -OwnershipToken $token } "ownership"
     if (-not (Test-Path -LiteralPath (Join-Path $source "keep.txt"))) { throw "Unowned contents were deleted." }
-    [IO.File]::WriteAllText((Join-Path $source ".hooptrace-reproducible-owner"), $token)
+    [IO.File]::WriteAllText((Join-Path $source ".hoopito-reproducible-owner"), $token)
     Assert-Throws { Remove-OwnedCanonicalSource -WorkspaceRoot $workspace -SourcePath $workspace -OwnershipToken $token } "exact"
     Assert-Throws { Remove-OwnedCanonicalSource -WorkspaceRoot $workspace -SourcePath $source -OwnershipToken "different" } "ownership"
     Remove-OwnedCanonicalSource -WorkspaceRoot $workspace -SourcePath $source -OwnershipToken $token
@@ -57,7 +57,7 @@ try {
     try {
         Assert-Throws { Get-SafeCanonicalSource -WorkspaceRoot $junction -RepoRoot $repoRoot } "reparse point"
         New-Item -ItemType Directory -Path $source | Out-Null
-        [IO.File]::WriteAllText((Join-Path $source ".hooptrace-reproducible-owner"), $token)
+        [IO.File]::WriteAllText((Join-Path $source ".hoopito-reproducible-owner"), $token)
         $nestedJunction = Join-Path $source "linked"
         New-Item -ItemType Junction -Path $nestedJunction -Value $target | Out-Null
         try {
@@ -109,7 +109,7 @@ try {
     $firstBin = Join-Path $workspace "first-bin"
     $secondBin = Join-Path $workspace "second-bin"
     New-Item -ItemType Directory -Path $firstBin, $secondBin | Out-Null
-    $commandName = "hooptrace_repro_test.cmd"
+    $commandName = "hoopito_repro_test.cmd"
     [IO.File]::WriteAllText((Join-Path $firstBin $commandName), "@exit /b 0")
     [IO.File]::WriteAllText((Join-Path $secondBin $commandName), "@exit /b 0")
     [IO.File]::WriteAllText((Join-Path $firstBin "flutter.bat"), "@exit /b 0")
@@ -132,7 +132,7 @@ try {
 } finally {
     $resolved = (Resolve-Path -LiteralPath $workspace).Path
     if ($resolved -ne $workspace -or [IO.Path]::GetDirectoryName($resolved) -ne $testBase -or
-        [IO.Path]::GetFileName($resolved) -notlike "hooptrace-reproducibility-test-*") {
+        [IO.Path]::GetFileName($resolved) -notlike "hoopito-reproducibility-test-*") {
         throw "Refusing unsafe test cleanup: $resolved"
     }
     if (Get-ChildItem -LiteralPath $resolved -Recurse -Force | Where-Object { $_.Attributes -band [IO.FileAttributes]::ReparsePoint }) {

@@ -2,39 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/design_system/editorial_color_helpers.dart'
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/design_system/editorial_color_helpers.dart'
     as color_helpers;
-import 'package:hooptrace/app/design_system/editorial_motion.dart' as motion;
-import 'package:hooptrace/app/design_system/editorial_theme.dart'
+import 'package:hoopito/app/design_system/editorial_motion.dart' as motion;
+import 'package:hoopito/app/design_system/editorial_theme.dart'
     as editorial_theme;
-import 'package:hooptrace/app/design_system/editorial_tokens.dart' as tokens;
+import 'package:hoopito/app/design_system/editorial_tokens.dart' as tokens;
 
 void main() {
   group('editorial theme', () {
     test('focused modules expose tokens while app_theme stays compatible', () {
-      const focusedTheme = editorial_theme.HoopTraceEditorialTheme.light();
-      const focusedMotion = motion.HoopTraceMotionTheme.light();
-      final assembledTheme = buildHoopTraceTheme();
+      const focusedTheme = editorial_theme.HoopitoEditorialTheme.light();
+      const focusedMotion = motion.HoopitoMotionTheme.light();
+      final assembledTheme = buildHoopitoTheme();
 
-      expect(tokens.HoopTraceColors.offWhite, focusedTheme.canvas);
+      expect(tokens.HoopitoColors.offWhite, focusedTheme.canvas);
       expect(focusedMotion.scoreFlight, const Duration(milliseconds: 480));
       expect(
         color_helpers.accessibleForegroundFor(focusedTheme.teamBlue),
         Colors.white,
       );
       expect(
-        assembledTheme.extension<HoopTraceEditorialTheme>()?.canvas,
+        assembledTheme.extension<HoopitoEditorialTheme>()?.canvas,
         focusedTheme.canvas,
       );
     });
 
     test('light and dark palettes expose the approved semantic colors', () {
-      final light = buildHoopTraceTheme().extension<HoopTraceEditorialTheme>()!;
-      final dark = buildHoopTraceTheme(
+      final light = buildHoopitoTheme().extension<HoopitoEditorialTheme>()!;
+      final dark = buildHoopitoTheme(
         brightness: Brightness.dark,
-      ).extension<HoopTraceEditorialTheme>()!;
+      ).extension<HoopitoEditorialTheme>()!;
 
       expect(light.canvas, const Color(0xFFF4F3EF));
       expect(light.surface, const Color(0xFFFFFFFF));
@@ -70,7 +70,7 @@ void main() {
     });
 
     test('motion tokens match the editorial choreography', () {
-      const motion = HoopTraceMotionTheme.light();
+      const motion = HoopitoMotionTheme.light();
 
       expect(motion.press, const Duration(milliseconds: 90));
       expect(motion.state, const Duration(milliseconds: 180));
@@ -99,7 +99,7 @@ void main() {
         ) async {
           await tester.pumpWidget(
             MaterialApp(
-              theme: buildHoopTraceTheme(brightness: brightness),
+              theme: buildHoopitoTheme(brightness: brightness),
               home: Scaffold(body: widget),
             ),
           );
@@ -110,7 +110,7 @@ void main() {
           final context = tester.element(find.byType(componentType));
           final editorial = Theme.of(
             context,
-          ).extension<HoopTraceEditorialTheme>()!;
+          ).extension<HoopitoEditorialTheme>()!;
           final outlineFinder = find.descendant(
             of: find.byType(componentType),
             matching: find.byWidgetPredicate((widget) {
@@ -176,11 +176,11 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: const Scaffold(
             body: Column(
               children: [
-                EditorialMasthead(title: 'HoopTrace', eyebrow: 'Game desk'),
+                EditorialMasthead(title: 'Hoopito', eyebrow: 'Game desk'),
                 EditorialIndexRow(index: '07', title: 'Latest game'),
               ],
             ),
@@ -190,7 +190,7 @@ void main() {
 
       final editorial = Theme.of(
         tester.element(find.text('GAME DESK')),
-      ).extension<HoopTraceEditorialTheme>()!;
+      ).extension<HoopitoEditorialTheme>()!;
       expect(
         tester.widget<Text>(find.text('GAME DESK')).style?.color,
         editorial.mutedInk,
@@ -208,7 +208,7 @@ void main() {
       final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: const Scaffold(
             body: Column(
               children: [
@@ -244,14 +244,14 @@ void main() {
         tester.view.devicePixelRatio = 1;
         await tester.pumpWidget(
           MaterialApp(
-            theme: buildHoopTraceTheme(brightness: brightness),
+            theme: buildHoopitoTheme(brightness: brightness),
             home: const EditorialScaffold(body: Text('desk')),
           ),
         );
         final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
         final palette = Theme.of(
           tester.element(find.text('desk')),
-        ).extension<HoopTraceEditorialTheme>()!;
+        ).extension<HoopitoEditorialTheme>()!;
         expect(scaffold.backgroundColor, palette.canvas);
         return tester
             .widget<Padding>(find.byKey(const Key('editorial-page-padding')))
@@ -273,7 +273,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: Scaffold(
             body: Column(
               children: [
@@ -316,7 +316,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: const TeamActionRail(
             teamLabel: 'Red team',
             teamColor: Color(0xFFA41E29),
@@ -339,31 +339,31 @@ void main() {
               locale: locale,
               supportedLocales: const [Locale('en'), Locale('zh')],
               localizationsDelegates: GlobalMaterialLocalizations.delegates,
-              theme: buildHoopTraceTheme(),
+              theme: buildHoopitoTheme(),
               home: EditorialMasthead(title: label),
             ),
           );
           return tester.widget<Text>(find.text(label)).style;
         }
 
-        final english = await mastheadStyle(const Locale('en'), 'HOOPTRACE');
+        final english = await mastheadStyle(const Locale('en'), 'HOOPITO');
         final chinese = await mastheadStyle(const Locale('zh'), '篮球记录');
-        expect(english?.fontFamily, HoopTraceTypography.displayFamily);
-        expect(chinese?.fontFamily, isNot(HoopTraceTypography.displayFamily));
+        expect(english?.fontFamily, HoopitoTypography.displayFamily);
+        expect(chinese?.fontFamily, isNot(HoopitoTypography.displayFamily));
         expect(
-          buildHoopTraceTheme().textTheme.bodyMedium?.fontFamily,
-          isNot(HoopTraceTypography.displayFamily),
+          buildHoopitoTheme().textTheme.bodyMedium?.fontFamily,
+          isNot(HoopitoTypography.displayFamily),
         );
 
         await tester.pumpWidget(
           MaterialApp(
-            theme: buildHoopTraceTheme(),
+            theme: buildHoopitoTheme(),
             home: const ScoreNumeral(value: '108'),
           ),
         );
         expect(
           tester.widget<Text>(find.text('108')).style?.fontFamily,
-          HoopTraceTypography.displayFamily,
+          HoopitoTypography.displayFamily,
         );
       },
     );
@@ -373,7 +373,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           MaterialApp(
-            theme: buildHoopTraceTheme(),
+            theme: buildHoopitoTheme(),
             home: const MediaQuery(
               data: MediaQueryData(disableAnimations: true),
               child: EditorialTapTarget(onPressed: _noop, child: Text('Press')),
@@ -394,7 +394,7 @@ void main() {
       Future<int> painterCount({required bool enabled}) async {
         await tester.pumpWidget(
           MaterialApp(
-            theme: buildHoopTraceTheme(),
+            theme: buildHoopitoTheme(),
             home: EditorialScaffold(
               showCourtLines: enabled,
               body: const Text('content'),

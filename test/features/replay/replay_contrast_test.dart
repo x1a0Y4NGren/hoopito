@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/replay/replay_controller.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/replay/replay_controller.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
     testWidgets(
       'replay team foregrounds meet normal-text contrast in $brightness',
       (tester) async {
-        final theme = buildHoopTraceTheme(brightness: brightness);
+        final theme = buildHoopitoTheme(brightness: brightness);
         await tester.pumpWidget(
           MaterialApp(
             theme: theme,

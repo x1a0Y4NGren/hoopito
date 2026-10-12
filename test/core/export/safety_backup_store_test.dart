@@ -3,9 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/export/safety_backup_store.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/export/safety_backup_store.dart';
 import 'package:path/path.dart' as path;
 
 import '../../test_helpers/test_database.dart';
@@ -18,9 +18,7 @@ void main() {
   late DateTime exportedAt;
 
   setUp(() async {
-    directory = await Directory.systemTemp.createTemp(
-      'hooptrace-safety-store-',
-    );
+    directory = await Directory.systemTemp.createTemp('hoopito-safety-store-');
     addTearDown(() => directory.delete(recursive: true));
     exportedAt = DateTime.utc(2026, 9, 24);
     codec = JsonBackupCodec(

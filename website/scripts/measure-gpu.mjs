@@ -15,7 +15,7 @@ const dxgiSource = String.raw`
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-public static class HooptraceGpuAdapters {
+public static class HoopitoGpuAdapters {
   [DllImport("dxgi.dll", CallingConvention=CallingConvention.StdCall)]
   private static extern int CreateDXGIFactory(ref Guid riid, out IntPtr factory);
   [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -58,8 +58,7 @@ public static class HooptraceGpuAdapters {
 const dist = resolve('dist');
 const stamp = new Date().toISOString().replaceAll(/[:.]/g, '-');
 const output = resolve(
-  process.env.HOOPTRACE_GPU_OUTPUT ??
-    `output/cinematic/performance/gpu-${stamp}`,
+  process.env.HOOPITO_GPU_OUTPUT ?? `output/cinematic/performance/gpu-${stamp}`,
 );
 const reportPath = resolve(output, 'measurements.json');
 try {
@@ -96,15 +95,13 @@ const windowsHardware =
             '-NoProfile',
             '-NonInteractive',
             '-Command',
-            `$taskGpuSource = @'\n${dxgiSource}\n'@; Add-Type -TypeDefinition $taskGpuSource; @{ adapters = @([HooptraceGpuAdapters]::Read()); displays = @(Get-CimInstance Win32_VideoController | Select-Object Name,DriverVersion,CurrentHorizontalResolution,CurrentVerticalResolution,CurrentRefreshRate) } | ConvertTo-Json -Depth 6`,
+            `$taskGpuSource = @'\n${dxgiSource}\n'@; Add-Type -TypeDefinition $taskGpuSource; @{ adapters = @([HoopitoGpuAdapters]::Read()); displays = @(Get-CimInstance Win32_VideoController | Select-Object Name,DriverVersion,CurrentHorizontalResolution,CurrentVerticalResolution,CurrentRefreshRate) } | ConvertTo-Json -Depth 6`,
           ],
           { encoding: 'utf8', windowsHide: true },
         ).replace(/^\uFEFF/, ''),
       )
     : null;
-const requestedGpuNames = (process.env.HOOPTRACE_GPU ?? 'amd,nvidia').split(
-  ',',
-);
+const requestedGpuNames = (process.env.HOOPITO_GPU ?? 'amd,nvidia').split(',');
 const gpuTargets = windowsHardware
   ? requestedGpuNames.map((name) => {
       const expression =
@@ -155,9 +152,9 @@ const server = createServer(async (request, response) => {
 });
 await new Promise((done) => server.listen(0, '127.0.0.1', done));
 const origin = `http://127.0.0.1:${server.address().port}`;
-const headless = process.env.HOOPTRACE_GPU_HEADLESS === '1';
-const viewports = process.env.HOOPTRACE_GPU_VIEWPORTS
-  ? JSON.parse(process.env.HOOPTRACE_GPU_VIEWPORTS)
+const headless = process.env.HOOPITO_GPU_HEADLESS === '1';
+const viewports = process.env.HOOPITO_GPU_VIEWPORTS
+  ? JSON.parse(process.env.HOOPITO_GPU_VIEWPORTS)
   : [
       { width: 1440, height: 900, dpr: 1 },
       { width: 1440, height: 900, dpr: 2 },
@@ -246,15 +243,14 @@ function summarize(events) {
 
 async function captureEvents(page, phase, operation) {
   await page.evaluate((phase) => {
-    window.hooptraceGpuPhase = phase;
+    window.hoopitoGpuPhase = phase;
   }, phase);
   await operation();
   await page.evaluate(() => {
-    window.hooptraceGpuPhase = null;
+    window.hoopitoGpuPhase = null;
   });
   return page.evaluate(
-    (phase) =>
-      window.hooptraceGpuFrames.filter((event) => event.phase === phase),
+    (phase) => window.hoopitoGpuFrames.filter((event) => event.phase === phase),
     phase,
   );
 }
@@ -408,7 +404,7 @@ try {
       ...(platform() === 'win32'
         ? {
             executablePath:
-              process.env.HOOPTRACE_CHROME_PATH ??
+              process.env.HOOPITO_CHROME_PATH ??
               'C:/Program Files/Google/Chrome/Application/chrome.exe',
           }
         : { channel: 'chrome' }),
@@ -427,8 +423,8 @@ try {
           const errors = [];
           page.on('pageerror', (error) => errors.push(error.message));
           await page.addInitScript(() => {
-            window.hooptraceGpuFrames = [];
-            window.hooptraceGpuPhase = 'intro';
+            window.hoopitoGpuFrames = [];
+            window.hoopitoGpuPhase = 'intro';
             const observe = () => {
               const canvas = document.querySelector('#court-canvas');
               if (!canvas) return;
@@ -443,7 +439,7 @@ try {
                   return;
                 const count = Number(canvas.dataset.renderCount);
                 if (!Number.isFinite(count)) return;
-                window.hooptraceGpuFrames.push({
+                window.hoopitoGpuFrames.push({
                   time: performance.now(),
                   count,
                   rendering: canvas.dataset.rendering,
@@ -454,7 +450,7 @@ try {
                   pixelRatio: Number(canvas.dataset.pixelRatio),
                   bufferWidth: Number(canvas.dataset.bufferWidth),
                   bufferHeight: Number(canvas.dataset.bufferHeight),
-                  phase: window.hooptraceGpuPhase,
+                  phase: window.hoopitoGpuPhase,
                 });
               }).observe(canvas, {
                 attributes: true,
@@ -531,9 +527,7 @@ try {
             { timeout: 10000 },
           );
           const intro = await page.evaluate(() =>
-            window.hooptraceGpuFrames.filter(
-              (event) => event.phase === 'intro',
-            ),
+            window.hoopitoGpuFrames.filter((event) => event.phase === 'intro'),
           );
           const scroll = await captureEvents(page, 'scroll', () =>
             scrollStory(page),

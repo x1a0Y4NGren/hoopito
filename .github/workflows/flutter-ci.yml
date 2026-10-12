@@ -80,7 +80,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: hooptrace-golden-failures
+          name: hoopito-golden-failures
           path: test/**/failures/**
           if-no-files-found: ignore
           retention-days: 7
@@ -111,7 +111,7 @@ jobs:
       - name: Upload debug APK
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: hooptrace-debug-apk
+          name: hoopito-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 14
@@ -149,7 +149,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: hooptrace-reproducibility-failures
+          name: hoopito-reproducibility-failures
           path: build/reproducible-diagnostics
           if-no-files-found: ignore
           retention-days: 3
@@ -157,7 +157,7 @@ jobs:
       - name: Upload verified unsigned release APK
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: hooptrace-unsigned-reproducible-apk
+          name: hoopito-unsigned-reproducible-apk
           path: |
             build/reproducible/app-release.apk
             build/reproducible/SHA256SUMS

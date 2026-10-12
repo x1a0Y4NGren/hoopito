@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/export/replay_image_exporter.dart';
+import 'package:hoopito/core/export/replay_image_exporter.dart';
 
 void main() {
   testWidgets('captures a RepaintBoundary as a usable PNG', (tester) async {

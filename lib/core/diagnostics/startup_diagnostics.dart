@@ -5,7 +5,7 @@ import 'dart:developer' as developer;
 abstract final class StartupDiagnostics {
   static const enabled =
       bool.fromEnvironment('dart.vm.profile') &&
-      bool.fromEnvironment('HOOPTRACE_ENTRY_PROFILE');
+      bool.fromEnvironment('HOOPITO_ENTRY_PROFILE');
 
   static final _spans = <Map<String, Object>>[];
   static var _finished = false;

@@ -2,16 +2,16 @@ import 'dart:io';
 
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
-import 'package:hooptrace/core/data/repositories/match_lifecycle_repository.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/entities/match_history_entry.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
+import 'package:hoopito/core/data/repositories/match_lifecycle_repository.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/entities/match_history_entry.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 import 'package:sqlite3/sqlite3.dart' as sqlite3;
 
 import '../../test_helpers/test_database.dart';
@@ -308,7 +308,7 @@ void main() {
     'history order index is recreated idempotently for an existing v2 database',
     () async {
       final directory = await Directory.systemTemp.createTemp(
-        'hooptrace-history-index-',
+        'hoopito-history-index-',
       );
       addTearDown(() => directory.delete(recursive: true));
       final file = File(

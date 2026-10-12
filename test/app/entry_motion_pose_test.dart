@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/entry/entry_motion_pose.dart';
+import 'package:hoopito/app/entry/entry_motion_pose.dart';
 
 void main() {
   test(

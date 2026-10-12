@@ -3,15 +3,15 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/provider_router.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/export/export_coordinator.dart';
-import 'package:hooptrace/features/home/home_page.dart';
-import 'package:hooptrace/features/project/project_details_page.dart';
-import 'package:hooptrace/features/settings/settings_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/provider_router.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/features/home/home_page.dart';
+import 'package:hoopito/features/project/project_details_page.dart';
+import 'package:hoopito/features/settings/settings_page.dart';
 
 import '../test_helpers/test_database.dart';
 import '../test_helpers/safety_backup_storage.dart';
@@ -34,13 +34,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(ProjectDetailsPage), findsOneWidget);
     expect(find.text('About'), findsOneWidget);
-    expect(find.text('HOOPTRACE'), findsOneWidget);
+    expect(find.text('Hoopito · 球豆'), findsOneWidget);
 
     router.go('/project');
     await tester.pumpAndSettle();
     expect(find.byType(ProjectDetailsPage), findsOneWidget);
     expect(find.text('About'), findsOneWidget);
-    expect(find.text('HOOPTRACE'), findsOneWidget);
+    expect(find.text('Hoopito · 球豆'), findsOneWidget);
   });
 
   testWidgets('optional recent-result failure never blocks Home', (

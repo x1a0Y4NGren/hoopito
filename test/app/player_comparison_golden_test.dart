@@ -3,18 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/analytics/player_comparison.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/players/player_comparison_controller.dart';
-import 'package:hooptrace/features/players/player_comparison_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/analytics/player_comparison.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/players/player_comparison_controller.dart';
+import 'package:hoopito/features/players/player_comparison_page.dart';
 
 import '../support/golden_fonts.dart';
 
 void main() {
-  setUpAll(loadHoopTraceGoldenFonts);
+  setUpAll(loadHoopitoGoldenFonts);
 
   testWidgets(
     'golden player comparison zh light compact',
@@ -58,7 +58,7 @@ void main() {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
-          theme: buildHoopTraceTheme(brightness: Brightness.light),
+          theme: buildHoopitoTheme(brightness: Brightness.light),
           home: RepaintBoundary(
             key: const Key('player-comparison-golden-root'),
             child: PlayerComparisonPage(
@@ -77,7 +77,7 @@ void main() {
       await expectLater(
         find.byKey(const Key('player-comparison-golden-root')),
         matchesGoldenFile(
-          hoopTraceGoldenFile('player_comparison_zh_light_compact'),
+          hoopitoGoldenFile('player_comparison_zh_light_compact'),
         ),
       );
       expect(tester.takeException(), isNull);

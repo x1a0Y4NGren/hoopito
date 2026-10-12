@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/device_automatic_backup_storage.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/device_automatic_backup_storage.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +19,8 @@ void main() {
           calls.add(call);
           return switch (call.method) {
             'pickDirectory' => <String, Object?>{
-              'reference': 'content://provider/tree/HoopTraceTest',
-              'displayName': 'HoopTraceTest',
+              'reference': 'content://provider/tree/HoopitoTest',
+              'displayName': 'HoopitoTest',
             },
             'directoryExists' => true,
             'writeBackup' => 'content://provider/document/backup.json',
@@ -30,13 +30,13 @@ void main() {
     final storage = DeviceAutomaticBackupStorage(useAndroidSaf: true);
 
     final selection = await storage.pickDirectory();
-    expect(selection?.reference, 'content://provider/tree/HoopTraceTest');
-    expect(selection?.displayName, 'HoopTraceTest');
+    expect(selection?.reference, 'content://provider/tree/HoopitoTest');
+    expect(selection?.displayName, 'HoopitoTest');
     expect(await storage.directoryExists(selection!.reference), isTrue);
     expect(
       await storage.write(
         directory: selection.reference,
-        fileName: 'hooptrace-auto-20260824T120000Z.json',
+        fileName: 'hoopito-auto-20260824T120000Z.json',
         bytes: Uint8List.fromList([1, 2, 3]),
       ),
       'content://provider/document/backup.json',
@@ -79,7 +79,7 @@ void main() {
             calls.add(call);
             return switch (call.method) {
               'listBackupFiles' => <Object?>[
-                'hooptrace-auto-20260824T120000Z.json',
+                'hoopito-auto-20260824T120000Z.json',
                 'notes.txt',
               ],
               'deleteBackupFile' => null,
@@ -90,13 +90,13 @@ void main() {
 
       expect(
         await storage.listFiles(
-          directory: 'content://provider/tree/HoopTraceTest',
+          directory: 'content://provider/tree/HoopitoTest',
         ),
-        ['hooptrace-auto-20260824T120000Z.json', 'notes.txt'],
+        ['hoopito-auto-20260824T120000Z.json', 'notes.txt'],
       );
       await storage.deleteFile(
-        directory: 'content://provider/tree/HoopTraceTest',
-        fileName: 'hooptrace-auto-20260824T120000Z.json',
+        directory: 'content://provider/tree/HoopitoTest',
+        fileName: 'hoopito-auto-20260824T120000Z.json',
       );
 
       expect(calls.map((call) => call.method), [
@@ -105,11 +105,11 @@ void main() {
       ]);
       expect(
         (calls.first.arguments as Map<Object?, Object?>)['directory'],
-        'content://provider/tree/HoopTraceTest',
+        'content://provider/tree/HoopitoTest',
       );
       expect(
         (calls.last.arguments as Map<Object?, Object?>)['fileName'],
-        'hooptrace-auto-20260824T120000Z.json',
+        'hoopito-auto-20260824T120000Z.json',
       );
     },
   );
@@ -124,16 +124,16 @@ void main() {
     final storage = DeviceAutomaticBackupStorage(useAndroidSaf: true);
 
     await storage.deleteFile(
-      directory: 'content://provider/tree/HoopTraceTest',
+      directory: 'content://provider/tree/HoopitoTest',
       fileName: 'notes.txt',
     );
     await storage.deleteFile(
-      directory: 'content://provider/tree/HoopTraceTest',
-      fileName: 'hooptrace-auto-good.json/../notes.txt',
+      directory: 'content://provider/tree/HoopitoTest',
+      fileName: 'hoopito-auto-good.json/../notes.txt',
     );
     await storage.deleteFile(
-      directory: 'content://provider/tree/HoopTraceTest',
-      fileName: r'hooptrace-auto-good.json\..\notes.txt',
+      directory: 'content://provider/tree/HoopitoTest',
+      fileName: r'hoopito-auto-good.json\..\notes.txt',
     );
 
     expect(calls, isEmpty);
@@ -149,35 +149,35 @@ void main() {
     expect(await storage.listFiles(directory: '/backups'), ['a.json']);
     await storage.deleteFile(
       directory: '/backups',
-      fileName: 'hooptrace-auto-a.json',
+      fileName: 'hoopito-auto-a.json',
     );
 
-    expect(fallback.deleted, ['/backups/hooptrace-auto-a.json']);
+    expect(fallback.deleted, ['/backups/hoopito-auto-a.json']);
   });
 
   test('rejects legacy Android filesystem paths', () async {
     final storage = DeviceAutomaticBackupStorage(useAndroidSaf: true);
 
     expect(
-      await storage.directoryExists('/storage/emulated/0/HoopTraceTest'),
+      await storage.directoryExists('/storage/emulated/0/HoopitoTest'),
       isFalse,
     );
     expect(
       () => storage.write(
-        directory: '/storage/emulated/0/HoopTraceTest',
-        fileName: 'hooptrace-backup-legacy.json',
+        directory: '/storage/emulated/0/HoopitoTest',
+        fileName: 'hoopito-backup-legacy.json',
         bytes: Uint8List(0),
       ),
       throwsA(isA<BackupDirectoryUnavailableException>()),
     );
     expect(
-      () => storage.listFiles(directory: '/storage/emulated/0/HoopTraceTest'),
+      () => storage.listFiles(directory: '/storage/emulated/0/HoopitoTest'),
       throwsA(isA<BackupDirectoryUnavailableException>()),
     );
     expect(
       () => storage.deleteFile(
-        directory: '/storage/emulated/0/HoopTraceTest',
-        fileName: 'hooptrace-auto-backup.json',
+        directory: '/storage/emulated/0/HoopitoTest',
+        fileName: 'hoopito-auto-backup.json',
       ),
       throwsA(isA<BackupDirectoryUnavailableException>()),
     );
@@ -197,15 +197,15 @@ void main() {
       for (final fileName in [
         '',
         'backup.json',
-        'hooptrace-auto-.json',
-        'hooptrace-auto-good.json/../escape.json',
-        r'hooptrace-backup-good.json\..\escape.json',
-        'hooptrace-safety-backup-good\u0000.json',
-        'hooptrace-auto-good.txt',
+        'hoopito-auto-.json',
+        'hoopito-auto-good.json/../escape.json',
+        r'hoopito-backup-good.json\..\escape.json',
+        'hoopito-safety-backup-good\u0000.json',
+        'hoopito-auto-good.txt',
       ]) {
         await expectLater(
           storage.write(
-            directory: 'content://provider/tree/HoopTraceTest',
+            directory: 'content://provider/tree/HoopitoTest',
             fileName: fileName,
             bytes: Uint8List(0),
           ),

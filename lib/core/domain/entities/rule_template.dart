@@ -1,6 +1,6 @@
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
-export 'package:hooptrace/core/domain/domain_enums.dart' show PossessionPolicy;
+export 'package:hoopito/core/domain/domain_enums.dart' show PossessionPolicy;
 
 class RuleTemplate {
   const RuleTemplate({

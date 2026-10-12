@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/repositories/rule_template_repository.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
 
 import '../../test_helpers/test_database.dart';
 

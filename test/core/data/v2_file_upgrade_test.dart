@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 import '../../generated_migrations/schema_v2.dart' as v2;
 
@@ -17,7 +17,7 @@ void main() {
     'official schema 2 file upgrades without changing canonical rows or undo',
     () async {
       final directory = await Directory.systemTemp.createTemp(
-        'hooptrace-v2-upgrade-',
+        'hoopito-v2-upgrade-',
       );
       addTearDown(() => directory.delete(recursive: true));
       final file = File('${directory.path}/synthetic.sqlite');

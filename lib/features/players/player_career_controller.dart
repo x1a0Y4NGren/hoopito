@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:hooptrace/core/domain/analytics/player_career_aggregate.dart';
+import 'package:hoopito/core/domain/analytics/player_career_aggregate.dart';
 
 typedef PlayerCareerLoader =
     Stream<PlayerCareerAggregate> Function(PlayerCareerQuery query);

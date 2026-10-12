@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/entry/hoop_trace_entry_gate.dart';
-import 'package:hooptrace/app/entry/entry_renderer_ready.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/settings/language_preferences.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/features/history/history_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/entry/hoopito_entry_gate.dart';
+import 'package:hoopito/app/entry/entry_renderer_ready.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/settings/language_preferences.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/features/history/history_page.dart';
 
 import '../test_helpers/test_database.dart';
 
@@ -36,7 +36,7 @@ void main() {
         overrides: [
           databaseStartupProvider.overrideWith((ref) => startup.future),
         ],
-        child: HoopTraceApp(
+        child: HoopitoApp(
           initialMotionPreference: MotionPreference.reduced,
           entryPlaybackSession: EntryPlaybackSession(),
         ),
@@ -48,7 +48,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 2100));
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsOneWidget);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsOneWidget);
     expect(find.text('正在打开本地记录…'), findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());
   });
@@ -68,13 +68,13 @@ void main() {
           databaseStartupProvider.overrideWith((ref) => startup.future),
           languagePreferencesControllerProvider.overrideWith((ref) => language),
         ],
-        child: HoopTraceApp(
+        child: HoopitoApp(
           initialMotionPreference: MotionPreference.reduced,
           entryPlaybackSession: EntryPlaybackSession(),
         ),
       ),
     );
-    final entryState = tester.state(find.byType(HoopTraceEntryGate));
+    final entryState = tester.state(find.byType(HoopitoEntryGate));
     expect(_entryGate(tester).startupStatus, EntryStartupStatus.loading);
 
     startup.complete(const DatabaseBootstrapState.ready());
@@ -82,15 +82,15 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 2200));
     expect(_entryGate(tester).startupStatus, EntryStartupStatus.loading);
-    expect(tester.state(find.byType(HoopTraceEntryGate)), same(entryState));
+    expect(tester.state(find.byType(HoopitoEntryGate)), same(entryState));
     expect(find.byKey(const Key('home-start-scoring')), findsNothing);
     expect(find.byType(CircularProgressIndicator), findsNothing);
 
     await language.setPreference(AppLanguagePreference.english);
     await tester.pumpAndSettle();
     expect(_entryGate(tester).startupStatus, EntryStartupStatus.ready);
-    expect(tester.state(find.byType(HoopTraceEntryGate)), same(entryState));
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(tester.state(find.byType(HoopitoEntryGate)), same(entryState));
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     expect(find.byKey(const Key('home-start-scoring')), findsOneWidget);
     expect(
       tester.widget<MaterialApp>(find.byType(MaterialApp)).locale,
@@ -109,20 +109,20 @@ void main() {
         overrides: [
           databaseStartupProvider.overrideWith((ref) => startup.future),
         ],
-        child: HoopTraceApp(
+        child: HoopitoApp(
           initialMotionPreference: MotionPreference.standard,
           entryPlaybackSession: EntryPlaybackSession(),
         ),
       ),
     );
-    final entryState = tester.state(find.byType(HoopTraceEntryGate));
+    final entryState = tester.state(find.byType(HoopitoEntryGate));
     startup.completeError(StateError('startup failed'));
     await tester.pump();
     await tester.pump();
 
     expect(_entryGate(tester).startupStatus, EntryStartupStatus.failure);
-    expect(tester.state(find.byType(HoopTraceEntryGate)), same(entryState));
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(tester.state(find.byType(HoopitoEntryGate)), same(entryState));
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     expect(
       find.text(AppLocalizationsZh().bootstrapFailureBody),
       findsOneWidget,
@@ -140,20 +140,20 @@ void main() {
         overrides: [
           databaseStartupProvider.overrideWith((ref) => startup.future),
         ],
-        child: HoopTraceApp(
+        child: HoopitoApp(
           initialMotionPreference: MotionPreference.standard,
           entryPlaybackSession: EntryPlaybackSession(),
         ),
       ),
     );
-    final entryState = tester.state(find.byType(HoopTraceEntryGate));
+    final entryState = tester.state(find.byType(HoopitoEntryGate));
     startup.complete(const DatabaseBootstrapState.incompatibleLegacy(1));
     await tester.pump();
     await tester.pump();
 
     expect(_entryGate(tester).startupStatus, EntryStartupStatus.legacy);
-    expect(tester.state(find.byType(HoopTraceEntryGate)), same(entryState));
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(tester.state(find.byType(HoopitoEntryGate)), same(entryState));
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     expect(find.byKey(const Key('legacy-bootstrap')), findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(milliseconds: 100));
@@ -168,19 +168,19 @@ void main() {
       overrides: [
         databaseStartupProvider.overrideWith((ref) => startup.future),
       ],
-      child: HoopTraceApp(
+      child: HoopitoApp(
         initialMotionPreference: MotionPreference.reduced,
         entryPlaybackSession: session,
       ),
     );
     await tester.pumpWidget(app());
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsOneWidget);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpWidget(app());
     await tester.pump(const Duration(milliseconds: 2200));
 
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
-    expect(find.byType(HoopTraceStartupPlaceholder), findsOneWidget);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
+    expect(find.byType(HoopitoStartupPlaceholder), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsNothing);
     expect(find.text('正在打开本地记录…'), findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());
@@ -195,10 +195,10 @@ void main() {
         overrides: [
           databaseStartupProvider.overrideWith((ref) => startup.future),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
-    expect(find.byType(HoopTraceStartupPlaceholder), findsOneWidget);
+    expect(find.byType(HoopitoStartupPlaceholder), findsOneWidget);
     expect(find.text('正在打开本地记录…'), findsNothing);
     await tester.pump(const Duration(milliseconds: 2200));
     expect(find.byType(CircularProgressIndicator), findsNothing);
@@ -219,7 +219,7 @@ void main() {
           appDatabaseProvider.overrideWithValue(database),
           databaseStartupProvider.overrideWith((ref) => startup.future),
         ],
-        child: HoopTraceApp(
+        child: HoopitoApp(
           initialMotionPreference: MotionPreference.reduced,
           entryPlaybackSession: EntryPlaybackSession(),
         ),
@@ -233,7 +233,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(HistoryPage), findsOneWidget);
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
@@ -268,7 +268,7 @@ void main() {
             };
           }),
         ],
-        child: HoopTraceApp(
+        child: HoopitoApp(
           initialMotionPreference: MotionPreference.reduced,
           entryPlaybackSession: EntryPlaybackSession(),
         ),
@@ -300,8 +300,8 @@ void main() {
   });
 }
 
-HoopTraceEntryGate _entryGate(WidgetTester tester) =>
-    tester.widget<HoopTraceEntryGate>(find.byType(HoopTraceEntryGate));
+HoopitoEntryGate _entryGate(WidgetTester tester) =>
+    tester.widget<HoopitoEntryGate>(find.byType(HoopitoEntryGate));
 
 Future<void> _pumpUntil(WidgetTester tester, bool Function() condition) async {
   for (var attempt = 0; attempt < 100; attempt++) {

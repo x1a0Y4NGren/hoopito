@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:hooptrace/app/design_system/editorial_primitives.dart';
+import 'package:hoopito/app/design_system/editorial_primitives.dart';
 
 class EditorialIndexRow extends StatefulWidget {
   const EditorialIndexRow({

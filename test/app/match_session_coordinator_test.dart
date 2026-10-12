@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/match_session_coordinator.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
+import 'package:hoopito/app/match_session_coordinator.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
 
 import '../test_helpers/test_database.dart';
 

@@ -73,8 +73,9 @@ def validate_json_envelope(payload):
         raise ValueError('Backup exceeds the shared 32 MiB limit')
     document = json.loads(payload)
     manifest, data = document['manifest'], document['data']
-    if (manifest['appName'], manifest['formatVersion'], manifest['schemaVersion']) != ('HoopTrace', 2, 3):
-        raise ValueError('Expected HoopTrace JSON format 2 / schema 3')
+    if (manifest['appName'] not in ('Hoopito', 'HoopTrace')
+            or (manifest['formatVersion'], manifest['schemaVersion']) != (2, 3)):
+        raise ValueError('Expected Hoopito or legacy HoopTrace JSON format 2 / schema 3')
     source_manifest = {key: manifest[key] for key in (
         'appName', 'appVersion', 'formatVersion', 'schemaVersion', 'exportedAt', 'recordCounts',
     )}
@@ -125,7 +126,7 @@ def stable_database(adb, device_path, output):
         second = [adb.private(path, optional=index > 0) for index, path in enumerate(paths)]
         if first != second:
             continue
-        with tempfile.TemporaryDirectory(prefix='hooptrace-observer-', dir=output.parent) as scratch:
+        with tempfile.TemporaryDirectory(prefix='hoopito-observer-', dir=output.parent) as scratch:
             local = Path(scratch) / 'database.sqlite'
             local.write_bytes(first[0])
             if first[1] is not None:
@@ -202,7 +203,7 @@ def provider_files(adb, tree, epoch, output):
     result = []
     for item in proof['files']:
         name, private_name = item['display_name'], item['private_filename']
-        if not re.fullmatch(r'hooptrace-(auto|backup)-[A-Za-z0-9._-]+\.json', name):
+        if not re.fullmatch(r'(?:hoopito|hooptrace)-(auto|backup)-[A-Za-z0-9._-]+\.json', name):
             raise ValueError('Receiver listed an unexpected backup filename')
         if Path(private_name).name != private_name or '/' in private_name or '\\' in private_name or '..' in private_name:
             raise ValueError('Unsafe receiver private filename')
@@ -253,7 +254,9 @@ def snapshot(args):
         tables, settings = app_database_summary(output / 'app.sqlite')
         tree = settings.get(PREFIX + 'directory', '')
         decoded_tree = unquote(tree)
-        if not decoded_tree.startswith('content://com.android.externalstorage.documents/tree/primary:Documents/HoopTraceV2Synthetic'):
+        if not decoded_tree.startswith((
+                'content://com.android.externalstorage.documents/tree/primary:Documents/HoopitoV2Synthetic',
+                'content://com.android.externalstorage.documents/tree/primary:Documents/HoopTraceV2Synthetic')):
             raise ValueError('Only the explicitly configured synthetic Documents tree is allowed')
         files = provider_files(adb, tree, epoch, output)
         grants = uid_grants(adb.text('shell', 'dumpsys', 'activity', 'permissions'), uid)
@@ -325,7 +328,7 @@ def compare_snapshots(before, after, mode, unforced_interval=False,
         failures.append('Business rows, insertion order, derived snapshots or non-backup settings changed')
     for value in (before, after):
         if value['foreground_app']:
-            failures.append('HoopTrace was in the foreground at a snapshot')
+            failures.append('Hoopito was in the foreground at a snapshot')
         if value['tables']['active_sessions']['count']:
             failures.append('An active match existed during observation')
     if before['work']['id'] != after['work']['id']:
@@ -369,7 +372,7 @@ def compare_snapshots(before, after, mode, unforced_interval=False,
         old_files = {(item['display_name'], item['sha256']) for item in before['provider_files']}
         new_files = [item for item in after['provider_files']
                      if (item['display_name'], item['sha256']) not in old_files
-                     and item['display_name'].startswith('hooptrace-auto-')]
+                     and item['display_name'].startswith(('hoopito-auto-', 'hooptrace-auto-'))]
         path_name = unquote(new.get(PREFIX + 'lastBackupPath', '')).rsplit('/', 1)[-1]
         matching = [item for item in new_files if item['display_name'] == path_name and item.get('json_envelope_valid')]
         last = utc_epoch(new[PREFIX + 'lastBackupAt']) if new.get(PREFIX + 'lastBackupAt') else None

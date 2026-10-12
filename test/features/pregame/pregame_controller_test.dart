@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/data/repositories/rule_template_repository.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
 
 void main() {
   test('pre-game state starts with default red and blue players', () {

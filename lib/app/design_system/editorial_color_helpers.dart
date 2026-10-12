@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:hooptrace/app/design_system/editorial_tokens.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/app/design_system/editorial_tokens.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 Color teamColorForScheme(
   TeamSide side,
@@ -13,10 +13,10 @@ Color teamColorForScheme(
       : background.computeLuminance() < 0.35;
   if (lightAccent) {
     return side == TeamSide.red
-        ? HoopTraceColors.redLight
-        : HoopTraceColors.blueLight;
+        ? HoopitoColors.redLight
+        : HoopitoColors.blueLight;
   }
-  return side == TeamSide.red ? HoopTraceColors.red : HoopTraceColors.blue;
+  return side == TeamSide.red ? HoopitoColors.red : HoopitoColors.blue;
 }
 
 Color accessibleForegroundFor(Color background) {

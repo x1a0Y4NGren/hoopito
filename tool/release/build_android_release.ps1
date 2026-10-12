@@ -161,7 +161,7 @@ if ($appMetadata -notmatch "'$([regex]::Escape($expectedMetadataVersion))'") {
 }
 
 $releaseDirectory = Join-Path $repoRoot "build\release-assets\v$Version"
-$releaseApkName = "HoopTrace-v$Version-android.apk"
+$releaseApkName = "Hoopito-v$Version-android.apk"
 $releaseApk = Join-Path $releaseDirectory $releaseApkName
 
 $trackedChanges = & git -C $repoRoot status --porcelain --untracked-files=all
@@ -174,8 +174,8 @@ if (-not (Test-Path -LiteralPath $keyPropertiesPath)) {
     throw "Missing android/key.properties. Run tool/release/setup_android_signing.ps1 first."
 }
 
-if ($env:HOOPTRACE_ALLOW_UNSIGNED_RELEASE -eq "true") {
-    throw "HOOPTRACE_ALLOW_UNSIGNED_RELEASE must not be enabled for an upstream release."
+if ($env:HOOPITO_ALLOW_UNSIGNED_RELEASE -eq "true" -or $env:HOOPTRACE_ALLOW_UNSIGNED_RELEASE -eq "true") {
+    throw "Neither HOOPITO_ALLOW_UNSIGNED_RELEASE nor its legacy alias may be enabled for an upstream release."
 }
 
 $androidSdk = Resolve-AndroidSdkPath -Root $repoRoot

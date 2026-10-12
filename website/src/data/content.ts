@@ -3,7 +3,7 @@ export const content = {
     lang: 'zh-CN',
     otherLanguage: 'EN',
     otherPath: '/en/',
-    title: 'HoopTrace — 每一球，都有迹可循。',
+    title: '球豆 — 每一球，都有迹可循。',
     description:
       '免费的离线篮球单挑记录与复盘工具。记比分、留落点、看赛果，把每一场对决变成自己的成长记录。Android 版现已开放下载。',
     skip: '跳到正文',
@@ -11,7 +11,7 @@ export const content = {
     hero: {
       eyebrow: '为每一场 1v1 而生',
       lines: ['每一球，', '都有迹可循。'],
-      lead: '把注意力留给球场。\n把比分、落点和复盘，交给 HoopTrace。',
+      lead: '把注意力留给球场。\n把比分、落点和复盘，交给球豆。',
       download: '下载 Android 版',
       explore: '走进球场',
       tags: ['完全离线', '免费开源', '无需账号'],
@@ -28,8 +28,8 @@ export const content = {
         ['落点记录', '记住从哪里出手'],
         ['随时撤回', '修正也有迹可循'],
       ],
-      caption: 'HoopTrace 2.0 · 真实计分界面',
-      alt: 'HoopTrace 中文横屏计分界面，蓝红两队记分按钮与中央半场',
+      caption: 'v2.0 · 更名前的真实计分界面',
+      alt: '更名前的 HoopTrace 中文横屏计分界面，蓝红两队记分按钮与中央半场',
       foot: '为球场现场设计。大触控区域，清晰的蓝红对阵。',
     },
     demo: {
@@ -61,8 +61,9 @@ export const content = {
       body: '看清比分如何变化，回到关键回合，把每场比赛关联到自己的球员档案。对决结束，记录继续积累。',
       summary: '一场比赛，完整回看',
       history: '每场对决，都有归处',
-      summaryAlt: 'HoopTrace 中文赛果页，显示最终比分与比分走势',
-      historyAlt: 'HoopTrace 中文比赛历史列表',
+      captureNote: 'v2.0 · 品牌更名前的真实截图',
+      summaryAlt: '更名前的 HoopTrace 中文赛果页，显示最终比分与比分走势',
+      historyAlt: '更名前的 HoopTrace 中文比赛历史列表',
       details: [
         ['赛果与复盘', '比分走势、关键回合、已确认落点。'],
         ['球员成长', '关联档案，看生涯记录与比赛比较。'],
@@ -79,7 +80,8 @@ export const content = {
       release: '发行说明与所有附件',
       size: '约 {size} MiB',
       system: 'Android {version} 及以上',
-      install: '下载安装包，在系统提示中允许此来源安装，再打开 HoopTrace。',
+      install:
+        '当前下载为更名前的 HoopTrace v2.0.0，安装后仍显示旧名。下载后，在系统提示中允许此来源安装。',
       qr: '手机扫码，打开官方发行页',
       verify: '核对 SHA-256',
       upgrade: '从旧 v1 升级？先保存 JSON 备份。',
@@ -119,12 +121,12 @@ export const content = {
     privacy: {
       title: '网站隐私说明',
       subtitle: '介绍在这里。你的比赛留在设备里。',
-      back: '返回 HoopTrace',
-      updated: '更新：2026 年 10 月 11 日',
+      back: '返回球豆',
+      updated: '更新：2026 年 10 月 12 日',
       sections: [
         [
           '网站与 App',
-          '本网站是 HoopTrace 的介绍和下载入口，与离线 App 的数据存储相互独立。网站不会读取你的 App 数据库，也不能访问手机里的比赛或球员记录。',
+          '本网站是球豆（Hoopito）的介绍和下载入口，与离线 App 的数据存储相互独立。网站不会读取你的 App 数据库，也不能访问手机里的比赛或球员记录。',
         ],
         [
           '浏览网站',
@@ -153,7 +155,7 @@ export const content = {
     lang: 'en',
     otherLanguage: '中文',
     otherPath: '/',
-    title: 'HoopTrace — Every play leaves a trace.',
+    title: 'Hoopito — Every play leaves a trace.',
     description:
       'A free, offline app for 1v1 basketball. Keep score, mark your shots, review the game, and build your own player history. Available for Android.',
     skip: 'Skip to content',
@@ -161,7 +163,7 @@ export const content = {
     hero: {
       eyebrow: 'MADE FOR EVERY 1v1',
       lines: ['Every play', 'leaves a trace.'],
-      lead: 'Keep your eyes on the court.\nLeave the score, shots, and review to HoopTrace.',
+      lead: 'Keep your eyes on the court.\nLeave the score, shots, and review to Hoopito.',
       download: 'Download for Android',
       explore: 'Step onto the court',
       tags: ['Fully offline', 'Free & open source', 'No account'],
@@ -178,8 +180,8 @@ export const content = {
         ['SHOT LOCATIONS', 'Remember where you shot'],
         ['UNDO ANYTIME', 'Corrections leave a trace'],
       ],
-      caption: 'HoopTrace 2.0 · Actual scoring screen',
-      alt: 'HoopTrace English landscape scoring screen with blue and red score controls and a half-court',
+      caption: 'v2.0 · Actual screen before the rename',
+      alt: 'Pre-rename HoopTrace English landscape scoring screen with blue and red score controls and a half-court',
       foot: 'Designed for courtside use. Large touch targets. A clear blue-and-red matchup.',
     },
     demo: {
@@ -212,9 +214,10 @@ export const content = {
       body: 'Follow the score changes. Return to the key plays. Link each game to your player profile. The game ends. Your record keeps growing.',
       summary: 'One game. A clearer picture.',
       history: 'A home for every matchup.',
+      captureNote: 'v2.0 · Actual capture before the rename',
       summaryAlt:
-        'HoopTrace English match summary with final score and score flow',
-      historyAlt: 'HoopTrace English match history list',
+        'Pre-rename HoopTrace English match summary with final score and score flow',
+      historyAlt: 'Pre-rename HoopTrace English match history list',
       details: [
         ['GAME REVIEW', 'Score flow, key plays, and confirmed shot locations.'],
         [
@@ -238,7 +241,7 @@ export const content = {
       size: 'About {size} MiB',
       system: 'Android {version} and later',
       install:
-        'Download the APK, allow installation from this source when Android asks, then open HoopTrace.',
+        'The current download is the pre-rename HoopTrace v2.0.0 and still displays that name. Download the APK and allow installation from this source when Android asks.',
       qr: 'Scan to open the official release on your phone',
       verify: 'Verify SHA-256',
       upgrade: 'Coming from v1? Save your JSON backup first.',
@@ -278,12 +281,12 @@ export const content = {
     privacy: {
       title: 'Website privacy',
       subtitle: 'The introduction is here. Your games stay on your device.',
-      back: 'Back to HoopTrace',
-      updated: 'Updated: October 11, 2026',
+      back: 'Back to Hoopito',
+      updated: 'Updated: October 12, 2026',
       sections: [
         [
           'The website and the app',
-          'This website introduces HoopTrace and links to downloads. It is separate from the offline app and cannot read its database or access game and player records on your phone.',
+          'This website introduces Hoopito and links to downloads. It is separate from the offline app and cannot read its database or access game and player records on your phone.',
         ],
         [
           'Browsing this website',

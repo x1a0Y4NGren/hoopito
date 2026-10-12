@@ -19,7 +19,7 @@ TOOL = ROOT / 'tool/release/prepare_v1_upgrade_fixture.py'
 class V1UpgradeFixtureTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.temporary = tempfile.TemporaryDirectory(prefix='hooptrace-v1-fixture-')
+        cls.temporary = tempfile.TemporaryDirectory(prefix='hoopito-v1-fixture-')
         cls.output = Path(cls.temporary.name) / 'fixture'
         generated = subprocess.run(
             [sys.executable, str(TOOL), '--output', str(cls.output)],

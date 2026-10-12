@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/data/repositories/player_repository.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/data/repositories/player_repository.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
 
 class PlayerListPage extends StatefulWidget {
   const PlayerListPage({
@@ -80,7 +80,7 @@ class _PlayerListPageState extends State<PlayerListPage> {
             );
           }
           return ListView.builder(
-            padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+            padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
             itemCount: players.length,
             itemBuilder: (context, index) {
               final player = players[index];

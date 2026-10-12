@@ -1,7 +1,7 @@
-# HoopTrace Entry Sound
+# Hoopito Entry Sound
 
 `entry_swish.wav` is an original 180 ms mono PCM sound synthesized for the
-HoopTrace cold-start animation. It combines a short, low-level rim transient
+Hoopito cold-start animation. It combines a short, low-level rim transient
 with a filtered-noise net texture. No recording or third-party audio is used.
 
 The asset is generated deterministically by

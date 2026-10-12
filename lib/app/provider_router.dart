@@ -3,38 +3,38 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/app/match_view_data_mapper.dart';
-import 'package:hooptrace/app/orientation_shell.dart';
-import 'package:hooptrace/app/player_routes.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/data/repositories/match_lifecycle_repository.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/match_setup_preset.dart';
-import 'package:hooptrace/core/domain/entities/match_history_entry.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/features/history/history_controller.dart';
-import 'package:hooptrace/features/history/history_page.dart';
-import 'package:hooptrace/features/home/home_page.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
-import 'package:hooptrace/features/pregame/start_match_mapper.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
-import 'package:hooptrace/features/project/project_details_page.dart';
-import 'package:hooptrace/features/replay/replay_controller.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
-import 'package:hooptrace/features/rules/rule_template_list_page.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
-import 'package:hooptrace/features/settings/data_management_page.dart';
-import 'package:hooptrace/features/settings/settings_page.dart';
-import 'package:hooptrace/app/summary_route.dart';
-import 'package:hooptrace/app/route_status.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/app/match_view_data_mapper.dart';
+import 'package:hoopito/app/orientation_shell.dart';
+import 'package:hoopito/app/player_routes.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/data/repositories/match_lifecycle_repository.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/match_setup_preset.dart';
+import 'package:hoopito/core/domain/entities/match_history_entry.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/features/history/history_controller.dart';
+import 'package:hoopito/features/history/history_page.dart';
+import 'package:hoopito/features/home/home_page.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
+import 'package:hoopito/features/pregame/start_match_mapper.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
+import 'package:hoopito/features/project/project_details_page.dart';
+import 'package:hoopito/features/replay/replay_controller.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
+import 'package:hoopito/features/rules/rule_template_list_page.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
+import 'package:hoopito/features/settings/data_management_page.dart';
+import 'package:hoopito/features/settings/settings_page.dart';
+import 'package:hoopito/app/summary_route.dart';
+import 'package:hoopito/app/route_status.dart';
 import 'package:uuid/uuid.dart';
 
 // Keep a finish intent stable across a failed transaction and UI retry.
@@ -158,7 +158,7 @@ GoRouter buildProviderAppRouter() {
         builder: (context, state) {
           final matchId = state.pathParameters['matchId']!;
           return OrientationShell(
-            mode: HoopTraceOrientationMode.landscapeRequired,
+            mode: HoopitoOrientationMode.landscapeRequired,
             child: _ScoringRoute(matchId: matchId),
           );
         },
@@ -203,7 +203,7 @@ class _MainNavigation extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 48,
-        title: const Text('HOOPTRACE'),
+        title: Text(l10n.appName),
         actions: [
           IconButton(
             key: homeSettingsShortcutKey,

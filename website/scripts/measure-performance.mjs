@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 const dist = resolve('dist');
 const stamp = new Date().toISOString().replaceAll(/[:.]/g, '-');
 const output = resolve(
-  process.env.HOOPTRACE_PERF_OUTPUT ??
+  process.env.HOOPITO_PERF_OUTPUT ??
     `output/cinematic/performance/mobile-${stamp}`,
 );
 const reportPath = resolve(output, 'measurements.json');
@@ -134,7 +134,7 @@ try {
     ...(platform() === 'win32'
       ? {
           executablePath:
-            process.env.HOOPTRACE_CHROME_PATH ??
+            process.env.HOOPITO_CHROME_PATH ??
             'C:/Program Files/Google/Chrome/Application/chrome.exe',
         }
       : { channel: 'chrome' }),
@@ -189,7 +189,7 @@ try {
         });
         await session.send('Emulation.setCPUThrottlingRate', { rate: 4 });
         await page.addInitScript(() => {
-          window.hooptraceVitals = {
+          window.hoopitoVitals = {
             lcp: 0,
             cls: 0,
             lcpElement: '',
@@ -199,11 +199,11 @@ try {
           new PerformanceObserver((list) => {
             const entry = list.getEntries().at(-1);
             if (!entry) return;
-            window.hooptraceVitals.lcp = entry.startTime;
-            window.hooptraceVitals.lcpElement =
+            window.hoopitoVitals.lcp = entry.startTime;
+            window.hoopitoVitals.lcpElement =
               entry.element?.outerHTML.slice(0, 300) ?? '';
-            window.hooptraceVitals.lcpResource = entry.url ?? '';
-            window.hooptraceVitals.lcpChanges.push({
+            window.hoopitoVitals.lcpResource = entry.url ?? '';
+            window.hoopitoVitals.lcpChanges.push({
               time: entry.startTime,
               tag: entry.element?.tagName ?? '',
               size: entry.size,
@@ -212,7 +212,7 @@ try {
           new PerformanceObserver((list) => {
             for (const entry of list.getEntries())
               if (!entry.hadRecentInput)
-                window.hooptraceVitals.cls += entry.value;
+                window.hoopitoVitals.cls += entry.value;
           }).observe({ type: 'layout-shift', buffered: true });
         });
         await page.goto(`${origin}${path}`, { waitUntil: 'networkidle' });
@@ -222,7 +222,7 @@ try {
           await new Promise((done) => setTimeout(done, 2100));
         });
         const vitals = await page.evaluate(() => ({
-          ...window.hooptraceVitals,
+          ...window.hoopitoVitals,
           scene: document.documentElement.dataset.scene,
           viewport: {
             width: innerWidth,

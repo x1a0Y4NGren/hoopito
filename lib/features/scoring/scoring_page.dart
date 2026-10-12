@@ -3,23 +3,23 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/design_system/recording_confirmation.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/rules/rule_engine.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
-import 'package:hooptrace/features/scoring/widgets/court_view.dart';
-import 'package:hooptrace/features/scoring/widgets/court_painter.dart';
-import 'package:hooptrace/features/scoring/widgets/score_side_panel.dart';
-import 'package:hooptrace/features/scoring/widgets/scoring_guide.dart';
-import 'package:hooptrace/features/scoring/motion/scoring_motion.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/design_system/recording_confirmation.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/rules/rule_engine.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
+import 'package:hoopito/features/scoring/widgets/court_view.dart';
+import 'package:hoopito/features/scoring/widgets/court_painter.dart';
+import 'package:hoopito/features/scoring/widgets/score_side_panel.dart';
+import 'package:hoopito/features/scoring/widgets/scoring_guide.dart';
+import 'package:hoopito/features/scoring/motion/scoring_motion.dart';
 
 const scoringResumeClockKey = Key('scoring-resume-clock');
 
@@ -777,7 +777,7 @@ class _ScoringPageState extends State<ScoringPage>
         (MediaQuery.maybeOf(context)?.disableAnimations ?? false) ||
         (MediaQuery.maybeAccessibleNavigationOf(context) ?? false) ||
         _motionMode != ScoringMotionMode.standard;
-    final motion = Theme.of(context).extension<HoopTraceMotionTheme>();
+    final motion = Theme.of(context).extension<HoopitoMotionTheme>();
     final locationRevealDuration = switch (_motionMode) {
       ScoringMotionMode.disabled => Duration.zero,
       ScoringMotionMode.reduced =>
@@ -1148,7 +1148,7 @@ class _ScoringPageState extends State<ScoringPage>
     final generation = _actionGeneration;
     final controller = _controller;
     final foulStampDuration =
-        Theme.of(context).extension<HoopTraceMotionTheme>()?.foulStamp ??
+        Theme.of(context).extension<HoopitoMotionTheme>()?.foulStamp ??
         const Duration(milliseconds: 180);
     try {
       final accepted = await controller.recordFoulCommitted(side);
@@ -1672,7 +1672,7 @@ class _ScoringPageState extends State<ScoringPage>
     final workspace = _motionWorkspaceKey.currentContext?.findRenderObject();
     final compactHeight = workspace is RenderBox && workspace.size.height < 500;
     final sheetDuration =
-        Theme.of(context).extension<HoopTraceMotionTheme>()?.sheet ??
+        Theme.of(context).extension<HoopitoMotionTheme>()?.sheet ??
         Duration.zero;
     await showModalBottomSheet<void>(
       context: context,
@@ -2102,7 +2102,7 @@ class _ScoringPageState extends State<ScoringPage>
     );
     final disabledExtensions = Map<Object, ThemeExtension<dynamic>>.of(
       theme.extensions,
-    )..[HoopTraceEditorialTheme] = disabledEditorial;
+    )..[HoopitoEditorialTheme] = disabledEditorial;
     return Semantics(
       button: true,
       enabled: false,
@@ -2647,12 +2647,12 @@ class _Scoreboard extends StatelessWidget {
     final blue = teamColorForScheme(
       TeamSide.blue,
       scheme,
-      background: HoopTraceColors.ink,
+      background: HoopitoColors.ink,
     );
     final red = teamColorForScheme(
       TeamSide.red,
       scheme,
-      background: HoopTraceColors.ink,
+      background: HoopitoColors.ink,
     );
     final editorial = editorialThemeOf(context);
     final clockLabel = clock == null
@@ -2680,7 +2680,7 @@ class _Scoreboard extends StatelessWidget {
             minimumSize: const Size(48, 48),
             padding: EdgeInsets.zero,
             foregroundColor: Colors.white,
-            backgroundColor: HoopTraceColors.ink,
+            backgroundColor: HoopitoColors.ink,
             elevation: 0,
             side: const BorderSide(color: Color(0xFF777D82)),
             shape: const BeveledRectangleBorder(
@@ -2729,7 +2729,7 @@ class _Scoreboard extends StatelessWidget {
               minimumSize: const Size(48, 48),
               padding: const EdgeInsets.symmetric(horizontal: 3),
               foregroundColor: editorial.arenaAccent,
-              backgroundColor: HoopTraceColors.ink,
+              backgroundColor: HoopitoColors.ink,
               disabledForegroundColor: Colors.white38,
               elevation: 0,
               side: BorderSide(
@@ -2756,7 +2756,7 @@ class _Scoreboard extends StatelessWidget {
 
     return Material(
       key: const Key('scoring-scoreboard'),
-      color: HoopTraceColors.ink,
+      color: HoopitoColors.ink,
       child: SizedBox(
         height: portrait ? 104 : 56,
         child: LayoutBuilder(
@@ -2913,7 +2913,7 @@ class _Scoreboard extends StatelessWidget {
                         padding: EdgeInsets.symmetric(
                           horizontal: compact ? 2 : 12,
                         ),
-                        foregroundColor: HoopTraceColors.ink,
+                        foregroundColor: HoopitoColors.ink,
                         backgroundColor: editorial.arenaAccent,
                         elevation: 0,
                         shape: const BeveledRectangleBorder(
@@ -2976,7 +2976,7 @@ class _ScoreLabel extends StatelessWidget {
         standard:
             Theme.of(
               context,
-            ).extension<HoopTraceMotionTheme>()?.scoreTransition ??
+            ).extension<HoopitoMotionTheme>()?.scoreTransition ??
             const Duration(milliseconds: 180),
       ),
       transitionBuilder: (child, animation) => SlideTransition(
@@ -2992,7 +2992,7 @@ class _ScoreLabel extends StatelessWidget {
         maxLines: 1,
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
           color: color,
-          fontFamily: HoopTraceTypography.displayFamily,
+          fontFamily: HoopitoTypography.displayFamily,
           fontWeight: FontWeight.w900,
           fontFeatures: const [FontFeature.tabularFigures()],
         ),

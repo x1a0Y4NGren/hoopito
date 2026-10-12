@@ -1,6 +1,6 @@
 """Collect opt-in Profile FrameTiming logs from real process cold starts.
 
-Build with --profile --dart-define=HOOPTRACE_ENTRY_PROFILE=true, then install
+Build with --profile --dart-define=HOOPITO_ENTRY_PROFILE=true, then install
 that APK on the synthetic Android user before running this tool. This tool
 never installs, uninstalls, clears app data, changes settings, or records video.
 Its only device mutations are force-stop and explicit activity launch.
@@ -21,7 +21,9 @@ import subprocess
 import time
 
 
-PREFIX = 'HOOPTRACE_ENTRY_PROFILE_JSON '
+PREFIX = 'HOOPITO_ENTRY_PROFILE_JSON '
+# Retain parsing of previously captured performance evidence.
+LEGACY_PREFIX = 'HOOPTRACE_ENTRY_PROFILE_JSON '
 PACKAGE = 'io.github.x1a0y4ngren.hooptrace'
 
 
@@ -29,9 +31,10 @@ def parse_records(log):
     """Read one complete probe, rejecting lost/truncated frame records."""
     records = []
     for line in log.splitlines():
-        if PREFIX not in line:
+        prefix = next((value for value in (PREFIX, LEGACY_PREFIX) if value in line), None)
+        if prefix is None:
             continue
-        records.append(json.loads(line.split(PREFIX, 1)[1]))
+        records.append(json.loads(line.split(prefix, 1)[1]))
     summaries = [record for record in records if record.get('type') == 'summary']
     if not summaries:
         return None
@@ -206,7 +209,10 @@ class Device:
     def validate(self):
         current_user = int(self.run('shell', 'am', 'get-current-user'))
         users = self.run('shell', 'pm', 'list', 'users')
-        if self.args.user != 10 or current_user != 10 or 'UserInfo{10:HoopTraceV2_Synthetic_' not in users:
+        synthetic_user = any(name in users for name in (
+            'UserInfo{10:HoopitoV2_Synthetic_', 'UserInfo{10:HoopTraceV2_Synthetic_',
+        ))
+        if self.args.user != 10 or current_user != 10 or not synthetic_user:
             raise RuntimeError('Requires the existing synthetic user 10 in the foreground; no users/settings are changed.')
         api = self.run('shell', 'getprop', 'ro.build.version.sdk')
         if api != '36':

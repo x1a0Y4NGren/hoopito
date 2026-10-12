@@ -13,14 +13,14 @@ const home = locale === 'zh' ? '/' : '/en/';
 
 <Layout
   locale={locale}
-  title={`${c.privacy.title} — HoopTrace`}
+  title={`${c.privacy.title} — ${locale === 'zh' ? '球豆' : 'Hoopito'}`}
   description={c.privacy.subtitle}
   privacy
 >
   <header class="site-header">
-    <a class="wordmark" href={home}>
+    <a class="wordmark" href={home} aria-label="Hoopito · 球豆">
       <img src="/brand/mark.webp" alt="" width="40" height="40" />
-      <span>HOOPTRACE.</span>
+      <span>HOOPITO.</span>
     </a>
     <a
       class="language"
@@ -70,7 +70,7 @@ const home = locale === 'zh' ? '/' : '/en/';
     </div>
   </main>
   <footer class="privacy-footer content-width">
-    <span class="display">HOOPTRACE.</span>
+    <span class="display">HOOPITO.</span>
     <small>© 2026 x1a0Y4NGren</small>
   </footer>
 </Layout>

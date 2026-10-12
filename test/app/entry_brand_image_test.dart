@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/entry/entry_brand_image.dart';
+import 'package:hoopito/app/entry/entry_brand_image.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

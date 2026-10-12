@@ -3,12 +3,12 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/analytics/player_career_aggregate.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/players/player_career_controller.dart';
-import 'package:hooptrace/features/players/player_career_page.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/analytics/player_career_aggregate.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/players/player_career_controller.dart';
+import 'package:hoopito/features/players/player_career_page.dart';
 
 void main() {
   testWidgets('career draws shooting growth and keeps the numeric samples', (

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
 
 /// An inline hint, leaving both scoring rails available throughout.
 class ScoringGuide extends StatefulWidget {

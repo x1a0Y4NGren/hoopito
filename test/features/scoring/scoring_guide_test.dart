@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
 
 void main() {
   for (final language in ['en', 'zh']) {
@@ -15,7 +15,7 @@ void main() {
           addTearDown(() => tester.binding.setSurfaceSize(null));
           await tester.pumpWidget(
             MaterialApp(
-              theme: buildHoopTraceTheme(brightness: brightness),
+              theme: buildHoopitoTheme(brightness: brightness),
               locale: Locale(language),
               supportedLocales: AppLocalizations.supportedLocales,
               localizationsDelegates: AppLocalizations.localizationsDelegates,

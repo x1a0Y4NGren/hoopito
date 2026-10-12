@@ -3,22 +3,22 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/design_system/recording_confirmation.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/export/replay_image_exporter.dart';
-import 'package:hooptrace/features/replay/replay_controller.dart';
-import 'package:hooptrace/features/replay/widgets/replay_analytics_summary.dart';
-import 'package:hooptrace/features/replay/widgets/replay_audit_sheet.dart';
-import 'package:hooptrace/features/replay/widgets/replay_event_editor.dart';
-import 'package:hooptrace/features/replay/widgets/replay_timeline.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
-import 'package:hooptrace/features/scoring/widgets/court_view.dart';
-import 'package:hooptrace/features/scoring/widgets/court_painter.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/design_system/recording_confirmation.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/export/replay_image_exporter.dart';
+import 'package:hoopito/features/replay/replay_controller.dart';
+import 'package:hoopito/features/replay/widgets/replay_analytics_summary.dart';
+import 'package:hoopito/features/replay/widgets/replay_audit_sheet.dart';
+import 'package:hoopito/features/replay/widgets/replay_event_editor.dart';
+import 'package:hoopito/features/replay/widgets/replay_timeline.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
+import 'package:hoopito/features/scoring/widgets/court_view.dart';
+import 'package:hoopito/features/scoring/widgets/court_painter.dart';
 
 class ReplayPage extends StatefulWidget {
   const ReplayPage({
@@ -290,8 +290,8 @@ class _ReplayPageState extends State<ReplayPage> {
           _ScoreHeader(data: controller.data, compact: compactLandscape),
           SizedBox(
             height: compactLandscape
-                ? HoopTraceSpacing.compact
-                : HoopTraceSpacing.section,
+                ? HoopitoSpacing.compact
+                : HoopitoSpacing.section,
           ),
           Expanded(
             child: LayoutBuilder(
@@ -337,7 +337,7 @@ class _ReplayPageState extends State<ReplayPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _ReplayOverview(controller: controller),
-                      const SizedBox(height: HoopTraceSpacing.section),
+                      const SizedBox(height: HoopitoSpacing.section),
                       ReplayTimelinePanel(
                         controller: controller,
                         embedded: true,
@@ -560,7 +560,7 @@ class _ReplayExportSummary extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                'HoopTrace',
+                l10n.appName,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w900,

@@ -3,20 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
-import 'package:hooptrace/features/summary/match_summary_page.dart';
-import 'package:hooptrace/features/home/home_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
+import 'package:hoopito/features/summary/match_summary_page.dart';
+import 'package:hoopito/features/home/home_page.dart';
 import 'package:go_router/go_router.dart';
 
 import '../test_helpers/test_database.dart';
@@ -39,7 +39,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [appDatabaseProvider.overrideWithValue(database)],
-          child: const HoopTraceApp(showEntryAnimation: false),
+          child: const HoopitoApp(showEntryAnimation: false),
         ),
       );
       await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -95,7 +95,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(database)],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -139,7 +139,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(database)],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -194,7 +194,7 @@ void main() {
           matchCommandServiceProvider.overrideWithValue(service),
           automaticBackupServiceProvider.overrideWithValue(backup),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -254,7 +254,7 @@ void main() {
           appDatabaseProvider.overrideWithValue(database),
           matchCommandServiceProvider.overrideWithValue(service),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -314,7 +314,7 @@ void main() {
             appDatabaseProvider.overrideWithValue(database),
             matchCommandServiceProvider.overrideWithValue(service),
           ],
-          child: const HoopTraceApp(showEntryAnimation: false),
+          child: const HoopitoApp(showEntryAnimation: false),
         ),
       );
       await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -359,7 +359,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [appDatabaseProvider.overrideWithValue(database)],
-          child: const HoopTraceApp(showEntryAnimation: false),
+          child: const HoopitoApp(showEntryAnimation: false),
         ),
       );
       await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));

@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hooptrace/core/diagnostics/startup_diagnostics.dart';
+import 'package:hoopito/core/diagnostics/startup_diagnostics.dart';
 
 /// Opt-in diagnostics for a Profile build. No callbacks or output in normal
 /// builds, and no filesystem, database, or network access.
@@ -19,8 +19,8 @@ class EntryFrameProbe {
   }
 
   static const _enabled =
-      kProfileMode && bool.fromEnvironment('HOOPTRACE_ENTRY_PROFILE');
-  static const _prefix = 'HOOPTRACE_ENTRY_PROFILE_JSON ';
+      kProfileMode && bool.fromEnvironment('HOOPITO_ENTRY_PROFILE');
+  static const _prefix = 'HOOPITO_ENTRY_PROFILE_JSON ';
   static const _flushDelay = Duration(milliseconds: 1200);
 
   final _frames = <FrameTiming>[];

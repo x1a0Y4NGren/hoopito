@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/design_system/recording_confirmation.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/app/design_system/recording_confirmation.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
 void main() {
   for (final initial in [TrackingCoverage.locations, TrackingCoverage.full]) {

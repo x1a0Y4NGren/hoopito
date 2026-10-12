@@ -5,11 +5,11 @@ import 'dart:typed_data';
 import 'package:csv/csv.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/export_coordinator.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
 
 import '../../test_helpers/test_database.dart';
 
@@ -25,7 +25,7 @@ void main() {
 
     setUp(() async {
       safetyDirectory = await Directory.systemTemp.createTemp(
-        'hooptrace-safety-',
+        'hoopito-safety-',
       );
       addTearDown(() => safetyDirectory.delete(recursive: true));
       replacementBackup = await withTestDatabase((source) async {
@@ -73,13 +73,13 @@ void main() {
     });
 
     test('shares a complete JSON backup with a stable filename', () async {
-      await coordinator.shareJsonBackup(subject: 'HoopTrace full local backup');
+      await coordinator.shareJsonBackup(subject: 'Hoopito full local backup');
 
       expect(gateway.shares, hasLength(1));
       final artifact = gateway.shares.single.single;
-      expect(artifact.fileName, 'hooptrace-backup-20260821-103000.json');
+      expect(artifact.fileName, 'hoopito-backup-20260821-103000.json');
       expect(artifact.mimeType, 'application/json');
-      expect(gateway.subjects.single, 'HoopTrace full local backup');
+      expect(gateway.subjects.single, 'Hoopito full local backup');
       final root = jsonDecode(utf8.decode(artifact.bytes)) as Map;
       expect(
         (root['data'] as Map).keys,
@@ -97,13 +97,13 @@ void main() {
     });
 
     test('shares match, event and player statistics CSV files', () async {
-      await coordinator.shareCsvExports(subject: 'HoopTrace CSV export');
+      await coordinator.shareCsvExports(subject: 'Hoopito CSV export');
 
       final files = gateway.shares.single;
       expect(files.map((file) => file.fileName), [
-        'hooptrace-matches-20260821-103000.csv',
-        'hooptrace-events-20260821-103000.csv',
-        'hooptrace-player-stats-20260821-103000.csv',
+        'hoopito-matches-20260821-103000.csv',
+        'hoopito-events-20260821-103000.csv',
+        'hoopito-player-stats-20260821-103000.csv',
       ]);
       final stats = _decodeCsv(utf8.decode(files.last.bytes));
       expect(
@@ -127,7 +127,7 @@ void main() {
       ]);
       expect(stats[2][0], '');
       expect(stats[2][1], '海浪');
-      expect(gateway.subjects.single, 'HoopTrace CSV export');
+      expect(gateway.subjects.single, 'Hoopito CSV export');
     });
 
     test(
@@ -144,7 +144,7 @@ void main() {
 
         expect(
           await coordinator.restorePickedBackup(
-            safetySubject: 'HoopTrace safety backup before restore',
+            safetySubject: 'Hoopito safety backup before restore',
           ),
           isTrue,
         );
@@ -371,7 +371,7 @@ void main() {
 
       await expectLater(
         () => coordinator.restorePickedBackup(
-          safetySubject: 'HoopTrace safety backup before restore',
+          safetySubject: 'Hoopito safety backup before restore',
         ),
         throwsA(isA<BackupRestoreBlockedException>()),
       );
@@ -396,7 +396,7 @@ void main() {
 
         await expectLater(
           () => coordinator.restorePickedBackup(
-            safetySubject: 'HoopTrace safety backup before restore',
+            safetySubject: 'Hoopito safety backup before restore',
           ),
           throwsA(isA<BackupRestoreBlockedException>()),
         );
@@ -425,7 +425,7 @@ void main() {
 
         await expectLater(
           () => coordinator.restorePickedBackup(
-            safetySubject: 'HoopTrace safety backup before restore',
+            safetySubject: 'Hoopito safety backup before restore',
           ),
           throwsA(isA<BackupException>()),
         );
@@ -451,7 +451,7 @@ void main() {
         expect(
           await coordinator.restorePickedBackup(
             mode: RestoreMode.merge,
-            safetySubject: 'HoopTrace safety backup before restore',
+            safetySubject: 'Hoopito safety backup before restore',
           ),
           isTrue,
         );
@@ -472,12 +472,12 @@ void main() {
     test('returns false when the import picker is cancelled', () async {
       expect(
         await coordinator.restorePickedBackup(
-          safetySubject: 'HoopTrace safety backup before restore',
-          pickerDialogTitle: '选择 HoopTrace 备份',
+          safetySubject: 'Hoopito safety backup before restore',
+          pickerDialogTitle: '选择 Hoopito 备份',
         ),
         isFalse,
       );
-      expect(gateway.lastBackupDialogTitle, '选择 HoopTrace 备份');
+      expect(gateway.lastBackupDialogTitle, '选择 Hoopito 备份');
     });
 
     test('forwards a localized directory picker title', () async {
@@ -491,14 +491,14 @@ void main() {
       await coordinator.shareReplayImage(
         png,
         matchId: 'match:/1',
-        subject: 'HoopTrace match replay',
+        subject: 'Hoopito match replay',
       );
 
       final artifact = gateway.shares.single.single;
-      expect(artifact.fileName, 'hooptrace-replay-match-1.png');
+      expect(artifact.fileName, 'hoopito-replay-match-1.png');
       expect(artifact.mimeType, 'image/png');
       expect(artifact.bytes, png);
-      expect(gateway.subjects.single, 'HoopTrace match replay');
+      expect(gateway.subjects.single, 'Hoopito match replay');
     });
 
     test('uses a caller-provided localized share subject', () async {

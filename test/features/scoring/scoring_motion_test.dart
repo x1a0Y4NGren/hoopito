@@ -4,11 +4,11 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/scoring/motion/scoring_motion.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/scoring/motion/scoring_motion.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
 import 'package:lottie/lottie.dart';
 
 ShotLocationCommitReceipt receipt(String id, {double x = .5, double y = .5}) {
@@ -24,8 +24,8 @@ ShotLocationCommitReceipt receipt(String id, {double x = .5, double y = .5}) {
 
 void main() {
   test('motion theme exposes standard and accelerated timings', () {
-    final light = const HoopTraceMotionTheme.light();
-    final dark = const HoopTraceMotionTheme.dark();
+    final light = const HoopitoMotionTheme.light();
+    final dark = const HoopitoMotionTheme.dark();
     expect(light.scoreFlight, const Duration(milliseconds: 480));
     expect(light.impact, const Duration(milliseconds: 180));
     expect(light.acceleratedScoreFlight, const Duration(milliseconds: 320));
@@ -56,7 +56,7 @@ void main() {
       final coordinator = ScoringMotionCoordinator();
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(brightness: Brightness.light),
+          theme: buildHoopitoTheme(brightness: Brightness.light),
           home: ScoringMotionOverlay(coordinator: coordinator),
         ),
       );
@@ -74,7 +74,7 @@ void main() {
       expect(delegate.keyPath, ['**', 'teamFill', 'teamFill', 'teamFill']);
       expect(
         delegate.value,
-        teamColorForScheme(TeamSide.blue, buildHoopTraceTheme().colorScheme),
+        teamColorForScheme(TeamSide.blue, buildHoopitoTheme().colorScheme),
       );
 
       final data = await rootBundle.load('assets/animations/paint_ball.json');
@@ -113,7 +113,7 @@ void main() {
   );
 
   test('bundled ball and splash draw delegates resolve blue and red', () async {
-    final theme = buildHoopTraceTheme();
+    final theme = buildHoopitoTheme();
     for (final side in TeamSide.values) {
       final expected = teamColorForScheme(side, theme.colorScheme);
       for (final asset in [
@@ -140,7 +140,7 @@ void main() {
         drawable.draw(Canvas(recorder), const Rect.fromLTWH(0, 0, 180, 180));
         recorder.endRecording();
         expect(callbackColor, expected, reason: '$side $asset');
-        expect(callbackColor, isNot(HoopTraceColors.orange));
+        expect(callbackColor, isNot(HoopitoColors.orange));
       }
     }
   });
@@ -249,7 +249,7 @@ void main() {
     () {
       final completed = <String>[];
       final coordinator = ScoringMotionCoordinator(
-        motionTheme: const HoopTraceMotionTheme.light(),
+        motionTheme: const HoopitoMotionTheme.light(),
         onComplete: (event) => completed.add(event.receipt.eventId),
       );
       for (var i = 0; i < 5; i++) {
@@ -687,7 +687,7 @@ void main() {
       );
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: ScoringMotionOverlay(coordinator: coordinator),
         ),
       );
@@ -713,7 +713,7 @@ void main() {
 
       final expectedColor = teamColorForScheme(
         TeamSide.blue,
-        buildHoopTraceTheme().colorScheme,
+        buildHoopitoTheme().colorScheme,
       );
       expect(find.byType(LottieBuilder), findsNothing);
       final initial = circles();
@@ -813,7 +813,7 @@ void main() {
     final coordinator = ScoringMotionCoordinator();
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: ScoringMotionOverlay(
           coordinator: coordinator,
           assetBuilder: (context, active, color) {
@@ -836,14 +836,14 @@ void main() {
     expect(assets.last, 'assets/animations/paint_ball.json');
     expect(
       colors.last,
-      teamColorForScheme(TeamSide.blue, buildHoopTraceTheme().colorScheme),
+      teamColorForScheme(TeamSide.blue, buildHoopitoTheme().colorScheme),
     );
     coordinator.advance(const Duration(milliseconds: 480));
     await tester.pump();
     expect(assets.last, 'assets/animations/paint_splash.json');
     expect(
       colors.last,
-      teamColorForScheme(TeamSide.blue, buildHoopTraceTheme().colorScheme),
+      teamColorForScheme(TeamSide.blue, buildHoopitoTheme().colorScheme),
     );
     coordinator.dispose();
   });

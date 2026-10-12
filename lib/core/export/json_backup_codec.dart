@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:drift/drift.dart';
-import 'package:hooptrace/core/audit/audit_log_entry.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/repositories/player_analytics_snapshot_repository.dart';
-import 'package:hooptrace/core/domain/analytics/player_analytics_snapshot.dart';
-import 'package:hooptrace/core/domain/analytics/player_analytics_snapshot_calculator.dart';
-import 'package:hooptrace/core/domain/entities/match.dart' as domain_match;
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/export/backup_manifest.dart';
+import 'package:hoopito/core/audit/audit_log_entry.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/repositories/player_analytics_snapshot_repository.dart';
+import 'package:hoopito/core/domain/analytics/player_analytics_snapshot.dart';
+import 'package:hoopito/core/domain/analytics/player_analytics_snapshot_calculator.dart';
+import 'package:hoopito/core/domain/entities/match.dart' as domain_match;
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/export/backup_manifest.dart';
 
 sealed class BackupException implements Exception {
   const BackupException(this.message);
@@ -153,7 +153,7 @@ class JsonBackupCodec {
     this.maxTotalRows = 200000,
   }) : now = now ?? DateTime.now;
 
-  static const appName = 'HoopTrace';
+  static const appName = 'Hoopito';
   static const currentFormatVersion = 2;
 
   final AppDatabase database;
@@ -581,9 +581,10 @@ class JsonBackupCodec {
     BackupManifest manifest,
     Map<String, List<Map<String, dynamic>>> data,
   ) {
-    if (manifest.appName != appName || manifest.appVersion.trim().isEmpty) {
+    if ((manifest.appName != appName && manifest.appName != 'HoopTrace') ||
+        manifest.appVersion.trim().isEmpty) {
       throw const BackupValidationException(
-        'Backup manifest does not identify a supported HoopTrace export.',
+        'Backup manifest does not identify a supported Hoopito export.',
       );
     }
     const legacyExpected = {

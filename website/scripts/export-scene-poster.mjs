@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 
 // Development-only capture tool: no debug handle or second renderer ships in the website.
 const dist = resolve('dist');
-const origin = process.env.HOOPTRACE_LOCAL_ORIGIN ?? 'http://127.0.0.1:4321';
+const origin = process.env.HOOPITO_LOCAL_ORIGIN ?? 'http://127.0.0.1:4321';
 const sceneChunk = (await readdir(resolve(dist, '_astro'))).find((name) =>
   /^court-scene.*\.js$/.test(name),
 );

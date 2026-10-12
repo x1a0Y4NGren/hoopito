@@ -1,6 +1,11 @@
-# Performance evidence / 性能证据
+# Hoopito · 球豆 Performance evidence / 性能证据
 
-## Latest candidate / 最新候选（2026-10-03）
+Current branding is Hoopito · 球豆. The dated HoopTrace measurements below retain
+their original source commits, environments, paths and results; they do not
+establish new performance verification after the rename. See
+[naming and compatibility](../design/brand/naming-and-compatibility.md).
+
+## Historical candidate / 历史候选（2026-10-03）
 
 Source `94bb58e094736dfeaf42e524e308236de876a059` full-suite query benchmark: history 20 rows
 15.464ms, replay 1,009 events 50.827ms; unchanged 500ms gate.

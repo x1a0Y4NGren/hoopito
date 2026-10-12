@@ -1,5 +1,5 @@
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
 /// The supported UTC windows for profile career analytics.
 enum PlayerCareerWindow { sevenDays, thirtyDays, ninetyDays, allTime }

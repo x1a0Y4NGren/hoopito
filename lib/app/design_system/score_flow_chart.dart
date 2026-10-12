@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
 
 class ScoreFlowChart extends StatelessWidget {
   const ScoreFlowChart({

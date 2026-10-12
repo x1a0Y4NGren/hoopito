@@ -5,22 +5,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
-import 'package:hooptrace/features/scoring/motion/scoring_motion.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
-import 'package:hooptrace/features/scoring/widgets/court_view.dart';
-import 'package:hooptrace/features/scoring/widgets/score_side_panel.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
+import 'package:hoopito/features/scoring/motion/scoring_motion.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
+import 'package:hoopito/features/scoring/widgets/court_view.dart';
+import 'package:hoopito/features/scoring/widgets/score_side_panel.dart';
 
 import '../../test_helpers/test_database.dart';
 
@@ -1523,12 +1523,12 @@ void main() {
       await tester.binding.setSurfaceSize(size);
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: const ScoringPage(matchId: 'editorial-action-rails'),
         ),
       );
 
-      final editorial = const HoopTraceEditorialTheme.light();
+      final editorial = const HoopitoEditorialTheme.light();
       final blueRail = tester.widget<Material>(
         find.byKey(const Key('blue-action-rail')),
       );
@@ -2561,7 +2561,7 @@ void main() {
     for (final brightness in Brightness.values) {
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(brightness: brightness),
+          theme: buildHoopitoTheme(brightness: brightness),
           home: SizedBox(
             width: 400,
             height: 500,
@@ -2607,7 +2607,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: ScoreSidePanel(
           side: TeamSide.blue,
           name: 'Blue',
@@ -2621,7 +2621,7 @@ void main() {
       ),
     );
 
-    final muted = const HoopTraceEditorialTheme.light().mutedInk;
+    final muted = const HoopitoEditorialTheme.light().mutedInk;
     for (final key in const [Key('blue-score-1'), Key('blue-miss')]) {
       final target = find.byKey(key);
       final button = tester.widget<ButtonStyleButton>(target);
@@ -4057,12 +4057,11 @@ void main() {
           .opacity,
       lessThan(1),
     );
-    final editorial = const HoopTraceEditorialTheme.light();
+    final editorial = const HoopitoEditorialTheme.light();
     final rowTheme = tester.widget<Theme>(
       find.ancestor(of: replay, matching: find.byType(Theme)).first,
     );
-    final disabledEditorial = rowTheme.data
-        .extension<HoopTraceEditorialTheme>();
+    final disabledEditorial = rowTheme.data.extension<HoopitoEditorialTheme>();
     expect(disabledEditorial?.ink, editorial.mutedInk);
     expect(disabledEditorial?.rule, editorial.mutedInk);
     semantics.dispose();

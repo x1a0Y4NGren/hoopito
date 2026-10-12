@@ -2,11 +2,13 @@
 
 ## Supported versions / 支持版本
 
-Security fixes are provided for the latest published HoopTrace release. Actual
+Security fixes are provided for the latest official release of Hoopito (formerly
+HoopTrace; Chinese name: 球豆). The published v2.0.0 APK retains its original
+HoopTrace name. Actual
 release provenance and verification scope are recorded in the release record;
 local Debug packages and unsigned artifacts do not establish a production release.
 
-HoopTrace 仅为最新正式版本提供安全修复；2.0 的实际发行来源与验收范围见发行记录，
+Hoopito · 球豆（原名 HoopTrace）仅为最新正式版本提供安全修复；2.0 的实际发行来源与验收范围见发行记录，
 本地 Debug 包和未签名复现产物不代表正式发行。发行状态与已知范围见
 [发行记录 / Release record](docs/release/v2.0.0-release-record.md)。
 
@@ -32,7 +34,7 @@ available. These are best-effort targets for a volunteer project.
 
 ## Security boundaries / 安全边界
 
-- HoopTrace has no account system, cloud backend, telemetry, ads, or payment SDK.
+- Hoopito has no account system, cloud backend, telemetry, ads, or payment SDK.
 - Match data is local SQLite data unless the user explicitly exports, shares, or
   enables an approved SAF backup directory.
 - Android system backup is disabled; official releases request no broad storage

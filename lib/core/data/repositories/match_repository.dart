@@ -1,25 +1,25 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/audit/audit_diff.dart';
-import 'package:hooptrace/core/audit/audit_log_entry.dart';
-import 'package:hooptrace/core/domain/entities/match.dart' as domain_match;
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/match_history_entry.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/entities/shot_location.dart' as domain;
-import 'package:hooptrace/core/domain/entities/possession_segment.dart'
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/audit/audit_diff.dart';
+import 'package:hoopito/core/audit/audit_log_entry.dart';
+import 'package:hoopito/core/domain/entities/match.dart' as domain_match;
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/match_history_entry.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/entities/shot_location.dart' as domain;
+import 'package:hoopito/core/domain/entities/possession_segment.dart'
     as domain_possession;
-import 'package:hooptrace/core/domain/entities/active_session.dart'
+import 'package:hoopito/core/domain/entities/active_session.dart'
     as domain_session;
-import 'package:hooptrace/core/domain/entities/clock_state.dart';
-import 'package:hooptrace/core/domain/clock/clock_engine.dart';
-import 'package:hooptrace/core/domain/scoring/scoring_reducer.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/entities/clock_state.dart';
+import 'package:hoopito/core/domain/clock/clock_engine.dart';
+import 'package:hoopito/core/domain/scoring/scoring_reducer.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 import 'package:uuid/uuid.dart';
 
 class MatchRepository {

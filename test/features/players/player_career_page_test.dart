@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/analytics/player_career_aggregate.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/players/player_career_controller.dart';
-import 'package:hooptrace/features/players/player_career_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/analytics/player_career_aggregate.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/players/player_career_controller.dart';
+import 'package:hoopito/features/players/player_career_page.dart';
 
 void main() {
   testWidgets('career avatar foreground meets normal-text contrast', (
@@ -26,7 +26,7 @@ void main() {
     for (final brightness in Brightness.values) {
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(brightness: brightness),
+          theme: buildHoopitoTheme(brightness: brightness),
           home: PlayerCareerPage(
             controller: controller,
             player: Player(
@@ -88,7 +88,7 @@ void main() {
             MediaQuery(
               data: const MediaQueryData(textScaler: TextScaler.linear(2)),
               child: MaterialApp(
-                theme: buildHoopTraceTheme(brightness: brightness),
+                theme: buildHoopitoTheme(brightness: brightness),
                 locale: locale,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
@@ -214,7 +214,7 @@ void main() {
       _expectSingleTapOwner(tester, sevenDays);
       expect(
         tester.widget<Text>(find.text('01  Aug 1, 2026')).style?.fontFamily,
-        HoopTraceTypography.displayFamily,
+        HoopitoTypography.displayFamily,
       );
       expect(
         tester
@@ -226,11 +226,11 @@ void main() {
             )
             .style
             ?.fontFamily,
-        HoopTraceTypography.displayFamily,
+        HoopitoTypography.displayFamily,
       );
       expect(
         tester.widget<Text>(find.text('4')).style?.fontFamily,
-        HoopTraceTypography.displayFamily,
+        HoopitoTypography.displayFamily,
       );
       final shotLine = find.byWidgetPredicate(
         (widget) =>
@@ -246,7 +246,7 @@ void main() {
             .where((span) => span.text == '3/6' || span.text == '1/1')
             .every(
               (span) =>
-                  span.style?.fontFamily == HoopTraceTypography.displayFamily,
+                  span.style?.fontFamily == HoopitoTypography.displayFamily,
             ),
         isTrue,
       );
@@ -349,7 +349,7 @@ void main() {
     expect(find.textContaining('+2.0'), findsOneWidget);
     expect(
       tester.widget<Text>(find.text('+2.0')).style?.fontFamily,
-      HoopTraceTypography.displayFamily,
+      HoopitoTypography.displayFamily,
     );
     final deltaSemantics = find.byWidgetPredicate(
       (widget) =>

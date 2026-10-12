@@ -1,9 +1,11 @@
-# HoopTrace C「独眼球怪」正式标识
+# Hoopito · 球豆 C「独眼球怪」正式标识
+
+当前品牌名称为 Hoopito · 球豆，继续使用已审核的 C 图形；名称与升级兼容规则见[品牌与兼容性](naming-and-compatibility.md)。下列生成记录、原始文件名和验收 SHA 保留当时 HoopTrace 项目的真实来源。
 
 2026-10-04，用户确认：“C是我打算作为logo，制作成图标吧，原来的彻底淘汰了”。
 据此将第一轮 C 概念正式制作为应用资源，不再保留旧篮筐／轨迹标识的运行时入口。
 
-![正式应用图标](../../../assets/icons/hooptrace-app-icon.png)
+![正式应用图标](../../../assets/icons/hoopito-app-icon.png)
 
 ## 设计与来源
 

@@ -1,4 +1,4 @@
-import 'package:hooptrace/core/audit/audit_diff.dart';
+import 'package:hoopito/core/audit/audit_diff.dart';
 
 /// Typed names for the action values persisted in the audit log.
 ///

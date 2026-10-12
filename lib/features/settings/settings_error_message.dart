@@ -1,7 +1,7 @@
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/backup_merge_service.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/backup_merge_service.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
 import 'package:intl/intl.dart';
 
 String settingsFriendlyError(Object error, AppLocalizations l10n) {

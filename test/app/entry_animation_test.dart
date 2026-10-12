@@ -5,10 +5,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/entry/hoop_trace_entry_gate.dart';
-import 'package:hooptrace/app/entry/entry_renderer_ready.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/entry/hoopito_entry_gate.dart';
+import 'package:hoopito/app/entry/entry_renderer_ready.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -34,10 +34,10 @@ void main() {
     MediaQueryData media = const MediaQueryData(size: Size(390, 844)),
     VoidCallback? onChildTap,
   }) => MaterialApp(
-    theme: buildHoopTraceTheme(),
+    theme: buildHoopitoTheme(),
     home: MediaQuery(
       data: media,
-      child: HoopTraceEntryGate(
+      child: HoopitoEntryGate(
         startupStatus: status,
         waitingLabel: 'Opening local records…',
         motionPreferenceLoader: preferenceLoader,
@@ -83,7 +83,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 141));
     await tester.pump();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     expect(find.byKey(const Key('entry-child')), findsOneWidget);
     expect(
       calls.where(
@@ -107,7 +107,7 @@ void main() {
     final opacity = tester.widget<Opacity>(
       find
           .descendant(
-            of: find.byKey(hoopTraceEntrySceneKey),
+            of: find.byKey(hoopitoEntrySceneKey),
             matching: find.byType(Opacity),
           )
           .first,
@@ -133,7 +133,7 @@ void main() {
         .widget<Opacity>(
           find
               .descendant(
-                of: find.byKey(hoopTraceEntrySceneKey),
+                of: find.byKey(hoopitoEntrySceneKey),
                 matching: find.byType(Opacity),
               )
               .first,
@@ -141,12 +141,12 @@ void main() {
         .opacity;
     final before = opacity();
     expect(before, inExclusiveRange(0, 1));
-    await tester.tap(find.byKey(hoopTraceEntryOverlayKey));
+    await tester.tap(find.byKey(hoopitoEntryOverlayKey));
     await tester.pump();
     expect(opacity(), closeTo(before, .001));
     await tester.pump(const Duration(milliseconds: 71));
     await tester.pump();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('finished gate releases its owned decoded image', (tester) async {
@@ -171,7 +171,7 @@ void main() {
     expect(_frame(tester).progress, .86);
     await tester.pumpWidget(harness());
     await tester.pumpAndSettle();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('timeline starts after the unchanged handoff frame', (
@@ -202,7 +202,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 141));
     await tester.pump();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('tap settles current deformation and does not tap through', (
@@ -213,7 +213,7 @@ void main() {
     await _start(tester);
     await tester.pump(const Duration(milliseconds: 330));
     final frozen = _frame(tester).progress;
-    await tester.tap(find.byKey(hoopTraceEntryOverlayKey));
+    await tester.tap(find.byKey(hoopitoEntryOverlayKey));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 60));
     await tester.pump();
@@ -222,7 +222,7 @@ void main() {
     expect(taps, 0);
     await tester.pump(const Duration(milliseconds: 61));
     await tester.pump();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets(
@@ -231,7 +231,7 @@ void main() {
       await tester.pumpWidget(harness(status: EntryStartupStatus.loading));
       await _start(tester);
       await tester.pump(const Duration(milliseconds: 400));
-      await tester.tap(find.byKey(hoopTraceEntryOverlayKey));
+      await tester.tap(find.byKey(hoopitoEntryOverlayKey));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 121));
       await tester.pump();
@@ -242,7 +242,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 141));
       await tester.pump();
-      expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+      expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     },
   );
 
@@ -257,11 +257,11 @@ void main() {
         imageLoader: () => decode.future,
       ),
     );
-    await tester.tap(find.byKey(hoopTraceEntryOverlayKey));
+    await tester.tap(find.byKey(hoopitoEntryOverlayKey));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 121));
     await tester.pump();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     final lateImage = image.clone();
     decode.complete(lateImage);
     pending.complete(MotionPreference.standard);
@@ -284,7 +284,7 @@ void main() {
         expect(_frame(tester).mode, EntryMotionMode.reduced);
         await tester.pump(const Duration(milliseconds: 141));
         await tester.pump();
-        expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+        expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
       },
     );
   }
@@ -302,7 +302,7 @@ void main() {
         },
       ),
     );
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     expect(loads, 0);
   });
 
@@ -315,7 +315,7 @@ void main() {
     await tester.pumpWidget(
       harness(media: const MediaQueryData(disableAnimations: true)),
     );
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -335,7 +335,7 @@ void main() {
         expect(_frame(tester).mode, EntryMotionMode.reduced);
         await tester.pump(const Duration(milliseconds: 141));
         await tester.pump();
-        expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+        expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
       },
     );
   }
@@ -351,7 +351,7 @@ void main() {
     expect(find.byType(Image), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 141));
     await tester.pump();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('decode timeout disposes late image and never restarts', (
@@ -363,7 +363,7 @@ void main() {
     await _start(tester);
     await tester.pump(const Duration(milliseconds: 141));
     await tester.pump();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     final lateImage = image.clone();
     pending.complete(lateImage);
     await tester.pump();
@@ -380,7 +380,7 @@ void main() {
           // Reproduce a UI stall: the source Future wins the callback race,
           // although the image is already beyond the preparation deadline.
           sleep(
-            HoopTraceEntryTimeline.imageWait + const Duration(milliseconds: 20),
+            HoopitoEntryTimeline.imageWait + const Duration(milliseconds: 20),
           );
           return Future.value(lateImage);
         },
@@ -390,7 +390,7 @@ void main() {
     expect(_frame(tester).mode, EntryMotionMode.reduced);
     expect(lateImage.debugDisposed, isTrue);
     await tester.pumpAndSettle();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('renderer readiness precedes the bounded image preparation', (
@@ -475,13 +475,13 @@ void main() {
       harness(presentationReadyLoader: () => presented.future),
     );
     await _start(tester);
-    await tester.pump(HoopTraceEntryTimeline.presentationWait);
+    await tester.pump(HoopitoEntryTimeline.presentationWait);
     await _start(tester);
     expect(_frame(tester).mode, EntryMotionMode.reduced);
     await tester.pumpAndSettle();
     presented.complete();
     await tester.pump();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('terminal startup cancels pending native splash removal', (
@@ -499,10 +499,10 @@ void main() {
         presentationReadyLoader: waitForPresentation,
       ),
     );
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     presented.complete();
     await tester.pumpAndSettle();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('skip consumes an entry still waiting for the native splash', (
@@ -513,12 +513,12 @@ void main() {
       harness(presentationReadyLoader: () => presented.future),
     );
     await _start(tester);
-    await tester.tap(find.byKey(hoopTraceEntrySceneKey));
+    await tester.tap(find.byKey(hoopitoEntrySceneKey));
     await tester.pumpAndSettle();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     presented.complete();
     await tester.pumpAndSettle();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('terminal startup cancels a pending renderer preparation', (
@@ -544,7 +544,7 @@ void main() {
         imageLoader: loadImage,
       ),
     );
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
     surface.complete();
     await tester.pump();
     expect(imageLoads, 0);
@@ -557,12 +557,12 @@ void main() {
       harness(rendererReadyLoader: () => Completer<void>().future),
     );
     await tester.pump(
-      HoopTraceEntryTimeline.rendererWait + const Duration(milliseconds: 1),
+      HoopitoEntryTimeline.rendererWait + const Duration(milliseconds: 1),
     );
     await _start(tester);
     expect(_frame(tester).mode, EntryMotionMode.standard);
     await tester.pumpAndSettle();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets(
@@ -602,7 +602,7 @@ void main() {
       await _start(tester);
       await tester.pump(const Duration(milliseconds: 200));
       await tester.pumpWidget(harness(status: status));
-      expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+      expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
       expect(find.byKey(const Key('entry-child')), findsOneWidget);
     });
   }
@@ -618,7 +618,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 121));
     await tester.pump();
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('one process session does not replay on widget recreation', (
@@ -630,7 +630,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpWidget(harness(session: session));
-    expect(find.byKey(hoopTraceEntryOverlayKey), findsNothing);
+    expect(find.byKey(hoopitoEntryOverlayKey), findsNothing);
   });
 
   testWidgets('long waiting hint is accessible with compact large text', (
@@ -657,7 +657,7 @@ void main() {
     expect(find.text('Opening local records…'), findsOneWidget);
     expect(
       tester
-          .getSemantics(find.byKey(hoopTraceEntryWaitingKey))
+          .getSemantics(find.byKey(hoopitoEntryWaitingKey))
           .getSemanticsData()
           .flagsCollection
           .isLiveRegion,
@@ -675,5 +675,5 @@ Future<void> _start(WidgetTester tester) async {
   await tester.pump();
 }
 
-HoopTraceEntryFrame _frame(WidgetTester tester) =>
-    tester.widget<HoopTraceEntryFrame>(find.byKey(hoopTraceEntrySceneKey));
+HoopitoEntryFrame _frame(WidgetTester tester) =>
+    tester.widget<HoopitoEntryFrame>(find.byKey(hoopitoEntrySceneKey));

@@ -3,24 +3,24 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hooptrace/app/design_system/editorial_motion.dart';
-import 'package:hooptrace/app/design_system/editorial_tokens.dart';
-import 'package:hooptrace/app/entry/entry_creature.dart';
-import 'package:hooptrace/app/entry/entry_brand_image.dart';
-import 'package:hooptrace/app/entry/entry_frame_probe.dart';
-import 'package:hooptrace/app/entry/entry_renderer_ready.dart';
-import 'package:hooptrace/core/diagnostics/startup_diagnostics.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
+import 'package:hoopito/app/design_system/editorial_motion.dart';
+import 'package:hoopito/app/design_system/editorial_tokens.dart';
+import 'package:hoopito/app/entry/entry_creature.dart';
+import 'package:hoopito/app/entry/entry_brand_image.dart';
+import 'package:hoopito/app/entry/entry_frame_probe.dart';
+import 'package:hoopito/app/entry/entry_renderer_ready.dart';
+import 'package:hoopito/core/diagnostics/startup_diagnostics.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
 
-const hoopTraceEntryOverlayKey = Key('hooptrace-entry-overlay');
-const hoopTraceEntrySceneKey = Key('hooptrace-entry-scene');
-const hoopTraceEntryWaitingKey = Key('hooptrace-entry-waiting');
+const hoopitoEntryOverlayKey = Key('hoopito-entry-overlay');
+const hoopitoEntrySceneKey = Key('hoopito-entry-scene');
+const hoopitoEntryWaitingKey = Key('hoopito-entry-waiting');
 
 enum EntryMotionMode { standard, reduced, disabled }
 
 enum EntryStartupStatus { loading, ready, failure, legacy }
 
-abstract final class HoopTraceEntryTimeline {
+abstract final class HoopitoEntryTimeline {
   static const total = Duration(milliseconds: 1000);
   static const handoffEnd = Duration(milliseconds: 60);
   static const anticipationEnd = Duration(milliseconds: 150);
@@ -51,8 +51,8 @@ class EntryPlaybackSession {
   }
 }
 
-class HoopTraceEntryGate extends StatefulWidget {
-  const HoopTraceEntryGate({
+class HoopitoEntryGate extends StatefulWidget {
+  const HoopitoEntryGate({
     required this.child,
     this.startupStatus = EntryStartupStatus.ready,
     this.waitingLabel,
@@ -74,16 +74,16 @@ class HoopTraceEntryGate extends StatefulWidget {
   final EntryPlaybackSession? playbackSession;
 
   @override
-  State<HoopTraceEntryGate> createState() => _HoopTraceEntryGateState();
+  State<HoopitoEntryGate> createState() => _HoopitoEntryGateState();
 }
 
-class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
+class _HoopitoEntryGateState extends State<HoopitoEntryGate>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _controller;
-  final _probe = const bool.fromEnvironment('HOOPTRACE_ENTRY_PROFILE')
+  final _probe = const bool.fromEnvironment('HOOPITO_ENTRY_PROFILE')
       ? EntryFrameProbe()
       : null;
-  HoopTraceMotionTheme _motion = const HoopTraceMotionTheme.light();
+  HoopitoMotionTheme _motion = const HoopitoMotionTheme.light();
   EntryMotionMode? _mode;
   ui.Image? _image;
   Timer? _hintTimer;
@@ -118,7 +118,7 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
       _visible = false;
       _probe?.dispose();
     }
-    _hintTimer = Timer(HoopTraceEntryTimeline.waitingHint, () {
+    _hintTimer = Timer(HoopitoEntryTimeline.waitingHint, () {
       if (mounted && _visible) setState(() => _showWaitingHint = true);
     });
   }
@@ -127,8 +127,8 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _motion =
-        Theme.of(context).extension<HoopTraceMotionTheme>() ??
-        const HoopTraceMotionTheme.light();
+        Theme.of(context).extension<HoopitoMotionTheme>() ??
+        const HoopitoMotionTheme.light();
     final media = MediaQuery.maybeOf(context);
     if (media?.disableAnimations == true) {
       _decisionStarted = true;
@@ -196,7 +196,7 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
     var outcome = 'presented';
     try {
       await (widget.presentationReadyLoader ?? waitForEntryPresentation)()
-          .timeout(HoopTraceEntryTimeline.presentationWait);
+          .timeout(HoopitoEntryTimeline.presentationWait);
       return true;
     } on TimeoutException {
       outcome = 'timeout';
@@ -221,7 +221,7 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
     var outcome = 'ready';
     try {
       await (widget.rendererReadyLoader ?? waitForEntryRenderer)().timeout(
-        HoopTraceEntryTimeline.rendererWait,
+        HoopitoEntryTimeline.rendererWait,
         onTimeout: () => outcome = 'timeout',
       );
     } on MissingPluginException {
@@ -288,7 +288,7 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
             // source Future wins the callback race. Enforce the same deadline
             // against a monotonic clock before accepting that late image.
             if (!accepting ||
-                elapsed.elapsed > HoopTraceEntryTimeline.imageWait) {
+                elapsed.elapsed > HoopitoEntryTimeline.imageWait) {
               accepting = false;
               outcome = 'timeout';
               image.dispose();
@@ -297,7 +297,7 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
             return image;
           })
           .timeout(
-            HoopTraceEntryTimeline.imageWait,
+            HoopitoEntryTimeline.imageWait,
             onTimeout: () {
               StartupDiagnostics.end('image_timeout_callback', startedAt);
               accepting = false;
@@ -374,7 +374,7 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
   }
 
   @override
-  void didUpdateWidget(covariant HoopTraceEntryGate oldWidget) {
+  void didUpdateWidget(covariant HoopitoEntryGate oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (_terminal) {
       _controller.stop();
@@ -486,7 +486,7 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
           Positioned.fill(
             child: BlockSemantics(
               child: GestureDetector(
-                key: hoopTraceEntryOverlayKey,
+                key: hoopitoEntryOverlayKey,
                 behavior: HitTestBehavior.opaque,
                 onTap: _skip,
                 child: AnimatedBuilder(
@@ -495,8 +495,8 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
                     final skip = Curves.easeOutCubic.transform(
                       _controller.value,
                     );
-                    return HoopTraceEntryFrame(
-                      key: hoopTraceEntrySceneKey,
+                    return HoopitoEntryFrame(
+                      key: hoopitoEntrySceneKey,
                       image: _image,
                       nativeHandoffPending: _firstFrameDeferred,
                       mode: _mode,
@@ -524,8 +524,8 @@ class _HoopTraceEntryGateState extends State<HoopTraceEntryGate>
   }
 }
 
-class HoopTraceEntryFrame extends StatelessWidget {
-  const HoopTraceEntryFrame({
+class HoopitoEntryFrame extends StatelessWidget {
+  const HoopitoEntryFrame({
     required this.mode,
     required this.progress,
     this.image,
@@ -567,7 +567,7 @@ class HoopTraceEntryFrame extends StatelessWidget {
           opacity ??
           (mode == EntryMotionMode.disabled ? 0 : _entryOpacity(progress)),
       child: ColoredBox(
-        color: HoopTraceColors.ink,
+        color: HoopitoColors.ink,
         child: waitingLabel == null
             ? Center(
                 child: OverflowBox(
@@ -593,10 +593,10 @@ class HoopTraceEntryFrame extends StatelessWidget {
                         liveRegion: true,
                         child: Text(
                           waitingLabel!,
-                          key: hoopTraceEntryWaitingKey,
+                          key: hoopitoEntryWaitingKey,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: HoopTraceColors.offWhite),
+                              ?.copyWith(color: HoopitoColors.offWhite),
                         ),
                       ),
                     ],
@@ -609,25 +609,24 @@ class HoopTraceEntryFrame extends StatelessWidget {
 }
 
 /// Used when animation is disabled or already consumed while startup continues.
-class HoopTraceStartupPlaceholder extends StatefulWidget {
-  const HoopTraceStartupPlaceholder({this.waitingLabel, super.key});
+class HoopitoStartupPlaceholder extends StatefulWidget {
+  const HoopitoStartupPlaceholder({this.waitingLabel, super.key});
 
   final String? waitingLabel;
 
   @override
-  State<HoopTraceStartupPlaceholder> createState() =>
-      _HoopTraceStartupPlaceholderState();
+  State<HoopitoStartupPlaceholder> createState() =>
+      _HoopitoStartupPlaceholderState();
 }
 
-class _HoopTraceStartupPlaceholderState
-    extends State<HoopTraceStartupPlaceholder> {
+class _HoopitoStartupPlaceholderState extends State<HoopitoStartupPlaceholder> {
   Timer? _timer;
   bool _showHint = false;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer(HoopTraceEntryTimeline.waitingHint, () {
+    _timer = Timer(HoopitoEntryTimeline.waitingHint, () {
       if (mounted) setState(() => _showHint = true);
     });
   }
@@ -639,7 +638,7 @@ class _HoopTraceStartupPlaceholderState
   }
 
   @override
-  Widget build(BuildContext context) => HoopTraceEntryFrame(
+  Widget build(BuildContext context) => HoopitoEntryFrame(
     mode: null,
     progress: 0,
     waitingLabel: _showHint ? widget.waitingLabel : null,

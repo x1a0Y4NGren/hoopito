@@ -1,7 +1,7 @@
 import 'package:csv/csv.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/export/csv_exporter.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/export/csv_exporter.dart';
 
 void main() {
   group('CsvExporter', () {

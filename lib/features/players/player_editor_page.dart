@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/data/repositories/player_repository.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/data/repositories/player_repository.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
 import 'package:uuid/uuid.dart';
 
 class PlayerEditorPage extends StatefulWidget {
@@ -195,7 +195,7 @@ class _PlayerEditorPageState extends State<PlayerEditorPage> {
     }
     final editorial = editorialThemeOf(context);
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+      padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
       child: Form(
         key: _formKey,
         child: Column(

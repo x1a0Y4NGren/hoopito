@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/entities/match.dart';
-import 'package:hooptrace/core/domain/entities/shot_location.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
-import 'package:hooptrace/features/pregame/start_match_mapper.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/entities/match.dart';
+import 'package:hoopito/core/domain/entities/shot_location.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
+import 'package:hoopito/features/pregame/start_match_mapper.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
 
 /// Coordinates scoring routes while keeping the old snapshot adapter
 /// available for compatibility tests and non-production callers.

@@ -178,7 +178,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get v2GrowthSample => '按比赛顺序显示运动战命中率；空缺表示记录不完整或无出手。';
 
   @override
-  String get appName => 'HoopTrace';
+  String get appName => '球豆';
 
   @override
   String get startScoring => '开始计分';
@@ -1102,14 +1102,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayMoreActions => '更多操作';
 
   @override
-  String get legacyBootstrapTitle => 'HoopTrace 数据兼容性检查';
+  String get legacyBootstrapTitle => '球豆数据兼容性检查';
 
   @override
-  String get legacyBootstrapHeadline => '无法打开 HoopTrace v0.1 数据';
+  String get legacyBootstrapHeadline => '无法打开旧版 v0.1 数据';
 
   @override
   String legacyBootstrapBody(Object version) {
-    return '检测到不兼容的旧数据库版本$version。现有文件会保持原样；HoopTrace 不会静默迁移、删除或清空它。请先导出或备份旧文件，再使用当前版本创建新的本地数据。';
+    return '检测到不兼容的旧数据库版本$version。现有文件会保持原样；球豆不会静默迁移、删除或清空它。请先导出或备份旧文件，再使用当前版本创建新的本地数据。';
   }
 
   @override
@@ -1307,7 +1307,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsBackupRetentionTitle => '自动备份保留数量';
 
   @override
-  String get settingsBackupRetentionSubtitle => '仅清理 HoopTrace 自动备份，不影响手动或安全备份';
+  String get settingsBackupRetentionSubtitle => '仅清理球豆自动备份，不影响手动或安全备份';
 
   @override
   String get settingsPrivacySection => '隐私';
@@ -1340,7 +1340,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsProjectSection => '项目详情';
 
   @override
-  String get settingsAboutTitle => '关于 HoopTrace';
+  String get settingsAboutTitle => '关于球豆';
 
   @override
   String get settingsAboutSection => '关于';
@@ -1352,7 +1352,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsRestoreDialogTitle => '选择备份导入方式';
 
   @override
-  String get settingsRestorePickerTitle => '选择 HoopTrace 备份';
+  String get settingsRestorePickerTitle => '选择球豆备份';
 
   @override
   String get settingsMergeTitle => '合并导入（推荐）';
@@ -1374,7 +1374,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settingsReplaceConfirmBody =>
-      '文件验证通过后，HoopTrace 会先创建一份恢复前安全备份，再一次性替换本机数据。';
+      '文件验证通过后，球豆会先创建一份恢复前安全备份，再一次性替换本机数据。';
 
   @override
   String get settingsReplaceConfirmAction => '选择备份';
@@ -1427,7 +1427,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsErrorChecksum => '备份校验失败，文件可能已损坏或被修改';
 
   @override
-  String get settingsErrorFutureVersion => '该备份由更高版本创建，请升级 HoopTrace 后再试';
+  String get settingsErrorFutureVersion => '该备份由更高版本创建，请升级球豆后再试';
 
   @override
   String get settingsErrorInvalidBackup => '备份内容无效，现有数据未被修改';
@@ -2235,22 +2235,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get projectOpenBrowser => '在浏览器中打开';
 
   @override
-  String get exportBackupDialogTitle => '选择 HoopTrace 备份';
+  String get exportBackupDialogTitle => '选择球豆备份';
 
   @override
   String get exportAutomaticBackupDialogTitle => '选择自动备份文件夹';
 
   @override
-  String get exportFullBackupSubject => 'HoopTrace 完整本地备份';
+  String get exportFullBackupSubject => '球豆完整本地备份';
 
   @override
-  String get exportSafetyBackupSubject => 'HoopTrace 恢复前安全备份';
+  String get exportSafetyBackupSubject => '球豆恢复前安全备份';
 
   @override
-  String get exportCsvSubject => 'HoopTrace CSV 数据导出';
+  String get exportCsvSubject => '球豆 CSV 数据导出';
 
   @override
-  String get exportReplaySubject => 'HoopTrace 比赛复盘';
+  String get exportReplaySubject => '球豆比赛复盘';
 
   @override
   String get projectGitHub => 'GitHub';

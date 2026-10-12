@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/analytics/player_comparison.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/players/player_comparison_controller.dart';
-import 'package:hooptrace/features/players/player_comparison_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/analytics/player_comparison.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/players/player_comparison_controller.dart';
+import 'package:hoopito/features/players/player_comparison_page.dart';
 
 void main() {
   testWidgets('comparison selects, swaps and changes modes', (tester) async {
@@ -271,7 +271,7 @@ Future<void> _pumpPage(
     MediaQuery(
       data: MediaQueryData(textScaler: textScaler),
       child: MaterialApp(
-        theme: buildHoopTraceTheme(brightness: brightness),
+        theme: buildHoopitoTheme(brightness: brightness),
         locale: locale,
         localizationsDelegates: const [
           AppLocalizations.delegate,

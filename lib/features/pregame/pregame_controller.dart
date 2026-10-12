@@ -1,7 +1,7 @@
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/core/domain/entities/match_setup_preset.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/core/domain/entities/match_setup_preset.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
 
 const defaultRedPlayerName = '红方';
 const defaultBluePlayerName = '蓝方';

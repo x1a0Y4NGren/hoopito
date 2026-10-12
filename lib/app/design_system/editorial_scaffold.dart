@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:hooptrace/app/design_system/editorial_court_lines.dart';
-import 'package:hooptrace/app/design_system/editorial_primitives.dart';
-import 'package:hooptrace/app/design_system/editorial_tokens.dart';
+import 'package:hoopito/app/design_system/editorial_court_lines.dart';
+import 'package:hoopito/app/design_system/editorial_primitives.dart';
+import 'package:hoopito/app/design_system/editorial_tokens.dart';
 
 class EditorialScaffold extends StatelessWidget {
   const EditorialScaffold({
@@ -28,7 +28,7 @@ class EditorialScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final editorial = editorialThemeOf(context);
     final viewportWidth = MediaQuery.sizeOf(context).width;
-    final pageInset = HoopTraceSpacing.pageFor(viewportWidth);
+    final pageInset = HoopitoSpacing.pageFor(viewportWidth);
     Widget content = Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxContentWidth),
@@ -36,14 +36,14 @@ class EditorialScaffold extends StatelessWidget {
           key: const Key('editorial-page-padding'),
           padding: EdgeInsets.symmetric(
             horizontal: pageInset,
-            vertical: HoopTraceSpacing.section,
+            vertical: HoopitoSpacing.section,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (masthead != null) ...[
                 masthead!,
-                SizedBox(height: HoopTraceSpacing.sectionFor(viewportWidth)),
+                SizedBox(height: HoopitoSpacing.sectionFor(viewportWidth)),
               ],
               Expanded(child: body),
             ],

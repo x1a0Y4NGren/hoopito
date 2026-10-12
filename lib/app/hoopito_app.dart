@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/entry/hoop_trace_entry_gate.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/provider_router.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/entry/hoopito_entry_gate.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/provider_router.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
 
 final _processEntryPlaybackSession = EntryPlaybackSession();
 
 /// Application composition root. The optional database and provider overrides
 /// are test seams; production ownership lives in [appDatabaseProvider].
-class HoopTraceApp extends StatelessWidget {
-  const HoopTraceApp({
+class HoopitoApp extends StatelessWidget {
+  const HoopitoApp({
     this.database,
     this.showEntryAnimation = true,
     this.initialMotionPreference,
@@ -34,7 +34,7 @@ class HoopTraceApp extends StatelessWidget {
   Widget build(BuildContext context) {
     if (database == null) {
       return ProviderScope(
-        child: _HoopTraceAppView(
+        child: _HoopitoAppView(
           showEntryAnimation: showEntryAnimation,
           initialMotionPreference: initialMotionPreference,
           entryPlaybackSession: entryPlaybackSession,
@@ -43,7 +43,7 @@ class HoopTraceApp extends StatelessWidget {
     }
     return ProviderScope(
       overrides: [appDatabaseProvider.overrideWithValue(database!)],
-      child: _HoopTraceAppView(
+      child: _HoopitoAppView(
         showEntryAnimation: showEntryAnimation,
         initialMotionPreference: initialMotionPreference,
         entryPlaybackSession: entryPlaybackSession,
@@ -52,8 +52,8 @@ class HoopTraceApp extends StatelessWidget {
   }
 }
 
-class _HoopTraceAppView extends ConsumerStatefulWidget {
-  const _HoopTraceAppView({
+class _HoopitoAppView extends ConsumerStatefulWidget {
+  const _HoopitoAppView({
     required this.showEntryAnimation,
     required this.initialMotionPreference,
     required this.entryPlaybackSession,
@@ -64,10 +64,10 @@ class _HoopTraceAppView extends ConsumerStatefulWidget {
   final EntryPlaybackSession? entryPlaybackSession;
 
   @override
-  ConsumerState<_HoopTraceAppView> createState() => _HoopTraceAppViewState();
+  ConsumerState<_HoopitoAppView> createState() => _HoopitoAppViewState();
 }
 
-class _HoopTraceAppViewState extends ConsumerState<_HoopTraceAppView> {
+class _HoopitoAppViewState extends ConsumerState<_HoopitoAppView> {
   // The bootstrap navigator becomes a Router when local startup is ready.
   // Preserve the entry timeline and its process claim across that handoff.
   final _entryGateKey = GlobalKey();
@@ -146,11 +146,11 @@ class _HoopTraceAppViewState extends ConsumerState<_HoopTraceAppView> {
   }) {
     if (routerConfig != null) {
       return MaterialApp.router(
-        title: 'HoopTrace',
+        title: 'Hoopito',
         onGenerateTitle: (context) =>
-            AppLocalizations.of(context)?.appName ?? 'HoopTrace',
-        theme: buildHoopTraceTheme(),
-        darkTheme: buildHoopTraceTheme(brightness: Brightness.dark),
+            AppLocalizations.of(context)?.appName ?? 'Hoopito',
+        theme: buildHoopitoTheme(),
+        darkTheme: buildHoopitoTheme(brightness: Brightness.dark),
         themeMode: themeMode,
         locale: locale,
         localizationsDelegates: const [
@@ -161,7 +161,7 @@ class _HoopTraceAppViewState extends ConsumerState<_HoopTraceAppView> {
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         builder: widget.showEntryAnimation
-            ? (context, child) => HoopTraceEntryGate(
+            ? (context, child) => HoopitoEntryGate(
                 key: _entryGateKey,
                 motionPreferenceLoader: motionPreferenceLoader,
                 playbackSession:
@@ -178,11 +178,11 @@ class _HoopTraceAppViewState extends ConsumerState<_HoopTraceAppView> {
       );
     }
     return MaterialApp(
-      title: 'HoopTrace',
+      title: 'Hoopito',
       onGenerateTitle: (context) =>
-          AppLocalizations.of(context)?.appName ?? 'HoopTrace',
-      theme: buildHoopTraceTheme(),
-      darkTheme: buildHoopTraceTheme(brightness: Brightness.dark),
+          AppLocalizations.of(context)?.appName ?? 'Hoopito',
+      theme: buildHoopitoTheme(),
+      darkTheme: buildHoopitoTheme(brightness: Brightness.dark),
       themeMode: themeMode,
       locale: locale,
       localizationsDelegates: const [
@@ -193,7 +193,7 @@ class _HoopTraceAppViewState extends ConsumerState<_HoopTraceAppView> {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       builder: widget.showEntryAnimation
-          ? (context, child) => HoopTraceEntryGate(
+          ? (context, child) => HoopitoEntryGate(
               key: _entryGateKey,
               motionPreferenceLoader: motionPreferenceLoader,
               playbackSession:
@@ -259,7 +259,7 @@ class _BootstrapLoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HoopTraceStartupPlaceholder(
+      body: HoopitoStartupPlaceholder(
         waitingLabel: AppLocalizations.of(context)!.entryPreparingRecords,
       ),
     );

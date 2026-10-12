@@ -2,21 +2,28 @@ import 'package:flutter/services.dart';
 
 enum MotionPreference { standard, reduced }
 
-const entryMotionPreferenceArgumentPrefix = '--hooptrace-entry-motion=';
-const entryAnimationDisabledArgument = '--hooptrace-entry-animation=disabled';
+const entryMotionPreferenceArgumentPrefix = '--hoopito-entry-motion=';
+const entryAnimationDisabledArgument = '--hoopito-entry-animation=disabled';
+const _legacyEntryMotionPreferenceArgumentPrefix = '--hooptrace-entry-motion=';
+const _legacyEntryAnimationDisabledArgument =
+    '--hooptrace-entry-animation=disabled';
 
 bool entryAnimationEnabledFromEntrypointArguments(Iterable<String> arguments) {
-  return !arguments.contains(entryAnimationDisabledArgument);
+  return !arguments.contains(entryAnimationDisabledArgument) &&
+      !arguments.contains(_legacyEntryAnimationDisabledArgument);
 }
 
 MotionPreference? motionPreferenceFromEntrypointArguments(
   Iterable<String> arguments,
 ) {
   for (final argument in arguments) {
-    if (!argument.startsWith(entryMotionPreferenceArgumentPrefix)) continue;
-    return switch (argument.substring(
-      entryMotionPreferenceArgumentPrefix.length,
-    )) {
+    final prefix = argument.startsWith(entryMotionPreferenceArgumentPrefix)
+        ? entryMotionPreferenceArgumentPrefix
+        : argument.startsWith(_legacyEntryMotionPreferenceArgumentPrefix)
+        ? _legacyEntryMotionPreferenceArgumentPrefix
+        : null;
+    if (prefix == null) continue;
+    return switch (argument.substring(prefix.length)) {
       'standard' => MotionPreference.standard,
       'reduced' => MotionPreference.reduced,
       _ => null,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Compatibility palette for feature pages awaiting the editorial migration.
 /// New code should consume the editorial theme's semantic colors instead.
-class HoopTraceColors {
-  const HoopTraceColors._();
+class HoopitoColors {
+  const HoopitoColors._();
 
   static const offWhite = Color(0xFFF4F3EF);
   static const cream = Color(0xFFFFFFFF);
@@ -22,8 +22,8 @@ class HoopTraceColors {
   static const darkInk = Color(0xFFF4F3EF);
 }
 
-class HoopTraceSpacing {
-  const HoopTraceSpacing._();
+class HoopitoSpacing {
+  const HoopitoSpacing._();
 
   static const page = 16.0;
   static const pageMedium = 24.0;
@@ -43,16 +43,16 @@ class HoopTraceSpacing {
   static double sectionFor(double width) => width >= 600 ? 32 : section;
 }
 
-class HoopTraceRadii {
-  const HoopTraceRadii._();
+class HoopitoRadii {
+  const HoopitoRadii._();
 
   static const card = 4.0;
   static const control = 4.0;
   static const pill = 999.0;
 }
 
-class HoopTraceTypography {
-  const HoopTraceTypography._();
+class HoopitoTypography {
+  const HoopitoTypography._();
 
   static const displayFamily = 'Barlow Condensed';
   static const body = 16.0;
@@ -68,11 +68,11 @@ class HoopTraceTypography {
   static double scoreFor(double width) => width >= 600 ? 72 : 56;
 }
 
-class HoopTraceStatusColors {
-  const HoopTraceStatusColors._();
+class HoopitoStatusColors {
+  const HoopitoStatusColors._();
 
   static const positive = Color(0xFF176B45);
   static const warning = Color(0xFF7A4B00);
-  static const negative = HoopTraceColors.red;
-  static const info = HoopTraceColors.blue;
+  static const negative = HoopitoColors.red;
+  static const info = HoopitoColors.blue;
 }

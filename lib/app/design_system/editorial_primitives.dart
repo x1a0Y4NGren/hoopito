@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:hooptrace/app/design_system/editorial_color_helpers.dart';
-import 'package:hooptrace/app/design_system/editorial_motion.dart';
-import 'package:hooptrace/app/design_system/editorial_theme.dart';
-import 'package:hooptrace/app/design_system/editorial_tokens.dart';
+import 'package:hoopito/app/design_system/editorial_color_helpers.dart';
+import 'package:hoopito/app/design_system/editorial_motion.dart';
+import 'package:hoopito/app/design_system/editorial_theme.dart';
+import 'package:hoopito/app/design_system/editorial_tokens.dart';
 
-HoopTraceEditorialTheme editorialThemeOf(BuildContext context) =>
-    Theme.of(context).extension<HoopTraceEditorialTheme>() ??
+HoopitoEditorialTheme editorialThemeOf(BuildContext context) =>
+    Theme.of(context).extension<HoopitoEditorialTheme>() ??
     (Theme.of(context).brightness == Brightness.dark
-        ? const HoopTraceEditorialTheme.dark()
-        : const HoopTraceEditorialTheme.light());
+        ? const HoopitoEditorialTheme.dark()
+        : const HoopitoEditorialTheme.light());
 
 Duration editorialMotionDuration(
   BuildContext context, {
@@ -49,8 +49,7 @@ class EditorialSurface extends StatelessWidget {
       decoration: BoxDecoration(
         color: color ?? editorial.surface,
         border: Border.all(color: editorial.rule),
-        borderRadius:
-            borderRadius ?? BorderRadius.circular(HoopTraceRadii.card),
+        borderRadius: borderRadius ?? BorderRadius.circular(HoopitoRadii.card),
       ),
       child: child,
     );
@@ -147,12 +146,12 @@ class _EditorialTapTargetState extends State<EditorialTapTarget> {
   @override
   Widget build(BuildContext context) {
     final editorial = editorialThemeOf(context);
-    final motion = Theme.of(context).extension<HoopTraceMotionTheme>();
+    final motion = Theme.of(context).extension<HoopitoMotionTheme>();
     final content = ConstrainedBox(
       constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
       child: EditorialFocusOutline(
         focused: _focused,
-        borderRadius: BorderRadius.circular(HoopTraceRadii.control),
+        borderRadius: BorderRadius.circular(HoopitoRadii.control),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -161,7 +160,7 @@ class _EditorialTapTargetState extends State<EditorialTapTarget> {
             onTapUp: (_) => _setPressed(false),
             onTapCancel: () => _setPressed(false),
             onFocusChange: (focused) => setState(() => _focused = focused),
-            borderRadius: BorderRadius.circular(HoopTraceRadii.control),
+            borderRadius: BorderRadius.circular(HoopitoRadii.control),
             focusColor: editorial.focus.withValues(alpha: 0.18),
             splashColor: editorial.arenaAccent.withValues(alpha: 0.14),
             child: AnimatedScale(

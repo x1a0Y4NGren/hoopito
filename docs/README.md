@@ -1,6 +1,6 @@
-# HoopTrace 文档入口
+# Hoopito · 球豆文档入口
 
-项目已发布 v2.0.0，主工作区统一维护 `main` 的 2.0 源码。当前状态见 [HANDOFF.md](../HANDOFF.md)；历史候选记录保留各自源码、设备和验收来源，不代表当前仍有独立候选工作区。
+项目已以 HoopTrace 名称发布 v2.0.0；当前源码与网站品牌为 Hoopito · 球豆，主工作区统一维护 `main` 的 2.0 源码。实际分支与发行状态以 Git 和 [HANDOFF.md](../HANDOFF.md) 为准；历史候选记录保留各自源码、设备和验收来源，不代表当前仍有独立候选工作区。
 
 ## 项目级说明
 
@@ -21,6 +21,7 @@
 
 ## 设计与历史
 
+- [品牌名称与兼容性](design/brand/naming-and-compatibility.md)：当前中英文用法、升级身份及历史证据边界；对外改名同步由 [Issue #6](https://github.com/x1a0Y4NGren/hoopito/issues/6) 跟踪。
 - [C「独眼球怪」正式标识与验证](design/brand/README.md)
 - [Q 弹启动动效、APK 来源与设备验收限制](design/brand/entry-motion.md)
 - [设计与实施记录的使用边界](superpowers/README.md)

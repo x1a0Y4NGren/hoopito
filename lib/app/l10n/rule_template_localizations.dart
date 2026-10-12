@@ -1,5 +1,5 @@
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
 
 /// Built-in rule records keep stable ids and backwards-compatible stored names.
 /// The UI resolves those ids to the active locale instead of rendering the

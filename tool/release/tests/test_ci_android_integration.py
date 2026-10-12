@@ -31,7 +31,7 @@ def action_script():
 @unittest.skipUnless(os.name == 'posix' and shutil.which('bash'), 'Requires a POSIX Bash; run in Linux/WSL')
 class AndroidIntegrationCiTest(unittest.TestCase):
     def run_action(self, api_level, fail_target=None, device=None):
-        with tempfile.TemporaryDirectory(prefix='hooptrace-ci-shell-') as temporary:
+        with tempfile.TemporaryDirectory(prefix='hoopito-ci-shell-') as temporary:
             path = Path(temporary)
             calls = path / 'calls.txt'
             fake_flutter = path / 'flutter'

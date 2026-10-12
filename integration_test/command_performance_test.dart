@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 import 'package:integration_test/integration_test.dart';
 
 const _p95Target = Duration(milliseconds: 100);
@@ -18,7 +18,7 @@ void main() {
     tester,
   ) async {
     final directory = (await tester.runAsync(
-      () => Directory.systemTemp.createTemp('hooptrace-command-benchmark-'),
+      () => Directory.systemTemp.createTemp('hoopito-command-benchmark-'),
     ))!;
     final database = openAppDatabaseAt(
       File('${directory.path}${Platform.pathSeparator}hooptrace.sqlite'),

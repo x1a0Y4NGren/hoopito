@@ -1,5 +1,5 @@
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/clock_state.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/clock_state.dart';
 
 /// Why a running clock was stopped while reconstructing its projection.
 enum ClockRecoveryReason { wallClockMovedBackward }

@@ -56,14 +56,14 @@ scratch="$(mktemp -d)"
 # registrant in libapp.so, and native plugin build IDs also include their build
 # directory. Build both clean archives sequentially at one documented path so
 # those otherwise-unavoidable toolchain inputs are identical.
-canonical_source="${HOOPTRACE_REPRODUCIBLE_ROOT:-/tmp/hooptrace-reproducible-source}"
+canonical_source="${HOOPITO_REPRODUCIBLE_ROOT:-/tmp/hoopito-reproducible-source}"
 canonical_name="$(basename "$canonical_source")"
 if [[ "$canonical_source" != /* ]]; then
-  echo "HOOPTRACE_REPRODUCIBLE_ROOT must be an absolute path." >&2
+  echo "HOOPITO_REPRODUCIBLE_ROOT must be an absolute path." >&2
   exit 2
 fi
-if [[ "$canonical_name" != "hooptrace-reproducible-source" ]]; then
-  echo "HOOPTRACE_REPRODUCIBLE_ROOT must end in hooptrace-reproducible-source." >&2
+if [[ "$canonical_name" != "hoopito-reproducible-source" ]]; then
+  echo "HOOPITO_REPRODUCIBLE_ROOT must end in hoopito-reproducible-source." >&2
   exit 2
 fi
 if [[ -e "$canonical_source" ]]; then
@@ -196,7 +196,7 @@ build_once() {
     dart --packages=.dart_tool/package_config.json tool/release/verify_sqlite_source.dart
     # Do not use --no-pub here. Flutter's release-mode dependency injection
     # regenerates GeneratedPluginRegistrant without dev-only plugins.
-    HOOPTRACE_ALLOW_UNSIGNED_RELEASE=true \
+    HOOPITO_ALLOW_UNSIGNED_RELEASE=true \
       flutter build apk --release
   )
   local built_apk="$canonical_source/build/app/outputs/flutter-apk/app-release.apk"

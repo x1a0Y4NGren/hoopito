@@ -1,8 +1,9 @@
 [CmdletBinding()]
 param(
+    # Keep the released app's key location and alias across the brand change.
     [string]$KeystorePath = (Join-Path $HOME ".hooptrace\signing\hooptrace-release.jks"),
     [string]$Alias = "hooptrace",
-    [string]$DistinguishedName = "CN=HoopTrace, OU=Open Source, O=HoopTrace, C=CN"
+    [string]$DistinguishedName = "CN=Hoopito, OU=Open Source, O=Hoopito, C=CN"
 )
 
 $ErrorActionPreference = "Stop"
@@ -25,7 +26,7 @@ New-Item -ItemType Directory -Force -Path $keystoreDirectory | Out-Null
 
 $keystoreAlreadyExists = Test-Path -LiteralPath $KeystorePath -PathType Leaf
 if (-not $keystoreAlreadyExists) {
-    Write-Host "Creating the permanent HoopTrace Android release key."
+    Write-Host "Creating the permanent Hoopito Android release key."
     Write-Host "Choose a strong password and press Enter for the key password to reuse it."
     & $keytool `
         -genkeypair `
@@ -68,12 +69,12 @@ function ConvertTo-JavaPropertyValue {
 }
 
 try {
-    $env:HOOPTRACE_KEYSTORE_PASSWORD = $passwordText
+    $env:HOOPITO_KEYSTORE_PASSWORD = $passwordText
     & $keytool `
         -list `
         -keystore $KeystorePath `
         -alias $Alias `
-        -storepass:env HOOPTRACE_KEYSTORE_PASSWORD | Out-Null
+        -storepass:env HOOPITO_KEYSTORE_PASSWORD | Out-Null
     if ($LASTEXITCODE -ne 0) {
         throw "The keystore password or alias could not be verified."
     }
@@ -92,7 +93,7 @@ try {
         [Text.UTF8Encoding]::new($false)
     )
 } finally {
-    Remove-Item Env:HOOPTRACE_KEYSTORE_PASSWORD -ErrorAction SilentlyContinue
+    Remove-Item Env:HOOPITO_KEYSTORE_PASSWORD -ErrorAction SilentlyContinue
     $propertyPassword = $null
     $passwordText = $null
 }

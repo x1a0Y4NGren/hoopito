@@ -5,8 +5,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/entry/entry_creature.dart';
-import 'package:hooptrace/app/entry/entry_motion_pose.dart';
+import 'package:hoopito/app/entry/entry_creature.dart';
+import 'package:hoopito/app/entry/entry_motion_pose.dart';
 
 void main() {
   test('mesh has one complete texture with 48 by 48 cells', () {

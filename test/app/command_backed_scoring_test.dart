@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/features/home/home_page.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/features/home/home_page.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
 
 import '../test_helpers/test_database.dart';
 
@@ -36,7 +36,7 @@ void main() {
           appDatabaseProvider.overrideWithValue(database),
           scoringFeedbackServiceProvider.overrideWithValue(feedback),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(homeStartScoringKey));

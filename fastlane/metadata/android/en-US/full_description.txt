@@ -1,4 +1,4 @@
-HoopTrace is an offline app for one-on-one basketball. Start quickly, record on court, understand your results, and build a player history.
+Hoopito is an offline app for one-on-one basketball. Start quickly, record on court, understand your results, and build a player history.
 
 Match, History, and Players tabs retain your browsing state. Start with temporary names, existing profiles, or a new player. Reuse the last setup, swap sides, and review the rules. Tap the target score to enter an integer from 1 to 999. Choose whether you will mainly keep score or record every shot; both use the same landscape workspace, with points, misses, fouls, locations, undo, save status, retry feedback, and a skippable guide.
 
@@ -6,7 +6,7 @@ Confirm the final score and recording scope, then open a result summary, full re
 
 Export complete JSON, readable CSV, or a replay image. Replacement and rollback require a verified private safety copy; active matches block replacement. The two latest valid copies are normally retained. Export and import share a 32 MiB, 100,000-rows-per-table, 200,000-total-row capacity contract. Private copies do not replace an external backup.
 
-All records stay on the device by default. There is no account, cloud sync, advertising, analytics, tracking, or personal-data upload. Optional automatic backup is off by default and writes only to a user-approved folder. The official HoopTrace project remains permanently free and open source under the MIT License.
+All records stay on the device by default. There is no account, cloud sync, advertising, analytics, tracking, or personal-data upload. Optional automatic backup is off by default and writes only to a user-approved folder. The official Hoopito project remains permanently free and open source under the MIT License.
 
 The black, white, and orange cyclops basketball icon has a silent elastic launch bounce with a wave and a brief final ripple. Skip it or use reduced/disabled motion. Simplified Chinese and English, system/light/dark themes, system font settings, and adaptive layouts are available.
 

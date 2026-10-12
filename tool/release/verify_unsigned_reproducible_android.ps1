@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$WorkspaceRoot = "D:\HoopTrace-Reproducibility",
+    [string]$WorkspaceRoot = "D:\Hoopito-Reproducibility",
     [string]$AndroidSdkRoot = "D:\Android\Sdk",
     [string]$JavaHome = $env:JAVA_HOME,
     [string]$FlutterPath = "flutter"
@@ -35,7 +35,7 @@ function Get-SafeCanonicalSource {
         }
         $ancestor = [IO.Path]::GetDirectoryName($ancestor)
     }
-    $source = Join-Path $workspace "hooptrace-reproducible-source"
+    $source = Join-Path $workspace "hoopito-reproducible-source"
     if (Test-Path -LiteralPath $source) { throw "The canonical reproducibility workspace already exists: $source" }
     return $source
 }
@@ -43,7 +43,7 @@ function Get-SafeCanonicalSource {
 function Remove-OwnedCanonicalSource {
     param([string]$WorkspaceRoot, [string]$SourcePath, [string]$OwnershipToken)
     $workspace = [IO.Path]::GetFullPath($WorkspaceRoot).TrimEnd('\', '/')
-    $expected = Join-Path $workspace "hooptrace-reproducible-source"
+    $expected = Join-Path $workspace "hoopito-reproducible-source"
     $actual = [IO.Path]::GetFullPath($SourcePath).TrimEnd('\', '/')
     if ($workspace -notmatch '^D:\\' -or $workspace.Length -le 3 -or $actual -ne $expected) {
         throw "Refusing cleanup outside the exact canonical workspace: $actual"
@@ -58,7 +58,7 @@ function Remove-OwnedCanonicalSource {
         $ancestor = [IO.Path]::GetDirectoryName($ancestor)
     }
     $resolved = (Resolve-Path -LiteralPath $actual).Path
-    $marker = Join-Path $resolved ".hooptrace-reproducible-owner"
+    $marker = Join-Path $resolved ".hoopito-reproducible-owner"
     if ($resolved -ne $expected -or -not $OwnershipToken -or
         -not [IO.File]::Exists($marker) -or [IO.File]::ReadAllText($marker) -ne $OwnershipToken) {
         throw "Refusing cleanup without this invocation's ownership marker: $actual"
@@ -71,11 +71,11 @@ function Remove-OwnedCanonicalSource {
 
 function Test-BinaryFilesEqual {
     param([string]$First, [string]$Second)
-    if (-not ("HoopTraceReproducibleFiles" -as [type])) {
+    if (-not ("HoopitoReproducibleFiles" -as [type])) {
         Add-Type -TypeDefinition @'
 using System;
 using System.IO;
-public static class HoopTraceReproducibleFiles {
+public static class HoopitoReproducibleFiles {
     public static bool Equal(string first, string second) {
         using (var a = File.OpenRead(first))
         using (var b = File.OpenRead(second)) {
@@ -102,7 +102,7 @@ public static class HoopTraceReproducibleFiles {
 }
 '@
     }
-    return [HoopTraceReproducibleFiles]::Equal($First, $Second)
+    return [HoopitoReproducibleFiles]::Equal($First, $Second)
 }
 
 function Invoke-RecordedNative {
@@ -241,7 +241,7 @@ function Invoke-CleanBuild {
     Write-Evidence (Join-Path $output "source-$Label.sha256") @("$(Get-CompatibleSha256 $archive)  source-$Label.zip")
     if (Test-Path -LiteralPath $canonicalSource) { throw "The canonical source unexpectedly exists: $canonicalSource" }
     New-Item -ItemType Directory -Path $canonicalSource | Out-Null
-    [IO.File]::WriteAllText((Join-Path $canonicalSource ".hooptrace-reproducible-owner"), $invocationId)
+    [IO.File]::WriteAllText((Join-Path $canonicalSource ".hoopito-reproducible-owner"), $invocationId)
     try {
         [IO.Compression.ZipFile]::ExtractToDirectory($archive, $canonicalSource)
         if (Test-Path -LiteralPath (Join-Path $canonicalSource "android\key.properties")) {
@@ -315,7 +315,7 @@ New-Item -ItemType Directory -Path $output | Out-Null
 New-Item -ItemType Directory -Path $WorkspaceRoot -Force | Out-Null
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $savedEnvironment = @{}
-foreach ($name in @("JAVA_HOME", "PATH", "ANDROID_SDK_ROOT", "ANDROID_HOME", "SOURCE_DATE_EPOCH", "HOOPTRACE_ALLOW_UNSIGNED_RELEASE", "GRADLE_OPTS")) {
+foreach ($name in @("JAVA_HOME", "PATH", "ANDROID_SDK_ROOT", "ANDROID_HOME", "SOURCE_DATE_EPOCH", "HOOPITO_ALLOW_UNSIGNED_RELEASE", "GRADLE_OPTS")) {
     $savedEnvironment[$name] = [Environment]::GetEnvironmentVariable($name, "Process")
 }
 $protocol = @("protocolVersion=1", "sourceSnapshot=two fresh git archive exports of one commit", "commit=$sourceCommit",
@@ -331,7 +331,7 @@ try {
     $env:ANDROID_SDK_ROOT = $sdkRoot
     $env:ANDROID_HOME = $sdkRoot
     $env:SOURCE_DATE_EPOCH = $sourceDateEpoch
-    $env:HOOPTRACE_ALLOW_UNSIGNED_RELEASE = "true"
+    $env:HOOPITO_ALLOW_UNSIGNED_RELEASE = "true"
     # A persistent Gradle JVM can retain mapped R8 output files on Windows even
     # after assembleRelease returns, preventing safe removal of the first tree.
     # A single-use JVM exits with each build; preserve the caller's other flags.

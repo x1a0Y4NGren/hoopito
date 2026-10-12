@@ -512,7 +512,7 @@ export function createCourtHardware({
       metalness: 0,
     }),
   );
-  nylon.customProgramCacheKey = () => 'hooptrace-anchored-nylon-net-v1';
+  nylon.customProgramCacheKey = () => 'hoopito-anchored-nylon-net-v1';
   nylon.onBeforeCompile = (shader) => {
     shader.uniforms.uNetImpact = impact;
     shader.uniforms.uNetAnchor = { value: netAnchor };

@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
-import 'package:hooptrace/app/entry/entry_motion_pose.dart';
+import 'package:hoopito/app/entry/entry_motion_pose.dart';
 
 typedef EntryVerticesBuilder =
     ui.Vertices Function(

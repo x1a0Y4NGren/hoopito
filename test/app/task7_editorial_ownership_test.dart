@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/entities/match.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/features/home/home_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/entities/match.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/features/home/home_page.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
     testWidgets(
       'Home renders inverse team identity from the $brightness contextual tokens',
       (tester) async {
-        final theme = buildHoopTraceTheme(brightness: brightness);
+        final theme = buildHoopitoTheme(brightness: brightness);
         await tester.pumpWidget(
           MaterialApp(
             locale: const Locale('en'),
@@ -67,7 +67,7 @@ void main() {
   }
 
   test('body and title styles expose the bundled CJK fallback', () {
-    final textTheme = buildHoopTraceTheme().textTheme;
+    final textTheme = buildHoopitoTheme().textTheme;
     for (final style in [
       textTheme.bodyMedium,
       textTheme.bodyLarge,

@@ -431,7 +431,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace'**
+  /// **'球豆'**
   String get appName;
 
   /// No description provided for @startScoring.
@@ -2223,19 +2223,19 @@ abstract class AppLocalizations {
   /// No description provided for @legacyBootstrapTitle.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace 数据兼容性检查'**
+  /// **'球豆数据兼容性检查'**
   String get legacyBootstrapTitle;
 
   /// No description provided for @legacyBootstrapHeadline.
   ///
   /// In zh, this message translates to:
-  /// **'无法打开 HoopTrace v0.1 数据'**
+  /// **'无法打开旧版 v0.1 数据'**
   String get legacyBootstrapHeadline;
 
   /// No description provided for @legacyBootstrapBody.
   ///
   /// In zh, this message translates to:
-  /// **'检测到不兼容的旧数据库版本{version}。现有文件会保持原样；HoopTrace 不会静默迁移、删除或清空它。请先导出或备份旧文件，再使用当前版本创建新的本地数据。'**
+  /// **'检测到不兼容的旧数据库版本{version}。现有文件会保持原样；球豆不会静默迁移、删除或清空它。请先导出或备份旧文件，再使用当前版本创建新的本地数据。'**
   String legacyBootstrapBody(Object version);
 
   /// No description provided for @bootstrapFailureBody.
@@ -2625,7 +2625,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsBackupRetentionSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'仅清理 HoopTrace 自动备份，不影响手动或安全备份'**
+  /// **'仅清理球豆自动备份，不影响手动或安全备份'**
   String get settingsBackupRetentionSubtitle;
 
   /// No description provided for @settingsPrivacySection.
@@ -2691,7 +2691,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAboutTitle.
   ///
   /// In zh, this message translates to:
-  /// **'关于 HoopTrace'**
+  /// **'关于球豆'**
   String get settingsAboutTitle;
 
   /// No description provided for @settingsAboutSection.
@@ -2715,7 +2715,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsRestorePickerTitle.
   ///
   /// In zh, this message translates to:
-  /// **'选择 HoopTrace 备份'**
+  /// **'选择球豆备份'**
   String get settingsRestorePickerTitle;
 
   /// No description provided for @settingsMergeTitle.
@@ -2757,7 +2757,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsReplaceConfirmBody.
   ///
   /// In zh, this message translates to:
-  /// **'文件验证通过后，HoopTrace 会先创建一份恢复前安全备份，再一次性替换本机数据。'**
+  /// **'文件验证通过后，球豆会先创建一份恢复前安全备份，再一次性替换本机数据。'**
   String get settingsReplaceConfirmBody;
 
   /// No description provided for @settingsReplaceConfirmAction.
@@ -2859,7 +2859,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsErrorFutureVersion.
   ///
   /// In zh, this message translates to:
-  /// **'该备份由更高版本创建，请升级 HoopTrace 后再试'**
+  /// **'该备份由更高版本创建，请升级球豆后再试'**
   String get settingsErrorFutureVersion;
 
   /// No description provided for @settingsErrorInvalidBackup.
@@ -4431,7 +4431,7 @@ abstract class AppLocalizations {
   /// No description provided for @exportBackupDialogTitle.
   ///
   /// In zh, this message translates to:
-  /// **'选择 HoopTrace 备份'**
+  /// **'选择球豆备份'**
   String get exportBackupDialogTitle;
 
   /// No description provided for @exportAutomaticBackupDialogTitle.
@@ -4443,25 +4443,25 @@ abstract class AppLocalizations {
   /// No description provided for @exportFullBackupSubject.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace 完整本地备份'**
+  /// **'球豆完整本地备份'**
   String get exportFullBackupSubject;
 
   /// No description provided for @exportSafetyBackupSubject.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace 恢复前安全备份'**
+  /// **'球豆恢复前安全备份'**
   String get exportSafetyBackupSubject;
 
   /// No description provided for @exportCsvSubject.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace CSV 数据导出'**
+  /// **'球豆 CSV 数据导出'**
   String get exportCsvSubject;
 
   /// No description provided for @exportReplaySubject.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace 比赛复盘'**
+  /// **'球豆比赛复盘'**
   String get exportReplaySubject;
 
   /// No description provided for @projectGitHub.

@@ -2,7 +2,7 @@ name: Website CI
 
 on:
   push:
-    branches: [main, codex/hooptrace-website]
+    branches: [main, codex/hooptrace-website, codex/hoopito-website]
     paths: ['website/**', '.github/workflows/website-ci.yml']
   pull_request:
     branches: [main]
@@ -70,7 +70,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: hooptrace-website-browser-evidence
+          name: hoopito-website-browser-evidence
           path: website/output/playwright/
           if-no-files-found: ignore
           retention-days: 14

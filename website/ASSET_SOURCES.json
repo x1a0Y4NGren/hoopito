@@ -279,20 +279,20 @@
       "source": "website/assets/art/source/scene-poster-compact.webp",
       "source_sha256": "b0d54afcd7b812bd5f856af08145ffa9b374464c493891e1521faeeba2ea3946",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "9e7fee2d888fcbaf8b8c50839c188ce308d66605f8d5412333f703660fa1bbeb",
+      "capture_record_sha256": "f5683c06763f32325f7be9c3554de31396af6b3cc785bd23738b2182d87e9575",
       "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "6a29273b57000c27d14832b268c5bd229736f82f417b6088a007c53f1f8e751c"
+          "sha256": "72a7dc6240a40c98953b9261d18932945aa9040eba2af2a3c4d87d962d8c5f62"
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "c505ffd1c1323de8185bf610140eb73c1a91644ee5fc1298c25582fc1beccfe1"
+          "sha256": "ca6f60029cb5fbe6a9b56b70ad66d4f6eb2971a23bf4ef4103fd4b5b0c1985ff"
         },
         {
           "path": "src/scripts/court-floor.ts",
-          "sha256": "f6f98117d8e6d12b938d2c44ab27119d0e202d8d4401f46ae5e258880b4c706c"
+          "sha256": "1642a0b288db2f64f4702895dbd75b34388187ab161cf61e9f6250fad096c719"
         },
         {
           "path": "src/scripts/court-textures.ts",
@@ -324,7 +324,7 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "5bd6530f52087b337b4d2391ea64dfe3eecb50f7c90dbd6efdc30d46c2b95933"
+          "sha256": "efb701ca94d41a1c38fa76ae3644ad1124223694efce607164803eb0b267cb0e"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -336,7 +336,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "1362c580bec64009efeb46424596119f143425a76e1503cb42d0e623c050c478"
+          "sha256": "621c4511cb43178016e051605ab85b10e08fca40bfa41c719f6496019083c1ca"
         }
       ],
       "pose": {
@@ -357,20 +357,20 @@
       "source": "website/assets/art/source/scene-poster-standard.webp",
       "source_sha256": "2b8a169467994ec49c00f2f82c727ed351292f60b1c6b0229a88c420b1ce48e1",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "9e7fee2d888fcbaf8b8c50839c188ce308d66605f8d5412333f703660fa1bbeb",
+      "capture_record_sha256": "f5683c06763f32325f7be9c3554de31396af6b3cc785bd23738b2182d87e9575",
       "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "6a29273b57000c27d14832b268c5bd229736f82f417b6088a007c53f1f8e751c"
+          "sha256": "72a7dc6240a40c98953b9261d18932945aa9040eba2af2a3c4d87d962d8c5f62"
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "c505ffd1c1323de8185bf610140eb73c1a91644ee5fc1298c25582fc1beccfe1"
+          "sha256": "ca6f60029cb5fbe6a9b56b70ad66d4f6eb2971a23bf4ef4103fd4b5b0c1985ff"
         },
         {
           "path": "src/scripts/court-floor.ts",
-          "sha256": "f6f98117d8e6d12b938d2c44ab27119d0e202d8d4401f46ae5e258880b4c706c"
+          "sha256": "1642a0b288db2f64f4702895dbd75b34388187ab161cf61e9f6250fad096c719"
         },
         {
           "path": "src/scripts/court-textures.ts",
@@ -402,7 +402,7 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "5bd6530f52087b337b4d2391ea64dfe3eecb50f7c90dbd6efdc30d46c2b95933"
+          "sha256": "efb701ca94d41a1c38fa76ae3644ad1124223694efce607164803eb0b267cb0e"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -414,7 +414,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "1362c580bec64009efeb46424596119f143425a76e1503cb42d0e623c050c478"
+          "sha256": "621c4511cb43178016e051605ab85b10e08fca40bfa41c719f6496019083c1ca"
         }
       ],
       "pose": {
@@ -435,20 +435,20 @@
       "source": "website/assets/art/source/scene-poster-wide.webp",
       "source_sha256": "a5386b1e67c1f7acb0fccc585460bb8808448cf91b01dd87f287599a7dd997e7",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "9e7fee2d888fcbaf8b8c50839c188ce308d66605f8d5412333f703660fa1bbeb",
+      "capture_record_sha256": "f5683c06763f32325f7be9c3554de31396af6b3cc785bd23738b2182d87e9575",
       "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "6a29273b57000c27d14832b268c5bd229736f82f417b6088a007c53f1f8e751c"
+          "sha256": "72a7dc6240a40c98953b9261d18932945aa9040eba2af2a3c4d87d962d8c5f62"
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "c505ffd1c1323de8185bf610140eb73c1a91644ee5fc1298c25582fc1beccfe1"
+          "sha256": "ca6f60029cb5fbe6a9b56b70ad66d4f6eb2971a23bf4ef4103fd4b5b0c1985ff"
         },
         {
           "path": "src/scripts/court-floor.ts",
-          "sha256": "f6f98117d8e6d12b938d2c44ab27119d0e202d8d4401f46ae5e258880b4c706c"
+          "sha256": "1642a0b288db2f64f4702895dbd75b34388187ab161cf61e9f6250fad096c719"
         },
         {
           "path": "src/scripts/court-textures.ts",
@@ -480,7 +480,7 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "5bd6530f52087b337b4d2391ea64dfe3eecb50f7c90dbd6efdc30d46c2b95933"
+          "sha256": "efb701ca94d41a1c38fa76ae3644ad1124223694efce607164803eb0b267cb0e"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -492,7 +492,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "1362c580bec64009efeb46424596119f143425a76e1503cb42d0e623c050c478"
+          "sha256": "621c4511cb43178016e051605ab85b10e08fca40bfa41c719f6496019083c1ca"
         }
       ],
       "pose": {
@@ -662,7 +662,7 @@
       "output": "public/brand/mark.webp",
       "bytes": 21916,
       "sha256": "7c291d7724bdae2c8da5cc4fb421d851b81329125ce90e84b2d3846683eb979d",
-      "source": "assets/icons/hooptrace-app-icon-foreground.png",
+      "source": "assets/icons/hoopito-app-icon-foreground.png",
       "source_sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8",
       "approval_record": "docs/design/brand/source.json",
       "dimensions_px": [
@@ -676,7 +676,7 @@
       "output": "public/brand/favicon.png",
       "bytes": 5152,
       "sha256": "254e8e37944898cfd200f189d7abf650f92334c17fb781c181c66f247b74f813",
-      "source": "assets/icons/hooptrace-app-icon-foreground.png",
+      "source": "assets/icons/hoopito-app-icon-foreground.png",
       "source_sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8",
       "approval_record": "docs/design/brand/source.json",
       "dimensions_px": [
@@ -721,8 +721,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 114616,
-      "sha256": "6f41b0a075c40afeccfccfd9fe74271ceb1d7d78aebfaeff5dd63f98b4af1143",
+      "bytes": 114924,
+      "sha256": "d490ab7c6902b4d2054e50049befe319d03660f443a3f3a792409c2d7fbdb1a6",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -867,6 +867,7 @@
         20146,
         20165,
         20171,
+        20173,
         20174,
         20195,
         20197,
@@ -1100,6 +1101,7 @@
         28857,
         29255,
         29256,
+        29260,
         29366,
         29420,
         29575,
@@ -1188,6 +1190,7 @@
         35828,
         35831,
         35835,
+        35910,
         36127,
         36134,
         36153,
@@ -1236,6 +1239,8 @@
         39029,
         39304,
         39564,
+        65288,
+        65289,
         65292,
         65306,
         65307,
@@ -1244,7 +1249,7 @@
       "text_sources": [
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "52124e9ed320a25543f84711596ff46925736ac474712f529da1f0b6446bf9e3"
+          "sha256": "94405904f629716d900405d2c172655d3f47bd1cd3beef96fee7f439e977688d"
         },
         {
           "path": "src/components/Icon.astro",
@@ -1252,19 +1257,19 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "5bd6530f52087b337b4d2391ea64dfe3eecb50f7c90dbd6efdc30d46c2b95933"
+          "sha256": "efb701ca94d41a1c38fa76ae3644ad1124223694efce607164803eb0b267cb0e"
         },
         {
           "path": "src/components/Layout.astro",
-          "sha256": "75237da80b338447359399f95bea051fdeebca82ccd3453e3dad52a1adfde75e"
+          "sha256": "4e0e79d1b080f14c9b9f78dab49679db142a0f8c8f5132357903dd98439000ca"
         },
         {
           "path": "src/components/Privacy.astro",
-          "sha256": "b3bc8d35edf4e25acbf96d02d3d0e4b3607f44fc5238cf05cf8b80b4c5b92059"
+          "sha256": "ad3e8a6ab71b03877fa7a845cde418668e402e30cb89c78b9bc8baf5e81f64dc"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "aa64eede234c3dcb17a6c52dc7bb21cd9f8d4c17d122cad11c1b3de1b430590e"
+          "sha256": "3fff457a915420c39360aee35dabf0191ed4f8d808ccee0b55dc6d8c7c795730"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -1272,7 +1277,7 @@
         },
         {
           "path": "src/data/release.ts",
-          "sha256": "bbda3a6ea6d8524ca58af4c4737f9e2343b45a62601faba234dd5c12445a917a"
+          "sha256": "8ed8a9ce62fbb49e865b807d495b0508a6a8bf963f9a502f50446fec669a7a2d"
         },
         {
           "path": "src/pages/en/index.astro",
@@ -1300,15 +1305,15 @@
         },
         {
           "path": "src/scripts/court-floor.ts",
-          "sha256": "f6f98117d8e6d12b938d2c44ab27119d0e202d8d4401f46ae5e258880b4c706c"
+          "sha256": "1642a0b288db2f64f4702895dbd75b34388187ab161cf61e9f6250fad096c719"
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "c505ffd1c1323de8185bf610140eb73c1a91644ee5fc1298c25582fc1beccfe1"
+          "sha256": "ca6f60029cb5fbe6a9b56b70ad66d4f6eb2971a23bf4ef4103fd4b5b0c1985ff"
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "6a29273b57000c27d14832b268c5bd229736f82f417b6088a007c53f1f8e751c"
+          "sha256": "72a7dc6240a40c98953b9261d18932945aa9040eba2af2a3c4d87d962d8c5f62"
         },
         {
           "path": "src/scripts/court-textures.ts",
@@ -1367,23 +1372,23 @@
     },
     {
       "output": "public/brand/release-qr.svg",
-      "bytes": 2025,
-      "sha256": "9b329ca46e420bc80793dd26cf4e82b239beb093d61c85b183acb3a42c2cb79d",
+      "bytes": 2031,
+      "sha256": "69c93512f7d464f337fec0afc043f66d32e7e415f8b2f0d90fbd3727f92f8991",
       "source": "src/data/release.ts",
-      "source_sha256": "bbda3a6ea6d8524ca58af4c4737f9e2343b45a62601faba234dd5c12445a917a",
-      "payload": "https://github.com/x1a0Y4NGren/hooptrace/releases/tag/v2.0.0",
+      "source_sha256": "8ed8a9ce62fbb49e865b807d495b0508a6a8bf963f9a502f50446fec669a7a2d",
+      "payload": "https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.0",
       "transformation": "QR code generated with qrcode; four-module quiet zone preserved",
       "license": "MIT (repository-generated graphic)"
     },
     {
       "output": "public/brand/share.png",
-      "bytes": 112737,
-      "sha256": "bc80e205003172236842c9a2156197b2096c94b478c519ad80a9dd284df8688e",
+      "bytes": 112963,
+      "sha256": "b74a382dbdedb119fab75e8b0d2f2c07153cbfe1ec1646e35f0add5921572cfa",
       "source": "scripts/prepare-assets.mjs",
-      "source_sha256": "09f94199e35cb70ac1114852542e2b3d59fce558af1c26969a7c39c3807f76d0",
+      "source_sha256": "f0a437899e016a8c417de2388578b5c5e4fde7c84178c085e6f8c8f24ae40639",
       "source_dependencies": [
         {
-          "source": "assets/icons/hooptrace-app-icon-foreground.png",
+          "source": "assets/icons/hoopito-app-icon-foreground.png",
           "sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8"
         },
         {
@@ -1391,16 +1396,24 @@
           "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65"
         },
         {
+          "source": "assets/fonts/NotoSansSC-Regular.otf",
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9"
+        },
+        {
+          "source": "website/public/fonts/noto-sc.woff2",
+          "sha256": "d490ab7c6902b4d2054e50049befe319d03660f443a3f3a792409c2d7fbdb1a6"
+        },
+        {
           "source": "assets/fonts/BarlowCondensed-Medium.ttf",
           "sha256": "262bd143292ce479ee0cd09a42b47ab173fca8e9c6eb5ed0b5c8a845bc371d17"
         }
       ],
-      "transformation": "Original SVG composition rasterized to PNG; embedded approved logo only scaled; Barlow lettering converted to glyph paths for portable rendering",
+      "transformation": "Original SVG composition rasterized to PNG; embedded approved logo only scaled; Barlow and Noto Sans SC lettering converted to glyph paths for portable rendering",
       "dimensions_px": [
         1200,
         630
       ],
-      "license": "MIT (repository graphic), SIL-OFL-1.1 (Barlow glyphs)"
+      "license": "MIT (repository graphic), SIL-OFL-1.1 (Barlow and Noto Sans SC glyphs)"
     },
     {
       "output": "public/licenses/astro.txt",

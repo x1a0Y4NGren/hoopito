@@ -84,7 +84,7 @@ internal class AutomaticBackupWorker(
                 engine.dartExecutor.executeDartEntrypoint(
                     DartExecutor.DartEntrypoint(
                         DartExecutor.DartEntrypoint.createDefault().pathToBundle,
-                        "package:hooptrace/main.dart",
+                        "package:hoopito/main.dart",
                         "automaticBackupBackgroundMain",
                     ),
                 )

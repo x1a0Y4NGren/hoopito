@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/export/safety_backup_store.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/export/safety_backup_store.dart';
 
 SafetyBackupStore createTestSafetyBackupStore(JsonBackupCodec codec) =>
     SafetyBackupStore(codec, storage: MemorySafetyBackupStorage());

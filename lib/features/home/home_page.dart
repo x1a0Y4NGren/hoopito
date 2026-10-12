@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/match_history_entry.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/match_history_entry.dart';
 
 const homeResumeCardKey = Key('home-resume-card');
 const homeResumeKey = Key('home-resume');
@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             if (recentMatches.isNotEmpty) ...[
-              const SizedBox(height: HoopTraceSpacing.section),
+              const SizedBox(height: HoopitoSpacing.section),
               EditorialSectionRule(label: l10n.v2RecentMatches),
               for (final match in recentMatches.take(3))
                 MatchScoreRow(
@@ -100,7 +100,7 @@ class HomePage extends StatelessWidget {
                 ),
             ],
             if (latestFinishedMatch != null) ...[
-              const SizedBox(height: HoopTraceSpacing.section),
+              const SizedBox(height: HoopitoSpacing.section),
               EditorialSectionRule(label: l10n.historyTitle),
               KeyedSubtree(
                 key: const Key('home-latest-result'),
@@ -114,7 +114,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ],
-            const SizedBox(height: HoopTraceSpacing.section),
+            const SizedBox(height: HoopitoSpacing.section),
             if (showDirectory)
               _HomeDirectory(
                 onOpenHistory: onOpenHistory,
@@ -123,7 +123,7 @@ class HomePage extends StatelessWidget {
                 onOpenSettings: onOpenSettings,
                 l10n: l10n,
               ),
-            const SizedBox(height: HoopTraceSpacing.section),
+            const SizedBox(height: HoopitoSpacing.section),
           ],
         ),
       ),
@@ -171,7 +171,7 @@ class _HomeHero extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(HoopTraceSpacing.section),
+                padding: const EdgeInsets.all(HoopitoSpacing.section),
                 child: active == null
                     ? _StartHero(onStartScoring: onStartScoring)
                     : _ActiveHero(

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/settings/theme_preferences.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/settings/theme_preferences.dart';
 
 import '../../test_helpers/test_database.dart';
 

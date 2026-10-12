@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate HoopTrace launch artwork and the original entry swish sound."""
+"""Generate Hoopito launch artwork and the original entry swish sound."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FOREGROUND = ROOT / "assets/icons/hooptrace-app-icon-foreground.png"
+FOREGROUND = ROOT / "assets/icons/hoopito-app-icon-foreground.png"
 AUDIO = ROOT / "assets/audio/entry_swish.wav"
 
 ANDROID_DENSITIES = {

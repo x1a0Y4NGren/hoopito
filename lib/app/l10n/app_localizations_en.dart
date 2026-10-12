@@ -188,7 +188,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'FG% in match order. Gaps mean incomplete recording or no attempts.';
 
   @override
-  String get appName => 'HoopTrace';
+  String get appName => 'Hoopito';
 
   @override
   String get startScoring => 'Start';
@@ -1133,14 +1133,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayMoreActions => 'More actions';
 
   @override
-  String get legacyBootstrapTitle => 'HoopTrace data compatibility check';
+  String get legacyBootstrapTitle => 'Hoopito data compatibility check';
 
   @override
-  String get legacyBootstrapHeadline => 'Could not open HoopTrace v0.1 data';
+  String get legacyBootstrapHeadline => 'Could not open legacy v0.1 data';
 
   @override
   String legacyBootstrapBody(Object version) {
-    return 'An incompatible legacy database version$version was detected. The existing file will remain unchanged; HoopTrace will not silently migrate, delete, or clear it. Export or back up the old file first, then create new local data with this version.';
+    return 'An incompatible legacy database version$version was detected. The existing file will remain unchanged; Hoopito will not silently migrate, delete, or clear it. Export or back up the old file first, then create new local data with this version.';
   }
 
   @override
@@ -1354,7 +1354,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsBackupRetentionSubtitle =>
-      'Only HoopTrace automatic backups are cleaned up; manual and safety backups are kept';
+      'Only Hoopito automatic backups are cleaned up; manual and safety backups are kept';
 
   @override
   String get settingsPrivacySection => 'Privacy';
@@ -1389,7 +1389,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsProjectSection => 'Project';
 
   @override
-  String get settingsAboutTitle => 'About HoopTrace';
+  String get settingsAboutTitle => 'About Hoopito';
 
   @override
   String get settingsAboutSection => 'About';
@@ -1402,7 +1402,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsRestoreDialogTitle => 'Choose backup import mode';
 
   @override
-  String get settingsRestorePickerTitle => 'Choose a HoopTrace backup';
+  String get settingsRestorePickerTitle => 'Choose a Hoopito backup';
 
   @override
   String get settingsMergeTitle => 'Merge import (recommended)';
@@ -1426,7 +1426,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsReplaceConfirmBody =>
-      'After validation, HoopTrace will create a safety backup and atomically replace local data.';
+      'After validation, Hoopito will create a safety backup and atomically replace local data.';
 
   @override
   String get settingsReplaceConfirmAction => 'Choose backup';
@@ -1485,7 +1485,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsErrorFutureVersion =>
-      'This backup was created by a newer version; upgrade HoopTrace and try again';
+      'This backup was created by a newer version; upgrade Hoopito and try again';
 
   @override
   String get settingsErrorInvalidBackup =>
@@ -2347,24 +2347,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectOpenBrowser => 'Open in browser';
 
   @override
-  String get exportBackupDialogTitle => 'Choose a HoopTrace backup';
+  String get exportBackupDialogTitle => 'Choose a Hoopito backup';
 
   @override
   String get exportAutomaticBackupDialogTitle =>
       'Choose an automatic backup folder';
 
   @override
-  String get exportFullBackupSubject => 'HoopTrace full local backup';
+  String get exportFullBackupSubject => 'Hoopito full local backup';
 
   @override
   String get exportSafetyBackupSubject =>
-      'HoopTrace safety backup before restore';
+      'Hoopito safety backup before restore';
 
   @override
-  String get exportCsvSubject => 'HoopTrace CSV export';
+  String get exportCsvSubject => 'Hoopito CSV export';
 
   @override
-  String get exportReplaySubject => 'HoopTrace match replay';
+  String get exportReplaySubject => 'Hoopito match replay';
 
   @override
   String get projectGitHub => 'GitHub';

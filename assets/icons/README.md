@@ -1,6 +1,6 @@
-# HoopTrace Icon Assets
+# Hoopito Icon Assets
 
-HoopTrace uses the approved **C · one-eyed basketball creature**: an asymmetric
+Hoopito uses the approved **C · one-eyed basketball creature**: an asymmetric
 orange ball, one large eye, a mischievous grin, and two simple basketball seams.
 The user approved it as the official logo on 2026-10-04 and requested complete
 retirement of the old hoop-and-shot-trace identity. Its source was prepared with
@@ -22,10 +22,10 @@ in the transparent source. Never reduce the foreground to an orange/white palett
 
 ## File roles and derivation
 
-- `hooptrace-app-icon-foreground.png`: transparent 1024 × 1024 production source;
+- `hoopito-app-icon-foreground.png`: transparent 1024 × 1024 production source;
   the complete creature is centered within a 620 × 620 safe zone.
-- `hooptrace-app-icon.png`: opaque 1024 × 1024 master on the near-black background.
-- `hooptrace-app-icon-monochrome.png`: transparent single-color master; black
+- `hoopito-app-icon.png`: opaque 1024 × 1024 master on the near-black background.
+- `hoopito-app-icon-monochrome.png`: transparent single-color master; black
   pupil, grin, and seams become negative spaces, keeping the face recognizable
   when Android applies a themed color.
 - Android legacy mipmaps and iOS AppIcon PNGs are opaque resizes of the master.

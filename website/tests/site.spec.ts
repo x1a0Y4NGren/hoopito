@@ -29,6 +29,7 @@ const locales = [
   {
     path: '/',
     lang: 'zh-CN',
+    brand: '球豆',
     title: '每一球，都有迹可循。',
     other: '/en/',
     privacy: '/privacy/',
@@ -36,6 +37,7 @@ const locales = [
   {
     path: '/en/',
     lang: 'en',
+    brand: 'Hoopito',
     title: 'Every play leaves a trace.',
     other: '/',
     privacy: '/en/privacy/',
@@ -220,6 +222,21 @@ for (const locale of locales) {
     expect(response?.ok()).toBe(true);
     await expect(page.locator('html')).toHaveAttribute('lang', locale.lang);
     await expect(page.locator('h1')).toHaveText(locale.title);
+    await expect(page).toHaveTitle(`${locale.brand} — ${locale.title}`);
+    await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
+      'content',
+      'Hoopito · 球豆',
+    );
+    await expect(page.locator('.wordmark')).toHaveText('HOOPITO.');
+    await expect(page.locator('.wordmark')).toHaveAttribute(
+      'aria-label',
+      'Hoopito · 球豆',
+    );
+    await expect(page.locator('.hero-lead')).toContainText(locale.brand);
+    await expect(page.locator('.install-note')).toContainText(
+      'HoopTrace v2.0.0',
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
     await expectDownload(page);
     for (const id of ['hero', 'scoring', 'experience', 'replay', 'download']) {
       await expect(page.locator(`main #${id}`)).toHaveCount(1);
@@ -269,6 +286,8 @@ for (const locale of locales) {
     ).toBe(true);
     await page.goto(locale.privacy);
     await expect(page.locator('html')).toHaveAttribute('lang', locale.lang);
+    await expect(page).toHaveTitle(new RegExp(locale.brand));
+    await expect(page.locator('.wordmark')).toHaveText('HOOPITO.');
     await expect(page.locator('main')).toContainText(/Vercel/);
     expect(failures).toEqual([]);
   });
@@ -843,7 +862,7 @@ for (const scale of [1, 2]) {
         await page.addInitScript(() => {
           const buffers: { samples: number; width: number; height: number }[] =
             [];
-          Reflect.set(window, 'hooptraceRenderbuffers', buffers);
+          Reflect.set(window, 'hoopitoRenderbuffers', buffers);
           const original =
             WebGL2RenderingContext.prototype.renderbufferStorageMultisample;
           WebGL2RenderingContext.prototype.renderbufferStorageMultisample =
@@ -878,7 +897,7 @@ for (const scale of [1, 2]) {
             cssWidth: canvas.clientWidth,
             cssHeight: canvas.clientHeight,
             antialias: canvas.dataset.antialias,
-            buffers: Reflect.get(window, 'hooptraceRenderbuffers') as {
+            buffers: Reflect.get(window, 'hoopitoRenderbuffers') as {
               samples: number;
               width: number;
               height: number;
@@ -968,10 +987,11 @@ for (const scale of [1, 2]) {
                       depth.includes(value),
                   ),
                 );
-                const buffers = Reflect.get(
-                  window,
-                  'hooptraceRenderbuffers',
-                ) as { samples: number; width: number; height: number }[];
+                const buffers = Reflect.get(window, 'hoopitoRenderbuffers') as {
+                  samples: number;
+                  width: number;
+                  height: number;
+                }[];
                 return wanted
                   ? canvas.dataset.antialias === `msaa-${wanted}` &&
                       buffers.some(
@@ -1005,15 +1025,15 @@ test(
     );
     await allowSoftwareWebGL(page);
     await page.addInitScript(() => {
-      const state = window as unknown as { hooptraceDrawCalls: number };
-      state.hooptraceDrawCalls = 0;
+      const state = window as unknown as { hoopitoDrawCalls: number };
+      state.hoopitoDrawCalls = 0;
       for (const method of ['drawElements', 'drawArrays'] as const) {
         const original = WebGL2RenderingContext.prototype[method];
         Reflect.set(
           WebGL2RenderingContext.prototype,
           method,
           function (this: WebGL2RenderingContext, ...args: unknown[]) {
-            state.hooptraceDrawCalls += 1;
+            state.hoopitoDrawCalls += 1;
             return Reflect.apply(original, this, args);
           },
         );
@@ -1026,10 +1046,10 @@ test(
     await page.evaluate(() => {
       const canvas =
         document.querySelector<HTMLCanvasElement>('#court-canvas')!;
-      Reflect.set(window, 'hooptraceContext', canvas.getContext('webgl2'));
+      Reflect.set(window, 'hoopitoContext', canvas.getContext('webgl2'));
     });
     const count = () =>
-      page.evaluate(() => Reflect.get(window, 'hooptraceDrawCalls') as number);
+      page.evaluate(() => Reflect.get(window, 'hoopitoDrawCalls') as number);
     const idleDrawCount = async () => {
       // Pin removal and canvas resizing can request a final frame after the
       // media event. Software rendering may delay it past a fixed 250ms pause.
@@ -1071,7 +1091,7 @@ test(
         () =>
           document
             .querySelector<HTMLCanvasElement>('#court-canvas')!
-            .getContext('webgl2') === Reflect.get(window, 'hooptraceContext'),
+            .getContext('webgl2') === Reflect.get(window, 'hoopitoContext'),
       ),
     ).toBe(true);
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -1151,15 +1171,15 @@ test(
     await allowSoftwareWebGL(page);
     // Count real GPU draw submissions at the browser boundary; production code has no test hooks.
     await page.addInitScript(() => {
-      const state = window as unknown as { hooptraceDrawCalls: number };
-      state.hooptraceDrawCalls = 0;
+      const state = window as unknown as { hoopitoDrawCalls: number };
+      state.hoopitoDrawCalls = 0;
       for (const method of ['drawElements', 'drawArrays'] as const) {
         const original = WebGL2RenderingContext.prototype[method];
         const wrapped = function (
           this: WebGL2RenderingContext,
           ...args: unknown[]
         ) {
-          state.hooptraceDrawCalls += 1;
+          state.hoopitoDrawCalls += 1;
           return Reflect.apply(original, this, args);
         };
         Reflect.set(WebGL2RenderingContext.prototype, method, wrapped);
@@ -1170,8 +1190,7 @@ test(
     const count = () =>
       page.evaluate(
         () =>
-          (window as unknown as { hooptraceDrawCalls: number })
-            .hooptraceDrawCalls,
+          (window as unknown as { hoopitoDrawCalls: number }).hoopitoDrawCalls,
       );
     await expect.poll(count).toBeGreaterThan(0);
     await page.evaluate(() => {

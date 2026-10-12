@@ -31,7 +31,8 @@ notices when bundling. It restricts competing visual animation building tools.
 Barlow is converted to WOFF2 without removing its glyph set. The Chinese font is
 further subset to website text and interface symbols. Copyright and license name
 records are retained. Original app fonts and their licenses remain untouched.
-The share image uses outlines from Barlow, with its font license retained here.
+The share image uses outlines from Barlow and Noto Sans SC, with both font
+licenses retained here.
 
 ## Asset build tools
 
@@ -50,7 +51,7 @@ served as website scripts.
 ## Repository images and provenance
 
 The approved C “one-eyed basketball creature” mark is resized from
-`assets/icons/hooptrace-app-icon-foreground.png`. Its geometry, expression, seams,
+`assets/icons/hoopito-app-icon-foreground.png`. Its geometry, expression, seams,
 opaque black detail and alpha transparency are preserved; its approval record is
 `docs/design/brand/source.json`.
 

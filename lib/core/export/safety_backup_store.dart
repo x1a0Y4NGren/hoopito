@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:hooptrace/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
-export 'package:hooptrace/core/export/json_backup_codec.dart'
+export 'package:hoopito/core/export/json_backup_codec.dart'
     show SafetyBackupWriteException;
 
 /// Metadata for an internal snapshot whose contents have passed validation.
@@ -47,6 +47,7 @@ class IoSafetyBackupStorage implements SafetyBackupStorage {
 
   static Future<Directory> _applicationDirectory() async {
     final documents = await getApplicationDocumentsDirectory();
+    // Keep the private location so pre-rebrand rollback snapshots remain usable.
     return Directory(path.join(documents.path, 'hooptrace-safety-backups'));
   }
 
@@ -105,7 +106,7 @@ class IoSafetyBackupStorage implements SafetyBackupStorage {
   }
 
   static final _internalFilePattern = RegExp(
-    r'^hooptrace-safety-backup-[A-Za-z0-9_-]+\.json(?:\.tmp)?$',
+    r'^hoop(?:trace|ito)-safety-backup-[A-Za-z0-9_-]+\.json(?:\.tmp)?$',
   );
 }
 
@@ -120,7 +121,7 @@ class SafetyBackupStore {
   Future<SafetyBackup> save(String source) async {
     final document = codec.decodeAndValidate(source);
     final stamp = document.manifest.exportedAt.toUtc().microsecondsSinceEpoch;
-    final fileName = 'hooptrace-safety-backup-$stamp-${const Uuid().v4()}.json';
+    final fileName = 'hoopito-safety-backup-$stamp-${const Uuid().v4()}.json';
     final temporaryName = '$fileName.tmp';
     final bytes = Uint8List.fromList(utf8.encode(source));
     try {
@@ -207,6 +208,6 @@ class SafetyBackupStore {
   }
 
   static final _snapshotPattern = RegExp(
-    r'^hooptrace-safety-backup-[A-Za-z0-9_-]+\.json$',
+    r'^hoop(?:trace|ito)-safety-backup-[A-Za-z0-9_-]+\.json$',
   );
 }

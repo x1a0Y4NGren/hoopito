@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/safety_backup_store.dart';
-import 'package:hooptrace/features/settings/settings_action_tile.dart';
-import 'package:hooptrace/features/settings/settings_controller.dart';
-import 'package:hooptrace/features/settings/settings_error_message.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/safety_backup_store.dart';
+import 'package:hoopito/features/settings/settings_action_tile.dart';
+import 'package:hoopito/features/settings/settings_controller.dart';
+import 'package:hoopito/features/settings/settings_error_message.dart';
 
 class DataManagementPage extends StatefulWidget {
   const DataManagementPage({
@@ -96,7 +96,7 @@ class _DataManagementPageState extends State<DataManagementPage> {
             const LinearProgressIndicator(minHeight: 2),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+              padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
               children: [
                 EditorialSectionRule(label: l10n.settingsManualDataSection),
                 EditorialIndexRow(
@@ -115,7 +115,7 @@ class _DataManagementPageState extends State<DataManagementPage> {
                       : l10n.settingsRestoreSubtitleBlocked,
                   onTap: widget.controller.busy ? null : _chooseRestoreMode,
                 ),
-                const SizedBox(height: HoopTraceSpacing.section),
+                const SizedBox(height: HoopitoSpacing.section),
                 EditorialSectionRule(label: l10n.v2SafetyTitle),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -152,7 +152,7 @@ class _DataManagementPageState extends State<DataManagementPage> {
                         widget.controller.canRestoreBackup,
                     onTap: () => unawaited(_restoreSafetyBackup(safety)),
                   ),
-                const SizedBox(height: HoopTraceSpacing.section),
+                const SizedBox(height: HoopitoSpacing.section),
                 EditorialSectionRule(
                   label: l10n.settingsAutomaticBackupSection,
                 ),

@@ -1,6 +1,8 @@
-# Q 弹启动动画
+# Hoopito · 球豆 Q 弹启动动画
 
 用户于 2026-10-04 批准本方案。沿用正式 C 独眼球怪，启动静音、无震动。
+
+改名沿用原图、网格、原生／Flutter 几何与启动行为。当前 Profile 诊断开关为 `HOOPITO_ENTRY_PROFILE`；下方历史验证中的 `HOOPTRACE_ENTRY_PROFILE`、APK 文件名、路径及源码 SHA 保留原来源。名称边界见[品牌与兼容性](naming-and-compatibility.md)。
 
 ## 动作参数
 

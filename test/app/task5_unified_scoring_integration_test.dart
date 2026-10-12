@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/drift.dart' hide isNull;
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/home/home_page.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
-import 'package:hooptrace/features/summary/match_summary_page.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/home/home_page.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
+import 'package:hoopito/features/summary/match_summary_page.dart';
 
 import '../test_helpers/test_database.dart';
 
@@ -45,7 +45,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
+      HoopitoApp(database: database, showEntryAnimation: false),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
     await _tapAction(tester, find.byKey(const Key('home-resume')));
@@ -93,7 +93,7 @@ void main() {
       });
 
       await tester.pumpWidget(
-        HoopTraceApp(database: database, showEntryAnimation: false),
+        HoopitoApp(database: database, showEntryAnimation: false),
       );
       await _pumpUntilFound(tester, find.byKey(homeStartScoringKey));
       await _tapAction(tester, find.byKey(homeStartScoringKey));

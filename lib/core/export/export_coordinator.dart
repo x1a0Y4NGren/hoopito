@@ -1,20 +1,20 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics_calculator.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/backup_merge_service.dart';
-import 'package:hooptrace/core/export/csv_exporter.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/export/safety_backup_store.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics_calculator.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/backup_merge_service.dart';
+import 'package:hoopito/core/export/csv_exporter.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/export/safety_backup_store.dart';
 
-export 'package:hooptrace/core/export/json_backup_codec.dart'
+export 'package:hoopito/core/export/json_backup_codec.dart'
     show BackupRestoreBlockedException;
-export 'package:hooptrace/core/export/safety_backup_store.dart';
+export 'package:hoopito/core/export/safety_backup_store.dart';
 
 class ExportArtifact {
   const ExportArtifact({
@@ -75,7 +75,7 @@ class ExportCoordinator {
     final payload = await codec.export();
     await gateway.share([
       ExportArtifact.text(
-        fileName: 'hooptrace-backup-${_fileTimestamp(timestamp)}.json',
+        fileName: 'hoopito-backup-${_fileTimestamp(timestamp)}.json',
         mimeType: 'application/json',
         contents: payload,
       ),
@@ -157,17 +157,17 @@ class ExportCoordinator {
     final suffix = _fileTimestamp(timestamp);
     await gateway.share([
       ExportArtifact.text(
-        fileName: 'hooptrace-matches-$suffix.csv',
+        fileName: 'hoopito-matches-$suffix.csv',
         mimeType: 'text/csv',
         contents: CsvExporter.matchList(matches, participants: participants),
       ),
       ExportArtifact.text(
-        fileName: 'hooptrace-events-$suffix.csv',
+        fileName: 'hoopito-events-$suffix.csv',
         mimeType: 'text/csv',
         contents: CsvExporter.eventList(events),
       ),
       ExportArtifact.text(
-        fileName: 'hooptrace-player-stats-$suffix.csv',
+        fileName: 'hoopito-player-stats-$suffix.csv',
         mimeType: 'text/csv',
         contents: CsvExporter.playerStatistics(statistics),
       ),
@@ -182,7 +182,7 @@ class ExportCoordinator {
     final safeMatchId = _safeFilePart(matchId);
     return gateway.share([
       ExportArtifact(
-        fileName: 'hooptrace-replay-$safeMatchId.png',
+        fileName: 'hoopito-replay-$safeMatchId.png',
         mimeType: 'image/png',
         bytes: bytes,
       ),

@@ -84,9 +84,16 @@ def prepare(output, dart, sqlite_library, package_config):
             archive.extractall(source)
         config = json.loads(package_config.read_text(encoding='utf-8'))
         for package in config['packages']:
-            package['rootUri'] = (source.as_uri() + '/') if package['name'] == 'hooptrace' else urljoin(
-                package_config.resolve().as_uri(), package['rootUri'],
-            )
+            if package['name'] in ('hoopito', 'hooptrace'):
+                # The authentic archived v1 source still imports hooptrace.
+                # Bind the current project's dependencies to that old name
+                # only inside this isolated historical fixture compiler.
+                package['name'] = 'hooptrace'
+                package['rootUri'] = source.as_uri() + '/'
+            else:
+                package['rootUri'] = urljoin(
+                    package_config.resolve().as_uri(), package['rootUri'],
+                )
         isolated_config = staging / 'package_config.json'
         isolated_config.write_text(json.dumps(config), encoding='utf-8')
         target = {'Windows': 'windows', 'Linux': 'linux', 'Darwin': 'macos'}[platform.system()]

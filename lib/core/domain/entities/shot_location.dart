@@ -1,4 +1,4 @@
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
 
 class ShotLocation {
   const ShotLocation({

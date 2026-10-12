@@ -4,16 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum HoopTraceOrientationMode { portraitFriendly, landscapeRequired }
+enum HoopitoOrientationMode { portraitFriendly, landscapeRequired }
 
 const double expandedOrientationShortestSide = 600;
 
 List<DeviceOrientation> preferredOrientationsForWindow(
-  HoopTraceOrientationMode mode, {
+  HoopitoOrientationMode mode, {
   required double shortestSide,
   double? displayShortestSide,
 }) {
-  if (mode == HoopTraceOrientationMode.landscapeRequired &&
+  if (mode == HoopitoOrientationMode.landscapeRequired &&
       (displayShortestSide ?? shortestSide) < expandedOrientationShortestSide) {
     return const [
       DeviceOrientation.landscapeLeft,
@@ -26,7 +26,7 @@ List<DeviceOrientation> preferredOrientationsForWindow(
 class OrientationShell extends StatefulWidget {
   const OrientationShell({required this.mode, required this.child, super.key});
 
-  final HoopTraceOrientationMode mode;
+  final HoopitoOrientationMode mode;
   final Widget child;
 
   @override

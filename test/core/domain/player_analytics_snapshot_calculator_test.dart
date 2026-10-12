@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/analytics/player_analytics_snapshot.dart';
-import 'package:hooptrace/core/domain/analytics/player_analytics_snapshot_calculator.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/analytics/player_analytics_snapshot.dart';
+import 'package:hoopito/core/domain/analytics/player_analytics_snapshot_calculator.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
 void main() {
   test('calculates a deterministic profile-linked match snapshot', () {

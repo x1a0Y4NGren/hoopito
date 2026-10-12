@@ -1,4 +1,4 @@
-import 'package:hooptrace/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database.dart';
 
 class ScoringGuidePreferences {
   ScoringGuidePreferences(this.database);

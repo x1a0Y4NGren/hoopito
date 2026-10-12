@@ -105,9 +105,9 @@ void main() {
     expect(android, contains(channel));
     expect(android, contains('ENTRY_MOTION_PREFERENCES'));
     expect(android, contains('getDartEntrypointArgs'));
-    expect(android, contains('--hooptrace-entry-motion='));
+    expect(android, contains('--hoopito-entry-motion='));
     expect(android, contains('entryAnimationClaimed'));
-    expect(android, contains('--hooptrace-entry-animation=disabled'));
+    expect(android, contains('--hoopito-entry-animation=disabled'));
     expect(ios, contains(channel));
     expect(ios, contains('UserDefaults.standard'));
   });

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 class ScoreSidePanel extends StatelessWidget {
   const ScoreSidePanel({
@@ -460,7 +460,7 @@ class _ScoreActionState extends State<_ScoreAction> {
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1,
         duration:
-            Theme.of(context).extension<HoopTraceMotionTheme>()?.press ??
+            Theme.of(context).extension<HoopitoMotionTheme>()?.press ??
             const Duration(milliseconds: 90),
         child: button,
       ),
@@ -654,7 +654,7 @@ class _FoulStamp extends StatelessWidget {
     return IgnorePointer(
       child: TweenAnimationBuilder<double>(
         duration:
-            Theme.of(context).extension<HoopTraceMotionTheme>()?.foulStamp ??
+            Theme.of(context).extension<HoopitoMotionTheme>()?.foulStamp ??
             const Duration(milliseconds: 180),
         tween: Tween(begin: 0.65, end: 1),
         builder: (context, scale, child) => Transform.scale(

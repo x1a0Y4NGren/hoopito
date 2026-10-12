@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
 
 /// A settings action with a visible and announced unavailable state.
 class SettingsActionTile extends StatelessWidget {

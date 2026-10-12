@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/export_coordinator.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/features/settings/settings_controller.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/features/settings/settings_controller.dart';
 
 import '../../test_helpers/test_database.dart';
 import '../../test_helpers/safety_backup_storage.dart';
@@ -148,14 +148,14 @@ void main() {
 
     expect(
       () => blocked.restoreBackup(
-        safetySubject: 'HoopTrace safety backup before restore',
+        safetySubject: 'Hoopito safety backup before restore',
       ),
       throwsA(isA<BackupRestoreBlockedException>()),
     );
     expect(
       await blocked.restoreBackup(
         mode: RestoreMode.merge,
-        safetySubject: 'HoopTrace safety backup before restore',
+        safetySubject: 'Hoopito safety backup before restore',
       ),
       isFalse,
     );

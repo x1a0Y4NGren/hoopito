@@ -1,4 +1,4 @@
-# HoopTrace 介绍与下载网站
+# Hoopito · 球豆 介绍与下载网站
 
 网站与 Flutter App 位于同一仓库，独立构建。Astro 输出静态 HTML，TypeScript
 管理交互，GSAP 驱动页面动效，Three.js 按条件加载连续球场场景。
@@ -6,6 +6,13 @@
 中文首页 `/`、英文首页 `/en/`；网站隐私说明分别为 `/privacy/` 和 `/en/privacy/`。
 两种语言共享组件，文案集中在 `src/data/content.ts`；语言切换保留当前章节锚点。
 真实计分与复盘截图随语言切换，网站文案独立于 Flutter ARB。
+
+当前品牌中文为「球豆」、英文为「Hoopito」，共享名称为「Hoopito · 球豆」，
+大写字标为 `HOOPITO`；npm 包名为 `hoopito-website`。已批准的 C 独眼球怪
+保持原图与几何。下载仍指向更名前已发布的 `HoopTrace-v2.0.0-android.apk`，
+其文件名、签名与 SHA-256 保持原样；GitHub 仓库已更名为 `x1a0Y4NGren/hoopito`，原仓库地址保留跳转。
+页面明确说明安装后仍显示旧名；历史 App 截图保留真实像素与拍摄来源，
+不重绘其中的 `HOOPTRACE`。原始 ImageGen 提示词、来源图与历史验收记录保留当时名称。
 
 ## 本地开发与验证
 
@@ -144,6 +151,9 @@ WOFF2 子集；Barlow 保留原有字形集。它同时更新二维码和
 原图、完整生成记录、转换方式和 SHA-256。
 
 性能脚本默认写入带时间戳的 `output/cinematic/performance/`，保留失败样本。
+工具环境变量使用 `HOOPITO_PERF_OUTPUT`、`HOOPITO_GPU_OUTPUT`、`HOOPITO_GPU`、
+`HOOPITO_GPU_HEADLESS`、`HOOPITO_GPU_VIEWPORTS`、`HOOPITO_CHROME_PATH` 和
+`HOOPITO_LOCAL_ORIGIN`；按需指定输出目录、GPU、浏览器或本地预览 origin。
 移动实验使用 390×844、DPR 1、4× CPU、150ms 延迟与 1.6Mbit/s 下行，三次中位
 LCP 目标 ≤2.5 秒，CLS ≤0.1。GPU 脚本在 Windows 只读枚举 DXGI，逐次选择
 实际 AMD Radeon 与 RTX 4070 适配器，不修改系统偏好；记录浏览器、渲染器、
@@ -180,26 +190,27 @@ Vercel 项目 Root Directory 设置为 `website`，Node.js 为 24.x，安装命�
 不需要 Vercel 服务端适配器。`vercel.json` 保存构建设置与基础响应头。
 `dist/`、`.vercel/`、浏览器报告和本地环境变量文件不提交。
 
-Vercel 预览工作已恢复，项目为 `hooptrace-website`，所属空间为
+既有 Vercel 项目已更名为 `hoopito-website`，项目身份保持不变，所属空间为
 `xyr175-9459s-projects`。网站分支的预览地址：
-[HoopTrace Preview](https://hooptrace-website-git-codex-hooptr-9f2c9c-xyr175-9459s-projects.vercel.app/)。
+[既有 HoopTrace 品牌预览](https://hooptrace-website-git-codex-hooptr-9f2c9c-xyr175-9459s-projects.vercel.app/)。
+GitHub 与 Vercel 项目已更名；下列旧预览属于此前部署，不代表当前品牌修改已上线。新的受保护预览将在正式 APK 与截图验收后更新。
 项目保留 Vercel Authentication；账号登录后可访问，也可通过 Deployment 页面
 的 Share 功能创建有期限的分享链接。分享凭据不写入源码或验证报告。
 分支地址随该分支成功部署更新；每次部署的不可变地址与实际 Git 提交可在
 Vercel Deployment 详情和构建日志中核对。`output/vercel/` 保存已验收部署的
 来源清单、构建日志与浏览器证据。此前工作区上传、已提交文件上传和 Git
 自动预览的来源记录分别保留，不能用后续提交替代。对应源码已提交并推送至 GitHub 的
-[`codex/hooptrace-website`](https://github.com/x1a0Y4NGren/hooptrace/tree/codex/hooptrace-website)
+[`codex/hooptrace-website`](https://github.com/x1a0Y4NGren/hoopito/tree/codex/hooptrace-website)
 分支，尚未合入 `main` 或发布正式域名。
 
-项目已连接 `x1a0Y4NGren/hooptrace`，自动部署沿用 blog 的 GitHub → Vercel
+项目已连接 `x1a0Y4NGren/hoopito`，自动部署沿用 blog 的 GitHub → Vercel
 工作流。推送 `codex/hooptrace-website` 等非生产分支会自动生成 Preview。
-`main` 是 Production 分支；当前范围仅为网站分支的预览验收，继续保留
-禁止搜索收录设置。正式上线须另行授权合入 `main` 并配置 `SITE_URL`。
+`main` 仍是 Production 分支，但 `vercel.json` 的 `git.deploymentEnabled.main=false` 阻止自动生产部署；当前范围仅为网站分支的预览验收，继续保留
+禁止搜索收录设置。源码整合到 `main` 不构成正式上线。正式上线须另行授权解除部署保护并配置 `SITE_URL`。
 
 重新连接已有项目时，先在 GitHub 的 Settings → Applications →
 Installed GitHub Apps → Vercel → Configure 中确认仓库访问权，再使用
-`vercel git connect https://github.com/x1a0Y4NGren/hooptrace.git`。
+`vercel git connect https://github.com/x1a0Y4NGren/hoopito.git`。
 
 本机 CLI 已完成登录；认证配置独立保存在忽略的 `.vercel/cli-state/`。
 在使用 CLI 时显式指定 `--global-config` 指向该目录、
@@ -214,3 +225,4 @@ Installed GitHub Apps → Vercel → Configure 中确认仓库访问权，再使
 origin，不含页面路径。`VERCEL_ENV=production` 且缺少 `SITE_URL` 时构建直接失败；
 正式配置用于 canonical、语言替代链接及分享图地址。域名和生产发布另按上线
 安排确认，保留 Preview 的禁止收录设置。
+`hoopito.com` 尚未由维护者持有，不预设为网站地址、canonical 或下载来源。

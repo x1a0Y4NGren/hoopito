@@ -1,4 +1,9 @@
-# 2.0 screenshot checklist / 2.0 截图清单
+# Hoopito · 球豆 screenshot checklist / 截图清单
+
+Current branding is Hoopito · 球豆. The recorded 2.0 captures below remain original
+HoopTrace images with their original provenance. Capture the current branded APK
+for a future release; do not relabel old captures as new UI evidence. See
+[naming and compatibility](../design/brand/naming-and-compatibility.md).
 
 Screenshots are release metadata and visual evidence; they do not replace flow,
 persistence or platform tests. Use synthetic player names and inspect every

@@ -62,6 +62,11 @@ def log(records_to_write):
 
 
 class ProbeParsingTest(unittest.TestCase):
+    def test_reads_legacy_brand_logs_without_changing_the_probe(self):
+        probe = fixture()
+        legacy_log = log(records(probe)).replace(measurement.PREFIX, measurement.LEGACY_PREFIX)
+        self.assertEqual(measurement.parse_records(legacy_log), probe)
+
     def test_waits_for_summary_then_parses_complete_probe(self):
         probe = fixture()
         self.assertIsNone(measurement.parse_records(log(probe['frames'])))

@@ -2,22 +2,28 @@
 
 ## Contract / 约定
 
-HoopTrace's reproducibility gate compares two unsigned release APKs produced on
+Hoopito's reproducibility gate compares two unsigned release APKs produced on
 one clean CI runner from the same committed source, lockfile, Flutter revision,
 Temurin Java version, Android SDK/build-tools/NDK, vendored SQLite amalgamation,
 and `SOURCE_DATE_EPOCH`. Each build starts from a fresh `git archive`; the two
 archives are built sequentially at the fixed
-`/tmp/hooptrace-reproducible-source` path because pinned Flutter 3.41.9 embeds
+`/tmp/hoopito-reproducible-source` path because pinned Flutter 3.41.9 embeds
 its build path in Dart and native libraries. A passing `cmp` proves the complete
 APKs are byte-identical before upstream signing. Cross-runner or cross-OS
 reproducibility is a separate comparison using the recorded toolchain files.
 
-HoopTrace 的可复现性门槛会固定源码提交、锁文件、Flutter revision、Java、
+Hoopito · 球豆的可复现性门槛会固定源码提交、锁文件、Flutter revision、Java、
 Android SDK/build-tools/NDK、仓库内 SQLite amalgamation 与 `SOURCE_DATE_EPOCH`，
 在同一干净 CI runner 上从两份全新的 `git archive` 顺序构建未签名 APK。由于
 固定的 Flutter 3.41.9 会把构建路径写入 Dart 与原生库，两次构建均使用固定的
-`/tmp/hooptrace-reproducible-source`；只有完整 APK 逐字节完全一致才通过。
+`/tmp/hoopito-reproducible-source`；只有完整 APK 逐字节完全一致才通过。
 跨 runner 或跨操作系统的结论必须使用输出中的工具链记录另行比较。
+
+Current tooling uses `HOOPITO_ALLOW_UNSIGNED_RELEASE` and the Linux workspace
+override `HOOPITO_REPRODUCIBLE_ROOT`. Earlier HoopTrace build paths, hashes and
+protocols remain historical evidence; changing the canonical path requires a new
+comparison and does not establish equality with a previously released APK. See
+[naming and compatibility](../design/brand/naming-and-compatibility.md).
 
 ```bash
 bash tool/release/verify_unsigned_reproducible_android.sh
@@ -28,7 +34,7 @@ On Windows, use the PowerShell counterpart from a clean committed checkout:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tool/release/verify_unsigned_reproducible_android.ps1 `
-  -WorkspaceRoot D:\HoopTrace-Reproducibility `
+  -WorkspaceRoot D:\Hoopito-Reproducibility `
   -AndroidSdkRoot D:\Android\Sdk `
   -JavaHome "C:\path\to\jdk-17.0.20+8"
 ```
@@ -36,7 +42,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tool/release/verify_unsigned
 Replace the example `JavaHome` with the installed Temurin 17.0.20+8 directory.
 
 It exports two fresh `git archive` snapshots and builds them sequentially at
-`D:\HoopTrace-Reproducibility\hooptrace-reproducible-source`. The named workspace
+`D:\Hoopito-Reproducibility\hoopito-reproducible-source`. The named workspace
 must be on D:, outside the checkout and toolchains; the canonical source leaf
 must not exist before invocation. Cleanup requires the exact resolved path and
 this invocation's ownership marker, and refuses junctions or other reparse
@@ -54,7 +60,7 @@ the owned first source tree is removed on Windows; no shared daemon is stopped.
 If the effective Java differs, prepare a task-specific configuration outside
 the project, then scope `APPDATA` to that directory for the invocation. For
 example, an operator-prepared
-`D:\HoopTrace-Reproducibility\flutter-config\.flutter_settings` can contain:
+`D:\Hoopito-Reproducibility\flutter-config\.flutter_settings` can contain:
 
 ```json
 {
@@ -66,9 +72,9 @@ example, an operator-prepared
 ```powershell
 $reproPreviousAppData = $env:APPDATA
 try {
-  $env:APPDATA = "D:\HoopTrace-Reproducibility\flutter-config"
+  $env:APPDATA = "D:\Hoopito-Reproducibility\flutter-config"
   & .\tool\release\verify_unsigned_reproducible_android.ps1 `
-    -WorkspaceRoot D:\HoopTrace-Reproducibility `
+    -WorkspaceRoot D:\Hoopito-Reproducibility `
     -AndroidSdkRoot D:\Android\Sdk `
     -JavaHome "C:\path\to\jdk-17.0.20+8"
 } finally { $env:APPDATA = $reproPreviousAppData }

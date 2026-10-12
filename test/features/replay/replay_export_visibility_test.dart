@@ -5,15 +5,15 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/export/replay_image_exporter.dart';
-import 'package:hooptrace/features/replay/replay_controller.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/export/replay_image_exporter.dart';
+import 'package:hoopito/features/replay/replay_controller.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
 
 import '../../support/golden_fonts.dart';
 
@@ -21,7 +21,7 @@ const _redName = 'River · 红方本场长姓名 · North Riverside Basketball C
 const _blueName = 'Jordan · 蓝方本场长姓名 · South Waterfront Basketball Club';
 
 void main() {
-  setUpAll(loadHoopTraceGoldenFonts);
+  setUpAll(loadHoopitoGoldenFonts);
 
   for (final locale in const [Locale('zh'), Locale('en')]) {
     for (final brightness in Brightness.values) {
@@ -219,7 +219,7 @@ Future<void> _openReport(
   await tester.pumpWidget(
     MaterialApp(
       key: UniqueKey(),
-      theme: buildHoopTraceTheme(brightness: brightness),
+      theme: buildHoopitoTheme(brightness: brightness),
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -335,7 +335,7 @@ Future<_Capture> _captureReport(WidgetTester tester, String name) async {
   expect(image.width, 2700);
   expect(image.height, (boundary.size.height * 3).ceil());
   expect(bytes!.take(8), [137, 80, 78, 71, 13, 10, 26, 10]);
-  const evidence = String.fromEnvironment('HOOPTRACE_EXPORT_EVIDENCE');
+  const evidence = String.fromEnvironment('HOOPITO_EXPORT_EVIDENCE');
   if (evidence.isNotEmpty) {
     await tester.runAsync(() async {
       final directory = await Directory(evidence).create(recursive: true);

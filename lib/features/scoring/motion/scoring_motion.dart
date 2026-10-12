@@ -2,8 +2,8 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
 import 'package:lottie/lottie.dart';
 
 /// Presentation policy for a scoring hero. It intentionally has no persistence
@@ -224,14 +224,14 @@ typedef ScoringMotionAssetBuilder =
 
 class ScoringMotionCoordinator extends ChangeNotifier {
   ScoringMotionCoordinator({
-    this.motionTheme = const HoopTraceMotionTheme.light(),
+    this.motionTheme = const HoopitoMotionTheme.light(),
     this.mode = ScoringMotionMode.standard,
     this.onComplete,
     this.onImpact,
     this.onFallback,
   });
 
-  final HoopTraceMotionTheme motionTheme;
+  final HoopitoMotionTheme motionTheme;
   final ScoringMotionMode mode;
   final ScoringMotionCallback? onComplete;
   final ScoringMotionCallback? onImpact;

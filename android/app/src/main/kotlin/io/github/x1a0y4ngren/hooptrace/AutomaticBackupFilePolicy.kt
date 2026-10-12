@@ -5,7 +5,7 @@ import android.provider.DocumentsContract
 /** Ownership rules for files that the automatic-backup retention may remove. */
 internal object AutomaticBackupFilePolicy {
     private const val JSON_MIME_TYPE = "application/json"
-    private val automaticBackupPattern = Regex("^hooptrace-auto-.+\\.json$")
+    private val automaticBackupPattern = Regex("^hoop(?:trace|ito)-auto-.+\\.json$")
 
     fun isAutomaticBackupFile(fileName: String): Boolean {
         if (fileName.contains('/') || fileName.contains('\\')) return false

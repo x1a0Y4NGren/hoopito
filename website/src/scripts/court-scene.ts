@@ -573,7 +573,7 @@ export async function createCourtScene(
     });
     // Surface channels, antialiased in screen space, keep the ball silhouette round.
     // Modelling these as exposed tubes made close-ups look like cables wrapped round a ball.
-    ballSurface.customProgramCacheKey = () => 'hooptrace-leather-channels-v2';
+    ballSurface.customProgramCacheKey = () => 'hoopito-leather-channels-v2';
     ballSurface.onBeforeCompile = (shader) => {
       shader.vertexShader = shader.vertexShader
         .replace(

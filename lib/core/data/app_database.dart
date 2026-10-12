@@ -18,7 +18,7 @@ class LegacySchemaDetectedException implements Exception {
   @override
   String toString() =>
       'LegacySchemaDetectedException: schema v$version is incompatible with '
-      'HoopTrace schema v3; start with a clean database.';
+      'Hoopito schema v3; start with a clean database.';
 }
 
 class Matches extends Table {
