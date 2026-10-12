@@ -284,6 +284,7 @@ let motionTimer: ReturnType<typeof setTimeout> | undefined;
 let choreographyReduced = reduced();
 let openingPlayed = false;
 let recentAnchor: { element: HTMLElement; expires: number } | undefined;
+let anchorFrame = 0;
 document.addEventListener('click', (event) => {
   if (event.button || event.metaKey || event.ctrlKey || event.shiftKey) return;
   const link =
@@ -303,16 +304,24 @@ for (const input of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
 function resumeAnchorNavigation() {
   // Refresh restores scroll positions and can cancel a native smooth anchor
   // scroll. Continue only the recent navigation; manual input cancels this intent.
-  if (
-    recentAnchor &&
-    performance.now() < recentAnchor.expires &&
-    location.hash === `#${recentAnchor.element.id}`
-  )
-    recentAnchor.element.scrollIntoView({
-      behavior: reduced() ? 'instant' : 'smooth',
-      block: 'start',
-    });
+  cancelAnimationFrame(anchorFrame);
+  anchorFrame = requestAnimationFrame(() => {
+    anchorFrame = 0;
+    if (
+      !disposed &&
+      recentAnchor &&
+      performance.now() < recentAnchor.expires &&
+      location.hash === `#${recentAnchor.element.id}`
+    )
+      recentAnchor.element.scrollIntoView({
+        behavior: reduced() ? 'instant' : 'smooth',
+        block: 'start',
+      });
+  });
 }
+// Include ScrollTrigger's own delayed resize/font measurements. Its refresh
+// restores scroll behavior on the next frame, so resume after that restoration.
+ScrollTrigger.addEventListener('refresh', resumeAnchorNavigation);
 function needsChoreographyRefresh() {
   if (choreographyReduced !== reduced()) return true;
   if (reduced()) return stages.size > 0;
@@ -347,7 +356,6 @@ window.addEventListener(
         // needs new measurements unless text growth changed pin eligibility.
         if (needsChoreographyRefresh()) gsap.matchMediaRefresh();
         ScrollTrigger.refresh();
-        resumeAnchorNavigation();
         updateStory();
       }
     }, 200);
@@ -514,7 +522,6 @@ systemMotion.addEventListener('change', () => {
     if (!disposed && needsChoreographyRefresh()) {
       gsap.matchMediaRefresh();
       ScrollTrigger.refresh();
-      resumeAnchorNavigation();
       updateStory();
     }
   }, 200);
@@ -547,6 +554,8 @@ window.addEventListener('pagehide', (event) => {
   stopScene();
   choreography.revert();
   cancelAnimationFrame(scrollFrame);
+  cancelAnimationFrame(anchorFrame);
+  ScrollTrigger.removeEventListener('refresh', resumeAnchorNavigation);
   clearTimeout(resizeTimer);
   clearTimeout(motionTimer);
 });
