@@ -23,7 +23,7 @@ const test = base.extend({
 });
 
 const apk =
-  'https://github.com/x1a0Y4NGren/hooptrace/releases/download/v2.0.0/HoopTrace-v2.0.0-android.apk';
+  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.0/HoopTrace-v2.0.0-android.apk';
 const origin = 'http://127.0.0.1:4321';
 const locales = [
   {
