@@ -283,7 +283,7 @@ let resizeTimer: ReturnType<typeof setTimeout> | undefined;
 let motionTimer: ReturnType<typeof setTimeout> | undefined;
 let choreographyReduced = reduced();
 let openingPlayed = false;
-let recentAnchor: { element: HTMLElement; expires: number } | undefined;
+let recentAnchor: { element: HTMLElement } | undefined;
 let anchorFrame = 0;
 document.addEventListener('click', (event) => {
   if (event.button || event.metaKey || event.ctrlKey || event.shiftKey) return;
@@ -294,7 +294,7 @@ document.addEventListener('click', (event) => {
   const element = link?.hash
     ? document.getElementById(link.hash.slice(1))
     : null;
-  if (element) recentAnchor = { element, expires: performance.now() + 2_000 };
+  if (element) recentAnchor = { element };
 });
 for (const input of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
   window.addEventListener(input, () => (recentAnchor = undefined), {
@@ -303,14 +303,13 @@ for (const input of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
 }
 function resumeAnchorNavigation() {
   // Refresh restores scroll positions and can cancel a native smooth anchor
-  // scroll. Continue only the recent navigation; manual input cancels this intent.
+  // scroll. Keep the current navigation intent until manual input cancels it.
   cancelAnimationFrame(anchorFrame);
   anchorFrame = requestAnimationFrame(() => {
     anchorFrame = 0;
     if (
       !disposed &&
       recentAnchor &&
-      performance.now() < recentAnchor.expires &&
       location.hash === `#${recentAnchor.element.id}`
     )
       recentAnchor.element.scrollIntoView({

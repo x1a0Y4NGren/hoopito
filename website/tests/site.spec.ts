@@ -116,10 +116,6 @@ test('rapid system motion changes restore cinematic stages even within one clock
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await expect(page.locator('.pin-spacer')).toHaveCount(0);
     await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await page.evaluate(
-      () =>
-        new Promise<void>((resolve) => requestAnimationFrame(() => resolve())),
-    );
   } finally {
     await page.evaluate(() => {
       (
@@ -127,6 +123,10 @@ test('rapid system motion changes restore cinematic stages even within one clock
       ).restoreMotionClock();
     });
   }
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => requestAnimationFrame(() => resolve())),
+  );
   await expect(page.locator('.pin-spacer')).toHaveCount(3, { timeout: 5_000 });
   await expect(page.locator('[data-hero-line]').first()).toHaveCSS(
     'opacity',
@@ -155,6 +155,19 @@ test('a pending desktop resize keeps native download navigation on target', asyn
   await page.goto('/');
   await page.waitForLoadState('networkidle');
   await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await page.evaluate(() => {
+    window.addEventListener(
+      'resize',
+      () => {
+        // Start before the queued 200ms refresh and keep its navigation pending.
+        setTimeout(() => {
+          const until = performance.now() + 2_500;
+          while (performance.now() < until) {}
+        }, 190);
+      },
+      { once: true },
+    );
+  });
   await page.setViewportSize({ width: 1439, height: 900 });
   await page.locator('.nav-download').evaluate((link: HTMLAnchorElement) => {
     link.click();
