@@ -53,8 +53,15 @@ jobs:
       - name: Install browser engines
         run: npx playwright install --with-deps --no-shell chromium firefox webkit
 
-      - name: Test desktop, mobile, bilingual and fallback behavior
-        run: npm run test:e2e
+      - name: Test desktop, mobile and bilingual UI in three browsers
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: output/playwright/report-ui
+        run: npm run test:e2e -- --grep-invert @webgl --workers=2 --output=output/playwright/results-ui
+
+      - name: Test software WebGL lifecycle without competing browser workers
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: output/playwright/report-webgl
+        run: npm run test:e2e -- --project=chromium --grep @webgl --workers=1 --output=output/playwright/results-webgl
 
       - name: Check whitespace
         run: git diff --check

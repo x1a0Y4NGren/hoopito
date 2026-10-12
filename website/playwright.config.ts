@@ -7,8 +7,10 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : 3,
-  timeout: 30_000,
-  expect: { timeout: 10_000 },
+  // Software WebGL on shared CI runners needs bounded extra test time. The
+  // website's eight-second initialization deadline is unchanged and still tested.
+  timeout: process.env.CI ? 90_000 : 30_000,
+  expect: { timeout: process.env.CI ? 20_000 : 10_000 },
   outputDir: './output/playwright/results',
   reporter: [
     ['list'],

@@ -47,6 +47,10 @@ Playwright 自动启动本地 `preview` 服务；失败时保留 trace 与截图
 `npx playwright install --with-deps --no-shell chromium firefox webkit` 安装运行时依赖。
 构建预算以逐文件 gzip 计算：移动首屏每种语言不超过 500 KiB，桌面 3D
 增量不超过 800 KiB。体积检查、模拟设备检查和真实 GPU 帧率各自保留证据。
+CI 在三种浏览器中验证 HTML、SVG、布局和滚动，关闭普通页面测试的 WebGL；
+标记为 `@webgl` 的场景与异常测试另外在 Chromium 中串行运行，避免软件渲染
+和其他浏览器争用云端 CPU。两组分别保存报告。CI 测试允许较长的有界运行时间，
+网站的 8 秒初始化回退期限保持原值。本机 `npm run test:e2e` 仍运行完整组合。
 历史验收记录见 [VERIFICATION.md](VERIFICATION.md)。新增球场材质验证保存在
 `output/playwright/court-materials/`；远端构建与浏览器验证保存在 `output/vercel/`，
 以各次记录的源码哈希核对实际被测版本。

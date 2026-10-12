@@ -1,4 +1,26 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test as base, type Page } from '@playwright/test';
+
+const test = base.extend({
+  page: async ({ page }, use, testInfo) => {
+    // Shared CI hosts render WebGL in software. Ordinary layout tests need HTML,
+    // SVG and GSAP, while the separately tagged lifecycle suite keeps real WebGL.
+    if (process.env.CI && !testInfo.tags.includes('@webgl')) {
+      await page.addInitScript(() => {
+        const original = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext = function (
+          this: HTMLCanvasElement,
+          type: string,
+          ...args: unknown[]
+        ) {
+          return type === 'webgl2'
+            ? null
+            : Reflect.apply(original, this, [type, ...args]);
+        } as typeof original;
+      });
+    }
+    await use(page);
+  },
+});
 
 const apk =
   'https://github.com/x1a0Y4NGren/hooptrace/releases/download/v2.0.0/HoopTrace-v2.0.0-android.apk';
@@ -412,27 +434,29 @@ test('missing WebGL2 keeps the static introduction and interactive demo', async 
   await expect(page.locator('[data-demo-marker]')).toBeVisible();
 });
 
-test('a failed 3D module never hides the download or blocks the demo', async ({
-  page,
-}, testInfo) => {
-  test.skip(
-    testInfo.project.name !== 'chromium',
-    'The deterministic WebGL fault scenarios run in Chromium.',
-  );
-  await allowSoftwareWebGL(page);
-  await page.route(threeChunk, (route) => route.abort('failed'));
-  await page.goto('/');
-  await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
-  await expectDownload(page);
-  await page.locator('#experience').scrollIntoViewIfNeeded();
-  await page.locator('[data-point-preset="left"]').click();
-  await page.locator('[data-record]').click();
-  await expect(page.locator('[data-blue-score]')).toHaveText('8');
-});
+test(
+  'a failed 3D module never hides the download or blocks the demo',
+  { tag: '@webgl' },
+  async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'The deterministic WebGL fault scenarios run in Chromium.',
+    );
+    await allowSoftwareWebGL(page);
+    await page.route(threeChunk, (route) => route.abort('failed'));
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
+    await expectDownload(page);
+    await page.locator('#experience').scrollIntoViewIfNeeded();
+    await page.locator('[data-point-preset="left"]').click();
+    await page.locator('[data-record]').click();
+    await expect(page.locator('[data-blue-score]')).toHaveText('8');
+  },
+);
 
 test(
   'a missing court texture keeps the introduction, download and scoring usable',
-  { lock: 'webgl-renderer' },
+  { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
@@ -466,7 +490,7 @@ test(
 
 test(
   'slow court textures time out without late 3D activation',
-  { lock: 'webgl-renderer' },
+  { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
@@ -506,42 +530,44 @@ test(
   },
 );
 
-test('slow 3D initialization gives up after eight seconds and does not activate late', async ({
-  page,
-}, testInfo) => {
-  test.skip(
-    testInfo.project.name !== 'chromium',
-    'The deterministic WebGL fault scenarios run in Chromium.',
-  );
-  await allowSoftwareWebGL(page);
-  let blocked = false;
-  let release: () => void = () => {};
-  const gate = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  await page.route(threeChunk, async (route) => {
-    blocked = true;
-    await gate;
-    await route.continue().catch(() => {});
-  });
-  try {
-    await page.goto('/', { waitUntil: 'domcontentloaded' });
-    await expect.poll(() => blocked).toBe(true);
-    await expectDownload(page);
-    await expect(page.locator('html')).toHaveAttribute('data-scene', '2d', {
-      timeout: 11_000,
+test(
+  'slow 3D initialization gives up after eight seconds and does not activate late',
+  { tag: '@webgl' },
+  async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'The deterministic WebGL fault scenarios run in Chromium.',
+    );
+    await allowSoftwareWebGL(page);
+    let blocked = false;
+    let release: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
     });
-    release();
-    await page.waitForLoadState('networkidle');
-    await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
-  } finally {
-    release();
-  }
-});
+    await page.route(threeChunk, async (route) => {
+      blocked = true;
+      await gate;
+      await route.continue().catch(() => {});
+    });
+    try {
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
+      await expect.poll(() => blocked).toBe(true);
+      await expectDownload(page);
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '2d', {
+        timeout: 11_000,
+      });
+      release();
+      await page.waitForLoadState('networkidle');
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
+    } finally {
+      release();
+    }
+  },
+);
 
 test(
   'a desktop scene cleans up on context loss and remains usable after resizing',
-  { lock: 'webgl-renderer' },
+  { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
@@ -590,7 +616,7 @@ test(
 
 test(
   'a shot recorded while 3D loads survives scene initialization and system motion changes',
-  { lock: 'webgl-renderer' },
+  { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
@@ -636,7 +662,7 @@ test(
 
 test(
   'court remains antialiased and interactive without HDR multisampling',
-  { lock: 'webgl-renderer' },
+  { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ browser }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
@@ -713,7 +739,7 @@ test(
 for (const scale of [1, 2]) {
   test(
     `court rendering at ${scale}x density antialiases its actual scene buffer`,
-    { lock: 'webgl-renderer' },
+    { tag: '@webgl', lock: 'webgl-renderer' },
     async ({ browser }, testInfo) => {
       test.skip(
         testInfo.project.name !== 'chromium',
@@ -884,7 +910,7 @@ for (const scale of [1, 2]) {
 
 test(
   'system motion preferences keep the same court, stop idle drawing and resume animation',
-  { lock: 'webgl-renderer' },
+  { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
@@ -956,7 +982,7 @@ test(
 
 test(
   'resetting a desktop shot clears its score and its animated location',
-  { lock: 'webgl-renderer' },
+  { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
@@ -991,7 +1017,7 @@ test(
 
 test(
   'a desktop scene is removed when the layout becomes mobile',
-  { lock: 'webgl-renderer' },
+  { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
@@ -1014,7 +1040,7 @@ test(
 
 test(
   'a hidden desktop page stops rendering and resumes when visible',
-  { lock: 'webgl-renderer' },
+  { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
