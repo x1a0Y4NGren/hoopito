@@ -1324,7 +1324,7 @@
         },
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a11189c87f64a791c9d57fe5c72599878f092a2520b64e09c85d48efe294bd93"
+          "sha256": "32d5e66e36c641403f5f94474f1d4fd68e23743cc8284532e124914cfda0f274"
         },
         {
           "path": "src/scripts/scene-contract.ts",

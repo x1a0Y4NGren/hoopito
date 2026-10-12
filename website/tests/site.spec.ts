@@ -77,6 +77,93 @@ test('cinematic stages unpin cleanly when the viewport or system motion changes'
   await expect(page.locator('.download-package')).toBeInViewport();
 });
 
+test('rapid system motion changes restore cinematic stages even within one clock tick', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      type: string,
+      ...args: unknown[]
+    ) {
+      return type === 'webgl2'
+        ? null
+        : Reflect.apply(original, this, [type, ...args]);
+    } as typeof original;
+  });
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+
+  // Coarse browser clocks can give successive media events the same timestamp.
+  // Keep real RAF/timers running; only make GSAP's media-event clock coincide.
+  await page.evaluate(() => {
+    const original = Date.now;
+    const tick = original() + 10;
+    Date.now = () => tick;
+    Object.assign(window, {
+      restoreMotionClock: () => {
+        Date.now = original;
+      },
+    });
+  });
+  try {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('.pin-spacer')).toHaveCount(0);
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) => requestAnimationFrame(() => resolve())),
+    );
+  } finally {
+    await page.evaluate(() => {
+      (
+        window as typeof window & { restoreMotionClock: () => void }
+      ).restoreMotionClock();
+    });
+  }
+  await expect(page.locator('.pin-spacer')).toHaveCount(3, { timeout: 5_000 });
+  await expect(page.locator('[data-hero-line]').first()).toHaveCSS(
+    'opacity',
+    '1',
+  );
+  await page.locator('.nav-download').click();
+  await expect(page.locator('.download-package')).toBeInViewport();
+  expect(errors).toEqual([]);
+});
+
+test('a pending desktop resize keeps native download navigation on target', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      type: string,
+      ...args: unknown[]
+    ) {
+      return type === 'webgl2'
+        ? null
+        : Reflect.apply(original, this, [type, ...args]);
+    } as typeof original;
+  });
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await page.setViewportSize({ width: 1439, height: 900 });
+  await page.locator('.nav-download').evaluate((link: HTMLAnchorElement) => {
+    link.click();
+  });
+  await expect(page).toHaveURL(/#download$/);
+  await expect(page.locator('.download-package')).toBeInViewport({
+    timeout: 5_000,
+  });
+  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+});
+
 async function expectDownload(page: Page) {
   await expect(page.locator('[data-download]').first()).toBeVisible();
   for (const link of await page.locator('[data-download]').all()) {

@@ -280,7 +280,54 @@ function updateStory() {
 }
 let scrollFrame = 0;
 let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+let motionTimer: ReturnType<typeof setTimeout> | undefined;
+let choreographyReduced = reduced();
 let openingPlayed = false;
+let recentAnchor: { element: HTMLElement; expires: number } | undefined;
+document.addEventListener('click', (event) => {
+  if (event.button || event.metaKey || event.ctrlKey || event.shiftKey) return;
+  const link =
+    event.target instanceof Element
+      ? event.target.closest<HTMLAnchorElement>('a[href^="#"]')
+      : null;
+  const element = link?.hash
+    ? document.getElementById(link.hash.slice(1))
+    : null;
+  if (element) recentAnchor = { element, expires: performance.now() + 2_000 };
+});
+for (const input of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
+  window.addEventListener(input, () => (recentAnchor = undefined), {
+    passive: true,
+  });
+}
+function resumeAnchorNavigation() {
+  // Refresh restores scroll positions and can cancel a native smooth anchor
+  // scroll. Continue only the recent navigation; manual input cancels this intent.
+  if (
+    recentAnchor &&
+    performance.now() < recentAnchor.expires &&
+    location.hash === `#${recentAnchor.element.id}`
+  )
+    recentAnchor.element.scrollIntoView({
+      behavior: reduced() ? 'instant' : 'smooth',
+      block: 'start',
+    });
+}
+function needsChoreographyRefresh() {
+  if (choreographyReduced !== reduced()) return true;
+  if (reduced()) return stages.size > 0;
+  return (['hero', 'scoring', 'replay'] as const).some((chapter) => {
+    const stage = document.querySelector<HTMLElement>(
+      `[data-story-stage="${chapter}"]`,
+    );
+    const trigger = stages.get(chapter)?.trigger;
+    const shouldPin =
+      desktop.matches &&
+      !!stage &&
+      stage.scrollHeight <= window.innerHeight - 50;
+    return !trigger || Boolean(trigger.pin) !== shouldPin;
+  });
+}
 function onScroll() {
   if (!scrollFrame)
     scrollFrame = requestAnimationFrame(() => {
@@ -296,8 +343,11 @@ window.addEventListener(
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       if (!disposed) {
-        gsap.matchMediaRefresh();
+        // Media changes already rebuild the stage. A same-mode resize only
+        // needs new measurements unless text growth changed pin eligibility.
+        if (needsChoreographyRefresh()) gsap.matchMediaRefresh();
         ScrollTrigger.refresh();
+        resumeAnchorNavigation();
         updateStory();
       }
     }, 200);
@@ -320,6 +370,7 @@ choreography.add(
   },
   (context) => {
     const { desktop: isDesktop, reduce } = context.conditions!;
+    choreographyReduced = Boolean(reduce);
     stages.clear();
     if (reduce) return;
     if (!openingPlayed) {
@@ -453,7 +504,21 @@ choreography.add(
     };
   },
 );
-systemMotion.addEventListener('change', applyMotion);
+systemMotion.addEventListener('change', () => {
+  applyMotion();
+  clearTimeout(motionTimer);
+  // GSAP can coalesce media events within one clock tick. Reconcile a missed
+  // final preference after the burst, without rebuilding already-correct stages
+  // during a user's anchor navigation or replaying the opening animation.
+  motionTimer = setTimeout(() => {
+    if (!disposed && needsChoreographyRefresh()) {
+      gsap.matchMediaRefresh();
+      ScrollTrigger.refresh();
+      resumeAnchorNavigation();
+      updateStory();
+    }
+  }, 200);
+});
 desktop.addEventListener('change', () => {
   if (desktop.matches) void startScene();
   else stopScene();
@@ -483,6 +548,7 @@ window.addEventListener('pagehide', (event) => {
   choreography.revert();
   cancelAnimationFrame(scrollFrame);
   clearTimeout(resizeTimer);
+  clearTimeout(motionTimer);
 });
 window.addEventListener('pageshow', () => scene?.setPaused(document.hidden));
 applyMotion();
