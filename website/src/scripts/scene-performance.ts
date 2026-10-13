@@ -12,6 +12,7 @@ export interface ActiveSample {
 /** Wall-clock idle gaps never become evidence for reducing active animation quality. */
 export class ActiveFrameMonitor {
   quality: SceneQuality = 'full';
+  qualityCeiling: SceneQuality = 'full';
   private previous: number | null = null;
   private idleSince: number | null = null;
   private activeElapsed = 0;
@@ -81,7 +82,7 @@ export class ActiveFrameMonitor {
       sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * 0.95))]!;
     this.window = 0;
     this.samples.length = 0;
-    this.slow = average > 18.5 || p95 > 23 ? this.slow + 1 : 0;
+    this.slow = average > 1000 / 58 || p95 > 20 ? this.slow + 1 : 0;
     this.fast = average <= 16.9 && p95 <= 18.5 ? this.fast + 1 : 0;
     let index = tiers.indexOf(this.quality);
     let changed = false;
@@ -92,7 +93,11 @@ export class ActiveFrameMonitor {
     ) {
       index += 1;
       changed = true;
-    } else if (this.fast >= 4 && index > 0 && now - this.changedAt >= 15_000) {
+    } else if (
+      this.fast >= 4 &&
+      index > tiers.indexOf(this.qualityCeiling) &&
+      now - this.changedAt >= 15_000
+    ) {
       index -= 1;
       changed = true;
     }

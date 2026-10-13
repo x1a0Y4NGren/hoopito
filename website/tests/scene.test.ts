@@ -1,6 +1,31 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+test('fast low-tier frames cannot promote beyond the prepared GPU budget', async () => {
+  const { ActiveFrameMonitor } =
+    await import('../src/scripts/scene-performance.ts');
+  const monitor = new ActiveFrameMonitor();
+  monitor.quality = 'density';
+  monitor.qualityCeiling = 'density';
+  for (let now = 0; now < 32000; now += 9) monitor.observe(now, true);
+  assert.equal(monitor.quality, 'density');
+  monitor.reset();
+  for (let now = 33000; now < 65000; now += 9) monitor.observe(now, true);
+  assert.equal(monitor.quality, 'density');
+});
+
+test('sustained tail latency above twenty milliseconds lowers quality despite a fast average', async () => {
+  const { ActiveFrameMonitor } =
+    await import('../src/scripts/scene-performance.ts');
+  const monitor = new ActiveFrameMonitor();
+  let now = 0;
+  for (let frame = 0; now < 5000; frame++) {
+    now += frame % 10 === 0 ? 21 : 16.5;
+    monitor.observe(now, true);
+  }
+  assert.equal(monitor.quality, 'effects');
+});
+
 test('chapter camera endpoints join without a jump and invalid progress cannot poison a pose', async () => {
   const { storyPose } = await import('../src/scripts/story-pose.ts');
   const chapters = [

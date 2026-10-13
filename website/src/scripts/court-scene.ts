@@ -755,6 +755,9 @@ export async function createCourtScene(
       }
       canvas.dataset.calibration = JSON.stringify(calibration);
       monitor.quality = quality;
+      // A faster low-tier frame does not prove a more expensive tier fits.
+      // Keep upgrades within the independently measured prepared-draw budget.
+      monitor.qualityCeiling = quality;
       monitor.reset();
     }
     if (disposed || failed || options.signal.aborted)

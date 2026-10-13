@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "captured_at": "2026-10-13T10:31:15.036Z",
+  "captured_at": "2026-10-13T11:10:18.395Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "browser": "155.0.8059.40",
   "source_inputs": [
     {
       "path": "src/scripts/court-scene.ts",
-      "sha256": "fd55595d5112e78afdcf9331f4e92fd702fee42ef3c6a67454945ecbecb9d16a"
+      "sha256": "f8d1481fbe73b5f51f4e7ab2a92ecd47acdbecf01e66d0fba3440e55ee80ab80"
     },
     {
       "path": "src/scripts/court-hardware.ts",
@@ -30,7 +30,7 @@
     },
     {
       "path": "src/scripts/scene-performance.ts",
-      "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+      "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
     },
     {
       "path": "src/scripts/gpu-calibration.ts",

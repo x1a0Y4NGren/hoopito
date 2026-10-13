@@ -401,19 +401,22 @@ try {
           ]
         : []),
     ];
-    const browser = await chromium.launch({
-      ...(platform() === 'win32'
-        ? {
-            executablePath:
-              process.env.HOOPITO_CHROME_PATH ??
-              'C:/Program Files/Google/Chrome/Application/chrome.exe',
-          }
-        : { channel: 'chrome' }),
-      headless,
-      args,
-    });
-    try {
-      for (const viewport of viewports) {
+    // Isolate each backing-buffer configuration in a fresh GPU process. Reusing
+    // native windows produced one-second RAF stalls on this hybrid AMD/NVIDIA
+    // host even while document.visibilityState remained visible.
+    for (const viewport of viewports) {
+      const browser = await chromium.launch({
+        ...(platform() === 'win32'
+          ? {
+              executablePath:
+                process.env.HOOPITO_CHROME_PATH ??
+                'C:/Program Files/Google/Chrome/Application/chrome.exe',
+            }
+          : { channel: 'chrome' }),
+        headless,
+        args,
+      });
+      try {
         const context = await browser.newContext({
           viewport: { width: viewport.width, height: viewport.height },
           deviceScaleFactor: viewport.dpr,
@@ -651,9 +654,9 @@ try {
         } finally {
           await context.close();
         }
+      } finally {
+        await browser.close();
       }
-    } finally {
-      await browser.close();
     }
   }
   report.passes =

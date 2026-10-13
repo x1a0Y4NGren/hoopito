@@ -309,12 +309,12 @@
       "source": "website/assets/art/source/scene-poster-compact.webp",
       "source_sha256": "b0d54afcd7b812bd5f856af08145ffa9b374464c493891e1521faeeba2ea3946",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "ae7adf7dc2a4612d94140fb26e2247bf1a704855e8f416f4fef5860247f3cad9",
+      "capture_record_sha256": "6b65b935c00477c765708425ebe3fc58e7bd4018c206ee869518709e0a95a774",
       "captured_with": "155.0.8059.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "fd55595d5112e78afdcf9331f4e92fd702fee42ef3c6a67454945ecbecb9d16a"
+          "sha256": "f8d1481fbe73b5f51f4e7ab2a92ecd47acdbecf01e66d0fba3440e55ee80ab80"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -338,7 +338,7 @@
         },
         {
           "path": "src/scripts/scene-performance.ts",
-          "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
         },
         {
           "path": "src/scripts/gpu-calibration.ts",
@@ -403,12 +403,12 @@
       "source": "website/assets/art/source/scene-poster-standard.webp",
       "source_sha256": "2b8a169467994ec49c00f2f82c727ed351292f60b1c6b0229a88c420b1ce48e1",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "ae7adf7dc2a4612d94140fb26e2247bf1a704855e8f416f4fef5860247f3cad9",
+      "capture_record_sha256": "6b65b935c00477c765708425ebe3fc58e7bd4018c206ee869518709e0a95a774",
       "captured_with": "155.0.8059.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "fd55595d5112e78afdcf9331f4e92fd702fee42ef3c6a67454945ecbecb9d16a"
+          "sha256": "f8d1481fbe73b5f51f4e7ab2a92ecd47acdbecf01e66d0fba3440e55ee80ab80"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -432,7 +432,7 @@
         },
         {
           "path": "src/scripts/scene-performance.ts",
-          "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
         },
         {
           "path": "src/scripts/gpu-calibration.ts",
@@ -497,12 +497,12 @@
       "source": "website/assets/art/source/scene-poster-wide.webp",
       "source_sha256": "a5386b1e67c1f7acb0fccc585460bb8808448cf91b01dd87f287599a7dd997e7",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "ae7adf7dc2a4612d94140fb26e2247bf1a704855e8f416f4fef5860247f3cad9",
+      "capture_record_sha256": "6b65b935c00477c765708425ebe3fc58e7bd4018c206ee869518709e0a95a774",
       "captured_with": "155.0.8059.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "fd55595d5112e78afdcf9331f4e92fd702fee42ef3c6a67454945ecbecb9d16a"
+          "sha256": "f8d1481fbe73b5f51f4e7ab2a92ecd47acdbecf01e66d0fba3440e55ee80ab80"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -526,7 +526,7 @@
         },
         {
           "path": "src/scripts/scene-performance.ts",
-          "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
         },
         {
           "path": "src/scripts/gpu-calibration.ts",
@@ -1506,7 +1506,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "fd55595d5112e78afdcf9331f4e92fd702fee42ef3c6a67454945ecbecb9d16a"
+          "sha256": "f8d1481fbe73b5f51f4e7ab2a92ecd47acdbecf01e66d0fba3440e55ee80ab80"
         },
         {
           "path": "src/scripts/court-textures.ts",
@@ -1534,7 +1534,7 @@
         },
         {
           "path": "src/scripts/scene-performance.ts",
-          "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
         },
         {
           "path": "src/scripts/screenshot-viewer.ts",
