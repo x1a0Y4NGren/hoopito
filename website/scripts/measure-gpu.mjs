@@ -182,7 +182,7 @@ const report = {
     ? 'Headless auxiliary test; renderer-verified WebGL scene-render submission cadence. Does not satisfy headed display acceptance.'
     : 'Headed installed Chrome, isolated temporary profiles, verified WebGL UNMASKED_RENDERER. Frame intervals come from renderCount mutations after composer.render() returns during active animation. This measures main-thread scene-render submission cadence, not GPU completion or idle requestAnimationFrame loops. A separate browser compositor trace is retained as diagnostic evidence.',
   limits:
-    'WebGL submission uses the named GPU, but JavaScript render() return and MutationObserver timestamps do not prove GPU command completion, presentation, or physical monitor scanout. Viewport and deviceScaleFactor are browser emulation settings; a DPR2 sample proves a larger backing buffer, not a physically Retina monitor. Trace profiling is separate from threshold samples to avoid profiling overhead.',
+    'WebGL submission uses the named GPU, but JavaScript render() return and MutationObserver timestamps do not prove GPU command completion, presentation, or physical monitor scanout. Viewport and deviceScaleFactor are browser emulation settings; a DPR2 sample proves a larger backing buffer, not a physically Retina monitor. All threshold samples finish before diagnostic traces start, and every trace uses a separate browser process.',
   targets: { averageFps: 58, p95FrameMs: 20 },
   samples: [],
   traces: [],
@@ -370,6 +370,7 @@ async function traceCompositor(browser, page, gpuName, viewport) {
   );
   report.traces.push({
     gpu: gpuName,
+    renderer: await page.locator('#court-canvas').getAttribute('data-renderer'),
     viewport,
     file,
     bytes: bytes.length,
@@ -381,6 +382,22 @@ async function traceCompositor(browser, page, gpuName, viewport) {
   });
   await session.detach();
 }
+
+function launchBrowser(args) {
+  return chromium.launch({
+    ...(platform() === 'win32'
+      ? {
+          executablePath:
+            process.env.HOOPITO_CHROME_PATH ??
+            'C:/Program Files/Google/Chrome/Application/chrome.exe',
+        }
+      : { channel: 'chrome' }),
+    headless,
+    args,
+  });
+}
+
+const diagnosticTraces = [];
 
 try {
   for (const target of gpuTargets) {
@@ -401,21 +418,11 @@ try {
           ]
         : []),
     ];
-    // Isolate each backing-buffer configuration in a fresh GPU process. Reusing
-    // native windows produced one-second RAF stalls on this hybrid AMD/NVIDIA
-    // host even while document.visibilityState remained visible.
+    // Isolate each backing-buffer configuration in a fresh GPU process. Prior
+    // sequential runs stalled after a trace pass while visibility stayed visible.
+    // Keep profiling out of the entire threshold matrix, including later samples.
     for (const viewport of viewports) {
-      const browser = await chromium.launch({
-        ...(platform() === 'win32'
-          ? {
-              executablePath:
-                process.env.HOOPITO_CHROME_PATH ??
-                'C:/Program Files/Google/Chrome/Application/chrome.exe',
-            }
-          : { channel: 'chrome' }),
-        headless,
-        args,
-      });
+      const browser = await launchBrowser(args);
       try {
         const context = await browser.newContext({
           viewport: { width: viewport.width, height: viewport.height },
@@ -609,17 +616,7 @@ try {
             (viewport.width === 1440 && viewport.dpr === 1) ||
             (viewport.width === 1920 && viewport.dpr === 2)
           ) {
-            try {
-              await traceCompositor(browser, page, target.name, viewport);
-            } catch (error) {
-              report.traces.push({
-                gpu: target.name,
-                viewport,
-                error: error.message,
-                limitation:
-                  'Diagnostic compositor trace failed; untraced scene-frame samples above remain available.',
-              });
-            }
+            diagnosticTraces.push({ target, viewport, args });
           }
           await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
         } catch (error) {
@@ -628,6 +625,7 @@ try {
             ?.evaluate(() => ({
               hidden: document.hidden,
               visibility: document.visibilityState,
+              focus: document.hasFocus(),
               root: { ...document.documentElement.dataset },
               demo: document.querySelector('[data-demo]')?.dataset.demoPhase,
               canvas: { ...document.querySelector('#court-canvas')?.dataset },
@@ -657,6 +655,54 @@ try {
       } finally {
         await browser.close();
       }
+    }
+  }
+
+  // Diagnostic profiling cannot affect a subsequent acceptance sample.
+  for (const { target, viewport, args } of diagnosticTraces) {
+    let browser;
+    try {
+      browser = await launchBrowser(args);
+      const page = await browser.newPage({
+        viewport: { width: viewport.width, height: viewport.height },
+        deviceScaleFactor: viewport.dpr,
+        reducedMotion: 'no-preference',
+      });
+      await page.bringToFront();
+      await page.goto(`${origin}/`, { waitUntil: 'load' });
+      await page.waitForFunction(
+        () => document.documentElement.dataset.scene === '3d',
+        null,
+        { timeout: 15000 },
+      );
+      const renderer = await page
+        .locator('#court-canvas')
+        .getAttribute('data-renderer');
+      if (
+        !renderer ||
+        /SwiftShader|software|llvmpipe/i.test(renderer) ||
+        !target.expression.test(renderer)
+      )
+        throw new Error(
+          `Diagnostic renderer does not match ${target.name}: ${renderer}`,
+        );
+      await page.waitForFunction(
+        () =>
+          document.querySelector('#court-canvas').dataset.rendering === 'idle',
+        null,
+        { timeout: 10000 },
+      );
+      await traceCompositor(browser, page, target.name, viewport);
+    } catch (error) {
+      report.traces.push({
+        gpu: target.name,
+        viewport,
+        error: error.message,
+        limitation:
+          'Diagnostic compositor trace failed; untraced scene-frame samples above remain available.',
+      });
+    } finally {
+      await browser?.close();
     }
   }
   report.passes =
