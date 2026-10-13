@@ -187,6 +187,7 @@ const report = {
   samples: [],
   traces: [],
   unavailable: [],
+  failures: [],
 };
 
 function summarize(events) {
@@ -420,6 +421,10 @@ try {
         });
         try {
           const page = await context.newPage();
+          // Each browser context opens a new native window. Explicitly activate
+          // it before measuring; hidden pages intentionally suspend the demo.
+          await page.bringToFront();
+          await page.waitForFunction(() => !document.hidden);
           const errors = [];
           page.on('pageerror', (error) => errors.push(error.message));
           await page.addInitScript(() => {
@@ -614,6 +619,35 @@ try {
             }
           }
           await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+        } catch (error) {
+          const page = context.pages().at(-1);
+          const state = await page
+            ?.evaluate(() => ({
+              hidden: document.hidden,
+              visibility: document.visibilityState,
+              root: { ...document.documentElement.dataset },
+              demo: document.querySelector('[data-demo]')?.dataset.demoPhase,
+              canvas: { ...document.querySelector('#court-canvas')?.dataset },
+            }))
+            .catch(() => null);
+          report.failures.push({
+            gpu: target.name,
+            viewport,
+            error: error.message,
+            state,
+          });
+          await page
+            ?.screenshot({
+              path: resolve(
+                output,
+                `${target.name}-${viewport.width}-${viewport.dpr}x-failed.png`,
+              ),
+            })
+            .catch(() => {});
+          await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+          console.log(
+            `${target.name} ${viewport.width} ${viewport.dpr}x: FAILED ${error.message}; state ${JSON.stringify(state)}`,
+          );
         } finally {
           await context.close();
         }
@@ -625,6 +659,7 @@ try {
   report.passes =
     report.samples.length > 0 &&
     report.unavailable.length === 0 &&
+    report.failures.length === 0 &&
     report.samples.every((sample) => sample.passes);
   await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
   console.log(`Evidence: ${output}`);
