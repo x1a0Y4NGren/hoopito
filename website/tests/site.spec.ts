@@ -62,6 +62,7 @@ test(
     await page.addStyleTag({
       content: 'html {scroll-behavior:auto !important}',
     });
+    await page.evaluate(() => document.fonts.ready);
     await page.evaluate(() => {
       const items = [
         ...document.querySelectorAll<HTMLElement>('body *'),
@@ -91,7 +92,31 @@ test(
         const samples: StoryFrame[] = [];
         for (const offset of [-2 * direction, 2 * direction]) {
           await page.evaluate((y) => window.scrollTo(0, y), cut + offset);
-          await page.waitForTimeout(750);
+          const previous = {
+            scoring: 'hero',
+            experience: 'scoring',
+            replay: 'experience',
+          };
+          const expectedChapter =
+            offset < 0 ? previous[chapter as keyof typeof previous] : chapter;
+          // Software rendering can delay the scroll RAF beyond a fixed sleep.
+          // Wait for the actual chapter boundary, while still requiring the
+          // shared endpoint pose rather than accepting a stale camera sample.
+          await expect(page.locator('#court-canvas')).toHaveAttribute(
+            'data-chapter',
+            expectedChapter,
+          );
+          await expect
+            .poll(async () =>
+              Number(
+                await page
+                  .locator('#court-canvas')
+                  .getAttribute('data-story-progress'),
+              ),
+            )
+            [offset < 0 ? 'toBeGreaterThan' : 'toBeLessThan'](
+              offset < 0 ? 0.99 : 0.01,
+            );
           samples.push(
             (await page.locator('#court-canvas').evaluate((e) => ({
               chapter: (e as HTMLElement).dataset.chapter,
@@ -1243,8 +1268,11 @@ test(
       await page.locator('[data-point-preset="left"]').click();
       await page.locator('[data-record]').click();
       await expect(page.locator('[data-blue-score]')).toHaveText('8');
-      await expect(page.locator('[data-demo-marker]')).toBeVisible();
+      // Release once a shot exists during loading. Artificially withholding the
+      // module for the entire flight leaves insufficient shader-compile time
+      // on CI; the real eight-second fallback deadline must stay unchanged.
       release();
+      await expect(page.locator('[data-demo-marker]')).toBeVisible();
       await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
       await expect(page.locator('[data-blue-score]')).toHaveText('8');
       await expect(page.locator('[data-record]')).toBeDisabled();
