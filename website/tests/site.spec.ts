@@ -103,7 +103,22 @@ for (const locale of locales) {
           Math.max(...samples.map((sample) => sample.delta)),
           name,
         ).toBeLessThan(0.5);
-        expect(samples.at(-1)!.scale).toBeCloseTo(1, 2);
+        // A busy software-rendered CI clock may still be animating after the
+        // sample window. Keep the frame alignment assertion, then observe the
+        // actual settled state rather than assuming wall time equals GSAP time.
+        await expect
+          .poll(() =>
+            selection.evaluate((element) => {
+              const halo = element
+                .querySelector<SVGCircleElement>('.aim-halo')!
+                .getScreenCTM()!;
+              const dot = element
+                .querySelector<SVGCircleElement>('circle[r="4"]')!
+                .getScreenCTM()!;
+              return Math.hypot(halo.a, halo.b) / Math.hypot(dot.a, dot.b);
+            }),
+          )
+          .toBeCloseTo(1, 2);
       };
       await page.locator('[data-point-preset="center"]').click();
       await sampleAlignment('center preset: animated and settled');
@@ -281,7 +296,7 @@ test('native stage distances and reverse jumps leave replay upright and download
   await page.addStyleTag({ content: 'html {scroll-behavior:auto !important}' });
   for (const [chapter, extra] of [
     ['hero', 0.75],
-    ['scoring', 1],
+    ['scoring', 0.65],
     ['replay', 0.75],
   ] as const) {
     const range = await page
@@ -513,12 +528,39 @@ test('net rebound continues after a recorded marker and reset restores its ancho
   await page.goto('/');
   const weave = page.locator('[data-net-weave]');
   const resting = await weave.getAttribute('d');
+  await page.evaluate((resting) => {
+    const marker = document.querySelector('[data-demo-marker]')!;
+    const weave = document.querySelector('[data-net-weave]')!;
+    Reflect.set(window, 'hoopitoRecordedNet', null);
+    const observer = new MutationObserver(() => {
+      if (
+        !marker.hasAttribute('hidden') &&
+        weave.getAttribute('d') !== resting
+      ) {
+        // The recoil crosses its neutral pose at the exact marker threshold.
+        // Observe a subsequent moving pose, before a driver round trip can
+        // return after the entire recoil has finished.
+        Reflect.set(window, 'hoopitoRecordedNet', weave.getAttribute('d'));
+        observer.disconnect();
+      }
+    });
+    observer.observe(marker.parentElement!, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['hidden', 'd'],
+    });
+  }, resting);
   await page.locator('[data-point-preset="center"]').click();
   await page.locator('[data-record]').click();
   await expect(page.locator('[data-demo-marker]')).not.toHaveAttribute(
     'hidden',
   );
-  await expect(weave).not.toHaveAttribute('d', resting!);
+  await expect
+    .poll(() => page.evaluate(() => Reflect.get(window, 'hoopitoRecordedNet')))
+    .not.toBeNull();
+  expect(
+    await page.evaluate(() => Reflect.get(window, 'hoopitoRecordedNet')),
+  ).not.toBe(resting!);
   await page.locator('[data-reset]').click();
   await expect(page.locator('[data-blue-score]')).toHaveText('6');
   await expect(weave).toHaveAttribute('d', resting!);
@@ -586,13 +628,36 @@ test('scoring feature emphasis follows scroll and retains manual focus only unti
       );
     }, progress);
   };
-  await seek(0.3);
+  await seek(0.05);
   await expect(page.locator('[data-story-device]')).toHaveAttribute(
     'data-score-focus',
     '0',
   );
+  await expect(page.locator('[data-score-step]')).toHaveText('01 / 03');
+  // Merely tabbing into a feature must not freeze the automatic guide.
+  await page.locator('[data-score-feature="2"]').focus();
+  await seek(0.5);
+  await expect(page.locator('[data-story-device]')).toHaveAttribute(
+    'data-score-focus',
+    '1',
+  );
+  await expect(page.locator('[data-score-resume]')).toBeHidden();
   await page.locator('[data-score-feature="2"]').click();
   await seek(0.5);
+  await expect(page.locator('[data-story-device]')).toHaveAttribute(
+    'data-score-focus',
+    '2',
+  );
+  await expect(page.locator('[data-score-step]')).toHaveText('03 / 03');
+  await expect(page.locator('[data-score-resume]')).toBeVisible();
+  await page.locator('[data-score-resume]').click();
+  await expect(page.locator('[data-story-device]')).toHaveAttribute(
+    'data-score-focus',
+    '1',
+  );
+  await expect(page.locator('[data-score-resume]')).toBeHidden();
+  await expect(page.locator('[data-score-feature="1"]')).toBeFocused();
+  await seek(1);
   await expect(page.locator('[data-story-device]')).toHaveAttribute(
     'data-score-focus',
     '2',
@@ -608,6 +673,62 @@ test('scoring feature emphasis follows scroll and retains manual focus only unti
     '1',
   );
 });
+
+for (const locale of locales) {
+  test(`${locale.lang}: scoring guide names the marked operation and keeps mobile selection readable`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`${locale.path}#scoring`);
+    const controls = page.locator('[data-score-controls]');
+    await expect(controls).toHaveAttribute('data-guide-mode', 'click');
+    for (const index of [0, 1, 2]) {
+      const feature = page.locator(`[data-score-feature="${index}"]`);
+      await feature.focus();
+      await page.keyboard.press(index === 2 ? 'Space' : 'Enter');
+      await expect(feature).toHaveAttribute('aria-pressed', 'true');
+      await expect(page.locator('[data-score-current]')).toHaveText(
+        (await feature.locator('strong').textContent())!,
+      );
+      await expect(page.locator('[data-score-step]')).toHaveText(
+        `0${index + 1} / 03`,
+      );
+      await expect(page.locator(`[data-score-region="${index}"]`)).toHaveCSS(
+        'opacity',
+        '1',
+      );
+      await expect(page.locator('[data-score-resume]')).toBeHidden();
+    }
+    await expectNoOverflow(page);
+  });
+  test(`${locale.lang}: scoring manual controls fit entirely below the desktop navigation`, async ({
+    page,
+  }) => {
+    await page.route(threeChunk, (route) => route.abort());
+    await page.goto(`${locale.path}#scoring`);
+    await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
+    await page
+      .locator('[data-story-stage="scoring"]')
+      .evaluate((e) =>
+        window.scrollTo(
+          0,
+          (Number((e as HTMLElement).dataset.storyStart) +
+            Number((e as HTMLElement).dataset.storyEnd)) /
+            2,
+        ),
+      );
+    await page.locator('[data-score-feature="2"]').click();
+    await expect(page.locator('[data-score-controls]')).toHaveAttribute(
+      'data-guide-mode',
+      'manual',
+    );
+    await expect(page.locator('[data-score-controls]')).toBeInViewport({
+      ratio: 1,
+    });
+    for (const button of await page.locator('[data-score-feature]').all())
+      await expect(button).toBeInViewport({ ratio: 1 });
+  });
+}
 
 for (const locale of locales) {
   test(`${locale.lang}: presentation screenshots preserve app-only dimensions and display proportions`, async ({

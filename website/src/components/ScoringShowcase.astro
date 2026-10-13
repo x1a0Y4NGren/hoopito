@@ -69,22 +69,51 @@ const src = `/screenshots/${locale}/scoring.webp`;
     </a>
   </figcaption>
 </figure>
-<div class="score-features" role="group" aria-label={c.scoring.explore}>
-  {c.scoring.features.map(([title, body], index) => (
-    <button
-      class="score-feature"
-      data-score-feature={index}
-      aria-pressed="false"
-      disabled
-    >
-      <span class="display feature-index">0{index + 1}</span>
-      <span>
-        <strong>{title}</strong>
-        <span class="feature-description">{body}</span>
+<div class="score-controls" data-score-controls>
+  <div class="score-guide">
+    <span class="score-current" aria-live="polite" aria-atomic="true">
+      <span class="display" data-score-step>
+        01 / 03
       </span>
-      <span class="feature-arrow" aria-hidden="true">
-        ↗
+      <strong data-score-current>{c.scoring.features[0][0]}</strong>
+    </span>
+    <div class="score-guide-actions">
+      <span
+        id="score-guide-hint"
+        class="score-guide-hint"
+        data-score-hint
+        data-scroll={c.scoring.guide.scroll}
+        data-click={c.scoring.guide.click}
+        data-manual={c.scoring.guide.manual}
+      >
+        {c.scoring.explore}
       </span>
-    </button>
-  ))}
+      <button class="score-resume" data-score-resume hidden>
+        {c.scoring.guide.resume}
+        <span aria-hidden="true">↓</span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="score-features"
+    role="group"
+    aria-label={c.scoring.explore}
+    aria-describedby="score-guide-hint"
+  >
+    {c.scoring.features.map(([title, body], index) => (
+      <button
+        class="score-feature"
+        data-score-feature={index}
+        aria-pressed="false"
+        disabled
+      >
+        <span class="display feature-index">0{index + 1}</span>
+        <span>
+          <strong>{title}</strong>
+          <span class="feature-description">{body}</span>
+        </span>
+        <span class="feature-indicator" aria-hidden="true"></span>
+      </button>
+    ))}
+  </div>
 </div>

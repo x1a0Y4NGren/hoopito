@@ -40,16 +40,23 @@ export function zoomView(
 export class ScoringFocus {
   private manual: number | undefined;
   private active = false;
+  get isManual() {
+    return this.manual !== undefined;
+  }
   choose(index: number) {
     this.manual = index;
     return index;
+  }
+  resume() {
+    this.manual = undefined;
   }
   update(progress: number, active: boolean): number | null {
     if (this.active && !active) this.manual = undefined;
     this.active = active;
     if (!active) return null;
     if (this.manual !== undefined) return this.manual;
-    if (progress < 0.25 || progress >= 0.85) return null;
-    return progress < 0.45 ? 0 : progress < 0.65 ? 1 : 2;
+    // Open with a useful explanation and keep the final operation visible
+    // through the reading pause; no unexplained blank state at either end.
+    return progress < 0.38 ? 0 : progress < 0.68 ? 1 : 2;
   }
 }

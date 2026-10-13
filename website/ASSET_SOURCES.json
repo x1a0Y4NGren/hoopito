@@ -304,13 +304,13 @@
     },
     {
       "output": "public/art/scene-poster-compact.webp",
-      "bytes": 21830,
-      "sha256": "1c2f75df9a5706d873e228432247240f81789e95af0171e8b7eb31bc272c1417",
+      "bytes": 21792,
+      "sha256": "a6f1752f7f40bb45638931a3ab08f3ede91b8d9106f3fa794a283c4da147d0b5",
       "source": "website/assets/art/source/scene-poster-compact.webp",
-      "source_sha256": "b0d54afcd7b812bd5f856af08145ffa9b374464c493891e1521faeeba2ea3946",
+      "source_sha256": "8d49af5a3950054288fcba91e8d67dbec1438f8840ad940dfaed0370c0288b10",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "c55f14f7ddc6dbd0b112bb17072f32c3eb393439863f5c24ffbaf0be64d1d2e6",
-      "captured_with": "155.0.8059.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "36b5599dc3147be3053a34272ad4badc3fafe30a146af63e7e2fb93065a106a1",
+      "captured_with": "155.0.8059.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
@@ -358,7 +358,7 @@
         },
         {
           "path": "src/styles/refinement.css",
-          "sha256": "6c5214e73221d98fd28bc1564f93f725e35d5066f53d61bcde87c2a4bb4f1752"
+          "sha256": "c2178092bda00de7b86545c46332978aeac9f30cd583b99c17e8e21525154370"
         },
         {
           "path": "src/components/Layout.astro",
@@ -398,13 +398,13 @@
     },
     {
       "output": "public/art/scene-poster-standard.webp",
-      "bytes": 33532,
-      "sha256": "6a051fc521794a54698f879199e6d45a7d7778df7883be4bbc847516ccf15932",
+      "bytes": 33250,
+      "sha256": "28a09ebb026224e10ea64005a6a6d3854b94b615cf7f1dccf827f5206d6e9301",
       "source": "website/assets/art/source/scene-poster-standard.webp",
-      "source_sha256": "2b8a169467994ec49c00f2f82c727ed351292f60b1c6b0229a88c420b1ce48e1",
+      "source_sha256": "e73bb43af91a973adfc7851fc6ed2df44a806b0c157d28c72b423a82debc82a4",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "c55f14f7ddc6dbd0b112bb17072f32c3eb393439863f5c24ffbaf0be64d1d2e6",
-      "captured_with": "155.0.8059.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "36b5599dc3147be3053a34272ad4badc3fafe30a146af63e7e2fb93065a106a1",
+      "captured_with": "155.0.8059.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
@@ -452,7 +452,7 @@
         },
         {
           "path": "src/styles/refinement.css",
-          "sha256": "6c5214e73221d98fd28bc1564f93f725e35d5066f53d61bcde87c2a4bb4f1752"
+          "sha256": "c2178092bda00de7b86545c46332978aeac9f30cd583b99c17e8e21525154370"
         },
         {
           "path": "src/components/Layout.astro",
@@ -492,13 +492,13 @@
     },
     {
       "output": "public/art/scene-poster-wide.webp",
-      "bytes": 51376,
-      "sha256": "4734cbf300f47a5d696b4b8df97e9356bd0532415226ecad0500e253f6d4fb94",
+      "bytes": 51024,
+      "sha256": "c3b57dc669efedf59befd8cac49b740a2c4006c1df5e2087a7422ed8c5b66b32",
       "source": "website/assets/art/source/scene-poster-wide.webp",
-      "source_sha256": "a5386b1e67c1f7acb0fccc585460bb8808448cf91b01dd87f287599a7dd997e7",
+      "source_sha256": "759dc5d48627417466311a195782edbb7f98636d3096d171e968c05c957a7fad",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "c55f14f7ddc6dbd0b112bb17072f32c3eb393439863f5c24ffbaf0be64d1d2e6",
-      "captured_with": "155.0.8059.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "36b5599dc3147be3053a34272ad4badc3fafe30a146af63e7e2fb93065a106a1",
+      "captured_with": "155.0.8059.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/court-scene.ts",
@@ -546,7 +546,7 @@
         },
         {
           "path": "src/styles/refinement.css",
-          "sha256": "6c5214e73221d98fd28bc1564f93f725e35d5066f53d61bcde87c2a4bb4f1752"
+          "sha256": "c2178092bda00de7b86545c46332978aeac9f30cd583b99c17e8e21525154370"
         },
         {
           "path": "src/components/Layout.astro",
@@ -895,8 +895,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 116284,
-      "sha256": "cc5e9a6bd7d5589821b934ac74fe386ae0e4810ef19f962428e465029730f31f",
+      "bytes": 117056,
+      "sha256": "c542b7c927235c89d2d6adb7c4d5673f6534151507a8a629fb4a0b3a2ae49e61",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -1030,6 +1030,7 @@
         20037,
         20043,
         20063,
+        20102,
         20107,
         20108,
         20110,
@@ -1049,7 +1050,6 @@
         20250,
         20256,
         20301,
-        20303,
         20307,
         20309,
         20316,
@@ -1128,7 +1128,6 @@
         21629,
         21644,
         21697,
-        21738,
         22120,
         22238,
         22270,
@@ -1275,6 +1274,8 @@
         28079,
         28165,
         28304,
+        28369,
+        28378,
         28436,
         28857,
         29255,
@@ -1357,6 +1358,7 @@
         35265,
         35268,
         35272,
+        35299,
         35302,
         35745,
         35748,
@@ -1418,6 +1420,7 @@
         38656,
         38754,
         39029,
+        39030,
         39304,
         39564,
         65288,
@@ -1454,7 +1457,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "b706a7d65172add2eca1ea4c676e95888c53829c8d860d41b93d649f30c82a7a"
+          "sha256": "2a3deb45ab7a4c10478e3bf645271d1b9c1bd042184205a5838cb43f2aa7d984"
         },
         {
           "path": "src/components/ScreenshotViewer.astro",
@@ -1462,7 +1465,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "158a46522135f85e46aac28e5aa25569ae342d2430005d56c40224f9d9678c20"
+          "sha256": "9112c2f1199d6e0e2c8c0f6a24edfb84e88a78023d9612abf8ca2cf840deb9c9"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -1522,11 +1525,11 @@
         },
         {
           "path": "src/scripts/main.ts",
-          "sha256": "d9f96dee7244cef72322abf1ae6702bf23272af7cc403b72de6db60b2cfa1496"
+          "sha256": "f8c1d0daea95fff95348855255fcabfc36a038a00d0f8fb512a8ac2b1996ddf1"
         },
         {
           "path": "src/scripts/presentation-state.ts",
-          "sha256": "f004611838d69175872d6cd47e4ca1c2b4a63fb4f467139fd2f82b4fef5650a0"
+          "sha256": "11611c289becabf518034135380e5b6964a620f765e748c8d096d30a5664f674"
         },
         {
           "path": "src/scripts/scene-contract.ts",
@@ -1610,7 +1613,7 @@
         },
         {
           "source": "website/public/fonts/noto-sc.woff2",
-          "sha256": "cc5e9a6bd7d5589821b934ac74fe386ae0e4810ef19f962428e465029730f31f"
+          "sha256": "c542b7c927235c89d2d6adb7c4d5673f6534151507a8a629fb4a0b3a2ae49e61"
         },
         {
           "source": "assets/fonts/BarlowCondensed-Medium.ttf",
