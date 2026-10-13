@@ -140,13 +140,20 @@ function choose(point: CourtPoint) {
     gsap.killTweensOf(halo);
     gsap.fromTo(
       halo,
-      { scale: 0.65, opacity: 0 },
+      {
+        // The halo lives inside the translated target group. Establish its
+        // local center before scaling; a later global svgOrigin leaves a
+        // smooth-origin translation behind even after scale returns to one.
+        transformOrigin: '50% 50%',
+        smoothOrigin: false,
+        scale: 0.65,
+        opacity: 0,
+      },
       {
         scale: 1,
         opacity: 1,
         duration: 0.5,
         ease: 'power2.out',
-        svgOrigin: '0 0',
       },
     );
   }

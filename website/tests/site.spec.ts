@@ -47,6 +47,83 @@ const locales = [
 ] as const;
 const threeChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
 
+for (const locale of locales) {
+  for (const width of [390, 1920]) {
+    test(`${locale.lang}: ${width}px aiming halo stays centered while selecting and resetting`, async ({
+      page,
+    }, testInfo) => {
+      await page.setViewportSize({ width, height: width === 390 ? 844 : 1080 });
+      // This regression concerns the interactive SVG, shared by both rendering
+      // paths; keep the decorative desktop renderer out of its frame sampling.
+      await page.route(threeChunk, (route) => route.abort());
+      await page.goto(`${locale.path}#experience`);
+      const selection = page.locator('[data-demo-selection]');
+      const sampleAlignment = async (name: string) => {
+        await expect(selection).not.toHaveAttribute('hidden');
+        const samples = await selection.evaluate(
+          (element) =>
+            new Promise<{ delta: number; scale: number }[]>((done) => {
+              const halo =
+                element.querySelector<SVGCircleElement>('.aim-halo')!;
+              const dot =
+                element.querySelector<SVGCircleElement>('circle[r="4"]')!;
+              const samples: { delta: number; scale: number }[] = [];
+              const started = performance.now();
+              const sample = () => {
+                const haloMatrix = halo.getScreenCTM()!;
+                const dotMatrix = dot.getScreenCTM()!;
+                const haloCenter = new DOMPoint(
+                  halo.cx.baseVal.value,
+                  halo.cy.baseVal.value,
+                ).matrixTransform(haloMatrix);
+                const targetCenter = new DOMPoint(
+                  dot.cx.baseVal.value,
+                  dot.cy.baseVal.value,
+                ).matrixTransform(dotMatrix);
+                samples.push({
+                  delta: Math.hypot(
+                    haloCenter.x - targetCenter.x,
+                    haloCenter.y - targetCenter.y,
+                  ),
+                  scale:
+                    Math.hypot(haloMatrix.a, haloMatrix.b) /
+                    Math.hypot(dotMatrix.a, dotMatrix.b),
+                });
+                if (performance.now() - started >= 650) done(samples);
+                else requestAnimationFrame(sample);
+              };
+              requestAnimationFrame(sample);
+            }),
+        );
+        await testInfo.attach(name, {
+          body: JSON.stringify(samples),
+          contentType: 'application/json',
+        });
+        expect(
+          Math.max(...samples.map((sample) => sample.delta)),
+          name,
+        ).toBeLessThan(0.5);
+        expect(samples.at(-1)!.scale).toBeCloseTo(1, 2);
+      };
+      await page.locator('[data-point-preset="center"]').click();
+      await sampleAlignment('center preset: animated and settled');
+      await page.locator('[data-point-preset="left"]').click();
+      await page.locator('[data-point-preset="right"]').click();
+      await sampleAlignment('rapid reselection');
+      await page.locator('[data-reset]').click();
+      await page.locator('[data-point-preset="center"]').focus();
+      await page.keyboard.press('Enter');
+      await sampleAlignment('keyboard selection after reset');
+      await page.screenshot({
+        path: testInfo.outputPath(`${locale.lang}-${width}-aim-centered.png`),
+      });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.locator('[data-point-preset="left"]').click();
+      await sampleAlignment('system reduced motion');
+    });
+  }
+}
+
 test(
   'large desktop text emits continuous camera poses across unpinned chapter boundaries',
   { tag: '@webgl', lock: 'webgl-renderer' },
