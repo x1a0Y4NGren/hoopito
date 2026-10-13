@@ -292,18 +292,20 @@ function updateStory() {
   const chapter = current.id as StoryChapter;
   const bounds = current.getBoundingClientRect();
   const stage = stages.get(chapter);
-  const progress = stage
+  // An unpinned visual can enter before its chapter becomes current. Its
+  // reveal progress therefore cannot drive the camera without cutting ahead
+  // of the shared endpoint. Natural-flow camera spans use the same chapter
+  // boundaries as selection, including enlarged text and gaps between sections.
+  const nextTop =
+    sections[sections.indexOf(current) + 1]?.getBoundingClientRect().top ??
+    bounds.bottom;
+  const flowProgress =
+    chapter === 'hero'
+      ? window.scrollY / Math.max(1, nextTop + window.scrollY - focus)
+      : (focus - bounds.top) / Math.max(1, nextTop - bounds.top);
+  const progress = stage?.trigger.pin
     ? stage.progress
-    : chapter === 'hero'
-      ? 0
-      : Math.max(
-          0,
-          Math.min(
-            1,
-            (focus - bounds.top) /
-              Math.max(1, bounds.height - window.innerHeight * 0.45),
-          ),
-        );
+    : Math.max(0, Math.min(1, flowProgress));
   storyFrame = {
     chapter,
     progress,
@@ -412,6 +414,11 @@ window.addEventListener(
 function applyMotion() {
   scene?.setMotionEnabled(!reduced());
   if (reduced()) {
+    gsap.killTweensOf(blue);
+    gsap.set(blue, { clearProps: 'transform' });
+    const halo = selection.querySelector('.aim-halo');
+    gsap.killTweensOf(halo);
+    gsap.set(halo, { scale: 1, opacity: 1 });
     if (state.phase === 'shooting') completeShot();
   }
   void startScene();
@@ -431,17 +438,17 @@ choreography.add(
     if (!openingPlayed) {
       openingPlayed = true;
       gsap.from('[data-hero-line]', {
-        yPercent: 35,
+        y: isDesktop ? 28 : 12,
         opacity: 0,
-        duration: isDesktop ? 1.3 : 0.9,
-        stagger: isDesktop ? 0.14 : 0.08,
+        duration: isDesktop ? 1.3 : 0.45,
+        stagger: isDesktop ? 0.14 : 0.04,
         ease: 'power3.out',
         clearProps: 'all',
       });
       gsap.from('.hero-ball', {
         rotation: -14,
         scale: 0.88,
-        duration: 1.8,
+        duration: isDesktop ? 1.8 : 0.5,
         ease: 'power2.out',
         clearProps: 'all',
       });
@@ -492,14 +499,14 @@ choreography.add(
         timeline.to(
           '.hero-art',
           {
-            scale: isDesktop ? 0.94 : 1.04,
-            yPercent: isDesktop ? 0 : 5,
+            scale: isDesktop ? 0.94 : 1,
+            y: isDesktop ? 0 : 12,
             duration: 1,
             ease: 'none',
           },
           0,
         );
-      } else if (chapter === 'scoring') {
+      } else if (chapter === 'scoring' && isDesktop) {
         timeline.fromTo(
           '[data-story-device]',
           {
@@ -516,7 +523,7 @@ choreography.add(
           },
           0,
         );
-      } else {
+      } else if (chapter === 'replay' && isDesktop) {
         timeline.fromTo(
           '[data-replay-device="summary"]',
           {
@@ -587,6 +594,24 @@ choreography.add(
             0.3,
           );
         }
+      }
+    }
+    if (!isDesktop) {
+      for (const element of document.querySelectorAll<HTMLElement>(
+        '.scoring-display, .score-features, .demo-map, .replay-editorial > *, .download-package',
+      )) {
+        gsap.from(element, {
+          opacity: 0,
+          y: 12,
+          duration: 0.42,
+          ease: 'power2.out',
+          clearProps: 'transform,opacity',
+          scrollTrigger: {
+            trigger: element,
+            start: 'top 88%',
+            toggleActions: 'play none none none',
+          },
+        });
       }
     }
     return () => {

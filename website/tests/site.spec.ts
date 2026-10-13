@@ -1,4 +1,6 @@
 import { expect, test as base, type Page } from '@playwright/test';
+import { storyPose } from '../src/scripts/story-pose';
+import type { StoryFrame } from '../src/scripts/scene-contract';
 
 const test = base.extend({
   page: async ({ page }, use, testInfo) => {
@@ -44,6 +46,279 @@ const locales = [
   },
 ] as const;
 const threeChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
+
+test(
+  'large desktop text emits continuous camera poses across unpinned chapter boundaries',
+  { tag: '@webgl', lock: 'webgl-renderer' },
+  async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'Scene frames are verified against Chromium WebGL.',
+    );
+    await allowSoftwareWebGL(page);
+    await page.setViewportSize({ width: 1440, height: 901 });
+    await page.goto('/en/');
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+    await page.addStyleTag({
+      content: 'html {scroll-behavior:auto !important}',
+    });
+    await page.evaluate(() => {
+      const items = [
+        ...document.querySelectorAll<HTMLElement>('body *'),
+      ].filter((e) =>
+        [...e.childNodes].some(
+          (n) => n.nodeType === Node.TEXT_NODE && n.textContent?.trim(),
+        ),
+      );
+      const sizes = items.map(
+        (e) => [e, parseFloat(getComputedStyle(e).fontSize)] as const,
+      );
+      for (const [element, size] of sizes)
+        element.style.fontSize = `${size * 2}px`;
+      dispatchEvent(new Event('resize'));
+    });
+    await expect(page.locator('.pin-spacer')).toHaveCount(0);
+    for (const chapter of ['scoring', 'experience', 'replay']) {
+      const cut = await page
+        .locator(`#${chapter}`)
+        .evaluate(
+          (e) =>
+            e.getBoundingClientRect().top +
+            scrollY -
+            Math.min(innerHeight * 0.3, 260),
+        );
+      for (const direction of [1, -1]) {
+        const samples: StoryFrame[] = [];
+        for (const offset of [-2 * direction, 2 * direction]) {
+          await page.evaluate((y) => window.scrollTo(0, y), cut + offset);
+          await page.waitForTimeout(750);
+          samples.push(
+            (await page.locator('#court-canvas').evaluate((e) => ({
+              chapter: (e as HTMLElement).dataset.chapter,
+              progress: Number((e as HTMLElement).dataset.storyProgress),
+              active: true,
+            }))) as StoryFrame,
+          );
+        }
+        const from = storyPose(samples[0]),
+          to = storyPose(samples[1]);
+        const delta = Math.hypot(
+          ...from.position.map((v, i) => v - to.position[i]),
+        );
+        expect(
+          delta,
+          `${chapter} ${direction}: ${JSON.stringify(samples)}`,
+        ).toBeLessThan(0.08);
+      }
+    }
+  },
+);
+
+for (const locale of locales) {
+  for (const dpr of [1, 2]) {
+    test(`${locale.lang}: ${dpr}x density and orientation changes retain one shot and complete readable chapters`, async ({
+      browser,
+    }) => {
+      const context = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: dpr,
+        hasTouch: true,
+      });
+      try {
+        const page = await context.newPage();
+        await page.addInitScript(() => {
+          const original = HTMLCanvasElement.prototype.getContext;
+          HTMLCanvasElement.prototype.getContext = function (
+            this: HTMLCanvasElement,
+            type: string,
+            ...args: unknown[]
+          ) {
+            return type === 'webgl2'
+              ? null
+              : Reflect.apply(original, this, [type, ...args]);
+          } as typeof original;
+        });
+        await page.goto(locale.path);
+        await page.locator('[data-point-preset="center"]').click();
+        await page.locator('[data-record]').click();
+        await page.setViewportSize({ width: 844, height: 390 });
+        await expect(page.locator('[data-demo-marker]')).not.toHaveAttribute(
+          'hidden',
+        );
+        for (const [width, height] of [
+          [360, 800],
+          [390, 844],
+          [768, 1024],
+          [1440, 900],
+          [1920, 1080],
+        ]) {
+          await page.setViewportSize({ width, height });
+          await expectNoOverflow(page);
+          await expect(page.locator('[data-blue-score]')).toHaveText('8');
+          for (const id of ['scoring', 'replay', 'download']) {
+            await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+            await expect(page.locator(`#${id} h2`)).toBeVisible();
+          }
+        }
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.locator('[data-reset]').click();
+        await expect(page.locator('[data-blue-score]')).toHaveText('6');
+        await expect(page.locator('.pin-spacer')).toHaveCount(0);
+      } finally {
+        await context.close();
+      }
+    });
+  }
+}
+
+test('native stage distances and reverse jumps leave replay upright and downloading usable', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await page.addStyleTag({ content: 'html {scroll-behavior:auto !important}' });
+  for (const [chapter, extra] of [
+    ['hero', 0.75],
+    ['scoring', 1],
+    ['replay', 0.75],
+  ] as const) {
+    const range = await page
+      .locator(`[data-story-stage="${chapter}"]`)
+      .evaluate((e) => ({
+        start: Number((e as HTMLElement).dataset.storyStart),
+        end: Number((e as HTMLElement).dataset.storyEnd),
+        height: innerHeight,
+      }));
+    expect(range.end - range.start).toBeCloseTo(range.height * extra, 0);
+  }
+  const stage = page.locator('[data-story-stage="replay"]');
+  for (const progress of [1, 0.05, 0.9, 0.2, 1]) {
+    await stage.evaluate(
+      (e, p) =>
+        window.scrollTo(
+          0,
+          Number((e as HTMLElement).dataset.storyStart) +
+            (Number((e as HTMLElement).dataset.storyEnd) -
+              Number((e as HTMLElement).dataset.storyStart)) *
+              p,
+        ),
+      progress,
+    );
+    await expect
+      .poll(async () => Number(await stage.getAttribute('data-story-progress')))
+      .toBeCloseTo(progress, 2);
+  }
+  for (const device of await page.locator('[data-replay-device]').all()) {
+    const rotation = await device.evaluate((e) => {
+      const m = new DOMMatrix(getComputedStyle(e).transform);
+      return Math.abs(m.b) + Math.abs(m.m13) + Math.abs(m.m23);
+    });
+    expect(rotation).toBeLessThan(0.001);
+    await expect(device.locator('.viewer-link')).toBeInViewport();
+  }
+  await page.locator('.nav-download').click();
+  await expect(page.locator('#download .button')).toBeInViewport();
+});
+
+for (const phase of [
+  { name: 'flight', delay: 450 },
+  { name: 'swish', delay: 1280 },
+  { name: 'rebound', delay: 1700 },
+]) {
+  test(`reset during ${phase.name} cancels every visual and stale completion`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    const resting = await page.locator('[data-net-weave]').getAttribute('d');
+    await page.locator('[data-point-preset="left"]').click();
+    await page.locator('[data-record]').click();
+    await page.waitForTimeout(phase.delay);
+    await page.evaluate(() =>
+      document.querySelector<HTMLButtonElement>('[data-reset]')!.click(),
+    );
+    await page.waitForTimeout(2300 - phase.delay);
+    await expect(page.locator('[data-blue-score]')).toHaveText('6');
+    await expect(page.locator('[data-demo-marker]')).toHaveAttribute(
+      'hidden',
+      '',
+    );
+    await expect(page.locator('[data-demo-ball]')).toHaveAttribute(
+      'hidden',
+      '',
+    );
+    await expect(page.locator('[data-demo-trail]')).toHaveAttribute(
+      'hidden',
+      '',
+    );
+    await expect(page.locator('[data-net-weave]')).toHaveAttribute(
+      'd',
+      resting!,
+    );
+    await page.locator('[data-point-preset="right"]').focus();
+    await page.keyboard.press('Enter');
+    await page.locator('[data-record]').click();
+    await expect(page.locator('[data-demo-marker]')).not.toHaveAttribute(
+      'hidden',
+    );
+    await expect(page.locator('[data-blue-score]')).toHaveText('8');
+  });
+}
+
+test('touch gallery pinches and pans within bounds then returns focus', async ({
+  page,
+  browserName,
+}) => {
+  test.skip(
+    browserName !== 'chromium',
+    'Native multi-touch injection uses Chromium CDP; shared viewer buttons are tested in all engines.',
+  );
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/#replay');
+  const link = page.locator('[data-replay-device="summary"] .viewer-link');
+  await link.click();
+  await expect(page.locator('[data-viewer-scale]')).toHaveText('100%');
+  const bounds = await page.locator('[data-viewer-viewport]').boundingBox();
+  const client = await page.context().newCDPSession(page);
+  const y = bounds!.y + bounds!.height / 2;
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [
+      { x: 165, y, id: 1 },
+      { x: 225, y, id: 2 },
+    ],
+  });
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchMove',
+    touchPoints: [
+      { x: 90, y, id: 1 },
+      { x: 300, y, id: 2 },
+    ],
+  });
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchEnd',
+    touchPoints: [],
+  });
+  await expect
+    .poll(async () =>
+      parseInt((await page.locator('[data-viewer-scale]').textContent())!),
+    )
+    .toBeGreaterThan(200);
+  const image = page.locator('[data-viewer-image]');
+  const before = await image.boundingBox();
+  await page.mouse.move(195, y);
+  await page.mouse.down();
+  await page.mouse.move(340, y + 100, { steps: 10 });
+  await page.mouse.up();
+  const after = await image.boundingBox();
+  expect(after!.x).toBeGreaterThan(before!.x);
+  expect(after!.x).toBeLessThanOrEqual(bounds!.x);
+  expect(after!.x + after!.width).toBeGreaterThanOrEqual(
+    bounds!.x + bounds!.width,
+  );
+  await page.locator('[data-viewer-close]').click();
+  await expect(link).toBeFocused();
+});
 
 for (const locale of locales) {
   test(`${locale.lang}: mobile replay reads introduction, result, insight, then history with distinct examples`, async ({

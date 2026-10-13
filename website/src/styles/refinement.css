@@ -1,6 +1,7 @@
 /* Product chapters share the arena's graphite, warm white and copper light. */
 :root {
   --feedback-duration: 200ms;
+  --chapter-light: #d2a67b;
   scrollbar-gutter: stable;
 }
 .image-link {
@@ -10,6 +11,36 @@
 }
 .image-link:focus-visible {
   outline-offset: 5px;
+}
+.button,
+.reset-button,
+.point-presets button,
+.site-header nav > a,
+.viewer-tools button,
+.viewer-header button {
+  transition-duration: var(--feedback-duration);
+}
+.button::before {
+  transition-duration: var(--feedback-duration);
+}
+.button {
+  border-radius: 8px;
+}
+.section-rule {
+  background: linear-gradient(90deg, #c49b6845, #a4947a12);
+}
+.download-package {
+  border-radius: 18px;
+  border-color: #d4b18b55;
+  box-shadow:
+    0 40px 80px -35px #000b,
+    inset 0 1px #d4b18b30;
+}
+.download-halo {
+  opacity: 0.7;
+}
+.download .button-dark {
+  border-radius: 9px;
 }
 .scoring-stage {
   padding-block: 24px;
@@ -204,7 +235,7 @@
 .viewer-header h2,
 .en .viewer-header h2 {
   font:
-    500 1rem/1.5 'Noto Sans SC',
+    500 1rem/1.5 Noto,
     sans-serif;
   letter-spacing: 0;
   margin-top: 3px;
