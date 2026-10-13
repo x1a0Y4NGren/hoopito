@@ -153,6 +153,7 @@ const server = createServer(async (request, response) => {
 await new Promise((done) => server.listen(0, '127.0.0.1', done));
 const origin = `http://127.0.0.1:${server.address().port}`;
 const headless = process.env.HOOPITO_GPU_HEADLESS === '1';
+const traceOnly = process.env.HOOPITO_GPU_TRACE_ONLY === '1';
 const viewports = process.env.HOOPITO_GPU_VIEWPORTS
   ? JSON.parse(process.env.HOOPITO_GPU_VIEWPORTS)
   : [
@@ -184,6 +185,7 @@ const report = {
   limits:
     'WebGL submission uses the named GPU, but JavaScript render() return and MutationObserver timestamps do not prove GPU command completion, presentation, or physical monitor scanout. Viewport and deviceScaleFactor are browser emulation settings; a DPR2 sample proves a larger backing buffer, not a physically Retina monitor. All threshold samples finish before diagnostic traces start, and every trace uses a separate browser process.',
   targets: { averageFps: 58, p95FrameMs: 20 },
+  traceOnly,
   samples: [],
   traces: [],
   unavailable: [],
@@ -378,7 +380,7 @@ async function traceCompositor(browser, page, gpuName, viewport) {
     eventGroups: [...groups.values()].sort((a, b) => b.count - a.count),
     compositorDisplayedCadence,
     limitation:
-      'Separate traced scroll pass. Compositor event counts are not asserted to be physical display FPS.',
+      'Separate traced scroll after warming chapter images and layout. Profiling overhead is included. Compositor event counts are not asserted to be physical display FPS.',
   });
   await session.detach();
 }
@@ -422,6 +424,14 @@ try {
     // sequential runs stalled after a trace pass while visibility stayed visible.
     // Keep profiling out of the entire threshold matrix, including later samples.
     for (const viewport of viewports) {
+      if (traceOnly) {
+        if (
+          (viewport.width === 1440 && viewport.dpr === 1) ||
+          (viewport.width === 1920 && viewport.dpr === 2)
+        )
+          diagnosticTraces.push({ target, viewport, args });
+        continue;
+      }
       const browser = await launchBrowser(args);
       try {
         const context = await browser.newContext({
@@ -727,6 +737,10 @@ try {
       await pageSession.detach();
       await page.bringToFront();
       await page.goto(`${origin}/`, { waitUntil: 'load' });
+      await page.bringToFront();
+      await page.waitForFunction(() => document.hasFocus(), null, {
+        timeout: 5000,
+      });
       await page.waitForFunction(
         () => document.documentElement.dataset.scene === '3d',
         null,
@@ -749,6 +763,16 @@ try {
         null,
         { timeout: 10000 },
       );
+      // Warm images and layout before tracing steady scrolling; preserve the
+      // separate cold opening/scroll/shot threshold measurements unchanged.
+      await scrollStory(page, 2000);
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForFunction(
+        () =>
+          document.querySelector('#court-canvas').dataset.rendering === 'idle',
+        null,
+        { timeout: 10000 },
+      );
       await traceCompositor(browser, page, target.name, viewport);
     } catch (error) {
       report.traces.push({
@@ -762,11 +786,16 @@ try {
       await browser?.close();
     }
   }
-  report.passes =
-    report.samples.length > 0 &&
-    report.unavailable.length === 0 &&
-    report.failures.length === 0 &&
-    report.samples.every((sample) => sample.passes);
+  // Trace-only success means diagnostic capture succeeded; no FPS gate is
+  // claimed from compositor callbacks or inferred from an empty sample list.
+  report.passes = traceOnly
+    ? report.traces.length > 0 &&
+      report.unavailable.length === 0 &&
+      report.traces.every((trace) => !trace.error)
+    : report.samples.length > 0 &&
+      report.unavailable.length === 0 &&
+      report.failures.length === 0 &&
+      report.samples.every((sample) => sample.passes);
   await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
   console.log(`Evidence: ${output}`);
   if (!report.passes) process.exitCode = 1;
