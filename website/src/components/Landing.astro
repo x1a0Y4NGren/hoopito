@@ -4,12 +4,15 @@ import Icon from './Icon.astro';
 import CourtDiagram from './CourtDiagram.astro';
 import { content, type Locale } from '../data/content';
 import { release } from '../data/release';
+import presentation from '../../../docs/design/screenshot-presentation.json';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const c = content[locale];
 const screen = (name: string) => `/screenshots/${locale}/${name}.webp`;
+const landscapeSize = presentation.screenshots.scoring.extract;
+const portraitSize = presentation.screenshots.summary.extract;
 const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
 const sampleLabel =
   locale === 'zh' ? '示例走势 · 宣传图形' : 'SAMPLE FLOW · ILLUSTRATION';
@@ -211,8 +214,8 @@ const sampleLabel =
             <img
               src={screen('scoring')}
               alt={c.scoring.alt}
-              width="1920"
-              height="1080"
+              width={landscapeSize.width}
+              height={landscapeSize.height}
               loading="lazy"
               decoding="async"
             />
@@ -405,8 +408,8 @@ const sampleLabel =
                 <img
                   src={screen('summary')}
                   alt={c.replay.summaryAlt}
-                  width="1080"
-                  height="1920"
+                  width={portraitSize.width}
+                  height={portraitSize.height}
                   loading="lazy"
                   decoding="async"
                 />
@@ -427,8 +430,8 @@ const sampleLabel =
                 <img
                   src={screen('history')}
                   alt={c.replay.historyAlt}
-                  width="1080"
-                  height="1920"
+                  width={portraitSize.width}
+                  height={portraitSize.height}
                   loading="lazy"
                   decoding="async"
                 />

@@ -24,6 +24,7 @@ for (const path of [
   'src/scripts/shaders/court.ts',
   'src/styles/site.css',
   'src/components/Landing.astro',
+  '../docs/design/screenshot-presentation.json',
   'src/data/court-materials.ts',
   'assets/materials/generation.json',
   'package-lock.json',

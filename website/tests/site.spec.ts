@@ -45,6 +45,31 @@ const locales = [
 ] as const;
 const threeChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
 
+for (const locale of locales) {
+  test(`${locale.lang}: presentation screenshots preserve app-only dimensions and display proportions`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(locale.path);
+    for (const [selector, width, height] of [
+      ['[data-story-device] img', 1818, 954],
+      ['[data-replay-device="summary"] img', 1080, 1783],
+      ['[data-replay-device="history"] img', 1080, 1783],
+    ] as const) {
+      const screenshot = page.locator(selector);
+      await screenshot.scrollIntoViewIfNeeded();
+      await expect(screenshot).toHaveJSProperty('naturalWidth', width);
+      await expect(screenshot).toHaveJSProperty('naturalHeight', height);
+      await expect(screenshot).toHaveAttribute('width', String(width));
+      await expect(screenshot).toHaveAttribute('height', String(height));
+      const box = await screenshot.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.width / box!.height).toBeCloseTo(width / height, 2);
+    }
+  });
+}
+
 test('cinematic stages unpin cleanly when the viewport or system motion changes', async ({
   page,
 }) => {

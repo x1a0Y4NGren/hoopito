@@ -42,6 +42,14 @@ For startup changes in Hoopito 2.0, retain the approved C logo and native/Flutte
 
 Keep core features offline-capable. Review privacy and architecture for new network behavior. Never commit signing keys, `key.properties`, device databases, build output, or real player data.
 
+## 对外截图展示规范
+
+网站、GitHub README、宣传页及后续商店素材必须使用经过处理的展示副本，不得展示设备／模拟器的系统状态栏（时间、电量、网络图标）、系统导航栏、模拟器边框或系统留白。截图放大查看同样使用完整分辨率的干净展示副本，不回退到带系统栏的证据原图。只裁掉系统区域，完整保留 App 自身的导航、内容与真实像素；不得拉伸、重绘界面、生成虚构 UI 或篡改比分和记录。
+
+原始截图和既有发行来源记录保持原样，作为拍摄证据；对外入口引用可复现生成的展示副本。裁剪按实际拍摄尺寸和系统边界校准，不盲目复用其他设备的固定裁剪值。记录原图、裁剪矩形、处理方式及输出 SHA-256，页面尺寸与比例使用处理后的值。更新截图时同时检查中英文、横竖屏、网站与 README，人工确认无系统栏残留、无 App 内容误裁、无变形；历史验证与原始证据不冒称已处理。
+
+当前展示裁剪配置见 [docs/design/screenshot-presentation.json](docs/design/screenshot-presentation.json)，生成和使用方法见 [website/README.md](website/README.md#素材与来源维护)。
+
 ## Proportionate Verification
 
 Use the validation matrix in CONTRIBUTING. Documentation-only edits need content/link checks and `git diff --check`, not Flutter builds. For Dart changes, format affected files, analyze, and run relevant `*_test.dart` tests. Broaden coverage for shared behavior, persistence, platform integration, or release work.
