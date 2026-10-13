@@ -431,6 +431,13 @@ try {
         });
         try {
           const page = await context.newPage();
+          const pageSession = await context.newCDPSession(page);
+          // Playwright normally simulates focus even when the native window is
+          // covered. Headed acceptance needs the browser's actual focus state.
+          await pageSession.send('Emulation.setFocusEmulationEnabled', {
+            enabled: false,
+          });
+          await pageSession.detach();
           // Each browser context opens a new native window. Explicitly activate
           // it before measuring; hidden pages intentionally suspend the demo.
           await page.bringToFront();
@@ -488,6 +495,9 @@ try {
           });
           await page.goto(`${origin}/`, { waitUntil: 'load' });
           await page.bringToFront();
+          await page.waitForFunction(() => document.hasFocus(), null, {
+            timeout: 5000,
+          });
           await page.waitForFunction(
             () =>
               document.documentElement.dataset.scene === '3d' ||
@@ -504,6 +514,7 @@ try {
               outerWidth,
               outerHeight,
               devicePixelRatio,
+              focused: document.hasFocus(),
               screenWidth: screen.width,
               screenHeight: screen.height,
               availableScreenWidth: screen.availWidth,
@@ -709,6 +720,11 @@ try {
         deviceScaleFactor: viewport.dpr,
         reducedMotion: 'no-preference',
       });
+      const pageSession = await page.context().newCDPSession(page);
+      await pageSession.send('Emulation.setFocusEmulationEnabled', {
+        enabled: false,
+      });
+      await pageSession.detach();
       await page.bringToFront();
       await page.goto(`${origin}/`, { waitUntil: 'load' });
       await page.waitForFunction(
