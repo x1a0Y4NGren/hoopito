@@ -758,7 +758,7 @@ h2 {
 .landscape-device img {
   width: 100%;
   border-radius: 19px;
-  aspect-ratio: 16/9;
+  height: auto;
   object-fit: contain;
   background: #071116;
 }
@@ -1250,7 +1250,7 @@ h2 {
 .portrait-device img {
   border-radius: 17px;
   width: 100%;
-  aspect-ratio: 9/16;
+  height: auto;
   background: #071116;
 }
 .portrait-device figcaption {

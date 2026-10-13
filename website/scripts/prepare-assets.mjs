@@ -8,6 +8,10 @@ import subsetFont from 'subset-font';
 import QRCode from 'qrcode';
 import { release } from '../src/data/release.ts';
 import { courtTextures } from '../src/data/court-materials.ts';
+import {
+  presentation,
+  presentationForCapture,
+} from './screenshot-presentation.mjs';
 
 const websiteRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const repositoryRoot = dirname(websiteRoot);
@@ -25,6 +29,15 @@ const sourceRecord = 'docs/release/v2.0.1-screenshots.json';
 const screenshots = JSON.parse(
   await readFile(join(repositoryRoot, sourceRecord), 'utf8'),
 );
+const presentationRecord = 'docs/design/screenshot-presentation.json';
+if (presentation.source_record !== sourceRecord) {
+  throw new Error(
+    'Screenshot presentation must be calibrated to the current capture record',
+  );
+}
+const presentationSha256 = createHash('sha256')
+  .update(await readFile(join(repositoryRoot, presentationRecord)))
+  .digest('hex');
 const assets = [];
 const ascii = Array.from({ length: 95 }, (_, index) =>
   String.fromCharCode(index + 32),
@@ -234,20 +247,21 @@ for (const capture of screenshots.captures) {
       `Screenshot dimensions differ from the original record: ${capture.path}`,
     );
   }
-  const name = capture.path
-    .split('/')
-    .at(-1)
-    .replace(/^\d-/, '')
-    .replace('.png', '.webp');
+  const { name, extract } = presentationForCapture(capture);
   const optimized = await sharp(source.bytes)
+    .extract(extract)
     .webp({ lossless: true, effort: 6 })
     .toBuffer();
-  await output(`screenshots/${capture.locale}/${name}`, optimized, {
+  await output(`screenshots/${capture.locale}/${name}.webp`, optimized, {
     source: source.source,
     source_sha256: source.source_sha256,
     transformation:
-      'Lossless WebP encoding; original dimensions and all system bars retained; no cropping or repainting',
-    dimensions_px: capture.dimensions_px,
+      'App-only crop removing Android status/navigation bars and landscape system inset; lossless WebP; retained App pixels unchanged, no resizing or repainting',
+    dimensions_px: [extract.width, extract.height],
+    source_dimensions_px: capture.dimensions_px,
+    crop_px: extract,
+    presentation_record: presentationRecord,
+    presentation_record_sha256: presentationSha256,
     locale: capture.locale,
     theme: capture.theme,
     screenshot_record: sourceRecord,

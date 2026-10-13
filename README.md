@@ -31,15 +31,15 @@ Hoopito（中文名：球豆）是一款为篮球爱好者准备的离线单挑�
 ## 先看比赛，不看说明书
 
 <p align="center">
-  <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/2-scoring.png" width="96%" alt="球豆 2.0.1 Android 横屏计分页">
+  <img src="website/public/screenshots/zh/scoring.webp" width="96%" alt="球豆 2.0.1 Android 横屏计分页">
 </p>
 
 <p align="center">
-  <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/1-home.png" width="45%" alt="球豆 2.0.1 比赛首页">
-  <img src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png" width="45%" alt="球豆 2.0.1 赛果与比分走势">
+  <img src="website/public/screenshots/zh/home.webp" width="45%" alt="球豆 2.0.1 比赛首页">
+  <img src="website/public/screenshots/zh/summary.webp" width="45%" alt="球豆 2.0.1 赛果与比分走势">
 </p>
 
-<p align="center"><sub>正式签名 v2.0.1 APK 在专用 API36 模拟器上的实际画面，使用虚构球员与对局，原始像素与系统栏保留。计分与赛果来自独立合成对局，双语八张原图的版本与拍摄状态见<a href="docs/release/v2.0.1-screenshots.json">截图记录</a>。</sub></p>
+<p align="center"><sub>正式签名 v2.0.1 APK 的真实 App 画面，使用虚构球员与对局。展示副本已裁除系统状态栏、导航栏与横屏系统留白，App 内容像素保持原样。计分与赛果来自独立合成对局，八张双语原图的拍摄来源见<a href="docs/release/v2.0.1-screenshots.json">截图记录</a>，裁剪方式见<a href="docs/design/screenshot-presentation.json">展示配置</a>。</sub></p>
 
 ## 三步打完一场球
 
