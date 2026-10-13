@@ -9,6 +9,11 @@
 390／1920px共12项全部通过。逐帧采样要求外圈与靶心距离小于0.5CSSpx，覆盖动画过程、
 结束停稳、快速换点、重置后键盘选点和系统减少动效；桌面／手机截图已人工查看。
 39项单元／像素测试、50文件类型检查、格式、生产构建、资源预算及`git diff --check`通过。
+上述是本次局部回归与本地检查结果。此前文档提交`b1475fe`的远端CI
+[38403589487](https://github.com/x1a0Y4NGren/hoopito/actions/runs/38403589487)中，
+`a shot recorded while 3D loads survives scene initialization and system motion changes`
+在共享软件GPU环境触发八秒初始化降级（14项WebGL通过、该1项失败）。原始日志保留为
+`ci-b1475fe-failed.log`，继续在#10跟踪；不冒称该轮远端CI通过。定位修正提交的新CI单独运行。
 原始失败与通过结果保留在`output/frontend-refinement/aim-halo-red`、`aim-halo-green`及
 相应日志中。此次只修改二维定位反馈，不修改投篮坐标、比分状态或3D材质／镜头。
 
