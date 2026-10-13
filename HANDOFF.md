@@ -1,4 +1,22 @@
-# HoopTrace 2.0 发行交接记录
+# Hoopito · 球豆交接记录
+
+## Issue #6 交付与项目收尾（2026-10-13）
+
+[Issue #6](https://github.com/x1a0Y4NGren/hoopito/issues/6) 已完成并关闭为 `completed`。交付检查点为 `14f8e3cffd229011cf186138b6cdd11821d8a041`，GitHub 仓库为 `x1a0Y4NGren/hoopito`；本机唯一活动 checkout 为 `D:/GitHub/hoopito`，Codex 同一项目入口的名称与保存路径已核验。此前 `D:/GitHub/hooptrace`、旧网站分支和下方未发布状态均属于历史记录。
+
+正式 [v2.0.1](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1) 为 Android `2.0.1+5`。签名 tag 与 APK 构建来源固定为 `4ecd960e5af1f6b12124a43e330d67efb628281b`；APK `Hoopito-v2.0.1-android.apk` 为 76,441,047 字节，SHA-256 `c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9`。沿用 v2 证书 `2820ba06e898be1152d38536492282127e9fb0734a0863bb42db63f8a75611dd`，公开匿名回读与再次安装已验证。后续文档、宣传、网站与 AOCI 提交不改变 APK 来源，也不替换公开附件。
+
+既有 Vercel 项目已更名为 `hoopito-website`，身份与认证保护保留；`codex/hoopito-website` 为预览分支。[交付时的不可变 Preview](https://hoopito-website-7s1plgt2c-xyr175-9459s-projects.vercel.app) 绑定 `14f8e3c`，`READY`，双语桌面／移动首页、隐私页、截图、分享图、下载、摘要及禁止收录等 **207 项检查通过**。[分支入口](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app) 随后续成功部署更新，不能用其地址替代构建来源。生产分支 `main` 的 Git 部署保持关闭，生产上线、商店与 F-Droid 发布、购买域名继续暂停。
+
+应用来源 `4ecd960` 的五项 App CI、对应网站 CI 与正式包 API24 全新安装、API36 公开 v2 同证覆盖、冷进程恢复、旧 JSON 导入及新旧混合备份保留已验收；交付检查点 `14f8e3c` 的 [App CI 38330612839](https://github.com/x1a0Y4NGren/hoopito/actions/runs/38330612839) 同样五项成功。网站输入未变，复用发行记录列明的成功网站 CI。本次收尾只整理文档、治理资产和本地资源，按文档范围检查链接与 diff，不机械重跑 Flutter、设备、APK 或远端部署。完整来源、失败样本及限制见 [v2.0.1 发行记录](docs/release/v2.0.1-release-record.md)。
+
+本轮两台专用合成 AVD `Hoopito_Brand_API24`／`Hoopito_Brand_API36` 在设置恢复后通过 `avdmanager` 删除，原 `Pixel_API_36` 的全部文件与配置摘要未变；没有删除共享 Android 系统镜像。清理 checkout 的 `build`、`.dart_tool`、`android/.gradle`、网站 `dist` 与 `.astro`，共 1,373,516,105 字节逻辑缓存。网站本地报告与失败图像共 1,475 文件及六份发行构建附件移到仓库外并逐项回读摘要；原始发行 APK、公开回读、设备数据库、截图、CI 日志和失败证据继续保留。依赖缓存、`node_modules`、签名配置、密钥与恢复材料保留；下次本地运行先按 README 生成依赖与构建输出。
+
+收尾证据目录为 `D:/DevCache/HoopitoArtifacts/issue-6-20261012/task-closeout-20261013/`，资源实际清理与保留见 `resource-cleanup.json`，治理与 Git 结果以该目录的最终检查回执为准。用户在 issue 完成后单独授权本次收尾，AOCI 在文档与清理达到稳定状态后增量维护；此前“125 份资产原摘要一致”只描述迁移时点，不把后续维护冒称原字节未变。
+
+自然 24 小时调度、实体设备和 iOS 正式签名安装仍未验；旧 Vulkan 模拟器 ANR 根因没有证明消除。API36 首次升级后业务与设置不变，但既有规则播种触发三项备份运行字段变化，不能称首次启动后整库完全相同。拒绝候选的原生 `kotlin.Unit` 崩溃与网络／早期部署失败样本保留，不能改标最终成功。后续工作按新的明确需求开始，历史计划的未勾选项不自动恢复为待办。
+
+以下内容保留各阶段的真实旧名、源码、路径与验收范围，不代表当前交付状态。
 
 ## 介绍与下载网站本地交付（2026-10-11）
 

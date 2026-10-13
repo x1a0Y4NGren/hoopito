@@ -39,7 +39,7 @@ licenses retained here.
 | Tool | Version | License | Local notice |
 | --- | --- | --- | --- |
 | TypeScript | 6.0.3 | Apache-2.0 | [License](public/licenses/typescript.txt) |
-| sharp | 0.34.5 | Apache-2.0 | [License](public/licenses/sharp.txt) |
+| sharp | 0.35.5 | Apache-2.0 | [License](public/licenses/sharp.txt) |
 | qrcode | 1.5.4 | MIT | [License](public/licenses/qrcode.txt) |
 | subset-font | 2.5.0 | BSD-3-Clause | [License](public/licenses/subset-font.txt) |
 
@@ -57,10 +57,12 @@ opaque black detail and alpha transparency are preserved; its approval record is
 
 The eight bilingual screenshots are losslessly encoded from the originals under
 `fastlane/metadata/android/`. They retain all original pixels, dimensions and
-system bars. Their synthetic match/player data and actual debug-build capture
-provenance come from `docs/release/v2.0.0-screenshots.json`. They are not screenshots
-of the published signed APK. The website's download configuration independently
-identifies that official release.
+system bars. Their synthetic match/player data and signed Release capture
+provenance come from `docs/release/v2.0.1-screenshots.json`. They were captured
+directly from the published v2.0.1 APK built from
+`4ecd960e5af1f6b12124a43e330d67efb628281b`. Historical v2.0.0 Debug captures retain
+their original provenance in `docs/release/v2.0.0-screenshots.json`; they are not
+relabeled as current release images.
 
 [ASSET_SOURCES.json](ASSET_SOURCES.json) records original and optimized SHA-256
 values, image dimensions, font subset sources, QR payload, transformations and
