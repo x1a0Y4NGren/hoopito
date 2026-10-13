@@ -98,6 +98,31 @@ for (const [id, maximumSize, quality] of [
   });
 }
 
+// This lightweight 2D tile is independent of the desktop texture request path.
+const demoWood = materialGeneration.assets.find(
+  (entry) => entry.id === 'maple',
+);
+const demoWoodSource = await localSource(
+  `website/assets/materials/${demoWood.source}`,
+);
+const demoWoodBytes = await sharp(demoWoodSource.bytes)
+  .resize(384, 384)
+  .webp({ quality: 60, effort: 6 })
+  .toBuffer();
+if (demoWoodBytes.length > 12 * 1024)
+  throw new Error('2D court wood exceeds its 12KiB budget');
+await output('art/demo-maple.webp', demoWoodBytes, {
+  source: demoWoodSource.source,
+  source_sha256: demoWoodSource.source_sha256,
+  generation_record: materialRecord,
+  generation_record_sha256: materialProvenance.source_sha256,
+  generated_with: materialGeneration.tool,
+  generation_mode: materialGeneration.mode,
+  dimensions_px: [384, 384],
+  transformation:
+    '384px square 2D material derivative; WebP quality60; no court markings or baked lighting; lazy-loaded near the demo, maximum12KiB',
+});
+
 const artRecord = 'website/assets/art/generation.json';
 const artProvenance = await localSource(artRecord);
 const artGeneration = JSON.parse(artProvenance.bytes.toString('utf8'));

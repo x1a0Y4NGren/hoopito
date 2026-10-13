@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
+import { SHOT_TIMING, netResponse } from './shot-timing';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -899,7 +900,7 @@ export async function createCourtScene(
       flight
         .to(motion, {
           progress: 1,
-          duration: 1.2,
+          duration: SHOT_TIMING.flight,
           ease: 'none',
           onUpdate() {
             if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
@@ -915,7 +916,7 @@ export async function createCourtScene(
         })
         .to(motion, {
           fall: 1,
-          duration: 0.35,
+          duration: SHOT_TIMING.swish,
           ease: 'power2.in',
           onUpdate() {
             if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
@@ -939,14 +940,14 @@ export async function createCourtScene(
         })
         .to(motion, {
           rebound: 1,
-          duration: 0.58,
+          duration: SHOT_TIMING.rebound,
           ease: 'none',
           onUpdate() {
             if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
             hardware?.setNetImpact(
-              Math.sin(motion.rebound * Math.PI * 3) *
-                Math.exp(-motion.rebound * 4) *
-                0.3,
+              netResponse(
+                SHOT_TIMING.mark + motion.rebound * SHOT_TIMING.rebound,
+              ),
             );
             requestRender();
           },

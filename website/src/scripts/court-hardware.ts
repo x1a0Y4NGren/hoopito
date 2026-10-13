@@ -512,7 +512,7 @@ export function createCourtHardware({
       metalness: 0,
     }),
   );
-  nylon.customProgramCacheKey = () => 'hoopito-anchored-nylon-net-v1';
+  nylon.customProgramCacheKey = () => 'hoopito-anchored-nylon-net-v2';
   nylon.onBeforeCompile = (shader) => {
     shader.uniforms.uNetImpact = impact;
     shader.uniforms.uNetAnchor = { value: netAnchor };
@@ -529,19 +529,19 @@ export function createCourtHardware({
           float depth = netDepth(point);
           float weight = depth * depth * (3.0 - 2.0 * depth);
           vec2 radial = point.xz - uNetAnchor.xz;
-          point.xz += uNetImpact * weight * (radial * 0.30 + vec2(0.022, -0.012));
-          point.y -= uNetImpact * weight * 0.014;
+          point.xz += uNetImpact * weight * (radial * 0.42 + vec2(0.030, -0.018));
+          point.y -= uNetImpact * weight * 0.075;
           return point;
         }
         vec3 netNormal(vec3 point, vec3 normal) {
           float depth = netDepth(point);
           float weight = depth * depth * (3.0 - 2.0 * depth);
           float slope = -6.0 * depth * (1.0 - depth) / ${netLength.toFixed(2)};
-          float expansion = 1.0 + uNetImpact * weight * 0.30;
+          float expansion = 1.0 + uNetImpact * weight * 0.42;
           vec2 radial = point.xz - uNetAnchor.xz;
-          vec2 shear = uNetImpact * slope * (radial * 0.30 + vec2(0.022, -0.012));
+          vec2 shear = uNetImpact * slope * (radial * 0.42 + vec2(0.030, -0.018));
           vec2 sides = normal.xz / expansion;
-          float vertical = (normal.y - dot(shear, sides)) / (1.0 - uNetImpact * slope * 0.014);
+          float vertical = (normal.y - dot(shear, sides)) / (1.0 - uNetImpact * slope * 0.075);
           return normalize(vec3(sides.x, vertical, sides.y));
         }
       `,

@@ -18,6 +18,7 @@ for (const path of [
   'src/scripts/court-floor.ts',
   'src/scripts/court-textures.ts',
   'src/scripts/scene-contract.ts',
+  'src/scripts/shot-timing.ts',
   'src/scripts/scene-performance.ts',
   'src/scripts/gpu-calibration.ts',
   'src/scripts/story-pose.ts',

@@ -1,16 +1,16 @@
 {
   "version": 1,
-  "captured_at": "2026-10-13T06:49:11.317Z",
+  "captured_at": "2026-10-13T07:27:52.060Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "browser": "154.0.8037.98",
   "source_inputs": [
     {
       "path": "src/scripts/court-scene.ts",
-      "sha256": "72a7dc6240a40c98953b9261d18932945aa9040eba2af2a3c4d87d962d8c5f62"
+      "sha256": "fd55595d5112e78afdcf9331f4e92fd702fee42ef3c6a67454945ecbecb9d16a"
     },
     {
       "path": "src/scripts/court-hardware.ts",
-      "sha256": "ca6f60029cb5fbe6a9b56b70ad66d4f6eb2971a23bf4ef4103fd4b5b0c1985ff"
+      "sha256": "58407669494672f29ea40f0daa1598e0fd155d3d9985d2fae6b1adeadca8a1bf"
     },
     {
       "path": "src/scripts/court-floor.ts",
@@ -23,6 +23,10 @@
     {
       "path": "src/scripts/scene-contract.ts",
       "sha256": "1767f8f6406a5c6dc79cf2ca5f250c737d83c1b446801730d1a1c74d059ebc73"
+    },
+    {
+      "path": "src/scripts/shot-timing.ts",
+      "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
     },
     {
       "path": "src/scripts/scene-performance.ts",
@@ -46,7 +50,7 @@
     },
     {
       "path": "src/styles/refinement.css",
-      "sha256": "d93b15f192b34a48e8559fa93f6cb6d9719263a8f919a8b78654f407c0a3b985"
+      "sha256": "62ba74b75c8e5699a57aa59d427c5763f97efc4e306ef702e8a6a69082c37390"
     },
     {
       "path": "src/components/Layout.astro",

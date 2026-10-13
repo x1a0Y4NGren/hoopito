@@ -1,4 +1,5 @@
 ---
+import { netPath } from '../scripts/shot-timing';
 interface Props {
   label: string;
 }
@@ -32,6 +33,28 @@ const { label } = Astro.props;
       <path d="M0 0V126M26 0V126" stroke="#ccb394" stroke-opacity=".04" />
       <path d="M0 34H26M26 93H52" stroke="#ccb394" stroke-opacity=".035" />
     </pattern>
+    <pattern
+      id="court-wood"
+      width="300"
+      height="300"
+      patternUnits="userSpaceOnUse"
+    >
+      <image
+        data-demo-surface
+        data-src="/art/demo-maple.webp"
+        width="300"
+        height="300"
+        preserveAspectRatio="none"
+      />
+    </pattern>
+    <pattern
+      id="ball-pebbles"
+      width="2.2"
+      height="2.2"
+      patternUnits="userSpaceOnUse"
+    >
+      <circle cx="1.1" cy="1.1" r=".35" fill="#55210b" opacity=".3" />
+    </pattern>
     <radialGradient id="demo-ball-color" cx="28%" cy="20%">
       <stop stop-color="#fdb274" />
       <stop offset=".5" stop-color="#dc6d30" />
@@ -54,6 +77,14 @@ const { label } = Astro.props;
   />
   <rect x="28" y="28" width="544" height="504" fill="url(#court-surface)" />
   <rect x="28" y="28" width="544" height="504" fill="url(#court-planks)" />
+  <rect
+    x="28"
+    y="28"
+    width="544"
+    height="504"
+    fill="url(#court-wood)"
+    opacity=".25"
+  />
   <rect x="28" y="28" width="544" height="504" fill="url(#court-spotlight)" />
   <path d="M206 28V238H394V28Z" fill="#ead5b8" fill-opacity=".025" />
   <g
@@ -82,7 +113,7 @@ const { label } = Astro.props;
     stroke-opacity=".6"
     stroke-width="1.3"
   >
-    <path d="M-16 3L-10 33H10L16 3M-12 4L6 33M-6 4L10 25M0 4L11 16M6 4L-10 25M12 4L-6 33M0 4L-11 16M-14 13H14M-12 23H12" />
+    <path data-net-weave d={netPath(0)} />
   </g>
   <ellipse
     cx="300"
@@ -146,8 +177,17 @@ const { label } = Astro.props;
     <circle r="7" fill="#79acdf" />
     <path d="M-3 0L-1 3L4-3" fill="none" stroke="#0c1720" stroke-width="1.6" />
   </g>
+  <path
+    data-demo-trail
+    {...{ hidden: '' }}
+    fill="none"
+    stroke="#ed9b60"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
   <g data-demo-ball {...{ hidden: '' }}>
     <circle r="12" fill="url(#demo-ball-color)" />
+    <circle r="12" fill="url(#ball-pebbles)" />
     <g fill="none" stroke="#442417" stroke-width="1.35">
       <path d="M-12 0H12M0-12V12M-8-9Q8 0-8 9M8-9Q-8 0 8 9" />
       <circle r="11.5" />

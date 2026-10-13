@@ -3,6 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initialDemoState, reduceDemo, type DemoAction } from './demo-state';
 import { ScoringFocus } from './presentation-state';
 import { createScreenshotViewer } from './screenshot-viewer';
+import { createShotFeedback } from './shot-feedback';
 import type {
   CourtPoint,
   CourtScene,
@@ -18,11 +19,14 @@ const canvas = select<HTMLCanvasElement>('#court-canvas');
 const desktop = matchMedia('(min-width: 1024px) and (pointer: fine)');
 const systemMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let scene: CourtScene | undefined;
+let shotFeedback: ReturnType<typeof createShotFeedback> | undefined;
 const suspension = new Set<string>(document.hidden ? ['hidden'] : []);
 function setSuspended(reason: string, paused: boolean) {
   if (paused) suspension.add(reason);
   else suspension.delete(reason);
   scene?.setPaused(suspension.size > 0);
+  if (suspension.size) shotFeedback?.pause();
+  else shotFeedback?.resume();
 }
 const viewer = createScreenshotViewer((open) => setSuspended('viewer', open));
 const scoringFocus = new ScoringFocus();
@@ -44,8 +48,6 @@ scoreFeatures.forEach((button, index) => {
 });
 let abort: AbortController | undefined;
 let deadline: ReturnType<typeof setTimeout> | undefined;
-let completion: ReturnType<typeof setTimeout> | undefined;
-let flight: gsap.core.Tween | undefined;
 const choreography = gsap.matchMedia();
 const stages = new Map<
   StoryChapter,
@@ -64,7 +66,21 @@ const court = select<SVGSVGElement>('[data-demo-court]');
 const marker = select<SVGGElement>('[data-demo-marker]');
 const selection = select<SVGGElement>('[data-demo-selection]');
 const ball = select<SVGGElement>('[data-demo-ball]');
-const net = document.querySelector<SVGGElement>('[data-demo-net]');
+const net = select<SVGPathElement>('[data-net-weave]');
+const trail = select<SVGPathElement>('[data-demo-trail]');
+shotFeedback = createShotFeedback(ball, net, trail);
+if (suspension.size) shotFeedback.pause();
+const surface = select<SVGImageElement>('[data-demo-surface]');
+const surfaceObserver = new IntersectionObserver(
+  (entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) {
+      surface.setAttribute('href', surface.dataset.src!);
+      surfaceObserver.disconnect();
+    }
+  },
+  { rootMargin: '200px' },
+);
+surfaceObserver.observe(court);
 const presets = [
   ...document.querySelectorAll<HTMLButtonElement>('[data-point-preset]'),
 ];
@@ -75,6 +91,7 @@ const positions: Record<string, CourtPoint> = {
 };
 
 function render() {
+  select<HTMLElement>('[data-demo]').dataset.demoPhase = state.phase;
   blue.textContent = String(state.blue);
   record.disabled = state.phase !== 'ready' || !state.point;
   reset.disabled = false;
@@ -118,13 +135,24 @@ function choose(point: CourtPoint) {
   if (state.phase !== 'ready') return;
   dispatch({ type: 'select', point });
   scene?.selectPoint(state.point);
+  if (!reduced()) {
+    const halo = selection.querySelector('.aim-halo');
+    gsap.killTweensOf(halo);
+    gsap.fromTo(
+      halo,
+      { scale: 0.65, opacity: 0 },
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.out',
+        svgOrigin: '0 0',
+      },
+    );
+  }
 }
 function stopFlight() {
-  clearTimeout(completion);
-  flight?.kill();
-  flight = undefined;
-  ball.setAttribute('hidden', '');
-  if (net) gsap.set(net, { scaleY: 1, skewX: 0 });
+  shotFeedback?.cancel();
 }
 function completeShot() {
   stopFlight();
@@ -152,37 +180,23 @@ record.addEventListener('click', () => {
     return;
   }
   scene?.shoot(state.point!);
-  const point = state.point!;
-  const animation = { progress: 0 };
-  ball.removeAttribute('hidden');
-  flight = gsap.to(animation, {
-    progress: 1,
-    duration: 1.55,
-    ease: 'none',
-    onUpdate: () => {
-      const t = animation.progress;
-      const x = (28 + point.x * 544) * (1 - t) + 300 * t;
-      const y =
-        (28 + point.y * 504) * (1 - t) + 82 * t - Math.sin(t * Math.PI) * 95;
-      ball.setAttribute(
-        'transform',
-        `translate(${x} ${y}) rotate(${t * 500}) scale(${1 - t * 0.35})`,
-      );
-      if (net)
-        gsap.set(net, {
-          scaleY: 1 + Math.sin((Math.max(0, t - 0.78) * Math.PI) / 0.22) * 0.22,
-          svgOrigin: '300 82',
-        });
-    },
-  });
   const generation = state.generation;
-  completion = setTimeout(() => {
-    stopFlight();
+  shotFeedback!.start(state.point!, () => {
     dispatch({ type: 'complete', generation });
-  }, 1550);
+  });
+  gsap.fromTo(
+    blue,
+    { scale: 0.9 },
+    { scale: 1, duration: 0.22, ease: 'power2.out', clearProps: 'transform' },
+  );
 });
 reset.addEventListener('click', () => {
   stopFlight();
+  const halo = selection.querySelector('.aim-halo');
+  gsap.killTweensOf(halo);
+  gsap.set(halo, { scale: 1, opacity: 1 });
+  gsap.killTweensOf(blue);
+  gsap.set(blue, { clearProps: 'transform' });
   dispatch({ type: 'reset' });
   scene?.reset();
 });
@@ -573,6 +587,7 @@ window.addEventListener('pagehide', (event) => {
     return;
   }
   disposed = true;
+  surfaceObserver.disconnect();
   viewer.dispose();
   stopFlight();
   stopScene();

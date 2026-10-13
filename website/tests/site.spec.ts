@@ -45,6 +45,75 @@ const locales = [
 ] as const;
 const threeChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
 
+test('hidden-page and gallery suspension freeze a shot until all reasons are released', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.locator('[data-point-preset="center"]').click();
+  await page.locator('[data-record]').click();
+  await expect(page.locator('[data-blue-score]')).toHaveText('8');
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', {
+      configurable: true,
+      value: true,
+    });
+    document.dispatchEvent(new Event('visibilitychange'));
+    document.querySelector<HTMLAnchorElement>('#scoring .viewer-link')!.click();
+  });
+  await page.waitForTimeout(1800);
+  await expect(page.locator('[data-demo-marker]')).toHaveAttribute(
+    'hidden',
+    '',
+  );
+  await page.locator('[data-viewer-close]').click();
+  await page.waitForTimeout(400);
+  await expect(page.locator('[data-demo-marker]')).toHaveAttribute(
+    'hidden',
+    '',
+  );
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', {
+      configurable: true,
+      value: false,
+    });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(page.locator('[data-demo-marker]')).not.toHaveAttribute(
+    'hidden',
+  );
+  await page.locator('[data-reset]').click();
+  await expect(page.locator('[data-blue-score]')).toHaveText('6');
+  await expect(page.locator('[data-demo-marker]')).toHaveAttribute(
+    'hidden',
+    '',
+  );
+});
+
+test('net rebound continues after a recorded marker and reset restores its anchored rest pose', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const weave = page.locator('[data-net-weave]');
+  const resting = await weave.getAttribute('d');
+  await page.locator('[data-point-preset="center"]').click();
+  await page.locator('[data-record]').click();
+  await expect(page.locator('[data-demo-marker]')).not.toHaveAttribute(
+    'hidden',
+  );
+  await expect(weave).not.toHaveAttribute('d', resting!);
+  await page.locator('[data-reset]').click();
+  await expect(page.locator('[data-blue-score]')).toHaveText('6');
+  await expect(weave).toHaveAttribute('d', resting!);
+  await page.waitForTimeout(700);
+  await expect(page.locator('[data-demo-marker]')).toHaveAttribute(
+    'hidden',
+    '',
+  );
+  await expect(page.locator('[data-demo-ball]')).toHaveAttribute('hidden', '');
+});
+
 for (const locale of locales) {
   test(`${locale.lang}: gallery uses clean images, bounds zoom and restores focus and position`, async ({
     page,
