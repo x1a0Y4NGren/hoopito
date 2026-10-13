@@ -99,7 +99,8 @@ JavaScript 未运行时，介绍、截图和下载链接仍可访问。
 自动画质依次为 `full`、`effects`、`density`：先减少辉光与拖尾，再降低密度；
 高分屏至少 1.5 倍，普通屏至少 1 倍。仅连续活跃帧参与采样，并使用滞回与
 冷却时间排除空闲、后台和短暂加载；短暂阅读保留活跃帧证据，后台、下载和视口变化清空。
-初始化可用 GPU 计时扩展时，用三次已编译绘制的中位成本依次检查各档，预留页面合成成本，
+初始化可用 GPU 计时扩展时，分别测开场、计分、投篮和俯视镜头的三次已编译绘制中位成本，
+按各镜头中的最高成本依次检查各档，预留页面合成成本，
 再播放开场；扩展不可用时使用运行中采样。该测量不把资源加载或编译时间计为性能不足。
 自动恢复不会超过本次初始化中 GPU 预计算已验证的最高档，避免低档运行较快就误升到
 已经超预算的高档；持续活跃平均低于 58 次/秒或 p95 超过 20ms 时按滞回策略降档。
@@ -194,6 +195,9 @@ DPR 2 是浏览器设备缩放仿真与真实扩大的画布。有窗口测量�
 Android 实机验收需由使用者打开预览，记录型号、浏览器和结果：首次加载与刷新、
 正反向和快速滚动、横竖屏、语言切换、选择位置记分及动画中重置、下载入口。
 自动测试不能替代这项实际体验；未收到实机报告时保持待验。
+若维护者明确允许以本地模拟器替代该轮手机验收，记录 Android 版本、模拟设备、浏览器、
+视口与执行结果，并明确这是模拟器证据。本轮 #7–#10 已获得该授权，实际检查见
+[VERIFICATION.md](VERIFICATION.md)，不再要求手机分享链接或真机反馈。
 
 当前截图来自 [v2.0.1 截图来源](../docs/release/v2.0.1-screenshots.json)，
 绑定正式 APK 的源码 `4ecd960`、摘要、设备、合成数据和拍摄时间。
@@ -223,10 +227,12 @@ Vercel 项目 Root Directory 设置为 `website`，Node.js 为 24.x，安装命�
 `dist/`、`.vercel/`、浏览器报告和本地环境变量文件不提交。
 
 既有 Vercel 项目已更名为 `hoopito-website`，项目身份保持不变，所属空间为
-`xyr175-9459s-projects`。当前网站源码已整合至 `main`，预览分支为
-`codex/hoopito-website`。当前受保护的[分支预览](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app)
-已验证双语首页、移动页面、隐私页、下载和资源摘要；实际源码与不可变部署地址
-记录在 [v2.0.1 发行记录](../docs/release/v2.0.1-release-record.md)。
+`xyr175-9459s-projects`。品牌同步与截图展示规范已合入 `main`，预览分支为
+`codex/hoopito-website`；本轮 #7–#10 精修继续留在预览分支。
+受保护的[分支预览](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app)
+随成功部署更新。本轮精修的源码、验证结果与不可变部署地址见
+[VERIFICATION.md](VERIFICATION.md)；品牌同步基线的实际源码与预览记录保留在
+[v2.0.1 发行记录](../docs/release/v2.0.1-release-record.md)。
 旧品牌预览仅属于历史部署，来源保留在 [VERIFICATION.md](VERIFICATION.md)。
 项目保留 Vercel Authentication；账号登录后可访问，也可通过 Deployment 页面
 的 Share 功能创建有期限的分享链接。分享凭据不写入源码或验证报告。
@@ -237,8 +243,8 @@ Vercel Deployment 详情和构建日志中核对。`output/vercel/` 保存已验
 `main`；新的预览分支为 `codex/hoopito-website`，正式域名尚未发布。
 
 项目已连接 `x1a0Y4NGren/hoopito`。非生产分支允许生成 Preview；本次通过
-Vercel API 的 `gitSource` 指定仓库 ID、预览分支和已推送提交创建部署，
-未把未触发的 Git 自动部署记为通过。
+网站分支推送触发 Git 自动预览，并核对 GitHub deployment 的提交与成功状态。
+早期曾通过 Vercel API 的 `gitSource` 指定仓库与提交创建预览，那些记录保持原有来源。
 `main` 仍是 Production 分支，但 `vercel.json` 的 `git.deploymentEnabled.main=false` 阻止自动生产部署；当前范围仅为网站分支的预览验收，继续保留
 禁止搜索收录设置。源码整合到 `main` 不构成正式上线。正式上线须另行授权解除部署保护并配置 `SITE_URL`。
 

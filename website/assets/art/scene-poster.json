@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "captured_at": "2026-10-13T11:10:18.395Z",
+  "captured_at": "2026-10-13T11:44:22.698Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "browser": "155.0.8059.40",
   "source_inputs": [
     {
       "path": "src/scripts/court-scene.ts",
-      "sha256": "f8d1481fbe73b5f51f4e7ab2a92ecd47acdbecf01e66d0fba3440e55ee80ab80"
+      "sha256": "b1753bb56d0adf5399d37c68d77e17db1fabef4119b5147bdf4084dcbca66b3f"
     },
     {
       "path": "src/scripts/court-hardware.ts",

@@ -344,7 +344,10 @@ document.addEventListener('click', (event) => {
   const element = link?.hash
     ? document.getElementById(link.hash.slice(1))
     : null;
-  if (element) recentAnchor = { element };
+  if (element) {
+    recentAnchor = { element };
+    resumeAnchorNavigation();
+  }
 });
 for (const input of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
   window.addEventListener(input, () => (recentAnchor = undefined), {
@@ -356,16 +359,20 @@ function resumeAnchorNavigation() {
   // scroll. Keep the current navigation intent until manual input cancels it.
   cancelAnimationFrame(anchorFrame);
   anchorFrame = requestAnimationFrame(() => {
-    anchorFrame = 0;
-    if (
-      !disposed &&
-      recentAnchor &&
-      location.hash === `#${recentAnchor.element.id}`
-    )
-      recentAnchor.element.scrollIntoView({
-        behavior: reduced() ? 'instant' : 'smooth',
-        block: 'start',
-      });
+    // Media-context restoration can queue another RAF during refresh. Let both
+    // the native default click and that restoration finish before reconciling.
+    anchorFrame = requestAnimationFrame(() => {
+      anchorFrame = 0;
+      if (
+        !disposed &&
+        recentAnchor &&
+        location.hash === `#${recentAnchor.element.id}`
+      )
+        recentAnchor.element.scrollIntoView({
+          behavior: reduced() ? 'instant' : 'smooth',
+          block: 'start',
+        });
+    });
   });
 }
 // Include ScrollTrigger's own delayed resize/font measurements. Its refresh

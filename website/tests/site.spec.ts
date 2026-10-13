@@ -1340,6 +1340,41 @@ test(
   },
 );
 
+test(
+  'initial GPU budget covers story views and restores the opening pose',
+  { tag: '@webgl', lock: 'webgl-renderer' },
+  async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'GPU pipeline runs in Chromium.',
+    );
+    await allowSoftwareWebGL(page);
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+    const canvas = page.locator('#court-canvas');
+    const costs = JSON.parse(
+      (await canvas.getAttribute('data-calibration')) ?? '[]',
+    );
+    if (costs.length) {
+      for (const cost of costs) {
+        expect(
+          cost.views.map((view: { chapter: string }) => view.chapter),
+        ).toEqual(['hero', 'scoring', 'experience', 'replay']);
+        expect(cost.milliseconds).toBe(
+          Math.max(
+            ...cost.views.map(
+              (view: { milliseconds: number }) => view.milliseconds,
+            ),
+          ),
+        );
+      }
+    }
+    await expect(canvas).toHaveAttribute('data-chapter', 'hero');
+    await expect(canvas).toHaveAttribute('data-story-progress', '0.0000');
+    await expect(page.locator('a[href="#download"]').first()).toBeVisible();
+  },
+);
+
 for (const scale of [1, 2]) {
   test(
     `court rendering at ${scale}x density antialiases its actual scene buffer`,

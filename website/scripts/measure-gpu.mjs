@@ -439,6 +439,16 @@ try {
           page.on('pageerror', (error) => errors.push(error.message));
           await page.addInitScript(() => {
             window.hoopitoGpuFrames = [];
+            window.hoopitoGpuLongTasks = [];
+            if (PerformanceObserver.supportedEntryTypes.includes('longtask'))
+              new PerformanceObserver((list) => {
+                window.hoopitoGpuLongTasks.push(
+                  ...list.getEntries().map((entry) => ({
+                    startTime: entry.startTime,
+                    duration: entry.duration,
+                  })),
+                );
+              }).observe({ type: 'longtask', buffered: true });
             window.hoopitoGpuPhase = 'intro';
             const observe = () => {
               const canvas = document.querySelector('#court-canvas');
@@ -621,6 +631,36 @@ try {
           await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
         } catch (error) {
           const page = context.pages().at(-1);
+          const diagnostic = await page
+            ?.evaluate(async () => {
+              const frames = [...window.hoopitoGpuFrames];
+              const intervals = await new Promise((done) => {
+                const times = [];
+                let previous;
+                let raf;
+                const heartbeat = (time) => {
+                  if (previous !== undefined) times.push(time - previous);
+                  previous = time;
+                  raf = requestAnimationFrame(heartbeat);
+                };
+                raf = requestAnimationFrame(heartbeat);
+                setTimeout(() => {
+                  cancelAnimationFrame(raf);
+                  done(times);
+                }, 2200);
+              });
+              return {
+                frames,
+                nativeRafProbeMs: intervals,
+                longTasks: window.hoopitoGpuLongTasks,
+              };
+            })
+            .catch(() => null);
+          const diagnosticFile = `${target.name}-${viewport.width}-${viewport.dpr}x-failed-events.json`;
+          await writeFile(
+            resolve(output, diagnosticFile),
+            `${JSON.stringify(diagnostic, null, 2)}\n`,
+          );
           const state = await page
             ?.evaluate(() => ({
               hidden: document.hidden,
@@ -636,6 +676,7 @@ try {
             viewport,
             error: error.message,
             state,
+            diagnosticFile,
           });
           await page
             ?.screenshot({

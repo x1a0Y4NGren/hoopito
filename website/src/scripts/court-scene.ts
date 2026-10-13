@@ -741,17 +741,49 @@ export async function createCourtScene(
       // A prepared GPU draw leaves room for native composition and page animation.
       // Probe the same ordered tiers before revealing the scene, while the matching
       // poster remains visible. Compilation and network delays are not evidence.
-      const calibration: { quality: SceneQuality; milliseconds: number }[] = [];
-      for (const candidate of ['full', 'effects', 'density'] as const) {
-        if (candidate !== quality) applyQuality(candidate);
-        const milliseconds = await preparedDrawCost(
-          gl,
-          drawFrame,
-          options.signal,
-        );
-        if (milliseconds === null) break;
-        calibration.push({ quality: candidate, milliseconds });
-        if (milliseconds <= 8) break;
+      const calibration: {
+        quality: SceneQuality;
+        milliseconds: number;
+        views: { chapter: StoryFrame['chapter']; milliseconds: number }[];
+      }[] = [];
+      const openingFrame = frame;
+      const openingIntro = intro.progress;
+      const probeFrames: StoryFrame[] = [
+        { chapter: 'hero', progress: 0, active: true },
+        { chapter: 'scoring', progress: 0.5, active: true },
+        { chapter: 'experience', progress: 0.25, active: true },
+        { chapter: 'replay', progress: 0.5, active: true },
+      ];
+      try {
+        intro.progress = 1;
+        for (const candidate of ['full', 'effects', 'density'] as const) {
+          if (candidate !== quality) applyQuality(candidate);
+          const views: (typeof calibration)[number]['views'] = [];
+          for (const probeFrame of probeFrames) {
+            frame = probeFrame;
+            updateCamera();
+            // Warm the view before measuring: a macro shot cannot establish the
+            // cost of a lit floor filling the buffer later in the story.
+            drawFrame();
+            const milliseconds = await preparedDrawCost(
+              gl,
+              drawFrame,
+              options.signal,
+            );
+            if (milliseconds === null) break;
+            views.push({ chapter: frame.chapter, milliseconds });
+          }
+          if (views.length !== probeFrames.length) break;
+          const milliseconds = Math.max(
+            ...views.map((view) => view.milliseconds),
+          );
+          calibration.push({ quality: candidate, milliseconds, views });
+          if (milliseconds <= 8) break;
+        }
+      } finally {
+        frame = openingFrame;
+        intro.progress = openingIntro;
+        if (!disposed) updateCamera();
       }
       canvas.dataset.calibration = JSON.stringify(calibration);
       monitor.quality = quality;
