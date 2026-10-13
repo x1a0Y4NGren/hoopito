@@ -69,7 +69,7 @@ const src = `/screenshots/${locale}/scoring.webp`;
     </a>
   </figcaption>
 </figure>
-<div class="score-controls" data-score-controls>
+<div class="score-controls" data-score-controls data-guide-mode="click">
   <div class="score-guide">
     <span class="score-current" aria-live="polite" aria-atomic="true">
       <span class="display" data-score-step>
@@ -77,22 +77,9 @@ const src = `/screenshots/${locale}/scoring.webp`;
       </span>
       <strong data-score-current>{c.scoring.features[0][0]}</strong>
     </span>
-    <div class="score-guide-actions">
-      <span
-        id="score-guide-hint"
-        class="score-guide-hint"
-        data-score-hint
-        data-scroll={c.scoring.guide.scroll}
-        data-click={c.scoring.guide.click}
-        data-manual={c.scoring.guide.manual}
-      >
-        {c.scoring.explore}
-      </span>
-      <button class="score-resume" data-score-resume hidden>
-        {c.scoring.guide.resume}
-        <span aria-hidden="true">↓</span>
-      </button>
-    </div>
+    <span id="score-guide-hint" class="score-guide-hint">
+      {c.scoring.guide.click}
+    </span>
   </div>
   <div
     class="score-features"

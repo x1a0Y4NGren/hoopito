@@ -292,11 +292,14 @@ test('native stage distances and reverse jumps leave replay upright and download
   page,
 }) => {
   await page.goto('/');
-  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await expect(page.locator('.pin-spacer')).toHaveCount(2);
+  await expect(page.locator('[data-story-stage="scoring"]')).not.toHaveCSS(
+    'position',
+    'fixed',
+  );
   await page.addStyleTag({ content: 'html {scroll-behavior:auto !important}' });
   for (const [chapter, extra] of [
     ['hero', 0.75],
-    ['scoring', 0.65],
     ['replay', 0.75],
   ] as const) {
     const range = await page
@@ -609,68 +612,56 @@ for (const locale of locales) {
   });
 }
 
-test('scoring feature emphasis follows scroll and retains manual focus only until chapter exit', async ({
+test('scoring flows naturally and changes its explanation only on button activation', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.route(threeChunk, (route) => route.abort());
+  await page.goto('/#scoring');
   await expect(page.locator('[data-score-feature="0"]')).toBeEnabled();
   await page.addStyleTag({ content: 'html {scroll-behavior:auto !important}' });
-  const seek = async (progress: number) => {
-    await page.evaluate((progress) => {
-      const stage = document.querySelector<HTMLElement>(
-        '[data-story-stage="scoring"]',
-      )!;
-      window.scrollTo(
-        0,
-        Number(stage.dataset.storyStart) +
-          (Number(stage.dataset.storyEnd) - Number(stage.dataset.storyStart)) *
-            progress,
-      );
-    }, progress);
-  };
-  await seek(0.05);
-  await expect(page.locator('[data-story-device]')).toHaveAttribute(
-    'data-score-focus',
-    '0',
+  const stage = page.locator('[data-story-stage="scoring"]');
+  const device = page.locator('[data-story-device]');
+  await expect(page.locator('[data-score-controls]')).toHaveAttribute(
+    'data-guide-mode',
+    'click',
   );
-  await expect(page.locator('[data-score-step]')).toHaveText('01 / 03');
-  // Merely tabbing into a feature must not freeze the automatic guide.
-  await page.locator('[data-score-feature="2"]').focus();
-  await seek(0.5);
-  await expect(page.locator('[data-story-device]')).toHaveAttribute(
-    'data-score-focus',
-    '1',
+  await expect(page.locator('[data-score-resume]')).toHaveCount(0);
+  expect(
+    await stage.evaluate((e) =>
+      e.parentElement!.classList.contains('pin-spacer'),
+    ),
+  ).toBe(false);
+  await expect(device).toHaveAttribute('data-score-focus', '0');
+  await stage.evaluate((e) =>
+    window.scrollTo(0, scrollY + e.getBoundingClientRect().top - 110),
   );
-  await expect(page.locator('[data-score-resume]')).toBeHidden();
+  const before = await stage.boundingBox();
+  await page.evaluate(() => window.scrollBy(0, 200));
+  await expect
+    .poll(async () => before!.y - (await stage.boundingBox())!.y)
+    .toBeCloseTo(200, 0);
+  await expect(device).toHaveAttribute('data-score-focus', '0');
   await page.locator('[data-score-feature="2"]').click();
-  await seek(0.5);
-  await expect(page.locator('[data-story-device]')).toHaveAttribute(
-    'data-score-focus',
-    '2',
-  );
+  await expect(device).toHaveAttribute('data-score-focus', '2');
   await expect(page.locator('[data-score-step]')).toHaveText('03 / 03');
-  await expect(page.locator('[data-score-resume]')).toBeVisible();
-  await page.locator('[data-score-resume]').click();
-  await expect(page.locator('[data-story-device]')).toHaveAttribute(
-    'data-score-focus',
-    '1',
-  );
-  await expect(page.locator('[data-score-resume]')).toBeHidden();
-  await expect(page.locator('[data-score-feature="1"]')).toBeFocused();
-  await seek(1);
-  await expect(page.locator('[data-story-device]')).toHaveAttribute(
-    'data-score-focus',
-    '2',
-  );
   await page.locator('#download').scrollIntoViewIfNeeded();
-  await expect(page.locator('[data-story-device]')).toHaveAttribute(
-    'data-score-focus',
+  await stage.scrollIntoViewIfNeeded();
+  await expect(device).toHaveAttribute('data-score-focus', '2');
+  const feature = page.locator('[data-score-feature="1"]');
+  await feature.focus();
+  await expect(device).toHaveAttribute('data-score-focus', '2');
+  await page.keyboard.press('Enter');
+  await expect(device).toHaveAttribute('data-score-focus', '1');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(device).toHaveAttribute('data-score-focus', '1');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(device).toHaveAttribute('data-score-focus', '1');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await stage.scrollIntoViewIfNeeded();
+  await expect(device).toHaveAttribute('data-score-focus', '1');
+  expect(await device.evaluate((e) => getComputedStyle(e).transform)).toBe(
     'none',
-  );
-  await seek(0.5);
-  await expect(page.locator('[data-story-device]')).toHaveAttribute(
-    'data-score-focus',
-    '1',
   );
 });
 
@@ -697,34 +688,21 @@ for (const locale of locales) {
         'opacity',
         '1',
       );
-      await expect(page.locator('[data-score-resume]')).toBeHidden();
+      await expect(page.locator('[data-score-resume]')).toHaveCount(0);
     }
     await expectNoOverflow(page);
   });
-  test(`${locale.lang}: scoring manual controls fit entirely below the desktop navigation`, async ({
+  test(`${locale.lang}: scoring buttons remain readable in natural flow`, async ({
     page,
   }) => {
     await page.route(threeChunk, (route) => route.abort());
     await page.goto(`${locale.path}#scoring`);
     await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
-    await page
-      .locator('[data-story-stage="scoring"]')
-      .evaluate((e) =>
-        window.scrollTo(
-          0,
-          (Number((e as HTMLElement).dataset.storyStart) +
-            Number((e as HTMLElement).dataset.storyEnd)) /
-            2,
-        ),
-      );
     await page.locator('[data-score-feature="2"]').click();
-    await expect(page.locator('[data-score-controls]')).toHaveAttribute(
-      'data-guide-mode',
-      'manual',
-    );
-    await expect(page.locator('[data-score-controls]')).toBeInViewport({
-      ratio: 1,
-    });
+    const controls = page.locator('[data-score-controls]');
+    await expect(controls).toHaveAttribute('data-guide-mode', 'click');
+    await controls.scrollIntoViewIfNeeded();
+    await expect(controls).toBeInViewport({ ratio: 1 });
     for (const button of await page.locator('[data-score-feature]').all())
       await expect(button).toBeInViewport({ ratio: 1 });
   });
@@ -772,18 +750,18 @@ test('cinematic stages unpin cleanly when the viewport or system motion changes'
   });
   await page.goto('/');
   await expect(page.locator('[data-point-preset="center"]')).toBeEnabled();
-  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await expect(page.locator('.pin-spacer')).toHaveCount(2);
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator('.pin-spacer')).toHaveCount(0);
   await expectNoOverflow(page);
   await page.setViewportSize({ width: 1440, height: 900 });
-  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await expect(page.locator('.pin-spacer')).toHaveCount(2);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('.pin-spacer')).toHaveCount(0);
   await expect(page.locator('h1')).toBeVisible();
   await expectDownload(page);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await expect(page.locator('.pin-spacer')).toHaveCount(2);
   await page.locator('.nav-download').click();
   await expect(page).toHaveURL(/#download$/);
   await expect(page.locator('.download-package')).toBeInViewport();
@@ -808,7 +786,7 @@ test('rapid system motion changes restore cinematic stages even within one clock
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
   await page.waitForLoadState('networkidle');
-  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await expect(page.locator('.pin-spacer')).toHaveCount(2);
 
   // Coarse browser clocks can give successive media events the same timestamp.
   // Keep real RAF/timers running; only make GSAP's media-event clock coincide.
@@ -837,7 +815,7 @@ test('rapid system motion changes restore cinematic stages even within one clock
     () =>
       new Promise<void>((resolve) => requestAnimationFrame(() => resolve())),
   );
-  await expect(page.locator('.pin-spacer')).toHaveCount(3, { timeout: 5_000 });
+  await expect(page.locator('.pin-spacer')).toHaveCount(2, { timeout: 5_000 });
   await expect(page.locator('[data-hero-line]').first()).toHaveCSS(
     'opacity',
     '1',
@@ -864,7 +842,7 @@ test('a pending desktop resize keeps native download navigation on target', asyn
   });
   await page.goto('/');
   await page.waitForLoadState('networkidle');
-  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await expect(page.locator('.pin-spacer')).toHaveCount(2);
   await page.evaluate(() => {
     window.addEventListener(
       'resize',
@@ -886,7 +864,7 @@ test('a pending desktop resize keeps native download navigation on target', asyn
   await expect(page.locator('.download-package')).toBeInViewport({
     timeout: 5_000,
   });
-  await expect(page.locator('.pin-spacer')).toHaveCount(3);
+  await expect(page.locator('.pin-spacer')).toHaveCount(2);
 });
 
 async function expectDownload(page: Page) {

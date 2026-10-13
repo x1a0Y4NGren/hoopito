@@ -44,7 +44,7 @@
 }
 .scoring-stage {
   padding-block: 24px;
-  min-height: calc(100svh - var(--header));
+  min-height: 0;
 }
 .scoring-stage .section-top {
   margin-bottom: 12px;
@@ -171,34 +171,10 @@
   font-size: 0.72rem;
   font-weight: 500;
 }
-.score-guide-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
 .score-guide-hint {
   color: #a7aea8;
   font-size: 0.65rem;
   line-height: 1.6;
-}
-.score-resume {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  gap: 10px;
-  padding: 0 12px;
-  border: 0;
-  background: transparent;
-  color: #e7bb91;
-  font-size: 0.7rem;
-  white-space: nowrap;
-  text-decoration: underline;
-  text-underline-offset: 5px;
-  transition: color var(--feedback-duration);
-}
-.score-resume:hover {
-  color: var(--paper);
 }
 .score-features {
   display: grid;

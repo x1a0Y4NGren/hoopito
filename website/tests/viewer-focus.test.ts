@@ -1,38 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  ScoringFocus,
-  constrainView,
-  zoomView,
-} from '../src/scripts/presentation-state.ts';
-
-test('scoring guide opens on the first operation, stays on the last, and holds manual selection until exit', () => {
-  const focus = new ScoringFocus();
-  assert.equal(focus.update(0, true), 0);
-  assert.equal(focus.update(0.1, true), 0);
-  assert.equal(focus.update(0.3, true), 0);
-  assert.equal(focus.update(0.5, true), 1);
-  assert.equal(focus.update(0.7, true), 2);
-  assert.equal(focus.update(0.9, true), 2);
-  assert.equal(focus.update(1, true), 2);
-  focus.choose(0);
-  assert.equal(focus.update(0.8, true), 0);
-  assert.equal(focus.update(0.4, true), 0);
-  assert.equal(focus.update(1, false), null);
-  assert.equal(focus.update(0.5, true), 1);
-});
-
-test('resuming the scoring guide follows the current scroll position without leaving the chapter', () => {
-  const focus = new ScoringFocus();
-  assert.equal(focus.update(0.5, true), 1);
-  focus.choose(2);
-  assert.equal(focus.isManual, true);
-  assert.equal(focus.update(0.1, true), 2);
-  focus.resume();
-  assert.equal(focus.isManual, false);
-  assert.equal(focus.update(0.1, true), 0);
-  assert.equal(focus.update(0.5, true), 1);
-});
+import { constrainView, zoomView } from '../src/scripts/presentation-state.ts';
 
 test('viewer bounds keep fit images centered and let enlarged content reach its edges', () => {
   const size = { width: 300, height: 500, imageWidth: 280, imageHeight: 462 };

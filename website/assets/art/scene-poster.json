@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "captured_at": "2026-10-13T14:38:38.601Z",
+  "captured_at": "2026-10-13T15:12:41.067Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "browser": "155.0.8059.40",
   "source_inputs": [
@@ -50,7 +50,7 @@
     },
     {
       "path": "src/styles/refinement.css",
-      "sha256": "c2178092bda00de7b86545c46332978aeac9f30cd583b99c17e8e21525154370"
+      "sha256": "575fa45e2da03095279496cc4c503bfd7cc2b3265006fe7913fab915f1f97903"
     },
     {
       "path": "src/components/Layout.astro",

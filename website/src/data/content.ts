@@ -43,10 +43,7 @@ export const content = {
       ],
       explore: '探索计分界面',
       guide: {
-        scroll: '下滑继续了解 · 也可点击切换',
         click: '点击功能，查看对应操作区域',
-        manual: '正在查看所选功能',
-        resume: '继续随滚动',
       },
       caption: 'v2.0.1 · 正式包真实计分界面',
       alt: '球豆中文横屏计分界面，蓝红两队记分按钮与中央半场',
@@ -223,10 +220,7 @@ export const content = {
       ],
       explore: 'Explore the scoring screen',
       guide: {
-        scroll: 'Scroll to explore · Or click a feature',
         click: 'Choose a feature to see its controls',
-        manual: 'Exploring your selected feature',
-        resume: 'Follow scroll',
       },
       caption: 'v2.0.1 · Actual Release screen',
       alt: 'Hoopito English landscape scoring screen with blue and red score controls and a half-court',

@@ -1,7 +1,6 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initialDemoState, reduceDemo, type DemoAction } from './demo-state';
-import { ScoringFocus } from './presentation-state';
 import { createScreenshotViewer } from './screenshot-viewer';
 import { createShotFeedback } from './shot-feedback';
 import type {
@@ -29,54 +28,26 @@ function setSuspended(reason: string, paused: boolean) {
   else shotFeedback?.resume();
 }
 const viewer = createScreenshotViewer((open) => setSuspended('viewer', open));
-const scoringFocus = new ScoringFocus();
 const scoreDevice = select<HTMLElement>('[data-story-device]');
-const scoreControls = select<HTMLElement>('[data-score-controls]');
 const scoreStep = select<HTMLElement>('[data-score-step]');
 const scoreCurrent = select<HTMLElement>('[data-score-current]');
-const scoreHint = select<HTMLElement>('[data-score-hint]');
-const scoreResume = select<HTMLButtonElement>('[data-score-resume]');
-let scoringAuto = false;
 const scoreFeatures = [
   ...document.querySelectorAll<HTMLButtonElement>('[data-score-feature]'),
 ];
-function paintScoring(index: number | null) {
-  const next = index === null ? 'none' : String(index);
-  const mode = scoringAuto
-    ? scoringFocus.isManual
-      ? 'manual'
-      : 'scroll'
-    : 'click';
-  if (
-    scoreDevice.dataset.scoreFocus === next &&
-    scoreControls.dataset.guideMode === mode
-  )
-    return;
-  scoreDevice.dataset.scoreFocus = next;
-  scoreControls.dataset.guideMode = mode;
-  scoreStep.textContent = `0${(index ?? 0) + 1} / 03`;
+function paintScoring(index: number) {
+  scoreDevice.dataset.scoreFocus = String(index);
+  scoreStep.textContent = `0${index + 1} / 03`;
   scoreCurrent.textContent =
-    scoreFeatures[index ?? 0].querySelector('strong')!.textContent;
-  scoreHint.textContent = scoreHint.dataset[mode]!;
-  scoreResume.hidden = mode !== 'manual';
+    scoreFeatures[index].querySelector('strong')!.textContent;
   scoreFeatures.forEach((button, i) =>
     button.setAttribute('aria-pressed', String(index === i)),
   );
 }
 scoreFeatures.forEach((button, index) => {
   button.disabled = false;
-  const chooseFeature = () => paintScoring(scoringFocus.choose(index));
-  button.addEventListener('click', chooseFeature);
+  button.addEventListener('click', () => paintScoring(index));
 });
-scoreResume.addEventListener('click', () => {
-  scoringFocus.resume();
-  // Restore keyboard focus before removing the resume control from the flow.
-  const current =
-    scoringFocus.update(stages.get('scoring')?.trigger.progress ?? 0, true) ??
-    0;
-  scoreFeatures[current].focus({ preventScroll: true });
-  updateStory();
-});
+paintScoring(0);
 let abort: AbortController | undefined;
 let deadline: ReturnType<typeof setTimeout> | undefined;
 const choreography = gsap.matchMedia();
@@ -351,18 +322,6 @@ function updateStory() {
   };
   scene?.setStoryFrame(storyFrame);
   root.dataset.chapter = chapter;
-  const scoringBounds = sections[1].getBoundingClientRect();
-  const scoringStage = stages.get('scoring');
-  scoringAuto = !!scoringStage?.trigger.pin && desktop.matches && !reduced();
-  paintScoring(
-    scoringFocus.update(
-      // Instructions follow native scroll immediately; device/camera retain
-      // their separate eased playhead without delaying button feedback.
-      scoringAuto ? scoringStage!.trigger.progress : 0,
-      scoringBounds.top < window.innerHeight - 100 &&
-        scoringBounds.bottom > 100,
-    ),
-  );
   const demoBounds = sections[2].getBoundingClientRect();
   root.dataset.interactive = String(
     !!scene &&
@@ -423,7 +382,7 @@ ScrollTrigger.addEventListener('refresh', resumeAnchorNavigation);
 function needsChoreographyRefresh() {
   if (choreographyReduced !== reduced()) return true;
   if (reduced()) return stages.size > 0;
-  return (['hero', 'scoring', 'replay'] as const).some((chapter) => {
+  return (['hero', 'replay'] as const).some((chapter) => {
     const stage = document.querySelector<HTMLElement>(
       `[data-story-stage="${chapter}"]`,
     );
@@ -431,8 +390,7 @@ function needsChoreographyRefresh() {
     const shouldPin =
       desktop.matches &&
       !!stage &&
-      stage.scrollHeight <=
-        window.innerHeight - (chapter === 'scoring' ? 88 : 50);
+      stage.scrollHeight <= window.innerHeight - 50;
     return !trigger || Boolean(trigger.pin) !== shouldPin;
   });
 }
@@ -505,7 +463,6 @@ choreography.add(
     }
     for (const [chapter, extra] of [
       ['hero', 0.75],
-      ['scoring', 0.65],
       ['replay', 0.75],
     ] as const) {
       const stage = document.querySelector<HTMLElement>(
@@ -514,10 +471,7 @@ choreography.add(
       if (!stage) continue;
       const value = { progress: 0 };
       // Expanded text is allowed to flow naturally instead of being clipped by a pinned viewport.
-      const canPin =
-        isDesktop &&
-        stage.scrollHeight <=
-          window.innerHeight - (chapter === 'scoring' ? 88 : 50);
+      const canPin = isDesktop && stage.scrollHeight <= window.innerHeight - 50;
       const timeline = gsap.timeline({
         scrollTrigger: {
           id: `story-${chapter}`,
@@ -531,7 +485,7 @@ choreography.add(
             canPin ? `+=${window.innerHeight * extra}` : 'bottom 25%',
           pin: canPin,
           pinSpacing: true,
-          scrub: chapter === 'scoring' ? 0.24 : 0.55,
+          scrub: 0.55,
           invalidateOnRefresh: true,
           onRefresh: (trigger) => {
             stage.dataset.storyStart = String(trigger.start);
@@ -556,23 +510,6 @@ choreography.add(
             y: isDesktop ? 0 : 12,
             duration: 1,
             ease: 'none',
-          },
-          0,
-        );
-      } else if (chapter === 'scoring' && isDesktop) {
-        timeline.fromTo(
-          '[data-story-device]',
-          {
-            rotationY: isDesktop ? -16 : 0,
-            rotationX: isDesktop ? 8 : 0,
-            scale: 0.93,
-          },
-          {
-            rotationY: 0,
-            rotationX: 0,
-            scale: 1,
-            duration: 0.18,
-            ease: 'power2.out',
           },
           0,
         );
@@ -651,7 +588,7 @@ choreography.add(
     }
     if (!isDesktop) {
       for (const element of document.querySelectorAll<HTMLElement>(
-        '.scoring-display, .score-features, .demo-map, .replay-editorial > *, .download-package',
+        '.demo-map, .replay-editorial > *, .download-package',
       )) {
         gsap.from(element, {
           opacity: 0,
