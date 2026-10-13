@@ -6,18 +6,13 @@ import ScoringShowcase from './ScoringShowcase.astro';
 import ScreenshotViewer from './ScreenshotViewer.astro';
 import { content, type Locale } from '../data/content';
 import { release } from '../data/release';
-import presentation from '../../../docs/design/screenshot-presentation.json';
+import ReplayShowcase from './ReplayShowcase.astro';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const c = content[locale];
-const screen = (name: string) => `/screenshots/${locale}/${name}.webp`;
-const summarySize = presentation.screenshots.summary.extract;
-const historySize = presentation.screenshots.history.extract;
 const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
-const sampleLabel =
-  locale === 'zh' ? '示例走势 · 宣传图形' : 'SAMPLE FLOW · ILLUSTRATION';
 ---
 
 <Layout locale={locale}>
@@ -301,155 +296,7 @@ const sampleLabel =
       </div>
     </section>
 
-    <section id="replay" class="replay chapter content-width">
-      <div class="replay-stage" data-story-stage="replay">
-        <div class="section-top">
-          <span class="chapter-number display">{c.replay.number}</span>
-          <span class="eyebrow">{c.replay.eyebrow}</span>
-          <span class="section-rule"></span>
-          <span class="display section-code">AFTER THE BUZZER</span>
-        </div>
-        <div class="replay-layout">
-          <div class="replay-copy stage-heading">
-            <h2>
-              {c.replay.title.map((line) => (
-                <span>{line}</span>
-              ))}
-            </h2>
-            <p class="section-body">{c.replay.body}</p>
-            <figure class="replay-graph" data-replay-graph>
-              <figcaption>
-                <span class="display">THE GAME, UNFOLDED.</span>
-                <span>{sampleLabel}</span>
-              </figcaption>
-              <svg
-                viewBox="0 0 420 152"
-                role="img"
-                aria-label={
-                  locale === 'zh'
-                    ? '示例走势：蓝方从六分增加到八分，红方保持六分'
-                    : 'Illustrative flow: Blue goes from six to eight points, Red stays at six'
-                }
-              >
-                <defs>
-                  <linearGradient id="replay-fill" x1="0" y1="0" x2="0" y2="1">
-                    <stop stop-color="#79acdf" stop-opacity=".24" />
-                    <stop offset="1" stop-color="#79acdf" stop-opacity="0" />
-                  </linearGradient>
-                </defs>
-                <path class="graph-grid" d="M20 28H397M20 69H397M20 110H397" />
-                <path d="M20 69H316V28H397V136H20Z" fill="url(#replay-fill)" />
-                <path class="graph-red" d="M20 69H397" />
-                <path
-                  class="graph-blue"
-                  data-example-path
-                  d="M20 69H316V28H397"
-                />
-                <circle cx="397" cy="28" r="5" fill="#79acdf" />
-                <circle cx="397" cy="69" r="4" fill="#dd8176" />
-                <text x="16" y="149">
-                  6 : 6
-                </text>
-                <text x="360" y="149">
-                  8 : 6
-                </text>
-              </svg>
-            </figure>
-          </div>
-          <div class="replay-visual stage-visual">
-            <div class="replay-orbit" aria-hidden="true"></div>
-            <figure
-              class="portrait-device summary-device"
-              data-replay-device="summary"
-            >
-              <div class="portrait-shell">
-                <a
-                  class="image-link"
-                  href={screen('summary')}
-                  data-image-viewer
-                  data-image-title={c.viewer.summary}
-                  aria-label={`${c.viewer.open} · ${c.viewer.summary}`}
-                >
-                  <img
-                    src={screen('summary')}
-                    alt={c.replay.summaryAlt}
-                    width={summarySize.width}
-                    height={summarySize.height}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </a>
-                <span class="device-glass" aria-hidden="true"></span>
-              </div>
-              <figcaption>
-                <span class="display">01 / REVIEW</span>
-                {c.replay.summary}
-                <br />
-                <small>{c.replay.captureNote}</small>
-                <a
-                  class="viewer-link"
-                  href={screen('summary')}
-                  data-image-viewer
-                  data-image-title={c.viewer.summary}
-                >
-                  {c.viewer.open}
-                  <span aria-hidden="true">↗</span>
-                </a>
-              </figcaption>
-            </figure>
-            <figure
-              class="portrait-device history-device"
-              data-replay-device="history"
-            >
-              <div class="portrait-shell">
-                <a
-                  class="image-link"
-                  href={screen('history')}
-                  data-image-viewer
-                  data-image-title={c.viewer.history}
-                  aria-label={`${c.viewer.open} · ${c.viewer.history}`}
-                >
-                  <img
-                    src={screen('history')}
-                    alt={c.replay.historyAlt}
-                    width={historySize.width}
-                    height={historySize.height}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </a>
-                <span class="device-glass" aria-hidden="true"></span>
-              </div>
-              <figcaption>
-                <span class="display">02 / HISTORY</span>
-                {c.replay.history}
-                <br />
-                <small>{c.replay.captureNote}</small>
-                <a
-                  class="viewer-link"
-                  href={screen('history')}
-                  data-image-viewer
-                  data-image-title={c.viewer.history}
-                >
-                  {c.viewer.open}
-                  <span aria-hidden="true">↗</span>
-                </a>
-              </figcaption>
-            </figure>
-          </div>
-        </div>
-      </div>
-      <div class="replay-details">
-        {c.replay.details.map(([title, body], i) => (
-          <article data-story-detail>
-            <span class="display">0{i + 1}</span>
-            <h3>{title}</h3>
-            <p>{body}</p>
-          </article>
-        ))}
-      </div>
-      <p class="fine-print replay-foot">{c.replay.foot}</p>
-    </section>
+    <ReplayShowcase locale={locale} />
 
     <section id="download" class="download chapter">
       <div class="download-halo" aria-hidden="true"></div>

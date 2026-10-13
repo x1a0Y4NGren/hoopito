@@ -76,6 +76,10 @@ export const content = {
       summary: '一场比赛，完整回看',
       history: '每场对决，都有归处',
       captureNote: 'v2.0.1 · 正式包真实截图',
+      captureResult: 'v2.0.1 · 真实赛果示例 8:11',
+      sampleLabel: '示例走势 · 宣传图形',
+      sampleNote: '网页演示 6:6 → 8:6，与 App 截图中的比赛为不同示例。',
+      flowAlt: '示例走势：蓝方从六分增加到八分，红方保持六分',
       summaryAlt: '球豆中文赛果页，显示最终比分与比分走势',
       historyAlt: '球豆中文比赛历史列表',
       details: [
@@ -247,6 +251,12 @@ export const content = {
       summary: 'One game. A clearer picture.',
       history: 'A home for every matchup.',
       captureNote: 'v2.0.1 · Actual Release captures',
+      captureResult: 'v2.0.1 · Actual result example 8:11',
+      sampleLabel: 'SAMPLE FLOW · ILLUSTRATION',
+      sampleNote:
+        'Web demo 6:6 → 8:6. A separate example from the game in the app captures.',
+      flowAlt:
+        'Illustrative flow: Blue goes from six to eight points, Red stays at six',
       summaryAlt:
         'Hoopito English match summary with final score and score flow',
       historyAlt: 'Hoopito English match history list',

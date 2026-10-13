@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "captured_at": "2026-10-13T07:27:52.060Z",
+  "captured_at": "2026-10-13T08:11:01.513Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "browser": "154.0.8037.98",
   "source_inputs": [
@@ -50,7 +50,7 @@
     },
     {
       "path": "src/styles/refinement.css",
-      "sha256": "62ba74b75c8e5699a57aa59d427c5763f97efc4e306ef702e8a6a69082c37390"
+      "sha256": "382d0cd1a00608a0f2364bb93c29ad98b4fdd46557297d518148189b9dea14fc"
     },
     {
       "path": "src/components/Layout.astro",
@@ -58,7 +58,7 @@
     },
     {
       "path": "src/components/Landing.astro",
-      "sha256": "04e14948c07fe80589e298daf549673fc6919efeb234145e050081f3de810fa5"
+      "sha256": "7a98220aa848d1507a42207f41dbb5ac9c839bedea6daee4dfba6a4b30c681f2"
     },
     {
       "path": "../docs/design/screenshot-presentation.json",

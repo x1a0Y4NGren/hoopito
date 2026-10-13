@@ -519,15 +519,61 @@ choreography.add(
       } else {
         timeline.fromTo(
           '[data-replay-device="summary"]',
-          { rotation: isDesktop ? -6 : 0, y: isDesktop ? 28 : 0 },
-          { rotation: 0, y: 0, duration: 0.85, ease: 'power2.out' },
+          {
+            rotationY: isDesktop ? -12 : 0,
+            rotation: isDesktop ? -4 : 0,
+            y: isDesktop ? 28 : 0,
+            scale: isDesktop ? 0.96 : 1,
+          },
+          {
+            rotationY: isDesktop ? -8 : 0,
+            rotation: isDesktop ? -2 : 0,
+            y: isDesktop ? 14 : 0,
+            scale: 1,
+            duration: 0.3,
+            ease: 'power2.out',
+          },
           0,
+        );
+        timeline.to(
+          '[data-replay-device="summary"]',
+          {
+            rotationY: 0,
+            rotation: 0,
+            y: 0,
+            duration: 0.4,
+            ease: 'power2.inOut',
+          },
+          0.3,
         );
         timeline.fromTo(
           '[data-replay-device="history"]',
-          { rotation: isDesktop ? 6 : 0, y: isDesktop ? -28 : 0 },
-          { rotation: 0, y: 0, duration: 0.85, ease: 'power2.out' },
-          0.1,
+          {
+            rotationY: isDesktop ? 14 : 0,
+            rotation: isDesktop ? 3 : 0,
+            y: isDesktop ? -24 : 0,
+            scale: isDesktop ? 0.94 : 1,
+          },
+          {
+            rotationY: isDesktop ? 8 : 0,
+            rotation: isDesktop ? 1 : 0,
+            y: isDesktop ? -12 : 0,
+            scale: 1,
+            duration: 0.3,
+            ease: 'power2.out',
+          },
+          0,
+        );
+        timeline.to(
+          '[data-replay-device="history"]',
+          {
+            rotationY: 0,
+            rotation: 0,
+            y: 0,
+            duration: 0.4,
+            ease: 'power2.inOut',
+          },
+          0.3,
         );
         const path = document.querySelector<SVGPathElement>(
           '[data-example-path]',
@@ -537,8 +583,8 @@ choreography.add(
           timeline.fromTo(
             path,
             { strokeDasharray: length, strokeDashoffset: length },
-            { strokeDashoffset: 0, duration: 0.65, ease: 'none' },
-            0.15,
+            { strokeDashoffset: 0, duration: 0.4, ease: 'none' },
+            0.3,
           );
         }
       }

@@ -45,6 +45,45 @@ const locales = [
 ] as const;
 const threeChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
 
+for (const locale of locales) {
+  test(`${locale.lang}: mobile replay reads introduction, result, insight, then history with distinct examples`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(`${locale.path}#replay`);
+    const sequence = [
+      '.replay-introduction',
+      '[data-replay-device="summary"]',
+      '.replay-insight',
+      '[data-replay-device="history"]',
+    ];
+    let bottom = 0;
+    for (const selector of sequence) {
+      const box = await page.locator(selector).boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.y).toBeGreaterThanOrEqual(bottom - 1);
+      bottom = box!.y + box!.height;
+    }
+    await expect(
+      page.locator('[data-replay-device="summary"] figcaption'),
+    ).toContainText('8:11');
+    await expect(page.locator('.replay-example-note')).toContainText(
+      '6:6 → 8:6',
+    );
+    for (const type of ['summary', 'history']) {
+      const link = page.locator(`[data-replay-device="${type}"] .viewer-link`);
+      await link.click();
+      await expect(page.locator('[data-viewer-image]')).toHaveJSProperty(
+        'naturalHeight',
+        1783,
+      );
+      await page.keyboard.press('Escape');
+      await expect(link).toBeFocused();
+    }
+  });
+}
+
 test('hidden-page and gallery suspension freeze a shot until all reasons are released', async ({
   page,
 }) => {

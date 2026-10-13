@@ -376,6 +376,210 @@
     justify-content: center;
   }
 }
+/* A result leads the composition; the archive sits one step behind it. */
+.replay-stage {
+  padding-bottom: 28px;
+}
+.replay-editorial {
+  display: grid;
+  grid-template-columns: 1.18fr 1fr 0.8fr;
+  grid-template-rows: auto 1fr;
+  gap: 30px 38px;
+  align-items: start;
+  perspective: 1600px;
+  position: relative;
+}
+.replay-editorial::before {
+  content: '';
+  position: absolute;
+  inset: 0 -5% 80px 28%;
+  z-index: -1;
+  background: radial-gradient(ellipse at 45% 42%, #d4a37215, transparent 65%);
+  pointer-events: none;
+}
+.replay-introduction {
+  grid-column: 1;
+  grid-row: 1;
+}
+.replay-introduction h2 {
+  font-size: clamp(2rem, 2.6vw, 3.15rem);
+  line-height: 1.4;
+}
+.en .replay-introduction h2 {
+  font-size: clamp(3.3rem, 3.65vw, 4.5rem);
+  line-height: 1.04;
+}
+.replay-introduction .section-body {
+  margin-top: 24px;
+  max-width: 420px;
+}
+.replay-insight {
+  grid-column: 1;
+  grid-row: 2;
+}
+.replay-editorial .summary-device {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  width: 100%;
+  max-width: 340px;
+  justify-self: center;
+}
+.replay-editorial .history-device {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  padding-top: 76px;
+  width: 100%;
+  max-width: 280px;
+  justify-self: center;
+}
+.replay-editorial .portrait-shell {
+  padding: 8px;
+  border-radius: 25px;
+  border-color: #d4b18b50;
+  background: linear-gradient(
+    145deg,
+    #827567,
+    #313536 14%,
+    #111619 60%,
+    #69533e
+  );
+  box-shadow:
+    0 34px 55px -17px #000b,
+    inset 0 1px #e7caa54d,
+    2px 2px 0 #423a31;
+}
+.replay-editorial .portrait-device img {
+  border-radius: 17px;
+  width: 100%;
+  height: auto;
+}
+.replay-editorial .device-glass {
+  opacity: 0.26;
+}
+.replay-editorial .portrait-device figcaption {
+  padding: 17px 3px 0;
+  font-size: 0.72rem;
+}
+.replay-editorial .portrait-device figcaption strong {
+  display: block;
+  color: #ded7c9;
+  font-weight: 450;
+}
+.replay-editorial .portrait-device figcaption small {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.6rem;
+  color: #9caa9f;
+}
+.replay-editorial .viewer-link {
+  margin-top: 7px;
+}
+.replay-insight .replay-graph {
+  margin: 0;
+  padding: 19px 18px 16px;
+  border-radius: 12px;
+  background: linear-gradient(125deg, #1b272a90, #131b1d80);
+  border-color: #bca17f25;
+  box-shadow: inset 0 1px #ffffff07;
+}
+.replay-example-note {
+  font-size: 0.58rem;
+  line-height: 1.8;
+  color: #8e9a91;
+  margin-top: 12px;
+}
+.replay-findings {
+  margin-top: 22px;
+}
+.replay-findings > div {
+  margin-top: 18px;
+}
+.replay-findings dt {
+  font-size: 0.78rem;
+  color: #d8d2c4;
+}
+.replay-findings dt span {
+  margin-right: 14px;
+  color: #cda579;
+  font-size: 0.7rem;
+}
+.replay-findings dd {
+  margin: 6px 0 0 28px;
+  color: #929e94;
+  font-size: 0.69rem;
+  line-height: 1.8;
+}
+.replay-foot {
+  margin-top: 22px;
+}
+@media (max-width: 1023px) {
+  .replay-editorial {
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+  }
+  .replay-stage {
+    min-height: 0;
+    padding-block: 0 22px;
+  }
+  .replay-editorial::before {
+    inset: 15% 0 0;
+  }
+  .replay-introduction {
+    width: 100%;
+  }
+  .replay-introduction h2 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+  }
+  .en .replay-introduction h2 {
+    font-size: clamp(3.1rem, 9.8vw, 4.8rem);
+  }
+  .replay-introduction .section-body {
+    max-width: 580px;
+    margin-top: 20px;
+  }
+  .replay-editorial .summary-device {
+    width: min(100%, 360px);
+    max-width: 360px;
+    align-self: center;
+  }
+  .replay-editorial .history-device {
+    width: min(100%, 340px);
+    max-width: 340px;
+    align-self: center;
+    padding-top: 0;
+  }
+  .replay-insight {
+    width: 100%;
+    max-width: 580px;
+    align-self: center;
+  }
+  .replay-editorial .portrait-shell {
+    padding: 7px;
+    border-radius: 22px;
+  }
+  .replay-editorial .portrait-device img {
+    border-radius: 15px;
+  }
+  .replay-editorial .portrait-device figcaption {
+    font-size: 0.8rem;
+  }
+  .replay-editorial .portrait-device figcaption small {
+    font-size: 0.67rem;
+  }
+  .replay-example-note {
+    font-size: 0.68rem;
+  }
+  .replay-findings dt {
+    font-size: 0.87rem;
+  }
+  .replay-findings dd {
+    font-size: 0.75rem;
+  }
+  .replay-foot {
+    text-align: left;
+  }
+}
 /* The demo feels like a courtside instrument, with one deliberate shot at a time. */
 .demo-score {
   border-radius: 14px;
