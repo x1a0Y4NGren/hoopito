@@ -2,6 +2,8 @@
 import Layout from './Layout.astro';
 import Icon from './Icon.astro';
 import CourtDiagram from './CourtDiagram.astro';
+import ScoringShowcase from './ScoringShowcase.astro';
+import ScreenshotViewer from './ScreenshotViewer.astro';
 import { content, type Locale } from '../data/content';
 import { release } from '../data/release';
 import presentation from '../../../docs/design/screenshot-presentation.json';
@@ -11,8 +13,8 @@ interface Props {
 const { locale } = Astro.props;
 const c = content[locale];
 const screen = (name: string) => `/screenshots/${locale}/${name}.webp`;
-const landscapeSize = presentation.screenshots.scoring.extract;
-const portraitSize = presentation.screenshots.summary.extract;
+const summarySize = presentation.screenshots.summary.extract;
+const historySize = presentation.screenshots.history.extract;
 const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
 const sampleLabel =
   locale === 'zh' ? '示例走势 · 宣传图形' : 'SAMPLE FLOW · ILLUSTRATION';
@@ -199,51 +201,7 @@ const sampleLabel =
           </h2>
           <p>{c.scoring.body}</p>
         </div>
-        <figure class="scoring-display stage-visual">
-          <div class="device-aura" aria-hidden="true"></div>
-          <div class="screen-label display">
-            <span>
-              <i class="live-dot"></i>LIVE MATCH
-            </span>
-            <span>
-              BLUE <i></i> VS <i></i> RED
-            </span>
-          </div>
-          <div class="landscape-device" data-story-device>
-            <span class="device-camera"></span>
-            <img
-              src={screen('scoring')}
-              alt={c.scoring.alt}
-              width={landscapeSize.width}
-              height={landscapeSize.height}
-              loading="lazy"
-              decoding="async"
-            />
-            <span class="device-glass" aria-hidden="true"></span>
-          </div>
-          <div class="score-callouts" aria-hidden="true">
-            {c.scoring.features.map(([title], i) => (
-              <div data-score-callout>
-                <span class="callout-point"></span>
-                <span class="display">0{i + 1}</span>
-                <span>{title}</span>
-              </div>
-            ))}
-          </div>
-          <figcaption>
-            {c.scoring.caption}
-            <span class="display">REAL APP / REAL RECORDS</span>
-          </figcaption>
-        </figure>
-      </div>
-      <div class="feature-strip">
-        {c.scoring.features.map(([title, body], i) => (
-          <article data-story-detail>
-            <span class="display feature-index">0{i + 1}</span>
-            <strong>{title}</strong>
-            <p>{body}</p>
-          </article>
-        ))}
+        <ScoringShowcase locale={locale} />
       </div>
       <p class="section-foot">{c.scoring.foot}</p>
     </section>
@@ -405,14 +363,22 @@ const sampleLabel =
               data-replay-device="summary"
             >
               <div class="portrait-shell">
-                <img
-                  src={screen('summary')}
-                  alt={c.replay.summaryAlt}
-                  width={portraitSize.width}
-                  height={portraitSize.height}
-                  loading="lazy"
-                  decoding="async"
-                />
+                <a
+                  class="image-link"
+                  href={screen('summary')}
+                  data-image-viewer
+                  data-image-title={c.viewer.summary}
+                  aria-label={`${c.viewer.open} · ${c.viewer.summary}`}
+                >
+                  <img
+                    src={screen('summary')}
+                    alt={c.replay.summaryAlt}
+                    width={summarySize.width}
+                    height={summarySize.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
                 <span class="device-glass" aria-hidden="true"></span>
               </div>
               <figcaption>
@@ -420,6 +386,15 @@ const sampleLabel =
                 {c.replay.summary}
                 <br />
                 <small>{c.replay.captureNote}</small>
+                <a
+                  class="viewer-link"
+                  href={screen('summary')}
+                  data-image-viewer
+                  data-image-title={c.viewer.summary}
+                >
+                  {c.viewer.open}
+                  <span aria-hidden="true">↗</span>
+                </a>
               </figcaption>
             </figure>
             <figure
@@ -427,14 +402,22 @@ const sampleLabel =
               data-replay-device="history"
             >
               <div class="portrait-shell">
-                <img
-                  src={screen('history')}
-                  alt={c.replay.historyAlt}
-                  width={portraitSize.width}
-                  height={portraitSize.height}
-                  loading="lazy"
-                  decoding="async"
-                />
+                <a
+                  class="image-link"
+                  href={screen('history')}
+                  data-image-viewer
+                  data-image-title={c.viewer.history}
+                  aria-label={`${c.viewer.open} · ${c.viewer.history}`}
+                >
+                  <img
+                    src={screen('history')}
+                    alt={c.replay.historyAlt}
+                    width={historySize.width}
+                    height={historySize.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
                 <span class="device-glass" aria-hidden="true"></span>
               </div>
               <figcaption>
@@ -442,6 +425,15 @@ const sampleLabel =
                 {c.replay.history}
                 <br />
                 <small>{c.replay.captureNote}</small>
+                <a
+                  class="viewer-link"
+                  href={screen('history')}
+                  data-image-viewer
+                  data-image-title={c.viewer.history}
+                >
+                  {c.viewer.open}
+                  <span aria-hidden="true">↗</span>
+                </a>
               </figcaption>
             </figure>
           </div>
@@ -608,6 +600,7 @@ const sampleLabel =
       <small>© 2026 · {c.footer.rights}</small>
     </div>
   </footer>
+  <ScreenshotViewer locale={locale} />
   <script>
     import '../scripts/main';
   </script>

@@ -293,7 +293,7 @@
       "source": "website/assets/art/source/scene-poster-compact.webp",
       "source_sha256": "b0d54afcd7b812bd5f856af08145ffa9b374464c493891e1521faeeba2ea3946",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "79b78ff71e2f4053d2c6007ca319ead0ca962872a9015044eb43df69a7b38d94",
+      "capture_record_sha256": "99bb820ecd3bc9eea09f0cbd4d0b1897f5fe24c54dc884fb25331f65aa826b2d",
       "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -337,12 +337,20 @@
           "sha256": "cba3bb1ddc931faf7d647ae68ef3bcc7b3a6cd3ad4b976140bfdfa7641ab6d5b"
         },
         {
+          "path": "src/styles/refinement.css",
+          "sha256": "d93b15f192b34a48e8559fa93f6cb6d9719263a8f919a8b78654f407c0a3b985"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "382713ee8b4627e5d4a85b67ec2006128ee09c57a8626dc1237d9da50ae421a7"
+        },
+        {
           "path": "src/components/Landing.astro",
-          "sha256": "445c2dc6f838ab39f85ecc4b5d99defd343adf6db74ce433b5bdec7c04dea5e7"
+          "sha256": "04e14948c07fe80589e298daf549673fc6919efeb234145e050081f3de810fa5"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
-          "sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74"
+          "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -375,7 +383,7 @@
       "source": "website/assets/art/source/scene-poster-standard.webp",
       "source_sha256": "2b8a169467994ec49c00f2f82c727ed351292f60b1c6b0229a88c420b1ce48e1",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "79b78ff71e2f4053d2c6007ca319ead0ca962872a9015044eb43df69a7b38d94",
+      "capture_record_sha256": "99bb820ecd3bc9eea09f0cbd4d0b1897f5fe24c54dc884fb25331f65aa826b2d",
       "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -419,12 +427,20 @@
           "sha256": "cba3bb1ddc931faf7d647ae68ef3bcc7b3a6cd3ad4b976140bfdfa7641ab6d5b"
         },
         {
+          "path": "src/styles/refinement.css",
+          "sha256": "d93b15f192b34a48e8559fa93f6cb6d9719263a8f919a8b78654f407c0a3b985"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "382713ee8b4627e5d4a85b67ec2006128ee09c57a8626dc1237d9da50ae421a7"
+        },
+        {
           "path": "src/components/Landing.astro",
-          "sha256": "445c2dc6f838ab39f85ecc4b5d99defd343adf6db74ce433b5bdec7c04dea5e7"
+          "sha256": "04e14948c07fe80589e298daf549673fc6919efeb234145e050081f3de810fa5"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
-          "sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74"
+          "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -457,7 +473,7 @@
       "source": "website/assets/art/source/scene-poster-wide.webp",
       "source_sha256": "a5386b1e67c1f7acb0fccc585460bb8808448cf91b01dd87f287599a7dd997e7",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "79b78ff71e2f4053d2c6007ca319ead0ca962872a9015044eb43df69a7b38d94",
+      "capture_record_sha256": "99bb820ecd3bc9eea09f0cbd4d0b1897f5fe24c54dc884fb25331f65aa826b2d",
       "captured_with": "154.0.8037.98; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -501,12 +517,20 @@
           "sha256": "cba3bb1ddc931faf7d647ae68ef3bcc7b3a6cd3ad4b976140bfdfa7641ab6d5b"
         },
         {
+          "path": "src/styles/refinement.css",
+          "sha256": "d93b15f192b34a48e8559fa93f6cb6d9719263a8f919a8b78654f407c0a3b985"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "382713ee8b4627e5d4a85b67ec2006128ee09c57a8626dc1237d9da50ae421a7"
+        },
+        {
           "path": "src/components/Landing.astro",
-          "sha256": "445c2dc6f838ab39f85ecc4b5d99defd343adf6db74ce433b5bdec7c04dea5e7"
+          "sha256": "04e14948c07fe80589e298daf549673fc6919efeb234145e050081f3de810fa5"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
-          "sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74"
+          "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -554,7 +578,7 @@
         "height": 1783
       },
       "presentation_record": "docs/design/screenshot-presentation.json",
-      "presentation_record_sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
       "locale": "zh",
       "theme": "light",
       "screenshot_record": "docs/release/v2.0.1-screenshots.json",
@@ -585,7 +609,7 @@
         "height": 954
       },
       "presentation_record": "docs/design/screenshot-presentation.json",
-      "presentation_record_sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
       "locale": "zh",
       "theme": "light",
       "screenshot_record": "docs/release/v2.0.1-screenshots.json",
@@ -616,7 +640,7 @@
         "height": 1783
       },
       "presentation_record": "docs/design/screenshot-presentation.json",
-      "presentation_record_sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
       "locale": "zh",
       "theme": "light",
       "screenshot_record": "docs/release/v2.0.1-screenshots.json",
@@ -647,7 +671,7 @@
         "height": 1783
       },
       "presentation_record": "docs/design/screenshot-presentation.json",
-      "presentation_record_sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
       "locale": "zh",
       "theme": "light",
       "screenshot_record": "docs/release/v2.0.1-screenshots.json",
@@ -678,7 +702,7 @@
         "height": 1783
       },
       "presentation_record": "docs/design/screenshot-presentation.json",
-      "presentation_record_sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
       "locale": "en",
       "theme": "dark",
       "screenshot_record": "docs/release/v2.0.1-screenshots.json",
@@ -709,7 +733,7 @@
         "height": 954
       },
       "presentation_record": "docs/design/screenshot-presentation.json",
-      "presentation_record_sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
       "locale": "en",
       "theme": "dark",
       "screenshot_record": "docs/release/v2.0.1-screenshots.json",
@@ -740,7 +764,7 @@
         "height": 1783
       },
       "presentation_record": "docs/design/screenshot-presentation.json",
-      "presentation_record_sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
       "locale": "en",
       "theme": "dark",
       "screenshot_record": "docs/release/v2.0.1-screenshots.json",
@@ -771,7 +795,7 @@
         "height": 1783
       },
       "presentation_record": "docs/design/screenshot-presentation.json",
-      "presentation_record_sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
       "locale": "en",
       "theme": "dark",
       "screenshot_record": "docs/release/v2.0.1-screenshots.json",
@@ -843,8 +867,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 114880,
-      "sha256": "1d797b4a2489b454ef9da212378808a672cc5b146df14dd3555c7a651e79c4c8",
+      "bytes": 116284,
+      "sha256": "cc5e9a6bd7d5589821b934ac74fe386ae0e4810ef19f962428e465029730f31f",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -1051,6 +1075,7 @@
         21368,
         21382,
         21450,
+        21452,
         21453,
         21457,
         21462,
@@ -1091,7 +1116,6 @@
         22791,
         22797,
         22806,
-        22815,
         22823,
         22830,
         22833,
@@ -1110,6 +1134,7 @@
         23545,
         23548,
         23562,
+        23567,
         23631,
         23637,
         23646,
@@ -1122,6 +1147,7 @@
         24182,
         24191,
         24211,
+        24212,
         24230,
         24320,
         24335,
@@ -1151,6 +1177,7 @@
         25226,
         25237,
         25252,
+        25302,
         25321,
         25345,
         25351,
@@ -1160,11 +1187,13 @@
         25454,
         25480,
         25490,
+        25506,
         25509,
         25511,
         25552,
         25764,
         25805,
+        25903,
         25918,
         25919,
         25968,
@@ -1251,6 +1280,7 @@
         31169,
         31215,
         31216,
+        31383,
         31435,
         31449,
         31561,
@@ -1277,6 +1307,7 @@
         32493,
         32500,
         32512,
+        32553,
         32593,
         32622,
         32773,
@@ -1318,7 +1349,6 @@
         36164,
         36187,
         36208,
-        36275,
         36339,
         36394,
         36712,
@@ -1333,6 +1363,7 @@
         36827,
         36857,
         36861,
+        36866,
         36873,
         36890,
         36947,
@@ -1346,6 +1377,7 @@
         38169,
         38190,
         38271,
+        38381,
         38382,
         38405,
         38431,
@@ -1378,19 +1410,27 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "445c2dc6f838ab39f85ecc4b5d99defd343adf6db74ce433b5bdec7c04dea5e7"
+          "sha256": "04e14948c07fe80589e298daf549673fc6919efeb234145e050081f3de810fa5"
         },
         {
           "path": "src/components/Layout.astro",
-          "sha256": "4e0e79d1b080f14c9b9f78dab49679db142a0f8c8f5132357903dd98439000ca"
+          "sha256": "382713ee8b4627e5d4a85b67ec2006128ee09c57a8626dc1237d9da50ae421a7"
         },
         {
           "path": "src/components/Privacy.astro",
           "sha256": "ad3e8a6ab71b03877fa7a845cde418668e402e30cb89c78b9bc8baf5e81f64dc"
         },
         {
+          "path": "src/components/ScoringShowcase.astro",
+          "sha256": "b706a7d65172add2eca1ea4c676e95888c53829c8d860d41b93d649f30c82a7a"
+        },
+        {
+          "path": "src/components/ScreenshotViewer.astro",
+          "sha256": "05546ca3ee625fe0e6c41ad7e1cf8c260a30b00e221a62c9c856018d082dbe1c"
+        },
+        {
           "path": "src/data/content.ts",
-          "sha256": "edb73946bee6b9a5d2f02669f0a63a91fee199b2d340308aa18d43d4d33c451d"
+          "sha256": "50b2a31b940da7ba3ecac7a2f46400ac448569f9996f4b44f48d299485281044"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -1450,7 +1490,11 @@
         },
         {
           "path": "src/scripts/main.ts",
-          "sha256": "65f8d7335104d46d3c351b58379fad1332ce02c8d27ea004cb4ce11045b8e678"
+          "sha256": "776740359d8823438a09d6b74a9d33b41b42c1066e8ba49c61f1ead176dd1d0f"
+        },
+        {
+          "path": "src/scripts/presentation-state.ts",
+          "sha256": "f004611838d69175872d6cd47e4ca1c2b4a63fb4f467139fd2f82b4fef5650a0"
         },
         {
           "path": "src/scripts/scene-contract.ts",
@@ -1459,6 +1503,10 @@
         {
           "path": "src/scripts/scene-performance.ts",
           "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+        },
+        {
+          "path": "src/scripts/screenshot-viewer.ts",
+          "sha256": "70050a009539608956473617538b45b4f7b108f8ea991e1dc5e964e7ab0d1432"
         },
         {
           "path": "src/scripts/shaders/court.ts",
@@ -1522,7 +1570,7 @@
         },
         {
           "source": "website/public/fonts/noto-sc.woff2",
-          "sha256": "1d797b4a2489b454ef9da212378808a672cc5b146df14dd3555c7a651e79c4c8"
+          "sha256": "cc5e9a6bd7d5589821b934ac74fe386ae0e4810ef19f962428e465029730f31f"
         },
         {
           "source": "assets/fonts/BarlowCondensed-Medium.ttf",

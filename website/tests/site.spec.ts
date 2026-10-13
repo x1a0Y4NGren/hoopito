@@ -46,6 +46,85 @@ const locales = [
 const threeChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
 
 for (const locale of locales) {
+  test(`${locale.lang}: gallery uses clean images, bounds zoom and restores focus and position`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(locale.path);
+    const link = page.locator('#scoring .viewer-link');
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toHaveAttribute(
+      'href',
+      /\/screenshots\/(zh|en)\/scoring\.webp$/,
+    );
+    const y = await page.evaluate(() => scrollY);
+    await link.click();
+    await expect(page.locator('[data-viewer]')).toBeVisible();
+    await expect(page.locator('[data-viewer-image]')).toHaveJSProperty(
+      'naturalWidth',
+      1818,
+    );
+    for (let i = 0; i < 6; i++) await page.locator('[data-viewer-in]').click();
+    await expect(page.locator('[data-viewer-scale]')).toHaveText('400%');
+    await expect(page.locator('[data-viewer-in]')).toBeDisabled();
+    await page.locator('[data-viewer-fit]').click();
+    await expect(page.locator('[data-viewer-scale]')).toHaveText('100%');
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-viewer]')).not.toBeVisible();
+    await expect(link).toBeFocused();
+    expect(Math.abs((await page.evaluate(() => scrollY)) - y)).toBeLessThan(3);
+    await page.locator('[data-score-feature="1"]').click();
+    await expect(page.locator('[data-story-device]')).toHaveAttribute(
+      'data-score-focus',
+      '1',
+    );
+  });
+}
+
+test('scoring feature emphasis follows scroll and retains manual focus only until chapter exit', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('[data-score-feature="0"]')).toBeEnabled();
+  await page.addStyleTag({ content: 'html {scroll-behavior:auto !important}' });
+  const seek = async (progress: number) => {
+    await page.evaluate((progress) => {
+      const stage = document.querySelector<HTMLElement>(
+        '[data-story-stage="scoring"]',
+      )!;
+      window.scrollTo(
+        0,
+        Number(stage.dataset.storyStart) +
+          (Number(stage.dataset.storyEnd) - Number(stage.dataset.storyStart)) *
+            progress,
+      );
+    }, progress);
+  };
+  await seek(0.3);
+  await expect(page.locator('[data-story-device]')).toHaveAttribute(
+    'data-score-focus',
+    '0',
+  );
+  await page.locator('[data-score-feature="2"]').click();
+  await seek(0.5);
+  await expect(page.locator('[data-story-device]')).toHaveAttribute(
+    'data-score-focus',
+    '2',
+  );
+  await page.locator('#download').scrollIntoViewIfNeeded();
+  await expect(page.locator('[data-story-device]')).toHaveAttribute(
+    'data-score-focus',
+    'none',
+  );
+  await seek(0.5);
+  await expect(page.locator('[data-story-device]')).toHaveAttribute(
+    'data-score-focus',
+    '1',
+  );
+});
+
+for (const locale of locales) {
   test(`${locale.lang}: presentation screenshots preserve app-only dimensions and display proportions`, async ({
     page,
   }) => {

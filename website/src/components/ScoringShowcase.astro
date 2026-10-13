@@ -1,0 +1,90 @@
+---
+import { content, type Locale } from '../data/content';
+import presentation from '../../../docs/design/screenshot-presentation.json';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale];
+const size = presentation.screenshots.scoring.extract;
+const src = `/screenshots/${locale}/scoring.webp`;
+---
+
+<figure class="scoring-display stage-visual">
+  <div class="device-aura" aria-hidden="true"></div>
+  <div class="screen-label display">
+    <span>
+      <i class="live-dot"></i>LIVE MATCH
+    </span>
+    <span>
+      BLUE <i></i> VS <i></i> RED
+    </span>
+  </div>
+  <div class="landscape-device" data-story-device data-score-focus="none">
+    <span class="device-camera" aria-hidden="true"></span>
+    <a
+      class="image-link score-screen"
+      href={src}
+      data-image-viewer
+      data-image-title={c.viewer.scoring}
+      aria-label={`${c.viewer.open} · ${c.viewer.scoring}`}
+    >
+      <img
+        src={src}
+        alt={c.scoring.alt}
+        width={size.width}
+        height={size.height}
+        loading="lazy"
+        decoding="async"
+      />
+      <svg
+        class="score-regions"
+        viewBox={`0 0 ${size.width} ${size.height}`}
+        aria-hidden="true"
+      >
+        <g data-score-region="0">
+          <rect x="10" y="287" width="287" height="650" rx="16" />
+          <rect x="1518" y="287" width="289" height="650" rx="16" />
+        </g>
+        <g data-score-region="1">
+          <rect x="529" y="226" width="759" height="709" rx="5" />
+        </g>
+        <g data-score-region="2">
+          <rect x="646" y="11" width="127" height="126" rx="20" />
+        </g>
+      </svg>
+    </a>
+    <span class="device-glass" aria-hidden="true"></span>
+  </div>
+  <figcaption>
+    <span>{c.scoring.caption}</span>
+    <a
+      class="viewer-link"
+      href={src}
+      data-image-viewer
+      data-image-title={c.viewer.scoring}
+    >
+      {c.viewer.open}
+      <span aria-hidden="true">↗</span>
+    </a>
+  </figcaption>
+</figure>
+<div class="score-features" role="group" aria-label={c.scoring.explore}>
+  {c.scoring.features.map(([title, body], index) => (
+    <button
+      class="score-feature"
+      data-score-feature={index}
+      aria-pressed="false"
+      disabled
+    >
+      <span class="display feature-index">0{index + 1}</span>
+      <span>
+        <strong>{title}</strong>
+        <span class="feature-description">{body}</span>
+      </span>
+      <span class="feature-arrow" aria-hidden="true">
+        ↗
+      </span>
+    </button>
+  ))}
+</div>

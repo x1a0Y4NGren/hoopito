@@ -1,6 +1,8 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initialDemoState, reduceDemo, type DemoAction } from './demo-state';
+import { ScoringFocus } from './presentation-state';
+import { createScreenshotViewer } from './screenshot-viewer';
 import type {
   CourtPoint,
   CourtScene,
@@ -16,6 +18,30 @@ const canvas = select<HTMLCanvasElement>('#court-canvas');
 const desktop = matchMedia('(min-width: 1024px) and (pointer: fine)');
 const systemMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let scene: CourtScene | undefined;
+const suspension = new Set<string>(document.hidden ? ['hidden'] : []);
+function setSuspended(reason: string, paused: boolean) {
+  if (paused) suspension.add(reason);
+  else suspension.delete(reason);
+  scene?.setPaused(suspension.size > 0);
+}
+const viewer = createScreenshotViewer((open) => setSuspended('viewer', open));
+const scoringFocus = new ScoringFocus();
+const scoreDevice = select<HTMLElement>('[data-story-device]');
+const scoreFeatures = [
+  ...document.querySelectorAll<HTMLButtonElement>('[data-score-feature]'),
+];
+function paintScoring(index: number | null) {
+  scoreDevice.dataset.scoreFocus = index === null ? 'none' : String(index);
+  scoreFeatures.forEach((button, i) =>
+    button.setAttribute('aria-pressed', String(index === i)),
+  );
+}
+scoreFeatures.forEach((button, index) => {
+  button.disabled = false;
+  const chooseFeature = () => paintScoring(scoringFocus.choose(index));
+  button.addEventListener('click', chooseFeature);
+  button.addEventListener('focus', chooseFeature);
+});
 let abort: AbortController | undefined;
 let deadline: ReturnType<typeof setTimeout> | undefined;
 let completion: ReturnType<typeof setTimeout> | undefined;
@@ -232,7 +258,7 @@ async function startScene() {
     scene.setStoryFrame(storyFrame);
     if (state.hasLocation) scene.setMadePoint(state.point);
     else scene.selectPoint(state.point);
-    scene.setPaused(document.hidden);
+    scene.setPaused(suspension.size > 0);
     updateStory();
   } catch {
     if (!controller.signal.aborted && abort === controller)
@@ -271,6 +297,14 @@ function updateStory() {
   };
   scene?.setStoryFrame(storyFrame);
   root.dataset.chapter = chapter;
+  const scoringBounds = sections[1].getBoundingClientRect();
+  paintScoring(
+    scoringFocus.update(
+      stages.get('scoring')?.progress ?? 0,
+      scoringBounds.top < window.innerHeight - 100 &&
+        scoringBounds.bottom > 100,
+    ),
+  );
   const demoBounds = sections[2].getBoundingClientRect();
   root.dataset.interactive = String(
     !!scene &&
@@ -463,20 +497,10 @@ choreography.add(
             rotationY: 0,
             rotationX: 0,
             scale: 1,
-            duration: 0.85,
+            duration: 0.25,
             ease: 'power2.out',
           },
           0,
-        );
-        timeline.from(
-          '[data-score-callout]',
-          {
-            opacity: 0.2,
-            x: isDesktop ? 24 : 0,
-            stagger: 0.12,
-            duration: 0.35,
-          },
-          0.35,
         );
       } else {
         timeline.fromTo(
@@ -530,7 +554,7 @@ desktop.addEventListener('change', () => {
   else stopScene();
 });
 document.addEventListener('visibilitychange', () =>
-  scene?.setPaused(document.hidden),
+  setSuspended('hidden', document.hidden),
 );
 document.fonts.ready.then(() => {
   if (!disposed) {
@@ -545,10 +569,11 @@ document.fonts.ready.then(() => {
 });
 window.addEventListener('pagehide', (event) => {
   if (event.persisted) {
-    scene?.setPaused(true);
+    setSuspended('page-cache', true);
     return;
   }
   disposed = true;
+  viewer.dispose();
   stopFlight();
   stopScene();
   choreography.revert();
@@ -558,5 +583,8 @@ window.addEventListener('pagehide', (event) => {
   clearTimeout(resizeTimer);
   clearTimeout(motionTimer);
 });
-window.addEventListener('pageshow', () => scene?.setPaused(document.hidden));
+window.addEventListener('pageshow', () => {
+  setSuspended('page-cache', false);
+  setSuspended('hidden', document.hidden);
+});
 applyMotion();

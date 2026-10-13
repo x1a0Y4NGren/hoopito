@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "captured_at": "2026-10-13T05:27:14.115Z",
+  "captured_at": "2026-10-13T06:49:11.317Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "browser": "154.0.8037.98",
   "source_inputs": [
@@ -45,12 +45,20 @@
       "sha256": "cba3bb1ddc931faf7d647ae68ef3bcc7b3a6cd3ad4b976140bfdfa7641ab6d5b"
     },
     {
+      "path": "src/styles/refinement.css",
+      "sha256": "d93b15f192b34a48e8559fa93f6cb6d9719263a8f919a8b78654f407c0a3b985"
+    },
+    {
+      "path": "src/components/Layout.astro",
+      "sha256": "382713ee8b4627e5d4a85b67ec2006128ee09c57a8626dc1237d9da50ae421a7"
+    },
+    {
       "path": "src/components/Landing.astro",
-      "sha256": "445c2dc6f838ab39f85ecc4b5d99defd343adf6db74ce433b5bdec7c04dea5e7"
+      "sha256": "04e14948c07fe80589e298daf549673fc6919efeb234145e050081f3de810fa5"
     },
     {
       "path": "../docs/design/screenshot-presentation.json",
-      "sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74"
+      "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
     },
     {
       "path": "src/data/court-materials.ts",

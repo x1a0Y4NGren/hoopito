@@ -23,6 +23,8 @@ for (const path of [
   'src/scripts/story-pose.ts',
   'src/scripts/shaders/court.ts',
   'src/styles/site.css',
+  'src/styles/refinement.css',
+  'src/components/Layout.astro',
   'src/components/Landing.astro',
   '../docs/design/screenshot-presentation.json',
   'src/data/court-materials.ts',

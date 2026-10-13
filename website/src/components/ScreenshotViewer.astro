@@ -1,0 +1,47 @@
+---
+import { content, type Locale } from '../data/content';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale].viewer;
+---
+
+<dialog class="image-viewer" data-viewer aria-labelledby="viewer-title">
+  <header class="viewer-header">
+    <div>
+      <span class="display">HOOPITO / APP GALLERY</span>
+      <h2 id="viewer-title" data-viewer-title>
+        {c.title}
+      </h2>
+    </div>
+    <button type="button" data-viewer-close aria-label={c.close} autofocus>
+      <span aria-hidden="true">×</span>
+    </button>
+  </header>
+  <div class="viewer-viewport" data-viewer-viewport>
+    <img data-viewer-image alt="" draggable="false" />
+  </div>
+  <footer class="viewer-footer">
+    <p>{c.hint}</p>
+    <div class="viewer-tools" role="group" aria-label={c.zoom}>
+      <button type="button" data-viewer-out aria-label={c.out}>
+        −
+      </button>
+      <span
+        data-viewer-scale
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        100%
+      </span>
+      <button type="button" data-viewer-in aria-label={c.in}>
+        +
+      </button>
+      <button type="button" data-viewer-fit>
+        {c.fit}
+      </button>
+    </div>
+  </footer>
+</dialog>
