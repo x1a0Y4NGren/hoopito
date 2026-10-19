@@ -1,6 +1,6 @@
 import { gsap } from 'gsap';
 import type { CourtPoint } from './scene-contract';
-import { SHOT_TIMING, shotFrame, netPath } from './shot-timing';
+import { SHOT_TIMING, shotFrame, netPath } from './shot-timing.ts';
 
 export function createShotFeedback(
   ball: SVGGElement,
@@ -23,6 +23,10 @@ export function createShotFeedback(
   }
   rest();
   return {
+    /** The active GSAP clock excludes suspension and remains alive through rebound. */
+    elapsed() {
+      return animation?.time() ?? null;
+    },
     start(point: CourtPoint, onRecorded: () => void) {
       cancel();
       const current = revision,

@@ -64,6 +64,24 @@ test('chapter camera endpoints join without a jump and invalid progress cannot p
   );
 });
 
+test('the interactive chapter holds a true overhead camera, including reduced motion', async () => {
+  const { storyPose } = await import('../src/scripts/story-pose.ts');
+  const rest = storyPose({ chapter: 'experience', progress: 0, active: true });
+  for (const progress of [0, 0.25, 0.5, 0.75, 1]) {
+    const frame = { chapter: 'experience' as const, progress, active: true };
+    assert.deepEqual(
+      storyPose(frame),
+      rest,
+      'Click coordinates must stay stable throughout the short stage',
+    );
+    assert.deepEqual(storyPose(frame, false), rest);
+  }
+  const [x, height, z] = rest.position;
+  assert.ok(height > 20);
+  assert.ok(Math.abs(x - rest.target[0]) < 0.01);
+  assert.ok(Math.abs(z - rest.target[2]) < 0.02);
+});
+
 test('idle, background and one delayed frame do not lower rendering quality', async () => {
   const { ActiveFrameMonitor } =
     await import('../src/scripts/scene-performance.ts');
@@ -150,17 +168,11 @@ test('reading and download stop refreshes while a visible shot or camera movemen
   );
 });
 
-test('reduced motion keeps one hero pose across scrolling and full motion resolves the retained chapter', async () => {
+test('reduced motion keeps the hero artwork outside the interactive chapter and full motion resolves the retained chapter', async () => {
   const { storyPose } = await import('../src/scripts/story-pose.ts');
   const hero = storyPose({ chapter: 'hero', progress: 0, active: true });
   const latest = { chapter: 'replay' as const, progress: 0.72, active: true };
-  for (const chapter of [
-    'hero',
-    'scoring',
-    'experience',
-    'replay',
-    'download',
-  ] as const) {
+  for (const chapter of ['hero', 'scoring', 'replay', 'download'] as const) {
     for (const progress of [0, 0.5, 1]) {
       assert.deepEqual(
         storyPose({ chapter, progress, active: true }, false),

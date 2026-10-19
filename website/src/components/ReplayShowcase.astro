@@ -1,147 +1,271 @@
 ---
 import { content, type Locale } from '../data/content';
 import presentation from '../../../docs/design/screenshot-presentation.json';
+import '../styles/replay-cards.css';
+import {
+  getReplayPaths,
+  getReplayPlotPoint,
+  replayExample,
+} from '../data/replay-example';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const c = content[locale];
 const screen = (name: string) => `/screenshots/${locale}/${name}.webp`;
+const paths = getReplayPaths();
+const finalPoint = getReplayPlotPoint(replayExample.points.at(-1)!);
 ---
 
 <section id="replay" class="replay chapter content-width">
-  <div class="replay-stage" data-story-stage="replay">
-    <div class="section-top">
-      <span class="chapter-number display">{c.replay.number}</span>
-      <span class="eyebrow">{c.replay.eyebrow}</span>
-      <span class="section-rule"></span>
-      <span class="display section-code">AFTER THE BUZZER</span>
-    </div>
-    <div class="replay-editorial">
-      <div class="replay-introduction stage-heading">
-        <h2>
-          {c.replay.title.map((line) => (
-            <span>{line}</span>
-          ))}
-        </h2>
-        <p class="section-body">{c.replay.body}</p>
+  <div class="replay-scroll-shell" data-replay-scroll-shell>
+    <div class="replay-stage" data-story-stage="replay">
+      <div class="section-top">
+        <span class="chapter-number display">{c.replay.number}</span>
+        <span class="eyebrow">{c.replay.eyebrow}</span>
+        <span class="section-rule"></span>
+        <span class="display section-code">AFTER THE BUZZER</span>
       </div>
-      <figure
-        class="portrait-device summary-device"
-        data-replay-device="summary"
-      >
-        <div class="portrait-shell">
-          <a
-            class="image-link"
-            href={screen('summary')}
-            data-image-viewer
-            data-image-title={c.viewer.summary}
-            aria-label={`${c.viewer.open} · ${c.viewer.summary}`}
-          >
-            <img
-              src={screen('summary')}
-              alt={c.replay.summaryAlt}
-              width={presentation.screenshots.summary.extract.width}
-              height={presentation.screenshots.summary.extract.height}
-              loading="lazy"
-              decoding="async"
-            />
-          </a>
-          <span class="device-glass" aria-hidden="true"></span>
+      <div class="replay-editorial">
+        <div class="replay-introduction stage-heading">
+          <h2>
+            {c.replay.title.map((line) => (
+              <span>{line}</span>
+            ))}
+          </h2>
+          <p class="section-body">{c.replay.body}</p>
         </div>
-        <figcaption>
-          <span class="display">01 / REVIEW</span>
-          <strong>{c.replay.summary}</strong>
-          <small>{c.replay.captureResult}</small>
-          <a
-            class="viewer-link"
-            href={screen('summary')}
-            data-image-viewer
-            data-image-title={c.viewer.summary}
-          >
-            {c.viewer.open}
-            <span aria-hidden="true">↗</span>
-          </a>
-        </figcaption>
-      </figure>
-      <div class="replay-insight">
-        <figure class="replay-graph" data-replay-graph>
-          <figcaption>
-            <span class="display">THE GAME, UNFOLDED.</span>
-            <span>{c.replay.sampleLabel}</span>
-          </figcaption>
-          <svg viewBox="0 0 420 152" role="img" aria-label={c.replay.flowAlt}>
-            <defs>
-              <linearGradient id="replay-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop stop-color="#79acdf" stop-opacity=".24" />
-                <stop offset="1" stop-color="#79acdf" stop-opacity="0" />
-              </linearGradient>
-            </defs>
-            <path class="graph-grid" d="M20 28H397M20 69H397M20 110H397" />
-            <path d="M20 69H316V28H397V136H20Z" fill="url(#replay-fill)" />
-            <path class="graph-red" d="M20 69H397" />
-            <path class="graph-blue" data-example-path d="M20 69H316V28H397" />
-            <circle cx="397" cy="28" r="5" fill="#79acdf" />
-            <circle cx="397" cy="69" r="4" fill="#dd8176" />
-            <text x="16" y="149">
-              6 : 6
-            </text>
-            <text x="360" y="149">
-              8 : 6
-            </text>
-          </svg>
-          <p class="replay-example-note">{c.replay.sampleNote}</p>
-        </figure>
-        <dl class="replay-findings">
-          {c.replay.details.slice(0, 2).map(([title, body], index) => (
-            <div>
-              <dt>
-                <span class="display">0{index + 1}</span>
-                {title}
-              </dt>
-              <dd>{body}</dd>
+        <figure
+          class="portrait-device summary-device"
+          data-replay-device="summary"
+        >
+          <span
+            class="replay-card-shadow"
+            data-replay-shadow
+            aria-hidden="true"
+          ></span>
+          <div class="replay-card-flight" data-replay-card>
+            <div class="replay-card-back" aria-hidden="true">
+              <span class="card-back-corner display">01 / REVIEW</span>
+              <span class="card-back-mark"></span>
+              <strong class="display">
+                HOOPITO<span>·</span>
+              </strong>
+              <span class="card-back-foot display">
+                EVERY PLAY LEAVES A TRACE.
+              </span>
             </div>
-          ))}
-        </dl>
-      </div>
-      <figure
-        class="portrait-device history-device"
-        data-replay-device="history"
-      >
-        <div class="portrait-shell">
-          <a
-            class="image-link"
-            href={screen('history')}
-            data-image-viewer
-            data-image-title={c.viewer.history}
-            aria-label={`${c.viewer.open} · ${c.viewer.history}`}
-          >
-            <img
-              src={screen('history')}
-              alt={c.replay.historyAlt}
-              width={presentation.screenshots.history.extract.width}
-              height={presentation.screenshots.history.extract.height}
-              loading="lazy"
-              decoding="async"
-            />
-          </a>
-          <span class="device-glass" aria-hidden="true"></span>
+            <div class="portrait-shell replay-card-front">
+              <a
+                class="image-link"
+                href={screen('summary')}
+                data-image-viewer
+                data-image-title={c.viewer.summary}
+                aria-label={`${c.viewer.open} · ${c.viewer.summary}`}
+              >
+                <img
+                  src={screen('summary')}
+                  alt={c.replay.summaryAlt}
+                  width={presentation.screenshots.summary.extract.width}
+                  height={presentation.screenshots.summary.extract.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+              <span class="device-glass" aria-hidden="true"></span>
+              <span
+                class="replay-card-sheen"
+                data-replay-sheen
+                aria-hidden="true"
+              ></span>
+            </div>
+          </div>
+          <figcaption>
+            <span class="display">01 / REVIEW</span>
+            <strong>{c.replay.summary}</strong>
+            <small>{c.replay.captureResult}</small>
+            <a
+              class="viewer-link"
+              href={screen('summary')}
+              data-image-viewer
+              data-image-title={c.viewer.summary}
+            >
+              {c.viewer.open}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </figcaption>
+        </figure>
+        <div class="replay-insight">
+          <figure class="replay-graph" data-replay-graph>
+            <figcaption>
+              <div>
+                <span class="display">THE GAME, UNFOLDED.</span>
+                <small>{c.replay.sampleLabel}</small>
+              </div>
+              <strong class="replay-live-score display">
+                <span data-replay-blue>8</span>
+                <i>:</i>
+                <span data-replay-red>11</span>
+              </strong>
+            </figcaption>
+            <div class="replay-graph-legend">
+              <span class="graph-blue-key">
+                <i></i>
+                {c.replay.graph.blue}
+              </span>
+              <span class="graph-red-key">
+                <i></i>
+                {c.replay.graph.red}
+              </span>
+              <strong
+                data-replay-event
+                data-opening={c.replay.graph.opening}
+                data-lead={c.replay.graph.lead}
+                data-tie={c.replay.graph.tie}
+                data-turnaround={c.replay.graph.turnaround}
+                data-final={c.replay.graph.final}
+              >
+                {c.replay.graph.final}
+              </strong>
+            </div>
+            <svg viewBox="0 0 460 204" role="img" aria-label={c.replay.flowAlt}>
+              <defs>
+                <clipPath id="replay-flow-clip">
+                  <rect
+                    x="33"
+                    y="20"
+                    width="398"
+                    height="152"
+                    data-replay-clip
+                  />
+                </clipPath>
+              </defs>
+              <path
+                class="graph-grid"
+                d="M34 28H426M34 74H426M34 120H426M34 166H426"
+              />
+              {[12, 8, 4, 0].map((score, i) => (
+                <text
+                  class="graph-axis"
+                  x="20"
+                  y={33 + i * 46}
+                  text-anchor="end"
+                >
+                  {score}
+                </text>
+              ))}
+              <g clip-path="url(#replay-flow-clip)">
+                <path class="graph-red" d={paths.right} />
+                <path class="graph-blue" data-example-path d={paths.left} />
+              </g>
+              <g data-replay-cursor transform={`translate(${finalPoint.x} 0)`}>
+                <path class="graph-cursor-line" d="M0 22V170" />
+                <circle
+                  class="graph-current-red"
+                  cy={finalPoint.rightY}
+                  r="4"
+                  data-replay-red-dot
+                />
+                <circle
+                  class="graph-current-blue"
+                  cy={finalPoint.leftY}
+                  r="4"
+                  data-replay-blue-dot
+                />
+              </g>
+              <text x="34" y="193">
+                0
+              </text>
+              <text x="426" y="193" text-anchor="end">
+                10 {c.replay.graph.rounds}
+              </text>
+            </svg>
+            <div class="replay-moments">
+              {replayExample.keyMoments.slice(0, 3).map((moment, index) => (
+                <div data-replay-moment={moment.id} data-reached="true">
+                  <span class="display">0{index + 1}</span>
+                  <strong>{c.replay.graph[moment.id]}</strong>
+                  <small class="display">
+                    {moment.leftScore} : {moment.rightScore}
+                  </small>
+                </div>
+              ))}
+            </div>
+            <p class="replay-example-note">{c.replay.sampleNote}</p>
+          </figure>
+          <dl class="replay-findings">
+            {c.replay.details.slice(0, 2).map(([title, body], index) => (
+              <div>
+                <dt>
+                  <span class="display">0{index + 1}</span>
+                  {title}
+                </dt>
+                <dd>{body}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
-        <figcaption>
-          <span class="display">02 / HISTORY</span>
-          <strong>{c.replay.history}</strong>
-          <small>{c.replay.captureNote}</small>
-          <a
-            class="viewer-link"
-            href={screen('history')}
-            data-image-viewer
-            data-image-title={c.viewer.history}
-          >
-            {c.viewer.open}
-            <span aria-hidden="true">↗</span>
-          </a>
-        </figcaption>
-      </figure>
+        <figure
+          class="portrait-device history-device"
+          data-replay-device="history"
+        >
+          <span
+            class="replay-card-shadow"
+            data-replay-shadow
+            aria-hidden="true"
+          ></span>
+          <div class="replay-card-flight" data-replay-card>
+            <div class="replay-card-back" aria-hidden="true">
+              <span class="card-back-corner display">02 / HISTORY</span>
+              <span class="card-back-mark"></span>
+              <strong class="display">
+                HOOPITO<span>·</span>
+              </strong>
+              <span class="card-back-foot display">
+                KEEP THE GAME. KEEP THE TRACE.
+              </span>
+            </div>
+            <div class="portrait-shell replay-card-front">
+              <a
+                class="image-link"
+                href={screen('history')}
+                data-image-viewer
+                data-image-title={c.viewer.history}
+                aria-label={`${c.viewer.open} · ${c.viewer.history}`}
+              >
+                <img
+                  src={screen('history')}
+                  alt={c.replay.historyAlt}
+                  width={presentation.screenshots.history.extract.width}
+                  height={presentation.screenshots.history.extract.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+              <span class="device-glass" aria-hidden="true"></span>
+              <span
+                class="replay-card-sheen"
+                data-replay-sheen
+                aria-hidden="true"
+              ></span>
+            </div>
+          </div>
+          <figcaption>
+            <span class="display">02 / HISTORY</span>
+            <strong>{c.replay.history}</strong>
+            <small>{c.replay.captureNote}</small>
+            <a
+              class="viewer-link"
+              href={screen('history')}
+              data-image-viewer
+              data-image-title={c.viewer.history}
+            >
+              {c.viewer.open}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </figcaption>
+        </figure>
+      </div>
     </div>
   </div>
   <p class="fine-print replay-foot">{c.replay.foot}</p>

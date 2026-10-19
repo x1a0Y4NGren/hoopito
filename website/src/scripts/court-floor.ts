@@ -205,17 +205,19 @@ export function createCourtFloor({
 
   const shadow = own(
     new THREE.ShaderMaterial({
+      uniforms: { uBaseShadow: { value: 1 } },
       vertexShader: `varying vec2 vUv;
       void main() {
         vUv = uv;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }`,
       fragmentShader: `varying vec2 vUv;
+      uniform float uBaseShadow;
       void main() {
         vec2 edge = max(abs((vUv - 0.5) * 3.6) - vec2(0.68, 0.59), 0.0);
         float contact = exp(-dot(edge, edge) * 5.2);
         float bounds = 1.0 - smoothstep(0.46, 0.5, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
-        gl_FragColor = vec4(0.002, 0.002, 0.002, contact * bounds * 0.5);
+        gl_FragColor = vec4(0.002, 0.002, 0.002, contact * bounds * 0.5 * uBaseShadow);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,
@@ -235,6 +237,13 @@ export function createCourtFloor({
 
   return {
     mesh,
+    setViewCutaway(value: number) {
+      const amount = Number.isFinite(value)
+        ? THREE.MathUtils.clamp(value, 0, 1)
+        : 0;
+      shadow.uniforms.uBaseShadow!.value = 1 - amount;
+      contact.visible = amount < 1;
+    },
     setLight(value: number) {
       strength.value = Number.isFinite(value)
         ? THREE.MathUtils.clamp(value, 0, 1.5)

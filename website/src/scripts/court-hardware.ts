@@ -3,6 +3,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 type ResourceOwner = <T extends { dispose(): void }>(resource: T) => T;
+type ViewRole = 'basket' | 'ceiling' | 'perimeter' | 'rear-support';
 
 interface CourtHardwareOptions {
   own: ResourceOwner;
@@ -15,6 +16,7 @@ interface GeometryBatch {
   material: THREE.Material;
   parts: THREE.BufferGeometry[];
   castShadow: boolean;
+  viewRole: ViewRole;
 }
 
 /** Model-space hardware, with one merged draw per finish and one animated net. */
@@ -27,12 +29,20 @@ export function createCourtHardware({
   group: THREE.Group;
   setNetImpact(value: number): void;
   setCeilingVisibility(value: number): void;
+  setViewCutaway(value: number): void;
 } {
   const group = new THREE.Group();
   group.name = 'court-hardware';
   const batches = new Map<string, GeometryBatch>();
   const impact = { value: 0 };
   const ceilingMeshes: THREE.Mesh<THREE.BufferGeometry, THREE.Material>[] = [];
+  const cutawayMeshes: {
+    mesh: THREE.Mesh<THREE.BufferGeometry, THREE.Material>;
+    opacity: number;
+    transparent: boolean;
+    depthWrite: boolean;
+    castShadow: boolean;
+  }[] = [];
   const netLength = 0.53;
   const netTop = rim.y - 0.033;
   const netAnchor = new THREE.Vector3(rim.x, netTop, rim.z);
@@ -42,11 +52,13 @@ export function createCourtHardware({
     name: string,
     parameters: THREE.MeshStandardMaterialParameters,
     castShadow = true,
+    viewRole: ViewRole = 'basket',
   ) => {
     batches.set(name, {
       material: own(new THREE.MeshStandardMaterial(parameters)),
       parts: [],
       castShadow,
+      viewRole,
     });
     return name;
   };
@@ -66,13 +78,18 @@ export function createCourtHardware({
     roughness: 0.31,
     metalness: 0.92,
   });
-  const padding = finish('padded-protection', {
-    color: '#15191C',
-    bumpMap: metalMap,
-    bumpScale: 0.004,
-    roughness: 0.91,
-    metalness: 0,
-  });
+  const padding = finish(
+    'padded-protection',
+    {
+      color: '#15191C',
+      bumpMap: metalMap,
+      bumpScale: 0.004,
+      roughness: 0.91,
+      metalness: 0,
+    },
+    true,
+    'rear-support',
+  );
   const orange = finish('orange-rim', {
     color: '#EF652C',
     bumpMap: metalMap,
@@ -96,6 +113,7 @@ export function createCourtHardware({
       depthWrite: false,
     },
     false,
+    'ceiling',
   );
   const marking = finish(
     'backboard-target',
@@ -119,6 +137,7 @@ export function createCourtHardware({
     ),
     parts: [],
     castShadow: false,
+    viewRole: 'basket',
   });
   const glassEdge = finish(
     'glass-edge',
@@ -132,6 +151,20 @@ export function createCourtHardware({
     },
     false,
   );
+  // The front board frame shares the original finishes; only the stand owns
+  // these clones. Their texture references remain owned by the scene caller.
+  function rearFinish(name: string, source: string) {
+    const original = batches.get(source)!;
+    batches.set(name, {
+      material: own(original.material.clone()),
+      parts: [],
+      castShadow: original.castShadow,
+      viewRole: 'rear-support',
+    });
+    return name;
+  }
+  const rearSteel = rearFinish('rear-painted-steel', steel);
+  const rearBrushed = rearFinish('rear-brushed-fasteners', brushed);
 
   // Construction parts never reach the renderer. Dispose these local staging
   // geometries after merging; only the final geometry belongs to the scene owner.
@@ -233,6 +266,7 @@ export function createCourtHardware({
     material: own(new THREE.MeshBasicMaterial({ color: '#0B1318' })),
     parts: [],
     castShadow: false,
+    viewRole: 'perimeter',
   });
   const ceilingStructure = 'ceiling-structure';
   batches.set(ceilingStructure, {
@@ -245,6 +279,7 @@ export function createCourtHardware({
     ),
     parts: [],
     castShadow: false,
+    viewRole: 'ceiling',
   });
   const ceilingMetal = finish(
     'ceiling-metal',
@@ -257,6 +292,7 @@ export function createCourtHardware({
       depthWrite: false,
     },
     false,
+    'ceiling',
   );
   const acoustic = finish(
     'acoustic-panels',
@@ -266,6 +302,7 @@ export function createCourtHardware({
       metalness: 0,
     },
     false,
+    'perimeter',
   );
   const warmStrip = finish(
     'arena-guidance-light',
@@ -277,6 +314,7 @@ export function createCourtHardware({
       metalness: 0.04,
     },
     false,
+    'perimeter',
   );
   for (const z of [-10, -3, 5]) {
     block([26.7, 0.19, 0.17], [0, 8.85, z], ceilingStructure, 0.012);
@@ -353,16 +391,16 @@ export function createCourtHardware({
   const backZ = rim.z - 2.15;
   const boardZ = rim.z - 0.47;
   const boardY = rim.y + 0.525;
-  block([1.46, 0.14, 1.35], [rim.x, 0.045, backZ], steel, 0.04);
+  block([1.46, 0.14, 1.35], [rim.x, 0.045, backZ], rearSteel, 0.04);
   block([1.23, 0.38, 1.08], [rim.x, 0.3, backZ + 0.07], padding, 0.09);
-  block([0.3, 3.88, 0.3], [rim.x, 2.03, backZ - 0.2], steel, 0.037);
+  block([0.3, 3.88, 0.3], [rim.x, 2.03, backZ - 0.2], rearSteel, 0.037);
   block([0.45, 1.57, 0.43], [rim.x, 1.03, backZ - 0.17], padding, 0.063);
   for (const y of [0.57, 1.47]) {
-    block([0.454, 0.047, 0.022], [rim.x, y, backZ + 0.054], steel, 0.005);
+    block([0.454, 0.047, 0.022], [rim.x, y, backZ + 0.054], rearSteel, 0.005);
     block(
       [0.054, 0.057, 0.03],
       [rim.x + 0.15, y, backZ + 0.071],
-      brushed,
+      rearBrushed,
       0.009,
     );
   }
@@ -373,7 +411,7 @@ export function createCourtHardware({
         0.026,
         0.029,
         [rim.x + dx, 0.13, backZ + dz],
-        brushed,
+        rearBrushed,
         undefined,
         6,
       );
@@ -387,17 +425,17 @@ export function createCourtHardware({
         new THREE.Vector3(rim.x + dx, boardY, boardZ - 0.095),
       ],
       0.076,
-      steel,
+      rearSteel,
     );
     beam(
       new THREE.Vector3(rim.x + dx, 2.75, backZ - 0.15),
       new THREE.Vector3(rim.x + dx, 3.91, boardZ - 0.74),
       0.029,
-      brushed,
+      rearBrushed,
     );
-    cylinder(0.088, 0.088, 0.08, [rim.x + dx, 3.55, backZ - 0.2], brushed);
+    cylinder(0.088, 0.088, 0.08, [rim.x + dx, 3.55, backZ - 0.2], rearBrushed);
   }
-  block([0.63, 0.58, 0.065], [rim.x, boardY, boardZ - 0.057], steel, 0.022);
+  block([0.63, 0.58, 0.065], [rim.x, boardY, boardZ - 0.057], rearSteel, 0.022);
   block([1.8, 1.05, 0.023], [rim.x, boardY, boardZ], 'glass-panel', 0.009);
   for (const dx of [-0.917, 0.917]) {
     block([0.031, 1.109, 0.053], [rim.x + dx, boardY, boardZ], steel, 0.009);
@@ -555,7 +593,12 @@ export function createCourtHardware({
         '#include <begin_vertex>\ntransformed = netPosition(transformed);',
       );
   };
-  batches.set('nylon-net', { material: nylon, parts: [], castShadow: false });
+  batches.set('nylon-net', {
+    material: nylon,
+    parts: [],
+    castShadow: false,
+    viewRole: 'basket',
+  });
   const netRows = [0, 0.065, 0.16, 0.265, 0.37, 0.465, netLength];
   const radii = [0.232, 0.225, 0.207, 0.182, 0.159, 0.137, 0.139];
   const nodes = netRows.map((drop, row) =>
@@ -626,10 +669,19 @@ export function createCourtHardware({
       geometry.boundingSphere.radius += 0.09;
     const mesh = new THREE.Mesh(own(geometry), batch.material);
     mesh.name = name;
+    mesh.userData.viewRole = batch.viewRole;
     mesh.castShadow = batch.castShadow;
     mesh.receiveShadow = !name.startsWith('ceiling-') && name !== 'glass-panel';
     group.add(mesh);
-    if (name.startsWith('ceiling-')) ceilingMeshes.push(mesh);
+    if (batch.viewRole === 'ceiling') ceilingMeshes.push(mesh);
+    if (batch.viewRole === 'perimeter' || batch.viewRole === 'rear-support')
+      cutawayMeshes.push({
+        mesh,
+        opacity: batch.material.opacity,
+        transparent: batch.material.transparent,
+        depthWrite: batch.material.depthWrite,
+        castShadow: batch.castShadow,
+      });
   }
 
   return {
@@ -646,6 +698,25 @@ export function createCourtHardware({
       for (const mesh of ceilingMeshes) {
         mesh.visible = opacity > 0.001;
         mesh.material.opacity = opacity;
+      }
+    },
+    setViewCutaway(value) {
+      const cutaway = Number.isFinite(value)
+        ? THREE.MathUtils.clamp(value, 0, 1)
+        : 0;
+      for (const original of cutawayMeshes) {
+        const { mesh } = original;
+        const transparent = cutaway > 0 || original.transparent;
+        if (mesh.material.transparent !== transparent) {
+          mesh.material.transparent = transparent;
+          mesh.material.needsUpdate = true;
+        }
+        mesh.material.opacity = original.opacity * (1 - cutaway);
+        mesh.material.depthWrite = cutaway === 0 && original.depthWrite;
+        mesh.visible = cutaway < 1;
+        // An alpha-blended stand must not leave an opaque shadow behind it.
+        // The caller refreshes its cached shadow map when this state changes.
+        mesh.castShadow = cutaway === 0 && original.castShadow;
       }
     },
   };

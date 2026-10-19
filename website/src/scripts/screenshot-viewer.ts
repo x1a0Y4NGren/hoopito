@@ -13,6 +13,11 @@ export function createScreenshotViewer(onOpenChange: (open: boolean) => void) {
   const scale = dialog.querySelector<HTMLElement>('[data-viewer-scale]')!;
   const zoomIn = dialog.querySelector<HTMLButtonElement>('[data-viewer-in]')!;
   const zoomOut = dialog.querySelector<HTMLButtonElement>('[data-viewer-out]')!;
+  const fitButton =
+    dialog.querySelector<HTMLButtonElement>('[data-viewer-fit]')!;
+  const message = dialog.querySelector<HTMLElement>('[data-viewer-status]')!;
+  const retry = dialog.querySelector<HTMLButtonElement>('[data-viewer-retry]')!;
+  const status = message.parentElement!;
   const listeners = new AbortController();
   const pointers = new Map<number, { x: number; y: number }>();
   let view: ViewState = { zoom: 1, x: 0, y: 0 };
@@ -20,6 +25,10 @@ export function createScreenshotViewer(onOpenChange: (open: boolean) => void) {
   let opener: HTMLElement | undefined;
   let scroll = 0;
   let alive = true;
+  let imageState: 'loading' | 'ready' | 'error' = 'loading';
+  let source = '';
+  let request = 0;
+  let deadline: ReturnType<typeof setTimeout> | undefined;
   const listen = (
     element: EventTarget,
     type: string,
@@ -29,18 +38,26 @@ export function createScreenshotViewer(onOpenChange: (open: boolean) => void) {
     view = constrainView(view, size);
     image.style.transform = `translate(-50%, -50%) translate(${view.x}px, ${view.y}px) scale(${view.zoom})`;
     scale.textContent = `${Math.round(view.zoom * 100)}%`;
-    zoomIn.disabled = view.zoom >= 4;
-    zoomOut.disabled = view.zoom <= 1;
+    zoomIn.disabled = imageState !== 'ready' || view.zoom >= 4;
+    zoomOut.disabled = imageState !== 'ready' || view.zoom <= 1;
+    fitButton.disabled = imageState !== 'ready';
     viewport.dataset.zoomed = String(view.zoom > 1);
   }
-  function fit() {
-    if (!dialog.open || !image.naturalWidth || !image.naturalHeight) return;
+  function fit(reset = false) {
+    if (
+      !dialog.open ||
+      imageState !== 'ready' ||
+      !image.naturalWidth ||
+      !image.naturalHeight
+    )
+      return;
     const width = viewport.clientWidth,
       height = viewport.clientHeight;
     const ratio = Math.min(
       (width - 32) / image.naturalWidth,
       (height - 32) / image.naturalHeight,
     );
+    const previousSize = size;
     size = {
       width,
       height,
@@ -49,13 +66,62 @@ export function createScreenshotViewer(onOpenChange: (open: boolean) => void) {
     };
     image.style.width = `${size.imageWidth}px`;
     image.style.height = `${size.imageHeight}px`;
-    view = { zoom: 1, x: 0, y: 0 };
+    view = reset
+      ? { zoom: 1, x: 0, y: 0 }
+      : {
+          ...view,
+          x: (view.x * size.imageWidth) / previousSize.imageWidth,
+          y: (view.y * size.imageHeight) / previousSize.imageHeight,
+        };
     pointers.clear();
     paint();
   }
   function zoom(value: number) {
+    if (imageState !== 'ready') return;
     view = zoomView(view, value, { x: 0, y: 0 }, size);
     paint();
+  }
+  function setImageState(value: typeof imageState) {
+    imageState = value;
+    viewport.dataset.imageState = value;
+    viewport.setAttribute('aria-busy', String(value === 'loading'));
+    image.hidden = value !== 'ready';
+    status.hidden = value === 'ready';
+    retry.hidden = value !== 'error';
+    message.textContent = value === 'ready' ? '' : message.dataset[value]!;
+    paint();
+  }
+  function loadImage() {
+    clearTimeout(deadline);
+    const current = ++request;
+    if (document.activeElement === retry)
+      dialog
+        .querySelector<HTMLButtonElement>('[data-viewer-close]')!
+        .focus({ preventScroll: true });
+    pointers.clear();
+    view = { zoom: 1, x: 0, y: 0 };
+    setImageState('loading');
+    // Clearing the previous request prevents a cached old picture from being
+    // presented while the new full-resolution image is still unavailable.
+    image.removeAttribute('src');
+    image.src = source;
+    const isCurrent = () => alive && dialog.open && current === request;
+    const fail = () => {
+      if (!isCurrent()) return;
+      request++;
+      clearTimeout(deadline);
+      setImageState('error');
+    };
+    deadline = setTimeout(fail, 12000);
+    void image
+      .decode()
+      .then(() => {
+        if (!isCurrent()) return;
+        clearTimeout(deadline);
+        setImageState('ready');
+        fit(true);
+      })
+      .catch(fail);
   }
   listen(document, 'click', (event) => {
     const click = event as MouseEvent;
@@ -70,41 +136,74 @@ export function createScreenshotViewer(onOpenChange: (open: boolean) => void) {
     const link = (event.target as Element).closest<HTMLAnchorElement>(
       '[data-image-viewer]',
     );
-    if (!link || typeof dialog.showModal !== 'function') return;
+    if (!link || dialog.open || typeof dialog.showModal !== 'function') return;
     event.preventDefault();
     opener = link;
     scroll = window.scrollY;
     image.alt = link.querySelector('img')?.alt ?? link.dataset.imageTitle ?? '';
-    image.src = link.href;
+    source = link.href;
     title.textContent = link.dataset.imageTitle ?? '';
     document.documentElement.classList.add('image-viewer-open');
     dialog.showModal();
     onOpenChange(true);
-    fit();
-    void image
-      .decode()
-      .then(() => {
-        if (alive && dialog.open) fit();
-      })
-      .catch(() => {});
+    loadImage();
   });
   listen(dialog, 'close', () => {
+    request++;
+    clearTimeout(deadline);
+    image.removeAttribute('src');
     document.documentElement.classList.remove('image-viewer-open');
     pointers.clear();
     onOpenChange(false);
-    opener?.focus({ preventScroll: true });
-    window.scrollTo({ top: scroll, behavior: 'instant' });
+    if (alive) {
+      opener?.focus({ preventScroll: true });
+      window.scrollTo({ top: scroll, behavior: 'instant' });
+    }
   });
   listen(dialog.querySelector('[data-viewer-close]')!, 'click', () =>
     dialog.close(),
   );
   listen(zoomIn, 'click', () => zoom(view.zoom + 0.5));
   listen(zoomOut, 'click', () => zoom(view.zoom - 0.5));
-  listen(dialog.querySelector('[data-viewer-fit]')!, 'click', fit);
-  listen(image, 'load', fit);
+  listen(fitButton, 'click', () => fit(true));
+  listen(retry, 'click', loadImage);
+  listen(dialog, 'keydown', (event) => {
+    const key = event as KeyboardEvent;
+    if (
+      key.ctrlKey ||
+      key.metaKey ||
+      key.altKey ||
+      key.isComposing ||
+      imageState !== 'ready'
+    )
+      return;
+    if (key.key === '+' || key.key === '=') zoom(view.zoom + 0.5);
+    else if (key.key === '-') zoom(view.zoom - 0.5);
+    else if (key.key === '0') fit(true);
+    else if (
+      ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key.key)
+    ) {
+      const step = key.shiftKey ? 120 : 48;
+      view = {
+        ...view,
+        x:
+          view.x +
+          (key.key === 'ArrowLeft'
+            ? step
+            : key.key === 'ArrowRight'
+              ? -step
+              : 0),
+        y:
+          view.y +
+          (key.key === 'ArrowUp' ? step : key.key === 'ArrowDown' ? -step : 0),
+      };
+      paint();
+    } else return;
+    key.preventDefault();
+  });
   listen(viewport, 'pointerdown', (event) => {
     const e = event as PointerEvent;
-    if (e.button !== 0) return;
+    if (e.button !== 0 || imageState !== 'ready') return;
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     viewport.setPointerCapture(e.pointerId);
   });
@@ -149,11 +248,13 @@ export function createScreenshotViewer(onOpenChange: (open: boolean) => void) {
     listen(viewport, type, (event) =>
       pointers.delete((event as PointerEvent).pointerId),
     );
-  const observer = new ResizeObserver(fit);
+  const observer = new ResizeObserver(() => fit());
   observer.observe(viewport);
   return {
     dispose() {
       alive = false;
+      request++;
+      clearTimeout(deadline);
       if (dialog.open) dialog.close();
       listeners.abort();
       observer.disconnect();

@@ -1,10 +1,10 @@
 {
-  "version": 2,
-  "generated_at": "2026-10-12",
+  "version": 3,
+  "generated_at": "2026-10-16",
   "tool": "image_gen.imagegen",
   "mode": "built-in",
-  "purpose": "Cinematic indoor HoopTrace court materials. Neutral generated material color and microdetail tiles; runtime lighting, paint and geometry remain in Three.js.",
-  "previous_generation_record": "generation-v1.json",
+  "purpose": "Hoopito indoor court materials. The unbranded basketball uses independently generated natural game-ball leather; classic eight-panel channels, material response and lighting are rendered in Three.js.",
+  "previous_generation_record": "generation-v2.json",
   "assets": [
     {
       "id": "maple",
@@ -46,19 +46,30 @@
     },
     {
       "id": "leather",
-      "source": "source/basketball-leather-v2.png",
-      "prompt": "Use case: photorealistic-natural. Asset type: seamless 2048 by 2048 PBR basketball leather base color material swatch. Perfectly flat orthographic extremely detailed close-up of authentic premium burnt orange basketball pebbled leather. Entire square contains a dense and consistent fine tactile pattern of tiny rounded irregular polygonal pebbles, with shallow narrow darker orange creases between them. Uniform warm ochre-copper orange color, accurate basketball leather with restrained natural variation. The pebbles are approximately ten to fourteen pixels across in the 2048 pixel image, yielding many tiny scales across the tile. Flat uniform neutral diffuse illumination, no directional lighting or large-scale brightness variation. It must tile seamlessly at all four edges. No spherical basketball shape, no black rubber ball seams, no letters or brand, no court, no floor, no object silhouette, no baked rim light or shiny reflections, no shadows or vignette, no dramatic pores, giant stones or reptile scales. No watermark. This color texture will be wrapped onto a 3D basketball; sphere geometry, seams, shading and highlights are implemented separately.",
+      "source": "source/basketball-leather-v3.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless square PBR base-color texture for the leather cover of a classic eight-panel NBA-style indoor game basketball, with absolutely no branding. Primary request: a flat orthographic material scan of genuine broken-in orange-brown basketball leather, close enough to reveal the fine embossed pebble grain. Thousands of tiny, tightly packed, low-relief, slightly flattened irregular rounded pebbles with fine shallow creases, natural leather pores and subtle rubbed tops. The grain must look like authentic game-ball leather, NOT separate beads, cobblestones, reptile scales, porous foam or inflated rubber bumps. Refined tawny burnt orange / warm saddle brown, restrained color variation and a dry matte finish. Each tiny grain approximately 5–8 pixels wide in a 1536px tile; consistent scale and evenly distributed grain across the whole image. Composition: the full square is only the flat leather surface, all four edges tile seamlessly. Lighting: perfectly even neutral diffuse scan illumination, no directional highlights, shadows, vignette or large brightness gradients; the 3D renderer adds lighting. Constraints: no ball silhouette, no sphere, no black panel channels, no lines or seams, no text or numbers, no letters, no NBA or manufacturer logo, no printed marks, no watermark, no border. This is a production material texture, not a picture of a finished ball; classic eight-panel black channels are applied separately on the 3D sphere.",
       "conversion": {
         "maximum_size": 1024,
         "quality": 72,
         "color_space": "srgb"
       },
-      "source_sha256": "892d68d6e9f8ea59a0d078fc26b6bb9b3a54c51f812c31dff33437567a8b7473",
-      "source_dimensions_px": [1254, 1254]
+      "source_sha256": "707c84227ba8e7585b4b077c90cd8b012bff6e344f8fb674dbb40d77cd086470",
+      "source_dimensions_px": [1254, 1254],
+      "visual_references": [
+        {
+          "url": "https://www.wilson.com/en-us/products/nba-official-game-basketball-wz10025",
+          "role": "Reference for genuine game-ball leather grain and warm orange-brown color. No manufacturer image or printed branding is used in the asset."
+        },
+        {
+          "url": "https://pr.nba.com/wilson-nba-global-partnership/",
+          "role": "Reference for the traditional eight-panel configuration. Channels are defined on the sphere separately from the generated repeating material."
+        }
+      ],
+      "reviewed_at": "2026-10-16"
     },
     {
       "id": "leatherDetail",
-      "source": "source/basketball-leather-v2.png",
+      "source": "source/basketball-leather-v3.png",
       "generated_source_id": "leather",
       "conversion": {
         "maximum_size": 512,
@@ -66,9 +77,9 @@
         "grayscale": true,
         "color_space": "linear"
       },
-      "source_sha256": "892d68d6e9f8ea59a0d078fc26b6bb9b3a54c51f812c31dff33437567a8b7473",
+      "source_sha256": "707c84227ba8e7585b4b077c90cd8b012bff6e344f8fb674dbb40d77cd086470",
       "source_dimensions_px": [1254, 1254],
-      "derivation": "Grayscale encoding of the generated basketball leather color source; no independent image generation. Used as a linear microdetail bump map."
+      "derivation": "Grayscale encoding of the independently generated v3 game-ball leather color source. Used as a linear microdetail bump map; no brand marks or black channels are baked into the tile."
     }
   ]
 }

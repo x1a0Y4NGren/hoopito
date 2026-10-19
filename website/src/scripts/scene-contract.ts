@@ -57,15 +57,36 @@ export interface StoryFrame {
 
 export type SceneQuality = 'full' | 'effects' | 'density';
 
+/** Browser viewport coordinates in CSS pixels, independent of drawing-buffer density. */
+export interface SceneRegion {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+export interface CameraPlacement {
+  region: SceneRegion;
+  blend: number;
+  inputEnabled: boolean;
+}
+
 export interface CourtScene {
   setStoryFrame(frame: StoryFrame): void;
+  /** Compose the existing camera into a transparent HTML interaction region. */
+  setCameraPlacement(placement: CameraPlacement | null): void;
+  pointFromClient(clientX: number, clientY: number): CourtPoint | null;
+  /** Project a floor location into browser viewport CSS pixels. */
+  projectPoint(point: CourtPoint): { x: number; y: number } | null;
+  /** Paint the current chapter at the current host size before revealing it. */
+  presentFrame(): void;
   /** Render and capture the current pose before the WebGL drawing buffer is released. */
   exportFrame(): string;
   selectPoint(point: CourtPoint | null): void;
   /** Restore a recorded location, preserving any remaining rebound of that same shot. */
   setMadePoint(point: CourtPoint | null): void;
-  /** One decorative flight; the DOM demo owns scoring and completion. */
-  shoot(point: CourtPoint): void;
+  /** Adopt the DOM shot's active elapsed seconds, preserving its remaining flight/rebound. */
+  shoot(point: CourtPoint, elapsed?: number): void;
   reset(): void;
   /** System accessibility preference changes animation, never the scene or renderer. */
   setMotionEnabled(enabled: boolean): void;
@@ -76,7 +97,6 @@ export interface CourtScene {
 export interface CourtSceneOptions {
   signal: AbortSignal;
   motionEnabled: boolean;
-  onPoint(point: CourtPoint): void;
   onFailure(reason: 'context-lost' | 'performance' | 'initialization'): void;
   onQualityChange?(quality: SceneQuality): void;
 }

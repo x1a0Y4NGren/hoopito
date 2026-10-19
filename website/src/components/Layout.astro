@@ -1,6 +1,8 @@
 ---
 import '../styles/site.css';
 import '../styles/refinement.css';
+import '../styles/demo-invitation.css';
+import '../styles/mobile-download-polish.css';
 import { content, type Locale } from '../data/content';
 interface Props {
   locale: Locale;
@@ -89,6 +91,14 @@ const origin = Astro.site ?? Astro.url.origin;
         }
       }
     </style>
+    <noscript>
+      <style is:inline>
+        .demo-court-stage[data-renderer='2d'] .demo-court {
+          opacity: 1 !important;
+          pointer-events: auto !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body class:list={[locale, privacy && 'privacy-page']}>
     <a class="skip-link" href="#main">

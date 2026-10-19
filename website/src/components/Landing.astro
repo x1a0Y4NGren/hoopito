@@ -39,7 +39,28 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
         fetchpriority="high"
       />
     </picture>
-    <canvas id="court-canvas"></canvas>
+    <picture class="demo-scene-poster" data-demo-poster aria-hidden="true">
+      <source
+        media="(min-width: 1600px) and (pointer: fine)"
+        srcset="/art/scene-poster-demo-wide.webp"
+      />
+      <source
+        media="(min-width: 1200px) and (pointer: fine)"
+        srcset="/art/scene-poster-demo-standard.webp"
+      />
+      <source
+        media="(min-width: 1024px) and (pointer: fine)"
+        srcset="/art/scene-poster-demo-compact.webp"
+      />
+      <img
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E"
+        alt=""
+        width="691"
+        height="810"
+        loading="lazy"
+      />
+    </picture>
+    <canvas id="court-canvas" aria-hidden="true"></canvas>
     <div class="scene-shade"></div>
   </div>
   <div class="page-grain" aria-hidden="true"></div>
@@ -72,7 +93,7 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
       </a>
     </nav>
   </header>
-  <main id="main">
+  <main id="main" tabindex="-1">
     <section id="hero" class="hero chapter">
       <div class="hero-stage" data-story-stage="hero">
         <div class="hero-art" aria-hidden="true">
@@ -202,90 +223,90 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
     </section>
 
     <section id="experience" class="experience chapter content-width" data-demo>
-      <div class="section-top">
-        <span class="chapter-number display">{c.demo.number}</span>
-        <span class="eyebrow">{c.demo.eyebrow}</span>
-        <span class="section-rule"></span>
-        <span class="display section-code">YOUR TURN / +02</span>
-      </div>
-      <div class="demo-layout">
-        <div class="demo-controls">
-          <h2>
-            {c.demo.title.map((line) => (
-              <span>{line}</span>
-            ))}
-          </h2>
-          <p class="section-body">{c.demo.body}</p>
-          <p class="demo-label">
-            <i></i>
-            {c.demo.label}
-          </p>
-          <div class="demo-score">
-            <div class="score-team blue-team">
-              <span class="blue-label">{c.demo.blue}</span>
-              <strong data-blue-score class="display">
-                6
-              </strong>
-            </div>
-            <div class="score-center">
-              <span class="display">
-                1 <i>v</i> 1
-              </span>
-              <span class="score-separator display">:</span>
-              <span class="display">HALF COURT</span>
-            </div>
-            <div class="score-team red-team">
-              <span class="red-label">{c.demo.red}</span>
-              <strong data-red-score class="display">
-                6
-              </strong>
-            </div>
-          </div>
-          <div class="point-presets" role="group" aria-label={c.demo.choose}>
-            {(['left', 'center', 'right'] as const).map((point, i) => (
-              <button data-point-preset={point} aria-pressed="false" disabled>
-                <span class="display">0{i + 1}</span>
-                {c.demo.points[i]}
-              </button>
-            ))}
-          </div>
-          <div class="demo-actions">
-            <button class="button button-orange" data-record disabled>
-              {c.demo.record}
-              <Icon name="plus" />
-            </button>
-            <button class="reset-button" data-reset disabled>
-              <Icon name="reset" />
-              <span>{c.demo.reset}</span>
-            </button>
-          </div>
-          <p
-            class="demo-status"
-            data-demo-status
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-            data-ready={c.demo.statuses.ready}
-            data-selected={c.demo.statuses.selected}
-            data-shooting={c.demo.statuses.shooting}
-            data-scored={c.demo.statuses.scored}
-          >
-            {c.demo.statuses.ready}
-          </p>
-          <p class="fine-print">{c.demo.note}</p>
-          <noscript>
-            <p class="nojs-note">{c.demo.nojs}</p>
-          </noscript>
+      <div class="experience-stage" data-story-stage="experience">
+        <div class="section-top">
+          <span class="chapter-number display">{c.demo.number}</span>
+          <span class="eyebrow">{c.demo.eyebrow}</span>
+          <span class="section-rule"></span>
+          <span class="display section-code">YOUR TURN / +02</span>
         </div>
-        <div class="demo-map">
-          <div class="map-topline display">
-            <span>THE SHOT LAB</span>
-            <span>01 / 01</span>
+        <div class="demo-layout">
+          <div class="demo-controls">
+            <h2>
+              {c.demo.title.map((line) => (
+                <span>{line}</span>
+              ))}
+            </h2>
+            <p class="section-body">{c.demo.body}</p>
+            <p class="demo-label">
+              <i></i>
+              {c.demo.label}
+            </p>
+            <div class="demo-score">
+              <div class="score-team blue-team">
+                <span class="blue-label">{c.demo.blue}</span>
+                <strong data-blue-score class="display">
+                  6
+                </strong>
+              </div>
+              <div class="score-center">
+                <span class="display">
+                  1 <i>v</i> 1
+                </span>
+                <span class="score-separator display">:</span>
+                <span class="display">HALF COURT</span>
+              </div>
+              <div class="score-team red-team">
+                <span class="red-label">{c.demo.red}</span>
+                <strong data-red-score class="display">
+                  6
+                </strong>
+              </div>
+            </div>
+            <div class="point-presets" role="group" aria-label={c.demo.choose}>
+              {(['left', 'center', 'right'] as const).map((point, i) => (
+                <button data-point-preset={point} aria-pressed="false" disabled>
+                  <span class="display">0{i + 1}</span>
+                  {c.demo.points[i]}
+                </button>
+              ))}
+            </div>
+            <div class="demo-actions">
+              <button class="button button-orange" data-record disabled>
+                {c.demo.record}
+                <Icon name="plus" />
+              </button>
+              <button class="reset-button" data-reset disabled>
+                <Icon name="reset" />
+                <span>{c.demo.reset}</span>
+              </button>
+            </div>
+            <p
+              class="demo-status"
+              data-demo-status
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              data-ready={c.demo.statuses.ready}
+              data-selected={c.demo.statuses.selected}
+              data-shooting={c.demo.statuses.shooting}
+              data-scored={c.demo.statuses.scored}
+            >
+              {c.demo.statuses.ready}
+            </p>
+            <p class="fine-print">{c.demo.note}</p>
+            <noscript>
+              <p class="nojs-note">{c.demo.nojs}</p>
+            </noscript>
           </div>
-          <CourtDiagram label={c.demo.courtLabel} />
-          <div class="map-label display">
-            <span>HALF COURT / 1v1</span>
-            <span>SELECT → SCORE → TRACE</span>
+          <div class="demo-map">
+            <div
+              class="demo-court-stage"
+              data-demo-court-host
+              data-renderer="2d"
+            >
+              <CourtDiagram label={c.demo.courtLabel} />
+            </div>
           </div>
         </div>
       </div>
@@ -335,13 +356,11 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
           <div class="download-package">
             <div class="package-heading">
               <span class="eyebrow">ANDROID RELEASE</span>
-              <span class="release-tag">v{release.version}</span>
+              <span class="release-tag">{c.download.channel}</span>
             </div>
             <div class="version-line">
               <span class="display">HOOPITO</span>
-              <b class="display">
-                {release.version.split('.').slice(0, 2).join('.')}
-              </b>
+              <b class="display">{release.version}</b>
             </div>
             <p class="package-meta">
               {c.download.system.replace('{version}', release.minimumAndroid)}

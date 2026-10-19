@@ -12,7 +12,12 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createCourtHardware } from './court-hardware';
 import { createCourtFloor } from './court-floor';
 import { loadCourtTextures } from './court-textures';
-import { storyPose } from './story-pose';
+import {
+  createCameraPoseResolver,
+  courtPointFromClient,
+  normalizeCameraPlacement,
+  projectCourtPoint,
+} from './camera-placement';
 import { preparedDrawCost } from './gpu-calibration';
 import { ShotContinuation } from './scene-contract';
 import {
@@ -27,6 +32,7 @@ import type {
   CourtSceneOptions,
   StoryFrame,
   SceneQuality,
+  CameraPlacement,
 } from './scene-contract';
 import {
   courtVertex,
@@ -70,6 +76,10 @@ export async function createCourtScene(
   let motionEnabled = options.motionEnabled;
   let quality: SceneQuality = 'full';
   let frame: StoryFrame = { chapter: 'hero', progress: 0, active: true };
+  let cameraPlacement: CameraPlacement | null = null;
+  const resolveCameraPose = createCameraPoseResolver();
+  let appliedCameraPose: ReturnType<typeof resolveCameraPose> | undefined;
+  let appliedIntroProgress = NaN;
   let flight: gsap.core.Timeline | undefined;
   const shotContinuation = new ShotContinuation();
   let introduction: gsap.core.Tween | undefined;
@@ -79,10 +89,6 @@ export async function createCourtScene(
   let changingUntil = 0;
   const intro = { progress: motionEnabled ? 0 : 1 };
   const aim = new THREE.Vector3();
-  const pointer = new THREE.Vector2();
-  const raycaster = new THREE.Raycaster();
-  const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-  const intersection = new THREE.Vector3();
 
   const own = <T extends { dispose(): void }>(resource: T): T => {
     if (disposed) {
@@ -135,7 +141,6 @@ export async function createCourtScene(
     introduction?.kill();
     shotContinuation.cancel();
     removeTrail();
-    canvas.removeEventListener('pointerup', onPointerUp);
     canvas.removeEventListener('webglcontextlost', onContextLost);
     window.removeEventListener('resize', resize);
     resizeObserver?.disconnect();
@@ -148,6 +153,7 @@ export async function createCourtScene(
     scene.clear();
     delete canvas.dataset.sceneReady;
     canvas.dataset.rendering = 'off';
+    canvas.dataset.inputEnabled = 'false';
   }
 
   // Declared before setup so cancellation also works during shader compilation.
@@ -167,9 +173,14 @@ export async function createCourtScene(
   let orangeRimLight: THREE.SpotLight | undefined;
   let hardware: ReturnType<typeof createCourtHardware> | undefined;
   let courtFloor: ReturnType<typeof createCourtFloor> | undefined;
+  const arenaShell = new THREE.Group();
+  const shellSurfaces: THREE.Material[] = [];
+  let previousCutaway = -1;
   const desiredCamera = new THREE.Vector3();
   const desiredTarget = new THREE.Vector3();
   let resizeObserver: ResizeObserver | undefined;
+  let viewportWidth = 0;
+  let viewportHeight = 0;
 
   function requestRender() {
     if (
@@ -201,9 +212,11 @@ export async function createCourtScene(
     if (disposed || !renderer || !composer) return;
     const width = Math.max(1, canvas.clientWidth || window.innerWidth);
     const height = Math.max(1, canvas.clientHeight || window.innerHeight);
+    viewportWidth = width;
+    viewportHeight = height;
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    // The element is the actual right-hand stage, rather than a clipped full-screen buffer.
+    // Chapter composition never changes this background canvas or its drawing density.
     const pixelRatio = renderDensity(
       window.devicePixelRatio || 1,
       quality,
@@ -256,7 +269,20 @@ export async function createCourtScene(
   }
 
   function updateCamera() {
-    const pose = storyPose(frame, motionEnabled);
+    const inputEnabled = String(canReceiveInput());
+    if (canvas.dataset.inputEnabled !== inputEnabled)
+      canvas.dataset.inputEnabled = inputEnabled;
+    const bounds = canvas.getBoundingClientRect();
+    const pose = resolveCameraPose(
+      frame,
+      bounds,
+      cameraPlacement,
+      motionEnabled,
+    );
+    // Placement, story, input projection and rendering can share one pose.
+    // Apply its matrices, light/cutaway and DOM state only once, synchronously.
+    if (pose === appliedCameraPose && intro.progress === appliedIntroProgress)
+      return;
     desiredCamera.set(...pose.position);
     desiredTarget.set(...pose.target);
     // The opening stays a macro composition: a gentle focus approach ends at hero progress zero.
@@ -267,12 +293,28 @@ export async function createCourtScene(
       );
     camera.position.copy(desiredCamera);
     aim.copy(desiredTarget);
+    camera.up.set(...(pose.up ?? [0, 1, 0]));
     camera.lookAt(aim);
-    if (camera.fov !== pose.fov) {
+    const aspect = bounds.width / bounds.height;
+    const aspectChanged =
+      Number.isFinite(aspect) && aspect > 0 && camera.aspect !== aspect;
+    // Preserve the macro ball's close focus, then recover depth precision as
+    // the camera rises. A constant 15mm near plane makes overhead paint fight
+    // the wood despite their physical separation.
+    const near = THREE.MathUtils.clamp(camera.position.y * 0.01, 0.015, 0.2);
+    if (camera.fov !== pose.fov || aspectChanged || camera.near !== near) {
       camera.fov = pose.fov;
+      camera.near = near;
+      if (aspectChanged) camera.aspect = aspect;
       camera.updateProjectionMatrix();
     }
     camera.updateMatrixWorld();
+    canvas.dataset.cameraView =
+      frame.chapter === 'experience' &&
+      (!cameraPlacement || cameraPlacement.blend === 1 || !motionEnabled)
+        ? 'overhead'
+        : 'story';
+    canvas.dataset.placementBlend = (cameraPlacement?.blend ?? 0).toFixed(4);
     if (paint) paint.uniforms.uReveal!.value = pose.reveal;
     if (keyLight) keyLight.intensity = 130 * pose.light;
     if (orangeRimLight) orangeRimLight.intensity = 125 * pose.light;
@@ -284,28 +326,50 @@ export async function createCourtScene(
     hardware?.setCeilingVisibility(
       1 - THREE.MathUtils.smoothstep(camera.position.y, 6.8, 7.8),
     );
+    // The same rising camera opens an architectural cutaway. Keep the basket
+    // and court intact while removing the perimeter and rear stand from view.
+    // Height is continuous across all chapters, including reverse travel.
+    const cutaway = THREE.MathUtils.smoothstep(camera.position.y, 8, 18);
+    applyViewCutaway(cutaway);
+    appliedCameraPose = pose;
+    appliedIntroProgress = intro.progress;
   }
 
-  function onPointerUp(event: PointerEvent) {
-    if (
-      disposed ||
-      paused ||
-      event.button !== 0 ||
-      !frame.active ||
-      frame.chapter !== 'experience'
-    )
-      return;
-    const bounds = canvas.getBoundingClientRect();
-    pointer.set(
-      ((event.clientX - bounds.left) / bounds.width) * 2 - 1,
-      (-(event.clientY - bounds.top) / bounds.height) * 2 + 1,
+  function applyViewCutaway(cutaway: number) {
+    // Shader preparation also uses this path without moving the camera.
+    // Its temporary material state must be restored on the next synchronization.
+    appliedCameraPose = undefined;
+    hardware?.setViewCutaway(cutaway);
+    courtFloor?.setViewCutaway(cutaway);
+    arenaShell.visible = cutaway < 0.999;
+    for (const surface of shellSurfaces) {
+      const transparent = cutaway > 0;
+      if (surface.transparent !== transparent) {
+        surface.transparent = transparent;
+        surface.depthWrite = !transparent;
+        surface.needsUpdate = true;
+      }
+      surface.opacity = 1 - cutaway;
+    }
+    // These shadows are cached: update when the rear stand begins/ends its
+    // cutaway, rather than leaving a solid silhouette after it has faded out.
+    const opaqueShell = cutaway === 0;
+    const wasOpaqueShell = previousCutaway <= 0;
+    if (renderer && opaqueShell !== wasOpaqueShell)
+      renderer.shadowMap.needsUpdate = true;
+    previousCutaway = cutaway;
+    canvas.dataset.viewCutaway = cutaway.toFixed(4);
+  }
+
+  function canReceiveInput() {
+    return (
+      !disposed &&
+      ready &&
+      !paused &&
+      frame.active &&
+      frame.chapter === 'experience' &&
+      Boolean(cameraPlacement?.inputEnabled)
     );
-    raycaster.setFromCamera(pointer, camera);
-    if (!raycaster.ray.intersectPlane(floorPlane, intersection)) return;
-    const x = intersection.x / WIDTH + 0.5;
-    const y = intersection.z / LENGTH + 0.5;
-    if (x >= 0.02 && x <= 0.98 && y >= 0.04 && y <= 0.98)
-      options.onPoint({ x, y });
   }
 
   function applyQuality(nextQuality: SceneQuality) {
@@ -479,10 +543,17 @@ export async function createCourtScene(
     // Matte acoustic walls carry the ambient base finish; no view-dependent BRDF
     // is visible here. Their contour lights remain separate emissive geometry.
     const wall = own(new THREE.MeshBasicMaterial({ color: '#090E11' }));
-    box([27, 9, 0.24], [0, 4.4, -13.5], wall);
-    box([0.22, 8.8, 36], [-13.5, 4.3, 2], wall);
-    box([0.22, 8.8, 36], [13.5, 4.3, 2], wall);
-    box([26.8, 0.034, 0.045], [0, 0.48, -13.34], emissiveAmber);
+    const shellLight = own(emissiveAmber.clone());
+    shellSurfaces.push(wall, shellLight);
+    arenaShell.name = 'arena-cutaway-shell';
+    add(arenaShell);
+    box([27, 9, 0.24], [0, 4.4, -13.5], wall, arenaShell);
+    box([0.22, 8.8, 36], [-13.5, 4.3, 2], wall, arenaShell);
+    box([0.22, 8.8, 36], [13.5, 4.3, 2], wall, arenaShell);
+    box([26.8, 0.034, 0.045], [0, 0.48, -13.34], shellLight, arenaShell);
+    arenaShell.traverse((part) => {
+      if (part instanceof THREE.Mesh) part.castShadow = false;
+    });
 
     courtFloor = createCourtFloor({ own, mapleMap: textures.maple, rim: RIM });
     add(courtFloor.mesh);
@@ -518,6 +589,7 @@ export async function createCourtScene(
         depthWrite: false,
         polygonOffset: true,
         polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1,
         toneMapped: true,
       }),
     );
@@ -561,20 +633,23 @@ export async function createCourtScene(
         ? (textures.leatherDetail as THREE.Texture)
         : own(leather.clone());
     leather.colorSpace = THREE.SRGBColorSpace;
-    leather.repeat.set(4, 2);
+    // Mirrored sampling joins the generated grain without a hard tile boundary.
+    leather.wrapS = leather.wrapT = THREE.MirroredRepeatWrapping;
+    leather.repeat.set(6, 3);
     leatherDetail.colorSpace = THREE.NoColorSpace;
-    leatherDetail.repeat.set(4, 2);
+    leatherDetail.wrapS = leatherDetail.wrapT = THREE.MirroredRepeatWrapping;
+    leatherDetail.repeat.set(6, 3);
     const ballSurface = material({
-      color: '#DDBD97',
+      color: '#FFFFFF',
       map: leather,
       bumpMap: leatherDetail,
-      bumpScale: 0.00032,
-      roughness: 0.73,
-      metalness: 0.015,
+      bumpScale: 0.00022,
+      roughness: 0.79,
+      metalness: 0,
     });
     // Surface channels, antialiased in screen space, keep the ball silhouette round.
     // Modelling these as exposed tubes made close-ups look like cables wrapped round a ball.
-    ballSurface.customProgramCacheKey = () => 'hoopito-leather-channels-v2';
+    ballSurface.customProgramCacheKey = () => 'hoopito-eight-panel-leather-v3';
     ballSurface.onBeforeCompile = (shader) => {
       shader.vertexShader = shader.vertexShader
         .replace(
@@ -598,12 +673,22 @@ export async function createCourtScene(
           float twist = (leatherDirection.x * leatherDirection.x - leatherDirection.z * leatherDirection.z)
             / max(dot(leatherDirection.xz, leatherDirection.xz), 0.00001);
           float straightChannel = min(abs(leatherDirection.x), abs(leatherDirection.z));
-          float curvedChannel = min(abs(latitude - 0.53 * twist), abs(latitude + 0.53 * twist));
+          // Two perpendicular great circles and ONE serpentine form eight panels.
+          // A mirrored second serpentine would cut sixteen panels and unwanted X crossings.
+          float curvedChannel = abs(latitude - 0.53 * twist);
           float channel = min(straightChannel, curvedChannel);
           float channelAA = max(fwidth(channel), 0.0001);
-          float rubber = 1.0 - smoothstep(0.0083 - channelAA * 0.5, 0.0083 + channelAA * 0.5, channel);
+          float rubber = 1.0 - smoothstep(0.0135 - channelAA * 0.5, 0.0135 + channelAA * 0.5, channel);
           diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.004, 0.003, 0.0025), rubber);
         `,
+        )
+        .replace(
+          '#include <normal_fragment_maps>',
+          // The inset rubber is smooth; only the leather carries pebbled grain.
+          THREE.ShaderChunk.normal_fragment_maps.replace(
+            'dHdxy_fwd()',
+            'dHdxy_fwd() * (1.0 - rubber)',
+          ),
         );
     };
     const sphereGeometry = own(new THREE.SphereGeometry(0.12, 96, 64));
@@ -719,17 +804,26 @@ export async function createCourtScene(
     resize();
     // Compile upfront before main reveals the canvas; no frame-blocking asset fetch.
     const previousTarget = renderer.getRenderTarget();
-    renderer.setRenderTarget(scenePass.target);
     try {
-      await renderer.compileAsync(scene, camera);
-      if (nativeSamples > 0 && !disposed && !options.signal.aborted) {
-        // Direct output has tone-mapping and color-space defines absent from HDR materials.
-        // Compile that variant now, so an adaptive quality change cannot introduce a shader hitch.
-        renderer.setRenderTarget(null);
+      // Warm both opaque and partially cutaway finishes before the first
+      // scroll. Fully hidden meshes would skip their alpha shader variants.
+      for (const cutaway of [0, 0.5]) {
+        if (disposed || options.signal.aborted) break;
+        applyViewCutaway(cutaway);
+        renderer.setRenderTarget(scenePass.target);
         await renderer.compileAsync(scene, camera);
+        if (nativeSamples > 0 && !disposed && !options.signal.aborted) {
+          // Direct output has distinct tone-mapping/color-space defines.
+          renderer.setRenderTarget(null);
+          await renderer.compileAsync(scene, camera);
+        }
       }
+      canvas.dataset.cutawayPrepared = 'true';
     } finally {
-      if (!disposed) renderer.setRenderTarget(previousTarget);
+      if (!disposed) {
+        renderer.setRenderTarget(previousTarget);
+        updateCamera();
+      }
     }
     if (disposed || options.signal.aborted)
       throw new DOMException('Scene aborted', 'AbortError');
@@ -800,7 +894,6 @@ export async function createCourtScene(
     canvas.dataset.storyProgress = frame.progress.toFixed(4);
     canvas.dataset.renderCount = '0';
     options.onQualityChange?.(quality);
-    canvas.addEventListener('pointerup', onPointerUp);
     window.addEventListener('resize', resize, { passive: true });
     resizeObserver = new ResizeObserver(() => resize());
     resizeObserver.observe(canvas);
@@ -840,12 +933,69 @@ export async function createCourtScene(
   }
 
   return {
+    setCameraPlacement(nextPlacement) {
+      if (disposed) return;
+      let next = normalizeCameraPlacement(nextPlacement);
+      // A transient empty layout must not throw the court back to its old pose.
+      if (nextPlacement && !next && cameraPlacement)
+        next = { ...cameraPlacement, inputEnabled: false };
+      const previous = cameraPlacement;
+      const sameGeometry =
+        previous === next ||
+        Boolean(
+          previous &&
+          next &&
+          previous.blend === next.blend &&
+          previous.region.left === next.region.left &&
+          previous.region.top === next.region.top &&
+          previous.region.width === next.region.width &&
+          previous.region.height === next.region.height,
+        );
+      if (sameGeometry && previous?.inputEnabled === next?.inputEnabled) return;
+      cameraPlacement = next;
+      updateCamera();
+      if (!sameGeometry) {
+        changingUntil = performance.now() + 160;
+        requestRender();
+      }
+    },
+    pointFromClient(clientX, clientY) {
+      if (
+        !canReceiveInput() ||
+        !cameraPlacement?.inputEnabled ||
+        !Number.isFinite(clientX) ||
+        !Number.isFinite(clientY)
+      )
+        return null;
+      const { region } = cameraPlacement;
+      const bounds = canvas.getBoundingClientRect();
+      for (const area of [region, bounds]) {
+        if (
+          clientX < area.left ||
+          clientX > area.left + area.width ||
+          clientY < area.top ||
+          clientY > area.top + area.height
+        )
+          return null;
+      }
+      updateCamera();
+      return courtPointFromClient(clientX, clientY, camera, bounds);
+    },
+    projectPoint(point) {
+      if (disposed || !ready) return null;
+      updateCamera();
+      return projectCourtPoint(point, camera, canvas.getBoundingClientRect());
+    },
     setStoryFrame(nextFrame) {
       if (disposed) return;
       const progress = Number.isFinite(nextFrame.progress)
         ? clamp(nextFrame.progress)
         : 0;
+      const viewportChanged =
+        canvas.clientWidth !== viewportWidth ||
+        canvas.clientHeight !== viewportHeight;
       if (
+        !viewportChanged &&
         frame.chapter === nextFrame.chapter &&
         frame.progress === progress &&
         frame.active === nextFrame.active
@@ -854,6 +1004,7 @@ export async function createCourtScene(
       frame = { ...nextFrame, progress };
       canvas.dataset.chapter = frame.chapter;
       canvas.dataset.storyProgress = progress.toFixed(4);
+      canvas.dataset.inputEnabled = String(canReceiveInput());
       if (frame.chapter !== 'hero' || frame.progress > 0.001) {
         introduction?.kill();
         intro.progress = 1;
@@ -866,8 +1017,16 @@ export async function createCourtScene(
         canvas.dataset.rendering = 'off';
         return;
       }
-      updateCamera();
+      if (viewportChanged) resize();
+      else updateCamera();
       requestRender();
+    },
+    presentFrame() {
+      if (disposed || !renderer || !composer) return;
+      resize();
+      updateCamera();
+      drawFrame();
+      canvas.dataset.presentedChapter = frame.chapter;
     },
     exportFrame() {
       if (disposed || !renderer || !composer)
@@ -891,10 +1050,13 @@ export async function createCourtScene(
       madeMarker.visible = true;
       requestRender();
     },
-    shoot(point) {
+    shoot(point, elapsed = 0) {
       if (disposed || !ball || !madeMarker || !selection) return;
       reset();
-      if (!motionEnabled) {
+      const time = Number.isFinite(elapsed)
+        ? Math.max(0, Math.min(SHOT_TIMING.total, elapsed))
+        : 0;
+      if (!motionEnabled || time >= SHOT_TIMING.total) {
         madeMarker.position.copy(worldPoint(point));
         madeMarker.visible = true;
         requestRender();
@@ -994,7 +1156,10 @@ export async function createCourtScene(
             requestRender();
           },
         });
-      if (paused) flight.pause();
+      // Render the same instant before the canvas is revealed. Suppressed
+      // callbacks would skip the marker/net transitions when adopting rebound.
+      if (time > 0) currentFlight.seek(time, false);
+      if (paused) currentFlight.pause();
       requestRender();
     },
     reset,
@@ -1018,6 +1183,7 @@ export async function createCourtScene(
     setPaused(nextPaused) {
       if (disposed || paused === nextPaused) return;
       paused = nextPaused;
+      updateCamera();
       if (paused) {
         cancelAnimationFrame(animationFrame);
         animationFrame = 0;
