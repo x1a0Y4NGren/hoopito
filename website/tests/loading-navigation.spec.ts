@@ -223,6 +223,62 @@ for (const locale of ['/', '/en/']) {
           ),
       )
       .toBeLessThan(2);
+    // Font readiness can precede ScrollTrigger's refresh and the native anchor
+    // scroll it resumes. Observe the final geometry across rendered frames
+    // before a real gesture cancels that initial navigation intent.
+    await expect
+      .poll(() =>
+        page.evaluate(async () => {
+          const measure = () => {
+            const heading = document.querySelector('#download .section-top')!;
+            const header = document.querySelector('.site-header')!;
+            return {
+              scroll: scrollY,
+              gap:
+                heading.getBoundingClientRect().top -
+                header.getBoundingClientRect().bottom -
+                20,
+              ranges: Array.from(
+                document.querySelectorAll<HTMLElement>('[data-story-stage]'),
+                (stage) => [stage.dataset.storyStart, stage.dataset.storyEnd],
+              ),
+              measured: ['hero', 'experience', 'replay'].every((chapter) => {
+                const stage = document.querySelector<HTMLElement>(
+                  `[data-story-stage="${chapter}"]`,
+                )!;
+                const spacer = stage.closest('.pin-spacer');
+                if (!spacer) return false;
+                const start = Number(stage.dataset.storyStart),
+                  end = Number(stage.dataset.storyEnd);
+                const inset = chapter === 'experience' ? 88 : innerHeight * 0.5;
+                const expectedStart = Math.round(
+                  scrollY + spacer.getBoundingClientRect().top - inset,
+                );
+                return (
+                  (chapter === 'hero' ||
+                    Math.abs(start - expectedStart) <= 0.5) &&
+                  Math.abs(
+                    end -
+                      start -
+                      innerHeight * (chapter === 'experience' ? 0.32 : 0.75),
+                  ) <= 0.5
+                );
+              }),
+            };
+          };
+          const before = measure();
+          await new Promise(requestAnimationFrame);
+          await new Promise(requestAnimationFrame);
+          const after = measure();
+          return (
+            after.measured &&
+            Math.abs(after.gap) < 2 &&
+            before.scroll === after.scroll &&
+            JSON.stringify(before.ranges) === JSON.stringify(after.ranges)
+          );
+        }),
+      )
+      .toBe(true);
     // Programmatic seeks are not manual input. Cancel the initial fragment
     // intent with a real gesture before seeking the sections being inspected.
     await page.mouse.wheel(0, -1);
@@ -242,6 +298,23 @@ for (const locale of ['/', '/en/']) {
           behavior: 'instant',
         }),
       );
+      // Hero and scoring both have no active navigation link. That shared
+      // count alone can pass before the new scroll frame has been consumed.
+      await expect(page.locator('html')).toHaveAttribute(
+        'data-chapter',
+        chapter,
+      );
+      await expect
+        .poll(() =>
+          page
+            .locator(`#${chapter}`)
+            .evaluate(
+              (element, expectedTop) =>
+                Math.abs(element.getBoundingClientRect().top - expectedTop),
+              chapter === 'hero' ? 0 : 140,
+            ),
+        )
+        .toBeLessThan(2);
       if (['hero', 'scoring'].includes(chapter))
         await expect(current).toHaveCount(0);
       else {

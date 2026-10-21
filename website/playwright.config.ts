@@ -22,6 +22,14 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { outputFolder: './output/playwright/report', open: 'never' }],
+    [
+      'json',
+      {
+        outputFile:
+          process.env.PLAYWRIGHT_JSON_OUTPUT_FILE ??
+          './output/playwright/results.json',
+      },
+    ],
   ],
   use: {
     baseURL: 'http://127.0.0.1:4321',

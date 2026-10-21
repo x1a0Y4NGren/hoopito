@@ -90,14 +90,31 @@ npm run test:e2e
 ```
 
 Playwright 自动启动本地 `preview` 服务；失败时保留 trace 与截图，报告位于
-`output/playwright/`。Linux CI 使用
-`npx playwright install --with-deps --no-shell chromium firefox webkit` 安装运行时依赖。
+`output/playwright/`。Linux CI 为每个任务仅安装所需浏览器及运行时依赖。
 构建预算以逐文件 gzip 计算：移动首屏每种语言不超过 500 KiB，桌面 3D
 增量不超过 800 KiB。体积检查、模拟设备检查和真实 GPU 帧率各自保留证据。
-CI 在三种浏览器中验证 HTML、SVG、布局和滚动，关闭普通页面测试的 WebGL；
-标记为 `@webgl` 的场景与异常测试另外在 Chromium 中串行运行，避免软件渲染
-和其他浏览器争用云端 CPU。两组分别保存报告。CI 测试允许较长的有界运行时间，
-网站的 8 秒初始化回退期限保持原值。本机 `npm run test:e2e` 仍运行完整组合。
+CI 先执行 15 分钟有界的 `validate`，只构建一次；生成包含源码提交 SHA、逐文件
+SHA-256、字节数和总摘要的 `build-artifact.json`，连同 `dist/` 上传当前运行的构建产物。
+三个普通 UI 任务（Chromium／Firefox／WebKit，各 15 分钟、2 workers）与 Chromium
+软件 WebGL 任务（20 分钟、1 worker）只依赖 `validate`，使用独立 runner；一组失败
+不取消其他浏览器。普通 UI 关闭 WebGL，标记 `@webgl` 的检查由独立任务串行运行。
+测试任务只下载当前工作流运行中按完整提交 SHA 命名的构建，校验本地源码身份、文件集合
+及每个文件的 SHA-256 后才启动 preview，不重新构建或引用其他提交的“最新产物”。
+失败允许一次诊断重试，但 `--fail-on-flaky-tests` 会将重试后通过也判为不稳定失败。
+各任务无论成功与否均保存独立 HTML／JSON 结果、执行状态、日志、trace 和失败截图，
+按浏览器与工作流运行次数区分，保留 14 天；构建身份摘要也随报告保存。
+网站的 8 秒初始化回退期限与现有单测、断言超时保持原值。
+本机 `npm run test:e2e` 仍运行完整组合。可在 `website/` 手动校验构建：
+
+```powershell
+$sourceSha = git rev-parse HEAD
+node scripts/build-artifact.mjs create --source-sha $sourceSha --manifest output/build-artifact.json
+node scripts/build-artifact.mjs verify --source-sha $sourceSha --manifest output/build-artifact.json
+```
+
+此命令中的源码身份是当前 `HEAD`。本地存在未提交改动时，还须单独记录工作区差异摘要；
+不能用该提交 SHA 冒称未提交源码的完整身份。CI 校验的是当前运行检出的提交。
+
 历史验收记录见 [VERIFICATION.md](VERIFICATION.md)。新增球场材质验证保存在
 `output/playwright/court-materials/`；远端构建与浏览器验证保存在 `output/vercel/`，
 以各次记录的源码哈希核对实际被测版本。

@@ -3,10 +3,10 @@ name: Website CI
 on:
   push:
     branches: [main, codex/hoopito-website]
-    paths: ['website/**', '.github/workflows/website-ci.yml']
+    paths: ["website/**", ".github/workflows/website-ci.yml"]
   pull_request:
     branches: [main]
-    paths: ['website/**', '.github/workflows/website-ci.yml']
+    paths: ["website/**", ".github/workflows/website-ci.yml"]
   workflow_dispatch:
 
 permissions:
@@ -17,12 +17,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  website:
-    name: Types, demo tests, static build, budgets and browsers
+  validate:
+    name: Format, types, unit tests, build and budgets
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     defaults:
       run:
+        shell: bash
         working-directory: website
     steps:
       - name: Check out source
@@ -31,46 +32,221 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: '24'
+          node-version: "24"
           cache: npm
           cache-dependency-path: website/package-lock.json
 
       - name: Install locked dependencies
-        run: npm ci
+        id: dependencies
+        run: |
+          mkdir -p output/playwright/validate
+          npm ci 2>&1 | tee output/playwright/validate/dependencies.log
 
       - name: Check website formatting
-        run: npm run format:check
+        id: format
+        run: npm run format:check 2>&1 | tee output/playwright/validate/format.log
 
       - name: Check types and Astro templates
-        run: npm run check
+        id: types
+        run: npm run check 2>&1 | tee output/playwright/validate/types.log
 
-      - name: Test the demo scoring and reset contract
-        run: npm test
+      - name: Test website contracts and artifact verification
+        id: unit
+        run: npm test 2>&1 | tee output/playwright/validate/unit.log
 
-      - name: Build the static preview and enforce resource budgets
-        run: npm run build
+      - name: Build once and enforce resource budgets
+        id: build
+        run: npm run build 2>&1 | tee output/playwright/validate/build.log
 
-      - name: Install browser engines
-        run: npx playwright install --with-deps --no-shell chromium firefox webkit
-
-      - name: Test desktop, mobile and bilingual UI in three browsers
-        env:
-          PLAYWRIGHT_HTML_OUTPUT_DIR: output/playwright/report-ui
-        run: npm run test:e2e -- --grep-invert @webgl --workers=2 --output=output/playwright/results-ui
-
-      - name: Test software WebGL lifecycle without competing browser workers
-        env:
-          PLAYWRIGHT_HTML_OUTPUT_DIR: output/playwright/report-webgl
-        run: npm run test:e2e -- --project=chromium --grep @webgl --workers=1 --output=output/playwright/results-webgl
+      - name: Bind output to checked-out source and file hashes
+        id: manifest
+        run: node scripts/build-artifact.mjs create --source-sha "$GITHUB_SHA" 2>&1 | tee output/playwright/validate/build-identity.json
 
       - name: Check whitespace
-        run: git diff --check
+        id: whitespace
+        run: git diff --check 2>&1 | tee output/playwright/validate/whitespace.log
 
-      - name: Preserve browser reports and visual evidence
+      - name: Share this run's build with browser jobs
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: hoopito-website-build-${{ github.sha }}
+          path: |
+            website/dist/
+            website/build-artifact.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 14
+
+      - name: Record execution result
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+          STEPS_JSON: ${{ toJSON(steps) }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { mkdir, writeFile } from 'node:fs/promises';
+          const directory = 'output/playwright/validate';
+          await mkdir(directory, { recursive: true });
+          await writeFile(directory + '/execution.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, job: 'validate', browser: process.env.BROWSER, status: process.env.JOB_STATUS, steps: JSON.parse(process.env.STEPS_JSON) }, null, 2) + '\n');
+          NODE
+
+      - name: Preserve reports, logs and failure evidence
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: hoopito-website-browser-evidence
-          path: website/output/playwright/
-          if-no-files-found: ignore
+          name: hoopito-website-validate-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          path: website/output/playwright/validate/
+          if-no-files-found: warn
+          retention-days: 14
+
+  ui:
+    name: UI (${{ matrix.browser }})
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    defaults:
+      run:
+        shell: bash
+        working-directory: website
+    env:
+      PLAYWRIGHT_HTML_OUTPUT_DIR: output/playwright/ui-${{ matrix.browser }}/report
+      PLAYWRIGHT_JSON_OUTPUT_FILE: output/playwright/ui-${{ matrix.browser }}/results.json
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install locked dependencies
+        id: dependencies
+        run: |
+          mkdir -p output/playwright/ui-${{ matrix.browser }}
+          npm ci 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/dependencies.log
+
+      - name: Download this workflow run's source-bound build
+        id: download
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: hoopito-website-build-${{ github.sha }}
+          path: website/
+          digest-mismatch: error
+
+      - name: Verify source SHA and every output file before preview
+        id: verify
+        run: |
+          mkdir -p output/playwright/ui-${{ matrix.browser }}
+          node scripts/build-artifact.mjs verify --source-sha "$GITHUB_SHA" 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/build-identity.json
+
+      - name: Install only the assigned browser
+        id: browser
+        run: npx playwright install --with-deps --no-shell ${{ matrix.browser }} 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/browser-install.log
+
+      - name: Run browser checks and reject flaky results
+        id: tests
+        run: npm run test:e2e -- --project=${{ matrix.browser }} --grep-invert @webgl --workers=2 --fail-on-flaky-tests --output=output/playwright/ui-${{ matrix.browser }}/test-results 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/test.log
+
+      - name: Record execution result
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+          STEPS_JSON: ${{ toJSON(steps) }}
+          BROWSER: ${{ matrix.browser }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { mkdir, writeFile } from 'node:fs/promises';
+          const directory = 'output/playwright/ui-${{ matrix.browser }}';
+          await mkdir(directory, { recursive: true });
+          await writeFile(directory + '/execution.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, job: 'ui', browser: process.env.BROWSER, status: process.env.JOB_STATUS, steps: JSON.parse(process.env.STEPS_JSON) }, null, 2) + '\n');
+          NODE
+
+      - name: Preserve reports, logs and failure evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: hoopito-website-ui-${{ matrix.browser }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          path: website/output/playwright/ui-${{ matrix.browser }}/
+          if-no-files-found: warn
+          retention-days: 14
+
+  webgl:
+    name: WebGL (Chromium software renderer)
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+        working-directory: website
+    env:
+      PLAYWRIGHT_HTML_OUTPUT_DIR: output/playwright/webgl-chromium/report
+      PLAYWRIGHT_JSON_OUTPUT_FILE: output/playwright/webgl-chromium/results.json
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install locked dependencies
+        id: dependencies
+        run: |
+          mkdir -p output/playwright/webgl-chromium
+          npm ci 2>&1 | tee output/playwright/webgl-chromium/dependencies.log
+
+      - name: Download this workflow run's source-bound build
+        id: download
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: hoopito-website-build-${{ github.sha }}
+          path: website/
+          digest-mismatch: error
+
+      - name: Verify source SHA and every output file before preview
+        id: verify
+        run: |
+          mkdir -p output/playwright/webgl-chromium
+          node scripts/build-artifact.mjs verify --source-sha "$GITHUB_SHA" 2>&1 | tee output/playwright/webgl-chromium/build-identity.json
+
+      - name: Install only the assigned browser
+        id: browser
+        run: npx playwright install --with-deps --no-shell chromium 2>&1 | tee output/playwright/webgl-chromium/browser-install.log
+
+      - name: Run browser checks and reject flaky results
+        id: tests
+        run: npm run test:e2e -- --project=chromium --grep @webgl --workers=1 --fail-on-flaky-tests --output=output/playwright/webgl-chromium/test-results 2>&1 | tee output/playwright/webgl-chromium/test.log
+
+      - name: Record execution result
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+          STEPS_JSON: ${{ toJSON(steps) }}
+          BROWSER: chromium
+        run: |
+          node --input-type=module <<'NODE'
+          import { mkdir, writeFile } from 'node:fs/promises';
+          const directory = 'output/playwright/webgl-chromium';
+          await mkdir(directory, { recursive: true });
+          await writeFile(directory + '/execution.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, job: 'webgl', browser: process.env.BROWSER, status: process.env.JOB_STATUS, steps: JSON.parse(process.env.STEPS_JSON) }, null, 2) + '\n');
+          NODE
+
+      - name: Preserve reports, logs and failure evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: hoopito-website-webgl-chromium-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          path: website/output/playwright/webgl-chromium/
+          if-no-files-found: warn
           retention-days: 14

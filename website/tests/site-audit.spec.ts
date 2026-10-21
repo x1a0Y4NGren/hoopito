@@ -160,22 +160,84 @@ test('scroll batching: a stationary court invitation does not rewrite its placem
 });
 
 async function enlargeChapterText(page: Page) {
-  await page.evaluate(() => {
-    const nodes = [...document.querySelectorAll<HTMLElement>('body *')].filter(
-      (element) =>
+  const waitForLayout = () =>
+    expect
+      .poll(() =>
+        page.evaluate(async () => {
+          const measure = () => [
+            scrollY,
+            document.documentElement.scrollHeight,
+            ...Array.from(
+              document.querySelectorAll(
+                '#download .section-top, .checksum summary, .upgrade summary, .faq details:first-child summary',
+              ),
+              (element) => {
+                const { x, y, width, height } = element.getBoundingClientRect();
+                return [x, y, width, height];
+              },
+            ),
+          ];
+          const before = measure();
+          await new Promise(requestAnimationFrame);
+          await new Promise(requestAnimationFrame);
+          return JSON.stringify(before) === JSON.stringify(measure());
+        }),
+      )
+      .toBe(true);
+  // Cancel the settled fragment intent before text resizing can resume it
+  // during Playwright's normal pointer-down/pointer-up on a native summary.
+  await waitForLayout();
+  await page.mouse.wheel(0, -1);
+  try {
+    await page.evaluate(() => {
+      const pending = new Set(
+        ['hero', 'experience', 'replay'].map((chapter) =>
+          document.querySelector(`[data-story-stage="${chapter}"]`)!,
+        ),
+      );
+      const probe = { done: false, stop: () => {} };
+      const observer = new MutationObserver((records) => {
+        for (const record of records) pending.delete(record.target as Element);
+        probe.done = pending.size === 0;
+      });
+      for (const stage of pending)
+        observer.observe(stage, {
+          attributes: true,
+          attributeFilter: ['data-story-start', 'data-story-end'],
+        });
+      probe.stop = () => observer.disconnect();
+      Reflect.set(window, '__chapterTextRefreshProbe', probe);
+      const nodes = [
+        ...document.querySelectorAll<HTMLElement>('body *'),
+      ].filter((element) =>
         [...element.childNodes].some(
           (node) =>
             node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
         ),
-    );
-    const sizes = nodes.map(
-      (element) =>
-        [element, parseFloat(getComputedStyle(element).fontSize)] as const,
-    );
-    for (const [element, size] of sizes)
-      element.style.fontSize = `${size * 2}px`;
-    dispatchEvent(new Event('resize'));
-  });
+      );
+      const sizes = nodes.map(
+        (element) =>
+          [element, parseFloat(getComputedStyle(element).fontSize)] as const,
+      );
+      for (const [element, size] of sizes)
+        element.style.fontSize = `${size * 2}px`;
+      dispatchEvent(new Event('resize'));
+    });
+    // Observe actual range publication instead of reproducing GSAP geometry.
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => Reflect.get(window, '__chapterTextRefreshProbe').done,
+        ),
+      )
+      .toBe(true);
+    await waitForLayout();
+  } finally {
+    await page.evaluate(() => {
+      Reflect.get(window, '__chapterTextRefreshProbe')?.stop();
+      Reflect.deleteProperty(window, '__chapterTextRefreshProbe');
+    });
+  }
 }
 
 for (const locale of ['/', '/en/']) {

@@ -540,23 +540,119 @@ test('replay completes the final fractional scroll pixel on a high density displ
 
 test('replay refresh preserves the card phase and media changes preserve the visible reading position', async ({
   page,
-}) => {
+}, testInfo) => {
   await page.route(threeChunk, (route) => route.abort());
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
   await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
   const stage = page.locator('[data-story-stage="replay"]');
-  await stage.evaluate((element) => {
+  const waitForMeasuredRange = async () => {
+    await expectDesktopPins(page);
+    // A viewport resize returns before the debounced media/layout refresh.
+    // Old ranges and old phase can still agree while both are obsolete.
+    await expect
+      .poll(() =>
+        stage.evaluate((element) => {
+          const { replayStart, replayEnd } = (element as HTMLElement).dataset;
+          const spacer = element.closest('.pin-spacer-story-replay');
+          if (!spacer) return false;
+          const expectedStart = Math.round(
+            scrollY + spacer.getBoundingClientRect().top - innerHeight * 0.5,
+          );
+          return (
+            Math.abs(Number(replayStart) - expectedStart) <= 0.5 &&
+            Math.abs(
+              Number(replayEnd) - Number(replayStart) - innerHeight * 0.75,
+            ) <= 0.5
+          );
+        }),
+      )
+      .toBe(true);
+  };
+  const expectSettledPhase = async (phase: number, restored = false) => {
+    let lastMeasurement: unknown;
+    try {
+      await expect
+        .poll(async () => {
+          lastMeasurement = await stage.evaluate(
+            async (element, target) => {
+              const read = () => {
+                const { replayStart, replayEnd, replayProgress } = (
+                  element as HTMLElement
+                ).dataset;
+                const start = Number(replayStart),
+                  end = Number(replayEnd);
+                return {
+                  start,
+                  end,
+                  scroll: scrollY,
+                  actual: Math.max(
+                    0,
+                    Math.min(1, (scrollY - start) / (end - start)),
+                  ),
+                  rendered: Number(replayProgress),
+                };
+              };
+              const before = read();
+              await new Promise(requestAnimationFrame);
+              await new Promise(requestAnimationFrame);
+              const after = read();
+              // A restored fractional playhead can differ from its rounded
+              // native scroll position by half a CSS pixel. Preserve the
+              // original per-step phase precision: media/resize used two
+              // decimals; initial seeks and completed cards used three.
+              const nativeTolerance = 0.5 / (after.end - after.start) + 0.0001;
+              const tolerance =
+                target.phase === 1 || !target.restored ? 0.0005 : 0.005;
+              return {
+                measurementStable:
+                  before.start === after.start && before.end === after.end,
+                motionSettled:
+                  before.scroll === after.scroll &&
+                  Math.abs(before.rendered - after.rendered) < 0.0001,
+                nativePhaseMatches:
+                  Math.abs(after.actual - after.rendered) < nativeTolerance,
+                targetPhaseMatches:
+                  Math.abs(after.rendered - target.phase) < tolerance,
+                ...after,
+                target: target.phase,
+                tolerance,
+                nativeTolerance,
+              };
+            },
+            { phase, restored },
+          );
+          return lastMeasurement;
+        })
+        .toMatchObject({
+          measurementStable: true,
+          motionSettled: true,
+          nativePhaseMatches: true,
+          targetPhaseMatches: true,
+        });
+    } catch (error) {
+      await testInfo.attach('replay-layout-state', {
+        body: JSON.stringify(lastMeasurement, null, 2),
+        contentType: 'application/json',
+      });
+      throw error;
+    }
+  };
+  await waitForMeasuredRange();
+  const midpoint = await stage.evaluate((element) => {
     const e = element as HTMLElement;
+    const start = Number(e.dataset.replayStart),
+      end = Number(e.dataset.replayEnd);
     scrollTo({
-      top: (Number(e.dataset.replayStart) + Number(e.dataset.replayEnd)) / 2,
+      top: (start + end) / 2,
       behavior: 'instant',
     });
+    // Native scroll positions are quantized; retain the actual sought phase.
+    return (scrollY - start) / (end - start);
   });
-  await expect
-    .poll(async () => Number(await stage.getAttribute('data-replay-progress')))
-    .toBeCloseTo(0.5, 3);
+  expect(midpoint).toBeCloseTo(0.5, 2);
+  await expectSettledPhase(midpoint);
   const top = (await stage.boundingBox())!.y;
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('.pin-spacer')).toHaveCount(0);
@@ -564,29 +660,26 @@ test('replay refresh preserves the card phase and media changes preserve the vis
     .poll(async () => Math.abs((await stage.boundingBox())!.y - top))
     .toBeLessThan(1);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await waitForMeasuredRange();
+  await expectSettledPhase(midpoint, true);
   await expect
-    .poll(async () => Number(await stage.getAttribute('data-replay-progress')))
-    .toBeCloseTo(0.5, 2);
+    .poll(async () => Math.abs((await stage.boundingBox())!.y - top))
+    .toBeLessThan(1);
   await page.setViewportSize({ width: 1440, height: 1050 });
-  await page.waitForTimeout(550);
-  await expect
-    .poll(async () => Number(await stage.getAttribute('data-replay-progress')))
-    .toBeCloseTo(0.5, 2);
+  await waitForMeasuredRange();
+  await expectSettledPhase(midpoint, true);
   await stage.evaluate((element) =>
     scrollTo({
       top: Number((element as HTMLElement).dataset.replayEnd),
       behavior: 'instant',
     }),
   );
-  await expect
-    .poll(async () => Number(await stage.getAttribute('data-replay-progress')))
-    .toBeCloseTo(1, 3);
+  await expectSettledPhase(1);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('.pin-spacer')).toHaveCount(0);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await expect
-    .poll(async () => Number(await stage.getAttribute('data-replay-progress')))
-    .toBeCloseTo(1, 3);
+  await waitForMeasuredRange();
+  await expectSettledPhase(1);
   await expect(page.locator('[data-replay-red]')).toHaveText('11');
   // Leaving the fixed approach must stay natural across later refreshes.
   await stage.evaluate((element) =>
@@ -595,15 +688,14 @@ test('replay refresh preserves the card phase and media changes preserve the vis
       behavior: 'instant',
     }),
   );
-  await expect
-    .poll(async () => Number(await stage.getAttribute('data-replay-progress')))
-    .toBeCloseTo(1, 2);
+  await expectSettledPhase(1);
   const leavingTop = (await stage.boundingBox())!.y;
   await page.setViewportSize({ width: 1440, height: 1100 });
-  await page.waitForTimeout(550);
-  expect(Math.abs((await stage.boundingBox())!.y - leavingTop)).toBeLessThan(
-    1.5,
-  );
+  await waitForMeasuredRange();
+  await expectSettledPhase(1);
+  await expect
+    .poll(async () => Math.abs((await stage.boundingBox())!.y - leavingTop))
+    .toBeLessThan(1.5);
   await expectNoOverflow(page);
 });
 
@@ -1396,24 +1488,6 @@ for (const locale of locales) {
       for (const index of [0, 1, 2]) {
         const feature = page.locator(`[data-score-feature="${index}"]`);
         const cue = page.locator(`[data-score-action="${index}"]`);
-        // Observe before activation: remote browser calls can otherwise start
-        // sampling after most of the short pulse has already played.
-        await cue.evaluate((element) => {
-          const circle =
-            element.querySelector<SVGCircleElement>('[data-score-pulse]')!;
-          const samples = [Number(circle.getAttribute('r'))];
-          const observer = new MutationObserver(() =>
-            samples.push(Number(circle.getAttribute('r'))),
-          );
-          observer.observe(circle, {
-            attributes: true,
-            attributeFilter: ['r'],
-          });
-          Object.assign(window, {
-            scorePulseSamples: samples,
-            stopScorePulseProbe: () => observer.disconnect(),
-          });
-        });
         await feature.click();
         await expect(device).toHaveAttribute('data-score-playing', 'true');
         await expect(page.locator(`[data-score-region="${index}"]`)).toHaveCSS(
@@ -1431,18 +1505,6 @@ for (const locale of locales) {
           )
           .toBeGreaterThan(0.2);
         await expect(device).toHaveAttribute('data-score-playing', 'false');
-        const samples = await page.evaluate(() => {
-          const probe = window as typeof window & {
-            scorePulseSamples: number[];
-            stopScorePulseProbe: () => void;
-          };
-          probe.stopScorePulseProbe();
-          return probe.scorePulseSamples;
-        });
-        expect(Math.max(...samples) - Math.min(...samples)).toBeGreaterThan(20);
-        expect(
-          new Set(samples.filter((radius) => radius > 23 && radius < 111)).size,
-        ).toBeGreaterThanOrEqual(3);
         await expect(cue).toHaveCSS('opacity', '0');
         await expect(image).toHaveAttribute('src', src!);
         await expect(feature).toHaveAttribute('aria-pressed', 'true');
@@ -1460,6 +1522,140 @@ for (const locale of locales) {
       await expect(device).toHaveAttribute('data-score-focus', '2');
       await expect(device).toHaveAttribute('data-score-playing', 'false');
       await expectNoOverflow(page);
+    });
+    test(`${locale.lang}: ${width}px controlled scoring clock preserves expanding rings and cue cleanup`, async ({
+      page,
+    }) => {
+      // Install before loading GSAP so its ticker uses this clock. Frame-by-frame
+      // advancement verifies the animation contract, not host rendering speed.
+      await page.clock.install();
+      await page.route(threeChunk, (route) => route.abort());
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`${locale.path}#scoring`);
+      await expect(page.locator('[data-score-feature="0"]')).toBeEnabled();
+      await page.evaluate(() => document.fonts.ready);
+      await page.locator('[data-story-device] img').evaluate(async (image) => {
+        await (image as HTMLImageElement).decode();
+      });
+      await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
+      await page.clock.runFor(2000);
+      const device = page.locator('[data-story-device]');
+      await expect(device).toHaveAttribute('data-score-focus', 'none');
+      for (const index of [0, 1, 2]) {
+        const feature = page.locator(`[data-score-feature="${index}"]`);
+        const action = page.locator(`[data-score-action="${index}"]`);
+        const read = () =>
+          action.evaluate((element) => {
+            const rings = [
+              ...element.querySelectorAll<SVGCircleElement>(
+                '[data-score-pulse]',
+              ),
+            ].map((ring) => {
+              const x = Number(ring.getAttribute('cx'));
+              const y = Number(ring.getAttribute('cy'));
+              const center = new DOMPoint(x, y).matrixTransform(
+                ring.getScreenCTM()!,
+              );
+              return {
+                radius: Number(ring.getAttribute('r')),
+                opacity: Number(getComputedStyle(ring).opacity),
+                x,
+                y,
+                screenX: center.x,
+                screenY: center.y,
+              };
+            });
+            const opacity = (selector: string) => {
+              const target = element.querySelector(selector);
+              return target ? Number(getComputedStyle(target).opacity) : 0;
+            };
+            const region = document.querySelector(
+              `[data-score-region="${element.getAttribute('data-score-action')}"]`,
+            )!;
+            return {
+              rings,
+              action: Number(getComputedStyle(element).opacity),
+              cursor: opacity('[data-score-cursor]'),
+              head: opacity('.score-operation-head'),
+              path: opacity('.score-operation-path'),
+              shade: Number(
+                getComputedStyle(region.querySelector('.score-shade')!).opacity,
+              ),
+              traces: [...region.querySelectorAll('.score-region-trace')].map(
+                (trace) => ({
+                  opacity: Number(getComputedStyle(trace).opacity),
+                  offset: parseFloat(
+                    (trace as SVGElement).style.strokeDashoffset,
+                  ),
+                }),
+              ),
+            };
+          });
+        const initial = await read();
+        expect(initial.rings).toHaveLength(index === 0 ? 2 : 1);
+        expect(initial.traces).toHaveLength(index === 0 ? 2 : 1);
+        for (const ring of initial.rings) {
+          expect(ring.radius).toBe(22);
+          expect(ring.opacity).toBe(0);
+        }
+        // Real mouse/keyboard activation is covered separately. Dispatching here
+        // leaves the virtual clock paused while the production handler runs.
+        await feature.dispatchEvent('click');
+        await expect(device).toHaveAttribute('data-score-playing', 'true');
+        const samples = [initial];
+        for (let elapsed = 0; elapsed < 2000; elapsed += 40) {
+          await page.clock.runFor(40);
+          samples.push(await read());
+        }
+        for (const [order, origin] of initial.rings.entries()) {
+          const rings = samples.map((sample) => sample.rings[order]);
+          const radii = rings.map((ring) => ring.radius);
+          expect(radii.at(-1)).toBeCloseTo(112, 3);
+          expect(
+            new Set(radii.filter((radius) => radius > 22 && radius < 112)).size,
+          ).toBeGreaterThanOrEqual(6);
+          for (let frame = 1; frame < rings.length; frame++) {
+            expect(radii[frame]).toBeGreaterThanOrEqual(radii[frame - 1]);
+            expect(radii[frame] - radii[frame - 1]).toBeLessThan(30);
+          }
+          for (const ring of rings) {
+            expect(ring.x).toBe(origin.x);
+            expect(ring.y).toBe(origin.y);
+            expect(Math.abs(ring.screenX - origin.screenX)).toBeLessThan(0.1);
+            expect(Math.abs(ring.screenY - origin.screenY)).toBeLessThan(0.1);
+          }
+          expect(
+            Math.max(...rings.map((ring) => ring.opacity)),
+          ).toBeGreaterThan(0.5);
+        }
+        expect(Math.max(...samples.map((sample) => sample.action))).toBe(1);
+        expect(Math.max(...samples.map((sample) => sample.cursor))).toBe(1);
+        expect(Math.max(...samples.map((sample) => sample.shade))).toBeCloseTo(
+          0.58,
+          2,
+        );
+        expect(
+          samples.some((sample) =>
+            sample.traces.every(
+              (trace) => trace.opacity === 1 && trace.offset === 0,
+            ),
+          ),
+        ).toBe(true);
+        if (index > 0) {
+          expect(Math.max(...samples.map((sample) => sample.head))).toBe(1);
+          expect(Math.max(...samples.map((sample) => sample.path))).toBe(1);
+        }
+        const final = samples.at(-1)!;
+        expect(final.action).toBe(0);
+        expect(final.cursor).toBe(0);
+        expect(final.head).toBe(0);
+        expect(final.path).toBe(0);
+        expect(final.shade).toBe(0);
+        for (const ring of final.rings) expect(ring.opacity).toBe(0);
+        for (const trace of final.traces) expect(trace.opacity).toBe(0);
+        await expect(device).toHaveAttribute('data-score-playing', 'false');
+        await expect(feature).toHaveAttribute('aria-pressed', 'true');
+      }
     });
   }
   test(`${locale.lang}: reduced motion keeps scoring explanation visible without playing an animation`, async ({
@@ -1593,6 +1789,8 @@ for (const width of [390, 1440]) {
       await page.route(threeChunk, (route) => route.abort());
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/#scoring');
+      await expect(page.locator('[data-score-feature="0"]')).toBeEnabled();
+      await page.evaluate(() => document.fonts.ready);
       // install() still lets the fake clock follow wall time. Pause it after
       // loading so locator checks cannot advance beyond the sampled phase.
       await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
@@ -2556,6 +2754,9 @@ async function delayCourtAdoption(page: Page) {
     if (!gsapName) throw new Error('The real shot timeline must be observable');
     body += `\nasync function __lateCourtCreate(...args) {
       const scene = await ${factory}(...args);
+      // The test owns this prepared scene until adoption. Do not animate an
+      // unadopted hero behind the loading poster while the factory is gated.
+      scene.setPaused(true);
       let adopt;
       const gate = new Promise(resolve => { adopt = resolve; });
       let shot;
@@ -2602,9 +2803,20 @@ test(
       'data-scene-ready',
       'true',
     );
+    await expect(page.locator('#court-canvas')).toHaveAttribute(
+      'data-rendering',
+      'paused',
+    );
+    const preparedCount = await page
+      .locator('#court-canvas')
+      .getAttribute('data-render-count');
     const host = page.locator('[data-demo-court-host]');
     await host.scrollIntoViewIfNeeded();
     await page.waitForTimeout(1750);
+    await expect(page.locator('#court-canvas')).toHaveAttribute(
+      'data-render-count',
+      preparedCount!,
+    );
     await expect(page.locator('html')).toHaveAttribute('data-scene', 'loading');
     await expect(host).toHaveAttribute('data-demo-invitation', 'idle');
     await page.evaluate(() => Reflect.get(window, '__lateCourt').adopt());

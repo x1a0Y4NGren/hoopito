@@ -1,6 +1,7 @@
 .astro/
 .vercel/
 dist/
+build-artifact.json
 node_modules/
 test-results/
 output/
