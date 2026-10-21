@@ -1483,34 +1483,92 @@ for (const locale of locales) {
       const device = page.locator('[data-story-device]');
       const image = device.locator('img');
       const src = await image.getAttribute('src');
+      const observeFeedback = (index: number) =>
+        device.evaluateHandle((element, selected) => {
+          const region = element.querySelector(
+            `[data-score-region="${selected}"]`,
+          )!;
+          const action = element.querySelector(
+            `[data-score-action="${selected}"]`,
+          )!;
+          const shade = region.querySelector('.score-shade')!;
+          const observed = {
+            playing: false,
+            actionPeak: 0,
+            shadePeak: 0,
+          };
+          const sample = () => {
+            if (
+              element.getAttribute('data-score-playing') !== 'true' ||
+              element.getAttribute('data-score-focus') !== String(selected)
+            )
+              return;
+            observed.playing = true;
+            observed.actionPeak = Math.max(
+              observed.actionPeak,
+              Number(getComputedStyle(action).opacity),
+            );
+            observed.shadePeak = Math.max(
+              observed.shadePeak,
+              Number(getComputedStyle(shade).opacity),
+            );
+          };
+          const observer = new MutationObserver(sample);
+          observer.observe(element, {
+            attributes: true,
+            subtree: true,
+            attributeFilter: [
+              'style',
+              'data-score-playing',
+              'data-score-focus',
+            ],
+          });
+          return {
+            read: () => ({ ...observed }),
+            stop: () => observer.disconnect(),
+          };
+        }, index);
       for (const ring of await page.locator('[data-score-pulse]').all())
         await expect(ring).toHaveCSS('opacity', '0');
       for (const index of [0, 1, 2]) {
         const feature = page.locator(`[data-score-feature="${index}"]`);
         const cue = page.locator(`[data-score-action="${index}"]`);
-        await feature.click();
-        await expect(device).toHaveAttribute('data-score-playing', 'true');
-        await expect(page.locator(`[data-score-region="${index}"]`)).toHaveCSS(
-          'opacity',
-          '1',
-        );
-        await expect(cue).toHaveCSS('opacity', '1');
-        await expect
-          .poll(async () =>
-            Number(
-              await page
-                .locator(`[data-score-region="${index}"] .score-shade`)
-                .evaluate((e) => getComputedStyle(e).opacity),
-            ),
-          )
-          .toBeGreaterThan(0.2);
-        await expect(device).toHaveAttribute('data-score-playing', 'false');
-        await expect(cue).toHaveCSS('opacity', '0');
-        await expect(image).toHaveAttribute('src', src!);
-        await expect(feature).toHaveAttribute('aria-pressed', 'true');
-        await feature.focus();
-        await page.keyboard.press('Enter');
-        await expect(device).toHaveAttribute('data-score-playing', 'true');
+        // Record the real animation before input: sequential protocol polls can
+        // miss its full-opacity plateau on a busy runner, even when it played.
+        const feedback = await observeFeedback(index);
+        try {
+          await feature.click();
+          await expect
+            .poll(() => feedback.evaluate((value) => value.read().playing))
+            .toBe(true);
+          await expect(
+            page.locator(`[data-score-region="${index}"]`),
+          ).toHaveCSS('opacity', '1');
+          await expect
+            .poll(() => feedback.evaluate((value) => value.read().actionPeak))
+            .toBe(1);
+          await expect
+            .poll(() => feedback.evaluate((value) => value.read().shadePeak))
+            .toBeGreaterThan(0.2);
+          await expect(device).toHaveAttribute('data-score-playing', 'false');
+          await expect(cue).toHaveCSS('opacity', '0');
+          await expect(image).toHaveAttribute('src', src!);
+          await expect(feature).toHaveAttribute('aria-pressed', 'true');
+        } finally {
+          await feedback.evaluate((value) => value.stop());
+          await feedback.dispose();
+        }
+        const replay = await observeFeedback(index);
+        try {
+          await feature.focus();
+          await page.keyboard.press('Enter');
+          await expect
+            .poll(() => replay.evaluate((value) => value.read().playing))
+            .toBe(true);
+        } finally {
+          await replay.evaluate((value) => value.stop());
+          await replay.dispose();
+        }
       }
       // A new selection cancels the old cue, even when the same button is replayed.
       await page.locator('[data-score-feature="0"]').click();

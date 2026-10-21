@@ -190,24 +190,134 @@ async function assertBackgroundIdentity(page: Page) {
   expect(state.widthError).toBeLessThan(1);
 }
 
-async function doubleTextSize(page: Page) {
+async function waitForNativeLayout(page: Page) {
+  await expect
+    .poll(() =>
+      page.evaluate(async () => {
+        const measure = () => [
+          scrollY,
+          document.documentElement.scrollHeight,
+          ...Array.from(
+            document.querySelectorAll<HTMLElement>(
+              '.site-header, #experience, #replay, [data-story-stage]',
+            ),
+            (element) => {
+              const { x, y, width, height } = element.getBoundingClientRect();
+              return [
+                x,
+                y,
+                width,
+                height,
+                element.dataset.storyStart,
+                element.dataset.storyEnd,
+              ];
+            },
+          ),
+        ];
+        const before = measure();
+        await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+        return JSON.stringify(before) === JSON.stringify(measure());
+      }),
+    )
+    .toBe(true);
+}
+
+async function cancelAnchorIntent(page: Page) {
   await page.evaluate(() => {
-    const nodes = [...document.querySelectorAll<HTMLElement>('body *')].filter(
-      (element) =>
+    // Compositor scrolling can precede delivery of a passive wheel listener.
+    // Capture the origin before input rather than inside that listener.
+    const probe = { seen: false, ended: false, top: scrollY, stop: () => {} };
+    const onWheel = () => {
+      probe.seen = true;
+    };
+    const onScrollEnd = () => {
+      if (probe.seen) probe.ended = true;
+    };
+    window.addEventListener('wheel', onWheel, { once: true, passive: true });
+    document.addEventListener('scrollend', onScrollEnd);
+    probe.stop = () => {
+      window.removeEventListener('wheel', onWheel);
+      document.removeEventListener('scrollend', onScrollEnd);
+    };
+    Reflect.set(window, '__courtNativeInputProbe', probe);
+  });
+  try {
+    await page.mouse.wheel(0, -1);
+    // mouse.wheel() returns before native scrolling finishes. Starting a seek
+    // then lets the remaining wheel scroll overwrite it on a busy CI renderer.
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const probe = Reflect.get(window, '__courtNativeInputProbe');
+          return (
+            probe.seen &&
+            (probe.top === 0 || (probe.ended && scrollY < probe.top))
+          );
+        }),
+      )
+      .toBe(true);
+    await waitForNativeLayout(page);
+  } finally {
+    await page.evaluate(() => {
+      Reflect.get(window, '__courtNativeInputProbe')?.stop();
+      Reflect.deleteProperty(window, '__courtNativeInputProbe');
+    });
+  }
+}
+
+async function doubleTextSize(page: Page) {
+  await cancelAnchorIntent(page);
+  try {
+    await page.evaluate(() => {
+      const pending = new Set(
+        ['hero', 'experience', 'replay'].map((chapter) =>
+          document.querySelector(`[data-story-stage="${chapter}"]`)!,
+        ),
+      );
+      const probe = { done: false, stop: () => {} };
+      const observer = new MutationObserver((records) => {
+        for (const record of records) pending.delete(record.target as Element);
+        probe.done = pending.size === 0;
+      });
+      for (const stage of pending)
+        observer.observe(stage, {
+          attributes: true,
+          attributeFilter: ['data-story-start', 'data-story-end'],
+        });
+      probe.stop = () => observer.disconnect();
+      Reflect.set(window, '__courtTextRefreshProbe', probe);
+      const nodes = [
+        ...document.querySelectorAll<HTMLElement>('body *'),
+      ].filter((element) =>
         [...element.childNodes].some(
           (node) =>
             node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
         ),
-    );
-    const sizes = nodes.map(
-      (element) =>
-        [element, parseFloat(getComputedStyle(element).fontSize)] as const,
-    );
-    for (const [element, size] of sizes)
-      element.style.fontSize = `${size * 2}px`;
-    dispatchEvent(new Event('resize'));
-  });
-  await expect(page.locator('.pin-spacer')).toHaveCount(0);
+      );
+      const sizes = nodes.map(
+        (element) =>
+          [element, parseFloat(getComputedStyle(element).fontSize)] as const,
+      );
+      for (const [element, size] of sizes)
+        element.style.fontSize = `${size * 2}px`;
+      dispatchEvent(new Event('resize'));
+    });
+    await expect(page.locator('.pin-spacer')).toHaveCount(0);
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => Reflect.get(window, '__courtTextRefreshProbe').done,
+        ),
+      )
+      .toBe(true);
+    await waitForNativeLayout(page);
+  } finally {
+    await page.evaluate(() => {
+      Reflect.get(window, '__courtTextRefreshProbe')?.stop();
+      Reflect.deleteProperty(window, '__courtTextRefreshProbe');
+    });
+  }
 }
 
 for (const viewport of [
@@ -452,7 +562,7 @@ for (const textScale of [1, 2]) {
       await exposeSceneInTest(page);
       await readyExperience(page, '/en/#experience');
       if (textScale === 2) await doubleTextSize(page);
-      await page.mouse.wheel(0, -1);
+      else await cancelAnchorIntent(page);
       const targets = await page.evaluate(() => {
         const stage = document.querySelector<HTMLElement>(
           '[data-story-stage="experience"]',
