@@ -31,11 +31,25 @@ async function allowSoftwareWebGL(page: Page) {
 
 // Wrap the real dynamic-module factory at the network boundary. No scene,
 // camera, input handler or renderer is replaced, and production has no globals.
-async function exposeSceneInTest(page: Page) {
+async function exposeSceneInTest(page: Page, observeOpening = false) {
   await allowSoftwareWebGL(page);
   await page.route(sceneChunk, async (route) => {
     const response = await route.fetch();
     let body = await response.text();
+    if (observeOpening) {
+      // Observe only the existing tween target, without exposing its timeline,
+      // changing GSAP, or adding a production hook. Fail if the contract moves.
+      let matches = 0;
+      body = body.replace(
+        /(\w+)\.to\(\s*(\w+),\s*\{\s*progress:\s*1,\s*duration:\s*1\.8,/g,
+        (_match, gsap, target) => {
+          matches++;
+          return `${gsap}.to((Reflect.set(window,"__openingProgress",()=>${target}.progress),${target}),{progress:1,duration:1.8,`;
+        },
+      );
+      if (matches !== 1)
+        throw new Error('Observe exactly one real 1.8s introduction');
+    }
     const exports = body.match(/export\s*\{([^}]*\bcreateCourtScene\b[^}]*)\}/);
     let factory = exports?.[1].match(
       /(?:^|,)\s*([\w$]+)\s+as\s+createCourtScene\b/,
@@ -371,156 +385,170 @@ for (const viewport of [
   { width: 1440, height: 1000 },
   { width: 1920, height: 1080 },
 ]) {
-  test(
-    `dense overhead arrival at ${viewport.width} by ${viewport.height} keeps each scroll pixel within 2px and half a degree in both directions`,
-    webgl,
-    async ({ page }, testInfo) => {
-      test.skip(
-        testInfo.project.name !== 'chromium',
-        'Real WebGL projection runs in Chromium.',
-      );
-      await page.setViewportSize(viewport);
-      await exposeSceneInTest(page);
-      await readyExperience(page, '/en/#experience');
-      // Cancel the initial anchor intent before seeking the native timeline.
-      await page.mouse.wheel(0, -1);
-      const stage = page.locator('[data-story-stage="experience"]');
-      await expect
-        .poll(() =>
-          stage.evaluate((element) =>
-            element.parentElement!.classList.contains('pin-spacer'),
-          ),
-        )
-        .toBe(true);
-      const samples = await page.evaluate(async () => {
-        const { scene } = Reflect.get(window, '__courtTest') as CourtProbe;
-        const stage = document.querySelector<HTMLElement>(
-          '[data-story-stage="experience"]',
-        )!;
-        const host = document.querySelector('[data-demo-court-host]')!;
-        const rest = Number(stage.dataset.storyStart);
-        const floorPoints = [
-          { x: 0, y: 0 },
-          { x: 1, y: 0 },
-          { x: 0, y: 1 },
-          { x: 1, y: 1 },
-          { x: 0.2, y: 0.8 },
-        ];
-        const read = () => {
-          const bounds = host.getBoundingClientRect();
-          const lineStart = scene.projectPoint({ x: 0.25, y: 0.5 })!;
-          const lineEnd = scene.projectPoint({ x: 0.75, y: 0.5 })!;
-          const arrival = Math.max(
-            0,
-            Math.min(
-              1,
-              (innerHeight * 0.85 - stage.getBoundingClientRect().top) /
-                (innerHeight * 0.85 - 88),
+  // Overlap both neighboring endpoints so every original one-pixel edge is
+  // checked in both directions without combining all software draws in one case.
+  for (const interval of [
+    { first: -60, last: -25, consistency: [-27, -26, -25], clamp: false },
+    { first: -26, last: 2, consistency: [-2, -1, 0, 1, 2], clamp: true },
+  ]) {
+    test(
+      `dense overhead arrival at ${viewport.width} by ${viewport.height}, offsets ${interval.first} through ${interval.last}, keeps each scroll pixel within 2px and half a degree in both directions`,
+      webgl,
+      async ({ page }, testInfo) => {
+        test.skip(
+          testInfo.project.name !== 'chromium',
+          'Real WebGL projection runs in Chromium.',
+        );
+        await page.setViewportSize(viewport);
+        await exposeSceneInTest(page);
+        await readyExperience(page, '/en/#experience');
+        // Cancel the initial anchor intent before seeking the native timeline.
+        await cancelAnchorIntent(page);
+        const stage = page.locator('[data-story-stage="experience"]');
+        await expect
+          .poll(() =>
+            stage.evaluate((element) =>
+              element.parentElement!.classList.contains('pin-spacer'),
             ),
-          );
-          return {
-            scroll: scrollY,
-            host: { x: bounds.left, y: bounds.top },
-            points: floorPoints.map((point) => scene.projectPoint(point)!),
-            roll: Math.atan2(lineEnd.y - lineStart.y, lineEnd.x - lineStart.x),
-            lineLength: Math.hypot(
-              lineEnd.x - lineStart.x,
-              lineEnd.y - lineStart.y,
-            ),
-            rawBlend: arrival * arrival * (3 - 2 * arrival),
-            blend:
-              document.querySelector<HTMLElement>('#court-canvas')!.dataset
-                .placementBlend,
-            chapter: document.documentElement.dataset.chapter,
-          };
-        };
-        const seek = async (offset: number) => {
-          scrollTo({ top: rest + offset, behavior: 'instant' });
-          await new Promise<void>((resolve) =>
-            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-          );
-          return { offset, ...read() };
-        };
-        const forward = [];
-        for (let offset = -60; offset <= 2; offset += 1)
-          forward.push(await seek(offset));
-        const reverse = [];
-        for (let offset = 2; offset >= -60; offset -= 1)
-          reverse.push(await seek(offset));
-        return { forward, reverse };
-      });
-      await testInfo.attach('dense-overhead-arrival', {
-        body: JSON.stringify(samples),
-        contentType: 'application/json',
-      });
-      for (const direction of ['forward', 'reverse'] as const) {
-        const values = samples[direction];
-        for (const sample of values) {
-          expect(sample.chapter).toBe('experience');
-          expect(sample.lineLength).toBeGreaterThan(100);
-          for (const point of sample.points) {
-            expect(point).not.toBeNull();
-            expect(Number.isFinite(point.x) && Number.isFinite(point.y)).toBe(
-              true,
+          )
+          .toBe(true);
+        const samples = await page.evaluate(async ({ first, last }) => {
+          const { scene } = Reflect.get(window, '__courtTest') as CourtProbe;
+          const stage = document.querySelector<HTMLElement>(
+            '[data-story-stage="experience"]',
+          )!;
+          const host = document.querySelector('[data-demo-court-host]')!;
+          const rest = Number(stage.dataset.storyStart);
+          const floorPoints = [
+            { x: 0, y: 0 },
+            { x: 1, y: 0 },
+            { x: 0, y: 1 },
+            { x: 1, y: 1 },
+            { x: 0.2, y: 0.8 },
+          ];
+          const read = () => {
+            const bounds = host.getBoundingClientRect();
+            const lineStart = scene.projectPoint({ x: 0.25, y: 0.5 })!;
+            const lineEnd = scene.projectPoint({ x: 0.75, y: 0.5 })!;
+            const arrival = Math.max(
+              0,
+              Math.min(
+                1,
+                (innerHeight * 0.85 - stage.getBoundingClientRect().top) /
+                  (innerHeight * 0.85 - 88),
+              ),
             );
+            return {
+              scroll: scrollY,
+              host: { x: bounds.left, y: bounds.top },
+              points: floorPoints.map((point) => scene.projectPoint(point)!),
+              roll: Math.atan2(
+                lineEnd.y - lineStart.y,
+                lineEnd.x - lineStart.x,
+              ),
+              lineLength: Math.hypot(
+                lineEnd.x - lineStart.x,
+                lineEnd.y - lineStart.y,
+              ),
+              rawBlend: arrival * arrival * (3 - 2 * arrival),
+              blend:
+                document.querySelector<HTMLElement>('#court-canvas')!.dataset
+                  .placementBlend,
+              chapter: document.documentElement.dataset.chapter,
+            };
+          };
+          const seek = async (offset: number) => {
+            scrollTo({ top: rest + offset, behavior: 'instant' });
+            await new Promise<void>((resolve) =>
+              requestAnimationFrame(() =>
+                requestAnimationFrame(() => resolve()),
+              ),
+            );
+            return { offset, ...read() };
+          };
+          const forward = [];
+          for (let offset = first; offset <= last; offset += 1)
+            forward.push(await seek(offset));
+          const reverse = [];
+          for (let offset = last; offset >= first; offset -= 1)
+            reverse.push(await seek(offset));
+          return { forward, reverse };
+        }, interval);
+        await testInfo.attach('dense-overhead-arrival', {
+          body: JSON.stringify({ interval, ...samples }),
+          contentType: 'application/json',
+        });
+        for (const direction of ['forward', 'reverse'] as const) {
+          const values = samples[direction];
+          for (const sample of values) {
+            expect(sample.chapter).toBe('experience');
+            expect(sample.lineLength).toBeGreaterThan(100);
+            for (const point of sample.points) {
+              expect(point).not.toBeNull();
+              expect(Number.isFinite(point.x) && Number.isFinite(point.y)).toBe(
+                true,
+              );
+            }
+          }
+          for (let index = 1; index < values.length; index += 1) {
+            const previous = values[index - 1],
+              current = values[index];
+            const angle = current.roll - previous.roll;
+            const rollDelta = Math.abs(
+              (Math.atan2(Math.sin(angle), Math.cos(angle)) * 180) / Math.PI,
+            );
+            const label = `${direction} offsets ${previous.offset} → ${current.offset}`;
+            expect(rollDelta, `${label}: screen rotation`).toBeLessThan(0.5);
+            for (
+              let pointIndex = 0;
+              pointIndex < current.points.length;
+              pointIndex += 1
+            ) {
+              const from = previous.points[pointIndex],
+                to = current.points[pointIndex];
+              // Remove only measured host travel. The pin stops that travel at
+              // 88px, so subtracting scrollY itself would hide an endpoint jump.
+              const dx = to.x - from.x - (current.host.x - previous.host.x);
+              const dy = to.y - from.y - (current.host.y - previous.host.y);
+              expect(
+                Math.hypot(dx, dy),
+                `${label}: floor point ${pointIndex}`,
+              ).toBeLessThanOrEqual(2);
+            }
           }
         }
-        for (let index = 1; index < values.length; index += 1) {
-          const previous = values[index - 1],
-            current = values[index];
-          const angle = current.roll - previous.roll;
-          const rollDelta = Math.abs(
-            (Math.atan2(Math.sin(angle), Math.cos(angle)) * 180) / Math.PI,
+        if (interval.clamp) {
+          const clampCrossing = samples.forward.findIndex(
+            (sample, index, values) =>
+              index > 0 &&
+              values[index - 1].rawBlend < 0.99999 &&
+              sample.rawBlend >= 0.99999,
           );
-          const label = `${direction} offsets ${previous.offset} → ${current.offset}`;
-          expect(rollDelta, `${label}: screen rotation`).toBeLessThan(0.5);
-          for (
-            let pointIndex = 0;
-            pointIndex < current.points.length;
-            pointIndex += 1
-          ) {
-            const from = previous.points[pointIndex],
-              to = current.points[pointIndex];
-            // Remove only measured host travel. The pin stops that travel at
-            // 88px, so subtracting scrollY itself would hide an endpoint jump.
-            const dx = to.x - from.x - (current.host.x - previous.host.x);
-            const dy = to.y - from.y - (current.host.y - previous.host.y);
+          expect(
+            clampCrossing,
+            'native samples must straddle both sides of the endpoint clamp',
+          ).toBeGreaterThan(0);
+        }
+        for (const offset of interval.consistency) {
+          const forward = samples.forward.find(
+            (sample) => sample.offset === offset,
+          )!;
+          const reverse = samples.reverse.find(
+            (sample) => sample.offset === offset,
+          )!;
+          for (let index = 0; index < forward.points.length; index += 1) {
+            const a = forward.points[index],
+              b = reverse.points[index];
             expect(
-              Math.hypot(dx, dy),
-              `${label}: floor point ${pointIndex}`,
+              Math.hypot(a.x - b.x, a.y - b.y),
+              `same native position at offset ${offset}`,
             ).toBeLessThanOrEqual(2);
           }
         }
-      }
-      const clampCrossing = samples.forward.findIndex(
-        (sample, index, values) =>
-          index > 0 &&
-          values[index - 1].rawBlend < 0.99999 &&
-          sample.rawBlend >= 0.99999,
-      );
-      expect(
-        clampCrossing,
-        'native samples must straddle both sides of the endpoint clamp',
-      ).toBeGreaterThan(0);
-      for (const offset of [-2, -1, 0, 1, 2]) {
-        const forward = samples.forward.find(
-          (sample) => sample.offset === offset,
-        )!;
-        const reverse = samples.reverse.find(
-          (sample) => sample.offset === offset,
-        )!;
-        for (let index = 0; index < forward.points.length; index += 1) {
-          const a = forward.points[index],
-            b = reverse.points[index];
-          expect(
-            Math.hypot(a.x - b.x, a.y - b.y),
-            `same native position at offset ${offset}`,
-          ).toBeLessThanOrEqual(2);
-        }
-      }
-      await assertBackgroundIdentity(page);
-    },
-  );
+        await assertBackgroundIdentity(page);
+      },
+    );
+  }
 }
 
 for (const path of ['/', '/en/']) {
@@ -1022,6 +1050,91 @@ test(
 );
 
 test(
+  'controlled opening clock advances the real introduction before WebGL settles at the final pose',
+  webgl,
+  async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'Real WebGL runs in Chromium.',
+    );
+    // Install before GSAP loads. Advance every animation frame with runFor;
+    // this checks the time contract independently of software GPU wall time.
+    await page.clock.install();
+    // Freeze on the blank page, before expensive GL work can block the command.
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await exposeSceneInTest(page, true);
+    const draws = await observeCourtDraws(page);
+    await page.goto('/');
+    const canvas = page.locator('#court-canvas');
+    // Initialization uses native async queries and timers too. Advance them
+    // in small frame-by-frame slices; never jump or bypass the 8s deadline.
+    for (let elapsed = 0; elapsed < 8000; elapsed += 100) {
+      if ((await page.locator('html').getAttribute('data-scene')) === '3d')
+        break;
+      await page.clock.runFor(100);
+    }
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+    await page.clock.runFor(16);
+    await expect(canvas).toHaveAttribute('data-rendering', 'active');
+    const read = () =>
+      page.evaluate(() => {
+        const { scene } = Reflect.get(window, '__courtTest') as CourtProbe;
+        const point = scene.projectPoint({ x: 0.5, y: 0.8 });
+        return {
+          point,
+          intro: Reflect.get(window, '__openingProgress')() as number,
+        };
+      });
+    const poses = [await read()];
+    const initialDraws = await draws();
+    for (const duration of [200, 200, 300, 500, 600]) {
+      await page.clock.runFor(duration);
+      poses.push(await read());
+    }
+    await testInfo.attach('opening-camera-clock', {
+      body: JSON.stringify({
+        poses,
+        canvas: await canvas.evaluate((element) => ({
+          ...(element as HTMLElement).dataset,
+        })),
+        scroll: await page.evaluate(() => scrollY),
+      }),
+      contentType: 'application/json',
+    });
+    expect(
+      poses.every(
+        (pose) =>
+          pose.point &&
+          Number.isFinite(pose.point.x) &&
+          Number.isFinite(pose.point.y),
+      ),
+    ).toBe(true);
+    expect(
+      new Set(poses.map((pose) => pose.intro)).size,
+    ).toBeGreaterThanOrEqual(3);
+    expect(poses[0].intro).toBeLessThan(1);
+    expect(poses[4].intro).toBeLessThan(1);
+    for (let index = 1; index < poses.length; index++) {
+      expect(poses[index].intro).toBeGreaterThanOrEqual(poses[index - 1].intro);
+    }
+    expect(poses.at(-1)!.intro).toBe(1);
+    expect(await draws()).toBeGreaterThan(initialDraws);
+    const finalPose = poses.at(-1)!;
+    // Flush the existing 160ms final-frame settling period, then prove that
+    // the completed camera and actual native draw count stay quiet.
+    await page.clock.runFor(300);
+    await expect(canvas).toHaveAttribute('data-rendering', 'idle');
+    expect(await read()).toEqual(finalPose);
+    const settledDraws = await draws();
+    await page.clock.runFor(500);
+    expect(await draws()).toBe(settledDraws);
+    expect(await read()).toEqual(finalPose);
+    await assertBackgroundIdentity(page);
+  },
+);
+
+test(
   'settled full-motion reading and download stop actual WebGL draws until chapter navigation resumes them',
   webgl,
   async ({ page }, testInfo) => {
@@ -1033,13 +1146,16 @@ test(
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await exposeSceneInTest(page);
     const draws = await observeCourtDraws(page);
-    await page.goto('/');
+    // Full-motion reading is a native-clock lifecycle check. The opening's
+    // animation clock is verified separately above, rather than imposing a
+    // software-render throughput deadline on this reading precondition.
+    await page.goto('/#scoring');
     await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
     await page.evaluate(() => document.fonts.ready);
     const canvas = page.locator('#court-canvas');
     await expect.poll(draws).toBeGreaterThan(0);
     await expect(canvas).toHaveAttribute('data-rendering', 'idle');
-    // Font measurements and the final introduction frame may still settle.
+    // Font measurements and the final chapter frame may still settle.
     // A real quiet interval must follow them while full motion remains enabled.
     await expect
       .poll(

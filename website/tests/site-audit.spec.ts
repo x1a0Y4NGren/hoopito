@@ -404,8 +404,23 @@ test('chapter polish: enabled actions share pressed and keyboard feedback while 
     const action = page.locator(selector);
     await action.scrollIntoViewIfNeeded();
     await page.mouse.move(0, 0);
-    // The previous hover can still be easing out when a scrolled action is read.
-    await page.waitForTimeout(240);
+    // A busy renderer can still be interpolating after 240 ms of wall time.
+    // Read the actual CSS transition lifecycle before taking the exact baseline.
+    await expect
+      .poll(() =>
+        action.evaluate((element) => {
+          getComputedStyle(element).boxShadow;
+          return element
+            .getAnimations()
+            .some(
+              (animation) =>
+                animation instanceof CSSTransition &&
+                animation.transitionProperty === 'box-shadow' &&
+                (animation.pending || animation.playState === 'running'),
+            );
+        }),
+      )
+      .toBe(false);
     const before = await action.evaluate(
       (element) => getComputedStyle(element).boxShadow,
     );

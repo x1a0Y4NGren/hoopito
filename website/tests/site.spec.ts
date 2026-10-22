@@ -792,8 +792,43 @@ for (const locale of locales) {
       )
       .toBeCloseTo(0.94, 2);
     await page.mouse.move(700, 400);
-    await page.mouse.wheel(0, -30);
-    await page.waitForTimeout(900);
+    const reverseDelta = -30;
+    const reverseGesture = await page.evaluateHandle((delta) => {
+      const gesture = {
+        seen: false,
+        destination: scrollY + delta,
+        stop: () => {},
+      };
+      const onWheel = () => {
+        gesture.seen = true;
+      };
+      window.addEventListener('wheel', onWheel, { once: true, passive: true });
+      gesture.stop = () => {
+        window.removeEventListener('wheel', onWheel);
+      };
+      return gesture;
+    }, reverseDelta);
+    try {
+      await page.mouse.wheel(0, reverseDelta);
+      // WebKit may deliver the compositor's remaining reverse wheel motion
+      // after 900 ms. Some engines expose scrollend but never dispatch it for
+      // this input, so require the full pixel delta before checking stability.
+      await expect
+        .poll(() =>
+          reverseGesture.evaluate(async (gesture) => {
+            if (!gesture.seen || Math.abs(scrollY - gesture.destination) >= 0.5)
+              return false;
+            const top = scrollY;
+            await new Promise(requestAnimationFrame);
+            await new Promise(requestAnimationFrame);
+            return scrollY === top;
+          }),
+        )
+        .toBe(true);
+    } finally {
+      await reverseGesture.evaluate((gesture) => gesture.stop());
+      await reverseGesture.dispose();
+    }
     const reversed = await page.evaluate(() => scrollY);
     expect(reversed).toBeLessThan(
       range.start + (range.end - range.start) * 0.94,
