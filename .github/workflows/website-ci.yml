@@ -226,7 +226,7 @@ jobs:
 
       - name: Run browser checks and reject flaky results
         id: tests
-        run: npm run test:e2e -- --project=chromium --grep @webgl --workers=1 --fail-on-flaky-tests --output=output/playwright/webgl-chromium/test-results 2>&1 | tee output/playwright/webgl-chromium/test.log
+        run: npm run test:e2e -- --config=playwright.webgl.config.ts --project=chromium --grep @webgl --workers=1 --fail-on-flaky-tests --output=output/playwright/webgl-chromium/test-results 2>&1 | tee output/playwright/webgl-chromium/test.log
 
       - name: Record execution result
         if: always()

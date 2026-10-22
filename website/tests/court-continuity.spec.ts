@@ -266,6 +266,48 @@ async function cancelAnchorIntent(page: Page) {
   }
 }
 
+async function resizeStoryViewport(page: Page, width: number, height: number) {
+  const previous = page.viewportSize();
+  if (previous?.width === width && previous.height === height) return;
+  await page.evaluate(() => {
+    const pending = new Set(
+      ['hero', 'experience', 'replay'].map((chapter) =>
+        document.querySelector(`[data-story-stage="${chapter}"]`)!,
+      ),
+    );
+    const probe = { done: false, stop: () => {} };
+    const observer = new MutationObserver((records) => {
+      for (const record of records) pending.delete(record.target as Element);
+      probe.done = pending.size === 0;
+    });
+    for (const stage of pending)
+      observer.observe(stage, {
+        attributes: true,
+        attributeFilter: ['data-story-start', 'data-story-end'],
+      });
+    probe.stop = () => observer.disconnect();
+    Reflect.set(window, '__courtViewportRefreshProbe', probe);
+  });
+  try {
+    await page.setViewportSize({ width, height });
+    // The resize event precedes the debounced choreography refresh and its
+    // position restoration. Measure the new native destination after both.
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => Reflect.get(window, '__courtViewportRefreshProbe').done,
+        ),
+      )
+      .toBe(true);
+    await waitForNativeLayout(page);
+  } finally {
+    await page.evaluate(() => {
+      Reflect.get(window, '__courtViewportRefreshProbe')?.stop();
+      Reflect.deleteProperty(window, '__courtViewportRefreshProbe');
+    });
+  }
+}
+
 async function doubleTextSize(page: Page) {
   await cancelAnchorIntent(page);
   try {
@@ -839,12 +881,13 @@ for (const dpr of [1, 2]) {
         const page = await context.newPage();
         await exposeSceneInTest(page);
         await readyExperience(page, '/en/#experience');
+        await cancelAnchorIntent(page);
         for (const [width, height] of [
           [1440, 1000],
           [1920, 1080],
           [1440, 650],
         ]) {
-          await page.setViewportSize({ width, height });
+          await resizeStoryViewport(page, width, height);
           await enterNativeExperience(page);
           const result = await page.evaluate(() => {
             const { scene } = Reflect.get(window, '__courtTest') as CourtProbe;

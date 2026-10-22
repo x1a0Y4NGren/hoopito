@@ -775,6 +775,15 @@ for (const locale of locales) {
       (top) => scrollTo({ top, behavior: 'instant' }),
       range.start + (range.end - range.start) * 0.94,
     );
+    // The native seek returns before WebKit commits its shared scroll clock.
+    // Begin the reverse gesture only once that seek has reached the cards, and
+    // hit page content rather than the mouse's default (0, 0) header boundary.
+    await expect
+      .poll(async () =>
+        Number(await stage.getAttribute('data-replay-progress')),
+      )
+      .toBeCloseTo(0.94, 2);
+    await page.mouse.move(700, 400);
     await page.mouse.wheel(0, -30);
     await page.waitForTimeout(900);
     const reversed = await page.evaluate(() => scrollY);

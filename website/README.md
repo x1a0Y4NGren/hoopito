@@ -98,6 +98,11 @@ SHA-256、字节数和总摘要的 `build-artifact.json`，连同 `dist/` 上传
 三个普通 UI 任务（Chromium／Firefox／WebKit，各 15 分钟、2 workers）与 Chromium
 软件 WebGL 任务（20 分钟、1 worker）只依赖 `validate`，使用独立 runner；一组失败
 不取消其他浏览器。普通 UI 关闭 WebGL，标记 `@webgl` 的检查由独立任务串行运行。
+WebGL 任务使用 `playwright.webgl.config.ts`，保留完整 Chromium；CI 按
+[Chromium 的软件 WebGL 模式](https://github.com/chromium/chromium/blob/156.0.8078.4/docs/gpu/swiftshader.md)
+采用软件合成器，仅将 WebGL 绘制交给 SwiftShader，避免把它同时用作整个浏览器的 GL 驱动。
+该配置继承原有用例、超时、画质与失败证据设置；本地仍使用现有真实 GPU 启动参数。
+软件渲染检查只证明场景与交互生命周期，不代表真实 GPU 的显示帧率。
 测试任务只下载当前工作流运行中按完整提交 SHA 命名的构建，校验本地源码身份、文件集合
 及每个文件的 SHA-256 后才启动 preview，不重新构建或引用其他提交的“最新产物”。
 失败允许一次诊断重试，但 `--fail-on-flaky-tests` 会将重试后通过也判为不稳定失败。
