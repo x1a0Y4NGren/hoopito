@@ -189,6 +189,7 @@ jobs:
     env:
       PLAYWRIGHT_HTML_OUTPUT_DIR: output/playwright/webgl-chromium/report
       PLAYWRIGHT_JSON_OUTPUT_FILE: output/playwright/webgl-chromium/results.json
+      DEBUG: pw:browser
     steps:
       - name: Check out source
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -226,7 +227,7 @@ jobs:
 
       - name: Run browser checks and reject flaky results
         id: tests
-        run: npm run test:e2e -- --config=playwright.webgl.config.ts --project=chromium --grep @webgl --workers=1 --fail-on-flaky-tests --output=output/playwright/webgl-chromium/test-results 2>&1 | tee output/playwright/webgl-chromium/test.log
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" npm run test:e2e -- --config=playwright.webgl.config.ts --project=chromium --grep @webgl --workers=1 --fail-on-flaky-tests --output=output/playwright/webgl-chromium/test-results 2>&1 | tee output/playwright/webgl-chromium/test.log
 
       - name: Record execution result
         if: always()

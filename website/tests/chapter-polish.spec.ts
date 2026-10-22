@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type CDPSession } from '@playwright/test';
 
 test('scrolling within a chapter does not repeatedly invalidate unchanged page-wide presentation attributes', async ({
   page,
@@ -141,7 +141,7 @@ for (const locale of ['/', '/en/']) {
 test(
   'overhead cutaway clears the arena architecture and restores it on reverse travel without moving the camera endpoint',
   { tag: '@webgl' },
-  async ({ page }, testInfo) => {
+  async ({ page, browser }, testInfo) => {
     test.skip(
       testInfo.project.name !== 'chromium',
       'Actual scene runs in Chromium.',
@@ -156,6 +156,85 @@ test(
       'true',
     );
     await expect(canvas).toHaveAttribute('data-view-cutaway', '1.0000');
+    if (process.env.CI) {
+      const actual = await canvas.evaluate((element) => {
+        const canvas = element as HTMLCanvasElement;
+        // Read the context already owned by the ready Three.js renderer.
+        const gl = canvas.getContext('webgl2')!;
+        const debug = gl.getExtension('WEBGL_debug_renderer_info');
+        const bounds = canvas.getBoundingClientRect();
+        return {
+          canvasCount: document.querySelectorAll('canvas').length,
+          buffer: { width: canvas.width, height: canvas.height },
+          css: {
+            x: bounds.x,
+            y: bounds.y,
+            width: bounds.width,
+            height: bounds.height,
+          },
+          data: { ...canvas.dataset },
+          context: {
+            version: gl.getParameter(gl.VERSION),
+            renderer: gl.getParameter(gl.RENDERER),
+            unmaskedRenderer:
+              debug && gl.getParameter(debug.UNMASKED_RENDERER_WEBGL),
+            attributes: gl.getContextAttributes(),
+            lost: gl.isContextLost(),
+          },
+          viewport: {
+            width: innerWidth,
+            height: innerHeight,
+            layoutWidth: document.documentElement.clientWidth,
+            scrollbarWidth: innerWidth - document.documentElement.clientWidth,
+            dpr: devicePixelRatio,
+          },
+          screen: {
+            width: screen.width,
+            height: screen.height,
+            depth: screen.colorDepth,
+          },
+          hidden: document.hidden,
+          visibility: document.visibilityState,
+          focus: document.hasFocus(),
+        };
+      });
+      const systemInfo: {
+        value?: unknown;
+        reason?: string;
+        detachReason?: string;
+      } = {};
+      let session: CDPSession | undefined;
+      try {
+        session = await browser.newBrowserCDPSession();
+        systemInfo.value = await session.send('SystemInfo.getInfo');
+      } catch (error) {
+        systemInfo.reason = String(error);
+      } finally {
+        try {
+          await session?.detach();
+        } catch (error) {
+          systemInfo.detachReason = String(error);
+        }
+      }
+      await testInfo.attach('software-webgl-environment', {
+        body: JSON.stringify(
+          {
+            browserVersion: browser.version(),
+            display: process.env.DISPLAY ?? null,
+            ci: process.env.CI,
+            configuredHeadless: testInfo.project.use.headless ?? null,
+            configuredLaunchArguments:
+              testInfo.project.use.launchOptions?.args ?? [],
+            actual,
+            systemInfo,
+            note: 'Environment metadata only; software rendering is not display FPS evidence.',
+          },
+          null,
+          2,
+        ),
+        contentType: 'application/json',
+      });
+    }
     await canvas.evaluate((element) =>
       Reflect.set(
         window,

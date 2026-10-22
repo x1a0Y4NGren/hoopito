@@ -178,7 +178,11 @@ async function assertBackgroundIdentity(page: Page) {
       sameContext: canvas.getContext('webgl2') === probe.context,
       creations: probe.creations,
       removals: probe.removals,
-      widthError: Math.abs(bounds.width - innerWidth * 0.48),
+      // The root reserves a stable scrollbar gutter. Viewport CSS units use
+      // that layout width, excluding a classic headed-browser scrollbar.
+      widthError: Math.abs(
+        bounds.width - document.documentElement.clientWidth * 0.48,
+      ),
     };
   });
   expect(state).toMatchObject({

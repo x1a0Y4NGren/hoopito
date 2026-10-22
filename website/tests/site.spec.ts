@@ -183,13 +183,18 @@ test(
     await page.locator('#experience').scrollIntoViewIfNeeded();
     const host = page.locator('[data-demo-court-host]');
     const canvas = page.locator('#court-canvas');
+    const sceneWidth = () =>
+      page.evaluate(() => document.documentElement.clientWidth * 0.48);
     await expect(host).toHaveAttribute('data-renderer', '3d');
     await expect(page.locator('.scene-background > #court-canvas')).toHaveCount(
       1,
     );
     await expect(host.locator('canvas')).toHaveCount(0);
     await expect(page.locator('canvas')).toHaveCount(1);
-    expect((await canvas.boundingBox())!.width).toBeCloseTo(1440 * 0.48, 0);
+    expect((await canvas.boundingBox())!.width).toBeCloseTo(
+      await sceneWidth(),
+      0,
+    );
     await expect(page.locator('html')).toHaveAttribute(
       'data-interactive',
       'true',
@@ -235,7 +240,10 @@ test(
     await expect(page.locator('.scene-background > #court-canvas')).toHaveCount(
       1,
     );
-    expect((await canvas.boundingBox())!.width).toBeCloseTo(1440 * 0.48, 0);
+    expect((await canvas.boundingBox())!.width).toBeCloseTo(
+      await sceneWidth(),
+      0,
+    );
     await expect(host).toHaveAttribute('data-renderer', '3d');
     await page.setViewportSize({ width: 1440, height: 1000 });
     await expectDesktopPins(page);
@@ -837,15 +845,48 @@ for (const locale of locales) {
       .toBeCloseTo(85, 0);
     await expect(page.locator('[data-replay-blue]')).toHaveText('8');
     await expect(page.locator('[data-replay-red]')).toHaveText('11');
-    await page.locator('[data-replay-device="summary"] .viewer-link').click();
-    await expect(page.locator('[data-viewer-image]')).toHaveJSProperty(
-      'naturalWidth',
-      1080,
-    );
-    await page.keyboard.press('Escape');
-    await expect
-      .poll(async () => (await stage.boundingBox())!.y)
-      .toBeCloseTo(85, 0);
+    const opener = page.locator('[data-replay-device="summary"] .viewer-link');
+    // A real click may scroll the caption into view. The gallery must restore
+    // that actual opening position, rather than undoing the user's approach.
+    const opening = await opener.evaluateHandle((element) => {
+      let position: { scroll: number; stageTop: number } | undefined;
+      const capture = () => {
+        position = {
+          scroll: scrollY,
+          stageTop: element
+            .closest('[data-story-stage="replay"]')!
+            .getBoundingClientRect().top,
+        };
+      };
+      element.addEventListener('click', capture, { capture: true, once: true });
+      return {
+        read: () => position,
+        stop: () => element.removeEventListener('click', capture, true),
+      };
+    });
+    try {
+      await opener.click();
+      const openedAt = await opening.evaluate((value) => value.read());
+      expect(openedAt).toBeDefined();
+      await expect(page.locator('[data-viewer-image]')).toHaveJSProperty(
+        'naturalWidth',
+        1080,
+      );
+      await page.keyboard.press('Escape');
+      await expect(page.locator('[data-viewer]')).not.toBeVisible();
+      await expect
+        .poll(() => page.evaluate(() => scrollY))
+        .toBeCloseTo(openedAt!.scroll, 0);
+      await expect
+        .poll(async () => (await stage.boundingBox())!.y)
+        .toBeCloseTo(openedAt!.stageTop, 0);
+      await expect(opener).toBeFocused();
+      await expect(page.locator('[data-replay-blue]')).toHaveText('8');
+      await expect(page.locator('[data-replay-red]')).toHaveText('11');
+    } finally {
+      await opening.evaluate((value) => value.stop());
+      await opening.dispose();
+    }
     expect(errors).toEqual([]);
   });
 
@@ -3147,7 +3188,13 @@ for (const scale of [1, 2]) {
             WebGL2RenderingContext.prototype.renderbufferStorageMultisample;
           WebGL2RenderingContext.prototype.renderbufferStorageMultisample =
             function (target, samples, format, width, height) {
-              buffers.push({ samples, width, height });
+              // The native API converts positive GLsizei arguments to integers;
+              // CDP density can leave tiny fractions in Three.js's JS values.
+              buffers.push({
+                samples,
+                width: Math.trunc(width),
+                height: Math.trunc(height),
+              });
               return original.call(
                 this,
                 target,
@@ -3224,7 +3271,7 @@ for (const scale of [1, 2]) {
         });
         await expect
           .poll(() => page.evaluate(() => window.devicePixelRatio))
-          .toBe(nextScale);
+          .toBeCloseTo(nextScale, 6);
         await expect
           .poll(() =>
             page
@@ -3362,8 +3409,8 @@ test(
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
     await expect(page.locator('[data-record]')).toBeDisabled();
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
     const resumed = await count();
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
     await expect.poll(count).toBeGreaterThan(resumed);
     await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
     expect(
