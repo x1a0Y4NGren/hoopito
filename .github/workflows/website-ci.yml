@@ -178,17 +178,21 @@ jobs:
           retention-days: 14
 
   webgl:
-    name: WebGL (Chromium software renderer)
+    name: WebGL (Chromium software renderer, shard ${{ matrix.shard }}/2)
     needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     defaults:
       run:
         shell: bash
         working-directory: website
     env:
-      PLAYWRIGHT_HTML_OUTPUT_DIR: output/playwright/webgl-chromium/report
-      PLAYWRIGHT_JSON_OUTPUT_FILE: output/playwright/webgl-chromium/results.json
+      PLAYWRIGHT_HTML_OUTPUT_DIR: output/playwright/webgl-chromium-${{ matrix.shard }}/report
+      PLAYWRIGHT_JSON_OUTPUT_FILE: output/playwright/webgl-chromium-${{ matrix.shard }}/results.json
       DEBUG: pw:browser
     steps:
       - name: Check out source
@@ -204,8 +208,8 @@ jobs:
       - name: Install locked dependencies
         id: dependencies
         run: |
-          mkdir -p output/playwright/webgl-chromium
-          npm ci 2>&1 | tee output/playwright/webgl-chromium/dependencies.log
+          mkdir -p output/playwright/webgl-chromium-${{ matrix.shard }}
+          npm ci 2>&1 | tee output/playwright/webgl-chromium-${{ matrix.shard }}/dependencies.log
 
       - name: Download this workflow run's source-bound build
         id: download
@@ -218,16 +222,16 @@ jobs:
       - name: Verify source SHA and every output file before preview
         id: verify
         run: |
-          mkdir -p output/playwright/webgl-chromium
-          node scripts/build-artifact.mjs verify --source-sha "$GITHUB_SHA" 2>&1 | tee output/playwright/webgl-chromium/build-identity.json
+          mkdir -p output/playwright/webgl-chromium-${{ matrix.shard }}
+          node scripts/build-artifact.mjs verify --source-sha "$GITHUB_SHA" 2>&1 | tee output/playwright/webgl-chromium-${{ matrix.shard }}/build-identity.json
 
       - name: Install only the assigned browser
         id: browser
-        run: bash scripts/install-ci-browser.sh chromium 2>&1 | tee output/playwright/webgl-chromium/browser-install.log
+        run: bash scripts/install-ci-browser.sh chromium 2>&1 | tee output/playwright/webgl-chromium-${{ matrix.shard }}/browser-install.log
 
       - name: Run browser checks and reject flaky results
         id: tests
-        run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" node scripts/ci-runtime-sampler.mjs --output output/playwright/webgl-chromium/runtime.jsonl -- npm run test:e2e -- --config=playwright.webgl.config.ts --project=chromium --grep @webgl --workers=1 --fail-on-flaky-tests --output=output/playwright/webgl-chromium/test-results 2>&1 | tee output/playwright/webgl-chromium/test.log
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" node scripts/ci-runtime-sampler.mjs --output output/playwright/webgl-chromium-${{ matrix.shard }}/runtime.jsonl -- npm run test:e2e -- --config=playwright.webgl.config.ts --project=chromium --grep @webgl --shard=${{ matrix.shard }}/2 --workers=1 --fail-on-flaky-tests --output=output/playwright/webgl-chromium-${{ matrix.shard }}/test-results 2>&1 | tee output/playwright/webgl-chromium-${{ matrix.shard }}/test.log
 
       - name: Record execution result
         if: always()
@@ -235,19 +239,20 @@ jobs:
           JOB_STATUS: ${{ job.status }}
           STEPS_JSON: ${{ toJSON(steps) }}
           BROWSER: chromium
+          SHARD_INDEX: ${{ matrix.shard }}
         run: |
           node --input-type=module <<'NODE'
           import { mkdir, writeFile } from 'node:fs/promises';
-          const directory = 'output/playwright/webgl-chromium';
+          const directory = 'output/playwright/webgl-chromium-${{ matrix.shard }}';
           await mkdir(directory, { recursive: true });
-          await writeFile(directory + '/execution.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, job: 'webgl', browser: process.env.BROWSER, status: process.env.JOB_STATUS, steps: JSON.parse(process.env.STEPS_JSON) }, null, 2) + '\n');
+          await writeFile(directory + '/execution.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, job: 'webgl', browser: process.env.BROWSER, shard: { current: Number(process.env.SHARD_INDEX), total: 2 }, status: process.env.JOB_STATUS, steps: JSON.parse(process.env.STEPS_JSON) }, null, 2) + '\n');
           NODE
 
       - name: Preserve reports, logs and failure evidence
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: hoopito-website-webgl-chromium-${{ github.sha }}-attempt-${{ github.run_attempt }}
-          path: website/output/playwright/webgl-chromium/
+          name: hoopito-website-webgl-chromium-shard-${{ matrix.shard }}-of-2-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          path: website/output/playwright/webgl-chromium-${{ matrix.shard }}/
           if-no-files-found: warn
           retention-days: 14

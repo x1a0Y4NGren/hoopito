@@ -96,8 +96,11 @@ Playwright 自动启动本地 `preview` 服务；失败时保留 trace 与截图
 CI 先执行 15 分钟有界的 `validate`，只构建一次；生成包含源码提交 SHA、逐文件
 SHA-256、字节数和总摘要的 `build-artifact.json`，连同 `dist/` 上传当前运行的构建产物。
 三个普通 UI 任务（Chromium／Firefox／WebKit，各 15 分钟、2 workers）与 Chromium
-软件 WebGL 任务（20 分钟、1 worker）只依赖 `validate`，使用独立 runner；一组失败
-不取消其他浏览器。普通 UI 关闭 WebGL，标记 `@webgl` 的检查由独立任务串行运行。
+软件 WebGL 的两个分片（各20分钟、1 worker）只依赖 `validate`，使用独立 runner；
+任一浏览器或分片失败不取消其余任务。普通 UI 关闭 WebGL，标记 `@webgl` 的检查按
+[Playwright sharding](https://playwright.dev/docs/test-sharding)分到两个独立任务，分片内部串行运行。
+两个分片的用例并集必须等于完整 WebGL 清单，均完成且零失败／flaky才算该组通过。
+这是为软件渲染与依赖安装留出总时限余量，不增加单项／任务时限或减少采样与断言。
 WebGL 任务使用 `playwright.webgl.config.ts`，保留完整 Chromium；CI 按
 [Chromium 的软件 WebGL 模式](https://github.com/chromium/chromium/blob/156.0.8078.4/docs/gpu/swiftshader.md)
 采用软件合成器，仅将 WebGL 绘制交给 SwiftShader，避免把它同时用作整个浏览器的 GL 驱动。
@@ -114,7 +117,7 @@ WebGL 任务还以两秒间隔保存 `runtime.jsonl`，记录主机 CPU／内存
 及每个文件的 SHA-256 后才启动 preview，不重新构建或引用其他提交的“最新产物”。
 失败允许一次诊断重试，但 `--fail-on-flaky-tests` 会将重试后通过也判为不稳定失败。
 各任务无论成功与否均保存独立 HTML／JSON 结果、执行状态、日志、trace 和失败截图，
-按浏览器与工作流运行次数区分，保留 14 天；构建身份摘要也随报告保存。
+按浏览器、WebGL分片及工作流运行次数区分，保留14天；构建身份摘要也随报告保存。
 网站的 8 秒初始化回退期限与现有单测、断言超时保持原值。
 密集俯视采样按有重叠边界的区间拆分，每种视口仍覆盖全部 63 个位置及相邻边的
 双向检查，保留 2px／0.5° 精度。开场使用加载前安装的受控时钟和逐帧 `runFor()`
