@@ -120,6 +120,11 @@ WebGL 任务还以两秒间隔保存 `runtime.jsonl`，记录主机 CPU／内存
 双向检查，保留 2px／0.5° 精度。开场使用加载前安装的受控时钟和逐帧 `runFor()`
 检查真实开场进度、中间／最终投影有效性与停绘；稳定阅读、下载和恢复交互使用真实时钟。
 这些软件 WebGL 功能检查不代表真实 GPU 帧率或开场墙钟耗时。
+浏览器安装通过 `scripts/install-ci-browser.sh` 在一次性 Linux runner 上执行：
+安装期间将 Azure HTTP 镜像入口替换为 Ubuntu 官方 HTTPS archive，并按
+[APT 配置](https://manpages.ubuntu.com/manpages/jammy/man5/apt.conf.5.html)
+限制连接／数据停滞为30秒、失败重试2次。安装结束恢复原镜像和临时配置；
+不禁用包签名验证、不重试测试，不延长15／20分钟任务时限。
 本机 `npm run test:e2e` 仍运行完整组合。可在 `website/` 手动校验构建：
 
 ```powershell

@@ -148,7 +148,7 @@ jobs:
 
       - name: Install only the assigned browser
         id: browser
-        run: npx playwright install --with-deps --no-shell ${{ matrix.browser }} 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/browser-install.log
+        run: bash scripts/install-ci-browser.sh ${{ matrix.browser }} 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/browser-install.log
 
       - name: Run browser checks and reject flaky results
         id: tests
@@ -223,7 +223,7 @@ jobs:
 
       - name: Install only the assigned browser
         id: browser
-        run: npx playwright install --with-deps --no-shell chromium 2>&1 | tee output/playwright/webgl-chromium/browser-install.log
+        run: bash scripts/install-ci-browser.sh chromium 2>&1 | tee output/playwright/webgl-chromium/browser-install.log
 
       - name: Run browser checks and reject flaky results
         id: tests
