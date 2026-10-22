@@ -408,16 +408,25 @@ test('chapter polish: enabled actions share pressed and keyboard feedback while 
     // Read the actual CSS transition lifecycle before taking the exact baseline.
     await expect
       .poll(() =>
-        action.evaluate((element) => {
-          getComputedStyle(element).boxShadow;
-          return element
-            .getAnimations()
-            .some(
-              (animation) =>
-                animation instanceof CSSTransition &&
-                animation.transitionProperty === 'box-shadow' &&
-                (animation.pending || animation.playState === 'running'),
-            );
+        action.evaluate(async (element) => {
+          const shadow = () => getComputedStyle(element).boxShadow;
+          const transitioning = () =>
+            element
+              .getAnimations()
+              .some(
+                (animation) =>
+                  animation instanceof CSSTransition &&
+                  animation.transitionProperty === 'box-shadow' &&
+                  (animation.pending || animation.playState === 'running'),
+              );
+          const before = shadow();
+          if (transitioning()) return true;
+          // WebKit can retire the transition before its computed style has
+          // consumed the compositor's last interpolation. Require the style
+          // itself to survive two native frames before capturing the baseline.
+          await new Promise(requestAnimationFrame);
+          await new Promise(requestAnimationFrame);
+          return transitioning() || shadow() !== before;
         }),
       )
       .toBe(false);
