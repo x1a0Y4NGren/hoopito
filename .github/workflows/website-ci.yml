@@ -67,7 +67,7 @@ jobs:
         run: git diff --check 2>&1 | tee output/playwright/validate/whitespace.log
 
       - name: Share this run's build with browser jobs
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hoopito-website-build-${{ github.sha }}
           path: |
@@ -92,7 +92,7 @@ jobs:
 
       - name: Preserve reports, logs and failure evidence
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hoopito-website-validate-${{ github.sha }}-attempt-${{ github.run_attempt }}
           path: website/output/playwright/validate/
@@ -170,7 +170,7 @@ jobs:
 
       - name: Preserve reports, logs and failure evidence
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hoopito-website-ui-${{ matrix.browser }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
           path: website/output/playwright/ui-${{ matrix.browser }}/
@@ -250,7 +250,7 @@ jobs:
 
       - name: Preserve reports, logs and failure evidence
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hoopito-website-webgl-chromium-shard-${{ matrix.shard }}-of-2-${{ github.sha }}-attempt-${{ github.run_attempt }}
           path: website/output/playwright/webgl-chromium-${{ matrix.shard }}/
