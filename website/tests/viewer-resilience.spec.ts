@@ -127,6 +127,31 @@ test('gallery keyboard magnifies and pans the picture without scrolling the page
   page,
 }) => {
   await openPage(page);
+  // fonts.ready does not finish native fragment navigation or the delayed
+  // ScrollTrigger refresh. Establish its actual target before opening a modal
+  // whose keyboard input must leave the underlying page at that position.
+  await expect
+    .poll(() =>
+      page.locator('#scoring .section-top').evaluate(async (heading) => {
+        const read = () => ({
+          scroll: scrollY,
+          top: heading.getBoundingClientRect().top,
+          target:
+            document.querySelector('.site-header')!.getBoundingClientRect()
+              .bottom + 20,
+        });
+        const before = read();
+        await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+        const after = read();
+        return (
+          Math.abs(after.top - after.target) < 1 &&
+          before.scroll === after.scroll &&
+          Math.abs(before.top - after.top) < 0.5
+        );
+      }),
+    )
+    .toBe(true);
   await page.locator('#scoring .viewer-link').click();
   await expect(page.locator('[data-viewer-viewport]')).toHaveAttribute(
     'data-image-state',
