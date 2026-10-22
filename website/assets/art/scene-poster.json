@@ -1,20 +1,41 @@
 {
-  "version": 1,
-  "captured_at": "2026-10-13T05:27:14.115Z",
+  "version": 2,
+  "captured_at": "2026-10-17T03:08:07.883Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
-  "browser": "154.0.8037.98",
+  "capture_method": "The actual production page scene observed at its dynamic factory export; no second renderer or authored capture pose.",
+  "browser": "155.0.8059.79",
+  "compiled_scene": {
+    "path": "_astro/court-scene.Bbf2hVgI.js",
+    "sha256": "e37281d9fca38da6dbb5970a21ea1e2aa7bf430a40e0e6eb3c2fc69197860306"
+  },
   "source_inputs": [
     {
+      "path": "src/scripts/main.ts",
+      "sha256": "3c37461524b9aa53021735de117acf0c616c3204938a288f4d007ea1197b92b2"
+    },
+    {
       "path": "src/scripts/court-scene.ts",
-      "sha256": "72a7dc6240a40c98953b9261d18932945aa9040eba2af2a3c4d87d962d8c5f62"
+      "sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178"
+    },
+    {
+      "path": "src/scripts/camera-placement.ts",
+      "sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c"
+    },
+    {
+      "path": "src/scripts/replay-cards.ts",
+      "sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12"
+    },
+    {
+      "path": "src/scripts/demo-invitation.ts",
+      "sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36"
     },
     {
       "path": "src/scripts/court-hardware.ts",
-      "sha256": "ca6f60029cb5fbe6a9b56b70ad66d4f6eb2971a23bf4ef4103fd4b5b0c1985ff"
+      "sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20"
     },
     {
       "path": "src/scripts/court-floor.ts",
-      "sha256": "1642a0b288db2f64f4702895dbd75b34388187ab161cf61e9f6250fad096c719"
+      "sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850"
     },
     {
       "path": "src/scripts/court-textures.ts",
@@ -22,11 +43,15 @@
     },
     {
       "path": "src/scripts/scene-contract.ts",
-      "sha256": "1767f8f6406a5c6dc79cf2ca5f250c737d83c1b446801730d1a1c74d059ebc73"
+      "sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9"
+    },
+    {
+      "path": "src/scripts/shot-timing.ts",
+      "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
     },
     {
       "path": "src/scripts/scene-performance.ts",
-      "sha256": "414787fd8c19c79368700f312060047349e1b1f6c474b3536f843512c965fc1d"
+      "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
     },
     {
       "path": "src/scripts/gpu-calibration.ts",
@@ -34,7 +59,7 @@
     },
     {
       "path": "src/scripts/story-pose.ts",
-      "sha256": "43678f24f3a34d208a77cd04dac7d40d92a0d647ef89781b9c4666d1705b0445"
+      "sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12"
     },
     {
       "path": "src/scripts/shaders/court.ts",
@@ -42,15 +67,35 @@
     },
     {
       "path": "src/styles/site.css",
-      "sha256": "cba3bb1ddc931faf7d647ae68ef3bcc7b3a6cd3ad4b976140bfdfa7641ab6d5b"
+      "sha256": "ff5101d766a1b53d22229f68aa96c18b86465c64b7eeae06a43bc6c13387a9cb"
+    },
+    {
+      "path": "src/styles/refinement.css",
+      "sha256": "57fcff987b56c63a5e0ff416cb9de705f8c15ca8e7572186e21da82db90c3616"
+    },
+    {
+      "path": "src/styles/replay-cards.css",
+      "sha256": "9163371059a94cafe149844f582c0054acd43857f91b3825e532811ff3091ebe"
+    },
+    {
+      "path": "src/styles/mobile-download-polish.css",
+      "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
+    },
+    {
+      "path": "src/components/Layout.astro",
+      "sha256": "e80e51fd66a141a52566b614590058cfa9307292dcbac0b7dfff6efd968b9b4c"
     },
     {
       "path": "src/components/Landing.astro",
-      "sha256": "445c2dc6f838ab39f85ecc4b5d99defd343adf6db74ce433b5bdec7c04dea5e7"
+      "sha256": "e9e113680a7b11a48d528d15c6dffe3ad1abe9a6e801545e12723bb43b18af95"
+    },
+    {
+      "path": "src/data/content.ts",
+      "sha256": "3aa5ffb3c1a22ca69dba198026fc6919ffdb8597d45eeabe43632c96a74eb2ac"
     },
     {
       "path": "../docs/design/screenshot-presentation.json",
-      "sha256": "d3f0b5c1ec481fab9d46f19eaba561fb48ff801828dcf1b8675c0baac0810b74"
+      "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
     },
     {
       "path": "src/data/court-materials.ts",
@@ -58,61 +103,257 @@
     },
     {
       "path": "assets/materials/generation.json",
-      "sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296"
+      "sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8"
     },
     {
       "path": "package-lock.json",
       "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
+    },
+    {
+      "path": "scripts/export-scene-poster.mjs",
+      "sha256": "b16d3d5e1fd22e22e466b0d3920442614be76c64063272006733472571680f02"
     }
   ],
   "captures": [
     {
       "id": "compact",
-      "source": "source/scene-poster-compact.webp",
-      "source_sha256": "b0d54afcd7b812bd5f856af08145ffa9b374464c493891e1521faeeba2ea3946",
+      "source": "source/scene-poster-compact-2026-10-17T03-08-01-692Z.webp",
+      "source_sha256": "ab81bc14df47ba256cd6a9f4c1e94a4cde0c96ee0a48be149c74be600a6671fd",
+      "viewport": {
+        "width": 1024,
+        "height": 768,
+        "device_scale_factor": 1
+      },
       "pose": {
         "chapter": "hero",
         "progress": 0,
         "active": true
+      },
+      "placement": {
+        "region": {
+          "left": 514.609375,
+          "top": 1958.953125,
+          "width": 434.984375,
+          "height": 405.984375
+        },
+        "blend": 0,
+        "inputEnabled": false
+      },
+      "input_enabled_before_pause": false,
+      "canvas_css": {
+        "left": 517.484375,
+        "top": 90,
+        "width": 491.515625,
+        "height": 678
       },
       "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 492,
       "height": 678,
+      "pixel_ratio": 1,
       "quality": "full",
-      "antialias": "msaa-4"
+      "antialias": "msaa-4",
+      "view_cutaway": 0
     },
     {
       "id": "standard",
-      "source": "source/scene-poster-standard.webp",
-      "source_sha256": "2b8a169467994ec49c00f2f82c727ed351292f60b1c6b0229a88c420b1ce48e1",
+      "source": "source/scene-poster-standard-2026-10-17T03-08-01-692Z.webp",
+      "source_sha256": "047d35e09c370ab32a091f36701e243b989051535bb92d53402c4e1d8010610b",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "device_scale_factor": 1
+      },
       "pose": {
         "chapter": "hero",
         "progress": 0,
         "active": true
+      },
+      "placement": {
+        "region": {
+          "left": 726.65625,
+          "top": 2051.640625,
+          "width": 614.8125,
+          "height": 573.8125
+        },
+        "blend": 0,
+        "inputEnabled": false
+      },
+      "input_enabled_before_pause": false,
+      "canvas_css": {
+        "left": 733.8125,
+        "top": 90,
+        "width": 691.1875,
+        "height": 810
       },
       "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 691,
       "height": 810,
+      "pixel_ratio": 1,
       "quality": "full",
-      "antialias": "msaa-4"
+      "antialias": "msaa-4",
+      "view_cutaway": 0
     },
     {
       "id": "wide",
-      "source": "source/scene-poster-wide.webp",
-      "source_sha256": "a5386b1e67c1f7acb0fccc585460bb8808448cf91b01dd87f287599a7dd997e7",
+      "source": "source/scene-poster-wide-2026-10-17T03-08-01-692Z.webp",
+      "source_sha256": "97b062d99efaa5883671f226e2d7f6d9135b71146c74293a98e34b55aceaa930",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "device_scale_factor": 1
+      },
       "pose": {
         "chapter": "hero",
         "progress": 0,
         "active": true
       },
+      "placement": {
+        "region": {
+          "left": 1001.953125,
+          "top": 2353.671875,
+          "width": 640,
+          "height": 597.328125
+        },
+        "blend": 0,
+        "inputEnabled": false
+      },
+      "input_enabled_before_pause": false,
+      "canvas_css": {
+        "left": 983.40625,
+        "top": 90,
+        "width": 921.59375,
+        "height": 990
+      },
       "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 922,
       "height": 990,
+      "pixel_ratio": 1,
       "quality": "full",
-      "antialias": "msaa-4"
+      "antialias": "msaa-4",
+      "view_cutaway": 0
+    },
+    {
+      "id": "demo-compact",
+      "source": "source/scene-poster-demo-compact-2026-10-17T03-08-01-692Z.webp",
+      "source_sha256": "303b53cd84bd5d576be602d3de875576bba5061dd1415224696f2601e1f0dfcb",
+      "viewport": {
+        "width": 1024,
+        "height": 768,
+        "device_scale_factor": 1
+      },
+      "pose": {
+        "chapter": "experience",
+        "progress": 0.2697189758832669,
+        "active": true
+      },
+      "placement": {
+        "region": {
+          "left": 514.609375,
+          "top": 242.953125,
+          "width": 434.984375,
+          "height": 405.984375
+        },
+        "blend": 1,
+        "inputEnabled": true
+      },
+      "input_enabled_before_pause": true,
+      "canvas_css": {
+        "left": 517.484375,
+        "top": 90,
+        "width": 491.515625,
+        "height": 678
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "engine": "three.js r186",
+      "width": 492,
+      "height": 678,
+      "pixel_ratio": 1,
+      "quality": "full",
+      "antialias": "msaa-4",
+      "view_cutaway": 1
+    },
+    {
+      "id": "demo-standard",
+      "source": "source/scene-poster-demo-standard-2026-10-17T03-08-01-692Z.webp",
+      "source_sha256": "c38018d4885ed0414df9211d78dd0071f83c40d8ac33e7845e429164a74542e4",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "device_scale_factor": 1
+      },
+      "pose": {
+        "chapter": "experience",
+        "progress": 0.2940642734591527,
+        "active": true
+      },
+      "placement": {
+        "region": {
+          "left": 726.65625,
+          "top": 170.640625,
+          "width": 614.8125,
+          "height": 573.8125
+        },
+        "blend": 1,
+        "inputEnabled": true
+      },
+      "input_enabled_before_pause": true,
+      "canvas_css": {
+        "left": 733.8125,
+        "top": 90,
+        "width": 691.1875,
+        "height": 810
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "engine": "three.js r186",
+      "width": 691,
+      "height": 810,
+      "pixel_ratio": 1,
+      "quality": "full",
+      "antialias": "msaa-4",
+      "view_cutaway": 1
+    },
+    {
+      "id": "demo-wide",
+      "source": "source/scene-poster-demo-wide-2026-10-17T03-08-01-692Z.webp",
+      "source_sha256": "1a4fa70feb5d61783e9d6bd117b4ac163a63e2cdb8d45e8fc4acd3280a8c9bfa",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "device_scale_factor": 1
+      },
+      "pose": {
+        "chapter": "experience",
+        "progress": 0.2871156567605815,
+        "active": true
+      },
+      "placement": {
+        "region": {
+          "left": 1001.953125,
+          "top": 170.671875,
+          "width": 640,
+          "height": 597.328125
+        },
+        "blend": 1,
+        "inputEnabled": true
+      },
+      "input_enabled_before_pause": true,
+      "canvas_css": {
+        "left": 983.40625,
+        "top": 90,
+        "width": 921.59375,
+        "height": 990
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "engine": "three.js r186",
+      "width": 922,
+      "height": 990,
+      "pixel_ratio": 1,
+      "quality": "full",
+      "antialias": "msaa-4",
+      "view_cutaway": 1
     }
   ]
 }

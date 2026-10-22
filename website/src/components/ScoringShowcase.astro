@@ -1,0 +1,221 @@
+---
+import { content, type Locale } from '../data/content';
+import presentation from '../../../docs/design/screenshot-presentation.json';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale];
+const size = presentation.screenshots.scoring.extract;
+const src = `/screenshots/${locale}/scoring.webp`;
+const regions = [
+  [
+    { x: 10, y: 287, width: 287, height: 650, rx: 16 },
+    { x: 1518, y: 287, width: 289, height: 650, rx: 16 },
+  ],
+  [{ x: 529, y: 226, width: 759, height: 709, rx: 5 }],
+  [{ x: 646, y: 11, width: 127, height: 126, rx: 20 }],
+];
+const targets = [
+  [
+    { x: 155, y: 518 },
+    { x: 1662, y: 518 },
+  ],
+  [{ x: 1050, y: 640 }],
+  [{ x: 709, y: 74 }],
+];
+---
+
+<figure class="scoring-display stage-visual">
+  <div class="device-aura" aria-hidden="true"></div>
+  <div class="screen-label display">
+    <span>
+      <i class="live-dot"></i>LIVE MATCH
+    </span>
+    <span>
+      BLUE <i></i> VS <i></i> RED
+    </span>
+  </div>
+  <div
+    class="landscape-device"
+    data-story-device
+    data-score-focus="none"
+    data-score-playing="false"
+  >
+    <span class="device-camera" aria-hidden="true"></span>
+    <a
+      class="image-link score-screen"
+      href={src}
+      data-image-viewer
+      data-image-title={c.viewer.scoring}
+      aria-label={`${c.viewer.open} · ${c.viewer.scoring}`}
+    >
+      <img
+        src={src}
+        alt={c.scoring.alt}
+        width={size.width}
+        height={size.height}
+        loading="lazy"
+        decoding="async"
+      />
+      <svg
+        class="score-regions"
+        viewBox={`0 0 ${size.width} ${size.height}`}
+        aria-hidden="true"
+      >
+        <defs>
+          {regions.map((areas, index) => (
+            <mask
+              id={`score-focus-${locale}-${index}`}
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              width={size.width}
+              height={size.height}
+              style="mask-type:luminance"
+            >
+              <rect
+                width={size.width}
+                height={size.height}
+                fill="white"
+                stroke="none"
+              />
+              {areas.map((area) => (
+                <rect {...area} fill="black" stroke="none" />
+              ))}
+            </mask>
+          ))}
+        </defs>
+        {regions.map((areas, index) => (
+          <g data-score-region={index}>
+            <rect
+              class="score-shade"
+              width={size.width}
+              height={size.height}
+              mask={`url(#score-focus-${locale}-${index})`}
+            />
+            {areas.map((area) => (
+              <rect class="score-region-outline" {...area} />
+            ))}
+            {areas.map((area) => (
+              <rect class="score-region-trace" {...area} pathLength="1" />
+            ))}
+          </g>
+        ))}
+        {targets.map((points, index) => (
+          <g data-score-action={index}>
+            {index === 1 && (
+              <>
+                <path
+                  class="score-operation-path"
+                  d="M850 762C949 781 1038 729 1050 640"
+                />
+                <path class="score-operation-head" data-arrow-size="20" />
+                <circle class="score-target-dot" cx="1050" cy="640" r="6" />
+              </>
+            )}
+            {index === 2 && (
+              <>
+                <path
+                  class="score-operation-path"
+                  data-score-undo-arc
+                  d="M748 98C753 59 723 34 695 43C681 47 671 58 667 71"
+                />
+                <path
+                  class="score-operation-head"
+                  data-score-undo-head
+                  data-arrow-size="14"
+                />
+              </>
+            )}
+            {points.map((point) => (
+              <circle
+                class="score-tap-ring"
+                data-score-pulse
+                cx={point.x}
+                cy={point.y}
+                r="22"
+              />
+            ))}
+            <g data-score-cursor>
+              <path d="M0 0V62L16 47 31 78 44 72 29 43H53Z" />
+            </g>
+          </g>
+        ))}
+      </svg>
+    </a>
+    <span class="device-glass" aria-hidden="true"></span>
+  </div>
+  <figcaption>
+    <span>{c.scoring.caption}</span>
+    <a
+      class="viewer-link"
+      href={src}
+      data-image-viewer
+      data-image-title={c.viewer.scoring}
+    >
+      {c.viewer.open}
+      <span aria-hidden="true">↗</span>
+    </a>
+  </figcaption>
+  <div class="score-preview" data-score-preview>
+    <span class="score-preview-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M8 3H3v5m13-5h5v5m0 8v5h-5M8 21H3v-5" />
+        <circle cx="12" cy="12" r="2" fill="currentColor" />
+      </svg>
+    </span>
+    <div>
+      <span class="score-preview-label">{c.scoring.preview}</span>
+      <p data-score-note>{c.scoring.intro}</p>
+    </div>
+  </div>
+</figure>
+<div class="score-controls" data-score-controls data-guide-mode="click">
+  <div class="score-guide">
+    <span class="score-current" aria-live="polite" aria-atomic="true">
+      <span class="display" data-score-step>
+        — / 03
+      </span>
+      <strong data-score-current>{c.scoring.choose}</strong>
+    </span>
+    <span id="score-guide-hint" class="score-guide-hint">
+      {c.scoring.guide.click}
+    </span>
+  </div>
+  <div
+    class="score-features"
+    role="group"
+    aria-label={c.scoring.explore}
+    aria-describedby="score-guide-hint"
+  >
+    {c.scoring.features.map(([title, body], index) => (
+      <button
+        class="score-feature"
+        data-score-feature={index}
+        data-score-feedback={c.scoring.feedback[index]}
+        data-score-invitation={index === 0 ? 'idle' : undefined}
+        aria-pressed="false"
+        disabled
+      >
+        {index === 0 && (
+          <svg
+            class="score-invite-arrow"
+            viewBox="0 0 72 72"
+            aria-hidden="true"
+            data-score-invite-arrow
+          >
+            <path data-arrow-shaft d="M62 7C41 2 18 18 18 54" />
+            <path data-arrow-head data-arrow-size="9" />
+          </svg>
+        )}
+        <span class="display feature-index">0{index + 1}</span>
+        <span>
+          <strong>{title}</strong>
+          <span class="feature-description">{body}</span>
+        </span>
+        <span class="feature-indicator" aria-hidden="true"></span>
+      </button>
+    ))}
+  </div>
+</div>

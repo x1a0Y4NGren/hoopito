@@ -303,7 +303,31 @@ html[data-scene='3d'] .arena-light {
 }
 .site-header nav > .nav-download {
   color: var(--paper);
-  border-bottom: 1px solid #e79a6a77;
+}
+.site-header nav > a[href^='#'] {
+  position: relative;
+}
+.site-header nav > a[href^='#']::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--copper);
+  opacity: 0;
+  transform: scaleX(0.35);
+  transform-origin: center;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+  pointer-events: none;
+}
+.site-header nav > a[aria-current='location'] {
+  color: var(--copper);
+}
+.site-header nav > a[aria-current='location']::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 .nav-download .icon {
   width: 20px;

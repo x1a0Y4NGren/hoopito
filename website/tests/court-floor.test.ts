@@ -1,5 +1,35 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import * as THREE from 'three';
+
+test('the rear stand contact shadow fades with its support and restores without altering the floor', async () => {
+  const { createCourtFloor } = await import('../src/scripts/court-floor.ts');
+  const resources = new Set<{ dispose(): void }>();
+  const floor = createCourtFloor({
+    own: (resource) => {
+      resources.add(resource);
+      return resource;
+    },
+    mapleMap: new THREE.Texture(),
+    rim: new THREE.Vector3(0, 3.05, -5.3),
+  });
+  try {
+    assert.equal(typeof floor.setViewCutaway, 'function');
+    const contact = floor.mesh.getObjectByName(
+      'cached-basket-base-shadow',
+    ) as THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>;
+    const surface = floor.mesh.material;
+    for (const amount of [0, 0.5, 1, 0.5, 0]) {
+      floor.setViewCutaway(amount);
+      assert.equal(contact.material.uniforms.uBaseShadow!.value, 1 - amount);
+      assert.equal(contact.visible, amount < 1);
+      assert.equal(floor.mesh.visible, true);
+      assert.equal(floor.mesh.material, surface);
+    }
+  } finally {
+    for (const resource of resources) resource.dispose();
+  }
+});
 
 test('baked floor illumination retains localized night pools without invalid or negative radiance', async () => {
   const { sampleFloorLighting } = await import('../src/scripts/court-floor.ts');

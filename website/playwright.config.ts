@@ -2,7 +2,14 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: '**/site.spec.ts',
+  testMatch: [
+    '**/site.spec.ts',
+    '**/loading-navigation.spec.ts',
+    '**/site-audit.spec.ts',
+    '**/viewer-resilience.spec.ts',
+    '**/court-continuity.spec.ts',
+    '**/chapter-polish.spec.ts',
+  ],
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
@@ -15,6 +22,14 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { outputFolder: './output/playwright/report', open: 'never' }],
+    [
+      'json',
+      {
+        outputFile:
+          process.env.PLAYWRIGHT_JSON_OUTPUT_FILE ??
+          './output/playwright/results.json',
+      },
+    ],
   ],
   use: {
     baseURL: 'http://127.0.0.1:4321',

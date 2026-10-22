@@ -62,6 +62,8 @@ Keep startup evidence tied to its source commit, build mode, renderer, and devic
 
 ## Collaboration and Delivery
 
+网站每次改动默认先在本地实现、验证并运行，提供本地地址供用户检查和审阅。只有用户在当前行动中明确要求“推送”“更新远端预览”等时才推送；此前网站提交／部署授权不自动覆盖后续改动。完成本地检查后保持本地改动，等待用户审阅，不主动推送或发布。
+
 Delegate independent, bounded work when useful. Create worktrees only when isolation is needed. Wait only for an actual dependency; use completion notifications or bounded waits instead of fixed sleeps and repeated unchanged polls.
 
 When committing is authorized, use short imperative commits, such as `fix: guard replay navigation`. Report the result, actual verification, and remaining blockers. Project closeout follows the explicit trigger above; merging, pushing, and publishing follow their own authorization for the current task. Historical release instructions do not grant it.

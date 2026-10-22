@@ -1,6 +1,31 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+test('fast low-tier frames cannot promote beyond the prepared GPU budget', async () => {
+  const { ActiveFrameMonitor } =
+    await import('../src/scripts/scene-performance.ts');
+  const monitor = new ActiveFrameMonitor();
+  monitor.quality = 'density';
+  monitor.qualityCeiling = 'density';
+  for (let now = 0; now < 32000; now += 9) monitor.observe(now, true);
+  assert.equal(monitor.quality, 'density');
+  monitor.reset();
+  for (let now = 33000; now < 65000; now += 9) monitor.observe(now, true);
+  assert.equal(monitor.quality, 'density');
+});
+
+test('sustained tail latency above twenty milliseconds lowers quality despite a fast average', async () => {
+  const { ActiveFrameMonitor } =
+    await import('../src/scripts/scene-performance.ts');
+  const monitor = new ActiveFrameMonitor();
+  let now = 0;
+  for (let frame = 0; now < 5000; frame++) {
+    now += frame % 10 === 0 ? 21 : 16.5;
+    monitor.observe(now, true);
+  }
+  assert.equal(monitor.quality, 'effects');
+});
+
 test('chapter camera endpoints join without a jump and invalid progress cannot poison a pose', async () => {
   const { storyPose } = await import('../src/scripts/story-pose.ts');
   const chapters = [
@@ -37,6 +62,24 @@ test('chapter camera endpoints join without a jump and invalid progress cannot p
     storyPose({ chapter: 'replay', progress: 2, active: true }),
     storyPose({ chapter: 'replay', progress: 1, active: true }),
   );
+});
+
+test('the interactive chapter holds a true overhead camera, including reduced motion', async () => {
+  const { storyPose } = await import('../src/scripts/story-pose.ts');
+  const rest = storyPose({ chapter: 'experience', progress: 0, active: true });
+  for (const progress of [0, 0.25, 0.5, 0.75, 1]) {
+    const frame = { chapter: 'experience' as const, progress, active: true };
+    assert.deepEqual(
+      storyPose(frame),
+      rest,
+      'Click coordinates must stay stable throughout the short stage',
+    );
+    assert.deepEqual(storyPose(frame, false), rest);
+  }
+  const [x, height, z] = rest.position;
+  assert.ok(height > 20);
+  assert.ok(Math.abs(x - rest.target[0]) < 0.01);
+  assert.ok(Math.abs(z - rest.target[2]) < 0.02);
 });
 
 test('idle, background and one delayed frame do not lower rendering quality', async () => {
@@ -125,17 +168,11 @@ test('reading and download stop refreshes while a visible shot or camera movemen
   );
 });
 
-test('reduced motion keeps one hero pose across scrolling and full motion resolves the retained chapter', async () => {
+test('reduced motion keeps the hero artwork outside the interactive chapter and full motion resolves the retained chapter', async () => {
   const { storyPose } = await import('../src/scripts/story-pose.ts');
   const hero = storyPose({ chapter: 'hero', progress: 0, active: true });
   const latest = { chapter: 'replay' as const, progress: 0.72, active: true };
-  for (const chapter of [
-    'hero',
-    'scoring',
-    'experience',
-    'replay',
-    'download',
-  ] as const) {
+  for (const chapter of ['hero', 'scoring', 'replay', 'download'] as const) {
     for (const progress of [0, 0.5, 1]) {
       assert.deepEqual(
         storyPose({ chapter, progress, active: true }, false),

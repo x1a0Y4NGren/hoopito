@@ -1,0 +1,66 @@
+---
+import { content, type Locale } from '../data/content';
+import Icon from './Icon.astro';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale].viewer;
+---
+
+<dialog
+  class="image-viewer"
+  data-viewer
+  aria-labelledby="viewer-title"
+  aria-describedby="viewer-hint"
+>
+  <header class="viewer-header">
+    <div>
+      <span class="display">HOOPITO / APP GALLERY</span>
+      <h2 id="viewer-title" data-viewer-title>
+        {c.title}
+      </h2>
+    </div>
+    <button type="button" data-viewer-close aria-label={c.close} autofocus>
+      <Icon name="plus" />
+    </button>
+  </header>
+  <div class="viewer-viewport" data-viewer-viewport data-image-state="loading">
+    <img data-viewer-image alt="" draggable="false" hidden />
+    <div class="viewer-status" hidden>
+      <p
+        data-viewer-status
+        data-loading={c.loading}
+        data-error={c.error}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      ></p>
+      <button type="button" class="viewer-retry" data-viewer-retry hidden>
+        {c.retry}
+      </button>
+    </div>
+  </div>
+  <footer class="viewer-footer">
+    <p id="viewer-hint">{c.hint}</p>
+    <div class="viewer-tools" role="group" aria-label={c.zoom}>
+      <button type="button" data-viewer-out aria-label={c.out} disabled>
+        −
+      </button>
+      <span
+        data-viewer-scale
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        100%
+      </span>
+      <button type="button" data-viewer-in aria-label={c.in} disabled>
+        +
+      </button>
+      <button type="button" data-viewer-fit disabled>
+        {c.fit}
+      </button>
+    </div>
+  </footer>
+</dialog>

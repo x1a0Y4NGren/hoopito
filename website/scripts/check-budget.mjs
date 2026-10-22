@@ -117,6 +117,28 @@ async function initialResources(page, viewport) {
   return graph(resources);
 }
 
+async function demoPosterResource(page, viewport) {
+  const html = (await bytes(resolve(dist, page))).toString('utf8');
+  for (const match of html.matchAll(
+    /<picture\b([^>]*)>([\s\S]*?)<\/picture>/g,
+  )) {
+    const attr = attributes(match[1]);
+    if (!(attr.class ?? '').split(/\s+/).includes('demo-scene-poster'))
+      continue;
+    const imageTag = match[2].match(/<img\b[^>]*>/)?.[0];
+    if (!imageTag)
+      throw new Error('The deferred demo poster has no fallback image');
+    const sources = [...match[2].matchAll(/<source\b[^>]*>/g)].map((source) =>
+      attributes(source[0]),
+    );
+    return localPath(
+      selectImageResource(attributes(imageTag), sources, viewport),
+      page,
+    );
+  }
+  throw new Error('Missing deferred demo scene poster picture');
+}
+
 async function list(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const groups = await Promise.all(
@@ -191,24 +213,33 @@ try {
       ...(await measure(desktop)),
     },
   ];
-  for (const width of [1440, 1920])
-    for (const avif of [true, false]) {
-      const extra = new Set(desktop);
-      const initial = await initialResources('index.html', {
-        width,
-        dpr: 1,
-        avif,
-        pointer: 'fine',
-      });
-      initial.forEach((file) => {
-        if (!baseline.has(file)) extra.add(file);
-      });
-      reports.push({
-        label: `Desktop scene + initial art ${width}px ${avif ? 'AVIF' : 'WebP'}`,
-        budget: budgets.desktop,
-        ...(await measure(extra)),
-      });
-    }
+  for (const width of [1024, 1440, 1920])
+    for (const dpr of [1, 2])
+      for (const avif of [true, false]) {
+        const extra = new Set(desktop);
+        const viewport = {
+          width,
+          dpr,
+          avif,
+          pointer: 'fine',
+        };
+        // Lazy loading defers this image; it still belongs to this desktop scene.
+        // Select one responsive candidate exactly as the page does, rather than
+        // adding every breakpoint to every viewport's budget.
+        const demoPoster = await demoPosterResource('index.html', viewport);
+        if (!demoPoster)
+          throw new Error(`Missing desktop demo poster at ${width}px`);
+        extra.add(demoPoster);
+        const initial = await initialResources('index.html', viewport);
+        initial.forEach((file) => {
+          if (!baseline.has(file)) extra.add(file);
+        });
+        reports.push({
+          label: `Desktop scene + initial art + demo ${width}px ${dpr}x ${avif ? 'AVIF' : 'WebP'}`,
+          budget: budgets.desktop,
+          ...(await measure(extra)),
+        });
+      }
   let failed = false;
   for (const report of reports) {
     const ok = report.gzip <= report.budget;

@@ -5,6 +5,8 @@ type Point3 = [number, number, number];
 export interface StoryPose {
   position: Point3;
   target: Point3;
+  /** Explicit screen-up avoids lookAt roll collapsing at the overhead pole. */
+  up?: Point3;
   fov: number;
   light: number;
   reveal: number;
@@ -28,17 +30,17 @@ const anchors: readonly StoryPose[] = [
     reveal: 1.1,
   },
   {
-    position: [8.8, 4.6, 3.8],
-    target: [-0.1, 2.2, -4.7],
-    fov: 44,
-    light: 0.8,
+    position: [0, 23.2, 0.01],
+    target: [0, 0.05, 0],
+    fov: 38,
+    light: 0.9,
     reveal: 1.1,
   },
   {
-    position: [0, 19, 9],
-    target: [0, 0.1, -1],
-    fov: 42,
-    light: 0.85,
+    position: [0, 23.2, 0.01],
+    target: [0, 0.05, 0],
+    fov: 38,
+    light: 0.9,
     reveal: 1.1,
   },
   {
@@ -71,11 +73,11 @@ const controls: readonly [Point3, Point3][] = [
   ],
   [
     [12, 7.8, 12.5],
-    [10.1, 4.6, 6.2],
+    [3.2, 20, 6.2],
   ],
   [
-    [9.2, 7.5, 6.2],
-    [2.6, 15.5, 10.4],
+    [0, 23.2, 0.01],
+    [0, 23.2, 0.01],
   ],
   [
     [0, 20.5, 6.1],
@@ -91,6 +93,12 @@ const mix = (from: number, to: number, progress: number) =>
   from + (to - from) * progress;
 
 export function storyPose(frame: StoryFrame, motionEnabled = true): StoryPose {
+  // The playing surface is an input coordinate system. Keep it stationary,
+  // including accessibility mode, while the surrounding chapters keep their story poses.
+  if (frame.chapter === 'experience') {
+    const pose = anchors[2]!;
+    return { ...pose, position: [...pose.position], target: [...pose.target] };
+  }
   // Accessibility keeps the same hero artwork while the caller retains current chapter state.
   const index = motionEnabled
     ? Math.max(0, chapters.indexOf(frame.chapter))
