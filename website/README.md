@@ -437,7 +437,7 @@ Vercel 项目 Root Directory 设置为 `website`，Node.js 为 24.x，安装命�
 `xyr175-9459s-projects`。当前网站（含 #7–#10 精修）已合入 `main`，正式官网为
 [https://hoopito.com](https://hoopito.com/)，英文首页为
 [https://hoopito.com/en/](https://hoopito.com/en/)。`www.hoopito.com` 通过 HTTPS 308
-跳转至主域名。当前正式部署为 `dpl_FnxezeHNKKawui9NGstwDh8LQSLf`，网站构建源码为
+跳转至主域名。首次正式部署为 `dpl_FnxezeHNKKawui9NGstwDh8LQSLf`，当时的网站构建源码为
 `64944b7e59ffb9fca9b8307ab238789bb6b3f125`。
 
 预览分支 `codex/hoopito-website` 的受保护
@@ -479,4 +479,5 @@ Vercel Production 环境已设置 `SITE_URL=https://hoopito.com`，用于 canoni
 `sitemap.xml` 包含 `/`、`/en/`、`/privacy/` 和 `/en/privacy/` 四页。
 `SITE_URL` 必须保持为不含页面路径的公开 HTTPS origin；`VERCEL_ENV=production`
 且缺少 `SITE_URL` 时构建直接失败。Preview 的认证与禁止收录设置继续保留。
-官网的 APK 下载仍指向 GitHub Releases，网站部署不改变正式 APK 及其来源。
+官网主下载使用构建时校验的同域静态安装包，GitHub Releases 保留为备用下载和
+原始发行来源。网站部署不改变正式 APK 的内容、签名及应用源码来源。
