@@ -1,5 +1,7 @@
 # Hoopito · 球豆 介绍与下载网站
 
+**官网：[简体中文](https://hoopito.com/) · [English](https://hoopito.com/en/)**
+
 网站与 Flutter App 位于同一仓库，独立构建。Astro 输出静态 HTML，TypeScript
 管理交互，GSAP 驱动页面动效，Three.js 按条件加载连续球场场景。
 
@@ -414,26 +416,30 @@ Vercel 项目 Root Directory 设置为 `website`，Node.js 为 24.x，安装命�
 `dist/`、`.vercel/`、浏览器报告和本地环境变量文件不提交。
 
 既有 Vercel 项目已更名为 `hoopito-website`，项目身份保持不变，所属空间为
-`xyr175-9459s-projects`。品牌同步与截图展示规范已合入 `main`，预览分支为
-`codex/hoopito-website`；本轮 #7–#10 精修继续留在预览分支。
-受保护的[分支预览](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app)
-随成功部署更新。本轮精修的源码、验证结果与不可变部署地址见
+`xyr175-9459s-projects`。当前网站（含 #7–#10 精修）已合入 `main`，正式官网为
+[https://hoopito.com](https://hoopito.com/)，英文首页为
+[https://hoopito.com/en/](https://hoopito.com/en/)。`www.hoopito.com` 通过 HTTPS 308
+跳转至主域名。当前正式部署为 `dpl_FnxezeHNKKawui9NGstwDh8LQSLf`，网站构建源码为
+`64944b7e59ffb9fca9b8307ab238789bb6b3f125`。
+
+预览分支 `codex/hoopito-website` 的受保护
+[分支预览](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app)
+随该分支成功部署更新。各阶段的源码、验证结果与不可变预览地址见
 [VERIFICATION.md](VERIFICATION.md)；品牌同步基线的实际源码与预览记录保留在
 [v2.0.1 发行记录](../docs/release/v2.0.1-release-record.md)。
 旧品牌预览仅属于历史部署，来源保留在 [VERIFICATION.md](VERIFICATION.md)。
-项目保留 Vercel Authentication；账号登录后可访问，也可通过 Deployment 页面
+Preview 继续保留 Vercel Authentication；账号登录后可访问，也可通过 Deployment 页面
 的 Share 功能创建有期限的分享链接。分享凭据不写入源码或验证报告。
 分支地址随该分支成功部署更新；每次部署的不可变地址与实际 Git 提交可在
 Vercel Deployment 详情和构建日志中核对。`output/vercel/` 保存已验收部署的
 来源清单、构建日志与浏览器证据。此前工作区上传、已提交文件上传和 Git
-自动预览的来源记录分别保留，不能用后续提交替代。当前 App 与网站源码已合入并推送
-`main`；新的预览分支为 `codex/hoopito-website`，正式域名尚未发布。
+自动预览的来源记录分别保留，不能用后续提交或正式部署替代。
 
-项目已连接 `x1a0Y4NGren/hoopito`。非生产分支允许生成 Preview；本次通过
-网站分支推送触发 Git 自动预览，并核对 GitHub deployment 的提交与成功状态。
+项目已连接 `x1a0Y4NGren/hoopito`，非生产分支允许生成 Preview。
 早期曾通过 Vercel API 的 `gitSource` 指定仓库与提交创建预览，那些记录保持原有来源。
-`main` 仍是 Production 分支，但 `vercel.json` 的 `git.deploymentEnabled.main=false` 阻止自动生产部署；当前范围仅为网站分支的预览验收，继续保留
-禁止搜索收录设置。源码整合到 `main` 不构成正式上线。正式上线须另行授权解除部署保护并配置 `SITE_URL`。
+`main` 仍是 Production 分支，`vercel.json` 的 `git.deploymentEnabled.main=false`
+继续阻止自动生产部署；当前正式版本由手动 Production 部署发布。后续推送 `main`
+不会自动更新官网，正式发布仍按该次明确授权手动执行并核对部署来源。
 
 重新连接已有项目时，先在 GitHub 的 Settings → Applications →
 Installed GitHub Apps → Vercel → Configure 中确认仓库访问权，再使用
@@ -442,16 +448,17 @@ Installed GitHub Apps → Vercel → Configure 中确认仓库访问权，再使
 本机 CLI 已完成登录；认证配置独立保存在忽略的 `.vercel/cli-state/`。
 在使用 CLI 时显式指定 `--global-config` 指向该目录、
 `--scope xyr175-9459s-projects` 和预期项目或部署 ID；不要把认证目录作为证据打包。
-CLI 部署应选择 Preview；当前 REST `/v13/deployments` 的 Preview 请求省略
+日常调试部署选择 Preview；REST `/v13/deployments` 的 Preview 请求省略
 `target`，并核对返回部署环境及 Git 来源。`target: "staging"` 是独立的 Staging
-环境，不能作为 Preview；`target: "production"` 不在本次授权范围内。
+环境，不能作为 Preview；正式发布使用 `target: "production"`。
 生产构建的 `SITE_URL` 门禁继续保留。
 
 预览与本地页面设置 `noindex,nofollow`，不输出正式 canonical。
 `robots.txt` 同时禁止抓取，预览 `sitemap.xml` 为空；Vercel 的预览地址用于分享图和语言链接。
 
-正式上线前，在 Vercel Production 环境设置 `SITE_URL` 为确认的公开 HTTPS
-origin，不含页面路径。`VERCEL_ENV=production` 且缺少 `SITE_URL` 时构建直接失败；
-正式配置用于 canonical、语言替代链接及分享图地址。域名和生产发布另按上线
-安排确认，保留 Preview 的禁止收录设置。
-`hoopito.com` 尚未由维护者持有，不预设为网站地址、canonical 或下载来源。
+Vercel Production 环境已设置 `SITE_URL=https://hoopito.com`，用于 canonical、
+语言替代链接及分享图地址。正式页面使用 `index,follow`，`robots.txt` 允许抓取，
+`sitemap.xml` 包含 `/`、`/en/`、`/privacy/` 和 `/en/privacy/` 四页。
+`SITE_URL` 必须保持为不含页面路径的公开 HTTPS origin；`VERCEL_ENV=production`
+且缺少 `SITE_URL` 时构建直接失败。Preview 的认证与禁止收录设置继续保留。
+官网的 APK 下载仍指向 GitHub Releases，网站部署不改变正式 APK 及其来源。

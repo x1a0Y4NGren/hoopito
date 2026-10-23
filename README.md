@@ -16,11 +16,13 @@ Hoopito（中文名：球豆）是一款为篮球爱好者准备的离线单挑�
 
 > **永久承诺：Hoopito · 球豆官方项目将始终免费并保持开源。** 官方版本不会加入付费墙、订阅、广告或闭源核心功能。
 
+**[中文官网](https://hoopito.com/)** · **[Official website (English)](https://hoopito.com/en/)**
+
 **[下载 v2.0.1 APK](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk)** · [查看本次更新](docs/release/v2.0.1-release-notes.md) · [安装与备份](docs/release/v2.0.1-release-notes.md#中文) · [隐私说明](PRIVACY.md) · [参与贡献](CONTRIBUTING.md)
 
 正式版 **Hoopito · 球豆 v2.0.1** 已发布。保留既有 v2 正式证书与安装身份，可直接覆盖升级 v2.0.0，继续读取原有比赛、设置和备份。新版本接受旧 HoopTrace 与新 Hoopito JSON；**旧 App 不能导入以 Hoopito 名称导出的 JSON**。历史发行文件和旧截图保留真实来源，名称与兼容标识见[品牌与兼容性](docs/design/brand/naming-and-compatibility.md)。
 
-介绍与下载网站位于 [`website/`](website/README.md)，提供中英文页面、桌面连续 3D 球场和手机二维投篮演示，独立于 Flutter 构建。预览与实际验收状态见[网站验收记录](website/VERIFICATION.md)。
+介绍与下载官网已上线，提供中英文页面、桌面连续 3D 球场和手机二维投篮演示。网站独立于 Flutter 构建，源码与维护说明位于 [`website/`](website/README.md)，各阶段的来源与实际验收见[网站验收记录](website/VERIFICATION.md)。
 
 > **安装提示：v2 使用新的正式签名，不能覆盖安装历史 v1。** 若旧版有需要保留的记录，请先导出完整 JSON，确认文件已保存在应用之外，再卸载旧版、安装 v2 并恢复。卸载会移除应用私有数据；CSV 和战报图片不能恢复数据库。
 
