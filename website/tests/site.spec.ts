@@ -24,8 +24,7 @@ const test = base.extend({
   },
 });
 
-const apk =
-  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk';
+const apk = '/downloads/v2.0.1/Hoopito-v2.0.1-android.apk';
 const origin = 'http://127.0.0.1:4321';
 const locales = [
   {
@@ -2316,6 +2315,10 @@ async function expectDownload(page: Page) {
   await expect(page.locator('[data-download]').first()).toBeVisible();
   for (const link of await page.locator('[data-download]').all()) {
     await expect(link).toHaveAttribute('href', apk);
+    await expect(link).toHaveAttribute(
+      'download',
+      'Hoopito-v2.0.1-android.apk',
+    );
   }
 }
 

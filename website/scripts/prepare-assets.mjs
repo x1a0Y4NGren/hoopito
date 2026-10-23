@@ -433,7 +433,7 @@ for (const [sourcePath, destination] of [
   });
 }
 
-const qr = await QRCode.toString(release.releaseUrl, {
+const qr = await QRCode.toString(release.downloadPageUrl, {
   type: 'svg',
   errorCorrectionLevel: 'M',
   margin: 4,
@@ -445,7 +445,7 @@ await output('brand/release-qr.svg', Buffer.from(qr), {
   source_sha256: sha256(
     await readFile(join(websiteRoot, 'src/data/release.ts')),
   ),
-  payload: release.releaseUrl,
+  payload: release.downloadPageUrl,
   transformation:
     'QR code generated with qrcode; four-module quiet zone preserved',
   license: 'MIT (repository-generated graphic)',

@@ -124,11 +124,12 @@ export const content = {
       body: '永久免费。开源。离线。\n为你的下一场单挑，留一个位置。',
       button: '下载 Android APK',
       release: '发行说明与所有附件',
+      fallback: 'GitHub 备用下载',
       size: '约 {size} MiB',
       system: 'Android {version} 及以上',
       install:
         '当前下载为 Hoopito · 球豆 v2.0.1。下载后，在系统提示中允许此来源安装。已安装 v2.0.0 可直接覆盖升级，保留数据和设置。',
-      qr: '手机扫码，打开官方发行页',
+      qr: '手机扫码，打开官网下载页',
       verify: '核对 SHA-256',
       upgrade: '从旧 v1 升级？先保存 JSON 备份。',
       upgradeBody:
@@ -140,7 +141,7 @@ export const content = {
     faq: [
       [
         '需要联网或注册吗？',
-        'App 的计分、复盘、历史和导出均可离线使用，无需账号，也没有云同步。下载网站与 GitHub 发行页需要网络。',
+        'App 的计分、复盘、历史和导出均可离线使用，无需账号，也没有云同步。官网下载与 GitHub 备用下载需要网络。',
       ],
       [
         '比赛记录会上传吗？',
@@ -172,7 +173,7 @@ export const content = {
       title: '网站隐私说明',
       subtitle: '介绍在这里。你的比赛留在设备里。',
       back: '返回球豆',
-      updated: '更新：2026 年 10 月 12 日',
+      updated: '更新：2026 年 10 月 23 日',
       sections: [
         [
           '网站与 App',
@@ -187,8 +188,8 @@ export const content = {
           '投篮演示只使用虚构比分和位置。其状态保存在当前页面内存中，刷新页面后重置，不保存到服务器或本地持久存储。',
         ],
         [
-          '外部下载与链接',
-          '点击下载、源码或反馈链接后会访问 GitHub。二维码同样指向 GitHub 官方发行页。相关请求与账号行为受 GitHub 的隐私政策约束。网站不会代理 APK，也不会宣称一次点击已经完成安装。',
+          '下载与外部链接',
+          '主下载由本网站通过 Vercel 分发安装包；二维码打开官网下载区。GitHub 备用下载、发行说明、源码和反馈入口会访问 GitHub，相关请求与账号行为受 GitHub 的隐私政策约束。一次点击不代表下载或安装已经完成。',
         ],
         [
           'App 的记录',
@@ -335,11 +336,12 @@ export const content = {
       body: 'Always free. Open source. Offline.\nMake room for your next 1v1.',
       button: 'Download Android APK',
       release: 'Release notes & all assets',
+      fallback: 'Download from GitHub',
       size: 'About {size} MiB',
       system: 'Android {version} and later',
       install:
         'The current download is Hoopito v2.0.1. Download the APK and allow installation from this source when Android asks. Install over v2.0.0 to keep your data and settings.',
-      qr: 'Scan to open the official release on your phone',
+      qr: 'Scan to open the official download page',
       verify: 'Verify SHA-256',
       upgrade: 'Coming from v1? Save your JSON backup first.',
       upgradeBody:
@@ -351,7 +353,7 @@ export const content = {
     faq: [
       [
         'Do I need an account or an internet connection?',
-        'Scoring, review, history, and export work offline in the app. No account or cloud sync. This website and the GitHub download page need an internet connection.',
+        'Scoring, review, history, and export work offline in the app. No account or cloud sync. Website downloads and the GitHub backup need an internet connection.',
       ],
       [
         'Are my game records uploaded?',
@@ -383,7 +385,7 @@ export const content = {
       title: 'Website privacy',
       subtitle: 'The introduction is here. Your games stay on your device.',
       back: 'Back to Hoopito',
-      updated: 'Updated: October 12, 2026',
+      updated: 'Updated: October 23, 2026',
       sections: [
         [
           'The website and the app',
@@ -399,7 +401,7 @@ export const content = {
         ],
         [
           'Downloads and external links',
-          'Download, source, and feedback links open GitHub. The QR code also links to the official GitHub release. GitHub’s privacy statement applies to those requests and account activity. This website does not proxy APKs or treat a click as a completed installation.',
+          'The primary download is served by this website through Vercel. The QR code opens the official download section. Backup downloads, release notes, source, and feedback links open GitHub, whose privacy statement applies to those requests and account activity. A click does not mean the download or installation has completed.',
         ],
         [
           'Records in the app',

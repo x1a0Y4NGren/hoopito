@@ -165,7 +165,12 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
             {c.hero.lead}
           </p>
           <div class="hero-actions">
-            <a class="button button-orange" data-download href={release.apkUrl}>
+            <a
+              class="button button-orange"
+              data-download
+              href={release.apkUrl}
+              download={release.apkFilename}
+            >
               {c.hero.download}
               <Icon name="download" />
             </a>
@@ -370,14 +375,28 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
                 String(Math.round(release.apkBytes / 1024 / 1024)),
               )}
             </p>
-            <a class="button button-dark" data-download href={release.apkUrl}>
+            <a
+              class="button button-dark"
+              data-download
+              href={release.apkUrl}
+              download={release.apkFilename}
+            >
               {c.download.button}
               <Icon name="download" />
             </a>
-            <a class="release-link" href={release.releaseUrl}>
-              {c.download.release}
-              <Icon name="arrow" />
-            </a>
+            <div class="download-links">
+              <a class="release-link" href={release.releaseUrl}>
+                {c.download.release}
+                <Icon name="arrow" />
+              </a>
+              <a
+                class="release-link download-fallback"
+                href={release.upstreamApkUrl}
+              >
+                {c.download.fallback}
+                <Icon name="download" />
+              </a>
+            </div>
             <p class="install-note">{c.download.install}</p>
             <div class="package-bottom">
               <div>

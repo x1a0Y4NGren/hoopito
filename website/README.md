@@ -48,7 +48,7 @@
 
 当前品牌中文为「球豆」、英文为「Hoopito」，共享名称为「Hoopito · 球豆」，
 大写字标为 `HOOPITO`；npm 包名为 `hoopito-website`。已批准的 C 独眼球怪
-保持原图与几何。下载指向已公开的 `Hoopito-v2.0.1-android.apk`，安装名称为
+保持原图与几何。官网下载提供已公开发行包的校验副本 `Hoopito-v2.0.1-android.apk`，安装名称为
 Hoopito／球豆。GitHub 仓库已更名为 `x1a0Y4NGren/hoopito`，原仓库地址保留跳转。
 当前八张双语截图来自同一正式签名包。网站与 GitHub README 使用裁掉系统状态栏、
 导航栏和横屏系统留白的展示副本，保留 App 内容的真实像素与比例；原图及旧截图
@@ -397,10 +397,28 @@ Android 实机验收需由使用者打开预览，记录型号、浏览器和结
 
 ## 发行信息维护
 
-`src/data/release.ts` 集中维护版本、最低 Android 版本、APK 地址、文件大小、
-SHA-256、发行页与项目链接。发布新 App 后先核对官方 Release 的真实附件，
-再更新此配置、双语相关文案并运行 `npm run assets`，让二维码和页面保持一致。
-APK 直接从 GitHub Release 下载，不复制进网站目录。
+`src/data/release.ts` 集中维护版本、最低 Android 版本、官网 APK 相对路径、
+文件名、GitHub 原始附件地址、文件大小、SHA-256、下载页与发行说明地址。
+主下载由官网同域的 `/downloads/v2.0.1/Hoopito-v2.0.1-android.apk` 提供，
+GitHub 原始附件保留为明确标注的备用下载；发行说明入口单独打开 GitHub。
+二维码打开 `https://hoopito.com/#download`，扫描后由用户点击下载。
+
+`npm run build` 依次执行 Astro 构建、APK 准备与校验、资源预算检查。
+准备工具优先使用 `HOOPITO_APK_PATH` 指定的本地正式包或 `.cache/downloads/`
+中的 SHA-256 缓存，每次复用都重新检查字节数与摘要；没有可复用文件时，从
+配置中固定版本的 GitHub Release 下载。每次下载限时 120 秒，网络失败最多重试
+一次；HTTP 错误、内容类型错误、长度或摘要不符会终止构建。只有验证成功的文件
+才进入 `dist/downloads/`，不会重新签名或重建 App，APK 和缓存均不提交。
+CI 的逐文件构建摘要包含 APK，网页首屏不会请求或预加载它。
+
+官网下载的本地审阅请先构建，再使用 `npm run preview`；Astro 开发服务器不提供
+仅存在于 `dist/` 的安装包。Vercel 的附件响应头、文件类型与版本缓存规则在
+`vercel.json` 中配置，本地 Astro preview 不模拟这些平台响应头；部署后须复核
+真实响应头、分段请求及下载完整性。下载使用 Vercel 的流量额度。
+
+发布新 App 后先核对官方 Release 的真实附件，再同步上述配置、Vercel 中精确的
+APK 路径与附件文件名、双语相关文案，并运行 `npm run assets`，让二维码和页面
+保持一致。页面组件或文案变更涉及场景占位来源绑定时，按下述素材流程重新导出。
 
 当前下载为正式 v2.0.1，支持 Android 7.0／API 24 及以上，同证覆盖升级 v2.0.0。
 旧 v1 到 v2 使用不同签名，不能覆盖安装；须先把完整 JSON 保存到 App 外，

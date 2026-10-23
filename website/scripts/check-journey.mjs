@@ -262,10 +262,11 @@ function unavailable(name, detail) {
 }
 
 async function inspectArtifact(release) {
-  const name = path.basename(new URL(release.apkUrl).pathname);
+  const name = release.apkFilename;
   const candidates = process.env.HOOPITO_APK_PATH
     ? [path.resolve(process.env.HOOPITO_APK_PATH)]
     : [
+        path.join(root, 'dist', release.apkUrl.slice(1)),
         path.join(repo, 'build/app/outputs/flutter-apk/app-release.apk'),
         path.join(repo, 'build/app/outputs/apk/release/app-release.apk'),
         path.join(root, 'output/download', name),

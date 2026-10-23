@@ -1,4 +1,165 @@
-import { expect, test, type Page } from '@playwright/test';
+import { createServer, request as proxyRequest } from 'node:http';
+import { expect, test as base, type Page } from '@playwright/test';
+
+const apk = '/downloads/v2.0.1/Hoopito-v2.0.1-android.apk';
+const apkFilename = 'Hoopito-v2.0.1-android.apk';
+const upstreamApk =
+  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk';
+
+const test = base.extend<{
+  downloadServer: { origin: string; apkRequests: string[] };
+}>({
+  downloadServer: async ({ baseURL }, use) => {
+    if (!baseURL) throw new Error('Download tests need the built site baseURL');
+    const apkRequests: string[] = [];
+    // Native download anchors bypass Playwright routing in Chromium. Mock the
+    // bytes at the HTTP boundary while proxying the real built site unchanged.
+    const server = createServer((request, response) => {
+      const target = new URL(request.url ?? '/', baseURL);
+      if (target.pathname.endsWith('.apk')) {
+        apkRequests.push(`${target.pathname}${target.search}`);
+        if (target.pathname !== apk) {
+          response.writeHead(404).end();
+          return;
+        }
+        response.writeHead(200, {
+          'content-type': 'application/vnd.android.package-archive',
+          'content-disposition': `attachment; filename="${apkFilename}"`,
+          'cache-control': 'no-store',
+        });
+        response.end('Small native APK attachment fixture');
+        return;
+      }
+      const upstream = proxyRequest(
+        target,
+        {
+          method: request.method,
+          headers: { ...request.headers, host: target.host },
+        },
+        (upstreamResponse) => {
+          response.writeHead(
+            upstreamResponse.statusCode ?? 502,
+            upstreamResponse.headers,
+          );
+          upstreamResponse.pipe(response);
+        },
+      );
+      upstream.on('error', (error) => {
+        if (response.headersSent) response.destroy(error);
+        else response.writeHead(502).end('Built-site proxy failed');
+      });
+      request.pipe(upstream);
+    });
+    await new Promise<void>((resolve) =>
+      server.listen(0, '127.0.0.1', resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === 'string')
+      throw new Error('Download fixture did not bind a local TCP port');
+    try {
+      await use({
+        origin: `http://127.0.0.1:${address.port}`,
+        apkRequests,
+      });
+    } finally {
+      server.closeAllConnections();
+      await new Promise<void>((resolve, reject) =>
+        server.close((error) => (error ? reject(error) : resolve())),
+      );
+    }
+  },
+});
+
+for (const locale of ['/', '/en/']) {
+  for (const width of [390, 1440]) {
+    for (const javaScriptEnabled of [true, false]) {
+      test(`direct APK download: ${locale} ${width}px JavaScript ${javaScriptEnabled ? 'enabled' : 'disabled'} preserves the page for mouse and Enter`, async ({
+        browser,
+        downloadServer,
+      }) => {
+        const context = await browser.newContext({
+          baseURL: downloadServer.origin,
+          acceptDownloads: true,
+          javaScriptEnabled,
+          reducedMotion: 'reduce',
+          viewport: { width, height: 900 },
+        });
+        try {
+          const page = await context.newPage();
+          const githubRequests: string[] = [];
+          page.on('request', (request) => {
+            const url = new URL(request.url());
+            if (
+              /(^|\.)(github\.com|githubusercontent\.com)$/.test(url.hostname)
+            )
+              githubRequests.push(request.url());
+          });
+          // A wrong external CTA must never fetch the real public APK.
+          await page.route(
+            /https:\/\/[^/]*(?:github\.com|githubusercontent\.com)\//,
+            (route) => route.abort(),
+          );
+          await page.goto(locale);
+          await page.waitForLoadState('networkidle');
+          expect(
+            downloadServer.apkRequests,
+            'Initial load must not request or prefetch an APK',
+          ).toEqual([]);
+          expect(githubRequests).toEqual([]);
+          await expect(page.locator('[data-download]')).toHaveCount(2);
+          const initialUrl = page.url();
+          for (const selector of [
+            '.hero-actions [data-download]',
+            '.download-package [data-download]',
+          ]) {
+            const action = page.locator(selector);
+            await expect(action).toHaveAttribute('href', apk);
+            await expect(action).toHaveAttribute('download', apkFilename);
+            for (const activation of ['mouse', 'Enter']) {
+              await action.scrollIntoViewIfNeeded();
+              if (activation === 'Enter') await action.focus();
+              const pendingDownload = page.waitForEvent('download');
+              if (activation === 'mouse') await action.click();
+              else await page.keyboard.press('Enter');
+              const download = await pendingDownload;
+              expect(download.url()).toBe(new URL(apk, initialUrl).href);
+              expect(download.suggestedFilename()).toBe(apkFilename);
+              expect(await download.failure()).toBeNull();
+              await expect(page).toHaveURL(initialUrl);
+              await download.delete();
+            }
+          }
+          expect(downloadServer.apkRequests).toEqual(Array(4).fill(apk));
+          expect(
+            githubRequests,
+            'Main download actions must stay on this origin',
+          ).toEqual([]);
+        } finally {
+          await context.close();
+        }
+      });
+    }
+  }
+
+  test(`direct APK download: ${locale} retains separate GitHub fallback and release links`, async ({
+    page,
+  }) => {
+    await page.goto(locale);
+    await expect(page.locator('.download-fallback')).toHaveAttribute(
+      'href',
+      upstreamApk,
+    );
+    await expect(page.locator('.download-fallback')).not.toHaveAttribute(
+      'data-download',
+    );
+    await expect(
+      page.locator('.download-links .release-link:not(.download-fallback)'),
+    ).toHaveAttribute(
+      'href',
+      'https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1',
+    );
+  });
+}
 
 test('replay refresh preserves its plot without rewriting unchanged SVG geometry', async ({
   page,
@@ -286,8 +447,6 @@ for (const locale of ['/', '/en/']) {
       await expect(page.locator('.release-tag')).toHaveText(
         locale === '/' ? '正式版' : 'Stable',
       );
-      const apk =
-        'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk';
       await expect(
         page.locator('.download-package [data-download]'),
       ).toHaveAttribute('href', apk);
@@ -362,9 +521,10 @@ for (const locale of ['/', '/en/']) {
 
 test('chapter polish: enabled actions share pressed and keyboard feedback while disabled scoring stays still', async ({
   page,
+  downloadServer,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/en/#experience');
+  await page.goto(`${downloadServer.origin}/en/#experience`);
   const record = page.locator('[data-record]');
   await record.scrollIntoViewIfNeeded();
   await page.mouse.move(0, 0);
@@ -386,16 +546,6 @@ test('chapter polish: enabled actions share pressed and keyboard feedback while 
   await page.mouse.up();
   await page.locator('[data-point-preset="center"]').click();
   const download = page.locator('.download-package [data-download]');
-  await page.route((await download.getAttribute('href'))!, (route) =>
-    route.fulfill({
-      status: 200,
-      headers: {
-        'content-type': 'application/vnd.android.package-archive',
-        'content-disposition': 'attachment; filename="press-feedback.apk"',
-      },
-      body: 'Local press-feedback test fixture',
-    }),
-  );
   for (const selector of [
     '[data-record]',
     '[data-reset]',
@@ -453,11 +603,14 @@ test('chapter polish: enabled actions share pressed and keyboard feedback while 
     if (selector === '.download-package [data-download]') {
       // Release on the link: Firefox retains native :active on a cancelled
       // drag even without site styles. Exercise the real click and download.
-      const downloadRequest = page.waitForRequest(
-        (await download.getAttribute('href'))!,
-      );
+      const initialUrl = page.url();
+      const pendingDownload = page.waitForEvent('download');
       await page.mouse.up();
-      await downloadRequest;
+      const attachment = await pendingDownload;
+      expect(attachment.suggestedFilename()).toBe(apkFilename);
+      expect(await attachment.failure()).toBeNull();
+      await expect(page).toHaveURL(initialUrl);
+      await attachment.delete();
       await page.mouse.move(0, 0);
     } else {
       await page.mouse.move(0, 0);
@@ -540,9 +693,10 @@ for (const locale of ['/', '/en/']) {
         'background-color',
         'rgba(0, 0, 0, 0)',
       );
-      await expect(
-        page.locator('#download a[href*=".apk"]').first(),
-      ).toHaveAttribute('href', /github\.com\/.*\.apk$/);
+      await expect(page.locator('#download [data-download]')).toHaveAttribute(
+        'href',
+        apk,
+      );
     } finally {
       await context.close();
     }

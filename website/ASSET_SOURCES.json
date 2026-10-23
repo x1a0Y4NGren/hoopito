@@ -306,11 +306,11 @@
       "output": "public/art/scene-poster-compact.webp",
       "bytes": 20952,
       "sha256": "63b2133d6f36f6f657d40846834cc04f05edf926a4f8ec7aa40fd4f3335782f9",
-      "source": "website/assets/art/source/scene-poster-compact-2026-10-17T03-08-01-692Z.webp",
+      "source": "website/assets/art/source/scene-poster-compact-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "ab81bc14df47ba256cd6a9f4c1e94a4cde0c96ee0a48be149c74be600a6671fd",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "42b2edb11389da7707792033f630e3c966b7fb8568418342bb0791c2422a9fa5",
-      "captured_with": "155.0.8059.79; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
+      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
@@ -370,7 +370,7 @@
         },
         {
           "path": "src/styles/site.css",
-          "sha256": "ff5101d766a1b53d22229f68aa96c18b86465c64b7eeae06a43bc6c13387a9cb"
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
         },
         {
           "path": "src/styles/refinement.css",
@@ -390,11 +390,11 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "e9e113680a7b11a48d528d15c6dffe3ad1abe9a6e801545e12723bb43b18af95"
+          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "3aa5ffb3c1a22ca69dba198026fc6919ffdb8597d45eeabe43632c96a74eb2ac"
+          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -432,11 +432,11 @@
       "output": "public/art/scene-poster-standard.webp",
       "bytes": 36030,
       "sha256": "b849891c03402b35fe15b5881b208132bc95f2e04d78b6c57d7864282d08122c",
-      "source": "website/assets/art/source/scene-poster-standard-2026-10-17T03-08-01-692Z.webp",
+      "source": "website/assets/art/source/scene-poster-standard-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "047d35e09c370ab32a091f36701e243b989051535bb92d53402c4e1d8010610b",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "42b2edb11389da7707792033f630e3c966b7fb8568418342bb0791c2422a9fa5",
-      "captured_with": "155.0.8059.79; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
+      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
@@ -496,7 +496,7 @@
         },
         {
           "path": "src/styles/site.css",
-          "sha256": "ff5101d766a1b53d22229f68aa96c18b86465c64b7eeae06a43bc6c13387a9cb"
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
         },
         {
           "path": "src/styles/refinement.css",
@@ -516,11 +516,11 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "e9e113680a7b11a48d528d15c6dffe3ad1abe9a6e801545e12723bb43b18af95"
+          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "3aa5ffb3c1a22ca69dba198026fc6919ffdb8597d45eeabe43632c96a74eb2ac"
+          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -558,11 +558,11 @@
       "output": "public/art/scene-poster-wide.webp",
       "bytes": 53770,
       "sha256": "5dd98e10349bea88ef681e9ced15f46c40dd80ee6e481e303a0d572872a8d904",
-      "source": "website/assets/art/source/scene-poster-wide-2026-10-17T03-08-01-692Z.webp",
+      "source": "website/assets/art/source/scene-poster-wide-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "97b062d99efaa5883671f226e2d7f6d9135b71146c74293a98e34b55aceaa930",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "42b2edb11389da7707792033f630e3c966b7fb8568418342bb0791c2422a9fa5",
-      "captured_with": "155.0.8059.79; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
+      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
@@ -622,7 +622,7 @@
         },
         {
           "path": "src/styles/site.css",
-          "sha256": "ff5101d766a1b53d22229f68aa96c18b86465c64b7eeae06a43bc6c13387a9cb"
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
         },
         {
           "path": "src/styles/refinement.css",
@@ -642,11 +642,11 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "e9e113680a7b11a48d528d15c6dffe3ad1abe9a6e801545e12723bb43b18af95"
+          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "3aa5ffb3c1a22ca69dba198026fc6919ffdb8597d45eeabe43632c96a74eb2ac"
+          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -684,11 +684,11 @@
       "output": "public/art/scene-poster-demo-compact.webp",
       "bytes": 5930,
       "sha256": "f975dc818df0d88729713d5a71e31a46f4434ffa9194ee2438246ecdfa37437c",
-      "source": "website/assets/art/source/scene-poster-demo-compact-2026-10-17T03-08-01-692Z.webp",
+      "source": "website/assets/art/source/scene-poster-demo-compact-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "303b53cd84bd5d576be602d3de875576bba5061dd1415224696f2601e1f0dfcb",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "42b2edb11389da7707792033f630e3c966b7fb8568418342bb0791c2422a9fa5",
-      "captured_with": "155.0.8059.79; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
+      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
@@ -748,7 +748,7 @@
         },
         {
           "path": "src/styles/site.css",
-          "sha256": "ff5101d766a1b53d22229f68aa96c18b86465c64b7eeae06a43bc6c13387a9cb"
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
         },
         {
           "path": "src/styles/refinement.css",
@@ -768,11 +768,11 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "e9e113680a7b11a48d528d15c6dffe3ad1abe9a6e801545e12723bb43b18af95"
+          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "3aa5ffb3c1a22ca69dba198026fc6919ffdb8597d45eeabe43632c96a74eb2ac"
+          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -810,11 +810,11 @@
       "output": "public/art/scene-poster-demo-standard.webp",
       "bytes": 9964,
       "sha256": "509c7241be50f7af51da6493d319c47dd999ac85dfc89d8b8609201b29adb95b",
-      "source": "website/assets/art/source/scene-poster-demo-standard-2026-10-17T03-08-01-692Z.webp",
+      "source": "website/assets/art/source/scene-poster-demo-standard-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "c38018d4885ed0414df9211d78dd0071f83c40d8ac33e7845e429164a74542e4",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "42b2edb11389da7707792033f630e3c966b7fb8568418342bb0791c2422a9fa5",
-      "captured_with": "155.0.8059.79; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
+      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
@@ -874,7 +874,7 @@
         },
         {
           "path": "src/styles/site.css",
-          "sha256": "ff5101d766a1b53d22229f68aa96c18b86465c64b7eeae06a43bc6c13387a9cb"
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
         },
         {
           "path": "src/styles/refinement.css",
@@ -894,11 +894,11 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "e9e113680a7b11a48d528d15c6dffe3ad1abe9a6e801545e12723bb43b18af95"
+          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "3aa5ffb3c1a22ca69dba198026fc6919ffdb8597d45eeabe43632c96a74eb2ac"
+          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -936,11 +936,11 @@
       "output": "public/art/scene-poster-demo-wide.webp",
       "bytes": 11292,
       "sha256": "b9628932bf766bfaf3b15a29d69f471888568189cc4d34b002dc8b395b500933",
-      "source": "website/assets/art/source/scene-poster-demo-wide-2026-10-17T03-08-01-692Z.webp",
+      "source": "website/assets/art/source/scene-poster-demo-wide-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "1a4fa70feb5d61783e9d6bd117b4ac163a63e2cdb8d45e8fc4acd3280a8c9bfa",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "42b2edb11389da7707792033f630e3c966b7fb8568418342bb0791c2422a9fa5",
-      "captured_with": "155.0.8059.79; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
+      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
@@ -1000,7 +1000,7 @@
         },
         {
           "path": "src/styles/site.css",
-          "sha256": "ff5101d766a1b53d22229f68aa96c18b86465c64b7eeae06a43bc6c13387a9cb"
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
         },
         {
           "path": "src/styles/refinement.css",
@@ -1020,11 +1020,11 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "e9e113680a7b11a48d528d15c6dffe3ad1abe9a6e801545e12723bb43b18af95"
+          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "3aa5ffb3c1a22ca69dba198026fc6919ffdb8597d45eeabe43632c96a74eb2ac"
+          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -1369,8 +1369,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 118620,
-      "sha256": "e70dd3a3d9f2933002f104c52d15a3f00abb4027fa81631dd226db505c1a25f7",
+      "bytes": 118632,
+      "sha256": "1a1f19415e9387c72e63dd3e4b0d24f11d044f63a1720ac00c233f1c0dd7d245",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -1478,7 +1478,6 @@
         215,
         247,
         8212,
-        8217,
         8230,
         8592,
         8593,
@@ -1630,7 +1629,6 @@
         23436,
         23448,
         23454,
-        23459,
         23481,
         23545,
         23548,
@@ -1922,7 +1920,7 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "e9e113680a7b11a48d528d15c6dffe3ad1abe9a6e801545e12723bb43b18af95"
+          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
         },
         {
           "path": "src/components/Layout.astro",
@@ -1946,7 +1944,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "3aa5ffb3c1a22ca69dba198026fc6919ffdb8597d45eeabe43632c96a74eb2ac"
+          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -1954,7 +1952,7 @@
         },
         {
           "path": "src/data/release.ts",
-          "sha256": "283cca1484cd25f0465d7a7f438739e9d6e0702739cfa6fb2a6bef144de618b6"
+          "sha256": "c4748be894bf3098a4f7713a32af991a4972ded3022c9db6736f8bf077c9142c"
         },
         {
           "path": "src/data/replay-example.ts",
@@ -2089,11 +2087,11 @@
     },
     {
       "output": "public/brand/release-qr.svg",
-      "bytes": 1965,
-      "sha256": "24e7d323e3739ff96410513f38c2cd0d0b74cac6f974906d281b77f4007c65de",
+      "bytes": 1630,
+      "sha256": "0a73f5b046f585c1372e45ca5a35149e3845b55f0c05f2586781f0f1adf7fc8b",
       "source": "src/data/release.ts",
-      "source_sha256": "283cca1484cd25f0465d7a7f438739e9d6e0702739cfa6fb2a6bef144de618b6",
-      "payload": "https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1",
+      "source_sha256": "c4748be894bf3098a4f7713a32af991a4972ded3022c9db6736f8bf077c9142c",
+      "payload": "https://hoopito.com/#download",
       "transformation": "QR code generated with qrcode; four-module quiet zone preserved",
       "license": "MIT (repository-generated graphic)"
     },
@@ -2102,7 +2100,7 @@
       "bytes": 112963,
       "sha256": "b74a382dbdedb119fab75e8b0d2f2c07153cbfe1ec1646e35f0add5921572cfa",
       "source": "scripts/prepare-assets.mjs",
-      "source_sha256": "00041f2f4619281ae979a8ee254a0f61c53280c0c5f0d1bb1131a78a7f4fca23",
+      "source_sha256": "ed68f8750ca210339c5d7f198fd80feaff75a6853bb2bc7fa3bd7207c7acc84d",
       "source_dependencies": [
         {
           "source": "assets/icons/hoopito-app-icon-foreground.png",
@@ -2118,7 +2116,7 @@
         },
         {
           "source": "website/public/fonts/noto-sc.woff2",
-          "sha256": "e70dd3a3d9f2933002f104c52d15a3f00abb4027fa81631dd226db505c1a25f7"
+          "sha256": "1a1f19415e9387c72e63dd3e4b0d24f11d044f63a1720ac00c233f1c0dd7d245"
         },
         {
           "source": "assets/fonts/BarlowCondensed-Medium.ttf",

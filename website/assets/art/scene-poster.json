@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "captured_at": "2026-10-17T03:08:07.883Z",
+  "captured_at": "2026-10-23T05:17:41.415Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "capture_method": "The actual production page scene observed at its dynamic factory export; no second renderer or authored capture pose.",
-  "browser": "155.0.8059.79",
+  "browser": "156.0.8078.47",
   "compiled_scene": {
     "path": "_astro/court-scene.Bbf2hVgI.js",
     "sha256": "e37281d9fca38da6dbb5970a21ea1e2aa7bf430a40e0e6eb3c2fc69197860306"
@@ -67,7 +67,7 @@
     },
     {
       "path": "src/styles/site.css",
-      "sha256": "ff5101d766a1b53d22229f68aa96c18b86465c64b7eeae06a43bc6c13387a9cb"
+      "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
     },
     {
       "path": "src/styles/refinement.css",
@@ -87,11 +87,11 @@
     },
     {
       "path": "src/components/Landing.astro",
-      "sha256": "e9e113680a7b11a48d528d15c6dffe3ad1abe9a6e801545e12723bb43b18af95"
+      "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
     },
     {
       "path": "src/data/content.ts",
-      "sha256": "3aa5ffb3c1a22ca69dba198026fc6919ffdb8597d45eeabe43632c96a74eb2ac"
+      "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
     },
     {
       "path": "../docs/design/screenshot-presentation.json",
@@ -117,7 +117,7 @@
   "captures": [
     {
       "id": "compact",
-      "source": "source/scene-poster-compact-2026-10-17T03-08-01-692Z.webp",
+      "source": "source/scene-poster-compact-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "ab81bc14df47ba256cd6a9f4c1e94a4cde0c96ee0a48be149c74be600a6671fd",
       "viewport": {
         "width": 1024,
@@ -157,7 +157,7 @@
     },
     {
       "id": "standard",
-      "source": "source/scene-poster-standard-2026-10-17T03-08-01-692Z.webp",
+      "source": "source/scene-poster-standard-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "047d35e09c370ab32a091f36701e243b989051535bb92d53402c4e1d8010610b",
       "viewport": {
         "width": 1440,
@@ -197,7 +197,7 @@
     },
     {
       "id": "wide",
-      "source": "source/scene-poster-wide-2026-10-17T03-08-01-692Z.webp",
+      "source": "source/scene-poster-wide-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "97b062d99efaa5883671f226e2d7f6d9135b71146c74293a98e34b55aceaa930",
       "viewport": {
         "width": 1920,
@@ -237,7 +237,7 @@
     },
     {
       "id": "demo-compact",
-      "source": "source/scene-poster-demo-compact-2026-10-17T03-08-01-692Z.webp",
+      "source": "source/scene-poster-demo-compact-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "303b53cd84bd5d576be602d3de875576bba5061dd1415224696f2601e1f0dfcb",
       "viewport": {
         "width": 1024,
@@ -277,7 +277,7 @@
     },
     {
       "id": "demo-standard",
-      "source": "source/scene-poster-demo-standard-2026-10-17T03-08-01-692Z.webp",
+      "source": "source/scene-poster-demo-standard-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "c38018d4885ed0414df9211d78dd0071f83c40d8ac33e7845e429164a74542e4",
       "viewport": {
         "width": 1440,
@@ -317,7 +317,7 @@
     },
     {
       "id": "demo-wide",
-      "source": "source/scene-poster-demo-wide-2026-10-17T03-08-01-692Z.webp",
+      "source": "source/scene-poster-demo-wide-2026-10-23T05-17-34-173Z.webp",
       "source_sha256": "1a4fa70feb5d61783e9d6bd117b4ac163a63e2cdb8d45e8fc4acd3280a8c9bfa",
       "viewport": {
         "width": 1920,
