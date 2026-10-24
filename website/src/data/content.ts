@@ -124,7 +124,6 @@ export const content = {
       body: '永久免费。开源。离线。\n为你的下一场单挑，留一个位置。',
       button: '下载 Android APK',
       release: '发行说明与所有附件',
-      fallback: 'GitHub 备用下载',
       size: '约 {size} MiB',
       system: 'Android {version} 及以上',
       install:
@@ -137,11 +136,35 @@ export const content = {
       source: '查看源码',
       feedback: '提交反馈',
     },
+    downloadChooser: {
+      title: '选择下载渠道',
+      description: '选择适合你的下载方式，带上球豆，下一场见。',
+      close: '关闭下载渠道选择',
+      github: 'GitHub下载渠道（国外）',
+      githubDescription: '从 GitHub Releases 直接下载正式安装包。',
+      lanzou: '蓝奏云下载渠道（国内）',
+      lanzouDescription: '打开分享页，输入下方密码下载。',
+      password: '密码：',
+      note: '下载由所选平台提供。安装后，球豆的核心功能可离线使用。',
+    },
+    community: {
+      eyebrow: '场下，也有同路人',
+      title: ['一起聊球，', '也一起把球豆做好。'],
+      body: '分享球场故事、交流使用心得，或带着设计与开发想法来聊聊。欢迎每个愿意认真交流的人。',
+      groupLabel: 'QQ 交流群',
+      instructions:
+        '用 QQ 扫码加入；同一部手机可先保存邀请卡，再在 QQ 中识别图片。也可以搜索群号申请加入。',
+      save: '保存群邀请卡',
+      view: '查看球豆 QQ 群 1129560287 完整邀请卡',
+      imageAlt: 'Hoopito · 球豆 QQ 交流群邀请卡，群号 1129560287',
+      caption: '用 QQ 扫码加入',
+      note: '交流群是自愿参与的外部 QQ 群，不影响 App 的离线使用。',
+    },
     faqTitle: '开赛前，你可能想知道',
     faq: [
       [
         '需要联网或注册吗？',
-        'App 的计分、复盘、历史和导出均可离线使用，无需账号，也没有云同步。官网下载与 GitHub 备用下载需要网络。',
+        'App 的计分、复盘、历史和导出均可离线使用，无需账号，也没有云同步。通过蓝奏云或 GitHub 下载需要网络；下载平台的使用要求以页面提示为准。',
       ],
       [
         '比赛记录会上传吗？',
@@ -173,7 +196,7 @@ export const content = {
       title: '网站隐私说明',
       subtitle: '介绍在这里。你的比赛留在设备里。',
       back: '返回球豆',
-      updated: '更新：2026 年 10 月 23 日',
+      updated: '更新：2026 年 10 月 25 日',
       sections: [
         [
           '网站与 App',
@@ -189,7 +212,11 @@ export const content = {
         ],
         [
           '下载与外部链接',
-          '主下载由本网站通过 Vercel 分发安装包；二维码打开官网下载区。GitHub 备用下载、发行说明、源码和反馈入口会访问 GitHub，相关请求与账号行为受 GitHub 的隐私政策约束。一次点击不代表下载或安装已经完成。',
+          '下载按钮打开渠道选择，蓝奏云渠道打开分享页，所需密码直接显示在本网站；GitHub 渠道访问正式 Release 安装包。仅在选择渠道后才会发起对应请求，相关请求及可能的登录行为受所选平台的隐私规则约束。下载卡中的二维码打开官网下载区；发行说明、源码和反馈入口访问 GitHub。一次点击不代表下载或安装已经完成。',
+        ],
+        [
+          'QQ 交流群',
+          '群邀请图片从本网站加载，浏览网页不会自动联系 QQ。扫码或搜索群号后，由你在 QQ 中申请加入；QQ 账号、群聊与分享内容受腾讯 QQ 的服务及隐私规则约束。加入完全自愿，网站不会读取群聊，App 的离线功能不依赖交流群。',
         ],
         [
           'App 的记录',
@@ -198,6 +225,7 @@ export const content = {
       ],
       vercel: 'Vercel 隐私政策',
       github: 'GitHub 隐私声明',
+      lanzou: '蓝奏云使用声明',
       app: 'App 隐私说明',
       contact: '通过 GitHub 联系维护者',
     },
@@ -336,7 +364,6 @@ export const content = {
       body: 'Always free. Open source. Offline.\nMake room for your next 1v1.',
       button: 'Download Android APK',
       release: 'Release notes & all assets',
-      fallback: 'Download from GitHub',
       size: 'About {size} MiB',
       system: 'Android {version} and later',
       install:
@@ -349,11 +376,35 @@ export const content = {
       source: 'View source',
       feedback: 'Send feedback',
     },
+    downloadChooser: {
+      title: 'Choose a download channel',
+      description: 'Choose how to download Hoopito. See you on court.',
+      close: 'Close download channels',
+      github: 'GitHub download (international)',
+      githubDescription: 'Download the official APK from GitHub Releases.',
+      lanzou: 'Lanzou download (China)',
+      lanzouDescription: 'Open the share page and enter the password below.',
+      password: 'Password:',
+      note: 'Your chosen platform provides the download. Core app features work offline after installation.',
+    },
+    community: {
+      eyebrow: 'GOOD COMPANY, OFF COURT',
+      title: ['Talk basketball.', 'Help shape Hoopito.'],
+      body: 'Share a court story, compare notes on the app, or bring your design and development ideas. There is room for everyone who wants a thoughtful conversation.',
+      groupLabel: 'QQ COMMUNITY GROUP',
+      instructions:
+        'Scan with QQ to join. On the same phone, save the invitation and recognize the image in QQ. You can also search the group number to request to join.',
+      save: 'Save the group invitation',
+      view: 'View the full Hoopito QQ group 1129560287 invitation',
+      imageAlt: 'Hoopito QQ community invitation, group number 1129560287',
+      caption: 'Scan with QQ to join',
+      note: 'Joining this external QQ group is optional. The app continues to work offline.',
+    },
     faqTitle: 'Before you step onto the court',
     faq: [
       [
         'Do I need an account or an internet connection?',
-        'Scoring, review, history, and export work offline in the app. No account or cloud sync. Website downloads and the GitHub backup need an internet connection.',
+        'Scoring, review, history, and export work offline in the app. No account or cloud sync. Lanzou and GitHub downloads need an internet connection; each platform sets its own download requirements.',
       ],
       [
         'Are my game records uploaded?',
@@ -385,7 +436,7 @@ export const content = {
       title: 'Website privacy',
       subtitle: 'The introduction is here. Your games stay on your device.',
       back: 'Back to Hoopito',
-      updated: 'Updated: October 23, 2026',
+      updated: 'Updated: October 25, 2026',
       sections: [
         [
           'The website and the app',
@@ -401,7 +452,11 @@ export const content = {
         ],
         [
           'Downloads and external links',
-          'The primary download is served by this website through Vercel. The QR code opens the official download section. Backup downloads, release notes, source, and feedback links open GitHub, whose privacy statement applies to those requests and account activity. A click does not mean the download or installation has completed.',
+          "Download buttons open a channel chooser. Lanzou opens a share page with its password displayed on this website; GitHub requests the official Release APK. No channel request is made until you select it. Requests and any sign-in activity are governed by the chosen platform's privacy terms. The QR code on the download card opens the official download section. Release notes, source, and feedback links open GitHub. A click does not mean the download or installation has completed.",
+        ],
+        [
+          'The QQ community',
+          "The invitation image loads from this website. Browsing does not automatically contact QQ. Scanning the code or searching the group number lets you request to join in QQ. Your QQ account, group conversations, and shared content are governed by Tencent QQ's terms and privacy rules. Joining is optional. The website cannot read group conversations, and the offline app does not depend on the group.",
         ],
         [
           'Records in the app',
@@ -410,6 +465,7 @@ export const content = {
       ],
       vercel: 'Vercel privacy policy',
       github: 'GitHub privacy statement',
+      lanzou: 'Lanzou service and privacy statement',
       app: 'App privacy policy',
       contact: 'Contact the maintainer on GitHub',
     },

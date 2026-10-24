@@ -151,6 +151,18 @@ Hoopito · 球豆不计划同时分发两个签名不同的官方 Android 包。
 
 Bug、想法、文档改进和代码贡献都欢迎。提交 Issue 或 Pull Request 前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。隐私、离线能力和永久免费开源承诺属于不可破坏的项目约束。
 
+### 一起聊球，也聊球豆
+
+球豆球友 QQ 交流群：**1129560287**。欢迎聊篮球、分享使用体验、交流产品想法与开源开发。使用 QQ 扫码，或在 QQ 中搜索群号；同一台手机上可先保存图片，再用 QQ 识别。问题跟踪与代码贡献仍请使用 Issue／Pull Request。
+
+<p align="center">
+  <a href="website/public/community/hoopito-qq-group.png">
+    <img src="website/public/community/hoopito-qq-group-preview.webp" width="420" alt="Hoopito · 球豆球友 QQ 交流群，群号 1129560287；使用 QQ 扫码加入">
+  </a>
+</p>
+
+<p align="center"><a href="https://hoopito.com/#community">官网交流入口</a> · <a href="website/public/community/hoopito-qq-group.png">查看完整二维码图片</a></p>
+
 ## 设计与动效资产
 
 Hoopito · 球豆沿用 2.0 的“黑场编辑部”界面：近黑比赛顶栏、冷白内容面和克制的竞技橙共同维持信息层级，红蓝只负责表达球队与比赛数据。比分、计时和现场操作优先保证快速辨认，不让装饰抢走比赛注意力。

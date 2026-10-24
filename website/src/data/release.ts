@@ -10,6 +10,8 @@ export const release = {
   apkUrl: '/downloads/v2.0.1/Hoopito-v2.0.1-android.apk',
   upstreamApkUrl:
     'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk',
+  lanzouUrl: 'https://wwbdc.lanzoub.com/ixNAU4d7x6kj',
+  lanzouPassword: 'gkyz',
   downloadPageUrl: 'https://hoopito.com/#download',
   releaseUrl: 'https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1',
   sha256: 'c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9',

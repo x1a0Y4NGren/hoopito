@@ -5,6 +5,8 @@ const apk = '/downloads/v2.0.1/Hoopito-v2.0.1-android.apk';
 const apkFilename = 'Hoopito-v2.0.1-android.apk';
 const upstreamApk =
   'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk';
+const lanzouShare = 'https://wwbdc.lanzoub.com/ixNAU4d7x6kj';
+const githubAttachment = '/__download-fixture__/github.apk';
 
 const test = base.extend<{
   downloadServer: { origin: string; apkRequests: string[] };
@@ -12,13 +14,14 @@ const test = base.extend<{
   downloadServer: async ({ baseURL }, use) => {
     if (!baseURL) throw new Error('Download tests need the built site baseURL');
     const apkRequests: string[] = [];
-    // Native download anchors bypass Playwright routing in Chromium. Mock the
-    // bytes at the HTTP boundary while proxying the real built site unchanged.
+    // Native downloads bypass Playwright routing in Chromium. Replace only the
+    // public GitHub attachment href at the HTTP boundary; the dialog, scripts,
+    // click handling and native download remain the real production behavior.
     const server = createServer((request, response) => {
       const target = new URL(request.url ?? '/', baseURL);
       if (target.pathname.endsWith('.apk')) {
         apkRequests.push(`${target.pathname}${target.search}`);
-        if (target.pathname !== apk) {
+        if (![apk, githubAttachment].includes(target.pathname)) {
           response.writeHead(404).end();
           return;
         }
@@ -34,9 +37,33 @@ const test = base.extend<{
         target,
         {
           method: request.method,
-          headers: { ...request.headers, host: target.host },
+          // The fixture rewrites HTML below; request uncompressed bytes instead
+          // of treating a compressed preview response as UTF-8 markup.
+          headers: {
+            ...request.headers,
+            host: target.host,
+            'accept-encoding': 'identity',
+          },
         },
         (upstreamResponse) => {
+          if (upstreamResponse.headers['content-type']?.includes('text/html')) {
+            const chunks: Buffer[] = [];
+            upstreamResponse.on('data', (chunk: Buffer) => chunks.push(chunk));
+            upstreamResponse.on('end', () => {
+              const html = Buffer.concat(chunks)
+                .toString('utf8')
+                .replaceAll(
+                  `href="${upstreamApk}"`,
+                  `href="${githubAttachment}"`,
+                );
+              const headers = { ...upstreamResponse.headers };
+              delete headers['content-length'];
+              delete headers['content-encoding'];
+              response.writeHead(upstreamResponse.statusCode ?? 502, headers);
+              response.end(html);
+            });
+            return;
+          }
           response.writeHead(
             upstreamResponse.statusCode ?? 502,
             upstreamResponse.headers,
@@ -73,7 +100,7 @@ const test = base.extend<{
 for (const locale of ['/', '/en/']) {
   for (const width of [390, 1440]) {
     for (const javaScriptEnabled of [true, false]) {
-      test(`direct APK download: ${locale} ${width}px JavaScript ${javaScriptEnabled ? 'enabled' : 'disabled'} preserves the page for mouse and Enter`, async ({
+      test(`download chooser: ${locale} ${width}px JavaScript ${javaScriptEnabled ? 'enabled' : 'disabled'} preserves native GitHub downloads for mouse and Enter`, async ({
         browser,
         downloadServer,
       }) => {
@@ -86,15 +113,24 @@ for (const locale of ['/', '/en/']) {
         });
         try {
           const page = await context.newPage();
+          // This matrix verifies HTML dialogs and native attachments. Keep
+          // software WebGL from dominating every assertion in WebKit; the
+          // dedicated scene suite still exercises the real rendering lifecycle.
+          await page.route(/court-(?:scene|engine)[^/]*\.js$/, (route) =>
+            route.abort(),
+          );
           const githubRequests: string[] = [];
+          const lanzouRequests: string[] = [];
           page.on('request', (request) => {
             const url = new URL(request.url());
             if (
               /(^|\.)(github\.com|githubusercontent\.com)$/.test(url.hostname)
             )
               githubRequests.push(request.url());
+            if (url.hostname.endsWith('.lanzoub.com'))
+              lanzouRequests.push(request.url());
           });
-          // A wrong external CTA must never fetch the real public APK.
+          // Safety net: no test should transfer the full public 77 MB APK.
           await page.route(
             /https:\/\/[^/]*(?:github\.com|githubusercontent\.com)\//,
             (route) => route.abort(),
@@ -106,6 +142,7 @@ for (const locale of ['/', '/en/']) {
             'Initial load must not request or prefetch an APK',
           ).toEqual([]);
           expect(githubRequests).toEqual([]);
+          expect(lanzouRequests).toEqual([]);
           await expect(page.locator('[data-download]')).toHaveCount(2);
           const initialUrl = page.url();
           for (const selector of [
@@ -113,26 +150,109 @@ for (const locale of ['/', '/en/']) {
             '.download-package [data-download]',
           ]) {
             const action = page.locator(selector);
-            await expect(action).toHaveAttribute('href', apk);
-            await expect(action).toHaveAttribute('download', apkFilename);
+            await expect(action).toHaveAttribute('href', githubAttachment);
+            await expect(action).toHaveAttribute('aria-haspopup', 'dialog');
+            await expect(action).toHaveAttribute(
+              'aria-controls',
+              'download-dialog',
+            );
             for (const activation of ['mouse', 'Enter']) {
               await action.scrollIntoViewIfNeeded();
               if (activation === 'Enter') await action.focus();
-              const pendingDownload = page.waitForEvent('download');
-              if (activation === 'mouse') await action.click();
-              else await page.keyboard.press('Enter');
+              let pendingDownload;
+              const beforeRequests = downloadServer.apkRequests.length;
+              const activate = async () => {
+                if (activation === 'mouse') await action.click();
+                else await page.keyboard.press('Enter');
+              };
+              if (javaScriptEnabled) {
+                await activate();
+                const dialog = page.locator('[data-download-dialog]');
+                await expect(dialog).toBeVisible();
+                await expect(dialog).toHaveAttribute('open', '');
+                await expect(
+                  page.locator('[data-download-close]'),
+                ).toBeFocused();
+                await expect(page).toHaveURL(initialUrl);
+                expect(downloadServer.apkRequests).toHaveLength(beforeRequests);
+                const github = page.locator('[data-download-channel="github"]');
+                // Static content and touch targets belong to this one shared
+                // dialog. Verify once per locale/viewport, while replaying all
+                // invokers and input methods below without costly duplicate RPCs.
+                if (beforeRequests === 0) {
+                  await expect(dialog).toHaveAccessibleName(
+                    locale === '/'
+                      ? '选择下载渠道'
+                      : 'Choose a download channel',
+                  );
+                  const lanzou = page.locator(
+                    '[data-download-channel="lanzou"]',
+                  );
+                  await expect(lanzou).toBeEnabled();
+                  await expect(lanzou).toHaveAttribute('href', lanzouShare);
+                  await expect(lanzou).toContainText(
+                    locale === '/'
+                      ? '蓝奏云下载渠道（国内）'
+                      : 'Lanzou download (China)',
+                  );
+                  await expect(
+                    page.locator('[data-download-password]'),
+                  ).toHaveText(
+                    locale === '/' ? /密码：\s*gkyz/ : /Password:\s*gkyz/,
+                  );
+                  await expect(
+                    page.locator('[data-download-channel="baidu"]'),
+                  ).toHaveCount(0);
+                  await expect(github).toHaveAttribute(
+                    'href',
+                    githubAttachment,
+                  );
+                  for (const control of [
+                    github,
+                    lanzou,
+                    page.locator('[data-download-close]'),
+                  ]) {
+                    const bounds = (await control.boundingBox())!;
+                    expect(bounds.width).toBeGreaterThanOrEqual(48);
+                    expect(bounds.height).toBeGreaterThanOrEqual(48);
+                  }
+                }
+                pendingDownload = page.waitForEvent('download');
+                if (activation === 'mouse') await github.click();
+                else {
+                  await github.focus();
+                  await page.keyboard.press('Enter');
+                }
+              } else {
+                pendingDownload = page.waitForEvent('download');
+                await activate();
+              }
               const download = await pendingDownload;
-              expect(download.url()).toBe(new URL(apk, initialUrl).href);
+              expect(download.url()).toBe(
+                new URL(githubAttachment, initialUrl).href,
+              );
               expect(download.suggestedFilename()).toBe(apkFilename);
               expect(await download.failure()).toBeNull();
               await expect(page).toHaveURL(initialUrl);
+              if (javaScriptEnabled) {
+                await expect(
+                  page.locator('[data-download-dialog]'),
+                ).not.toBeVisible();
+                await expect(action).toBeFocused();
+              }
               await download.delete();
             }
           }
-          expect(downloadServer.apkRequests).toEqual(Array(4).fill(apk));
+          expect(downloadServer.apkRequests).toEqual(
+            Array(4).fill(githubAttachment),
+          );
           expect(
             githubRequests,
-            'Main download actions must stay on this origin',
+            'The HTTP attachment fixture must prevent real GitHub transfers',
+          ).toEqual([]);
+          expect(
+            lanzouRequests,
+            'GitHub downloads must not contact Lanzou',
           ).toEqual([]);
         } finally {
           await context.close();
@@ -141,17 +261,51 @@ for (const locale of ['/', '/en/']) {
     }
   }
 
-  test(`direct APK download: ${locale} retains separate GitHub fallback and release links`, async ({
+  test(`download chooser: ${locale} lists Lanzou first with its visible password and keeps the original GitHub release`, async ({
     page,
   }) => {
     await page.goto(locale);
-    await expect(page.locator('.download-fallback')).toHaveAttribute(
-      'href',
-      upstreamApk,
+    for (const action of await page.locator('[data-download]').all()) {
+      await expect(action).toHaveAttribute('href', upstreamApk);
+      await expect(action).toHaveAttribute('aria-haspopup', 'dialog');
+      await expect(action).toHaveAttribute('aria-controls', 'download-dialog');
+    }
+    await expect(
+      page.locator('[data-download-channel="github"]'),
+    ).toHaveAttribute('href', upstreamApk);
+    const channels = page.locator('a[data-download-channel]');
+    await expect(channels).toHaveCount(2);
+    await expect(channels.nth(0)).toHaveAttribute(
+      'data-download-channel',
+      'lanzou',
     );
-    await expect(page.locator('.download-fallback')).not.toHaveAttribute(
-      'data-download',
+    await expect(channels.nth(1)).toHaveAttribute(
+      'data-download-channel',
+      'github',
     );
+    await expect(channels.nth(0)).toContainText(
+      locale === '/' ? '蓝奏云下载渠道（国内）' : 'Lanzou download (China)',
+    );
+    await expect(channels.nth(1)).toContainText(
+      locale === '/'
+        ? 'GitHub下载渠道（国外）'
+        : 'GitHub download (international)',
+    );
+    await expect(channels.nth(0)).toHaveAttribute('href', lanzouShare);
+    await expect(channels.nth(0)).toHaveAttribute(
+      'aria-describedby',
+      'download-lanzou-password',
+    );
+    const password = page.locator('p[data-download-password]');
+    await expect(password).toHaveAttribute('id', 'download-lanzou-password');
+    await expect(password).toHaveText(
+      locale === '/' ? /密码：\s*gkyz/ : /Password:\s*gkyz/,
+    );
+    await expect(password.locator('code')).toHaveText('gkyz');
+    await expect(page.locator('[data-download-channel="baidu"]')).toHaveCount(
+      0,
+    );
+    await expect(page.locator('.download-fallback')).toHaveCount(0);
     await expect(
       page.locator('.download-links .release-link:not(.download-fallback)'),
     ).toHaveAttribute(
@@ -159,7 +313,221 @@ for (const locale of ['/', '/en/']) {
       'https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1',
     );
   });
+
+  for (const width of [390, 1440]) {
+    test(`download chooser: ${locale} ${width}px dismisses without navigation and restores its invoker`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(locale);
+      await page.evaluate(() => document.fonts.ready);
+      const action = page.locator('.download-package [data-download]');
+      const dialog = page.locator('[data-download-dialog]');
+      const initialUrl = page.url();
+      const downloads: string[] = [];
+      page.on('download', (download) => downloads.push(download.url()));
+      for (const dismissal of ['Escape', 'close', 'backdrop']) {
+        await action.scrollIntoViewIfNeeded();
+        await action.focus();
+        const initialScroll = await page.evaluate(() => scrollY);
+        await page.keyboard.press('Enter');
+        await expect(dialog).toBeVisible();
+        await expect(page.locator('[data-download-close]')).toBeFocused();
+        // The two links follow their visible domestic/international order and
+        // cycle back to close, including Safari's Tab-to-links preference.
+        for (const channel of ['lanzou', 'github', 'close']) {
+          await page.keyboard.press('Tab');
+          await expect(
+            page.locator(
+              channel === 'close'
+                ? '[data-download-close]'
+                : `[data-download-channel="${channel}"]`,
+            ),
+          ).toBeFocused();
+        }
+        for (const channel of ['github', 'lanzou', 'close']) {
+          await page.keyboard.press('Shift+Tab');
+          await expect(
+            page.locator(
+              channel === 'close'
+                ? '[data-download-close]'
+                : `[data-download-channel="${channel}"]`,
+            ),
+          ).toBeFocused();
+        }
+        if (dismissal === 'Escape') await page.keyboard.press('Escape');
+        else if (dismissal === 'close')
+          await page.locator('[data-download-close]').click();
+        else await page.mouse.click(2, 2);
+        await expect(dialog).not.toBeVisible();
+        await expect(action).toBeFocused();
+        await expect(page).toHaveURL(initialUrl);
+        expect(
+          Math.abs((await page.evaluate(() => scrollY)) - initialScroll),
+        ).toBeLessThanOrEqual(1);
+        expect(downloads).toEqual([]);
+      }
+    });
+  }
+
+  test(`download chooser: ${locale} keeps every channel readable at 200 percent mobile text`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(locale);
+    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(() => {
+      const sizes = [...document.querySelectorAll<HTMLElement>('body *')].map(
+        (element) =>
+          [element, parseFloat(getComputedStyle(element).fontSize)] as const,
+      );
+      for (const [element, size] of sizes)
+        element.style.fontSize = `${size * 2}px`;
+    });
+    await page.locator('.hero-actions [data-download]').click();
+    const dialog = page.locator('[data-download-dialog]');
+    await expect(dialog).toBeVisible();
+    expect(
+      await dialog.evaluate(
+        (element) => element.scrollWidth - element.clientWidth,
+      ),
+    ).toBeLessThanOrEqual(1);
+    for (const selector of [
+      '[data-download-close]',
+      '[data-download-channel="github"]',
+      '[data-download-channel="lanzou"]',
+      '[data-download-password]',
+    ]) {
+      const control = page.locator(selector);
+      await control.scrollIntoViewIfNeeded();
+      await expect(control).toBeInViewport();
+      const bounds = (await control.boundingBox())!;
+      expect(bounds.x).toBeGreaterThanOrEqual(0);
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(391);
+    }
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+  });
+
+  for (const width of [390, 1440]) {
+    test(`download chooser: ${locale} ${width}px opens the exact Lanzou share without leaving the website`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.route(/court-(?:scene|engine)[^/]*\.js$/, (route) =>
+        route.abort(),
+      );
+      const shareRequests: string[] = [];
+      await page.context().route(/^https:\/\/[^/]*lanzoub\.com\//, (route) => {
+        if (route.request().isNavigationRequest())
+          shareRequests.push(route.request().url());
+        return route.fulfill({
+          status: 200,
+          contentType: 'text/html; charset=utf-8',
+          body: '<h1>Controlled Lanzou share page</h1>',
+        });
+      });
+      await page.goto(locale);
+      await page.evaluate(() => document.fonts.ready);
+      expect(
+        shareRequests,
+        'Browsing must not contact a download channel',
+      ).toEqual([]);
+      const initialUrl = page.url();
+      for (const [selector, activation] of [
+        ['.hero-actions [data-download]', 'mouse'],
+        ['.download-package [data-download]', 'Enter'],
+      ]) {
+        const invoker = page.locator(selector);
+        await invoker.scrollIntoViewIfNeeded();
+        await invoker.click();
+        const dialog = page.locator('[data-download-dialog]');
+        const lanzou = page.locator('[data-download-channel="lanzou"]');
+        await expect(dialog).toBeVisible();
+        const password = page.locator('[data-download-password]');
+        await expect(password).toBeVisible();
+        const [lanzouBounds, passwordBounds, githubBounds] = await Promise.all([
+          lanzou.boundingBox(),
+          password.boundingBox(),
+          page.locator('[data-download-channel="github"]').boundingBox(),
+        ]);
+        expect(passwordBounds!.y).toBeGreaterThanOrEqual(
+          lanzouBounds!.y + lanzouBounds!.height,
+        );
+        expect(passwordBounds!.y + passwordBounds!.height).toBeLessThanOrEqual(
+          githubBounds!.y,
+        );
+        const beforeShareRequests = shareRequests.length;
+        await expect(page).toHaveURL(initialUrl);
+        const popupOpened = page.waitForEvent('popup');
+        if (activation === 'mouse') await lanzou.click();
+        else {
+          await lanzou.focus();
+          await page.keyboard.press('Enter');
+        }
+        const popup = await popupOpened;
+        await expect(popup).toHaveURL(lanzouShare);
+        await expect(popup.locator('h1')).toHaveText(
+          'Controlled Lanzou share page',
+        );
+        expect(shareRequests.slice(beforeShareRequests)).toEqual([lanzouShare]);
+        await expect(dialog).not.toBeVisible();
+        await expect(page).toHaveURL(initialUrl);
+        await expect(invoker).toBeFocused();
+        await popup.close();
+      }
+      expect(shareRequests).toEqual([lanzouShare, lanzouShare]);
+    });
+  }
 }
+
+test('download chooser: closing the chooser does not resume a shot while the page remains hidden', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.locator('[data-point-preset="center"]').click();
+  await page.locator('[data-record]').click();
+  await expect(page.locator('[data-blue-score]')).toHaveText('8');
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', {
+      configurable: true,
+      value: true,
+    });
+    document.dispatchEvent(new Event('visibilitychange'));
+    document
+      .querySelector<HTMLAnchorElement>('.hero-actions [data-download]')!
+      .click();
+  });
+  await expect(page.locator('[data-download-dialog]')).toBeVisible();
+  await page.waitForTimeout(1800);
+  await expect(page.locator('[data-demo-marker]')).toHaveAttribute(
+    'hidden',
+    '',
+  );
+  await page.locator('[data-download-close]').click();
+  await page.waitForTimeout(400);
+  await expect(page.locator('[data-demo-marker]')).toHaveAttribute(
+    'hidden',
+    '',
+  );
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', {
+      configurable: true,
+      value: false,
+    });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(page.locator('[data-demo-marker]')).not.toHaveAttribute(
+    'hidden',
+  );
+  await expect(page.locator('[data-blue-score]')).toHaveText('8');
+  await page.locator('[data-reset]').click();
+  await expect(page.locator('[data-blue-score]')).toHaveText('6');
+});
 
 test('replay refresh preserves its plot without rewriting unchanged SVG geometry', async ({
   page,
@@ -449,7 +817,7 @@ for (const locale of ['/', '/en/']) {
       );
       await expect(
         page.locator('.download-package [data-download]'),
-      ).toHaveAttribute('href', apk);
+      ).toHaveAttribute('href', upstreamApk);
       await expect(page.locator('.checksum code')).toHaveText(
         'c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9',
       );
@@ -602,15 +970,12 @@ test('chapter polish: enabled actions share pressed and keyboard feedback while 
     ).toBe(true);
     if (selector === '.download-package [data-download]') {
       // Release on the link: Firefox retains native :active on a cancelled
-      // drag even without site styles. Exercise the real click and download.
+      // drag even without site styles. Exercise the real click and dialog.
       const initialUrl = page.url();
-      const pendingDownload = page.waitForEvent('download');
       await page.mouse.up();
-      const attachment = await pendingDownload;
-      expect(attachment.suggestedFilename()).toBe(apkFilename);
-      expect(await attachment.failure()).toBeNull();
+      await expect(page.locator('[data-download-dialog]')).toBeVisible();
+      await page.locator('[data-download-close]').click();
       await expect(page).toHaveURL(initialUrl);
-      await attachment.delete();
       await page.mouse.move(0, 0);
     } else {
       await page.mouse.move(0, 0);
@@ -695,7 +1060,7 @@ for (const locale of ['/', '/en/']) {
       );
       await expect(page.locator('#download [data-download]')).toHaveAttribute(
         'href',
-        apk,
+        upstreamApk,
       );
     } finally {
       await context.close();

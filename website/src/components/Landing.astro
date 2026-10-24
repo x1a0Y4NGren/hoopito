@@ -4,6 +4,8 @@ import Icon from './Icon.astro';
 import CourtDiagram from './CourtDiagram.astro';
 import ScoringShowcase from './ScoringShowcase.astro';
 import ScreenshotViewer from './ScreenshotViewer.astro';
+import DownloadChooser from './DownloadChooser.astro';
+import Community from './Community.astro';
 import { content, type Locale } from '../data/content';
 import { release } from '../data/release';
 import ReplayShowcase from './ReplayShowcase.astro';
@@ -168,8 +170,11 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
             <a
               class="button button-orange"
               data-download
-              href={release.apkUrl}
-              download={release.apkFilename}
+              href={release.upstreamApkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-haspopup="dialog"
+              aria-controls="download-dialog"
             >
               {c.hero.download}
               <Icon name="download" />
@@ -378,8 +383,11 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
             <a
               class="button button-dark"
               data-download
-              href={release.apkUrl}
-              download={release.apkFilename}
+              href={release.upstreamApkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-haspopup="dialog"
+              aria-controls="download-dialog"
             >
               {c.download.button}
               <Icon name="download" />
@@ -388,13 +396,6 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
               <a class="release-link" href={release.releaseUrl}>
                 {c.download.release}
                 <Icon name="arrow" />
-              </a>
-              <a
-                class="release-link download-fallback"
-                href={release.upstreamApkUrl}
-              >
-                {c.download.fallback}
-                <Icon name="download" />
               </a>
             </div>
             <p class="install-note">{c.download.install}</p>
@@ -458,6 +459,7 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
         </div>
       </div>
     </section>
+    <Community locale={locale} />
   </main>
   <footer class="site-footer content-width">
     <div class="footer-heading">
@@ -486,6 +488,7 @@ const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
     </div>
   </footer>
   <ScreenshotViewer locale={locale} />
+  <DownloadChooser locale={locale} />
   <script>
     import '../scripts/main';
   </script>

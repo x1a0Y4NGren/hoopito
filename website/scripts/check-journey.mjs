@@ -1093,7 +1093,30 @@ async function languageJourney(locale, release) {
       );
     await expect(page.locator('#download .button')).toBeInViewport();
     for (const link of await page.locator('[data-download]').all())
-      await expect(link).toHaveAttribute('href', release.apkUrl);
+      await expect(link).toHaveAttribute('href', release.upstreamApkUrl);
+    const chooser = page.locator('[data-download-dialog]');
+    await page.locator('#download [data-download]').click();
+    await expect(chooser).toBeVisible();
+    await expect(
+      chooser.locator('[data-download-channel="github"]'),
+    ).toHaveAttribute('href', release.upstreamApkUrl);
+    await expect(
+      chooser.locator('[data-download-channel="lanzou"]'),
+    ).toHaveAttribute('href', release.lanzouUrl);
+    expect(
+      await chooser
+        .locator('[data-download-channel]')
+        .evaluateAll((channels) =>
+          channels.map((channel) => channel.dataset.downloadChannel),
+        ),
+    ).toEqual(['lanzou', 'github']);
+    await expect(chooser.locator('[data-download-password]')).toBeVisible();
+    await expect(chooser.locator('[data-download-password] code')).toHaveText(
+      release.lanzouPassword,
+    );
+    await screenshot('download-channels');
+    await chooser.locator('[data-download-close]').click();
+    await expect(chooser).not.toBeVisible();
     await expect(page.locator('#download .release-link')).toHaveAttribute(
       'href',
       release.releaseUrl,
@@ -1105,7 +1128,9 @@ async function languageJourney(locale, release) {
     await screenshot('download');
     return {
       linkInspection: 'passed',
-      href: release.apkUrl,
+      githubHref: release.upstreamApkUrl,
+      lanzouHref: release.lanzouUrl,
+      sharePasswordVisible: true,
       artifact: report.artifact.status,
       retrieval: report.artifact.retrieval,
     };

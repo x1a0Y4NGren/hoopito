@@ -18,6 +18,7 @@ await mkdir(evidence, { recursive: true });
 const sourceInputs = [];
 for (const path of [
   'src/scripts/main.ts',
+  'src/scripts/download-chooser.ts',
   'src/scripts/court-scene.ts',
   'src/scripts/camera-placement.ts',
   'src/scripts/replay-cards.ts',
@@ -35,9 +36,14 @@ for (const path of [
   'src/styles/refinement.css',
   'src/styles/replay-cards.css',
   'src/styles/mobile-download-polish.css',
+  'src/styles/download-chooser.css',
+  'src/styles/community.css',
   'src/components/Layout.astro',
   'src/components/Landing.astro',
+  'src/components/DownloadChooser.astro',
+  'src/components/Community.astro',
   'src/data/content.ts',
+  'src/data/community.ts',
   '../docs/design/screenshot-presentation.json',
   'src/data/court-materials.ts',
   'assets/materials/generation.json',

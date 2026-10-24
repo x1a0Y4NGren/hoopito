@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import subsetFont from 'subset-font';
 import QRCode from 'qrcode';
+import { prepareCommunityAssets } from './prepare-community.mjs';
 import { release } from '../src/data/release.ts';
 import { courtTextures } from '../src/data/court-materials.ts';
 import {
@@ -38,7 +39,7 @@ if (presentation.source_record !== sourceRecord) {
 const presentationSha256 = createHash('sha256')
   .update(await readFile(join(repositoryRoot, presentationRecord)))
   .digest('hex');
-const assets = [];
+const assets = await prepareCommunityAssets();
 const ascii = Array.from({ length: 95 }, (_, index) =>
   String.fromCharCode(index + 32),
 ).join('');

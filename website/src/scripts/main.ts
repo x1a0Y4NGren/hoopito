@@ -2,6 +2,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initialDemoState, reduceDemo, type DemoAction } from './demo-state';
 import { createScreenshotViewer } from './screenshot-viewer';
+import { createDownloadChooser } from './download-chooser';
 import { createShotFeedback } from './shot-feedback';
 import { createScoringFeedback } from './scoring-feedback';
 import { createDemoInvitation } from './demo-invitation';
@@ -75,6 +76,9 @@ function setSuspended(reason: string, paused: boolean) {
   if (suspension.size) killReplaySnap();
 }
 const viewer = createScreenshotViewer((open) => setSuspended('viewer', open));
+const downloadChooser = createDownloadChooser((open) =>
+  setSuspended('download-dialog', open),
+);
 const scoreDevice = select<HTMLElement>('[data-story-device]');
 const scoreStep = select<HTMLElement>('[data-score-step]');
 const scoreCurrent = select<HTMLElement>('[data-score-current]');
@@ -1093,6 +1097,7 @@ window.addEventListener('pagehide', (event) => {
   surfaceObserver.disconnect();
   scoreInvitationObserver.disconnect();
   viewer.dispose();
+  downloadChooser.dispose();
   scoringFeedback?.cancel();
   demoInvitation?.cancel();
   stopFlight();

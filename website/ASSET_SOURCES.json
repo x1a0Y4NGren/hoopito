@@ -31,6 +31,155 @@
   },
   "assets": [
     {
+      "output": "public/community/hoopito-qq-group.png",
+      "bytes": 2268629,
+      "sha256": "ffb7c3ac3655adf704d6910933342a4f95093ada56c5eeb26a21b72b38ddc740",
+      "source": "website/assets/community/source/qq-group-original.jpg",
+      "source_sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31",
+      "generation_record": "website/assets/community/generation.json",
+      "generation_record_sha256": "12b741df3f50fb32bf18a1252e36843529c024fcb2bbee06a83982c87b3435fc",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "source_inputs": [
+        {
+          "source": "website/assets/community/source/qq-group-original.jpg",
+          "sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31"
+        },
+        {
+          "source": "website/assets/community/source/arena-invitation-imagegen.png",
+          "sha256": "d5c94ee5e7c0fd538b228515d0b45f7b19df9a096231e4fcbc56ac44e3f0e612"
+        },
+        {
+          "source": "website/scripts/prepare-community.mjs",
+          "sha256": "25ca7f4ba8841f774a2e543e3e9f4c0a74e6b319bfcfb1554357c350e6e37b34"
+        },
+        {
+          "source": "assets/icons/hoopito-app-icon-foreground.png",
+          "sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8"
+        },
+        {
+          "source": "assets/fonts/BarlowCondensed-Bold.ttf",
+          "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65"
+        },
+        {
+          "source": "assets/fonts/NotoSansSC-Regular.otf",
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9"
+        }
+      ],
+      "dimensions_px": [
+        1536,
+        1536
+      ],
+      "qr_crop": {
+        "left": 220,
+        "top": 800,
+        "width": 928,
+        "height": 928
+      },
+      "qr_destination": {
+        "left": 304,
+        "top": 428
+      },
+      "transformation": "ImageGen atmosphere resized to 1536×1536; original QQ code inserted at native dimensions with 128px added white quiet zone, approved mascot scaled, bundled font glyph paths; lossless PNG; QR pixels verified identical.",
+      "scan_verification": "Native QQ circular-code format: ordinary QR decoding is unavailable. Output-to-source pixel equality is checked during preparation. On 2026-10-25 the user confirmed a successful QQ client scan and correct group number 1129560287 for the full PNG with SHA-256 ffb7c3ac3655adf704d6910933342a4f95093ada56c5eeb26a21b72b38ddc740."
+    },
+    {
+      "output": "public/community/hoopito-qq-group.webp",
+      "bytes": 1350082,
+      "sha256": "5441c3f8a8b6d6eaf825628483f572202fec71925d945289f64f9e32c88288c6",
+      "source": "website/assets/community/source/qq-group-original.jpg",
+      "source_sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31",
+      "generation_record": "website/assets/community/generation.json",
+      "generation_record_sha256": "12b741df3f50fb32bf18a1252e36843529c024fcb2bbee06a83982c87b3435fc",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "source_inputs": [
+        {
+          "source": "website/assets/community/source/qq-group-original.jpg",
+          "sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31"
+        },
+        {
+          "source": "website/assets/community/source/arena-invitation-imagegen.png",
+          "sha256": "d5c94ee5e7c0fd538b228515d0b45f7b19df9a096231e4fcbc56ac44e3f0e612"
+        },
+        {
+          "source": "website/scripts/prepare-community.mjs",
+          "sha256": "25ca7f4ba8841f774a2e543e3e9f4c0a74e6b319bfcfb1554357c350e6e37b34"
+        },
+        {
+          "source": "assets/icons/hoopito-app-icon-foreground.png",
+          "sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8"
+        },
+        {
+          "source": "assets/fonts/BarlowCondensed-Bold.ttf",
+          "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65"
+        },
+        {
+          "source": "assets/fonts/NotoSansSC-Regular.otf",
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9"
+        }
+      ],
+      "dimensions_px": [
+        1536,
+        1536
+      ],
+      "qr_crop": {
+        "left": 220,
+        "top": 800,
+        "width": 928,
+        "height": 928
+      },
+      "qr_destination": {
+        "left": 304,
+        "top": 428
+      },
+      "transformation": "ImageGen atmosphere resized to 1536×1536; original QQ code inserted at native dimensions with 128px added white quiet zone, approved mascot scaled, bundled font glyph paths; lossless WEBP; QR pixels verified identical.",
+      "scan_verification": "Native QQ circular-code format: ordinary QR decoding is unavailable. Output-to-source pixel equality is checked during preparation. On 2026-10-25 the user confirmed a successful QQ client scan and correct group number 1129560287 for the full PNG with SHA-256 ffb7c3ac3655adf704d6910933342a4f95093ada56c5eeb26a21b72b38ddc740."
+    },
+    {
+      "output": "public/community/hoopito-qq-group-preview.webp",
+      "bytes": 445882,
+      "sha256": "0176c8352e74b8e7a50fb4e118f194403f6c23e190216d69ae3cd291f708603a",
+      "source": "website/assets/community/source/qq-group-original.jpg",
+      "source_sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31",
+      "generation_record": "website/assets/community/generation.json",
+      "generation_record_sha256": "12b741df3f50fb32bf18a1252e36843529c024fcb2bbee06a83982c87b3435fc",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "source_inputs": [
+        {
+          "source": "website/assets/community/source/qq-group-original.jpg",
+          "sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31"
+        },
+        {
+          "source": "website/assets/community/source/arena-invitation-imagegen.png",
+          "sha256": "d5c94ee5e7c0fd538b228515d0b45f7b19df9a096231e4fcbc56ac44e3f0e612"
+        },
+        {
+          "source": "website/scripts/prepare-community.mjs",
+          "sha256": "25ca7f4ba8841f774a2e543e3e9f4c0a74e6b319bfcfb1554357c350e6e37b34"
+        },
+        {
+          "source": "assets/icons/hoopito-app-icon-foreground.png",
+          "sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8"
+        },
+        {
+          "source": "assets/fonts/BarlowCondensed-Bold.ttf",
+          "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65"
+        },
+        {
+          "source": "assets/fonts/NotoSansSC-Regular.otf",
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9"
+        }
+      ],
+      "dimensions_px": [
+        768,
+        768
+      ],
+      "transformation": "Proportional 768×768 downsample of the full invitation, encoded as lossless WebP for lazy website/README preview. Native-size unmodified QR pixels remain available in the linked PNG and full WebP.",
+      "scan_verification": "Native QQ circular-code format: ordinary QR decoding is unavailable. Output-to-source pixel equality is checked during preparation. On 2026-10-25 the user confirmed a successful QQ client scan and correct group number 1129560287 for the full PNG with SHA-256 ffb7c3ac3655adf704d6910933342a4f95093ada56c5eeb26a21b72b38ddc740."
+    },
+    {
       "output": "public/textures/maple-albedo-v2.webp",
       "bytes": 34802,
       "sha256": "6cc0b455d19e6aca5ff893bea0124a99b3923b52e870f7f309f85ed8b83ab0ba",
@@ -304,17 +453,21 @@
     },
     {
       "output": "public/art/scene-poster-compact.webp",
-      "bytes": 20952,
-      "sha256": "63b2133d6f36f6f657d40846834cc04f05edf926a4f8ec7aa40fd4f3335782f9",
-      "source": "website/assets/art/source/scene-poster-compact-2026-10-23T05-17-34-173Z.webp",
-      "source_sha256": "ab81bc14df47ba256cd6a9f4c1e94a4cde0c96ee0a48be149c74be600a6671fd",
+      "bytes": 20380,
+      "sha256": "02cbbc993205f05b8b3887f15bc83cc76f59451a951b40c8f3cc64c1827ea0a0",
+      "source": "website/assets/art/source/scene-poster-compact-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "8dab8ec5c8a553508f90c63e88aa630adacd877ff5a126ac696ed1622fcc2759",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
-      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "3c37461524b9aa53021735de117acf0c616c3204938a288f4d007ea1197b92b2"
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
         },
         {
           "path": "src/scripts/court-scene.ts",
@@ -385,16 +538,36 @@
           "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
         },
         {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
           "path": "src/components/Layout.astro",
-          "sha256": "e80e51fd66a141a52566b614590058cfa9307292dcbac0b7dfff6efd968b9b4c"
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -414,7 +587,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "b16d3d5e1fd22e22e466b0d3920442614be76c64063272006733472571680f02"
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
         }
       ],
       "pose": {
@@ -430,17 +603,21 @@
     },
     {
       "output": "public/art/scene-poster-standard.webp",
-      "bytes": 36030,
-      "sha256": "b849891c03402b35fe15b5881b208132bc95f2e04d78b6c57d7864282d08122c",
-      "source": "website/assets/art/source/scene-poster-standard-2026-10-23T05-17-34-173Z.webp",
-      "source_sha256": "047d35e09c370ab32a091f36701e243b989051535bb92d53402c4e1d8010610b",
+      "bytes": 34552,
+      "sha256": "3e3f1b891a11512c85d0ab53ebd680f6cc3230a0ef49b6fa30d3e890629f5098",
+      "source": "website/assets/art/source/scene-poster-standard-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "179acce9031b01db8ad394dbf26d6537ef2902f4e4ea78480faa9e16b3ae2bd3",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
-      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "3c37461524b9aa53021735de117acf0c616c3204938a288f4d007ea1197b92b2"
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
         },
         {
           "path": "src/scripts/court-scene.ts",
@@ -511,16 +688,36 @@
           "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
         },
         {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
           "path": "src/components/Layout.astro",
-          "sha256": "e80e51fd66a141a52566b614590058cfa9307292dcbac0b7dfff6efd968b9b4c"
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -540,7 +737,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "b16d3d5e1fd22e22e466b0d3920442614be76c64063272006733472571680f02"
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
         }
       ],
       "pose": {
@@ -556,17 +753,21 @@
     },
     {
       "output": "public/art/scene-poster-wide.webp",
-      "bytes": 53770,
-      "sha256": "5dd98e10349bea88ef681e9ced15f46c40dd80ee6e481e303a0d572872a8d904",
-      "source": "website/assets/art/source/scene-poster-wide-2026-10-23T05-17-34-173Z.webp",
-      "source_sha256": "97b062d99efaa5883671f226e2d7f6d9135b71146c74293a98e34b55aceaa930",
+      "bytes": 52908,
+      "sha256": "59a00e6e16bd07aad9e6e5c04797b6f232305712d33aabfe347859bfbce1929d",
+      "source": "website/assets/art/source/scene-poster-wide-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "7b7fe66e441f0cb825cb990cb2b7027b632e4ce23b1547d96d8c5e0418ff725b",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
-      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "3c37461524b9aa53021735de117acf0c616c3204938a288f4d007ea1197b92b2"
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
         },
         {
           "path": "src/scripts/court-scene.ts",
@@ -637,16 +838,36 @@
           "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
         },
         {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
           "path": "src/components/Layout.astro",
-          "sha256": "e80e51fd66a141a52566b614590058cfa9307292dcbac0b7dfff6efd968b9b4c"
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -666,7 +887,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "b16d3d5e1fd22e22e466b0d3920442614be76c64063272006733472571680f02"
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
         }
       ],
       "pose": {
@@ -682,17 +903,21 @@
     },
     {
       "output": "public/art/scene-poster-demo-compact.webp",
-      "bytes": 5930,
-      "sha256": "f975dc818df0d88729713d5a71e31a46f4434ffa9194ee2438246ecdfa37437c",
-      "source": "website/assets/art/source/scene-poster-demo-compact-2026-10-23T05-17-34-173Z.webp",
-      "source_sha256": "303b53cd84bd5d576be602d3de875576bba5061dd1415224696f2601e1f0dfcb",
+      "bytes": 6134,
+      "sha256": "84b850f5b4469c5384f4e7bbd6f89a014a6edeef876e1cd7f1c1dc064bc4adca",
+      "source": "website/assets/art/source/scene-poster-demo-compact-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "fff9d6157491a666e0b3c82702397659ef43b43d837e42b3fb503bf8e4d59e11",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
-      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "3c37461524b9aa53021735de117acf0c616c3204938a288f4d007ea1197b92b2"
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
         },
         {
           "path": "src/scripts/court-scene.ts",
@@ -763,16 +988,36 @@
           "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
         },
         {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
           "path": "src/components/Layout.astro",
-          "sha256": "e80e51fd66a141a52566b614590058cfa9307292dcbac0b7dfff6efd968b9b4c"
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -792,7 +1037,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "b16d3d5e1fd22e22e466b0d3920442614be76c64063272006733472571680f02"
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
         }
       ],
       "pose": {
@@ -808,17 +1053,21 @@
     },
     {
       "output": "public/art/scene-poster-demo-standard.webp",
-      "bytes": 9964,
-      "sha256": "509c7241be50f7af51da6493d319c47dd999ac85dfc89d8b8609201b29adb95b",
-      "source": "website/assets/art/source/scene-poster-demo-standard-2026-10-23T05-17-34-173Z.webp",
-      "source_sha256": "c38018d4885ed0414df9211d78dd0071f83c40d8ac33e7845e429164a74542e4",
+      "bytes": 9904,
+      "sha256": "aa43be7338d5f1c8cde52181adf273ffd2fc6e31a1dd760740186cd54388a921",
+      "source": "website/assets/art/source/scene-poster-demo-standard-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "06769f3059ed710a71aca69d21c2291da730ec694863cee7358be7462134c2ba",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
-      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "3c37461524b9aa53021735de117acf0c616c3204938a288f4d007ea1197b92b2"
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
         },
         {
           "path": "src/scripts/court-scene.ts",
@@ -889,16 +1138,36 @@
           "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
         },
         {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
           "path": "src/components/Layout.astro",
-          "sha256": "e80e51fd66a141a52566b614590058cfa9307292dcbac0b7dfff6efd968b9b4c"
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -918,7 +1187,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "b16d3d5e1fd22e22e466b0d3920442614be76c64063272006733472571680f02"
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
         }
       ],
       "pose": {
@@ -934,17 +1203,21 @@
     },
     {
       "output": "public/art/scene-poster-demo-wide.webp",
-      "bytes": 11292,
-      "sha256": "b9628932bf766bfaf3b15a29d69f471888568189cc4d34b002dc8b395b500933",
-      "source": "website/assets/art/source/scene-poster-demo-wide-2026-10-23T05-17-34-173Z.webp",
-      "source_sha256": "1a4fa70feb5d61783e9d6bd117b4ac163a63e2cdb8d45e8fc4acd3280a8c9bfa",
+      "bytes": 11188,
+      "sha256": "6419c58cb3447a06e2956a9b7f2484c3b13f0c67189a95da03d32dc347497127",
+      "source": "website/assets/art/source/scene-poster-demo-wide-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "a460966d3ab3c8885dd3fb92d270752b3504ae6ae0199a1dc24f07fff8587769",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "6587b9b370baff310e7ee01fcd844ce62ae531a8885bdd0e68c9ad3bc100bf98",
-      "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "3c37461524b9aa53021735de117acf0c616c3204938a288f4d007ea1197b92b2"
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
         },
         {
           "path": "src/scripts/court-scene.ts",
@@ -1015,16 +1288,36 @@
           "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
         },
         {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
           "path": "src/components/Layout.astro",
-          "sha256": "e80e51fd66a141a52566b614590058cfa9307292dcbac0b7dfff6efd968b9b4c"
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
         },
         {
           "path": "../docs/design/screenshot-presentation.json",
@@ -1044,7 +1337,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "b16d3d5e1fd22e22e466b0d3920442614be76c64063272006733472571680f02"
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
         }
       ],
       "pose": {
@@ -1369,8 +1662,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 118632,
-      "sha256": "1a1f19415e9387c72e63dd3e4b0d24f11d044f63a1720ac00c233f1c0dd7d245",
+      "bytes": 125228,
+      "sha256": "0c0fd48763beac75f34c8ae824e4afd56e1d9625a2900494ed4db2433349376c",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -1512,6 +1805,7 @@
         20135,
         20139,
         20146,
+        20154,
         20165,
         20171,
         20174,
@@ -1529,10 +1823,12 @@
         20351,
         20363,
         20379,
+        20381,
         20391,
         20445,
         20449,
         20462,
+        20570,
         20648,
         20801,
         20808,
@@ -1557,6 +1853,7 @@
         21015,
         21017,
         21018,
+        21035,
         21040,
         21047,
         21069,
@@ -1574,8 +1871,10 @@
         21319,
         21322,
         21333,
+        21345,
         21368,
         21382,
+        21442,
         21450,
         21452,
         21453,
@@ -1602,8 +1901,10 @@
         21629,
         21644,
         21697,
+        21709,
         22120,
         22238,
+        22269,
         22270,
         22312,
         22320,
@@ -1619,6 +1920,7 @@
         22823,
         22830,
         22833,
+        22863,
         22909,
         22914,
         22987,
@@ -1630,6 +1932,7 @@
         23448,
         23454,
         23481,
+        23494,
         23545,
         23548,
         23562,
@@ -1654,6 +1957,8 @@
         24402,
         24403,
         24405,
+        24433,
+        24471,
         24490,
         24515,
         24535,
@@ -1663,6 +1968,7 @@
         24687,
         24819,
         24847,
+        24895,
         25104,
         25110,
         25130,
@@ -1691,12 +1997,14 @@
         25509,
         25511,
         25552,
+        25628,
         25764,
         25773,
         25805,
         25903,
         25918,
         25919,
+        25925,
         25968,
         25972,
         25991,
@@ -1734,6 +2042,7 @@
         26723,
         27178,
         27425,
+        27426,
         27490,
         27491,
         27492,
@@ -1745,10 +2054,12 @@
         27809,
         27861,
         27880,
+        27969,
         27979,
         27983,
         28079,
         28165,
+        28192,
         28304,
         28436,
         28857,
@@ -1763,9 +2074,11 @@
         29983,
         29992,
         30001,
+        30003,
         30028,
         30041,
         30165,
+        30331,
         30340,
         30422,
         30424,
@@ -1814,11 +2127,14 @@
         32553,
         32593,
         32622,
+        32676,
         32773,
         32780,
+        32842,
         32852,
         32988,
         33021,
+        33150,
         33258,
         33322,
         33853,
@@ -1837,10 +2153,12 @@
         35745,
         35748,
         35753,
+        35759,
         35760,
         35768,
         35774,
         35775,
+        35782,
         35797,
         35823,
         35828,
@@ -1851,16 +2169,21 @@
         36134,
         36153,
         36164,
+        36182,
         36187,
         36208,
+        36215,
         36229,
+        36335,
         36339,
         36394,
         36712,
         36733,
         36739,
+        36755,
         36793,
         36807,
+        36814,
         36816,
         36820,
         36824,
@@ -1874,6 +2197,7 @@
         36890,
         36947,
         36965,
+        36992,
         37096,
         37117,
         37324,
@@ -1911,8 +2235,16 @@
       ],
       "text_sources": [
         {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
+        },
+        {
           "path": "src/components/CourtDiagram.astro",
           "sha256": "69bcc430b38cd6905878a6d952504631b73f093d5d81821aad23c6a6d9e016d7"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
         },
         {
           "path": "src/components/Icon.astro",
@@ -1920,15 +2252,15 @@
         },
         {
           "path": "src/components/Landing.astro",
-          "sha256": "665c5d9f75eddbebae3a2779ed022dd68c1cb1a56439c6bd9c6735bb65b9a193"
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
         },
         {
           "path": "src/components/Layout.astro",
-          "sha256": "e80e51fd66a141a52566b614590058cfa9307292dcbac0b7dfff6efd968b9b4c"
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
         },
         {
           "path": "src/components/Privacy.astro",
-          "sha256": "3c695221b9f99026de35b2779a1877e887b83109461baa05ebe77bb5a83685ac"
+          "sha256": "44f0746c3c03e82cf6d5911ffeedafa1bdf5339da5c41a7f15b1b4a49bceb0c0"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -1943,8 +2275,12 @@
           "sha256": "004322044f105134a7c96f666fab05a62da425b54725522de97c4f8ac8da9416"
         },
         {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
+        },
+        {
           "path": "src/data/content.ts",
-          "sha256": "8eb940c1a3fb8b25432cdffdff843ab176c455fd26101dbefe2b697ff430faca"
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -1952,7 +2288,7 @@
         },
         {
           "path": "src/data/release.ts",
-          "sha256": "c4748be894bf3098a4f7713a32af991a4972ded3022c9db6736f8bf077c9142c"
+          "sha256": "b79c57a2ca84dee2b9969c69bd70a5482d2a35daed9edef6a07f56e442d4e1bd"
         },
         {
           "path": "src/data/replay-example.ts",
@@ -2015,12 +2351,16 @@
           "sha256": "f18e27c74a1c0664b44da841fe36b9e06bfae62b5bbde417b7d6a6fb00a45a8d"
         },
         {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
+        },
+        {
           "path": "src/scripts/gpu-calibration.ts",
           "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
         },
         {
           "path": "src/scripts/main.ts",
-          "sha256": "3c37461524b9aa53021735de117acf0c616c3204938a288f4d007ea1197b92b2"
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
         },
         {
           "path": "src/scripts/presentation-state.ts",
@@ -2090,7 +2430,7 @@
       "bytes": 1630,
       "sha256": "0a73f5b046f585c1372e45ca5a35149e3845b55f0c05f2586781f0f1adf7fc8b",
       "source": "src/data/release.ts",
-      "source_sha256": "c4748be894bf3098a4f7713a32af991a4972ded3022c9db6736f8bf077c9142c",
+      "source_sha256": "b79c57a2ca84dee2b9969c69bd70a5482d2a35daed9edef6a07f56e442d4e1bd",
       "payload": "https://hoopito.com/#download",
       "transformation": "QR code generated with qrcode; four-module quiet zone preserved",
       "license": "MIT (repository-generated graphic)"
@@ -2100,7 +2440,7 @@
       "bytes": 112963,
       "sha256": "b74a382dbdedb119fab75e8b0d2f2c07153cbfe1ec1646e35f0add5921572cfa",
       "source": "scripts/prepare-assets.mjs",
-      "source_sha256": "ed68f8750ca210339c5d7f198fd80feaff75a6853bb2bc7fa3bd7207c7acc84d",
+      "source_sha256": "06e0283f993b0a304f2ed429e38312b1905e50cc1375c1536f8e3e01878985d7",
       "source_dependencies": [
         {
           "source": "assets/icons/hoopito-app-icon-foreground.png",
@@ -2116,7 +2456,7 @@
         },
         {
           "source": "website/public/fonts/noto-sc.woff2",
-          "sha256": "1a1f19415e9387c72e63dd3e4b0d24f11d044f63a1720ac00c233f1c0dd7d245"
+          "sha256": "0c0fd48763beac75f34c8ae824e4afd56e1d9625a2900494ed4db2433349376c"
         },
         {
           "source": "assets/fonts/BarlowCondensed-Medium.ttf",
