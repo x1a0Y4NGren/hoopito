@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Java
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
@@ -68,11 +68,19 @@ jobs:
       - name: Run unit and widget tests
         run: flutter test --reporter expanded
 
+      - name: Test startup measurement and backup observation gates
+        run: >-
+          python3 -m unittest -v
+          tool.release.tests.test_measure_entry_startup
+          tool.release.tests.test_compare_entry_startup_runs
+          tool.release.tests.test_observe_automatic_backup
+          tool.release.tests.test_ci_android_integration
+
       - name: Upload golden failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: hooptrace-golden-failures
+          name: hoopito-golden-failures
           path: test/**/failures/**
           if-no-files-found: ignore
           retention-days: 7
@@ -97,10 +105,13 @@ jobs:
       - name: Build debug APK
         run: flutter build apk --debug --no-pub
 
+      - name: Test native backup and Android window policies
+        run: ./android/gradlew -p android :app:testDebugUnitTest
+
       - name: Upload debug APK
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: hooptrace-debug-apk
+          name: hoopito-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 14
@@ -115,7 +126,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Java
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
@@ -136,17 +147,17 @@ jobs:
 
       - name: Upload reproducibility failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: hooptrace-reproducibility-failures
+          name: hoopito-reproducibility-failures
           path: build/reproducible-diagnostics
           if-no-files-found: ignore
           retention-days: 3
 
       - name: Upload verified unsigned release APK
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: hooptrace-unsigned-reproducible-apk
+          name: hoopito-unsigned-reproducible-apk
           path: |
             build/reproducible/app-release.apk
             build/reproducible/SHA256SUMS
@@ -172,7 +183,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Java
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
@@ -208,12 +219,7 @@ jobs:
           emulator-options: >-
             -no-window -gpu swiftshader_indirect -no-snapshot -noaudio
             -no-boot-anim -camera-back none
-          script: |
-            flutter test integration_test/main_loop_test.dart -d emulator-5554
-            if [ "${{ matrix.api-level }}" = "36" ]; then
-              flutter test integration_test/player_comparison_flow_test.dart -d emulator-5554
-              flutter test integration_test/command_performance_test.dart -d emulator-5554
-            fi
+          script: bash tool/release/run_android_integration_ci.sh ${{ matrix.api-level }}
 
   ios-no-sign:
     name: iOS no-sign compile

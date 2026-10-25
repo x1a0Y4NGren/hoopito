@@ -5,9 +5,9 @@ import 'dart:typed_data';
 
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
 import 'package:path/path.dart' as path;
 
 import '../../test_helpers/test_database.dart';
@@ -60,7 +60,7 @@ void main() {
       expect(storage.files, hasLength(1));
       expect(
         storage.files.single.fileName,
-        'hooptrace-backup-20260821-090507.json',
+        'hoopito-backup-20260821-090507.json',
       );
       expect(
         jsonDecode(utf8.decode(storage.files.single.bytes)),
@@ -93,7 +93,7 @@ void main() {
 
       final path = await service.runNow();
 
-      expect(path, '/approved/hooptrace-backup-20260821-090507.json');
+      expect(path, '/approved/hoopito-backup-20260821-090507.json');
       final state = await service.loadState();
       expect(state.enabled, isFalse);
       expect(state.lastBackupAt, DateTime.utc(2026, 8, 21, 9, 5, 7));
@@ -113,7 +113,7 @@ void main() {
         expect(storage.files, hasLength(2));
         expect(
           storage.files.last.fileName,
-          'hooptrace-auto-20260821-090507.json',
+          'hoopito-auto-20260821-090507.json',
         );
         expect((await service.loadState()).dirty, isFalse);
       },
@@ -134,7 +134,7 @@ void main() {
     test(
       'disables and clears an unsupported legacy directory reference',
       () async {
-        const legacyPath = '/storage/emulated/0/HoopTraceTest';
+        const legacyPath = '/storage/emulated/0/HoopitoTest';
         storage.availableDirectories.add(legacyPath);
         await service.configureDirectory(legacyPath);
         await service.enable();
@@ -170,7 +170,7 @@ void main() {
       'IO storage never overwrites a backup with the same filename',
       () async {
         final directory = await Directory.systemTemp.createTemp(
-          'hooptrace-backup-test-',
+          'hoopito-backup-test-',
         );
         addTearDown(() => directory.delete(recursive: true));
         const ioStorage = IoAutomaticBackupStorage();
@@ -194,22 +194,22 @@ void main() {
 
     test('IO retention refuses a backup-looking parent traversal', () async {
       final root = await Directory.systemTemp.createTemp(
-        'hooptrace-retention-guard-',
+        'hoopito-retention-guard-',
       );
       addTearDown(() => root.delete(recursive: true));
       final approved = await Directory(
         path.join(root.path, 'approved'),
       ).create();
-      final outside = File(path.join(root.path, 'hooptrace-auto-outside.json'));
+      final outside = File(path.join(root.path, 'hoopito-auto-outside.json'));
       await outside.writeAsString('keep');
 
       await const IoAutomaticBackupStorage().deleteFile(
         directory: approved.path,
         fileName: path.join(
-          'hooptrace-auto-nested',
+          'hoopito-auto-nested',
           '..',
           '..',
-          'hooptrace-auto-outside.json',
+          'hoopito-auto-outside.json',
         ),
       );
 
@@ -232,7 +232,7 @@ void main() {
 
       final destination = await service.runIfDue();
 
-      expect(destination, '/approved/hooptrace-auto-20260822-090507.json');
+      expect(destination, '/approved/hoopito-auto-20260822-090507.json');
       expect((await service.loadState()).dirty, isFalse);
     });
 
@@ -543,16 +543,16 @@ void main() {
         for (var index = 0; index < 10; index++) {
           retentionStorage.files.add(
             _WrittenBackup(
-              'hooptrace-auto-202608${(index + 1).toString().padLeft(2, '0')}-090507.json',
+              'hoopito-auto-202608${(index + 1).toString().padLeft(2, '0')}-090507.json',
               Uint8List(0),
             ),
           );
         }
         retentionStorage.files.add(
-          _WrittenBackup('hooptrace-backup-manual.json', Uint8List(0)),
+          _WrittenBackup('hoopito-backup-manual.json', Uint8List(0)),
         );
         retentionStorage.files.add(
-          _WrittenBackup('hooptrace-pre-restore.json', Uint8List(0)),
+          _WrittenBackup('hoopito-pre-restore.json', Uint8List(0)),
         );
         await service.markDirty();
         current = current.add(const Duration(hours: 24));
@@ -561,21 +561,19 @@ void main() {
 
         final automatic = retentionStorage.files
             .map((file) => file.fileName)
-            .where((name) => name.startsWith('hooptrace-auto-'))
+            .where((name) => name.startsWith('hoopito-auto-'))
             .toList();
         expect(automatic, hasLength(10));
-        expect(retentionStorage.deleted, [
-          'hooptrace-auto-20260801-090507.json',
-        ]);
+        expect(retentionStorage.deleted, ['hoopito-auto-20260801-090507.json']);
         expect(
           retentionStorage.files.any(
-            (file) => file.fileName == 'hooptrace-backup-manual.json',
+            (file) => file.fileName == 'hoopito-backup-manual.json',
           ),
           isTrue,
         );
         expect(
           retentionStorage.files.any(
-            (file) => file.fileName == 'hooptrace-pre-restore.json',
+            (file) => file.fileName == 'hoopito-pre-restore.json',
           ),
           isTrue,
         );

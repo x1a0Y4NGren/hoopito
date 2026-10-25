@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/repositories/player_analytics_snapshot_repository.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/repositories/player_analytics_snapshot_repository.dart';
 
 import '../test_helpers/test_database.dart';
 

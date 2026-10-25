@@ -3,18 +3,19 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/export_coordinator.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/core/settings/theme_preferences.dart';
-import 'package:hooptrace/features/settings/settings_controller.dart';
-import 'package:hooptrace/features/settings/settings_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/core/settings/theme_preferences.dart';
+import 'package:hoopito/features/settings/settings_controller.dart';
+import 'package:hoopito/features/settings/settings_page.dart';
 
 import '../../test_helpers/test_database.dart';
+import '../../test_helpers/safety_backup_storage.dart';
 
 void main() {
   testWidgets(
@@ -35,6 +36,7 @@ void main() {
         exports: ExportCoordinator(
           database,
           codec,
+          safetyBackups: createTestSafetyBackupStore(codec),
           gateway: _Gateway(),
           automaticBackup: automaticBackup,
         ),
@@ -60,7 +62,7 @@ void main() {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: SettingsPage(controller: settings, themeController: theme),
         ),
       );

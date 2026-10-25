@@ -1,5 +1,7 @@
 # HoopTrace Product Design
 
+> Historical first-release design. Later changes supersede parts of its visual and scoring behavior; consult current code, tests, and the [history scope](../README.md) before reusing it.
+
 ## Overview
 
 HoopTrace is an open-source, permanently free, offline-first mobile app for basketball one-on-one scoring, shot location capture, and post-game review. The first release targets Android while keeping the Flutter codebase ready for future iOS support.

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
 
 class DeviceAutomaticBackupStorage
     implements
@@ -159,7 +159,9 @@ class DeviceAutomaticBackupStorage
 
   static final _controlCharacterPattern = RegExp(r'[\x00-\x1F\x7F]');
   static final _writeFileNamePattern = RegExp(
-    r'^hooptrace-(?:auto|backup|safety-backup)-[A-Za-z0-9][A-Za-z0-9._-]*\.json$',
+    r'^hoop(?:trace|ito)-(?:auto|backup|safety-backup)-[A-Za-z0-9][A-Za-z0-9._-]*\.json$',
   );
-  static final _automaticBackupPattern = RegExp(r'^hooptrace-auto-.+\.json$');
+  static final _automaticBackupPattern = RegExp(
+    r'^hoop(?:trace|ito)-auto-.+\.json$',
+  );
 }

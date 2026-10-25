@@ -1,0 +1,196 @@
+---
+import { netPath } from '../scripts/shot-timing';
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<svg
+  data-demo-court
+  class="demo-court"
+  viewBox="0 0 600 560"
+  role="img"
+  aria-label={label}
+>
+  <defs>
+    <linearGradient id="court-surface" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#26302f" />
+      <stop offset=".42" stop-color="#201f1c" />
+      <stop offset="1" stop-color="#10171a" />
+    </linearGradient>
+    <radialGradient id="court-spotlight" cx="50%" cy="0%" r="90%">
+      <stop stop-color="#e6b587" stop-opacity=".12" />
+      <stop offset=".58" stop-color="#e6a36e" stop-opacity=".025" />
+      <stop offset="1" stop-color="#e6a36e" stop-opacity="0" />
+    </radialGradient>
+    <pattern
+      id="court-planks"
+      width="52"
+      height="126"
+      patternUnits="userSpaceOnUse"
+    >
+      <path d="M0 0V126M26 0V126" stroke="#ccb394" stroke-opacity=".04" />
+      <path d="M0 34H26M26 93H52" stroke="#ccb394" stroke-opacity=".035" />
+    </pattern>
+    <pattern
+      id="court-wood"
+      width="300"
+      height="300"
+      patternUnits="userSpaceOnUse"
+    >
+      <image
+        data-demo-surface
+        data-src="/art/demo-maple.webp"
+        width="300"
+        height="300"
+        preserveAspectRatio="none"
+      />
+    </pattern>
+    <pattern
+      id="ball-pebbles"
+      width="2.2"
+      height="2.2"
+      patternUnits="userSpaceOnUse"
+    >
+      <circle cx="1.1" cy="1.1" r=".35" fill="#55210b" opacity=".3" />
+    </pattern>
+    <radialGradient id="demo-ball-color" cx="28%" cy="20%">
+      <stop stop-color="#fdb274" />
+      <stop offset=".5" stop-color="#dc6d30" />
+      <stop offset="1" stop-color="#763213" />
+    </radialGradient>
+    <linearGradient id="court-edge" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#e5a170" stop-opacity=".55" />
+      <stop offset=".48" stop-color="#e5a170" stop-opacity=".06" />
+      <stop offset="1" stop-color="#e5a170" stop-opacity=".28" />
+    </linearGradient>
+  </defs>
+  <rect
+    x="15"
+    y="15"
+    width="570"
+    height="530"
+    rx="6"
+    fill="#0b0e0f"
+    stroke="url(#court-edge)"
+  />
+  <rect x="28" y="28" width="544" height="504" fill="url(#court-surface)" />
+  <rect x="28" y="28" width="544" height="504" fill="url(#court-planks)" />
+  <rect
+    x="28"
+    y="28"
+    width="544"
+    height="504"
+    fill="url(#court-wood)"
+    opacity=".14"
+  />
+  <rect x="28" y="28" width="544" height="504" fill="url(#court-spotlight)" />
+  <path d="M206 28V238H394V28Z" fill="#ead5b8" fill-opacity=".025" />
+  <g
+    stroke="#e8e1d6"
+    stroke-opacity=".64"
+    fill="none"
+    stroke-width="2.2"
+    stroke-linejoin="round"
+  >
+    <path d="M28 28H572V532H28ZM206 28V238H394V28" />
+    <path d="M206 238A94 94 0 0 0 394 238" />
+    <path
+      d="M206 238A94 94 0 0 1 394 238"
+      stroke-dasharray="8 9"
+      stroke-opacity=".28"
+    />
+    <path d="M57 28V133A243 243 0 0 0 543 133V28M234 532A66 66 0 0 1 366 532" />
+    <path d="M258 64H342" stroke-width="5" stroke="#c7cdd0" />
+    <path d="M300 65V75" stroke="#c7cdd0" />
+  </g>
+  <g
+    data-demo-net
+    transform="translate(300 82)"
+    fill="none"
+    stroke="#eee4d6"
+    stroke-opacity=".6"
+    stroke-width="1.3"
+  >
+    <path data-net-weave d={netPath(0)} />
+  </g>
+  <ellipse
+    cx="300"
+    cy="82"
+    rx="16"
+    ry="7"
+    fill="none"
+    stroke="#ee945e"
+    stroke-width="3.8"
+  />
+  <g
+    opacity=".12"
+    fill="#e3d7c9"
+    font-family="Barlow Condensed, sans-serif"
+    font-size="22"
+    text-anchor="middle"
+    letter-spacing="6"
+  >
+    <text x="303" y="425">
+      HOOPITO
+    </text>
+  </g>
+  <g data-demo-selection {...{ hidden: '' }}>
+    <circle
+      class="aim-halo"
+      r="31"
+      fill="#e7a272"
+      fill-opacity=".055"
+      stroke="#e7a272"
+      stroke-opacity=".22"
+    />
+    <circle
+      r="20"
+      fill="#e7a272"
+      fill-opacity=".12"
+      stroke="#e7a272"
+      stroke-width="1.4"
+    />
+    <circle r="4" fill="#e7a272" />
+    <path
+      d="M-30 0H-24M24 0H30M0-30V-24M0 24V30"
+      stroke="#e7a272"
+      stroke-width="1.4"
+    />
+  </g>
+  <g data-demo-marker {...{ hidden: '' }}>
+    <circle
+      r="29"
+      fill="#79acdf"
+      fill-opacity=".06"
+      stroke="#79acdf"
+      stroke-opacity=".2"
+    />
+    <circle
+      r="18"
+      fill="#79acdf"
+      fill-opacity=".13"
+      stroke="#79acdf"
+      stroke-width="1.5"
+    />
+    <circle r="7" fill="#79acdf" />
+    <path d="M-3 0L-1 3L4-3" fill="none" stroke="#0c1720" stroke-width="1.6" />
+  </g>
+  <path
+    data-demo-trail
+    {...{ hidden: '' }}
+    fill="none"
+    stroke="#ed9b60"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+  <g data-demo-ball {...{ hidden: '' }}>
+    <circle r="12" fill="url(#demo-ball-color)" />
+    <circle r="12" fill="url(#ball-pebbles)" />
+    <g fill="none" stroke="#442417" stroke-width="1.35">
+      <path d="M-12 0H12M0-12V12M-8-9Q8 0-8 9M8-9Q-8 0 8 9" />
+      <circle r="11.5" />
+    </g>
+  </g>
+</svg>

@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
 import 'package:sqlite3/sqlite3.dart' as sqlite3;
 
 void main() {
@@ -14,7 +14,7 @@ void main() {
     tester,
   ) async {
     final directory = (await tester.runAsync(
-      () => Directory.systemTemp.createTemp('hooptrace-task6-v1-'),
+      () => Directory.systemTemp.createTemp('hoopito-task6-v1-'),
     ))!;
     addTearDown(() => directory.delete(recursive: true));
     final file = File(
@@ -27,7 +27,7 @@ void main() {
     raw.close();
     final database = openAppDatabaseAt(file);
     await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
+      HoopitoApp(database: database, showEntryAnimation: false),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('legacy-bootstrap')));
     expect(find.byKey(const Key('legacy-bootstrap')), findsOneWidget);

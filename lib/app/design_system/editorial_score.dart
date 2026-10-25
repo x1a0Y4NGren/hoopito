@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:hooptrace/app/design_system/editorial_primitives.dart';
-import 'package:hooptrace/app/design_system/editorial_tokens.dart';
+import 'package:hoopito/app/design_system/editorial_primitives.dart';
+import 'package:hoopito/app/design_system/editorial_tokens.dart';
 
 class ScoreNumeral extends StatelessWidget {
   const ScoreNumeral({
@@ -28,8 +28,8 @@ class ScoreNumeral extends StatelessWidget {
         '$value',
         style: Theme.of(context).textTheme.displayLarge?.copyWith(
           color: color ?? editorial.ink,
-          fontFamily: HoopTraceTypography.displayFamily,
-          fontSize: fontSize ?? HoopTraceTypography.scoreFor(width),
+          fontFamily: HoopitoTypography.displayFamily,
+          fontSize: fontSize ?? HoopitoTypography.scoreFor(width),
           fontWeight: FontWeight.w700,
           height: 0.9,
           fontFeatures: const [FontFeature.tabularFigures()],

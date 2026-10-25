@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
-import 'package:hooptrace/features/scoring/widgets/court_painter.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
+import 'package:hoopito/features/scoring/widgets/court_painter.dart';
 
 export 'court_painter.dart' show EraserShotMarker, TransientShotMarker;
 
@@ -83,6 +83,7 @@ class CourtView extends StatelessWidget {
           ScoringShotLocation? closest;
           var closestDistance = 28.0;
           for (final location in shotLocations) {
+            if (hiddenShotLocationIds.contains(location.id)) continue;
             final center = HalfCourtGeometry.pointToOffset(
               location.point,
               size,

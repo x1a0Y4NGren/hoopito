@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 void main() {
   test('retired visual compatibility extension is not registered', () {
-    final theme = buildHoopTraceTheme();
+    final theme = buildHoopitoTheme();
     expect(
       theme.extensions.values.any(
-        (extension) =>
-            extension.runtimeType.toString() == 'HoopTraceVisualTheme',
+        (extension) => extension.runtimeType.toString() == 'HoopitoVisualTheme',
       ),
       isFalse,
     );
   });
 
   test('light theme uses the editorial canvas and shared tokens', () {
-    final theme = buildHoopTraceTheme();
+    final theme = buildHoopitoTheme();
 
     expect(theme.brightness, Brightness.light);
     expect(theme.colorScheme.primary, const Color(0xFFFF5A1F));
     expect(theme.scaffoldBackgroundColor, const Color(0xFFF4F3EF));
-    expect(HoopTraceSpacing.page, 16);
-    expect(HoopTraceRadii.card, 4);
+    expect(HoopitoSpacing.page, 16);
+    expect(HoopitoRadii.card, 4);
     expect(theme.textTheme.bodyLarge?.fontSize, 16);
   });
 
   test('dark theme uses a black-court canvas with readable foregrounds', () {
-    final theme = buildHoopTraceTheme(brightness: Brightness.dark);
+    final theme = buildHoopitoTheme(brightness: Brightness.dark);
     final surface = theme.colorScheme.surface.computeLuminance();
     final foreground = theme.colorScheme.onSurface.computeLuminance();
     final lighter = surface > foreground ? surface : foreground;
@@ -41,8 +40,8 @@ void main() {
   });
 
   test('primary actions meet WCAG text contrast in both themes', () {
-    final light = buildHoopTraceTheme();
-    final dark = buildHoopTraceTheme(brightness: Brightness.dark);
+    final light = buildHoopitoTheme();
+    final dark = buildHoopitoTheme(brightness: Brightness.dark);
 
     for (final scheme in [light.colorScheme, dark.colorScheme]) {
       expect(
@@ -53,8 +52,8 @@ void main() {
   });
 
   test('team result colors meet WCAG contrast on light and dark surfaces', () {
-    final light = buildHoopTraceTheme();
-    final dark = buildHoopTraceTheme(brightness: Brightness.dark);
+    final light = buildHoopitoTheme();
+    final dark = buildHoopitoTheme(brightness: Brightness.dark);
 
     for (final side in TeamSide.values) {
       expect(
@@ -76,9 +75,9 @@ void main() {
           teamColorForScheme(
             side,
             light.colorScheme,
-            background: HoopTraceColors.ink,
+            background: HoopitoColors.ink,
           ),
-          HoopTraceColors.ink,
+          HoopitoColors.ink,
         ),
         greaterThanOrEqualTo(4.5),
       );

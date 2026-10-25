@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/scoring/scoring_reducer.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/scoring/scoring_reducer.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 void main() {
   test('score is derived from non-deleted score events only', () {

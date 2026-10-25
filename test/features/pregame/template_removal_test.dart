@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/repositories/rule_template_repository.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
+import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
 
 void main() {
   testWidgets('falls back when the selected custom template is removed', (

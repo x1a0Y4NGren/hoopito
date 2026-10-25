@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
 
 void main() {
   final redProfile = Player(
@@ -156,6 +156,9 @@ void main() {
       MaterialApp(home: PregamePage(onStartMatch: (value) => setup = value)),
     );
 
+    await _scrollTo(tester, find.byKey(const Key('pregame-clock-settings')));
+    await tester.tap(find.byKey(const Key('pregame-clock-settings')));
+    await tester.pumpAndSettle();
     await _scrollTo(tester, find.byKey(const Key('pregame-timer')));
     await tester.tap(find.byKey(const Key('pregame-timer')));
     await _scrollTo(tester, find.byKey(const Key('pregame-clock-count-up')));

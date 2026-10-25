@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:hooptrace/app/design_system/editorial_primitives.dart';
-import 'package:hooptrace/app/design_system/editorial_tokens.dart';
+import 'package:hoopito/app/design_system/editorial_primitives.dart';
+import 'package:hoopito/app/design_system/editorial_tokens.dart';
 
 class EditorialMasthead extends StatelessWidget {
   const EditorialMasthead({
@@ -42,11 +42,11 @@ class EditorialMasthead extends StatelessWidget {
                 ?.copyWith(
                   color: editorial.ink,
                   fontFamily: useDisplayFamily
-                      ? HoopTraceTypography.displayFamily
+                      ? HoopitoTypography.displayFamily
                       : null,
                   fontSize: compact
-                      ? HoopTraceTypography.title
-                      : HoopTraceTypography.mastheadFor(width),
+                      ? HoopitoTypography.title
+                      : HoopitoTypography.mastheadFor(width),
                   fontWeight: FontWeight.w700,
                   height: compact ? 1.1 : 0.92,
                   letterSpacing: useDisplayFamily ? 0.3 : 0,

@@ -1,6 +1,10 @@
-# HoopTrace Release Checklist
+# Hoopito · 球豆 Release Checklist
 
 本清单适用于 GitHub Release，并包含后续 F-Droid 提交所需的前置核验。每个发行版从干净的 `main` 和唯一签名 tag 构建。
+
+仅在准备或执行正式发行时使用本清单；普通维护按 [贡献指南](../../CONTRIBUTING.md#测试要求) 选择验证范围。创建 tag、发布 Release 或提交 F-Droid 申请需要当前任务的对应授权，准备工作不自动授权对外发布。第 8 节仅在本次包含 F-Droid 渠道工作时执行，不阻塞单独的 GitHub Release。
+
+本文件是可复用的发行模板，不是 2.0 的完成状态表。当前候选与原始验收来源见 [HANDOFF.md](../../HANDOFF.md)。复用证据时保留其提交、工具链和设备范围；本地 Debug、未签名复现、文件重开和模拟器验收分别不能代替正式同证升级、远端 CI、进程重启或实体设备结果。
 
 ## 1. 范围与版本
 
@@ -8,9 +12,9 @@
 - [ ] 将 `pubspec.yaml` 的 `version` 更新为目标 `versionName+versionCode`。
 - [ ] 同步 `lib/app/app_metadata.dart` 中用于备份清单的版本号。
 - [ ] 将 `CHANGELOG.md` 的 Unreleased 内容归入目标版本和发布日期。
-- [ ] 确认 Android Application ID 仍为 `io.github.x1a0y4ngren.hooptrace`。
+- [ ] 确认 Android Application ID 仍为 `io.github.x1a0y4ngren.hooptrace`；保留原签名、原生技术标识和本地数据名称，遵守[品牌与兼容性](../design/brand/naming-and-compatibility.md)。
 - [ ] 同步 README 中的当前正式版本、下载与更新说明链接、功能描述和真实界面截图；不得保留上个版本或发布候选文案。
-- [ ] 确认应用显示名、图标、MIT License 和 PRIVACY 均为最终版本。
+- [ ] 确认显示名使用英文 Hoopito、中文球豆，双语并列使用 Hoopito · 球豆；图标、MIT License 和 PRIVACY 均为最终版本。
 - [ ] 搜索源码中的 `TODO`、模板标识、测试域名和调试开关并逐项评估。
 
 ## 2. 依赖、隐私与权限
@@ -71,7 +75,7 @@ flutter build apk --debug
 - [ ] 首次发布可运行 `tool/release/setup_android_signing.ps1`，在仓库外创建 keystore 并生成被忽略的签名配置。
 - [ ] 在未提交的 `android/key.properties` 中配置 `storeFile`、`storePassword`、`keyAlias` 和 `keyPassword`。
 - [ ] 运行 `tool/release/build_android_release.ps1`，从干净提交生成签名 APK、证书记录、权限记录和 `SHA256SUMS`。
-- [ ] 确认没有为上游发布设置 `allowUnsignedRelease` 或 `HOOPTRACE_ALLOW_UNSIGNED_RELEASE`。
+- [ ] 确认没有为上游发布设置 `allowUnsignedRelease` 或 `HOOPITO_ALLOW_UNSIGNED_RELEASE`。
 - [ ] 使用 `apksigner verify --verbose --print-certs <apk>` 验证签名和证书指纹。
 - [ ] 将首次正式签名证书 SHA-256 指纹写入维护者的离线发布记录，后续版本必须一致。
 - [ ] 计算 `SHA256SUMS`，至少覆盖发布 APK。
@@ -87,6 +91,8 @@ flutter build apk --debug
 - [ ] 验证自动备份关闭、授权目录、立即备份、重启备份和目录失效错误。
 - [ ] 分别测试全新安装和从上一个正式版本覆盖升级，确认本地数据保留。
 - [ ] 检查离线模式下所有核心流程。
+- [ ] 涉及启动动效修改时，验收原生衔接、慢初始化、错误/旧数据库、跳过、减少/关闭动画和返回前台；保存从标准动作直至首页的连续设备录屏。
+- [ ] 涉及启动动效修改时，完成约定次数的 Profile 冷启动，分别记录标准动作与降级，按批准帧预算检查构建/绘制耗时；保留失败样本，核对 APK 来源并恢复测试设置。
 
 ## 6. 商店与仓库元数据
 
@@ -100,7 +106,7 @@ flutter build apk --debug
 
 - [ ] 以版本 tag 创建非草稿 Release。
 - [ ] 发布说明包含主要变化、升级说明、隐私声明链接和已知限制。
-- [ ] 上传正式签名 APK 和 `SHA256SUMS`。
+- [ ] 上传正式签名 APK 和 `SHA256SUMS`；新发行 APK 命名为 `Hoopito-v<version>-android.apk`，既有 `HoopTrace-v2.0.0-android.apk` 保留原名。
 - [ ] 保留 GitHub 自动生成的 source code archives。
 - [ ] 明确 Android 优先状态以及 iOS 尚未正式发布。
 - [ ] 从公开 Release 页面重新下载 APK，核验 SHA-256 和签名后安装冒烟测试。
@@ -118,6 +124,7 @@ flutter build apk --debug
 ## 9. 发布后
 
 - [ ] 在一台干净设备上验证公开下载渠道。
-- [ ] 监控公开 Issue 中的安装、迁移和数据恢复问题。
 - [ ] 不删除或替换已经公开的二进制；需要修复时发布递增版本号的新版本。
 - [ ] 把本次签名指纹、校验和、测试结果和已知问题归档。
+
+本次发布在适用检查、公开产物核验和归档完成后结束。后续 Issue 监控属于独立任务：仅在明确要求时设置，并约定期限、检查频率和通知条件；无需在发布任务内持续等待新 Issue。

@@ -1,17 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match.dart' as domain_match;
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/home/home_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/clock/clock_engine.dart';
+import 'package:hoopito/core/domain/entities/clock_state.dart';
+import 'package:hoopito/core/domain/entities/match.dart' as domain_match;
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/home/home_page.dart';
 
 void main() {
+  testWidgets('a restored untimed match does not claim its clock is paused', (
+    tester,
+  ) async {
+    final persistedClock = ClockEngine().project(
+      state: ClockState(
+        id: 'restored-untimed-clock',
+        matchId: _activeMatch.match.id,
+        mode: ClockMode.countUp,
+        phase: ClockPhase.regulation,
+        accumulatedSeconds: 0,
+      ),
+      now: DateTime.utc(2026, 10, 2),
+    );
+    for (final locale in const [Locale('en'), Locale('zh')]) {
+      await _pumpHome(
+        tester,
+        locale: locale,
+        activeMatch: _activeMatch.copyWith(clock: persistedClock),
+      );
+      final l10n = AppLocalizations.of(
+        tester.element(find.byKey(homeResumeCardKey)),
+      )!;
+      expect(find.textContaining(l10n.homeClockNotConfigured), findsOneWidget);
+      expect(find.textContaining(l10n.homeClockPaused), findsNothing);
+      expect(find.byKey(homeResumeKey), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    }
+  });
+
   testWidgets('empty home makes one editorial hero the start destination', (
     tester,
   ) async {
@@ -28,7 +59,7 @@ void main() {
     );
 
     expect(find.byType(EditorialScaffold), findsOneWidget);
-    expect(find.text('HOOPTRACE'), findsOneWidget);
+    expect(find.text('HOOPITO'), findsOneWidget);
     expect(find.byKey(const Key('home-editorial-hero')), findsOneWidget);
     expect(find.byKey(homeStartScoringKey), findsOneWidget);
     expect(find.byKey(homeResumeKey), findsNothing);
@@ -92,7 +123,7 @@ void main() {
   });
 
   testWidgets(
-    'active match keeps Continue dominant and retains secondary Start and Abandon callbacks',
+    'active match offers Continue and confirmed Abandon without an invalid Start',
     (tester) async {
       var starts = 0;
       var resumes = 0;
@@ -106,20 +137,16 @@ void main() {
       );
 
       expect(find.byKey(const Key('home-editorial-hero')), findsOneWidget);
-      expect(find.byKey(homeStartScoringKey), findsOneWidget);
+      expect(find.byKey(homeStartScoringKey), findsNothing);
       expect(find.text('River'), findsOneWidget);
       expect(find.text('Jordan'), findsOneWidget);
       expect(find.text('11'), findsOneWidget);
       expect(find.text('9'), findsOneWidget);
       expect(tester.widget(find.byKey(homeResumeKey)), isA<FilledButton>());
-      expect(tester.widget(find.byKey(homeStartScoringKey)), isA<TextButton>());
-
-      await tester.tap(find.byKey(homeStartScoringKey));
-      expect(starts, 1);
 
       await tester.tap(find.byKey(homeResumeKey));
       expect(resumes, 1);
-      expect(starts, 1);
+      expect(starts, 0);
 
       await tester.ensureVisible(find.byKey(homeAbandonKey));
       await tester.tap(find.byKey(homeAbandonKey));
@@ -180,19 +207,23 @@ void main() {
           find.byKey(const Key('home-editorial-hero')),
         );
         final startEditorial = editorialThemeOf(startContext);
-        final startIndex = tester.widget<Text>(
-          find.descendant(
-            of: find.byKey(const Key('home-editorial-hero')),
-            matching: find.text('01'),
-          ),
+        final startTitle = tester.widget<Text>(
+          find
+              .descendant(
+                of: find.byKey(const Key('home-editorial-hero')),
+                matching: find.text(
+                  AppLocalizations.of(startContext)!.startScoring,
+                ),
+              )
+              .first,
         );
         expect(
           _contrastRatio(
-            startIndex.style!.color!,
+            startTitle.style!.color!,
             startEditorial.inverseSurface,
           ),
           greaterThanOrEqualTo(4.5),
-          reason: 'the start index must remain readable on the inverse hero',
+          reason: 'the start title must remain readable on the inverse hero',
         );
 
         await _pumpHome(
@@ -255,7 +286,7 @@ Future<void> _pumpHome(
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: buildHoopTraceTheme(brightness: brightness),
+      theme: buildHoopitoTheme(brightness: brightness),
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaler: textScaler),
         child: child!,

@@ -1,10 +1,10 @@
-import 'package:hooptrace/core/domain/entities/match.dart';
-import 'package:hooptrace/core/domain/entities/active_session.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/possession_segment.dart';
-import 'package:hooptrace/core/domain/entities/shot_location.dart';
-import 'package:hooptrace/core/domain/clock/clock_engine.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/entities/match.dart';
+import 'package:hoopito/core/domain/entities/active_session.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/possession_segment.dart';
+import 'package:hoopito/core/domain/entities/shot_location.dart';
+import 'package:hoopito/core/domain/clock/clock_engine.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 enum MatchDecisionKind { finishOrContinue }
 

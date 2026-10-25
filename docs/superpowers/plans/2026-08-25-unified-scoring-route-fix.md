@@ -1,6 +1,6 @@
 # HoopTrace Unified Scoring and Route Fix Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Every production change follows strict RED/GREEN TDD.
+> Historical unified-scoring plan, not a current assignment. Execution instructions and checkboxes below describe that task only; see [history scope](../README.md).
 
 **Goal:** Replace the split simple/detailed scoring experience with one clean scoring surface, add court-first and ten-second score-first shot-location capture with action-level undo, and eliminate every terminal-match navigation dead end.
 

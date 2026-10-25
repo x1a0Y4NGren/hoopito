@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/scoring/widgets/score_side_panel.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/scoring/widgets/score_side_panel.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
@@ -11,7 +11,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           MaterialApp(
-            theme: buildHoopTraceTheme(brightness: brightness),
+            theme: buildHoopitoTheme(brightness: brightness),
             home: Scaffold(
               body: Center(
                 child: SizedBox(
@@ -23,7 +23,7 @@ void main() {
                     score: 23,
                     fouls: 4,
                     onScore: (_) {},
-                    onFoul: () {},
+                    onMiss: () {},
                   ),
                 ),
               ),
@@ -32,8 +32,8 @@ void main() {
         );
 
         final palette = brightness == Brightness.light
-            ? const HoopTraceEditorialTheme.light()
-            : const HoopTraceEditorialTheme.dark();
+            ? const HoopitoEditorialTheme.light()
+            : const HoopitoEditorialTheme.dark();
         final expectedRail = brightness == Brightness.dark
             ? palette.surface
             : palette.canvas;
@@ -47,7 +47,7 @@ void main() {
           find.byKey(const Key('blue-action-rail')),
         );
         expect(rail.color, expectedRail);
-        expect(rail.color, isNot(HoopTraceColors.ink));
+        expect(rail.color, isNot(HoopitoColors.ink));
         final divider = rail.shape! as Border;
         expect(divider.right.color, palette.rule);
         expect(divider.right.width, 1);
@@ -69,15 +69,15 @@ void main() {
         );
         expect(_contrast(foreground!, background!), greaterThanOrEqualTo(4.5));
 
-        final foulButton = tester.widget<OutlinedButton>(
-          find.byKey(const Key('blue-foul')),
+        final missButton = tester.widget<OutlinedButton>(
+          find.byKey(const Key('blue-miss')),
         );
-        final foulBackground = foulButton.style!.backgroundColor!.resolve({})!;
-        final foulForeground = foulButton.style!.foregroundColor!.resolve({})!;
-        final foulBorder = foulButton.style!.side!.resolve({})!;
-        expect(foulBorder.color, palette.arenaAccent);
+        final missBackground = missButton.style!.backgroundColor!.resolve({})!;
+        final missForeground = missButton.style!.foregroundColor!.resolve({})!;
+        final missBorder = missButton.style!.side!.resolve({})!;
+        expect(missBorder.color, palette.rule);
         expect(
-          _contrast(foulForeground, foulBackground),
+          _contrast(missForeground, missBackground),
           greaterThanOrEqualTo(4.5),
         );
 
@@ -86,7 +86,7 @@ void main() {
         );
         expect(identityLines, hasLength(4));
         for (final line in identityLines) {
-          expect(line.color, isIn([palette.teamBlue, palette.arenaAccent]));
+          expect(line.color, palette.teamBlue);
           expect(line.constraints?.maxWidth, 3);
         }
 
@@ -107,7 +107,7 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(
             context,
@@ -125,7 +125,7 @@ void main() {
                 score: 9,
                 fouls: 2,
                 onScore: (_) {},
-                onFoul: () {},
+                onMiss: () {},
               ),
             ),
           ),
@@ -137,7 +137,7 @@ void main() {
       Key('red-score-1'),
       Key('red-score-2'),
       Key('red-score-3'),
-      Key('red-foul'),
+      Key('red-miss'),
     ];
     final rects = [for (final key in keys) tester.getRect(find.byKey(key))];
     for (final rect in rects) {

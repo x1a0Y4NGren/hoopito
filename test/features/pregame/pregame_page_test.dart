@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
 
 void main() {
   testWidgets('configuration rail is flat and contains no nested surfaces', (
@@ -85,17 +85,20 @@ void main() {
     expect(startedBlueName, 'Blue B');
   });
 
-  testWidgets('pre-game page hides recording mode and coverage choices', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const MaterialApp(home: PregamePage()));
+  testWidgets(
+    'pre-game uses natural scope choices and a unified scoring mode',
+    (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: PregamePage()));
 
-    expect(find.byKey(const Key('pregame-recording-simple')), findsNothing);
-    expect(find.byKey(const Key('pregame-recording-detailed')), findsNothing);
-    expect(find.byKey(const Key('pregame-tracking-coverage')), findsNothing);
-    expect(find.text('记录模式（必选）'), findsNothing);
-    expect(find.text('失误追踪范围'), findsNothing);
-  });
+      expect(find.byKey(const Key('pregame-recording-simple')), findsNothing);
+      expect(find.byKey(const Key('pregame-recording-detailed')), findsNothing);
+      expect(find.byKey(const Key('pregame-tracking-coverage')), findsNothing);
+      expect(find.text('记录模式（必选）'), findsNothing);
+      expect(find.text('失误追踪范围'), findsNothing);
+      expect(find.byKey(const Key('pregame-coverage-scores')), findsOneWidget);
+      expect(find.byKey(const Key('pregame-coverage-shots')), findsOneWidget);
+    },
+  );
 
   testWidgets('pre-game page exposes Chinese rule template options', (
     tester,
@@ -139,6 +142,7 @@ void main() {
       MaterialApp(home: PregamePage(onStartMatch: (_) => started = true)),
     );
 
+    await _openClockSettings(tester);
     await tester.scrollUntilVisible(
       find.byKey(const Key('pregame-timer')),
       300,
@@ -174,6 +178,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const MaterialApp(home: PregamePage()));
+    await _openClockSettings(tester);
     await tester.ensureVisible(find.byKey(const Key('pregame-timer')));
     await tester.tap(find.byKey(const Key('pregame-timer')));
     await tester.pump();
@@ -221,7 +226,7 @@ void main() {
         1,
       ),
     );
-    expect(find.byKey(const Key('pregame-court-divider')), findsOneWidget);
+    expect(find.byKey(const Key('pregame-court-divider')), findsNothing);
     expect(find.byKey(const Key('pregame-configuration-rail')), findsOneWidget);
   });
 
@@ -267,6 +272,10 @@ void main() {
       expect(find.byKey(const Key('pregame-clock-section')), findsOneWidget);
       expect(find.byKey(const Key('pregame-advanced-section')), findsOneWidget);
       expect(find.byKey(const Key('pregame-rule-template')), findsOneWidget);
+      await _openClockSettings(tester);
+      await tester.ensureVisible(find.byKey(const Key('pregame-advanced')));
+      await tester.tap(find.byKey(const Key('pregame-advanced')));
+      await tester.pumpAndSettle();
       expect(find.byKey(const Key('pregame-timer')), findsOneWidget);
       expect(find.byKey(const Key('pregame-win-by-two')), findsOneWidget);
     },
@@ -281,7 +290,7 @@ void main() {
         tester.view.physicalSize = size;
         tester.view.devicePixelRatio = 1;
         await tester.pumpWidget(
-          MaterialApp(theme: buildHoopTraceTheme(), home: const PregamePage()),
+          MaterialApp(theme: buildHoopitoTheme(), home: const PregamePage()),
         );
         await tester.pump();
 
@@ -312,7 +321,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: MediaQuery(
@@ -344,7 +353,7 @@ void main() {
       for (final brightness in [Brightness.light, Brightness.dark]) {
         await tester.pumpWidget(
           MaterialApp(
-            theme: buildHoopTraceTheme(brightness: brightness),
+            theme: buildHoopitoTheme(brightness: brightness),
             home: const PregamePage(),
           ),
         );
@@ -377,7 +386,7 @@ void main() {
     }
 
     for (final brightness in [Brightness.light, Brightness.dark]) {
-      final scheme = buildHoopTraceTheme(brightness: brightness).colorScheme;
+      final scheme = buildHoopitoTheme(brightness: brightness).colorScheme;
       expect(
         contrast(scheme.primary, scheme.onPrimary),
         greaterThanOrEqualTo(4.5),
@@ -439,7 +448,7 @@ void main() {
     'team groups and start expose accessible semantics and 48dp targets',
     (tester) async {
       await tester.pumpWidget(
-        MaterialApp(theme: buildHoopTraceTheme(), home: const PregamePage()),
+        MaterialApp(theme: buildHoopitoTheme(), home: const PregamePage()),
       );
       await tester.pump();
 
@@ -513,4 +522,11 @@ void main() {
       expect(find.text('请输入红方姓名。'), findsOneWidget);
     },
   );
+}
+
+Future<void> _openClockSettings(WidgetTester tester) async {
+  final clock = find.byKey(const Key('pregame-clock-settings'));
+  await tester.ensureVisible(clock);
+  await tester.tap(clock);
+  await tester.pumpAndSettle();
 }

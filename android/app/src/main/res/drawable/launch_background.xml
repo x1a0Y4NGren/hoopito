@@ -4,6 +4,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/launch_hoop" />
+            android:src="@drawable/launch_mark" />
     </item>
 </layer-list>

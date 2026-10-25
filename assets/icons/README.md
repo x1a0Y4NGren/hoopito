@@ -1,38 +1,60 @@
-# HoopTrace Icon Assets
+# Hoopito Icon Assets
 
-The launcher icon uses a near-black court-inspired field and a compact basketball-to-hoop trace mark. It was created specifically for HoopTrace during the 2026 release-preparation phase with OpenAI's built-in ImageGen tool and contains no third-party artwork.
+Hoopito uses the approved **C · one-eyed basketball creature**: an asymmetric
+orange ball, one large eye, a mischievous grin, and two simple basketball seams.
+The user approved it as the official logo on 2026-10-04 and requested complete
+retirement of the old hoop-and-shot-trace identity. Its source was prepared with
+OpenAI's built-in ImageGen, preserving the approved concept while removing its
+background. No third-party artwork is included.
 
-## Generation
+## Source and palette
 
-Mode: built-in ImageGen, `logo-brand` use case (not the CLI fallback).
+The original transparent ImageGen result and exact prompt are preserved in
+[the brand record](../../docs/design/brand/README.md). The normalized project
+foreground retains the generated alpha and maps visible pixels to three colors:
 
-Final selected prompt:
+- Arena orange: `#FF5A1F`
+- Near-black pupil, grin, and basketball seams: `#101112`
+- Warm-white eye and glint: `#F4F3EF`
 
-```text
-Use case: logo-brand
-Asset type: square mobile app launcher icon foreground source with true transparency
-Primary request: Create one centered, minimal geometric basketball mark for HoopTrace: a basketball hoop and backboard in warm white, an arena-orange basketball at the upper left, and one continuous arena-orange shot trace curving from the ball into the hoop.
-Scene/backdrop: fully transparent canvas; no background shape and no baked outer icon container.
-Subject: simplified front-facing basketball backboard and hoop; the ball and continuous trace must remain distinct and recognizable at 32 px.
-Style/medium: crisp flat vector-like logo rendered as a high-resolution raster; minimal silhouette; heavy square-ended strokes; generous negative space.
-Composition/framing: square composition, optically centered as one balanced mark, with ample clear margin on every side for Android adaptive circle, rounded-square, and squircle masks; nothing clipped.
-Color palette: use only warm white #F4F3EF and arena orange #FF5A1F; transparent elsewhere.
-Constraints: exactly one basketball, one continuous shot trace entering the hoop, and one hoop/backboard assembly; clean simple geometry; strong small-size legibility; true alpha transparency.
-Avoid: text, letters, lettermarks, red or blue player dots, a full basketball court, extra balls, extra traces, extra court markings, gradients, shadows, glow, paper texture, distressing, 3D effects, photorealism, watermark, border, background fill, and baked rounded outer corners.
-```
-
-Palette:
-
-- Near-black background: `#101112`
-- Warm-white mark: `#F4F3EF`
-- Arena-orange ball and trace: `#FF5A1F`
+The launcher background is also `#101112`. Black facial details retain their ink
+in the transparent source. Never reduce the foreground to an orange/white palette.
 
 ## File roles and derivation
 
-- `hooptrace-app-icon-foreground.png` is the normalized 1024 x 1024 transparent project source. Its visible mark is centered within a 620 x 620 launcher safe zone.
-- `hooptrace-app-icon.png` is the opaque 1024 x 1024 master, composited over the exact near-black background.
-- Android legacy mipmaps and every iOS AppIcon PNG are opaque Lanczos resizes of the composite master.
-- Android adaptive foreground and monochrome PNGs use 108, 162, 216, 324, and 432 pixel canvases for mdpi through xxxhdpi. The monochrome asset reuses the source alpha as one warm-white color.
-- `tool/release/generate_launcher_icons.py` performs source normalization (when given a transparent built-in ImageGen result), compositing, Lanczos resizing, platform output generation, and contact-sheet generation. It requires Pillow and does not add a Flutter package dependency.
+- `hoopito-app-icon-foreground.png`: transparent 1024 × 1024 production source;
+  the complete creature is centered within a 620 × 620 safe zone.
+- `hoopito-app-icon.png`: opaque 1024 × 1024 master on the near-black background.
+- `hoopito-app-icon-monochrome.png`: transparent single-color master; black
+  pupil, grin, and seams become negative spaces, keeping the face recognizable
+  when Android applies a themed color.
+- Android legacy mipmaps and iOS AppIcon PNGs are opaque resizes of the master.
+  Android adaptive foregrounds use the transparent source; monochrome resources
+  use the single-color master with antialiased alpha edges.
+- Both Fastlane locales use the same 512 × 512 opaque store icon.
+- Native Android `launch_mark.png` and iOS LaunchImage use the new foreground
+  at 0.78 scale, matching the first Flutter entry frame. Flutter uses the same
+  foreground through its bounce and final hold; it no longer draws the old hoop.
 
-The source, master, derivatives, and generation script are distributed under the repository MIT License.
+The current entry motion uses a 48×48 texture mesh for squash, stretch and a
+decaying upper-body wave. Its endpoints render the original image directly.
+Startup is silent and has no haptic feedback; scoring feedback preferences are
+separate. See the [entry motion record](../../docs/design/brand/entry-motion.md).
+
+Regenerate with Python and Pillow (validated with Python 3.12 and Pillow 12.3):
+
+```sh
+python tool/release/generate_launcher_icons.py \
+  --import-imagegen-source docs/design/brand/hooptrace-c-imagegen-source.png \
+  --contact-sheet build/logo/cyclops-contact-sheet.png
+python tool/release/generate_entry_assets.py
+python -m unittest discover -s tool/release/tests -v
+```
+
+The launcher script validates all platform dimensions, transparency, the three
+foreground colors, monochrome details, adaptive XML, and both store icons. It
+does not add a Flutter dependency. The entry script also reproduces the existing
+legacy swish sound, which the current entry no longer loads or plays; it does not
+synthesize replacement artwork.
+
+All source artwork, derivatives, and scripts use the repository MIT License.

@@ -3,8 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 @immutable
-class HoopTraceMotionTheme extends ThemeExtension<HoopTraceMotionTheme> {
-  const HoopTraceMotionTheme({
+class HoopitoMotionTheme extends ThemeExtension<HoopitoMotionTheme> {
+  const HoopitoMotionTheme({
     required this.scoreFlight,
     required this.impact,
     required this.acceleratedScoreFlight,
@@ -22,7 +22,7 @@ class HoopTraceMotionTheme extends ThemeExtension<HoopTraceMotionTheme> {
     required this.entryPreferenceWait,
   });
 
-  const HoopTraceMotionTheme.light()
+  const HoopitoMotionTheme.light()
     : this(
         scoreFlight: const Duration(milliseconds: 480),
         impact: const Duration(milliseconds: 180),
@@ -35,13 +35,13 @@ class HoopTraceMotionTheme extends ThemeExtension<HoopTraceMotionTheme> {
         pageReveal: const Duration(milliseconds: 220),
         foulStamp: const Duration(milliseconds: 180),
         undo: const Duration(milliseconds: 180),
-        entry: const Duration(milliseconds: 1320),
+        entry: const Duration(milliseconds: 1000),
         entryReduced: const Duration(milliseconds: 140),
         entrySkip: const Duration(milliseconds: 120),
         entryPreferenceWait: const Duration(milliseconds: 80),
       );
 
-  const HoopTraceMotionTheme.dark() : this.light();
+  const HoopitoMotionTheme.dark() : this.light();
 
   final Duration scoreFlight;
   final Duration impact;
@@ -63,7 +63,7 @@ class HoopTraceMotionTheme extends ThemeExtension<HoopTraceMotionTheme> {
   Duration get splash => impact;
 
   @override
-  HoopTraceMotionTheme copyWith({
+  HoopitoMotionTheme copyWith({
     Duration? scoreFlight,
     Duration? impact,
     Duration? acceleratedScoreFlight,
@@ -81,7 +81,7 @@ class HoopTraceMotionTheme extends ThemeExtension<HoopTraceMotionTheme> {
     Duration? entrySkip,
     Duration? entryPreferenceWait,
   }) {
-    return HoopTraceMotionTheme(
+    return HoopitoMotionTheme(
       scoreFlight: scoreFlight ?? this.scoreFlight,
       impact: impact ?? this.impact,
       acceleratedScoreFlight:
@@ -102,7 +102,7 @@ class HoopTraceMotionTheme extends ThemeExtension<HoopTraceMotionTheme> {
   }
 
   @override
-  HoopTraceMotionTheme lerp(covariant HoopTraceMotionTheme? other, double t) {
+  HoopitoMotionTheme lerp(covariant HoopitoMotionTheme? other, double t) {
     if (other == null) return this;
     Duration blend(Duration a, Duration b) => Duration(
       microseconds: ui
@@ -113,7 +113,7 @@ class HoopTraceMotionTheme extends ThemeExtension<HoopTraceMotionTheme> {
           )!
           .round(),
     );
-    return HoopTraceMotionTheme(
+    return HoopitoMotionTheme(
       scoreFlight: blend(scoreFlight, other.scoreFlight),
       impact: blend(impact, other.impact),
       acceleratedScoreFlight: blend(
@@ -140,7 +140,7 @@ class HoopTraceMotionTheme extends ThemeExtension<HoopTraceMotionTheme> {
 
   @override
   bool operator ==(Object other) =>
-      other is HoopTraceMotionTheme &&
+      other is HoopitoMotionTheme &&
       other.scoreFlight == scoreFlight &&
       other.impact == impact &&
       other.acceleratedScoreFlight == acceleratedScoreFlight &&
@@ -177,4 +177,4 @@ class HoopTraceMotionTheme extends ThemeExtension<HoopTraceMotionTheme> {
   );
 }
 
-typedef HoopTraceMotionTokens = HoopTraceMotionTheme;
+typedef HoopitoMotionTokens = HoopitoMotionTheme;

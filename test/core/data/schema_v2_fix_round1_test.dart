@@ -3,15 +3,15 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/domain/entities/match.dart' as dom;
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/domain/entities/match.dart' as dom;
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 import '../../test_helpers/test_database.dart';
@@ -344,7 +344,7 @@ void main() {
   test(
     'native bootstrap rejects v1 before Drift opens or changes the file',
     () async {
-      final directory = await Directory.systemTemp.createTemp('hooptrace-v1-');
+      final directory = await Directory.systemTemp.createTemp('hoopito-v1-');
       addTearDown(() => directory.delete(recursive: true));
       final file = File(
         '${directory.path}${Platform.pathSeparator}hooptrace.sqlite',

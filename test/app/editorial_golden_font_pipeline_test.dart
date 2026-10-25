@@ -4,13 +4,13 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/editorial_masthead.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/editorial_masthead.dart';
 
 import '../support/golden_fonts.dart';
 
 void main() {
-  setUpAll(loadHoopTraceGoldenFonts);
+  setUpAll(loadHoopitoGoldenFonts);
 
   testWidgets('production theme preserves body and display font roles', (
     tester,
@@ -18,7 +18,7 @@ void main() {
     const bodyKey = Key('body-copy');
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: Builder(
           builder: (context) => Column(
             children: [
@@ -40,7 +40,7 @@ void main() {
         .style!;
     expect(bodyStyle.fontFamily, isNot('Noto Sans SC'));
     expect(bodyStyle.fontFamilyFallback, contains('Noto Sans SC'));
-    expect(displayStyle.fontFamily, HoopTraceTypography.displayFamily);
+    expect(displayStyle.fontFamily, HoopitoTypography.displayFamily);
     expect(displayStyle.fontFamilyFallback, contains('Noto Sans SC'));
   });
 
@@ -51,7 +51,7 @@ void main() {
     const missingGlyph = Key('missing-material-glyph');
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: Row(
           textDirection: TextDirection.ltr,
           children: const [
@@ -89,14 +89,14 @@ void main() {
     tester,
   ) async {
     const bodyGlyph = Key('body-glyph');
-    final bodyStyle = buildHoopTraceTheme().textTheme.bodyMedium!.copyWith(
+    final bodyStyle = buildHoopitoTheme().textTheme.bodyMedium!.copyWith(
       color: Colors.black,
       fontSize: 40,
       height: 1,
     );
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: Align(
           alignment: Alignment.topLeft,
           child: RepaintBoundary(
@@ -138,14 +138,14 @@ void main() {
     tester,
   ) async {
     const bodyGlyph = Key('chinese-body-glyph');
-    final bodyStyle = buildHoopTraceTheme().textTheme.bodyMedium!.copyWith(
+    final bodyStyle = buildHoopitoTheme().textTheme.bodyMedium!.copyWith(
       color: Colors.black,
       fontSize: 40,
       height: 1,
     );
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: Align(
           alignment: Alignment.topLeft,
           child: RepaintBoundary(

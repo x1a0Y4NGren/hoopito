@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
 
 import '../test_helpers/test_database.dart';
 
@@ -66,11 +66,11 @@ void main() {
                 () async => throw StateError('backup directory moved'),
           ),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-start-scoring')));
-    expect(find.text('HOOPTRACE'), findsOneWidget);
+    expect(find.text('球豆'), findsOneWidget);
   });
 
   testWidgets('built-in startup failure is shown instead of being swallowed', (
@@ -91,7 +91,7 @@ void main() {
           ),
           startupAutomaticBackupProvider.overrideWith((ref) => () async {}),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.text(l10n.bootstrapFailureBody));

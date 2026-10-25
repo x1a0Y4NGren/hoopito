@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 class ScoreSidePanel extends StatelessWidget {
   const ScoreSidePanel({
@@ -12,17 +12,16 @@ class ScoreSidePanel extends StatelessWidget {
     required this.score,
     required this.fouls,
     required this.onScore,
-    required this.onFoul,
+    required this.onMiss,
     this.scoreButtons = const [1, 2, 3],
-    this.onMiss,
     this.scoreEnabled = true,
-    this.missEnabled = false,
-    this.foulEnabled = true,
+    this.missEnabled = true,
     this.locationPoints,
     this.locationRemainingSeconds,
     this.locationRevealDuration = Duration.zero,
     this.reduceMotion = false,
     this.scoreButtonKeys,
+    this.missButtonKey,
     this.foulStamp = false,
     this.foulStampVersion = 0,
     super.key,
@@ -34,12 +33,10 @@ class ScoreSidePanel extends StatelessWidget {
   final int score;
   final int fouls;
   final ValueChanged<int> onScore;
-  final VoidCallback onFoul;
+  final VoidCallback onMiss;
   final List<int> scoreButtons;
-  final VoidCallback? onMiss;
   final bool scoreEnabled;
   final bool missEnabled;
-  final bool foulEnabled;
   final int? locationPoints;
   final int? locationRemainingSeconds;
   final Duration locationRevealDuration;
@@ -48,6 +45,7 @@ class ScoreSidePanel extends StatelessWidget {
   /// Optional geometry handles for the live scoring overlay. Public semantic
   /// ValueKeys remain on the actual buttons and are never replaced.
   final Map<int, GlobalKey>? scoreButtonKeys;
+  final GlobalKey? missButtonKey;
   final bool foulStamp;
   final int foulStampVersion;
 
@@ -55,7 +53,6 @@ class ScoreSidePanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
     final editorial = editorialThemeOf(context);
-    final disabledColor = editorial.mutedInk;
     final dark = Theme.of(context).brightness == Brightness.dark;
     final railSurface = dark ? editorial.surface : editorial.canvas;
     final buttonSurface = dark
@@ -109,63 +106,24 @@ class ScoreSidePanel extends StatelessWidget {
                   geometryKey: scoreButtonKeys?[points],
                   onPressed: () => onScore(points),
                 ),
-              if (missEnabled && onMiss != null)
-                SizedBox(
-                  width: actionWidth,
-                  height: buttonHeight,
-                  child: OutlinedButton(
-                    key: Key('${side.name}-miss'),
-                    onPressed: onMiss,
-                    style: _editorialRailButtonStyle(
-                      color,
-                      backgroundColor: buttonSurface,
-                      ruleColor: editorial.rule,
-                      disabledColor: disabledColor,
-                      height: buttonHeight,
-                      padding: EdgeInsets.zero,
-                    ),
-                    child: _TeamActionLabel(
-                      side: side,
-                      color: color,
-                      child: _CompactActionLabel(l10n.scoringMissed),
-                    ),
-                  ),
-                ),
-              SizedBox(
+              _MissAction(
+                side: side,
+                teamLabel: teamLabel ?? name,
                 width: actionWidth,
                 height: buttonHeight,
-                child: Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    Positioned.fill(
-                      child: Opacity(
-                        opacity: foulEnabled ? 1 : 0.48,
-                        child: OutlinedButton(
-                          key: Key('${side.name}-foul'),
-                          onPressed: foulEnabled ? onFoul : null,
-                          style: _editorialRailButtonStyle(
-                            editorial.ink,
-                            backgroundColor: buttonSurface,
-                            ruleColor: editorial.arenaAccent,
-                            disabledColor: disabledColor,
-                            height: buttonHeight,
-                            padding: EdgeInsets.zero,
-                          ),
-                          child: _TeamActionLabel(
-                            side: side,
-                            color: editorial.arenaAccent,
-                            child: _CompactActionLabel(l10n.scoringFoul),
-                          ),
-                        ),
-                      ),
-                    ),
-                    if (foulStamp)
-                      _FoulStamp(
-                        key: ValueKey('foul-stamp-$foulStampVersion'),
-                        reduceMotion: reduceMotion,
-                      ),
-                  ],
-                ),
+                color: color,
+                buttonSurface: buttonSurface,
+                ruleColor: editorial.rule,
+                compact: true,
+                enabled: missEnabled,
+                locationActive: locationPoints == 0,
+                locationRemainingSeconds: locationPoints == 0
+                    ? locationRemainingSeconds
+                    : null,
+                locationRevealDuration: locationRevealDuration,
+                reduceMotion: reduceMotion,
+                geometryKey: missButtonKey,
+                onPressed: onMiss,
               ),
             ];
 
@@ -174,7 +132,12 @@ class ScoreSidePanel extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _RailFoulSummary(foulsLabel: '${l10n.scoringFoul} $fouls'),
+                  _RailFoulSummary(
+                    foulsLabel: '${l10n.scoringFoul} $fouls',
+                    foulStamp: foulStamp,
+                    foulStampVersion: foulStampVersion,
+                    reduceMotion: reduceMotion,
+                  ),
                   const SizedBox(height: 4),
                   Expanded(
                     child: LayoutBuilder(
@@ -225,7 +188,12 @@ class ScoreSidePanel extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _RailFoulSummary(foulsLabel: '${l10n.scoringFoul} $fouls'),
+                    _RailFoulSummary(
+                      foulsLabel: '${l10n.scoringFoul} $fouls',
+                      foulStamp: foulStamp,
+                      foulStampVersion: foulStampVersion,
+                      reduceMotion: reduceMotion,
+                    ),
                     for (final points in scoreButtons)
                       _ScoreAction(
                         side: side,
@@ -247,53 +215,24 @@ class ScoreSidePanel extends StatelessWidget {
                         geometryKey: scoreButtonKeys?[points],
                         onPressed: () => onScore(points),
                       ),
-                    if (missEnabled && onMiss != null)
-                      SizedBox(
-                        height: buttonHeight,
-                        child: OutlinedButton.icon(
-                          key: Key('${side.name}-miss'),
-                          onPressed: onMiss,
-                          style: _editorialRailButtonStyle(
-                            color,
-                            backgroundColor: buttonSurface,
-                            ruleColor: editorial.rule,
-                            disabledColor: disabledColor,
-                            height: buttonHeight,
-                          ),
-                          icon: const Icon(Icons.close, size: 18),
-                          label: Text(l10n.scoringMissed),
-                        ),
-                      ),
-                    SizedBox(
+                    _MissAction(
+                      side: side,
+                      teamLabel: teamLabel ?? name,
+                      width: double.infinity,
                       height: buttonHeight,
-                      child: Stack(
-                        alignment: Alignment.topRight,
-                        children: [
-                          Positioned.fill(
-                            child: Opacity(
-                              opacity: foulEnabled ? 1 : 0.48,
-                              child: OutlinedButton.icon(
-                                key: Key('${side.name}-foul'),
-                                onPressed: foulEnabled ? onFoul : null,
-                                style: _editorialRailButtonStyle(
-                                  editorial.ink,
-                                  backgroundColor: buttonSurface,
-                                  ruleColor: editorial.arenaAccent,
-                                  disabledColor: disabledColor,
-                                  height: buttonHeight,
-                                ),
-                                icon: const Icon(Icons.flag_outlined, size: 18),
-                                label: Text(l10n.scoringFoul),
-                              ),
-                            ),
-                          ),
-                          if (foulStamp)
-                            _FoulStamp(
-                              key: ValueKey('foul-stamp-$foulStampVersion'),
-                              reduceMotion: reduceMotion,
-                            ),
-                        ],
-                      ),
+                      color: color,
+                      buttonSurface: buttonSurface,
+                      ruleColor: editorial.rule,
+                      compact: false,
+                      enabled: missEnabled,
+                      locationActive: locationPoints == 0,
+                      locationRemainingSeconds: locationPoints == 0
+                          ? locationRemainingSeconds
+                          : null,
+                      locationRevealDuration: locationRevealDuration,
+                      reduceMotion: reduceMotion,
+                      geometryKey: missButtonKey,
+                      onPressed: onMiss,
                     ),
                   ],
                 ),
@@ -302,6 +241,107 @@ class ScoreSidePanel extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _MissAction extends StatelessWidget {
+  const _MissAction({
+    required this.side,
+    required this.teamLabel,
+    required this.width,
+    required this.height,
+    required this.color,
+    required this.buttonSurface,
+    required this.ruleColor,
+    required this.compact,
+    required this.enabled,
+    required this.locationActive,
+    required this.locationRemainingSeconds,
+    required this.locationRevealDuration,
+    required this.reduceMotion,
+    required this.geometryKey,
+    required this.onPressed,
+  });
+
+  final TeamSide side;
+  final String teamLabel;
+  final double width;
+  final double height;
+  final Color color;
+  final Color buttonSurface;
+  final Color ruleColor;
+  final bool compact;
+  final bool enabled;
+  final bool locationActive;
+  final int? locationRemainingSeconds;
+  final Duration locationRevealDuration;
+  final bool reduceMotion;
+  final GlobalKey? geometryKey;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
+    final remaining = locationRemainingSeconds;
+    final semantic = locationActive && remaining != null
+        ? l10n.scoringMissLocationPendingSemantics(remaining, teamLabel)
+        : l10n.scoringMissSemantics(teamLabel);
+    final label = _TeamActionLabel(
+      side: side,
+      color: color,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.close, size: 17),
+          const SizedBox(width: 4),
+          _CompactActionLabel(l10n.scoringMissed),
+          if (locationActive) ...[
+            const SizedBox(width: 4),
+            const Icon(Icons.location_on_outlined, size: 17),
+            if (remaining != null) Text('$remaining'),
+          ],
+        ],
+      ),
+    );
+    final button = SizedBox(
+      key: geometryKey,
+      width: width,
+      height: height,
+      child: Semantics(
+        label: semantic,
+        button: true,
+        enabled: enabled,
+        child: Opacity(
+          opacity: enabled ? 1 : 0.48,
+          child: OutlinedButton(
+            key: Key('${side.name}-miss'),
+            onPressed: enabled ? onPressed : null,
+            style: _editorialRailButtonStyle(
+              color,
+              backgroundColor: buttonSurface,
+              ruleColor: ruleColor,
+              disabledColor: editorialThemeOf(context).mutedInk,
+              height: height,
+              padding: compact ? EdgeInsets.zero : null,
+              emphasizedBorder: locationActive,
+            ),
+            child: FittedBox(fit: BoxFit.scaleDown, child: label),
+          ),
+        ),
+      ),
+    );
+    if (!locationActive) return button;
+    return AnimatedContainer(
+      key: Key('${side.name}-miss-location-affordance'),
+      duration: locationRevealDuration,
+      curve: Curves.easeOut,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withValues(alpha: 0.35), width: 2),
+      ),
+      child: button,
     );
   }
 }
@@ -420,7 +460,7 @@ class _ScoreActionState extends State<_ScoreAction> {
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1,
         duration:
-            Theme.of(context).extension<HoopTraceMotionTheme>()?.press ??
+            Theme.of(context).extension<HoopitoMotionTheme>()?.press ??
             const Duration(milliseconds: 90),
         child: button,
       ),
@@ -537,25 +577,47 @@ class _CompactActionLabel extends StatelessWidget {
 }
 
 class _RailFoulSummary extends StatelessWidget {
-  const _RailFoulSummary({required this.foulsLabel});
+  const _RailFoulSummary({
+    required this.foulsLabel,
+    required this.foulStamp,
+    required this.foulStampVersion,
+    required this.reduceMotion,
+  });
 
   final String foulsLabel;
+  final bool foulStamp;
+  final int foulStampVersion;
+  final bool reduceMotion;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 20,
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Text(
-          foulsLabel,
-          maxLines: 1,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: editorialThemeOf(context).mutedInk,
-            fontWeight: FontWeight.w700,
-            fontFeatures: const [FontFeature.tabularFigures()],
+      child: Stack(
+        alignment: Alignment.center,
+        clipBehavior: Clip.none,
+        children: [
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              foulsLabel,
+              maxLines: 1,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: editorialThemeOf(context).mutedInk,
+                fontWeight: FontWeight.w700,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
           ),
-        ),
+          if (foulStamp)
+            Positioned(
+              right: 0,
+              child: _FoulStamp(
+                key: ValueKey('foul-stamp-$foulStampVersion'),
+                reduceMotion: reduceMotion,
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -568,7 +630,6 @@ class _FoulStamp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
     final editorial = editorialThemeOf(context);
     final stamp = DecoratedBox(
       key: const Key('scoring-foul-stamp'),
@@ -579,7 +640,7 @@ class _FoulStamp extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
         child: Text(
-          l10n.scoringFoul,
+          '+1',
           style: TextStyle(
             color: const Color(0xFF101112),
             fontSize: 12,
@@ -593,8 +654,8 @@ class _FoulStamp extends StatelessWidget {
     return IgnorePointer(
       child: TweenAnimationBuilder<double>(
         duration:
-            Theme.of(context).extension<HoopTraceMotionTheme>()?.foulStamp ??
-            Duration.zero,
+            Theme.of(context).extension<HoopitoMotionTheme>()?.foulStamp ??
+            const Duration(milliseconds: 180),
         tween: Tween(begin: 0.65, end: 1),
         builder: (context, scale, child) => Transform.scale(
           scale: scale,

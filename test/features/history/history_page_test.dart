@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/features/history/history_controller.dart';
-import 'package:hooptrace/features/history/history_page.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/features/history/history_controller.dart';
+import 'package:hoopito/features/history/history_page.dart';
 
 void main() {
   testWidgets('shows recent match details and returns tapped match id', (

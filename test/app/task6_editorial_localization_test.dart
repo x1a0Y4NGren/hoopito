@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_en.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/app/l10n/rule_template_localizations.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_en.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/app/l10n/rule_template_localizations.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
 
 void main() {
   test('Chinese draft warning says returning home', () {

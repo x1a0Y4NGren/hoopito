@@ -1,6 +1,6 @@
 # HoopTrace Editorial UI Redesign Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:test-driven-development` for behavior changes. Do not spawn additional agents. Work only in the worktree assigned by the controller, commit the completed task, and write the requested report.
+> Historical editorial redesign plan, not a current assignment. Execution instructions and checkboxes below describe that task only; see [history scope](../README.md).
 
 **Goal:** Replace HoopTrace's warm-paper/doodle interface with a unified, premium “black-court editorial desk” visual system across every screen while preserving all scoring, persistence, routing, accessibility, and localization behavior.
 

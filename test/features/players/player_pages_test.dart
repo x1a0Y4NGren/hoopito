@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/data/repositories/player_repository.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/players/player_editor_page.dart';
-import 'package:hooptrace/features/players/player_list_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/data/repositories/player_repository.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/players/player_editor_page.dart';
+import 'package:hoopito/features/players/player_list_page.dart';
 
 import '../../test_helpers/test_database.dart';
 
@@ -36,7 +36,7 @@ void main() {
           final mediaQuery = MediaQuery(
             data: const MediaQueryData(textScaler: TextScaler.linear(2)),
             child: MaterialApp(
-              theme: buildHoopTraceTheme(brightness: brightness),
+              theme: buildHoopitoTheme(brightness: brightness),
               locale: locale,
               localizationsDelegates: const [
                 AppLocalizations.delegate,
@@ -68,7 +68,7 @@ void main() {
             MediaQuery(
               data: const MediaQueryData(textScaler: TextScaler.linear(2)),
               child: MaterialApp(
-                theme: buildHoopTraceTheme(brightness: brightness),
+                theme: buildHoopitoTheme(brightness: brightness),
                 locale: locale,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
@@ -108,7 +108,7 @@ void main() {
     var edits = 0;
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: PlayerListPage(
           repository: repository,
           onCreate: () {},
@@ -134,7 +134,7 @@ void main() {
     var saved = false;
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: PlayerEditorPage(
           repository: PlayerRepository(database),
           onSaved: () => saved = true,
@@ -206,7 +206,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: PlayerListPage(
           repository: repository,
           onCreate: () {},
@@ -251,7 +251,7 @@ void main() {
     for (final brightness in Brightness.values) {
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(brightness: brightness),
+          theme: buildHoopitoTheme(brightness: brightness),
           home: PlayerListPage(
             repository: repository,
             onCreate: () {},
@@ -410,6 +410,10 @@ void main() {
     final repository = PlayerRepository(database);
     var editCalls = 0;
     var analyticsCalls = 0;
+    addTearDown(() async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await database.close();
+    });
     await repository.save(
       Player(
         id: 'large-text-player',
@@ -421,16 +425,19 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MediaQuery(
-        data: const MediaQueryData(textScaler: TextScaler.linear(2)),
-        child: MaterialApp(
-          theme: buildHoopTraceTheme(),
-          home: PlayerListPage(
-            repository: repository,
-            onCreate: () {},
-            onEdit: (_) => editCalls++,
-            onViewAnalytics: (_) => analyticsCalls++,
-          ),
+      MaterialApp(
+        theme: buildHoopitoTheme(),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: const TextScaler.linear(2)),
+          child: child!,
+        ),
+        home: PlayerListPage(
+          repository: repository,
+          onCreate: () {},
+          onEdit: (_) => editCalls++,
+          onViewAnalytics: (_) => analyticsCalls++,
         ),
       ),
     );
@@ -448,11 +455,10 @@ void main() {
     await tester.tap(
       find.byKey(const ValueKey('player-analytics-large-text-player')),
     );
+    expect(editCalls, 1);
+    expect(analyticsCalls, 0);
+    await tester.tap(find.text('很长的球员昵称用于大字号列表'));
     expect(analyticsCalls, 1);
-    await tester.tap(
-      find.byKey(const ValueKey('player-row-large-text-player')),
-      warnIfMissed: false,
-    );
     expect(editCalls, 1);
   });
 

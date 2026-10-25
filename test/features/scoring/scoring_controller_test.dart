@@ -1,18 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:hooptrace/core/audit/audit_log_entry.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/rules/rule_engine.dart';
-import 'package:hooptrace/core/domain/scoring/score_state.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
+import 'package:hoopito/core/audit/audit_log_entry.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/rules/rule_engine.dart';
+import 'package:hoopito/core/domain/scoring/score_state.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
 
 import '../../test_helpers/test_database.dart';
 
@@ -847,6 +847,72 @@ void main() {
     expect(controller.state.blueFouls, 0);
   });
 
+  test(
+    'live undo covers foul, possession, note, and custom events locally',
+    () async {
+      final controller = ScoringController(matchId: 'local-all-undo');
+
+      expect(await controller.recordFoulCommitted(TeamSide.red), isTrue);
+      expect(await controller.recordPossessionCommitted(TeamSide.blue), isTrue);
+      expect(
+        await controller.recordNoteCommitted('Timeout adjustment'),
+        isTrue,
+      );
+      expect(
+        await controller.recordCustomCommitted(label: 'Lineup change'),
+        isTrue,
+      );
+
+      expect(await controller.undoLastScoringActionCommitted(), isTrue);
+      expect(
+        controller.state.events
+            .singleWhere((event) => event.type == EventKind.custom)
+            .isDeleted,
+        isTrue,
+      );
+      expect(await controller.undoLastScoringActionCommitted(), isTrue);
+      expect(
+        controller.state.events
+            .singleWhere((event) => event.type == EventKind.note)
+            .isDeleted,
+        isTrue,
+      );
+      expect(await controller.undoLastScoringActionCommitted(), isTrue);
+      expect(controller.currentPossession, isNull);
+      expect(await controller.undoLastScoringActionCommitted(), isTrue);
+      expect(controller.state.redFouls, 0);
+      expect(await controller.undoLastScoringActionCommitted(), isFalse);
+    },
+  );
+
+  test(
+    'local undo preserves action order around location supplements',
+    () async {
+      final controller = ScoringController(
+        matchId: 'local-location-action-order',
+        nowUtc: () => DateTime.utc(2026, 8, 25, 12),
+      );
+      expect(
+        await controller.recordScoreCommitted(side: TeamSide.red, points: 2),
+        isTrue,
+      );
+      expect(
+        await controller.attachSupplementLocation(CourtPoint(x: 0.4, y: 0.6)),
+        isTrue,
+      );
+      expect(await controller.recordFoulCommitted(TeamSide.blue), isTrue);
+
+      expect(await controller.undoLastScoringActionCommitted(), isTrue);
+      expect(controller.state.blueFouls, 0);
+      expect(controller.state.shotLocations, hasLength(1));
+      expect(controller.state.score.redScore, 2);
+
+      expect(await controller.undoLastScoringActionCommitted(), isTrue);
+      expect(controller.state.shotLocations, isEmpty);
+      expect(controller.state.score.redScore, 2);
+    },
+  );
+
   test('target score setup produces rule hints while scoring', () {
     final controller = ScoringController(
       setup: const MatchSetup(
@@ -1207,6 +1273,7 @@ void main() {
           points: 2,
         );
         await entered.future;
+        final notificationsBeforeDispose = notifications;
         controller.dispose();
         release.complete();
 
@@ -1217,7 +1284,7 @@ void main() {
           )..where((row) => row.matchId.equals(start.match.id))).get(),
           hasLength(1),
         );
-        expect(notifications, 0);
+        expect(notifications, notificationsBeforeDispose);
       });
     },
   );

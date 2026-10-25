@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
 
 class RuleTemplateRepository {
   RuleTemplateRepository(this._database);

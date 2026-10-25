@@ -1,0 +1,115 @@
+.community {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: clamp(40px, 7vw, 120px);
+  padding-block: clamp(56px, 7vw, 112px);
+  border-top: 1px solid var(--line);
+  scroll-margin-top: calc(var(--header) + 24px);
+}
+.community-copy {
+  min-width: 0;
+}
+.community h2 {
+  margin-block: 18px 24px;
+  max-width: 12em;
+  font-size: clamp(2rem, 3.4vw, 3.8rem);
+  text-wrap: balance;
+}
+.community-description {
+  max-width: 35em;
+  color: var(--muted);
+  font-size: 1rem;
+}
+.community h2 > span {
+  display: block;
+}
+.community-number {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-block: 30px 18px;
+}
+.community-number > span {
+  color: var(--orange);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+.community-number strong {
+  max-width: 100%;
+  color: var(--paper);
+  font-size: clamp(2.7rem, 5vw, 5rem);
+  line-height: 1.15;
+  letter-spacing: 0.025em;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.community-instructions {
+  max-width: 35em;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.community-save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  min-height: 48px;
+  margin-block: 14px 12px;
+  padding-block: 8px;
+  color: var(--orange);
+  border-bottom: 1px solid #ee956c66;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+.community-save:hover {
+  color: var(--paper);
+  border-color: var(--paper);
+}
+.community-note {
+  max-width: 40em;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.community-artwork {
+  width: min(100%, 480px);
+  justify-self: end;
+}
+.community-poster-link {
+  display: block;
+  min-width: 48px;
+  min-height: 48px;
+}
+.community-poster-link img {
+  width: 100%;
+  aspect-ratio: 1;
+}
+.community-artwork figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 20px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+.community-artwork figcaption .display {
+  color: var(--orange);
+  letter-spacing: 0.08em;
+}
+@media (max-width: 767px) {
+  .community {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .community-artwork {
+    justify-self: start;
+    width: min(100%, 400px);
+  }
+  .community-number strong {
+    font-size: clamp(2.7rem, 11vw, 4rem);
+  }
+}

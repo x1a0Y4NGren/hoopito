@@ -3,11 +3,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/features/project/external_link_launcher.dart';
-import 'package:hooptrace/features/project/project_details_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/features/project/external_link_launcher.dart';
+import 'package:hoopito/features/project/project_details_page.dart';
 
 class RecordingLauncher extends ExternalLinkLauncher {
   final opened = <String>[];
@@ -36,7 +36,7 @@ void main() {
     expect(find.byType(EditorialScaffold), findsOneWidget);
     expect(find.byType(EditorialMasthead), findsOneWidget);
     expect(find.text('About'), findsOneWidget);
-    expect(find.text('HOOPTRACE'), findsOneWidget);
+    expect(find.text('Hoopito · 球豆'), findsOneWidget);
   });
 
   testWidgets('project details stays usable across visual matrix', (
@@ -57,7 +57,7 @@ void main() {
             MediaQuery(
               data: const MediaQueryData(textScaler: TextScaler.linear(2)),
               child: MaterialApp(
-                theme: buildHoopTraceTheme(brightness: brightness),
+                theme: buildHoopitoTheme(brightness: brightness),
                 locale: locale,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
@@ -104,7 +104,7 @@ void main() {
     final launcher = RecordingLauncher();
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         locale: const Locale('en'),
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -190,7 +190,7 @@ void main() {
 
     await tester.tap(find.text(l10n.projectGitHub));
     await tester.pump();
-    expect(launcher.opened, [hoopTraceRepositoryUrl]);
+    expect(launcher.opened, [hoopitoRepositoryUrl]);
   });
 }
 

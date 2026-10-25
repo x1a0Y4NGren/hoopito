@@ -1,11 +1,11 @@
 import 'package:drift/drift.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics_calculator.dart';
-import 'package:hooptrace/core/domain/analytics/player_career_aggregate.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics_calculator.dart';
+import 'package:hoopito/core/domain/analytics/player_career_aggregate.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 /// Reads profile-linked career analytics from one bounded CTE query.
 ///
@@ -266,12 +266,12 @@ class PlayerCareerRepository {
   }
 
   static double? _percentage(_MatchCareer match) {
-    final attempts = match.fieldGoalAttempts + match.freeThrowAttempts;
+    final attempts = match.fieldGoalAttempts;
     if (attempts == 0 ||
         match.trackingCoverage.index < TrackingCoverage.shotAttempts.index) {
       return null;
     }
-    return (match.fieldGoalMade + match.freeThrowMade) / attempts;
+    return match.fieldGoalMade / attempts;
   }
 
   static TrackingCoverage _trackingCoverage(String value) {

@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
 
 void main() {
   test(
     'explicit file database opens through the production background executor',
     () async {
       final directory = await Directory.systemTemp.createTemp(
-        'hooptrace-task15-db-',
+        'hoopito-task15-db-',
       );
       final database = openAppDatabaseAt(
         File('${directory.path}${Platform.pathSeparator}hooptrace.sqlite'),

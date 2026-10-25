@@ -1,5 +1,7 @@
 # 发布与质量支线
 
+> 历史首发任务，非当前待办；使用边界见 [README](README.md)。
+
 - 中文名：发布与质量支线
 - Branch：`codex/release-ci`
 - Worktree：`.worktrees/release-ci`

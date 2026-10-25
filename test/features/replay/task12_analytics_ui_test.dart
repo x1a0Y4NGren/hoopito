@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/replay/widgets/replay_analytics_summary.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/replay/widgets/replay_analytics_summary.dart';
 
 void main() {
   testWidgets('replay analytics presents flow, attempts, coverage, and zones', (
@@ -16,8 +16,8 @@ void main() {
       leadChanges: 2,
       madeShotCount: 3,
       missedShotCount: 2,
-      shootingPercentage: .6,
-      recordedShootingPercentage: .6,
+      shootingPercentage: .5,
+      recordedShootingPercentage: .5,
       shootingPercentageIsTrustworthy: true,
       trackingCoverage: TrackingCoverage.full,
       fieldGoalMadeCount: 2,
@@ -61,10 +61,11 @@ void main() {
     expect(find.text('犯规'), findsOneWidget);
     expect(find.text('球权'), findsOneWidget);
     expect(find.text('记录完整度'), findsOneWidget);
-    expect(find.text('位置覆盖'), findsOneWidget);
+    expect(find.text('已确认落点 / 已记录运动战出手'), findsOneWidget);
     expect(find.text('出手区域'), findsOneWidget);
     expect(find.textContaining('油漆区'), findsOneWidget);
-    expect(find.text('60% · 3/6'), findsOneWidget);
+    expect(find.text('50% · 2/4'), findsOneWidget);
+    expect(find.text('50% · 1/2'), findsOneWidget);
     expect(find.text('3/4'), findsOneWidget);
     expect(find.text('3/6'), findsNothing);
     expect(tester.takeException(), isNull);
@@ -84,6 +85,8 @@ void main() {
       recordedShootingPercentage: null,
       shootingPercentageIsTrustworthy: false,
       trackingCoverage: TrackingCoverage.scoresOnly,
+      fieldGoalMadeCount: 4,
+      fieldGoalAttemptCount: 4,
       keyPossessions: const [],
     );
 
@@ -100,7 +103,7 @@ void main() {
     );
 
     expect(find.textContaining('%'), findsNothing);
-    expect(find.textContaining('记录的出手'), findsOneWidget);
+    expect(find.textContaining('运动战出手'), findsWidgets);
     expect(find.textContaining('4'), findsWidgets);
   });
 

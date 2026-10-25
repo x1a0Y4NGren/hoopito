@@ -1,0 +1,18 @@
+{
+  "concept": "C · one-eyed basketball creature",
+  "approvedBy": "User in this conversation",
+  "approvalDate": "2026-10-04",
+  "tool": "Built-in ImageGen",
+  "intent": "Edit approved C into a transparent production source, preserve character geometry and black details",
+  "referenceFile": "exec-d240901c-0200-4dc8-9ebb-f0e5777a887a.png",
+  "generatedFile": "exec-0a1c66e4-34cb-4963-b56d-f82a60ff0021.png",
+  "projectSource": "hooptrace-c-imagegen-source.png",
+  "projectSourceSha256": "5a7db317cd403ad261b1fdf319b7d84e27ddaa35eb9aa3338247e69c725d6e47",
+  "normalizedForegroundSha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8",
+  "palette": [
+    "#FF5A1F",
+    "#101112",
+    "#F4F3EF"
+  ],
+  "prompt": "Use case: logo-brand production cutout. Edit the provided approved HoopTrace concept C only. Preserve this exact one-eyed basketball creature: its asymmetrical softly lobed orange spherical silhouette, large warm-white oval eye and oversized near-black pupil looking upper-right with the same small warm-white glint, curved mischievous black smile, and two bold simplified basketball seams. Keep its personality, pose, geometry and proportions faithful to the reference. Remove the entire near-black background outside the creature and output TRUE ALPHA TRANSPARENCY, not a checkerboard, not a black field. Crucially PRESERVE all black facial details and the black seam lines as opaque near-black ink, including the pupil. Use strictly flat solid arena orange #FF5A1F, near-black #101112, warm white #F4F3EF; clean smooth antialiased edges, no grain or texture, no highlights other than the existing eye glint. Square 1024 or larger canvas, centered complete creature with generous clear margins. No extra elements, no text, no limbs, no new outline around the entire body, no hoop, no shadow, no gradient, no 3D, no badge background. This is asset preparation of an already approved design, not a redesign."
+}

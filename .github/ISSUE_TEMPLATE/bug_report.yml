@@ -1,5 +1,5 @@
 name: Bug report / 缺陷报告
-description: Report a reproducible HoopTrace problem / 报告可复现问题
+description: Report a reproducible Hoopito · 球豆 problem / 报告可复现问题
 title: "[Bug]: "
 labels: [bug, needs-triage]
 body:

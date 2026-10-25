@@ -1,0 +1,98 @@
+---
+import Icon from './Icon.astro';
+import { content, type Locale } from '../data/content';
+import { release } from '../data/release';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale].downloadChooser;
+const download = content[locale].download;
+---
+
+<dialog
+  id="download-dialog"
+  class="download-chooser"
+  data-download-dialog
+  aria-labelledby="download-dialog-title"
+  aria-describedby="download-dialog-description"
+>
+  <header class="download-chooser-header">
+    <span class="eyebrow">HOOPITO / ANDROID</span>
+    <button type="button" data-download-close aria-label={c.close} autofocus>
+      <Icon name="plus" />
+    </button>
+  </header>
+  <h2 id="download-dialog-title">{c.title}</h2>
+  <p id="download-dialog-description" class="download-chooser-description">
+    {c.description}
+  </p>
+  <div class="download-chooser-version">
+    <span>v{release.version}</span>
+    <span>
+      {download.size.replace(
+        '{size}',
+        String(Math.round(release.apkBytes / 1024 / 1024)),
+      )}
+    </span>
+    <span>{download.system.replace('{version}', release.minimumAndroid)}</span>
+  </div>
+  <div class="download-channel-list">
+    <div class="download-channel-group">
+      <a
+        class="download-channel download-channel-domestic"
+        data-download-channel="lanzou"
+        href={release.lanzouUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-describedby="download-lanzou-password"
+      >
+        <span class="download-channel-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M7 18h11a4 4 0 0 0 .5-8A6.5 6.5 0 0 0 6 8a5 5 0 0 0 1 10Z" />
+          </svg>
+        </span>
+        <span class="download-channel-copy">
+          <strong>{c.lanzou}</strong>
+          <span class="download-channel-description">
+            {c.lanzouDescription}
+          </span>
+        </span>
+        <Icon name="arrow" />
+      </a>
+      <p
+        id="download-lanzou-password"
+        class="download-channel-password"
+        data-download-password
+      >
+        <span>{c.password}</span>
+        <code>{release.lanzouPassword}</code>
+      </p>
+    </div>
+    <a
+      class="download-channel"
+      data-download-channel="github"
+      href={release.upstreamApkUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="download-channel-icon">
+        <Icon name="github" />
+      </span>
+      <span class="download-channel-copy">
+        <strong>{c.github}</strong>
+        <span class="download-channel-description">{c.githubDescription}</span>
+      </span>
+      <Icon name="download" />
+    </a>
+  </div>
+  <p class="download-chooser-note">{c.note}</p>
+</dialog>

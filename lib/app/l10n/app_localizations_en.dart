@@ -9,13 +9,192 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'HoopTrace';
+  String get v2Saving => 'Saving';
+
+  @override
+  String get v2Saved => 'Saved on device';
+
+  @override
+  String get v2SaveFailed => 'Save failed; retry';
+
+  @override
+  String get v2LastAction => 'Last action';
+
+  @override
+  String v2GrowthChartRange(int count, int total) {
+    return 'Showing the latest $count of $total games';
+  }
+
+  @override
+  String get v2SafetyWriteError =>
+      'The safety copy could not be saved and verified. Current data was preserved. Check device storage and try again.';
+
+  @override
+  String get v2SafetyLoadError => 'Safety copies could not be read. Try again.';
+
+  @override
+  String get v2BackupRows => 'rows';
+
+  @override
+  String v2BackupCapacityError(String measured, String limit) {
+    return 'Backup exceeds supported capacity ($measured; limit $limit). Original data is preserved.';
+  }
+
+  @override
+  String get v2SwapSides => 'Swap sides';
+
+  @override
+  String get v2PresetApplied =>
+      'Players and rules copied; adjust before starting';
+
+  @override
+  String get v2RulesSummary => 'Rule summary';
+
+  @override
+  String get v2StartFailed => 'Could not start the match. Try again.';
+
+  @override
+  String get v2PointsDifference => 'Points difference · last two games';
+
+  @override
+  String get v2MarginDifference => 'Margin change · last two games';
+
+  @override
+  String get v2Matches => 'Matches';
+
+  @override
+  String get v2RecentMatches => 'Recent matches';
+
+  @override
+  String get v2RecentPreset => 'Use last match setup';
+
+  @override
+  String get v2Result => 'Result';
+
+  @override
+  String get v2Rematch => 'Play again';
+
+  @override
+  String get v2Share => 'Share report';
+
+  @override
+  String get v2Replay => 'Full replay';
+
+  @override
+  String get v2CoverageTitle => 'Recording scope';
+
+  @override
+  String get v2CoverageScores => 'Mainly scores';
+
+  @override
+  String get v2CoverageComplete => 'Every shot recorded';
+
+  @override
+  String get v2CoverageHelp =>
+      'Confirm only when every attempt, including misses, was recorded. Choose mainly scores if attempts were missed.';
+
+  @override
+  String get v2CorrectCoverage => 'Correct recording scope';
+
+  @override
+  String get v2CoverageReason => 'Recording scope correction';
+
+  @override
+  String get v2FieldGoalPercentage => 'FG%';
+
+  @override
+  String get v2FreeThrowPercentage => 'FT%';
+
+  @override
+  String get v2RecordedSample => 'Charts show recorded attempts only';
+
+  @override
+  String get v2LocationScope =>
+      'Confirmed locations / recorded field goal attempts';
+
+  @override
+  String get v2SavePlayer => 'Save to player profile';
+
+  @override
+  String get v2CreatePlayer => 'Create player profile';
+
+  @override
+  String get v2SelectPlayer => 'Choose existing player';
+
+  @override
+  String get v2PlayerSaved => 'Profile linked; match name preserved';
+
+  @override
+  String get v2Retry => 'Retry';
+
+  @override
+  String get v2GuideTitle => 'Quick guide';
+
+  @override
+  String get v2GuideScore => 'Record scores';
+
+  @override
+  String get v2GuideScoreBody => 'Tap either side’s +1, +2 or +3 to score.';
+
+  @override
+  String get v2GuideLocation => 'Locations and misses';
+
+  @override
+  String get v2GuideLocationBody =>
+      'Tap the court first, or add a location within 10 seconds after scoring. Record misses too.';
+
+  @override
+  String get v2GuideUndo => 'Undo and finish';
+
+  @override
+  String get v2GuideUndoBody =>
+      'Undo restores the last action. Tap Finish at the top and confirm the recording scope.';
+
+  @override
+  String get v2GuideSkip => 'Skip';
+
+  @override
+  String get v2GuideNext => 'Next';
+
+  @override
+  String get v2GuideDone => 'Got it';
+
+  @override
+  String get v2AbandonedMatch => 'Match not finished';
+
+  @override
+  String get v2AbandonedMatchHelp =>
+      'You can replay the saved record. This match is excluded from completed-match statistics.';
+
+  @override
+  String get v2SafetyTitle => 'Restore safety copies';
+
+  @override
+  String get v2SafetyHelp =>
+      'Current data is protected before replacement or rollback. The two most recent copies are kept.';
+
+  @override
+  String get v2SafetyEmpty => 'No safety copies yet';
+
+  @override
+  String get v2SafetyRestore => 'Restore this copy';
+
+  @override
+  String get v2SafetyConfirm =>
+      'Restoring this copy replaces current data after saving another safety copy.';
+
+  @override
+  String get v2GrowthSample =>
+      'FG% in match order. Gaps mean incomplete recording or no attempts.';
+
+  @override
+  String get appName => 'Hoopito';
 
   @override
   String get startScoring => 'Start';
 
   @override
-  String get replayHistory => 'Replay History';
+  String get replayHistory => 'History';
 
   @override
   String get settings => 'Settings';
@@ -954,19 +1133,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayMoreActions => 'More actions';
 
   @override
-  String get legacyBootstrapTitle => 'HoopTrace data compatibility check';
+  String get legacyBootstrapTitle => 'Hoopito data compatibility check';
 
   @override
-  String get legacyBootstrapHeadline => 'Could not open HoopTrace v0.1 data';
+  String get legacyBootstrapHeadline => 'Could not open legacy v0.1 data';
 
   @override
   String legacyBootstrapBody(Object version) {
-    return 'An incompatible legacy database version$version was detected. The existing file will remain unchanged; HoopTrace will not silently migrate, delete, or clear it. Export or back up the old file first, then create new local data with this version.';
+    return 'An incompatible legacy database version$version was detected. The existing file will remain unchanged; Hoopito will not silently migrate, delete, or clear it. Export or back up the old file first, then create new local data with this version.';
   }
 
   @override
   String get bootstrapFailureBody =>
       'The local database could not be opened. Existing data was not modified. Try again later or create a new local database.';
+
+  @override
+  String get entryPreparingRecords => 'Opening local records…';
 
   @override
   String get settingsDefaultSection => 'Defaults';
@@ -1072,6 +1254,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsDataSection => 'Data';
 
   @override
+  String get settingsDataManagementTitle => 'Manage data and backups';
+
+  @override
+  String get settingsDataManagementSubtitle =>
+      'Export, restore, and automatic backups in one place';
+
+  @override
+  String get settingsManualDataSection => 'Export and restore';
+
+  @override
+  String get settingsAutomaticBackupSection => 'Automatic backup settings';
+
+  @override
+  String get settingsExportDataTitle => 'Export data';
+
+  @override
+  String get settingsExportDataSubtitle =>
+      'Choose a restorable JSON backup or CSV files for analysis';
+
+  @override
+  String get settingsExportDataDialogTitle => 'Choose export format';
+
+  @override
   String get settingsStatisticsSection => 'Statistics';
 
   @override
@@ -1149,7 +1354,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsBackupRetentionSubtitle =>
-      'Only HoopTrace automatic backups are cleaned up; manual and safety backups are kept';
+      'Only Hoopito automatic backups are cleaned up; manual and safety backups are kept';
 
   @override
   String get settingsPrivacySection => 'Privacy';
@@ -1184,7 +1389,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsProjectSection => 'Project';
 
   @override
-  String get settingsAboutTitle => 'About HoopTrace';
+  String get settingsAboutTitle => 'About Hoopito';
 
   @override
   String get settingsAboutSection => 'About';
@@ -1197,7 +1402,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsRestoreDialogTitle => 'Choose backup import mode';
 
   @override
-  String get settingsRestorePickerTitle => 'Choose a HoopTrace backup';
+  String get settingsRestorePickerTitle => 'Choose a Hoopito backup';
 
   @override
   String get settingsMergeTitle => 'Merge import (recommended)';
@@ -1221,7 +1426,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsReplaceConfirmBody =>
-      'After validation, HoopTrace will create a safety backup and atomically replace local data.';
+      'After validation, Hoopito will create a safety backup and atomically replace local data.';
 
   @override
   String get settingsReplaceConfirmAction => 'Choose backup';
@@ -1280,7 +1485,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsErrorFutureVersion =>
-      'This backup was created by a newer version; upgrade HoopTrace and try again';
+      'This backup was created by a newer version; upgrade Hoopito and try again';
 
   @override
   String get settingsErrorInvalidBackup =>
@@ -1324,7 +1529,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeActiveMatch => 'Match in progress';
 
   @override
-  String get homeClockNotConfigured => 'Timer not configured';
+  String get homeClockNotConfigured => 'Timer off';
 
   @override
   String get homeClockRegulationExpired => 'Regulation ended';
@@ -1336,7 +1541,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeClockPaused => 'Timer paused';
 
   @override
-  String get homeLastPersistedUnknown => 'Last saved: unknown';
+  String get homeLastPersistedUnknown => 'Last save time unavailable';
 
   @override
   String homeLastPersisted(Object date) {
@@ -1614,6 +1819,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pregameTargetScore => 'Target score';
 
   @override
+  String get pregameEditTargetScore => 'Edit target score';
+
+  @override
+  String get pregameConfirmTargetScore => 'Confirm';
+
+  @override
+  String pregameTargetScoreRange(int min, int max) {
+    return 'Enter a whole number from $min to $max';
+  }
+
+  @override
   String get pregamePoint => 'points';
 
   @override
@@ -1702,7 +1918,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String pregameNameSnapshot(Object side) {
-    return '$side name snapshot';
+    return '$side match name';
   }
 
   @override
@@ -1711,7 +1927,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pregameSnapshotHint =>
-      'The current display name is saved when the match starts.';
+      'Changing this match name does not change the player profile.';
 
   @override
   String get pregameRed => 'Red';
@@ -1759,7 +1975,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scoringMade => 'Made';
 
   @override
-  String get scoringMissed => 'Missed';
+  String get scoringMissed => 'Miss';
 
   @override
   String scoringPoints(Object points) {
@@ -2131,24 +2347,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectOpenBrowser => 'Open in browser';
 
   @override
-  String get exportBackupDialogTitle => 'Choose a HoopTrace backup';
+  String get exportBackupDialogTitle => 'Choose a Hoopito backup';
 
   @override
   String get exportAutomaticBackupDialogTitle =>
       'Choose an automatic backup folder';
 
   @override
-  String get exportFullBackupSubject => 'HoopTrace full local backup';
+  String get exportFullBackupSubject => 'Hoopito full local backup';
 
   @override
   String get exportSafetyBackupSubject =>
-      'HoopTrace safety backup before restore';
+      'Hoopito safety backup before restore';
 
   @override
-  String get exportCsvSubject => 'HoopTrace CSV export';
+  String get exportCsvSubject => 'Hoopito CSV export';
 
   @override
-  String get exportReplaySubject => 'HoopTrace match replay';
+  String get exportReplaySubject => 'Hoopito match replay';
 
   @override
   String get projectGitHub => 'GitHub';
@@ -2207,10 +2423,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scoringFoul => 'Foul';
 
   @override
+  String scoringFoulForSide(Object side) {
+    return '$side foul';
+  }
+
+  @override
   String get scoringMore => 'More';
 
   @override
   String get scoringShotsGroup => 'Shots';
+
+  @override
+  String get scoringShotDisplayGroup => 'Shot display';
+
+  @override
+  String scoringShowMissMarkers(Object side) {
+    return 'Show $side misses';
+  }
+
+  @override
+  String get scoringDisplayShown => 'Shown';
+
+  @override
+  String get scoringDisplayHidden => 'Hidden';
 
   @override
   String get scoringFreeThrowsGroup => 'Free throws';
@@ -2236,6 +2471,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String scoringMissSupplementPrompt(Object seconds, Object side) {
+    return 'Add $side miss location · ${seconds}s';
+  }
+
+  @override
   String get scoringSupplementExpired => 'Location supplement expired';
 
   @override
@@ -2250,5 +2490,15 @@ class AppLocalizationsEn extends AppLocalizations {
     Object side,
   ) {
     return '$side +$points, location pending $seconds seconds';
+  }
+
+  @override
+  String scoringMissSemantics(Object side) {
+    return '$side miss';
+  }
+
+  @override
+  String scoringMissLocationPendingSemantics(Object seconds, Object side) {
+    return '$side miss, location pending $seconds seconds';
   }
 }

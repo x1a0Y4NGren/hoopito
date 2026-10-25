@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart' hide ShotLocation;
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/entities/match.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/entities/shot_location.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/data/app_database.dart' hide ShotLocation;
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/entities/match.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/entities/shot_location.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 import '../../test_helpers/test_database.dart';
 

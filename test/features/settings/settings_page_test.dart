@@ -5,20 +5,64 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/export_coordinator.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/core/settings/language_preferences.dart';
-import 'package:hooptrace/core/settings/theme_preferences.dart';
-import 'package:hooptrace/features/settings/settings_controller.dart';
-import 'package:hooptrace/features/settings/settings_page.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/core/settings/language_preferences.dart';
+import 'package:hoopito/core/settings/theme_preferences.dart';
+import 'package:hoopito/features/settings/settings_controller.dart';
+import 'package:hoopito/features/settings/data_management_page.dart';
+import 'package:hoopito/features/settings/settings_page.dart';
 
 import '../../test_helpers/test_database.dart';
+import '../../test_helpers/safety_backup_storage.dart';
 
 void main() {
+  testWidgets(
+    'settings overview offers one data hub instead of duplicate actions',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(800, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final database = createTestDatabase();
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await database.close();
+      });
+      final codec = JsonBackupCodec(database, appVersion: '0.1.0+1');
+      final backup = AutomaticBackupService(
+        database,
+        codec,
+        storage: _Storage(),
+      );
+      final controller = SettingsController(
+        exports: ExportCoordinator(
+          database,
+          codec,
+          safetyBackups: createTestSafetyBackupStore(codec),
+          gateway: _Gateway(),
+          automaticBackup: backup,
+        ),
+        automaticBackup: backup,
+      );
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp(home: SettingsPage(controller: controller)),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('管理数据与备份'), findsOneWidget);
+      expect(find.text('规则模板'), findsNothing);
+      expect(find.text('导出完整备份'), findsNothing);
+      expect(find.text('导出 CSV'), findsNothing);
+      expect(find.text('从备份恢复'), findsNothing);
+      expect(find.byKey(const Key('automatic-backup-switch')), findsNothing);
+    },
+  );
+
   testWidgets('settings uses exactly five editorial groups in order', (
     tester,
   ) async {
@@ -39,6 +83,7 @@ void main() {
       exports: ExportCoordinator(
         database,
         codec,
+        safetyBackups: createTestSafetyBackupStore(codec),
         gateway: _Gateway(),
         automaticBackup: automaticBackup,
       ),
@@ -118,6 +163,7 @@ void main() {
         exports: ExportCoordinator(
           database,
           codec,
+          safetyBackups: createTestSafetyBackupStore(codec),
           gateway: _Gateway(),
           automaticBackup: automaticBackup,
         ),
@@ -125,6 +171,7 @@ void main() {
       );
       addTearDown(controller.dispose);
       var aboutCalls = 0;
+      var dataCalls = 0;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -139,36 +186,23 @@ void main() {
           home: SettingsPage(
             controller: controller,
             onOpenProject: () => aboutCalls += 1,
+            onOpenData: () => dataCalls += 1,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      final backupNow = find.byKey(const Key('settings-backup-now-row'));
-      await tester.scrollUntilVisible(backupNow, 300);
-      await tester.ensureVisible(backupNow);
-      final disabledSemantics = tester.getSemantics(backupNow);
-      expect(disabledSemantics.flagsCollection.isButton, isTrue);
-      expect(disabledSemantics.flagsCollection.isEnabled, ui.Tristate.isFalse);
+      final data = find.byKey(const Key('settings-data-row'));
+      await tester.scrollUntilVisible(data, 300);
+      await tester.ensureVisible(data);
+      expect(tester.getSemantics(data).flagsCollection.isButton, isTrue);
       expect(
-        disabledSemantics.getSemanticsData().hasAction(ui.SemanticsAction.tap),
-        isFalse,
+        tester.getSemantics(data).flagsCollection.isEnabled,
+        ui.Tristate.isTrue,
       );
-      expect(
-        find.descendant(
-          of: backupNow,
-          matching: find.byKey(const Key('setting-disabled-cue')),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(
-          of: backupNow,
-          matching: find.byIcon(Icons.arrow_forward),
-        ),
-        findsNothing,
-      );
-      expect(tester.getSize(backupNow).height, greaterThanOrEqualTo(48));
+      _expectSingleTapOwner(tester, data);
+      await tester.tap(data);
+      expect(dataCalls, 1);
 
       final about = find.byKey(const Key('settings-about-row'));
       await tester.scrollUntilVisible(about, 300);
@@ -184,109 +218,70 @@ void main() {
     },
   );
 
-  testWidgets('settings exposes usable local export and backup controls', (
-    tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(800, 1600));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    final database = createTestDatabase();
-    final gateway = _Gateway();
-    final storage = _Storage()..availableDirectories.add('/approved');
-    final codec = JsonBackupCodec(database, appVersion: '0.1.0+1');
-    final automaticBackup = AutomaticBackupService(
-      database,
-      codec,
-      storage: storage,
-    );
-    final feedback = ScoringFeedbackService(
-      ScoringFeedbackPreferencesRepository(database),
-    );
-    final controller = SettingsController(
-      exports: ExportCoordinator(
+  testWidgets(
+    'settings feedback switches persist after data actions move out',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(800, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final database = createTestDatabase();
+      final gateway = _Gateway();
+      final storage = _Storage()..availableDirectories.add('/approved');
+      final codec = JsonBackupCodec(database, appVersion: '0.1.0+1');
+      final automaticBackup = AutomaticBackupService(
         database,
         codec,
-        gateway: gateway,
+        storage: storage,
+      );
+      final feedback = ScoringFeedbackService(
+        ScoringFeedbackPreferencesRepository(database),
+      );
+      final controller = SettingsController(
+        exports: ExportCoordinator(
+          database,
+          codec,
+          safetyBackups: createTestSafetyBackupStore(codec),
+          gateway: gateway,
+          automaticBackup: automaticBackup,
+        ),
         automaticBackup: automaticBackup,
-      ),
-      automaticBackup: automaticBackup,
-      feedback: feedback,
-    );
-    addTearDown(controller.dispose);
+        feedback: feedback,
+      );
+      addTearDown(controller.dispose);
 
-    await tester.pumpWidget(
-      MaterialApp(home: SettingsPage(controller: controller)),
-    );
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        MaterialApp(home: SettingsPage(controller: controller)),
+      );
+      await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(
-      find.byKey(const Key('scoring-feedback-haptic-switch')),
-      240,
-    );
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('scoring-feedback-haptic-switch')),
+        240,
+      );
 
-    expect(
-      tester
-          .widget<SwitchListTile>(
-            find.byKey(const Key('scoring-feedback-haptic-switch')),
-          )
-          .value,
-      isTrue,
-    );
-    expect(
-      tester
-          .widget<SwitchListTile>(
-            find.byKey(const Key('scoring-feedback-sound-switch')),
-          )
-          .value,
-      isFalse,
-    );
-    await tester.tap(find.byKey(const Key('scoring-feedback-haptic-switch')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('scoring-feedback-sound-switch')));
-    await tester.pumpAndSettle();
-    expect((await feedback.load()).haptic, isFalse);
-    expect((await feedback.load()).sound, isTrue);
-
-    for (final title in [
-      '导出完整备份',
-      '从备份恢复',
-      '导出 CSV',
-      '自动备份',
-      '备份位置',
-      '立即备份',
-      '自动备份保留数量',
-    ]) {
-      await tester.scrollUntilVisible(find.text(title), 200);
-      expect(find.text(title), findsOneWidget);
-    }
-    expect(find.text('后续提供'), findsNothing);
-
-    await tester.scrollUntilVisible(find.text('从备份恢复'), 200);
-    await tester.tap(find.text('从备份恢复'));
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('backup-mode-merge')), findsOneWidget);
-    expect(find.byKey(const Key('backup-mode-replace')), findsOneWidget);
-    expect(find.textContaining('合并导入'), findsOneWidget);
-    expect(find.text('替换本机数据'), findsOneWidget);
-    await tester.tap(find.text('取消'));
-    await tester.pumpAndSettle();
-
-    await tester.ensureVisible(find.text('导出 CSV'));
-    await tester.tap(find.text('导出 CSV'));
-    await tester.pumpAndSettle();
-    expect(gateway.shareCalls, 1);
-
-    gateway.pickedDirectory = const BackupDirectorySelection(
-      reference: '/approved',
-      displayName: 'HoopTrace backups',
-    );
-    await tester.ensureVisible(
-      find.byKey(const Key('automatic-backup-switch')),
-    );
-    await tester.tap(find.byKey(const Key('automatic-backup-switch')));
-    await tester.pumpAndSettle();
-    expect(storage.writeCount, 1);
-    expect(find.text('已开启'), findsWidgets);
-  });
+      expect(
+        tester
+            .widget<SwitchListTile>(
+              find.byKey(const Key('scoring-feedback-haptic-switch')),
+            )
+            .value,
+        isTrue,
+      );
+      expect(
+        tester
+            .widget<SwitchListTile>(
+              find.byKey(const Key('scoring-feedback-sound-switch')),
+            )
+            .value,
+        isFalse,
+      );
+      await tester.tap(find.byKey(const Key('scoring-feedback-haptic-switch')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('scoring-feedback-sound-switch')));
+      await tester.pumpAndSettle();
+      expect((await feedback.load()).haptic, isFalse);
+      expect((await feedback.load()).sound, isTrue);
+    },
+  );
 
   testWidgets(
     'settings exposes localized motion preference and settings-only preview',
@@ -311,6 +306,7 @@ void main() {
         exports: ExportCoordinator(
           database,
           codec,
+          safetyBackups: createTestSafetyBackupStore(codec),
           gateway: _Gateway(),
           automaticBackup: automaticBackup,
         ),
@@ -426,6 +422,7 @@ void main() {
       exports: ExportCoordinator(
         database,
         codec,
+        safetyBackups: createTestSafetyBackupStore(codec),
         gateway: gateway,
         automaticBackup: automaticBackup,
       ),
@@ -442,7 +439,7 @@ void main() {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: SettingsPage(controller: controller),
+      home: DataManagementPage(controller: controller),
     );
 
     await tester.pumpWidget(app(const Locale('en')));
@@ -454,7 +451,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('backup-mode-merge')));
     await tester.pumpAndSettle();
-    expect(gateway.lastBackupDialogTitle, 'Choose a HoopTrace backup');
+    expect(gateway.lastBackupDialogTitle, 'Choose a Hoopito backup');
 
     final automaticBackupSwitch = find.byKey(
       const Key('automatic-backup-switch'),
@@ -495,6 +492,7 @@ void main() {
         exports: ExportCoordinator(
           database,
           codec,
+          safetyBackups: createTestSafetyBackupStore(codec),
           gateway: _Gateway(),
           automaticBackup: automaticBackup,
         ),
@@ -541,6 +539,7 @@ void main() {
       exports: ExportCoordinator(
         database,
         codec,
+        safetyBackups: createTestSafetyBackupStore(codec),
         gateway: _Gateway(),
         automaticBackup: automaticBackup,
       ),
@@ -614,6 +613,7 @@ void main() {
         exports: ExportCoordinator(
           database,
           codec,
+          safetyBackups: createTestSafetyBackupStore(codec),
           gateway: _Gateway(),
           automaticBackup: automaticBackup,
         ),

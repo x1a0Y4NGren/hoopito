@@ -1,14 +1,14 @@
 import 'package:drift/drift.dart';
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match.dart' as entities;
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/clock_state.dart';
-import 'package:hooptrace/core/domain/entities/active_session.dart'
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match.dart' as entities;
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/clock_state.dart';
+import 'package:hoopito/core/domain/entities/active_session.dart'
     as entity_active;
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 import '../../test_helpers/test_database.dart';
 import '../../generated_migrations/schema.dart';

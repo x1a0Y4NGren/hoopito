@@ -1,22 +1,22 @@
-# F-Droid Preparation Notes
+# Hoopito · 球豆 F-Droid Preparation Notes
 
-本文记录 HoopTrace 申请进入官方 F-Droid 仓库前的构建事实、隐私声明和剩余工作。它不是已经通过审核的 fdroiddata recipe。
+本文记录 Hoopito · 球豆申请进入官方 F-Droid 仓库前的构建事实、隐私声明和剩余工作。它不是已经通过审核的 fdroiddata recipe。改名与已发布版本的边界见[品牌与兼容性](../design/brand/naming-and-compatibility.md)。
 
 ## 应用身份
 
-- Name：HoopTrace
+- Name：Hoopito；中文名称：球豆；双语品牌：Hoopito · 球豆
 - Application ID：`io.github.x1a0y4ngren.hooptrace`
 - License：MIT
-- Source：`https://github.com/x1a0Y4NGren/hooptrace`
-- Issue tracker：`https://github.com/x1a0Y4NGren/hooptrace/issues`
-- Published Android release：`1.0.0`，versionCode `2`，Git tag `v1.0.0`；`0.1.0` 是已被取代的原型版本
+- Source：`https://github.com/x1a0Y4NGren/hoopito`
+- Issue tracker：`https://github.com/x1a0Y4NGren/hoopito/issues`
+- Published Android release：Hoopito · 球豆 `2.0.1`，versionCode `5`，Git tag `v2.0.1`；历史 HoopTrace `2.0.0` 为 versionCode `4`，`1.0.0` 为 versionCode `2`
 - Platform：Flutter，Android 优先
 
 Application ID 已脱离 Flutter 模板的 `com.example` 命名，并与 GitHub Pages 命名空间对应。v1.0.0 已正式发布后不可再更改。
 
 ## 当前发布状态
 
-v1.0.0 Android APK 已通过 GitHub Release 发布，发布提交对应 `v1.0.0` tag。本文是 F-Droid 准备记录，不代表已经进入官方 F-Droid 仓库；后续 F-Droid 工作仍需单独完成且不得改变已发布版本。
+Hoopito · 球豆 v2.0.1 Android 正式 APK 已通过 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1) 发布，公开文件为 `Hoopito-v2.0.1-android.apk`，来源见[发行记录](v2.0.1-release-record.md)。原 HoopTrace v2.0.0 文件和验收记录保留历史名称。本文仍是 F-Droid 准备记录，**尚未在官方 F-Droid 仓库发布**；后续渠道工作需单独完成，不改变已发布版本。
 
 ## 构建工具链
 
@@ -36,7 +36,7 @@ v1.0.0 Android APK 已通过 GitHub Release 发布，发布提交对应 `v1.0.0`
 
 ```bash
 flutter pub get
-HOOPTRACE_ALLOW_UNSIGNED_RELEASE=true flutter build apk --release
+HOOPITO_ALLOW_UNSIGNED_RELEASE=true flutter build apk --release
 ```
 
 For a release-verification checkout, run the pinned toolchain and source
@@ -76,7 +76,7 @@ git diff --exit-code -- THIRD_PARTY_NOTICES.md
 
 ## 网络和隐私行为
 
-首版核心功能完全离线：
+当前核心功能完全离线：
 
 - 无账号、云同步、广告、分析、追踪或崩溃遥测。
 - 无应用运营后端，不上传球员、比赛、落点或设置。
@@ -92,16 +92,18 @@ git diff --exit-code -- THIRD_PARTY_NOTICES.md
 
 - `fastlane/metadata/android/en-US/short_description.txt`
 - `fastlane/metadata/android/en-US/full_description.txt`
-- `fastlane/metadata/android/en-US/changelogs/2.txt`
+- `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`（当前 v2.0.1 为 `5.txt`，历史 v2.0.0 为 `4.txt`）
 - 对应的 `zh-CN` 文件
 - 两个 locale 的 `images/icon.png`
 - 两个 locale 的 4 张手机截图：主页、计分、复盘和历史
 
-截图来自 Android 模拟器，使用经过整理的演示比分和默认球员名称，不包含个人信息。正式提交前应确保 release tag 中包含最终 metadata。
+当前双语八张截图直接来自正式签名 v2.0.1 APK 在专用 API36 模拟器上的实际画面，全部使用合成球员与对局，逐张按原始分辨率检查后原样复制。版本、摘要、拍摄状态及原始证据见[截图来源](v2.0.1-screenshots.json)与[维护清单](screenshots-checklist.md)；旧八张 PNG 与[历史来源](v2.0.0-screenshots.json)保留在版本化目录。
+
+正式 APK 与签名 tag 的应用提交固定为 `4ecd960e5af1f6b12124a43e330d67efb628281b`。新截图与宣传文档在正式包验收后更新，其提交独立于 APK 来源；不能为了更新宣传素材移动签名 tag。后续 F-Droid recipe 应分别核对构建源码与元数据来源。
 
 ## 源码与 tag 要求
 
-- 每个公开 `versionName` 必须有唯一 tag；当前发布为 `v1.0.0`。
+- 每个公开 `versionName` 必须有唯一 tag；当前已发布版本为 Hoopito · 球豆 `v2.0.1`。
 - tag 必须指向用于构建发布 APK 的干净提交。
 - GitHub source archive 应能在无私有文件、无预下载构建产物的环境中完成构建。
 - `pubspec.lock` 必须提交，避免解析到不同依赖版本。
@@ -109,7 +111,7 @@ git diff --exit-code -- THIRD_PARTY_NOTICES.md
 
 ## 可复现构建注意事项
 
-F-Droid 基础收录不强制上游提供可复现构建，但普通 F-Droid 源码构建会由 F-Droid 使用不同证书签名，无法覆盖安装 GitHub 渠道的 APK。HoopTrace 不计划维护两个签名不同的官方 Android 包，因此把可复现构建和上游二进制验证设为项目自己的 F-Droid 首发门槛。
+F-Droid 基础收录不强制上游提供可复现构建，但普通 F-Droid 源码构建会由 F-Droid 使用不同证书签名，无法覆盖安装 GitHub 渠道的 APK。Hoopito · 球豆不计划维护两个签名不同的官方 Android 包，因此把可复现构建和上游二进制验证设为项目自己的 F-Droid 首发门槛。
 
 F-Droid 官方文档指出 Flutter/NDK 原生库可能嵌入 SDK 或工作目录路径。首次 recipe 验证应：
 

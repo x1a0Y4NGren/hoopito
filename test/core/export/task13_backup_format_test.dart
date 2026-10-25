@@ -1,11 +1,60 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
 
 import '../../test_helpers/test_database.dart';
 
 void main() {
+  test('export rejects payloads above the import byte limit', () async {
+    final database = createTestDatabase();
+    await expectLater(
+      JsonBackupCodec(
+        database,
+        appVersion: '1.0.0',
+        maxPayloadBytes: 8,
+      ).export(),
+      throwsA(isA<BackupValidationException>()),
+    );
+  });
+
+  test('export rejects excess table and total rows', () async {
+    final database = createTestDatabase();
+    for (final id in ['one', 'two']) {
+      await database
+          .into(database.players)
+          .insert(
+            PlayerRow(
+              id: id,
+              nickname: id,
+              createdAt: DateTime.utc(2026, 8, 24),
+            ),
+          );
+    }
+    await database
+        .into(database.appSettings)
+        .insert(
+          AppSetting(
+            key: 'example',
+            valueJson: 'true',
+            updatedAt: DateTime.utc(2026),
+          ),
+        );
+    await expectLater(
+      JsonBackupCodec(
+        database,
+        appVersion: '1.0.0',
+        maxRowsPerTable: 1,
+      ).export(),
+      throwsA(isA<BackupValidationException>()),
+    );
+    await expectLater(
+      JsonBackupCodec(database, appVersion: '1.0.0', maxTotalRows: 2).export(),
+      throwsA(isA<BackupValidationException>()),
+    );
+  });
+
   test('1.1 exports declare backup format 2 independently', () async {
     final database = createTestDatabase();
 

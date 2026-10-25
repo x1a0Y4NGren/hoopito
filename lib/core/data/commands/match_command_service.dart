@@ -3,25 +3,25 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:drift/drift.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match.dart' as domain_match;
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/possession_segment.dart'
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match.dart' as domain_match;
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/possession_segment.dart'
     as domain_possession;
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/clock/clock_engine.dart';
-import 'package:hooptrace/core/domain/entities/clock_state.dart';
-import 'package:hooptrace/core/domain/entities/shot_location.dart' as domain;
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/clock/clock_engine.dart';
+import 'package:hoopito/core/domain/entities/clock_state.dart';
+import 'package:hoopito/core/domain/entities/shot_location.dart' as domain;
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 import 'package:uuid/uuid.dart';
 
-export 'package:hooptrace/core/domain/clock/clock_engine.dart'
+export 'package:hoopito/core/domain/clock/clock_engine.dart'
     show ClockEngine, ClockProjection, ClockRecoveryReason, MatchClockEngine;
-export 'package:hooptrace/core/domain/entities/match_detail.dart'
+export 'package:hoopito/core/domain/entities/match_detail.dart'
     show
         MatchDecisionKind,
         MatchDecisionReason,
@@ -299,9 +299,10 @@ class ConfirmShotLocationCommand extends MatchCommand {
   };
 }
 
-/// Undoes the latest durable scoring action for a match. The service selects
-/// the action from persisted event/location rows and audit chronology, so the
-/// command remains correct after a controller or process rebuild.
+/// Undoes the latest durable user-recorded action for a live match. The
+/// service selects the action from persisted event/location rows and audit
+/// chronology, so the command remains correct after a rebuild. The historical
+/// command name is retained for receipt and backup compatibility.
 class UndoLastScoringActionCommand extends MatchCommand {
   UndoLastScoringActionCommand({
     super.commandId,
@@ -589,6 +590,7 @@ class FinishMatchCommand extends MatchCommand {
     bool? confirmedFinalScore,
     this.expectedRedScore,
     this.expectedBlueScore,
+    this.trackingCoverage,
   }) : endedAt = endedAt.toUtc(),
        confirmFinalScore =
            confirmedFinalScore ??
@@ -610,6 +612,12 @@ class FinishMatchCommand extends MatchCommand {
   final int? expectedRedScore;
   final int? expectedBlueScore;
 
+  /// Optional user confirmation of how completely attempts were recorded.
+  /// A null value retains the stored declaration and is deliberately omitted
+  /// from [payload] so receipts created by older versions keep their original
+  /// fingerprint.
+  final TrackingCoverage? trackingCoverage;
+
   @override
   String get commandType => 'finish';
 
@@ -621,6 +629,34 @@ class FinishMatchCommand extends MatchCommand {
     'confirmFinalScore': confirmFinalScore,
     'expectedRedScore': expectedRedScore,
     'expectedBlueScore': expectedBlueScore,
+    if (trackingCoverage != null) 'trackingCoverage': trackingCoverage!.name,
+  };
+}
+
+/// Explicitly corrects the persisted completeness declaration without
+/// changing scoring events or participating in the live undo stack.
+class SetTrackingCoverageCommand extends MatchCommand {
+  SetTrackingCoverageCommand({
+    super.commandId,
+    required this.matchId,
+    required this.trackingCoverage,
+    required this.reason,
+  });
+
+  @override
+  final String matchId;
+  final TrackingCoverage trackingCoverage;
+  final String reason;
+
+  @override
+  String get commandType => 'setTrackingCoverage';
+
+  @override
+  Map<String, Object?> get payload => <String, Object?>{
+    'commandId': commandId,
+    'matchId': matchId,
+    'trackingCoverage': trackingCoverage.name,
+    'reason': reason.trim(),
   };
 }
 
@@ -911,25 +947,21 @@ class _PossessionReplayState {
   String? endedAtEventId;
 }
 
-enum _ScoringUndoKind { event, location }
+enum _LiveUndoKind { event, location }
 
-class _UndoableScoringAction {
-  const _UndoableScoringAction.event({
-    required this.event,
-    required this.atomicLocation,
-  }) : kind = _ScoringUndoKind.event,
-       location = null;
+class _UndoableLiveAction {
+  const _UndoableLiveAction.event({required this.event})
+    : kind = _LiveUndoKind.event,
+      location = null;
 
-  const _UndoableScoringAction.location({
+  const _UndoableLiveAction.location({
     required this.event,
     required this.location,
-  }) : kind = _ScoringUndoKind.location,
-       atomicLocation = false;
+  }) : kind = _LiveUndoKind.location;
 
-  final _ScoringUndoKind kind;
+  final _LiveUndoKind kind;
   final MatchEventRow? event;
   final ShotLocation? location;
-  final bool atomicLocation;
 }
 
 class MatchCommandService {
@@ -1294,12 +1326,14 @@ class MatchCommandService {
     });
   }
 
-  /// Undoes the latest scoring action using durable audit chronology.
+  /// Undoes the latest user-recorded live action using audit chronology.
   ///
   /// A location supplement is its own action, so it is unconfirmed first and
   /// the score remains intact. A court-first event/location write is one
   /// `create` action and is undone atomically. Timer, finish, semantic, and
-  /// replay-only edits never enter the candidate set.
+  /// replay-only edits never enter the candidate set. Fouls, possession,
+  /// notes, and custom events do participate and cannot be skipped in favor
+  /// of an older score.
   Future<MatchDetail> undoLastScoringAction(
     UndoLastScoringActionCommand command,
   ) {
@@ -1311,16 +1345,16 @@ class MatchCommandService {
         // finished/archived projection is durable history and cannot be
         // reopened through this command.
         await _requireActiveMatch(command);
-        final selected = await _latestScoringAction(command.matchId);
+        final selected = await _latestLiveUndoAction(command.matchId);
         if (selected == null) {
           throw CommandValidationFailure(
             command: command,
-            message: 'There is no committed scoring action to undo.',
+            message: 'There is no committed match action to undo.',
             projectionMatchId: command.matchId,
           );
         }
 
-        if (selected.kind == _ScoringUndoKind.location) {
+        if (selected.kind == _LiveUndoKind.location) {
           final location = selected.location!;
           final before = _shotLocationJson(location);
           await (_database.update(_database.shotLocations)
@@ -1377,10 +1411,13 @@ class MatchCommandService {
             reason: command.reason,
           );
           await _recalculatePossessionSuggestions(command.matchId);
-          await _restoreDecisionStateAfterScoringUndo(
-            command,
-            selectedEvent: event,
-          );
+          final eventType = EventKind.values.byName(event.type);
+          if (_eventTypeChangesScore(eventType)) {
+            await _restoreDecisionStateAfterScoringUndo(
+              command,
+              selectedEvent: event,
+            );
+          }
           final afterProjection = await _projectionInTransaction(
             command.matchId,
           );
@@ -1760,6 +1797,73 @@ class MatchCommandService {
 
   Future<MatchDetail> finish(FinishMatchCommand command) {
     return _complete(command, MatchLifecycle.finished);
+  }
+
+  Future<MatchDetail> setTrackingCoverage(SetTrackingCoverageCommand command) {
+    return _execute(command, () {
+      return _database.transaction(() async {
+        final duplicate = await _returnForDuplicate(command);
+        if (duplicate != null) return duplicate;
+        final row = await _matchRow(command.matchId);
+        if (row == null) {
+          throw CommandValidationFailure(
+            command: command,
+            message: 'Missing match ${command.matchId}.',
+          );
+        }
+        final lifecycle = MatchLifecycle.values.byName(row.lifecycle);
+        if (lifecycle == MatchLifecycle.active) {
+          await _requireActiveMatch(command);
+        }
+        if (lifecycle != MatchLifecycle.active &&
+            lifecycle != MatchLifecycle.finished &&
+            lifecycle != MatchLifecycle.archived) {
+          throw CommandValidationFailure(
+            command: command,
+            message:
+                'Tracking coverage can only be corrected for a playable match.',
+            projectionMatchId: command.matchId,
+          );
+        }
+        if (command.reason.trim().isEmpty) {
+          throw CommandValidationFailure(
+            command: command,
+            message: 'A tracking coverage correction reason is required.',
+            projectionMatchId: command.matchId,
+          );
+        }
+        final current = TrackingCoverage.values.byName(row.trackingCoverage);
+        if (current != command.trackingCoverage) {
+          await (_database.update(
+            _database.matches,
+          )..where((match) => match.id.equals(command.matchId))).write(
+            MatchesCompanion(
+              trackingCoverage: Value(command.trackingCoverage.name),
+            ),
+          );
+          await _writeAudit(
+            id: '${command.commandId}:audit',
+            matchId: command.matchId,
+            targetId: command.matchId,
+            action: 'edit',
+            before: <String, Object?>{
+              'matchId': command.matchId,
+              'trackingCoverage': current.name,
+            },
+            after: <String, Object?>{
+              'matchId': command.matchId,
+              'trackingCoverage': command.trackingCoverage.name,
+            },
+            reason: command.reason,
+          );
+        }
+        await _inject(MatchCommandFailurePoint.afterLifecycleWritten);
+        final result = await _writeReceipt(command);
+        await _inject(MatchCommandFailurePoint.afterAuditWritten);
+        await _inject(MatchCommandFailurePoint.beforeCommit);
+        return result;
+      });
+    });
   }
 
   Future<MatchDetail> setPossession(SetPossessionCommand command) {
@@ -2395,6 +2499,7 @@ class MatchCommandService {
             projectionMatchId: active?.matchId ?? command.matchId,
           );
         }
+        TrackingCoverage? finishCoverage;
         if (lifecycle == MatchLifecycle.finished) {
           final confirmed = command is FinishMatchCommand
               ? command.confirmFinalScore
@@ -2442,6 +2547,18 @@ class MatchCommandService {
               decision: decision,
               projectionMatchId: command.matchId,
             );
+          }
+          if (command is FinishMatchCommand &&
+              command.trackingCoverage != null) {
+            final requested = command.trackingCoverage!;
+            final current = TrackingCoverage.values.byName(
+              row.trackingCoverage,
+            );
+            finishCoverage =
+                requested == TrackingCoverage.scoresOnly ||
+                    current.index <= requested.index
+                ? requested
+                : current;
           }
         }
         final endedAt = switch (command) {
@@ -2522,8 +2639,29 @@ class MatchCommandService {
           MatchesCompanion(
             lifecycle: Value(lifecycle.name),
             endedAt: Value(endedAt),
+            trackingCoverage: finishCoverage == null
+                ? const Value.absent()
+                : Value(finishCoverage.name),
           ),
         );
+        if (finishCoverage != null &&
+            finishCoverage.name != row.trackingCoverage) {
+          await _writeAudit(
+            id: '${command.commandId}:coverage-audit',
+            matchId: command.matchId,
+            targetId: command.matchId,
+            action: 'edit',
+            before: <String, Object?>{
+              'matchId': command.matchId,
+              'trackingCoverage': row.trackingCoverage,
+            },
+            after: <String, Object?>{
+              'matchId': command.matchId,
+              'trackingCoverage': finishCoverage.name,
+            },
+            reason: 'finish-tracking-coverage',
+          );
+        }
         await (_database.delete(_database.activeSessions)..where(
               (session) =>
                   session.id.equals('active') &
@@ -2847,19 +2985,18 @@ class MatchCommandService {
     return rows.isEmpty ? null : rows.first;
   }
 
-  Future<_UndoableScoringAction?> _latestScoringAction(String matchId) async {
+  Future<_UndoableLiveAction?> _latestLiveUndoAction(String matchId) async {
     final events =
         await (_database.select(_database.matchEvents)
               ..where(
                 (event) =>
                     event.matchId.equals(matchId) &
                     event.isDeleted.equals(false) &
-                    event.type.isIn([
-                      EventKind.score.name,
-                      EventKind.fieldGoal.name,
-                      EventKind.miss.name,
-                      EventKind.freeThrow.name,
-                    ]),
+                    event.type.isIn(
+                      liveUndoableEventKinds
+                          .map((kind) => kind.name)
+                          .toList(growable: false),
+                    ),
               )
               ..orderBy([
                 (_) => OrderingTerm.desc(const CustomExpression<int>('rowid')),
@@ -2890,25 +3027,17 @@ class MatchCommandService {
               ]))
             .get();
 
-    _UndoableScoringAction? latest;
+    _UndoableLiveAction? latest;
     for (final audit in audits) {
       final event = eventById[audit.targetId];
       if (event == null) continue;
       if (audit.action == 'locate') {
         final location = locationByEvent[event.id];
         if (location == null) continue;
-        latest = _UndoableScoringAction.location(
-          event: event,
-          location: location,
-        );
+        latest = _UndoableLiveAction.location(event: event, location: location);
         continue;
       }
-      final location = locationByEvent[event.id];
-      final after = _decodeObject(audit.afterJson);
-      latest = _UndoableScoringAction.event(
-        event: event,
-        atomicLocation: location != null && after['shotLocation'] is Map,
-      );
+      latest = _UndoableLiveAction.event(event: event);
     }
     // Legacy/imported event rows may have no create audit. If the newest
     // durable row is one of those events, it is still the next undoable
@@ -2920,7 +3049,7 @@ class MatchCommandService {
     if (events.isNotEmpty && !createAuditEventIds.contains(events.first.id)) {
       if (latest?.event?.id == events.first.id) return latest;
       final event = events.first;
-      return _UndoableScoringAction.event(event: event, atomicLocation: false);
+      return _UndoableLiveAction.event(event: event);
     }
     return latest;
   }
@@ -2939,6 +3068,12 @@ class MatchCommandService {
     return type == EventKind.fieldGoal ||
         type == EventKind.score ||
         type == EventKind.miss;
+  }
+
+  static bool _eventTypeChangesScore(EventKind type) {
+    return type == EventKind.score ||
+        type == EventKind.fieldGoal ||
+        type == EventKind.freeThrow;
   }
 
   Future<PlayerRow?> _playerRow(String id) {

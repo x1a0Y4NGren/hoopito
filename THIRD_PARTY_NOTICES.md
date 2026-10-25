@@ -183,6 +183,30 @@ Regenerate after dependency changes with `dart --packages=.dart_tool/package_con
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+## audioplayers 6.7.1, audioplayers_android 5.2.1, audioplayers_darwin 6.4.0, audioplayers_linux 4.2.1, audioplayers_platform_interface 7.1.1, audioplayers_web 5.2.1, audioplayers_windows 4.3.1
+
+    MIT License
+    
+    Copyright (c) 2017 Blue Fire
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
 ## boolean_selector 2.1.2, meta 1.17.0, shelf_packages_handler 3.0.2
 
     Copyright 2016, the Dart project authors.
@@ -422,7 +446,7 @@ Regenerate after dependency changes with `dart --packages=.dart_tool/package_con
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## Android/Maven release runtime: androidx.activity:activity:1.9.0, Android/Maven release runtime: androidx.annotation:annotation-experimental:1.4.1, Android/Maven release runtime: androidx.annotation:annotation-jvm:1.10.0, Android/Maven release runtime: androidx.annotation:annotation:1.10.0, Android/Maven release runtime: androidx.arch.core:core-common:2.2.0, Android/Maven release runtime: androidx.arch.core:core-runtime:2.2.0, Android/Maven release runtime: androidx.browser:browser:1.9.0, Android/Maven release runtime: androidx.collection:collection-jvm:1.4.2, Android/Maven release runtime: androidx.collection:collection:1.4.2, Android/Maven release runtime: androidx.concurrent:concurrent-futures-ktx:1.1.0, Android/Maven release runtime: androidx.concurrent:concurrent-futures:1.1.0, Android/Maven release runtime: androidx.core:core-ktx:1.18.0, Android/Maven release runtime: androidx.core:core-viewtree:1.0.0, Android/Maven release runtime: androidx.core:core:1.18.0, Android/Maven release runtime: androidx.customview:customview:1.0.0, Android/Maven release runtime: androidx.exifinterface:exifinterface:1.4.1, Android/Maven release runtime: androidx.fragment:fragment:1.7.1, Android/Maven release runtime: androidx.interpolator:interpolator:1.0.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-common-java8:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-common-jvm:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-common:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-livedata-core-ktx:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-livedata-core:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-livedata:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-process:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-runtime-android:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-runtime:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-service:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-viewmodel-android:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-viewmodel-savedstate-android:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-viewmodel-savedstate:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-viewmodel:2.10.0, Android/Maven release runtime: androidx.loader:loader:1.0.0, Android/Maven release runtime: androidx.profileinstaller:profileinstaller:1.4.0, Android/Maven release runtime: androidx.room:room-common-jvm:2.7.0, Android/Maven release runtime: androidx.room:room-common:2.7.0, Android/Maven release runtime: androidx.room:room-runtime-android:2.7.0, Android/Maven release runtime: androidx.room:room-runtime:2.7.0, Android/Maven release runtime: androidx.savedstate:savedstate-android:1.4.0, Android/Maven release runtime: androidx.savedstate:savedstate:1.4.0, Android/Maven release runtime: androidx.sqlite:sqlite-android:2.5.0, Android/Maven release runtime: androidx.sqlite:sqlite-framework-android:2.5.0, Android/Maven release runtime: androidx.sqlite:sqlite-framework:2.5.0, Android/Maven release runtime: androidx.sqlite:sqlite:2.5.0, Android/Maven release runtime: androidx.startup:startup-runtime:1.1.1, Android/Maven release runtime: androidx.tracing:tracing-ktx:1.2.0, Android/Maven release runtime: androidx.tracing:tracing:1.2.0, Android/Maven release runtime: androidx.versionedparcelable:versionedparcelable:1.1.1, Android/Maven release runtime: androidx.viewpager:viewpager:1.0.0, Android/Maven release runtime: androidx.window.extensions.core:core:1.0.0, Android/Maven release runtime: androidx.window:window-java:1.2.0, Android/Maven release runtime: androidx.window:window:1.2.0, Android/Maven release runtime: androidx.work:work-runtime-ktx:2.11.2, Android/Maven release runtime: androidx.work:work-runtime:2.11.2, Android/Maven release runtime: com.getkeepsafe.relinker:relinker:1.4.5, Android/Maven release runtime: com.google.guava:listenablefuture:1.0, Android/Maven release runtime: org.jetbrains.kotlin:kotlin-stdlib:2.2.20, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.11.0, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.11.0, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-serialization-bom:1.7.3, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.7.3, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.3, Android/Maven release runtime: org.jetbrains:annotations:23.0.0, Android/Maven release runtime: org.jspecify:jspecify:1.0.0, clock 1.1.2, fake_async 1.3.3
+## Android/Maven release runtime: androidx.activity:activity:1.9.0, Android/Maven release runtime: androidx.annotation:annotation-experimental:1.4.1, Android/Maven release runtime: androidx.annotation:annotation-jvm:1.10.0, Android/Maven release runtime: androidx.annotation:annotation:1.10.0, Android/Maven release runtime: androidx.arch.core:core-common:2.2.0, Android/Maven release runtime: androidx.arch.core:core-runtime:2.2.0, Android/Maven release runtime: androidx.browser:browser:1.9.0, Android/Maven release runtime: androidx.collection:collection-jvm:1.4.2, Android/Maven release runtime: androidx.collection:collection:1.4.2, Android/Maven release runtime: androidx.concurrent:concurrent-futures-ktx:1.1.0, Android/Maven release runtime: androidx.concurrent:concurrent-futures:1.1.0, Android/Maven release runtime: androidx.core:core-ktx:1.18.0, Android/Maven release runtime: androidx.core:core-viewtree:1.0.0, Android/Maven release runtime: androidx.core:core:1.18.0, Android/Maven release runtime: androidx.customview:customview:1.0.0, Android/Maven release runtime: androidx.exifinterface:exifinterface:1.4.1, Android/Maven release runtime: androidx.fragment:fragment:1.7.1, Android/Maven release runtime: androidx.interpolator:interpolator:1.0.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-common-java8:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-common-jvm:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-common:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-livedata-core-ktx:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-livedata-core:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-livedata:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-process:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-runtime-android:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-runtime:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-service:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-viewmodel-android:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-viewmodel-savedstate-android:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-viewmodel-savedstate:2.10.0, Android/Maven release runtime: androidx.lifecycle:lifecycle-viewmodel:2.10.0, Android/Maven release runtime: androidx.loader:loader:1.0.0, Android/Maven release runtime: androidx.profileinstaller:profileinstaller:1.4.0, Android/Maven release runtime: androidx.room:room-common-jvm:2.7.0, Android/Maven release runtime: androidx.room:room-common:2.7.0, Android/Maven release runtime: androidx.room:room-runtime-android:2.7.0, Android/Maven release runtime: androidx.room:room-runtime:2.7.0, Android/Maven release runtime: androidx.savedstate:savedstate-android:1.4.0, Android/Maven release runtime: androidx.savedstate:savedstate:1.4.0, Android/Maven release runtime: androidx.sqlite:sqlite-android:2.5.0, Android/Maven release runtime: androidx.sqlite:sqlite-framework-android:2.5.0, Android/Maven release runtime: androidx.sqlite:sqlite-framework:2.5.0, Android/Maven release runtime: androidx.sqlite:sqlite:2.5.0, Android/Maven release runtime: androidx.startup:startup-runtime:1.1.1, Android/Maven release runtime: androidx.tracing:tracing-ktx:1.2.0, Android/Maven release runtime: androidx.tracing:tracing:1.2.0, Android/Maven release runtime: androidx.versionedparcelable:versionedparcelable:1.1.1, Android/Maven release runtime: androidx.viewpager:viewpager:1.0.0, Android/Maven release runtime: androidx.window.extensions.core:core:1.0.0, Android/Maven release runtime: androidx.window:window-java:1.2.0, Android/Maven release runtime: androidx.window:window:1.2.0, Android/Maven release runtime: androidx.work:work-runtime-ktx:2.11.2, Android/Maven release runtime: androidx.work:work-runtime:2.11.2, Android/Maven release runtime: com.getkeepsafe.relinker:relinker:1.4.5, Android/Maven release runtime: com.google.guava:listenablefuture:1.0, Android/Maven release runtime: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0, Android/Maven release runtime: org.jetbrains.kotlin:kotlin-stdlib:2.2.20, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.11.0, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.11.0, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-serialization-bom:1.7.3, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.7.3, Android/Maven release runtime: org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.3, Android/Maven release runtime: org.jetbrains:annotations:23.0.0, Android/Maven release runtime: org.jspecify:jspecify:1.0.0, clock 1.1.2, fake_async 1.3.3
 
     Apache License
                                Version 2.0, January 2004
@@ -32541,6 +32565,30 @@ Regenerate after dependency changes with `dart --packages=.dart_tool/package_con
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## synchronized 3.4.0+1
+
+    MIT License
+    
+    Copyright (c) 2016, Alexandre Roux Tekartik.
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
 
 ## test_api 0.7.10, test_core 0.6.16
 

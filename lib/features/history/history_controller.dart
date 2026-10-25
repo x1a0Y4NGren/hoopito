@@ -166,6 +166,9 @@ class HistoryController extends ChangeNotifier {
   int _requestGeneration = 0;
   bool _reloadPending = false;
   Completer<void>? _refreshCompleter;
+  bool _visibleRefreshPending = false;
+  Completer<void>? _visibleRefreshCompleter;
+  bool _visibleRefreshFailed = false;
   bool _disposed = false;
   Object? _loadError;
 
@@ -177,6 +180,12 @@ class HistoryController extends ChangeNotifier {
     _refreshCompleter = null;
     if (refreshCompleter != null && !refreshCompleter.isCompleted) {
       refreshCompleter.complete();
+    }
+    final visibleRefreshCompleter = _visibleRefreshCompleter;
+    _visibleRefreshCompleter = null;
+    if (visibleRefreshCompleter != null &&
+        !visibleRefreshCompleter.isCompleted) {
+      visibleRefreshCompleter.complete();
     }
     super.dispose();
   }
@@ -235,6 +244,7 @@ class HistoryController extends ChangeNotifier {
     }
     _loadingPage = true;
     _loadError = null;
+    _visibleRefreshFailed = false;
     final generation = _requestGeneration;
     notifyListeners();
     try {
@@ -258,22 +268,102 @@ class HistoryController extends ChangeNotifier {
       }
       return false;
     } finally {
-      _loadingPage = false;
-      if (!_disposed) {
-        notifyListeners();
-        if (_reloadPending) {
-          _reloadPending = false;
-          final refreshCompleter = _refreshCompleter;
-          _refreshCompleter = null;
-          unawaited(
-            loadNextPage().then((_) {
-              if (refreshCompleter != null && !refreshCompleter.isCompleted) {
-                refreshCompleter.complete();
-              }
-            }),
-          );
+      _finishPageLoad();
+    }
+  }
+
+  /// Replaces the already loaded range only after all bounded pages succeed.
+  /// Requests received during a load merge into one subsequent refresh.
+  Future<void> refreshVisible() {
+    if (_disposed || dataSource == null) return Future<void>.value();
+    _visibleRefreshPending = true;
+    final completer = _visibleRefreshCompleter ??= Completer<void>();
+    _drainPendingLoads();
+    return completer.future;
+  }
+
+  Future<void> _refreshVisibleNow() async {
+    final source = dataSource!;
+    _visibleRefreshPending = false;
+    _loadingPage = true;
+    _loadError = null;
+    _visibleRefreshFailed = false;
+    final generation = _requestGeneration;
+    final filters = _filters;
+    final targetCount = _allMatches.length < pageSize
+        ? pageSize
+        : _allMatches.length;
+    final refreshed = <HistoryMatchSummary>[];
+    final seenIds = <String>{};
+    final seenCursors = <String?>{};
+    String? cursor;
+    notifyListeners();
+    try {
+      do {
+        if (!seenCursors.add(cursor)) {
+          throw StateError('History pagination cursor did not advance.');
         }
+        final page = await source.loadPage(
+          filters: filters,
+          limit: pageSize,
+          cursor: cursor,
+        );
+        if (_disposed || generation != _requestGeneration) return;
+        for (final entry in page.entries) {
+          if (seenIds.add(entry.matchId)) refreshed.add(entry);
+        }
+        cursor = page.nextCursor;
+      } while (cursor != null && refreshed.length < targetCount);
+      _allMatches
+        ..clear()
+        ..addAll(refreshed);
+      _nextCursor = cursor;
+      _hasLoadedSourcePage = true;
+      _sort();
+    } on Object catch (error) {
+      if (!_disposed && generation == _requestGeneration) {
+        _loadError = error;
+        _visibleRefreshFailed = true;
       }
+    } finally {
+      _finishPageLoad();
+    }
+  }
+
+  Future<void> retryLoad() async {
+    if (_visibleRefreshFailed) {
+      await refreshVisible();
+    } else {
+      await loadNextPage();
+    }
+  }
+
+  void _finishPageLoad() {
+    _loadingPage = false;
+    if (_disposed) return;
+    notifyListeners();
+    _drainPendingLoads();
+  }
+
+  void _drainPendingLoads() {
+    if (_disposed || _loadingPage) return;
+    if (_reloadPending) {
+      _reloadPending = false;
+      final refreshCompleter = _refreshCompleter;
+      _refreshCompleter = null;
+      unawaited(
+        loadNextPage().then((_) {
+          if (refreshCompleter != null && !refreshCompleter.isCompleted) {
+            refreshCompleter.complete();
+          }
+        }),
+      );
+    } else if (_visibleRefreshPending) {
+      unawaited(_refreshVisibleNow());
+    } else {
+      final completer = _visibleRefreshCompleter;
+      _visibleRefreshCompleter = null;
+      if (completer != null && !completer.isCompleted) completer.complete();
     }
   }
 

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/export_coordinator.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
 
 class SettingsController extends ChangeNotifier {
   SettingsController({
@@ -24,18 +24,30 @@ class SettingsController extends ChangeNotifier {
       const ScoringFeedbackPreferences.defaults();
   bool _initialized = false;
   bool _busy = false;
+  Future<void>? _loadInFlight;
+  List<SafetyBackup> _safetyBackups = const [];
+  Object? _safetyBackupError;
 
   AutomaticBackupState get backupState => _backupState;
   ScoringFeedbackPreferences get feedbackState => _feedbackState;
   bool get initialized => _initialized;
   bool get busy => _busy;
+  List<SafetyBackup> get safetyBackups => _safetyBackups;
+  Object? get safetyBackupError => _safetyBackupError;
 
-  Future<void> load() async {
-    await _perform(() async {
-      _backupState = await automaticBackup.loadState();
-      if (feedback != null) _feedbackState = await feedback!.load();
-      _initialized = true;
-    });
+  Future<void> load() => _loadInFlight ??= _loadOnce();
+
+  Future<void> _loadOnce() async {
+    try {
+      await _perform(() async {
+        _backupState = await automaticBackup.loadState();
+        if (feedback != null) _feedbackState = await feedback!.load();
+        await _reloadSafetyBackups();
+        _initialized = true;
+      });
+    } finally {
+      _loadInFlight = null;
+    }
   }
 
   Future<void> shareJsonBackup({required String subject}) =>
@@ -46,24 +58,57 @@ class SettingsController extends ChangeNotifier {
 
   Future<bool> restoreBackup({
     RestoreMode mode = RestoreMode.replace,
-    required String safetySubject,
+    String? safetySubject,
     String? pickerDialogTitle,
   }) {
     if (mode == RestoreMode.replace && !canRestoreBackup) {
       throw const BackupRestoreBlockedException();
     }
     return _perform(() async {
-      final restored = await exports.restorePickedBackup(
-        mode: mode,
-        safetySubject: safetySubject,
-        pickerDialogTitle: pickerDialogTitle,
-      );
+      late final bool restored;
+      try {
+        restored = await exports.restorePickedBackup(
+          mode: mode,
+          safetySubject: safetySubject,
+          pickerDialogTitle: pickerDialogTitle,
+        );
+      } on Object {
+        await _reloadSafetyBackups();
+        rethrow;
+      }
       if (restored) {
         _backupState = await automaticBackup.loadState();
         if (feedback != null) _feedbackState = await feedback!.reload();
+        await _reloadSafetyBackups();
       }
       return restored;
     });
+  }
+
+  Future<void> refreshSafetyBackups() => _perform(_reloadSafetyBackups);
+
+  Future<void> restoreSafetyBackup(SafetyBackup backup) {
+    if (!canRestoreBackup) throw const BackupRestoreBlockedException();
+    return _perform(() async {
+      try {
+        await exports.restoreSafetyBackup(backup);
+      } on Object {
+        await _reloadSafetyBackups();
+        rethrow;
+      }
+      _backupState = await automaticBackup.loadState();
+      if (feedback != null) _feedbackState = await feedback!.reload();
+      await _reloadSafetyBackups();
+    });
+  }
+
+  Future<void> _reloadSafetyBackups() async {
+    try {
+      _safetyBackups = List.unmodifiable(await exports.listSafetyBackups());
+      _safetyBackupError = null;
+    } on Object catch (error) {
+      _safetyBackupError = error;
+    }
   }
 
   Future<bool> configureBackupDirectory({String? dialogTitle}) {

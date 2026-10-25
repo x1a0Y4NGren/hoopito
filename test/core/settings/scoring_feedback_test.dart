@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/settings/motion_preference_cache.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/settings/motion_preference_cache.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
 
 import '../../test_helpers/test_database.dart';
 

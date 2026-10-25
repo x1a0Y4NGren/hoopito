@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/core/data/repositories/player_repository.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/core/data/repositories/player_repository.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
 
 import '../test_helpers/test_database.dart';
 
@@ -26,7 +26,7 @@ void main() {
     });
 
     await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
+      HoopitoApp(database: database, showEntryAnimation: false),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-start-scoring')));
     await tester.tap(find.byKey(const Key('home-start-scoring')));

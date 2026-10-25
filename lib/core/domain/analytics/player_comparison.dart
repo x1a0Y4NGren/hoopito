@@ -1,4 +1,4 @@
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
 
 sealed class PlayerComparisonRequest {
   const PlayerComparisonRequest({required this.playerId});
@@ -134,9 +134,8 @@ class PlayerComparisonSample {
       hasTrustworthyAttempts && freeThrowAttempts > 0
       ? freeThrowMade * 100 / freeThrowAttempts
       : null;
-  double? get locationCoverage =>
-      hasTrustworthyAttempts && fieldGoalAttempts > 0
-      ? locatableAttemptCount * 100 / fieldGoalAttempts
+  double? get locationCoverage => fieldGoalAttempts > 0
+      ? confirmedLocationCount * 100 / fieldGoalAttempts
       : null;
   int get result => pointsFor.compareTo(pointsAgainst);
 

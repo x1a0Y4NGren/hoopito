@@ -1,0 +1,2552 @@
+{
+  "version": 1,
+  "generated_by": "node scripts/prepare-assets.mjs",
+  "note": "Original application assets are never rewritten. Current screenshots were captured directly from the published signed v2.0.1 Release APK. Its application source commit is independent of later website and documentation commits.",
+  "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+  "screenshot_record_sha256": "a1f86ce96060abb493f4ec2f057bdd8f6fa035d3608258a9c97eca62f38c0fa8",
+  "screenshot_provenance": {
+    "source_commit": "4ecd960e5af1f6b12124a43e330d67efb628281b",
+    "build_type": "MAIN Release (officially signed)",
+    "apk_file_name": "Hoopito-v2.0.1-android.apk",
+    "apk_sha256": "c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9",
+    "apk_bytes": 76441047,
+    "certificate_sha256": "2820ba06e898be1152d38536492282127e9fb0734a0863bb42db63f8a75611dd",
+    "application_id": "io.github.x1a0y4ngren.hooptrace",
+    "version_name": "2.0.1",
+    "version_code": 5,
+    "schema": 3,
+    "json_format": 2,
+    "device": "Hoopito_Brand_API36 dedicated x86_64 emulator",
+    "api": 36,
+    "synthetic_android_user": 0,
+    "capture_method": "Unmodified adb exec-out screencap -p from the installed official signed Release APK; byte-identical copies, no crop or mock rendering",
+    "privacy": "All player names, player IDs and match data are synthetic; original system bars retained",
+    "scope": "Eight bilingual release images from three independent synthetic matches. English captures precede the legacy JSON merge; Chinese captures follow it. This record describes screenshot provenance, not physical-device behavior, a foldable hinge or natural 24-hour scheduling.",
+    "external_evidence_root": "D:/DevCache/HoopitoArtifacts/issue-6-20261012/device-api36",
+    "installed_package_proof": "final-installed-package-proof.json",
+    "installed_package_proof_sha256": "c42ec633c2b870b4c745e05bd7d85e71901767d964e038b48aa51a041d7a4f3c",
+    "fixture_record": "final-screenshot-fixtures-db/rows.json",
+    "fixture_record_sha256": "cb9e4119208db7ceb90163a5206e99072215601584e7b043f9684bb82d88df46",
+    "chronological_actions": "commands.ndjson"
+  },
+  "assets": [
+    {
+      "output": "public/community/hoopito-qq-group.png",
+      "bytes": 2268629,
+      "sha256": "ffb7c3ac3655adf704d6910933342a4f95093ada56c5eeb26a21b72b38ddc740",
+      "source": "website/assets/community/source/qq-group-original.jpg",
+      "source_sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31",
+      "generation_record": "website/assets/community/generation.json",
+      "generation_record_sha256": "12b741df3f50fb32bf18a1252e36843529c024fcb2bbee06a83982c87b3435fc",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "source_inputs": [
+        {
+          "source": "website/assets/community/source/qq-group-original.jpg",
+          "sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31"
+        },
+        {
+          "source": "website/assets/community/source/arena-invitation-imagegen.png",
+          "sha256": "d5c94ee5e7c0fd538b228515d0b45f7b19df9a096231e4fcbc56ac44e3f0e612"
+        },
+        {
+          "source": "website/scripts/prepare-community.mjs",
+          "sha256": "25ca7f4ba8841f774a2e543e3e9f4c0a74e6b319bfcfb1554357c350e6e37b34"
+        },
+        {
+          "source": "assets/icons/hoopito-app-icon-foreground.png",
+          "sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8"
+        },
+        {
+          "source": "assets/fonts/BarlowCondensed-Bold.ttf",
+          "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65"
+        },
+        {
+          "source": "assets/fonts/NotoSansSC-Regular.otf",
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9"
+        }
+      ],
+      "dimensions_px": [
+        1536,
+        1536
+      ],
+      "qr_crop": {
+        "left": 220,
+        "top": 800,
+        "width": 928,
+        "height": 928
+      },
+      "qr_destination": {
+        "left": 304,
+        "top": 428
+      },
+      "transformation": "ImageGen atmosphere resized to 1536×1536; original QQ code inserted at native dimensions with 128px added white quiet zone, approved mascot scaled, bundled font glyph paths; lossless PNG; QR pixels verified identical.",
+      "scan_verification": "Native QQ circular-code format: ordinary QR decoding is unavailable. Output-to-source pixel equality is checked during preparation. On 2026-10-25 the user confirmed a successful QQ client scan and correct group number 1129560287 for the full PNG with SHA-256 ffb7c3ac3655adf704d6910933342a4f95093ada56c5eeb26a21b72b38ddc740."
+    },
+    {
+      "output": "public/community/hoopito-qq-group.webp",
+      "bytes": 1350082,
+      "sha256": "5441c3f8a8b6d6eaf825628483f572202fec71925d945289f64f9e32c88288c6",
+      "source": "website/assets/community/source/qq-group-original.jpg",
+      "source_sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31",
+      "generation_record": "website/assets/community/generation.json",
+      "generation_record_sha256": "12b741df3f50fb32bf18a1252e36843529c024fcb2bbee06a83982c87b3435fc",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "source_inputs": [
+        {
+          "source": "website/assets/community/source/qq-group-original.jpg",
+          "sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31"
+        },
+        {
+          "source": "website/assets/community/source/arena-invitation-imagegen.png",
+          "sha256": "d5c94ee5e7c0fd538b228515d0b45f7b19df9a096231e4fcbc56ac44e3f0e612"
+        },
+        {
+          "source": "website/scripts/prepare-community.mjs",
+          "sha256": "25ca7f4ba8841f774a2e543e3e9f4c0a74e6b319bfcfb1554357c350e6e37b34"
+        },
+        {
+          "source": "assets/icons/hoopito-app-icon-foreground.png",
+          "sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8"
+        },
+        {
+          "source": "assets/fonts/BarlowCondensed-Bold.ttf",
+          "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65"
+        },
+        {
+          "source": "assets/fonts/NotoSansSC-Regular.otf",
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9"
+        }
+      ],
+      "dimensions_px": [
+        1536,
+        1536
+      ],
+      "qr_crop": {
+        "left": 220,
+        "top": 800,
+        "width": 928,
+        "height": 928
+      },
+      "qr_destination": {
+        "left": 304,
+        "top": 428
+      },
+      "transformation": "ImageGen atmosphere resized to 1536×1536; original QQ code inserted at native dimensions with 128px added white quiet zone, approved mascot scaled, bundled font glyph paths; lossless WEBP; QR pixels verified identical.",
+      "scan_verification": "Native QQ circular-code format: ordinary QR decoding is unavailable. Output-to-source pixel equality is checked during preparation. On 2026-10-25 the user confirmed a successful QQ client scan and correct group number 1129560287 for the full PNG with SHA-256 ffb7c3ac3655adf704d6910933342a4f95093ada56c5eeb26a21b72b38ddc740."
+    },
+    {
+      "output": "public/community/hoopito-qq-group-preview.webp",
+      "bytes": 445882,
+      "sha256": "0176c8352e74b8e7a50fb4e118f194403f6c23e190216d69ae3cd291f708603a",
+      "source": "website/assets/community/source/qq-group-original.jpg",
+      "source_sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31",
+      "generation_record": "website/assets/community/generation.json",
+      "generation_record_sha256": "12b741df3f50fb32bf18a1252e36843529c024fcb2bbee06a83982c87b3435fc",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "source_inputs": [
+        {
+          "source": "website/assets/community/source/qq-group-original.jpg",
+          "sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31"
+        },
+        {
+          "source": "website/assets/community/source/arena-invitation-imagegen.png",
+          "sha256": "d5c94ee5e7c0fd538b228515d0b45f7b19df9a096231e4fcbc56ac44e3f0e612"
+        },
+        {
+          "source": "website/scripts/prepare-community.mjs",
+          "sha256": "25ca7f4ba8841f774a2e543e3e9f4c0a74e6b319bfcfb1554357c350e6e37b34"
+        },
+        {
+          "source": "assets/icons/hoopito-app-icon-foreground.png",
+          "sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8"
+        },
+        {
+          "source": "assets/fonts/BarlowCondensed-Bold.ttf",
+          "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65"
+        },
+        {
+          "source": "assets/fonts/NotoSansSC-Regular.otf",
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9"
+        }
+      ],
+      "dimensions_px": [
+        768,
+        768
+      ],
+      "transformation": "Proportional 768×768 downsample of the full invitation, encoded as lossless WebP for lazy website/README preview. Native-size unmodified QR pixels remain available in the linked PNG and full WebP.",
+      "scan_verification": "Native QQ circular-code format: ordinary QR decoding is unavailable. Output-to-source pixel equality is checked during preparation. On 2026-10-25 the user confirmed a successful QQ client scan and correct group number 1129560287 for the full PNG with SHA-256 ffb7c3ac3655adf704d6910933342a4f95093ada56c5eeb26a21b72b38ddc740."
+    },
+    {
+      "output": "public/textures/maple-albedo-v2.webp",
+      "bytes": 34802,
+      "sha256": "6cc0b455d19e6aca5ff893bea0124a99b3923b52e870f7f309f85ed8b83ab0ba",
+      "source": "website/assets/materials/source/maple-floor-v2.png",
+      "source_sha256": "942ac328eb3b464ce460155b407d65c641325c0ffd451a67efddddcc08997b16",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "transformation": "Proportional resize up to 1024px; WebP quality 72; no scene lighting or court markings added"
+    },
+    {
+      "output": "public/textures/graphite-metal-v2.webp",
+      "bytes": 43126,
+      "sha256": "334f8e281a983af69e0b371f844e90b9ec09ccb7b04377b45a5bb114d5074fa8",
+      "source": "website/assets/materials/source/graphite-metal-v2.png",
+      "source_sha256": "69a59fc6dba5b1a11331c473714c9c835a5742a98ed6ec4a8de9e64ebf5d0045",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        768,
+        768
+      ],
+      "transformation": "Proportional resize up to 768px; WebP quality 65; no scene lighting or court markings added"
+    },
+    {
+      "output": "public/textures/glass-detail.webp",
+      "bytes": 31446,
+      "sha256": "b160119764bdb2a2fd7c2554d4ef668d72133c9150bacd3a654983a57578fe57",
+      "source": "website/assets/materials/source/glass-detail.png",
+      "source_sha256": "71ea4f8ffdf7392d1ba07770a292d6e3d7a829db0b5b89a300fc897a6a010b21",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        512,
+        512
+      ],
+      "transformation": "Proportional resize up to 512px; WebP quality 75; no scene lighting or court markings added"
+    },
+    {
+      "output": "public/textures/basketball-leather.webp",
+      "bytes": 179568,
+      "sha256": "761fc1a6e80a7b1faaa5fe35967367f4207cc2feaff56705e788dbaa53c6215b",
+      "source": "website/assets/materials/source/basketball-leather-v3.png",
+      "source_sha256": "707c84227ba8e7585b4b077c90cd8b012bff6e344f8fb674dbb40d77cd086470",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        1024,
+        1024
+      ],
+      "transformation": "Proportional resize up to 1024px; WebP quality 72; no scene lighting or court markings added"
+    },
+    {
+      "output": "public/textures/basketball-microdetail.webp",
+      "bytes": 48906,
+      "sha256": "6154fe0b7d8fdff3ab8084fb2910f916ad4c37961b9fc96da661bbca271d631d",
+      "source": "website/assets/materials/source/basketball-leather-v3.png",
+      "source_sha256": "707c84227ba8e7585b4b077c90cd8b012bff6e344f8fb674dbb40d77cd086470",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        512,
+        512
+      ],
+      "transformation": "Proportional resize up to 512px; grayscale microdetail; WebP quality 68; no scene lighting or court markings added"
+    },
+    {
+      "output": "public/art/demo-maple.webp",
+      "bytes": 4158,
+      "sha256": "384cc7a4c4fe0451d3078877927fdad17c89153d779122ab9a8a22d204d509d4",
+      "source": "website/assets/materials/source/maple-floor-v2.png",
+      "source_sha256": "942ac328eb3b464ce460155b407d65c641325c0ffd451a67efddddcc08997b16",
+      "generation_record": "website/assets/materials/generation.json",
+      "generation_record_sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        384,
+        384
+      ],
+      "transformation": "384px square 2D material derivative; WebP quality60; no court markings or baked lighting; lazy-loaded near the demo, maximum12KiB"
+    },
+    {
+      "output": "public/art/arena-wide-960.avif",
+      "bytes": 11171,
+      "sha256": "0a914c8043e341b068bf6b2c2096c0cb6c23c8e359f055d8fbe9e0fc05ff941c",
+      "source": "website/assets/art/source/arena-wide.png",
+      "source_sha256": "5602794ce48f37b28bde3ca3999f3832f1455c4f51b5e026e285b1ded46fb23f",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        960,
+        411
+      ],
+      "transformation": "Proportional resize to 960px; AVIF quality 42; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-wide-960.webp",
+      "bytes": 19236,
+      "sha256": "ce9fb62b76aeb25b1baeb113c5f29fdfccb9a6775a07e3c9ee51aad165675f72",
+      "source": "website/assets/art/source/arena-wide.png",
+      "source_sha256": "5602794ce48f37b28bde3ca3999f3832f1455c4f51b5e026e285b1ded46fb23f",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        960,
+        411
+      ],
+      "transformation": "Proportional resize to 960px; WEBP quality 65; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-wide-1600.avif",
+      "bytes": 23250,
+      "sha256": "9ecaf9c35dd63e4617074d33fbc8eeb7ab567cc5e430e945816ffdbd0e32ceed",
+      "source": "website/assets/art/source/arena-wide.png",
+      "source_sha256": "5602794ce48f37b28bde3ca3999f3832f1455c4f51b5e026e285b1ded46fb23f",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        1600,
+        686
+      ],
+      "transformation": "Proportional resize to 1600px; AVIF quality 42; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-wide-1600.webp",
+      "bytes": 43210,
+      "sha256": "d4f858d1ba1973cdc3e3c8dec31f34a227203e393a5f639959038334e4f297e2",
+      "source": "website/assets/art/source/arena-wide.png",
+      "source_sha256": "5602794ce48f37b28bde3ca3999f3832f1455c4f51b5e026e285b1ded46fb23f",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        1600,
+        686
+      ],
+      "transformation": "Proportional resize to 1600px; WEBP quality 65; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-tall-480.avif",
+      "bytes": 13881,
+      "sha256": "4faafdf5eb7cee7a6f8ee8e5e6e8fbcc0131277410bbc6d88333bf0c581fef7e",
+      "source": "website/assets/art/source/arena-tall.png",
+      "source_sha256": "eb96fcac658c83f8d46191ffc8341fd5b9fe042690a1994c6802324bc3c9efeb",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        480,
+        853
+      ],
+      "transformation": "Proportional resize to 480px; AVIF quality 42; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-tall-480.webp",
+      "bytes": 24264,
+      "sha256": "0174b315b7b8787a2f3c99b853dbf2c2b2eeef670a3b01bf6181deb43e83f323",
+      "source": "website/assets/art/source/arena-tall.png",
+      "source_sha256": "eb96fcac658c83f8d46191ffc8341fd5b9fe042690a1994c6802324bc3c9efeb",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        480,
+        853
+      ],
+      "transformation": "Proportional resize to 480px; WEBP quality 65; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-tall-768.avif",
+      "bytes": 27044,
+      "sha256": "c6551149f4b4dabd6645022f671e41253f18ded311d1574c6350810c72719708",
+      "source": "website/assets/art/source/arena-tall.png",
+      "source_sha256": "eb96fcac658c83f8d46191ffc8341fd5b9fe042690a1994c6802324bc3c9efeb",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        768,
+        1365
+      ],
+      "transformation": "Proportional resize to 768px; AVIF quality 42; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/arena-tall-768.webp",
+      "bytes": 48482,
+      "sha256": "7a1df442abf1bf2fb9669faf92bd6e3c4b2a66ec7497022108456b999b848a3a",
+      "source": "website/assets/art/source/arena-tall.png",
+      "source_sha256": "eb96fcac658c83f8d46191ffc8341fd5b9fe042690a1994c6802324bc3c9efeb",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        768,
+        1365
+      ],
+      "transformation": "Proportional resize to 768px; WEBP quality 65; cinematic background plate; no text or interface compositing"
+    },
+    {
+      "output": "public/art/basketball-480.webp",
+      "bytes": 50414,
+      "sha256": "bf9488bc0b766025beff12af840a39532446d07e0b0f8389cfddf8243eefb2b8",
+      "source": "website/assets/art/source/basketball.png",
+      "source_sha256": "08a9d751c6c20b26884cdcf043aa691db6649301fa35e91cd178c5750bf672f2",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        480,
+        462
+      ],
+      "transformation": "Proportional resize to 480px; WEBP quality 72; original alpha retained; no text or interface compositing"
+    },
+    {
+      "output": "public/art/basketball-768.webp",
+      "bytes": 106120,
+      "sha256": "1d68352e86930fb6eda8e9db98e497a8447ec9489af064012df57b02807469eb",
+      "source": "website/assets/art/source/basketball.png",
+      "source_sha256": "08a9d751c6c20b26884cdcf043aa691db6649301fa35e91cd178c5750bf672f2",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        768,
+        739
+      ],
+      "transformation": "Proportional resize to 768px; WEBP quality 66; original alpha retained; no text or interface compositing"
+    },
+    {
+      "output": "public/art/basketball-900.webp",
+      "bytes": 146692,
+      "sha256": "87ab523f704a735e803d4716adce573e97878c64573fffa5bfb65f31aac9c1e9",
+      "source": "website/assets/art/source/basketball.png",
+      "source_sha256": "08a9d751c6c20b26884cdcf043aa691db6649301fa35e91cd178c5750bf672f2",
+      "generation_record": "website/assets/art/generation.json",
+      "generation_record_sha256": "05f3834973aabde469e1d75e717d95b5d594798967917e2c45d5dc0ec38174c6",
+      "generated_with": "image_gen.imagegen",
+      "generation_mode": "built-in",
+      "dimensions_px": [
+        900,
+        866
+      ],
+      "transformation": "Proportional resize to 900px; WEBP quality 72; original alpha retained; no text or interface compositing"
+    },
+    {
+      "output": "public/art/scene-poster-compact.webp",
+      "bytes": 20380,
+      "sha256": "02cbbc993205f05b8b3887f15bc83cc76f59451a951b40c8f3cc64c1827ea0a0",
+      "source": "website/assets/art/source/scene-poster-compact-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "8dab8ec5c8a553508f90c63e88aa630adacd877ff5a126ac696ed1622fcc2759",
+      "capture_record": "website/assets/art/scene-poster.json",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "source_inputs": [
+        {
+          "path": "src/scripts/main.ts",
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
+        },
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178"
+        },
+        {
+          "path": "src/scripts/camera-placement.ts",
+          "sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c"
+        },
+        {
+          "path": "src/scripts/replay-cards.ts",
+          "sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12"
+        },
+        {
+          "path": "src/scripts/demo-invitation.ts",
+          "sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9"
+        },
+        {
+          "path": "src/scripts/shot-timing.ts",
+          "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/styles/site.css",
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
+        },
+        {
+          "path": "src/styles/refinement.css",
+          "sha256": "57fcff987b56c63a5e0ff416cb9de705f8c15ca8e7572186e21da82db90c3616"
+        },
+        {
+          "path": "src/styles/replay-cards.css",
+          "sha256": "9163371059a94cafe149844f582c0054acd43857f91b3825e532811ff3091ebe"
+        },
+        {
+          "path": "src/styles/mobile-download-polish.css",
+          "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
+        },
+        {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
+        },
+        {
+          "path": "src/data/content.ts",
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
+        },
+        {
+          "path": "../docs/design/screenshot-presentation.json",
+          "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "assets/materials/generation.json",
+          "sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
+        },
+        {
+          "path": "scripts/export-scene-poster.mjs",
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
+        }
+      ],
+      "pose": {
+        "chapter": "hero",
+        "progress": 0,
+        "active": true
+      },
+      "dimensions_px": [
+        492,
+        678
+      ],
+      "transformation": "WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained"
+    },
+    {
+      "output": "public/art/scene-poster-standard.webp",
+      "bytes": 34552,
+      "sha256": "3e3f1b891a11512c85d0ab53ebd680f6cc3230a0ef49b6fa30d3e890629f5098",
+      "source": "website/assets/art/source/scene-poster-standard-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "179acce9031b01db8ad394dbf26d6537ef2902f4e4ea78480faa9e16b3ae2bd3",
+      "capture_record": "website/assets/art/scene-poster.json",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "source_inputs": [
+        {
+          "path": "src/scripts/main.ts",
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
+        },
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178"
+        },
+        {
+          "path": "src/scripts/camera-placement.ts",
+          "sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c"
+        },
+        {
+          "path": "src/scripts/replay-cards.ts",
+          "sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12"
+        },
+        {
+          "path": "src/scripts/demo-invitation.ts",
+          "sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9"
+        },
+        {
+          "path": "src/scripts/shot-timing.ts",
+          "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/styles/site.css",
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
+        },
+        {
+          "path": "src/styles/refinement.css",
+          "sha256": "57fcff987b56c63a5e0ff416cb9de705f8c15ca8e7572186e21da82db90c3616"
+        },
+        {
+          "path": "src/styles/replay-cards.css",
+          "sha256": "9163371059a94cafe149844f582c0054acd43857f91b3825e532811ff3091ebe"
+        },
+        {
+          "path": "src/styles/mobile-download-polish.css",
+          "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
+        },
+        {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
+        },
+        {
+          "path": "src/data/content.ts",
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
+        },
+        {
+          "path": "../docs/design/screenshot-presentation.json",
+          "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "assets/materials/generation.json",
+          "sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
+        },
+        {
+          "path": "scripts/export-scene-poster.mjs",
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
+        }
+      ],
+      "pose": {
+        "chapter": "hero",
+        "progress": 0,
+        "active": true
+      },
+      "dimensions_px": [
+        691,
+        810
+      ],
+      "transformation": "WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained"
+    },
+    {
+      "output": "public/art/scene-poster-wide.webp",
+      "bytes": 52908,
+      "sha256": "59a00e6e16bd07aad9e6e5c04797b6f232305712d33aabfe347859bfbce1929d",
+      "source": "website/assets/art/source/scene-poster-wide-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "7b7fe66e441f0cb825cb990cb2b7027b632e4ce23b1547d96d8c5e0418ff725b",
+      "capture_record": "website/assets/art/scene-poster.json",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "source_inputs": [
+        {
+          "path": "src/scripts/main.ts",
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
+        },
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178"
+        },
+        {
+          "path": "src/scripts/camera-placement.ts",
+          "sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c"
+        },
+        {
+          "path": "src/scripts/replay-cards.ts",
+          "sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12"
+        },
+        {
+          "path": "src/scripts/demo-invitation.ts",
+          "sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9"
+        },
+        {
+          "path": "src/scripts/shot-timing.ts",
+          "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/styles/site.css",
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
+        },
+        {
+          "path": "src/styles/refinement.css",
+          "sha256": "57fcff987b56c63a5e0ff416cb9de705f8c15ca8e7572186e21da82db90c3616"
+        },
+        {
+          "path": "src/styles/replay-cards.css",
+          "sha256": "9163371059a94cafe149844f582c0054acd43857f91b3825e532811ff3091ebe"
+        },
+        {
+          "path": "src/styles/mobile-download-polish.css",
+          "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
+        },
+        {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
+        },
+        {
+          "path": "src/data/content.ts",
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
+        },
+        {
+          "path": "../docs/design/screenshot-presentation.json",
+          "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "assets/materials/generation.json",
+          "sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
+        },
+        {
+          "path": "scripts/export-scene-poster.mjs",
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
+        }
+      ],
+      "pose": {
+        "chapter": "hero",
+        "progress": 0,
+        "active": true
+      },
+      "dimensions_px": [
+        922,
+        990
+      ],
+      "transformation": "WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained"
+    },
+    {
+      "output": "public/art/scene-poster-demo-compact.webp",
+      "bytes": 6134,
+      "sha256": "84b850f5b4469c5384f4e7bbd6f89a014a6edeef876e1cd7f1c1dc064bc4adca",
+      "source": "website/assets/art/source/scene-poster-demo-compact-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "fff9d6157491a666e0b3c82702397659ef43b43d837e42b3fb503bf8e4d59e11",
+      "capture_record": "website/assets/art/scene-poster.json",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "source_inputs": [
+        {
+          "path": "src/scripts/main.ts",
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
+        },
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178"
+        },
+        {
+          "path": "src/scripts/camera-placement.ts",
+          "sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c"
+        },
+        {
+          "path": "src/scripts/replay-cards.ts",
+          "sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12"
+        },
+        {
+          "path": "src/scripts/demo-invitation.ts",
+          "sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9"
+        },
+        {
+          "path": "src/scripts/shot-timing.ts",
+          "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/styles/site.css",
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
+        },
+        {
+          "path": "src/styles/refinement.css",
+          "sha256": "57fcff987b56c63a5e0ff416cb9de705f8c15ca8e7572186e21da82db90c3616"
+        },
+        {
+          "path": "src/styles/replay-cards.css",
+          "sha256": "9163371059a94cafe149844f582c0054acd43857f91b3825e532811ff3091ebe"
+        },
+        {
+          "path": "src/styles/mobile-download-polish.css",
+          "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
+        },
+        {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
+        },
+        {
+          "path": "src/data/content.ts",
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
+        },
+        {
+          "path": "../docs/design/screenshot-presentation.json",
+          "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "assets/materials/generation.json",
+          "sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
+        },
+        {
+          "path": "scripts/export-scene-poster.mjs",
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
+        }
+      ],
+      "pose": {
+        "chapter": "experience",
+        "progress": 0.2697189758832669,
+        "active": true
+      },
+      "dimensions_px": [
+        492,
+        678
+      ],
+      "transformation": "WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained"
+    },
+    {
+      "output": "public/art/scene-poster-demo-standard.webp",
+      "bytes": 9904,
+      "sha256": "aa43be7338d5f1c8cde52181adf273ffd2fc6e31a1dd760740186cd54388a921",
+      "source": "website/assets/art/source/scene-poster-demo-standard-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "06769f3059ed710a71aca69d21c2291da730ec694863cee7358be7462134c2ba",
+      "capture_record": "website/assets/art/scene-poster.json",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "source_inputs": [
+        {
+          "path": "src/scripts/main.ts",
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
+        },
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178"
+        },
+        {
+          "path": "src/scripts/camera-placement.ts",
+          "sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c"
+        },
+        {
+          "path": "src/scripts/replay-cards.ts",
+          "sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12"
+        },
+        {
+          "path": "src/scripts/demo-invitation.ts",
+          "sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9"
+        },
+        {
+          "path": "src/scripts/shot-timing.ts",
+          "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/styles/site.css",
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
+        },
+        {
+          "path": "src/styles/refinement.css",
+          "sha256": "57fcff987b56c63a5e0ff416cb9de705f8c15ca8e7572186e21da82db90c3616"
+        },
+        {
+          "path": "src/styles/replay-cards.css",
+          "sha256": "9163371059a94cafe149844f582c0054acd43857f91b3825e532811ff3091ebe"
+        },
+        {
+          "path": "src/styles/mobile-download-polish.css",
+          "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
+        },
+        {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
+        },
+        {
+          "path": "src/data/content.ts",
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
+        },
+        {
+          "path": "../docs/design/screenshot-presentation.json",
+          "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "assets/materials/generation.json",
+          "sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
+        },
+        {
+          "path": "scripts/export-scene-poster.mjs",
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
+        }
+      ],
+      "pose": {
+        "chapter": "experience",
+        "progress": 0.2940642734591527,
+        "active": true
+      },
+      "dimensions_px": [
+        691,
+        810
+      ],
+      "transformation": "WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained"
+    },
+    {
+      "output": "public/art/scene-poster-demo-wide.webp",
+      "bytes": 11188,
+      "sha256": "6419c58cb3447a06e2956a9b7f2484c3b13f0c67189a95da03d32dc347497127",
+      "source": "website/assets/art/source/scene-poster-demo-wide-2026-10-24T16-36-37-853Z.webp",
+      "source_sha256": "a460966d3ab3c8885dd3fb92d270752b3504ae6ae0199a1dc24f07fff8587769",
+      "capture_record": "website/assets/art/scene-poster.json",
+      "capture_record_sha256": "6fe7d54176305268a2889151339ac9f51aaf72025ba65d11da84e081f914e7af",
+      "captured_with": "156.0.8078.47; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "source_inputs": [
+        {
+          "path": "src/scripts/main.ts",
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
+        },
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178"
+        },
+        {
+          "path": "src/scripts/camera-placement.ts",
+          "sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c"
+        },
+        {
+          "path": "src/scripts/replay-cards.ts",
+          "sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12"
+        },
+        {
+          "path": "src/scripts/demo-invitation.ts",
+          "sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9"
+        },
+        {
+          "path": "src/scripts/shot-timing.ts",
+          "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/styles/site.css",
+          "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
+        },
+        {
+          "path": "src/styles/refinement.css",
+          "sha256": "57fcff987b56c63a5e0ff416cb9de705f8c15ca8e7572186e21da82db90c3616"
+        },
+        {
+          "path": "src/styles/replay-cards.css",
+          "sha256": "9163371059a94cafe149844f582c0054acd43857f91b3825e532811ff3091ebe"
+        },
+        {
+          "path": "src/styles/mobile-download-polish.css",
+          "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
+        },
+        {
+          "path": "src/styles/download-chooser.css",
+          "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+        },
+        {
+          "path": "src/styles/community.css",
+          "sha256": "b046f66c3303f7d10c0d199793ec03cf58ef3a04f00266c8361692eae14757fd"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
+        },
+        {
+          "path": "src/data/content.ts",
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
+        },
+        {
+          "path": "../docs/design/screenshot-presentation.json",
+          "sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "assets/materials/generation.json",
+          "sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
+        },
+        {
+          "path": "scripts/export-scene-poster.mjs",
+          "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
+        }
+      ],
+      "pose": {
+        "chapter": "experience",
+        "progress": 0.2871156567605815,
+        "active": true
+      },
+      "dimensions_px": [
+        922,
+        990
+      ],
+      "transformation": "WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained"
+    },
+    {
+      "output": "public/screenshots/zh/home.webp",
+      "bytes": 26018,
+      "sha256": "37f894f371594247b98318ad031b2a631e59afef1c4e4f30aac02a8ac91f4aa6",
+      "source": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/1-home.png",
+      "source_sha256": "daf38debd56e1eea3823ecd0a12836ca93773b335f3514fb5ce07edec5450094",
+      "transformation": "App-only crop removing Android status/navigation bars and landscape system inset; lossless WebP; retained App pixels unchanged, no resizing or repainting",
+      "dimensions_px": [
+        1080,
+        1783
+      ],
+      "source_dimensions_px": [
+        1080,
+        1920
+      ],
+      "crop_px": {
+        "left": 0,
+        "top": 74,
+        "width": 1080,
+        "height": 1783
+      },
+      "presentation_record": "docs/design/screenshot-presentation.json",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
+      "locale": "zh",
+      "theme": "light",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-zh-light-home",
+      "captured_at_utc": "2026-10-12T14:13:40.977500+00:00",
+      "synthetic_only": true,
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/screenshots/zh/scoring.webp",
+      "bytes": 26820,
+      "sha256": "95a824f8f26ec958f3c1fb57fd9f3e03d47396b9104d4849da9a8775c6f218b5",
+      "source": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/2-scoring.png",
+      "source_sha256": "f5bf3a800564d4e81a3b386b3c7246b50a4b9c4956fa3d82dccce2db05c32ddf",
+      "transformation": "App-only crop removing Android status/navigation bars and landscape system inset; lossless WebP; retained App pixels unchanged, no resizing or repainting",
+      "dimensions_px": [
+        1818,
+        954
+      ],
+      "source_dimensions_px": [
+        1920,
+        1080
+      ],
+      "crop_px": {
+        "left": 102,
+        "top": 63,
+        "width": 1818,
+        "height": 954
+      },
+      "presentation_record": "docs/design/screenshot-presentation.json",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
+      "locale": "zh",
+      "theme": "light",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-zh-light-scoring",
+      "captured_at_utc": "2026-10-12T14:16:43.262763+00:00",
+      "synthetic_only": true,
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/screenshots/zh/summary.webp",
+      "bytes": 22006,
+      "sha256": "1e2916778ffe83df9a7979d8506ced53a6fc91c527be0cbec39fc6f429e23c23",
+      "source": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png",
+      "source_sha256": "f67c8fe521ce501530751956aef7bb02b3ec133dc0c60d1057aa6bec48a9f78f",
+      "transformation": "App-only crop removing Android status/navigation bars and landscape system inset; lossless WebP; retained App pixels unchanged, no resizing or repainting",
+      "dimensions_px": [
+        1080,
+        1783
+      ],
+      "source_dimensions_px": [
+        1080,
+        1920
+      ],
+      "crop_px": {
+        "left": 0,
+        "top": 74,
+        "width": 1080,
+        "height": 1783
+      },
+      "presentation_record": "docs/design/screenshot-presentation.json",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
+      "locale": "zh",
+      "theme": "light",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-zh-light-summary",
+      "captured_at_utc": "2026-10-12T14:14:21.758229+00:00",
+      "synthetic_only": true,
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/screenshots/zh/history.webp",
+      "bytes": 37100,
+      "sha256": "aa7cb9baee4432b5e072f97f21c10a026717bf49086881b7e82b9162210688d8",
+      "source": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/4-history.png",
+      "source_sha256": "41202eb77a1176321f01142d2416df5147a55cb6d51d5fa38ed7a267ddef64a2",
+      "transformation": "App-only crop removing Android status/navigation bars and landscape system inset; lossless WebP; retained App pixels unchanged, no resizing or repainting",
+      "dimensions_px": [
+        1080,
+        1783
+      ],
+      "source_dimensions_px": [
+        1080,
+        1920
+      ],
+      "crop_px": {
+        "left": 0,
+        "top": 74,
+        "width": 1080,
+        "height": 1783
+      },
+      "presentation_record": "docs/design/screenshot-presentation.json",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
+      "locale": "zh",
+      "theme": "light",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-zh-light-history",
+      "captured_at_utc": "2026-10-12T14:14:16.212998+00:00",
+      "synthetic_only": true,
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/screenshots/en/home.webp",
+      "bytes": 27450,
+      "sha256": "376d2a9cc1c596d2f5e01b7d727b10e573840db3ca3b77ba0203f14c4c68f7d4",
+      "source": "fastlane/metadata/android/en-US/images/phoneScreenshots/1-home.png",
+      "source_sha256": "5aa7212f5e3346d62052bb9979246ea9f381674d06fb74c31b65213f99e36436",
+      "transformation": "App-only crop removing Android status/navigation bars and landscape system inset; lossless WebP; retained App pixels unchanged, no resizing or repainting",
+      "dimensions_px": [
+        1080,
+        1783
+      ],
+      "source_dimensions_px": [
+        1080,
+        1920
+      ],
+      "crop_px": {
+        "left": 0,
+        "top": 74,
+        "width": 1080,
+        "height": 1783
+      },
+      "presentation_record": "docs/design/screenshot-presentation.json",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
+      "locale": "en",
+      "theme": "dark",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-en-dark-home",
+      "captured_at_utc": "2026-10-12T14:09:22.407291+00:00",
+      "synthetic_only": true,
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/screenshots/en/scoring.webp",
+      "bytes": 31660,
+      "sha256": "874532d7a5cd76d96b2c29c0505d6cc09460149c936c6b03570c58a04b87576b",
+      "source": "fastlane/metadata/android/en-US/images/phoneScreenshots/2-scoring.png",
+      "source_sha256": "99c9473f712c166b23e9fa8a04c0c14f765608674cf9eca22a2badf14190262e",
+      "transformation": "App-only crop removing Android status/navigation bars and landscape system inset; lossless WebP; retained App pixels unchanged, no resizing or repainting",
+      "dimensions_px": [
+        1818,
+        954
+      ],
+      "source_dimensions_px": [
+        1920,
+        1080
+      ],
+      "crop_px": {
+        "left": 102,
+        "top": 63,
+        "width": 1818,
+        "height": 954
+      },
+      "presentation_record": "docs/design/screenshot-presentation.json",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
+      "locale": "en",
+      "theme": "dark",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-en-dark-scoring",
+      "captured_at_utc": "2026-10-12T14:07:43.700215+00:00",
+      "synthetic_only": true,
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/screenshots/en/summary.webp",
+      "bytes": 23198,
+      "sha256": "090ebe2ce326d618397147cd942970a0b6b0e88d450f0932c5b20d3d846f853c",
+      "source": "fastlane/metadata/android/en-US/images/phoneScreenshots/3-summary.png",
+      "source_sha256": "8dc7e0fad6954e0962fba9a9b52b29f9b5147731f4847ce8d35020dbbb44f281",
+      "transformation": "App-only crop removing Android status/navigation bars and landscape system inset; lossless WebP; retained App pixels unchanged, no resizing or repainting",
+      "dimensions_px": [
+        1080,
+        1783
+      ],
+      "source_dimensions_px": [
+        1080,
+        1920
+      ],
+      "crop_px": {
+        "left": 0,
+        "top": 74,
+        "width": 1080,
+        "height": 1783
+      },
+      "presentation_record": "docs/design/screenshot-presentation.json",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
+      "locale": "en",
+      "theme": "dark",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-en-dark-summary",
+      "captured_at_utc": "2026-10-12T14:09:16.829796+00:00",
+      "synthetic_only": true,
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/screenshots/en/history.webp",
+      "bytes": 42810,
+      "sha256": "eaa01651a5fb24c37397b6a7ddd2c6abad897625def0abebf9be004e6a884078",
+      "source": "fastlane/metadata/android/en-US/images/phoneScreenshots/4-history.png",
+      "source_sha256": "b9b778fe57f792330560430aefef3da8b5d557f4f66d11f497829688d572b107",
+      "transformation": "App-only crop removing Android status/navigation bars and landscape system inset; lossless WebP; retained App pixels unchanged, no resizing or repainting",
+      "dimensions_px": [
+        1080,
+        1783
+      ],
+      "source_dimensions_px": [
+        1080,
+        1920
+      ],
+      "crop_px": {
+        "left": 0,
+        "top": 74,
+        "width": 1080,
+        "height": 1783
+      },
+      "presentation_record": "docs/design/screenshot-presentation.json",
+      "presentation_record_sha256": "7fcc675b1471e4f039b0cef395a6e966688842da1347c046a4d7d2f9fbfa6aa6",
+      "locale": "en",
+      "theme": "dark",
+      "screenshot_record": "docs/release/v2.0.1-screenshots.json",
+      "source_capture": "release-en-dark-history",
+      "captured_at_utc": "2026-10-12T14:09:27.944034+00:00",
+      "synthetic_only": true,
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/brand/mark.webp",
+      "bytes": 21916,
+      "sha256": "7c291d7724bdae2c8da5cc4fb421d851b81329125ce90e84b2d3846683eb979d",
+      "source": "assets/icons/hoopito-app-icon-foreground.png",
+      "source_sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8",
+      "approval_record": "docs/design/brand/source.json",
+      "dimensions_px": [
+        512,
+        512
+      ],
+      "transformation": "Proportional resize only; alpha transparency and approved C geometry preserved",
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/brand/favicon.png",
+      "bytes": 5152,
+      "sha256": "254e8e37944898cfd200f189d7abf650f92334c17fb781c181c66f247b74f813",
+      "source": "assets/icons/hoopito-app-icon-foreground.png",
+      "source_sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8",
+      "approval_record": "docs/design/brand/source.json",
+      "dimensions_px": [
+        96,
+        96
+      ],
+      "transformation": "Proportional resize only; approved C mark on transparent canvas",
+      "license": "MIT (repository artwork)"
+    },
+    {
+      "output": "public/fonts/barlow-medium.woff2",
+      "bytes": 37956,
+      "sha256": "74804a02c97a501a7ce0f11328e390ca42034e2765dd609f132dddd4140b3b39",
+      "source": "assets/fonts/BarlowCondensed-Medium.ttf",
+      "source_sha256": "262bd143292ce479ee0cd09a42b47ab173fca8e9c6eb5ed0b5c8a845bc371d17",
+      "transformation": "WOFF2 conversion; original font glyph set retained",
+      "license": "SIL-OFL-1.1",
+      "license_file": "public/fonts/OFL-Barlow.txt",
+      "copyright": "Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow)"
+    },
+    {
+      "output": "public/fonts/barlow-semibold.woff2",
+      "bytes": 39216,
+      "sha256": "835d6974e9cc030828dd22aad9e816057685fa172f54fee420501a56dd551bf4",
+      "source": "assets/fonts/BarlowCondensed-SemiBold.ttf",
+      "source_sha256": "7b619d14bc2327509a9ef32b0890f709626f7ecc9ff61191c2a4314c5499d2d9",
+      "transformation": "WOFF2 conversion; original font glyph set retained",
+      "license": "SIL-OFL-1.1",
+      "license_file": "public/fonts/OFL-Barlow.txt",
+      "copyright": "Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow)"
+    },
+    {
+      "output": "public/fonts/barlow-bold.woff2",
+      "bytes": 39372,
+      "sha256": "ac2096bc10bf166913fea75c181a77ebb0868e7746fcaf59ee8be0cc81d1b88a",
+      "source": "assets/fonts/BarlowCondensed-Bold.ttf",
+      "source_sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65",
+      "transformation": "WOFF2 conversion; original font glyph set retained",
+      "license": "SIL-OFL-1.1",
+      "license_file": "public/fonts/OFL-Barlow.txt",
+      "copyright": "Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow)"
+    },
+    {
+      "output": "public/fonts/noto-sc.woff2",
+      "bytes": 125228,
+      "sha256": "0c0fd48763beac75f34c8ae824e4afd56e1d9625a2900494ed4db2433349376c",
+      "source": "assets/fonts/NotoSansSC-Regular.otf",
+      "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
+      "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+      "transformation": "WOFF2 glyph subset from all website Astro/TypeScript/JavaScript/JSON sources, printable ASCII, and interface symbols; original app font untouched",
+      "subset_code_points": [
+        10,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        169,
+        177,
+        183,
+        215,
+        247,
+        8212,
+        8230,
+        8592,
+        8593,
+        8594,
+        8595,
+        8599,
+        8722,
+        12289,
+        12290,
+        12300,
+        12301,
+        19968,
+        19978,
+        19979,
+        19981,
+        19982,
+        20002,
+        20004,
+        20010,
+        20013,
+        20026,
+        20027,
+        20037,
+        20043,
+        20063,
+        20107,
+        20108,
+        20110,
+        20113,
+        20114,
+        20132,
+        20135,
+        20139,
+        20146,
+        20154,
+        20165,
+        20171,
+        20174,
+        20195,
+        20197,
+        20214,
+        20221,
+        20250,
+        20256,
+        20301,
+        20307,
+        20309,
+        20316,
+        20320,
+        20351,
+        20363,
+        20379,
+        20381,
+        20391,
+        20445,
+        20449,
+        20462,
+        20570,
+        20648,
+        20801,
+        20808,
+        20809,
+        20813,
+        20837,
+        20840,
+        20843,
+        20845,
+        20851,
+        20854,
+        20855,
+        20869,
+        20876,
+        20877,
+        20915,
+        20934,
+        20986,
+        20987,
+        20998,
+        20999,
+        21015,
+        21017,
+        21018,
+        21035,
+        21040,
+        21047,
+        21069,
+        21103,
+        21147,
+        21151,
+        21152,
+        21153,
+        21160,
+        21183,
+        21253,
+        21270,
+        21306,
+        21313,
+        21319,
+        21322,
+        21333,
+        21345,
+        21368,
+        21382,
+        21442,
+        21450,
+        21452,
+        21453,
+        21457,
+        21462,
+        21463,
+        21464,
+        21475,
+        21482,
+        21487,
+        21488,
+        21490,
+        21491,
+        21495,
+        21512,
+        21516,
+        21517,
+        21518,
+        21521,
+        21527,
+        21551,
+        21578,
+        21592,
+        21629,
+        21644,
+        21697,
+        21709,
+        22120,
+        22238,
+        22269,
+        22270,
+        22312,
+        22320,
+        22330,
+        22336,
+        22343,
+        22495,
+        22768,
+        22788,
+        22791,
+        22797,
+        22806,
+        22823,
+        22830,
+        22833,
+        22863,
+        22909,
+        22914,
+        22987,
+        23383,
+        23384,
+        23427,
+        23433,
+        23436,
+        23448,
+        23454,
+        23481,
+        23494,
+        23545,
+        23548,
+        23562,
+        23567,
+        23631,
+        23637,
+        23646,
+        24037,
+        24038,
+        24049,
+        24050,
+        24102,
+        24179,
+        24180,
+        24182,
+        24191,
+        24211,
+        24212,
+        24230,
+        24320,
+        24335,
+        24402,
+        24403,
+        24405,
+        24433,
+        24471,
+        24490,
+        24515,
+        24535,
+        24577,
+        24590,
+        24674,
+        24687,
+        24819,
+        24847,
+        24895,
+        25104,
+        25110,
+        25130,
+        25143,
+        25152,
+        25163,
+        25165,
+        25171,
+        25176,
+        25195,
+        25216,
+        25226,
+        25237,
+        25252,
+        25302,
+        25321,
+        25345,
+        25351,
+        25353,
+        25361,
+        25442,
+        25454,
+        25480,
+        25490,
+        25506,
+        25509,
+        25511,
+        25552,
+        25628,
+        25764,
+        25773,
+        25805,
+        25903,
+        25918,
+        25919,
+        25925,
+        25968,
+        25972,
+        25991,
+        26032,
+        26041,
+        26080,
+        26085,
+        26087,
+        26102,
+        26126,
+        26159,
+        26174,
+        26224,
+        26242,
+        26356,
+        26368,
+        26376,
+        26377,
+        26381,
+        26410,
+        26412,
+        26415,
+        26426,
+        26435,
+        26463,
+        26469,
+        26500,
+        26512,
+        26524,
+        26597,
+        26631,
+        26679,
+        26680,
+        26696,
+        26723,
+        27178,
+        27425,
+        27426,
+        27490,
+        27491,
+        27492,
+        27493,
+        27599,
+        27604,
+        27704,
+        27714,
+        27809,
+        27861,
+        27880,
+        27969,
+        27979,
+        27983,
+        28079,
+        28165,
+        28192,
+        28304,
+        28436,
+        28857,
+        29255,
+        29256,
+        29366,
+        29420,
+        29575,
+        29616,
+        29699,
+        29702,
+        29983,
+        29992,
+        30001,
+        30003,
+        30028,
+        30041,
+        30165,
+        30331,
+        30340,
+        30422,
+        30424,
+        30446,
+        30452,
+        30456,
+        30475,
+        30495,
+        30528,
+        30693,
+        30721,
+        30830,
+        31034,
+        31163,
+        31169,
+        31215,
+        31216,
+        31227,
+        31383,
+        31435,
+        31449,
+        31561,
+        31574,
+        31614,
+        31639,
+        31649,
+        31726,
+        31995,
+        32034,
+        32047,
+        32418,
+        32422,
+        32423,
+        32447,
+        32456,
+        32461,
+        32463,
+        32467,
+        32473,
+        32476,
+        32479,
+        32487,
+        32493,
+        32500,
+        32512,
+        32553,
+        32593,
+        32622,
+        32676,
+        32773,
+        32780,
+        32842,
+        32852,
+        32988,
+        33021,
+        33150,
+        33258,
+        33322,
+        33853,
+        34013,
+        34394,
+        34892,
+        34920,
+        34987,
+        35013,
+        35201,
+        35206,
+        35265,
+        35268,
+        35272,
+        35302,
+        35745,
+        35748,
+        35753,
+        35759,
+        35760,
+        35768,
+        35774,
+        35775,
+        35782,
+        35797,
+        35823,
+        35828,
+        35831,
+        35835,
+        35910,
+        36127,
+        36134,
+        36153,
+        36164,
+        36182,
+        36187,
+        36208,
+        36215,
+        36229,
+        36335,
+        36339,
+        36394,
+        36712,
+        36733,
+        36739,
+        36755,
+        36793,
+        36807,
+        36814,
+        36816,
+        36820,
+        36824,
+        36825,
+        36827,
+        36857,
+        36861,
+        36866,
+        36873,
+        36880,
+        36890,
+        36947,
+        36965,
+        36992,
+        37096,
+        37117,
+        37324,
+        37325,
+        38062,
+        38142,
+        38169,
+        38190,
+        38271,
+        38381,
+        38382,
+        38405,
+        38431,
+        38450,
+        38453,
+        38468,
+        38469,
+        38543,
+        38544,
+        38656,
+        38750,
+        38754,
+        39029,
+        39030,
+        39033,
+        39046,
+        39304,
+        39564,
+        65288,
+        65289,
+        65292,
+        65306,
+        65307,
+        65311
+      ],
+      "text_sources": [
+        {
+          "path": "src/components/Community.astro",
+          "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
+        },
+        {
+          "path": "src/components/CourtDiagram.astro",
+          "sha256": "69bcc430b38cd6905878a6d952504631b73f093d5d81821aad23c6a6d9e016d7"
+        },
+        {
+          "path": "src/components/DownloadChooser.astro",
+          "sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
+        },
+        {
+          "path": "src/components/Icon.astro",
+          "sha256": "1454ad92dbb02bedd50eb8302172f619068ecb32fb2dbd2a2b008e4a8546828d"
+        },
+        {
+          "path": "src/components/Landing.astro",
+          "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+        },
+        {
+          "path": "src/components/Layout.astro",
+          "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
+        },
+        {
+          "path": "src/components/Privacy.astro",
+          "sha256": "44f0746c3c03e82cf6d5911ffeedafa1bdf5339da5c41a7f15b1b4a49bceb0c0"
+        },
+        {
+          "path": "src/components/ReplayShowcase.astro",
+          "sha256": "310f669c4aa62f50acb3377488c4df2abebde97c7c0a3e2a238f80cf68d4d236"
+        },
+        {
+          "path": "src/components/ScoringShowcase.astro",
+          "sha256": "fb2e145e9edf9109124bb36c3ddd2b78cef59f636c7cd82f5908fd7a334a0ca1"
+        },
+        {
+          "path": "src/components/ScreenshotViewer.astro",
+          "sha256": "004322044f105134a7c96f666fab05a62da425b54725522de97c4f8ac8da9416"
+        },
+        {
+          "path": "src/data/community.ts",
+          "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
+        },
+        {
+          "path": "src/data/content.ts",
+          "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+        },
+        {
+          "path": "src/data/court-materials.ts",
+          "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+        },
+        {
+          "path": "src/data/release.ts",
+          "sha256": "b79c57a2ca84dee2b9969c69bd70a5482d2a35daed9edef6a07f56e442d4e1bd"
+        },
+        {
+          "path": "src/data/replay-example.ts",
+          "sha256": "0a27edaca29ea11e0985b217f9601291913035f1e4519974c32595c7ad63e66c"
+        },
+        {
+          "path": "src/pages/en/index.astro",
+          "sha256": "d317cd4968ca9623b9adf9cd0f63567c3679af3f59c403d3639628f17fcca442"
+        },
+        {
+          "path": "src/pages/en/privacy.astro",
+          "sha256": "8459f3d5e3d1aefe346160b7fa332ce90dfeea228a0957cb294f5628475980b3"
+        },
+        {
+          "path": "src/pages/index.astro",
+          "sha256": "47611f622df6007729d6b154b3a79c104cbcb576052d0da29df5387603297f96"
+        },
+        {
+          "path": "src/pages/privacy.astro",
+          "sha256": "6567cff7b33d10cd5ddd416f844e9ee41d9f012cb5f8fbd5dbe15fd9c86f1279"
+        },
+        {
+          "path": "src/pages/robots.txt.ts",
+          "sha256": "0fbbee65872d17e1e2b8b9cacd6ef3a58a99a1833bcc3bd778fdf91413961475"
+        },
+        {
+          "path": "src/pages/sitemap.xml.ts",
+          "sha256": "7c4728b6e8bcbcf62405fe49a953e28d1a7217d634937b2e5f4ae7b9fd509120"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
+        },
+        {
+          "path": "src/scripts/camera-placement.ts",
+          "sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c"
+        },
+        {
+          "path": "src/scripts/court-floor.ts",
+          "sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850"
+        },
+        {
+          "path": "src/scripts/court-hardware.ts",
+          "sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20"
+        },
+        {
+          "path": "src/scripts/court-scene.ts",
+          "sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178"
+        },
+        {
+          "path": "src/scripts/court-textures.ts",
+          "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+        },
+        {
+          "path": "src/scripts/demo-invitation.ts",
+          "sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "f18e27c74a1c0664b44da841fe36b9e06bfae62b5bbde417b7d6a6fb00a45a8d"
+        },
+        {
+          "path": "src/scripts/download-chooser.ts",
+          "sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
+        },
+        {
+          "path": "src/scripts/gpu-calibration.ts",
+          "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
+        },
+        {
+          "path": "src/scripts/main.ts",
+          "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+        },
+        {
+          "path": "src/scripts/presentation-state.ts",
+          "sha256": "b56db268045584a695211aa7f83633a2f31f4ccdedeb973780148471fd933042"
+        },
+        {
+          "path": "src/scripts/replay-cards.ts",
+          "sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12"
+        },
+        {
+          "path": "src/scripts/scene-contract.ts",
+          "sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9"
+        },
+        {
+          "path": "src/scripts/scene-performance.ts",
+          "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
+        },
+        {
+          "path": "src/scripts/scoring-feedback.ts",
+          "sha256": "9c1a9f685a5e153f9c29718962c43a0077ea45aae6119bf6592c230ee3ee3427"
+        },
+        {
+          "path": "src/scripts/screenshot-viewer.ts",
+          "sha256": "dc8b49b2af3ac04d06fcadbb8833140fdb8bc2725b8147dc64f2de93103fbfac"
+        },
+        {
+          "path": "src/scripts/shaders/court.ts",
+          "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "7437084f66f5e288c06d9d72693a864c7c268ea50aa4721c58da771666fc9ff4"
+        },
+        {
+          "path": "src/scripts/shot-timing.ts",
+          "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
+        },
+        {
+          "path": "src/scripts/story-pose.ts",
+          "sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12"
+        }
+      ],
+      "license": "SIL-OFL-1.1",
+      "license_file": "public/fonts/OFL-NotoSansSC.txt",
+      "copyright": "© 2014-2021 Adobe (http://www.adobe.com/)."
+    },
+    {
+      "output": "public/fonts/OFL-Barlow.txt",
+      "bytes": 4376,
+      "sha256": "10b0e6bb43166a50fbe7cde2895bd7f703738a5da843acb5c97c95dc9ea26817",
+      "source": "assets/fonts/OFL.txt",
+      "source_sha256": "10b0e6bb43166a50fbe7cde2895bd7f703738a5da843acb5c97c95dc9ea26817",
+      "transformation": "Verbatim license copy",
+      "license": "SIL-OFL-1.1"
+    },
+    {
+      "output": "public/fonts/OFL-NotoSansSC.txt",
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+      "source": "assets/fonts/OFL-NotoSansSC.txt",
+      "source_sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+      "transformation": "Verbatim license copy",
+      "license": "SIL-OFL-1.1"
+    },
+    {
+      "output": "public/brand/release-qr.svg",
+      "bytes": 1630,
+      "sha256": "0a73f5b046f585c1372e45ca5a35149e3845b55f0c05f2586781f0f1adf7fc8b",
+      "source": "src/data/release.ts",
+      "source_sha256": "b79c57a2ca84dee2b9969c69bd70a5482d2a35daed9edef6a07f56e442d4e1bd",
+      "payload": "https://hoopito.com/#download",
+      "transformation": "QR code generated with qrcode; four-module quiet zone preserved",
+      "license": "MIT (repository-generated graphic)"
+    },
+    {
+      "output": "public/brand/share.png",
+      "bytes": 112963,
+      "sha256": "b74a382dbdedb119fab75e8b0d2f2c07153cbfe1ec1646e35f0add5921572cfa",
+      "source": "scripts/prepare-assets.mjs",
+      "source_sha256": "06e0283f993b0a304f2ed429e38312b1905e50cc1375c1536f8e3e01878985d7",
+      "source_dependencies": [
+        {
+          "source": "assets/icons/hoopito-app-icon-foreground.png",
+          "sha256": "def44481ce4b6663adecb86f390556fbf198060a218e861e299cc7bec20ef8a8"
+        },
+        {
+          "source": "assets/fonts/BarlowCondensed-Bold.ttf",
+          "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65"
+        },
+        {
+          "source": "assets/fonts/NotoSansSC-Regular.otf",
+          "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9"
+        },
+        {
+          "source": "website/public/fonts/noto-sc.woff2",
+          "sha256": "0c0fd48763beac75f34c8ae824e4afd56e1d9625a2900494ed4db2433349376c"
+        },
+        {
+          "source": "assets/fonts/BarlowCondensed-Medium.ttf",
+          "sha256": "262bd143292ce479ee0cd09a42b47ab173fca8e9c6eb5ed0b5c8a845bc371d17"
+        }
+      ],
+      "transformation": "Original SVG composition rasterized to PNG; embedded approved logo only scaled; Barlow and Noto Sans SC lettering converted to glyph paths for portable rendering",
+      "dimensions_px": [
+        1200,
+        630
+      ],
+      "license": "MIT (repository graphic), SIL-OFL-1.1 (Barlow and Noto Sans SC glyphs)"
+    },
+    {
+      "output": "public/licenses/astro.txt",
+      "bytes": 3628,
+      "sha256": "4aa72be797aad0e5e21827eaae6a1df9e122d7a401f07d2c308a6b9a5f0e1278",
+      "source": "node_modules/astro/LICENSE",
+      "source_sha256": "4aa72be797aad0e5e21827eaae6a1df9e122d7a401f07d2c308a6b9a5f0e1278",
+      "package": "astro",
+      "version": "7.3.8",
+      "license": "MIT",
+      "transformation": "Verbatim upstream package license"
+    },
+    {
+      "output": "public/licenses/three.txt",
+      "bytes": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc",
+      "source": "node_modules/three/LICENSE",
+      "source_sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc",
+      "package": "three",
+      "version": "0.186.1",
+      "license": "MIT",
+      "transformation": "Verbatim upstream package license"
+    },
+    {
+      "output": "public/licenses/typescript.txt",
+      "bytes": 9197,
+      "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47",
+      "source": "node_modules/typescript/LICENSE.txt",
+      "source_sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47",
+      "package": "typescript",
+      "version": "6.0.3",
+      "license": "Apache-2.0",
+      "transformation": "Verbatim upstream package license"
+    },
+    {
+      "output": "public/licenses/sharp.txt",
+      "bytes": 10273,
+      "sha256": "73ba74dfaa520b49a401b5d21459a8523a146f3b7518a833eea5efa85130bf68",
+      "source": "node_modules/sharp/LICENSE",
+      "source_sha256": "73ba74dfaa520b49a401b5d21459a8523a146f3b7518a833eea5efa85130bf68",
+      "package": "sharp",
+      "version": "0.35.5",
+      "license": "Apache-2.0",
+      "transformation": "Verbatim upstream package license"
+    },
+    {
+      "output": "public/licenses/qrcode.txt",
+      "bytes": 1076,
+      "sha256": "8df47c6ad9ac2c41eb9b2a72def9908959da0ede8dadd56c7b249c1bdb0c5ce6",
+      "source": "node_modules/qrcode/license",
+      "source_sha256": "8df47c6ad9ac2c41eb9b2a72def9908959da0ede8dadd56c7b249c1bdb0c5ce6",
+      "package": "qrcode",
+      "version": "1.5.4",
+      "license": "MIT",
+      "transformation": "Verbatim upstream package license"
+    },
+    {
+      "output": "public/licenses/subset-font.txt",
+      "bytes": 1503,
+      "sha256": "b6a2bd466724fee12c200fc7a5ebd22c98606ecc1c4206cbae50ccb69b4c36f3",
+      "source": "node_modules/subset-font/LICENSE",
+      "source_sha256": "b6a2bd466724fee12c200fc7a5ebd22c98606ecc1c4206cbae50ccb69b4c36f3",
+      "package": "subset-font",
+      "version": "2.5.0",
+      "license": "BSD-3-Clause",
+      "transformation": "Verbatim upstream package license"
+    },
+    {
+      "output": "public/licenses/GSAP.txt",
+      "bytes": 567,
+      "sha256": "6c1ecb1f4b5c4c3afb65b184dbc2e5f38925cd17847e9907af2cb1b531ca7aea",
+      "source": "node_modules/gsap/package.json",
+      "package": "gsap",
+      "version": "3.15.0",
+      "source_sha256": "85cc13e31f7a3cd124b587a40f545f265f47d0dfb9a556bb122d70fc0fca3459",
+      "license": "Standard No Charge GSAP License",
+      "license_url": "https://gsap.com/community/standard-license/",
+      "transformation": "License identification and authoritative source link; no claim of MIT licensing"
+    }
+  ]
+}

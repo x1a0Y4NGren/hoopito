@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics_calculator.dart';
-import 'package:hooptrace/core/domain/analytics/player_analytics_snapshot.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics_calculator.dart';
+import 'package:hoopito/core/domain/analytics/player_analytics_snapshot.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
 
 /// Produces stable derived values from the canonical match rows.
 class PlayerAnalyticsSnapshotCalculator {

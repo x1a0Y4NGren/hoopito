@@ -4,10 +4,10 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:drift/drift.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/export/backup_retention.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/export/automatic_backup_scheduler.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/export/backup_retention.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/export/automatic_backup_scheduler.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
@@ -138,7 +138,9 @@ class IoAutomaticBackupStorage
     await File(path.join(directory, fileName)).delete();
   }
 
-  static final _automaticFilePattern = RegExp(r'^hooptrace-auto-.+\.json$');
+  static final _automaticFilePattern = RegExp(
+    r'^hoop(?:trace|ito)-auto-.+\.json$',
+  );
 }
 
 class AutomaticBackupService {
@@ -355,10 +357,10 @@ class AutomaticBackupService {
         now().toUtc().isBefore(dirtySince.add(dueInterval))) {
       return null;
     }
-    return _runShared(filePrefix: 'hooptrace-auto');
+    return _runShared(filePrefix: 'hoopito-auto');
   }
 
-  Future<String> runNow() => _runShared(filePrefix: 'hooptrace-backup');
+  Future<String> runNow() => _runShared(filePrefix: 'hoopito-backup');
 
   /// Match completion is a durable checkpoint and is backed up immediately;
   /// the 24-hour delay applies only to other outstanding data changes.
@@ -366,13 +368,13 @@ class AutomaticBackupService {
     if (!await isEnabled()) return null;
     await markDirty();
     final inFlight = _runInFlight;
-    if (inFlight == null) return _runShared(filePrefix: 'hooptrace-auto');
+    if (inFlight == null) return _runShared(filePrefix: 'hoopito-auto');
 
     final completed = await inFlight;
     if (identical(_runInFlight, inFlight)) _runInFlight = null;
     final state = await loadState();
     if (state.dirtyRevision != completed.dirtyRevision) {
-      return _runShared(filePrefix: 'hooptrace-auto');
+      return _runShared(filePrefix: 'hoopito-auto');
     }
     return completed.destination;
   }
@@ -555,7 +557,14 @@ class AutomaticBackupService {
     try {
       final files = await retentionStorage.listFiles(directory: directory);
       final automatic =
-          files.where(_isAutomaticBackupFile).toList(growable: false)..sort();
+          files.where(_isAutomaticBackupFile).toList(growable: false)
+            ..sort((first, second) {
+              // Brand prefixes must not affect chronology across the rebrand.
+              final order = first
+                  .replaceFirst(_automaticPrefix, '')
+                  .compareTo(second.replaceFirst(_automaticPrefix, ''));
+              return order != 0 ? order : first.compareTo(second);
+            });
       final excess = automatic.length - retentionLimit;
       if (excess <= 0) return;
       for (final fileName in automatic.take(excess)) {
@@ -570,7 +579,10 @@ class AutomaticBackupService {
     }
   }
 
-  static final _automaticFilePattern = RegExp(r'^hooptrace-auto-.+\.json$');
+  static final _automaticPrefix = RegExp(r'^hoop(?:trace|ito)-auto-');
+  static final _automaticFilePattern = RegExp(
+    r'^hoop(?:trace|ito)-auto-.+\.json$',
+  );
 
   static bool _isAutomaticBackupFile(String fileName) =>
       _automaticFilePattern.hasMatch(fileName);

@@ -4,16 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/drift.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/provider_router.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match.dart' as domain_match;
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/provider_router.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match.dart' as domain_match;
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
 
 import '../test_helpers/test_database.dart';
 
@@ -38,9 +38,13 @@ void main() {
       tester,
       find.byKey(const Key('history-imported-imported-route')),
     );
-    await tester.tap(
-      find.byKey(const Key('history-resume-imported-imported-route')),
+    await tester.pumpAndSettle();
+    final resume = find.byKey(
+      const Key('history-resume-imported-imported-route'),
     );
+    await tester.ensureVisible(resume);
+    await tester.pumpAndSettle();
+    await tester.tap(resume.hitTestable());
     await _pumpUntil(tester, find.byType(ScoringPage));
 
     expect(find.byType(ScoringPage), findsOneWidget);
@@ -80,9 +84,13 @@ void main() {
       tester,
       find.byKey(const Key('history-resume-imported-imported-conflict')),
     );
-    await tester.tap(
-      find.byKey(const Key('history-resume-imported-imported-conflict')),
+    await tester.pumpAndSettle();
+    final resume = find.byKey(
+      const Key('history-resume-imported-imported-conflict'),
     );
+    await tester.ensureVisible(resume);
+    await tester.pumpAndSettle();
+    await tester.tap(resume.hitTestable());
     await tester.pumpAndSettle();
 
     expect(find.text('无法恢复导入的未完成比赛，请确认没有其他活动比赛。'), findsOneWidget);

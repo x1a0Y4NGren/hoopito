@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:hooptrace/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/diagnostics/startup_diagnostics.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart' as sqlite3_lib;
@@ -49,7 +50,13 @@ AppDatabase _openAppDatabaseAt(
         isolateSetup: _sqliteIsolateSetup(temporaryPath),
       );
     }),
-    legacyVersionProbe: () async => _legacyVersion(await resolveOnce()),
+    legacyVersionProbe: () async {
+      final file = await resolveOnce();
+      return StartupDiagnostics.measureSync(
+        'legacy_version_probe',
+        () => _legacyVersion(file),
+      );
+    },
   );
 }
 

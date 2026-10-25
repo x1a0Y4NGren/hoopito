@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/match_history_entry.dart';
 
 const homeResumeCardKey = Key('home-resume-card');
 const homeResumeKey = Key('home-resume');
@@ -28,11 +29,19 @@ class HomePage extends StatelessWidget {
     required this.onOpenSettings,
     required this.onOpenProject,
     this.latestFinishedMatch,
+    this.recentMatches = const [],
+    this.onRecentMatchTap,
+    this.onRecentPreset,
+    this.showDirectory = true,
     super.key,
   });
 
   final MatchDetail? activeMatch;
   final MatchDetail? latestFinishedMatch;
+  final List<MatchHistoryEntry> recentMatches;
+  final ValueChanged<String>? onRecentMatchTap;
+  final VoidCallback? onRecentPreset;
+  final bool showDirectory;
   final VoidCallback onStartScoring;
   final VoidCallback onContinue;
   final Future<void> Function() onAbandon;
@@ -49,8 +58,12 @@ class HomePage extends StatelessWidget {
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
     return EditorialScaffold(
       maxContentWidth: 920,
-      masthead: EditorialMasthead(title: l10n.appName.toUpperCase()),
+      masthead: EditorialMasthead(
+        title: showDirectory ? l10n.appName.toUpperCase() : l10n.v2Matches,
+        compact: !showDirectory,
+      ),
       body: SingleChildScrollView(
+        key: const PageStorageKey('home-scroll'),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -60,8 +73,34 @@ class HomePage extends StatelessWidget {
               onContinue: onContinue,
               onAbandon: onAbandon,
             ),
+            if (onRecentPreset != null && activeMatch == null)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: OutlinedButton.icon(
+                  key: const Key('home-recent-preset'),
+                  onPressed: onRecentPreset,
+                  icon: const Icon(Icons.refresh),
+                  label: Text(l10n.v2RecentPreset),
+                ),
+              ),
+            if (recentMatches.isNotEmpty) ...[
+              const SizedBox(height: HoopitoSpacing.section),
+              EditorialSectionRule(label: l10n.v2RecentMatches),
+              for (final match in recentMatches.take(3))
+                MatchScoreRow(
+                  key: ValueKey('home-result-${match.id}'),
+                  blueTeamName: match.blueName,
+                  blueScore: match.blueScore,
+                  redTeamName: match.redName,
+                  redScore: match.redScore,
+                  contextLabel: match.ruleName,
+                  onTap: onRecentMatchTap == null
+                      ? null
+                      : () => onRecentMatchTap!(match.id),
+                ),
+            ],
             if (latestFinishedMatch != null) ...[
-              const SizedBox(height: HoopTraceSpacing.section),
+              const SizedBox(height: HoopitoSpacing.section),
               EditorialSectionRule(label: l10n.historyTitle),
               KeyedSubtree(
                 key: const Key('home-latest-result'),
@@ -75,15 +114,16 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ],
-            const SizedBox(height: HoopTraceSpacing.section),
-            _HomeDirectory(
-              onOpenHistory: onOpenHistory,
-              onOpenPlayers: onOpenPlayers,
-              onOpenRules: onOpenRules,
-              onOpenSettings: onOpenSettings,
-              l10n: l10n,
-            ),
-            const SizedBox(height: HoopTraceSpacing.section),
+            const SizedBox(height: HoopitoSpacing.section),
+            if (showDirectory)
+              _HomeDirectory(
+                onOpenHistory: onOpenHistory,
+                onOpenPlayers: onOpenPlayers,
+                onOpenRules: onOpenRules,
+                onOpenSettings: onOpenSettings,
+                l10n: l10n,
+              ),
+            const SizedBox(height: HoopitoSpacing.section),
           ],
         ),
       ),
@@ -131,12 +171,11 @@ class _HomeHero extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(HoopTraceSpacing.section),
+                padding: const EdgeInsets.all(HoopitoSpacing.section),
                 child: active == null
                     ? _StartHero(onStartScoring: onStartScoring)
                     : _ActiveHero(
                         detail: active,
-                        onStartScoring: onStartScoring,
                         onContinue: onContinue,
                         onAbandon: onAbandon,
                       ),
@@ -162,15 +201,10 @@ class _StartHero extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '01',
-          style: Theme.of(context).textTheme.displayLarge?.copyWith(
-            color: editorial.canvas,
-            fontFamily: HoopTraceTypography.displayFamily,
-            fontSize: 96,
-            fontWeight: FontWeight.w700,
-            height: 0.8,
-          ),
+        Icon(
+          Icons.sports_basketball_outlined,
+          size: 40,
+          color: editorial.arenaAccent,
         ),
         const SizedBox(height: 18),
         Text(
@@ -198,13 +232,11 @@ class _StartHero extends StatelessWidget {
 class _ActiveHero extends StatelessWidget {
   const _ActiveHero({
     required this.detail,
-    required this.onStartScoring,
     required this.onContinue,
     required this.onAbandon,
   });
 
   final MatchDetail detail;
-  final VoidCallback onStartScoring;
   final VoidCallback onContinue;
   final Future<void> Function() onAbandon;
 
@@ -213,7 +245,7 @@ class _ActiveHero extends StatelessWidget {
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
     final editorial = editorialThemeOf(context);
     final clock = detail.clock;
-    final clockStatus = clock == null
+    final clockStatus = !detail.match.timerEnabled || clock == null
         ? l10n.homeClockNotConfigured
         : clock.isRegulationExpired
         ? l10n.homeClockRegulationExpired
@@ -285,17 +317,6 @@ class _ActiveHero extends StatelessWidget {
           onPressed: onContinue,
           icon: const Icon(Icons.arrow_forward),
           label: Text(l10n.homeResumeMatch),
-        ),
-        const SizedBox(height: 8),
-        TextButton.icon(
-          key: homeStartScoringKey,
-          onPressed: onStartScoring,
-          style: TextButton.styleFrom(
-            foregroundColor: editorial.canvas,
-            minimumSize: const Size.fromHeight(48),
-          ),
-          icon: const Icon(Icons.add),
-          label: Text(l10n.startScoring),
         ),
         const SizedBox(height: 8),
         OutlinedButton(

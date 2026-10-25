@@ -39,11 +39,11 @@ void main() {
 
   test('platform launch artwork has deterministic dimensions', () async {
     final expectedDimensions = <String, int>{
-      'android/app/src/main/res/drawable-mdpi/launch_hoop.png': 288,
-      'android/app/src/main/res/drawable-hdpi/launch_hoop.png': 432,
-      'android/app/src/main/res/drawable-xhdpi/launch_hoop.png': 576,
-      'android/app/src/main/res/drawable-xxhdpi/launch_hoop.png': 864,
-      'android/app/src/main/res/drawable-xxxhdpi/launch_hoop.png': 1152,
+      'android/app/src/main/res/drawable-mdpi/launch_mark.png': 288,
+      'android/app/src/main/res/drawable-hdpi/launch_mark.png': 432,
+      'android/app/src/main/res/drawable-xhdpi/launch_mark.png': 576,
+      'android/app/src/main/res/drawable-xxhdpi/launch_mark.png': 864,
+      'android/app/src/main/res/drawable-xxxhdpi/launch_mark.png': 1152,
       'ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png': 288,
       'ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png': 576,
       'ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png': 864,
@@ -53,10 +53,6 @@ void main() {
       final dimensions = await _pngDimensions(entry.key);
       expect(dimensions, (entry.value, entry.value), reason: entry.key);
     }
-    expect(await _pngDimensions('assets/icons/hooptrace-entry-hoop.png'), (
-      512,
-      512,
-    ));
   });
 
   test('native launch screens use the fixed black brand surface', () {
@@ -77,9 +73,9 @@ void main() {
     ).readAsStringSync();
 
     expect(android, contains('@color/launch_background'));
-    expect(android, contains('@drawable/launch_hoop'));
+    expect(android, contains('@drawable/launch_mark'));
     expect(android31, contains('android:windowSplashScreenAnimatedIcon'));
-    expect(android31, contains('@drawable/launch_hoop'));
+    expect(android31, contains('@drawable/launch_mark'));
     expect(
       androidNormal,
       contains(
@@ -109,9 +105,9 @@ void main() {
     expect(android, contains(channel));
     expect(android, contains('ENTRY_MOTION_PREFERENCES'));
     expect(android, contains('getDartEntrypointArgs'));
-    expect(android, contains('--hooptrace-entry-motion='));
+    expect(android, contains('--hoopito-entry-motion='));
     expect(android, contains('entryAnimationClaimed'));
-    expect(android, contains('--hooptrace-entry-animation=disabled'));
+    expect(android, contains('--hoopito-entry-animation=disabled'));
     expect(ios, contains(channel));
     expect(ios, contains('UserDefaults.standard'));
   });

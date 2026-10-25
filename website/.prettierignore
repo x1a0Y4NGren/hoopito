@@ -1,0 +1,9 @@
+dist
+node_modules
+output
+public
+ASSET_SOURCES.json
+THIRD_PARTY_NOTICES.md
+package-lock.json
+.astro
+.vercel

@@ -1,8 +1,8 @@
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
-export 'package:hooptrace/core/domain/domain_enums.dart'
+export 'package:hoopito/core/domain/domain_enums.dart'
     show MatchLifecycle, MatchStatus, RecordingMode, TrackingCoverage;
 
 class MatchParticipant {

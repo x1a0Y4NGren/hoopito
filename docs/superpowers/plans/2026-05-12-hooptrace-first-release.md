@@ -1,6 +1,6 @@
 # HoopTrace First Release Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> Historical first-release plan, not a current assignment. Execution instructions and checkboxes below describe that task only; see [history scope](../README.md).
 
 **Goal:** Build the Android-first HoopTrace Flutter app with offline scoring, shot location capture, replay, local storage, audit history, statistics, backup/export, settings, and open-source release preparation.
 

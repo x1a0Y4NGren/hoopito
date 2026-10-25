@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/core/settings/language_preferences.dart';
-import 'package:hooptrace/core/settings/theme_preferences.dart';
-import 'package:hooptrace/features/home/home_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/entry/hoopito_entry_gate.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/core/settings/language_preferences.dart';
+import 'package:hoopito/core/settings/theme_preferences.dart';
+import 'package:hoopito/features/home/home_page.dart';
 
 import '../test_helpers/test_database.dart';
+import '../test_helpers/safety_backup_storage.dart';
 
 void main() {
   testWidgets('app theme mode is driven by the persisted preference', (
@@ -21,7 +25,7 @@ void main() {
     });
 
     await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
+      HoopitoApp(database: database, showEntryAnimation: false),
     );
     await tester.pumpAndSettle();
 
@@ -57,7 +61,7 @@ void main() {
     tester.platformDispatcher.localeTestValue = const Locale('en');
 
     await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
+      HoopitoApp(database: database, showEntryAnimation: false),
     );
     await tester.pumpAndSettle();
 
@@ -79,16 +83,10 @@ void main() {
     });
     tester.platformDispatcher.localeTestValue = const Locale('en');
 
-    await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
-    );
+    await tester.pumpWidget(_memoryBackedApp(database));
     await tester.pumpAndSettle();
     final settingsShortcut = find.byKey(const Key('home-settings-shortcut'));
-    await tester.scrollUntilVisible(
-      settingsShortcut,
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
+    await tester.ensureVisible(settingsShortcut);
     await tester.tap(settingsShortcut);
     await tester.pumpAndSettle();
 
@@ -113,9 +111,7 @@ void main() {
     );
 
     await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
-    );
+    await tester.pumpWidget(_memoryBackedApp(database));
     await tester.pumpAndSettle();
 
     final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -141,7 +137,7 @@ void main() {
           appDatabaseProvider.overrideWithValue(database),
           languagePreferencesControllerProvider.overrideWith((ref) => language),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     for (var attempt = 0; attempt < 50; attempt++) {
@@ -149,7 +145,8 @@ void main() {
     }
 
     expect(find.byKey(const Key('home-start-scoring')), findsNothing);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(HoopitoStartupPlaceholder), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
 
     await language.load();
     await tester.pumpAndSettle();
@@ -168,7 +165,7 @@ void main() {
     tester.platformDispatcher.localeTestValue = const Locale('fr');
 
     await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
+      HoopitoApp(database: database, showEntryAnimation: false),
     );
     await tester.pump();
 
@@ -176,3 +173,20 @@ void main() {
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }
+
+Widget _memoryBackedApp(AppDatabase database) => ProviderScope(
+  overrides: [
+    appDatabaseProvider.overrideWithValue(database),
+    exportCoordinatorProvider.overrideWith((ref) {
+      final codec = ref.watch(backupCodecProvider);
+      return ExportCoordinator(
+        database,
+        codec,
+        gateway: ref.watch(exportGatewayProvider),
+        automaticBackup: ref.watch(automaticBackupServiceProvider),
+        safetyBackups: createTestSafetyBackupStore(codec),
+      );
+    }),
+  ],
+  child: const HoopitoApp(showEntryAnimation: false),
+);

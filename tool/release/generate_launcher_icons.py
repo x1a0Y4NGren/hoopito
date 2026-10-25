@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Normalize and regenerate HoopTrace launcher icon resources."""
+"""Normalize and regenerate Hoopito launcher icon resources."""
 
 from __future__ import annotations
 
@@ -13,8 +13,9 @@ from PIL import Image, ImageDraw
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FOREGROUND = ROOT / 'assets/icons/hooptrace-app-icon-foreground.png'
-MASTER = ROOT / 'assets/icons/hooptrace-app-icon.png'
+FOREGROUND = ROOT / 'assets/icons/hoopito-app-icon-foreground.png'
+MASTER = ROOT / 'assets/icons/hoopito-app-icon.png'
+MONOCHROME = ROOT / 'assets/icons/hoopito-app-icon-monochrome.png'
 IOS_CATALOG = ROOT / 'ios/Runner/Assets.xcassets/AppIcon.appiconset'
 ANDROID_RES = ROOT / 'android/app/src/main/res'
 
@@ -41,7 +42,7 @@ ANDROID_ADAPTIVE_SIZES = {
 
 
 def _canonicalize_colors(image: Image.Image) -> Image.Image:
-    """Map generated visible pixels to the two-color foreground palette."""
+    """Keep the mascot's orange body, white eye, and black facial details."""
     rgba = image.convert('RGBA')
     canonical = Image.new('RGBA', rgba.size)
     source_pixels = rgba.load()
@@ -53,10 +54,26 @@ def _canonicalize_colors(image: Image.Image) -> Image.Image:
             if alpha < 8:
                 output_pixels[x, y] = (0, 0, 0, 0)
                 continue
-            color = ARENA_ORANGE if red - green > 35 else WARM_WHITE
+            color = min(
+                (BACKGROUND, ARENA_ORANGE, WARM_WHITE),
+                key=lambda candidate: sum(
+                    (component - target) ** 2
+                    for component, target in zip((red, green, blue), candidate)
+                ),
+            )
             output_pixels[x, y] = (*color, alpha)
 
     return canonical
+
+
+def _monochrome_foreground(foreground: Image.Image) -> Image.Image:
+    """Use negative space for the pupil, grin, and seams in themed icons."""
+    monochrome = Image.new('RGBA', foreground.size, (*WARM_WHITE, 0))
+    monochrome.putdata([
+        (*WARM_WHITE, 0 if pixel[:3] == BACKGROUND else pixel[3])
+        for pixel in foreground.convert('RGBA').get_flattened_data()
+    ])
+    return monochrome
 
 
 def import_imagegen_source(source_path: Path) -> None:
@@ -108,6 +125,12 @@ def generate_resources() -> None:
     master = Image.new('RGBA', foreground.size, (*BACKGROUND, 255))
     master.alpha_composite(foreground)
     _save_rgb(master, MASTER)
+    monochrome_source = _monochrome_foreground(foreground)
+    monochrome_source.save(MONOCHROME, optimize=True)
+
+    for locale in ('en-US', 'zh-CN'):
+        store_icon = ROOT / f'fastlane/metadata/android/{locale}/images/icon.png'
+        _save_rgb(master.resize((512, 512), Image.Resampling.LANCZOS), store_icon)
 
     for density, size in ANDROID_LEGACY_SIZES.items():
         directory = ANDROID_RES / f'mipmap-{density}'
@@ -121,8 +144,11 @@ def generate_resources() -> None:
         adaptive_path.parent.mkdir(parents=True, exist_ok=True)
         adaptive.save(adaptive_path, optimize=True)
 
-        monochrome = Image.new('RGBA', adaptive.size, (*WARM_WHITE, 0))
-        monochrome.putalpha(adaptive.getchannel('A'))
+        monochrome = monochrome_source.resize((size, size), Image.Resampling.LANCZOS)
+        # Alpha edges are antialiased; every visible pixel stays one ink color.
+        monochrome_rgb = Image.new('RGBA', monochrome.size, (*WARM_WHITE, 0))
+        monochrome_rgb.putalpha(monochrome.getchannel('A'))
+        monochrome = monochrome_rgb
         monochrome.save(
             adaptive_path.with_name('ic_launcher_monochrome.png'),
             optimize=True,
@@ -153,6 +179,12 @@ def validate_resources() -> None:
     assert bounds is not None
     assert bounds[2] - bounds[0] <= SAFE_ZONE_SIZE
     assert bounds[3] - bounds[1] <= SAFE_ZONE_SIZE
+    visible_colors = {
+        pixel[:3] for pixel in foreground.get_flattened_data() if pixel[3] >= 8
+    }
+    assert visible_colors == {BACKGROUND, ARENA_ORANGE, WARM_WHITE}
+    monochrome_source = Image.open(MONOCHROME).convert('RGBA')
+    assert monochrome_source.tobytes() == _monochrome_foreground(foreground).tobytes()
 
     master = Image.open(MASTER)
     assert master.size == (CANVAS_SIZE, CANVAS_SIZE)
@@ -183,15 +215,24 @@ def validate_resources() -> None:
         assert monochrome.size == (size, size)
         assert adaptive.getchannel('A').getextrema() == (0, 255)
         assert monochrome.getchannel('A').getextrema() == (0, 255)
-        assert monochrome.getchannel('A').tobytes() == adaptive.getchannel(
-            'A',
-        ).tobytes(), f'Monochrome alpha does not match adaptive foreground: {density}'
+        expected_alpha = monochrome_source.resize(
+            (size, size), Image.Resampling.LANCZOS,
+        ).getchannel('A')
+        assert monochrome.getchannel('A').tobytes() == expected_alpha.tobytes(), (
+            f'Monochrome details do not match the mascot: {density}'
+        )
         visible_monochrome = {
             pixel[:3]
             for pixel in monochrome.get_flattened_data()
             if pixel[3] > 0
         }
         assert visible_monochrome == {WARM_WHITE}
+
+    for locale in ('en-US', 'zh-CN'):
+        icon = Image.open(ROOT / f'fastlane/metadata/android/{locale}/images/icon.png')
+        assert icon.mode == 'RGB' and icon.size == (512, 512)
+        expected = master_rgb.resize((512, 512), Image.Resampling.LANCZOS)
+        assert icon.tobytes() == expected.tobytes()
 
     contents = json.loads((IOS_CATALOG / 'Contents.json').read_text())
     for entry in contents['images']:

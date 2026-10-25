@@ -1,5 +1,5 @@
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
 enum KeyPossessionType { tie, overtake, matchPoint, scoringRun }
 
@@ -180,6 +180,12 @@ class MatchAnalytics {
   /// non-null compatibility field and is zero when the recording is not
   /// sufficient to make a truthful claim.
   double? get reliableShootingPercentage => recordedShootingPercentage;
+
+  double? get reliableFreeThrowPercentage =>
+      trackingCoverage.index >= TrackingCoverage.shotAttempts.index &&
+          freeThrowAttemptCount > 0
+      ? freeThrowMadeCount / freeThrowAttemptCount
+      : null;
 
   bool get hasReliableShootingPercentage =>
       shootingPercentageIsTrustworthy && recordedShootingPercentage != null;

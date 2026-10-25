@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/repositories/player_analytics_snapshot_repository.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/analytics/player_comparison.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/repositories/player_analytics_snapshot_repository.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/analytics/player_comparison.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
 class PlayerComparisonRepository {
   PlayerComparisonRepository(

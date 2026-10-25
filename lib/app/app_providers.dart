@@ -2,34 +2,35 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:hooptrace/app/app_metadata.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/repositories/match_lifecycle_repository.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/data/repositories/player_repository.dart';
-import 'package:hooptrace/core/data/repositories/player_career_repository.dart';
-import 'package:hooptrace/core/data/repositories/player_comparison_repository.dart';
-import 'package:hooptrace/core/data/repositories/rule_template_repository.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/match_history_entry.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/automatic_backup_scheduler.dart';
-import 'package:hooptrace/core/export/device_automatic_backup_storage.dart';
-import 'package:hooptrace/core/export/device_export_gateway.dart';
-import 'package:hooptrace/core/export/export_coordinator.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/settings/language_preferences.dart';
-import 'package:hooptrace/core/settings/motion_preference_cache.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/core/settings/theme_preferences.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
-import 'package:hooptrace/features/settings/settings_controller.dart';
-import 'package:hooptrace/features/players/player_career_controller.dart';
-import 'package:hooptrace/features/players/player_comparison_controller.dart';
+import 'package:hoopito/app/app_metadata.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/repositories/match_lifecycle_repository.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/data/repositories/player_repository.dart';
+import 'package:hoopito/core/data/repositories/player_career_repository.dart';
+import 'package:hoopito/core/data/repositories/player_comparison_repository.dart';
+import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/match_history_entry.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/automatic_backup_scheduler.dart';
+import 'package:hoopito/core/export/device_automatic_backup_storage.dart';
+import 'package:hoopito/core/export/device_export_gateway.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/settings/language_preferences.dart';
+import 'package:hoopito/core/settings/motion_preference_cache.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/core/settings/theme_preferences.dart';
+import 'package:hoopito/core/settings/scoring_guide_preferences.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
+import 'package:hoopito/features/settings/settings_controller.dart';
+import 'package:hoopito/features/players/player_career_controller.dart';
+import 'package:hoopito/features/players/player_comparison_controller.dart';
 
 /// The result of the pre-Drift compatibility probe. A legacy result is
 /// deliberately a value instead of an exception so the app can show a clear
@@ -149,6 +150,13 @@ final ruleTemplatesProvider = StreamProvider<List<RuleTemplate>>((ref) {
 
 final clockEngineProvider = Provider<ClockEngine>((ref) => const ClockEngine());
 
+final scoringGuidePreferencesProvider = Provider<ScoringGuidePreferences>(
+  (ref) => ScoringGuidePreferences(ref.watch(appDatabaseProvider)),
+);
+final scoringGuideSeenProvider = FutureProvider<bool>(
+  (ref) => ref.watch(scoringGuidePreferencesProvider).hasSeen(),
+);
+
 final matchCommandServiceProvider = Provider<MatchCommandService>(
   (ref) => MatchCommandService(ref.watch(appDatabaseProvider)),
 );
@@ -156,7 +164,7 @@ final matchCommandServiceProvider = Provider<MatchCommandService>(
 final backupCodecProvider = Provider<JsonBackupCodec>(
   (ref) => JsonBackupCodec(
     ref.watch(appDatabaseProvider),
-    appVersion: hoopTraceAppVersion,
+    appVersion: hoopitoAppVersion,
   ),
 );
 
@@ -242,6 +250,9 @@ final databaseStartupProvider = FutureProvider<DatabaseBootstrapState>((
   final bootstrap = await ref.watch(databaseBootstrapProvider.future);
   if (!bootstrap.isReady) return bootstrap;
 
+  // Repair persisted runtime triggers before the first domain UPSERT. Waiting
+  // until backup.loadState() leaves older enabled backups unable to start.
+  await ref.watch(appDatabaseProvider).ensureBackupDirtyTriggers();
   await ref.watch(startupEnsureBuiltInsProvider)();
   try {
     await ref.watch(startupAutomaticBackupProvider)();
@@ -275,6 +286,14 @@ final activeMatchProvider = StreamProvider<MatchDetail?>((ref) {
 final historyProvider = StreamProvider<List<MatchHistoryEntry>>((ref) {
   return ref.watch(matchRepositoryProvider).watchHistory();
 });
+
+/// Home reads three bounded summaries without hydrating events per match.
+final recentMatchSummariesProvider = StreamProvider<List<MatchHistoryEntry>>(
+  (ref) => ref
+      .watch(matchRepositoryProvider)
+      .watchHistoryPage(limit: 3)
+      .map((page) => page.entries),
+);
 
 final liveMatchProvider = StreamProvider.autoDispose
     .family<MatchDetail?, String>((ref, matchId) {

@@ -36,6 +36,24 @@ enum EventKind {
   possession,
 }
 
+/// User-authored match actions that participate in the live scoring undo
+/// history. Derived rewards and lifecycle/clock semantics are deliberately
+/// excluded so one press always reverses the latest visible recording action.
+const Set<EventKind> liveUndoableEventKinds = <EventKind>{
+  EventKind.score,
+  EventKind.fieldGoal,
+  EventKind.freeThrow,
+  EventKind.miss,
+  EventKind.foul,
+  EventKind.note,
+  EventKind.custom,
+  EventKind.possession,
+};
+
+extension EventKindUndoPolicy on EventKind {
+  bool get isLiveUndoable => liveUndoableEventKinds.contains(this);
+}
+
 /// Compatibility alias for the pre-1.0 event enum.
 typedef MatchEventType = EventKind;
 

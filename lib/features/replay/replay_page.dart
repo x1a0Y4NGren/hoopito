@@ -3,21 +3,22 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/entities/possession_segment.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/export/replay_image_exporter.dart';
-import 'package:hooptrace/features/replay/replay_controller.dart';
-import 'package:hooptrace/features/replay/widgets/replay_analytics_summary.dart';
-import 'package:hooptrace/features/replay/widgets/replay_audit_sheet.dart';
-import 'package:hooptrace/features/replay/widgets/replay_event_editor.dart';
-import 'package:hooptrace/features/replay/widgets/replay_timeline.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
-import 'package:hooptrace/features/scoring/widgets/court_view.dart';
-import 'package:hooptrace/features/scoring/widgets/court_painter.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/design_system/recording_confirmation.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/export/replay_image_exporter.dart';
+import 'package:hoopito/features/replay/replay_controller.dart';
+import 'package:hoopito/features/replay/widgets/replay_analytics_summary.dart';
+import 'package:hoopito/features/replay/widgets/replay_audit_sheet.dart';
+import 'package:hoopito/features/replay/widgets/replay_event_editor.dart';
+import 'package:hoopito/features/replay/widgets/replay_timeline.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
+import 'package:hoopito/features/scoring/widgets/court_view.dart';
+import 'package:hoopito/features/scoring/widgets/court_painter.dart';
 
 class ReplayPage extends StatefulWidget {
   const ReplayPage({
@@ -25,6 +26,7 @@ class ReplayPage extends StatefulWidget {
     this.onExit,
     this.exitTooltip,
     this.onFinishMatch,
+    this.onFinishWithCoverage,
     this.onShareSummary,
     this.captureBoundary,
     super.key,
@@ -34,6 +36,12 @@ class ReplayPage extends StatefulWidget {
   final VoidCallback? onExit;
   final String? exitTooltip;
   final FutureOr<void> Function(int redScore, int blueScore)? onFinishMatch;
+  final FutureOr<void> Function(
+    int redScore,
+    int blueScore,
+    TrackingCoverage coverage,
+  )?
+  onFinishWithCoverage;
   final Future<void> Function(Uint8List bytes, String matchId)? onShareSummary;
   final Future<Uint8List> Function(GlobalKey boundaryKey)? captureBoundary;
 
@@ -109,47 +117,31 @@ class _ReplayPageState extends State<ReplayPage> {
 
   Future<void> _confirmFinishMatch() async {
     final finish = widget.onFinishMatch;
-    if (_finishBusy || finish == null) return;
+    final coveredFinish = widget.onFinishWithCoverage;
+    if (_finishBusy || (finish == null && coveredFinish == null)) return;
     final data = widget.controller.data;
     final l10n = _localizations(context);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.confirmFinalScoreTitle),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.finalScoreLine(
-                data.blueName,
-                data.blueScore,
-                data.redName,
-                data.redScore,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(l10n.confirmFinalScoreBody),
-          ],
-        ),
-        actions: [
-          TextButton(
-            key: const Key('replay-finish-cancel'),
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(l10n.cancelAction),
-          ),
-          FilledButton(
-            key: const Key('replay-finish-confirm'),
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(l10n.finishMatch),
-          ),
-        ],
+    final coverage = await confirmRecordingCoverage(
+      context,
+      title: l10n.confirmFinalScoreTitle,
+      scoreLine: l10n.finalScoreLine(
+        data.blueName,
+        data.blueScore,
+        data.redName,
+        data.redScore,
       ),
+      confirmLabel: l10n.finishMatch,
+      cancelKey: const Key('replay-finish-cancel'),
+      confirmKey: const Key('replay-finish-confirm'),
     );
-    if (confirmed != true || !mounted) return;
+    if (coverage == null || !mounted) return;
     setState(() => _finishBusy = true);
     try {
-      await Future<void>.sync(() => finish(data.redScore, data.blueScore));
+      await Future<void>.sync(
+        () => coveredFinish != null
+            ? coveredFinish(data.redScore, data.blueScore, coverage)
+            : finish!(data.redScore, data.blueScore),
+      );
     } on Object {
       if (mounted) {
         ScaffoldMessenger.of(context)
@@ -201,7 +193,9 @@ class _ReplayPageState extends State<ReplayPage> {
                   controller.setEditing(!controller.isEditing);
                 }
               case _ReplayAppBarAction.finish:
-                if (!_finishBusy && widget.onFinishMatch != null) {
+                if (!_finishBusy &&
+                    (widget.onFinishMatch != null ||
+                        widget.onFinishWithCoverage != null)) {
                   _confirmFinishMatch();
                 }
             }
@@ -216,7 +210,8 @@ class _ReplayPageState extends State<ReplayPage> {
                     : l10n.replayReadOnly,
               ),
             ),
-            if (widget.onFinishMatch != null)
+            if (widget.onFinishMatch != null ||
+                widget.onFinishWithCoverage != null)
               PopupMenuItem(
                 value: _ReplayAppBarAction.finish,
                 enabled: !_finishBusy,
@@ -245,7 +240,7 @@ class _ReplayPageState extends State<ReplayPage> {
         ),
       ),
     );
-    if (widget.onFinishMatch != null) {
+    if (widget.onFinishMatch != null || widget.onFinishWithCoverage != null) {
       actions.add(
         Padding(
           padding: const EdgeInsets.only(right: 12),
@@ -295,13 +290,14 @@ class _ReplayPageState extends State<ReplayPage> {
           _ScoreHeader(data: controller.data, compact: compactLandscape),
           SizedBox(
             height: compactLandscape
-                ? HoopTraceSpacing.compact
-                : HoopTraceSpacing.section,
+                ? HoopitoSpacing.compact
+                : HoopitoSpacing.section,
           ),
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final landscape = constraints.maxWidth > constraints.maxHeight;
+                final landscape =
+                    MediaQuery.orientationOf(context) == Orientation.landscape;
                 if (constraints.maxWidth >= 840 || landscape) {
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -341,7 +337,7 @@ class _ReplayPageState extends State<ReplayPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _ReplayOverview(controller: controller),
-                      const SizedBox(height: HoopTraceSpacing.section),
+                      const SizedBox(height: HoopitoSpacing.section),
                       ReplayTimelinePanel(
                         controller: controller,
                         embedded: true,
@@ -367,6 +363,19 @@ class _ReplayPageState extends State<ReplayPage> {
     );
   }
 }
+
+Future<void> showMatchReportDialog(
+  BuildContext context, {
+  required ReplayController controller,
+  required Future<void> Function(Uint8List bytes, String matchId) onShare,
+}) => showDialog<void>(
+  context: context,
+  builder: (_) => _ReplayExportDialog(
+    controller: controller,
+    captureBoundary: ReplayImageExporter.capture,
+    onShare: onShare,
+  ),
+);
 
 class _ReplayExportDialog extends StatefulWidget {
   const _ReplayExportDialog({
@@ -403,40 +412,51 @@ class _ReplayExportDialogState extends State<_ReplayExportDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.image_outlined,
-                    color: editorialThemeOf(context).arenaAccent,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      l10n.replayExportTitle,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: l10n.replayClose,
-                    onPressed: _busy ? null : () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-              Text(l10n.replayExportDescription),
-              const SizedBox(height: 16),
               Expanded(
-                child: Center(
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: RepaintBoundary(
-                      key: _boundaryKey,
-                      child: _ReplayExportSummary(
-                        controller: widget.controller,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.image_outlined,
+                            color: editorialThemeOf(context).arenaAccent,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              l10n.replayExportTitle,
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.w800),
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: l10n.replayClose,
+                            onPressed: _busy
+                                ? null
+                                : () => Navigator.pop(context),
+                            icon: const Icon(Icons.close),
+                          ),
+                        ],
                       ),
-                    ),
+                      Text(l10n.replayExportDescription),
+                      const SizedBox(height: 16),
+                      FittedBox(
+                        fit: BoxFit.fitWidth,
+                        alignment: Alignment.topCenter,
+                        // Report typography belongs to the exported document.
+                        // The dialog controls still follow system text size.
+                        child: MediaQuery.withNoTextScaling(
+                          child: RepaintBoundary(
+                            key: _boundaryKey,
+                            child: _ReplayExportSummary(
+                              controller: widget.controller,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -448,14 +468,15 @@ class _ReplayExportDialogState extends State<_ReplayExportDialog> {
                 ),
               ],
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              Wrap(
+                alignment: WrapAlignment.end,
+                spacing: 12,
+                runSpacing: 8,
                 children: [
                   TextButton(
                     onPressed: _busy ? null : () => Navigator.pop(context),
                     child: Text(l10n.cancelAction),
                   ),
-                  const SizedBox(width: 12),
                   FilledButton.icon(
                     key: const Key('replay-export-confirm'),
                     onPressed: _busy ? null : _export,
@@ -510,9 +531,8 @@ class _ReplayExportSummary extends StatelessWidget {
     final data = controller.data;
     final l10n = _localizations(context);
     final analytics = data.analytics;
-    final attempts = analytics == null
-        ? controller.scoreEventCount
-        : analytics.attempts;
+    final attempts =
+        analytics?.fieldGoalAttemptCount ?? controller.scoreEventCount;
     final shootingPercentage = analytics == null || attempts == 0
         ? l10n.replayNoData
         : analytics.hasReliableShootingPercentage
@@ -526,7 +546,6 @@ class _ReplayExportSummary extends StatelessWidget {
     return Container(
       key: const Key('replay-export-summary'),
       width: 900,
-      height: 520,
       padding: const EdgeInsets.all(26),
       color: Theme.of(context).colorScheme.surface,
       child: Column(
@@ -541,7 +560,7 @@ class _ReplayExportSummary extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                'HoopTrace',
+                l10n.appName,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w900,
@@ -595,82 +614,97 @@ class _ReplayExportSummary extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 18),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Center(
-                    child: AspectRatio(
-                      aspectRatio: 15 / 14,
-                      child: CourtView(
-                        shotLocations: controller.shotLocations,
-                        pendingLocation: null,
-                        mode: CourtViewMode.readOnly,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 15 / 14,
+                  child: CourtView(
+                    shotLocations: controller.shotLocations,
+                    pendingLocation: null,
+                    mode: CourtViewMode.readOnly,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 24),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      l10n.replayExportAnalysis,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 24),
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        l10n.replayExportAnalysis,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.w800,
+                    const SizedBox(height: 10),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final metricWidth = (constraints.maxWidth - 10) / 2;
+                        final metrics = [
+                          _ExportMetric(
+                            label: l10n.replayDuration,
+                            value: _formatDuration(data.duration),
+                          ),
+                          _ExportMetric(
+                            label: l10n.v2LocationScope,
+                            value: analytics == null || attempts == 0
+                                ? l10n.replayNoData
+                                : '${analytics.confirmedLocationCount}/$attempts',
+                          ),
+                          _ExportMetric(
+                            label: l10n.v2FieldGoalPercentage,
+                            value: shootingPercentage,
+                          ),
+                          _ExportMetric(
+                            label: l10n.v2FreeThrowPercentage,
+                            value:
+                                analytics?.reliableFreeThrowPercentage == null
+                                ? l10n.replayNoData
+                                : '${(analytics!.reliableFreeThrowPercentage! * 100).round()}%',
+                          ),
+                          _ExportMetric(
+                            label: l10n.replayExportLeadChanges,
+                            value: l10n.replayExportLeadChangesValue(
+                              analytics?.leadChanges ?? 0,
                             ),
-                      ),
-                      const SizedBox(height: 10),
-                      Expanded(
-                        child: GridView.count(
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisCount: 2,
-                          childAspectRatio: 2.25,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
+                          ),
+                          _ExportMetric(
+                            label: l10n.replayExportLargestLead,
+                            value: largestLead,
+                          ),
+                          _ExportMetric(
+                            label: l10n.v2CoverageTitle,
+                            value:
+                                analytics == null ||
+                                    analytics.trackingCoverage.index <
+                                        TrackingCoverage.shotAttempts.index
+                                ? l10n.v2CoverageScores
+                                : l10n.v2CoverageComplete,
+                          ),
+                        ];
+                        return Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
                           children: [
-                            _ExportMetric(
-                              label: l10n.replayDuration,
-                              value: _formatDuration(data.duration),
-                            ),
-                            _ExportMetric(
-                              label: l10n.replayExportShotLocations,
-                              value: '${controller.locatedShotCount}',
-                            ),
-                            _ExportMetric(
-                              label: l10n.replayExportShootingPercentage,
-                              value: shootingPercentage,
-                            ),
-                            _ExportMetric(
-                              label: l10n.replayExportLeadChanges,
-                              value: l10n.replayExportLeadChangesValue(
-                                analytics?.leadChanges ?? 0,
-                              ),
-                            ),
-                            _ExportMetric(
-                              label: l10n.replayExportLargestLead,
-                              value: largestLead,
-                            ),
-                            _ExportMetric(
-                              label: l10n.replayExportKeyMoments,
-                              value: l10n.replayExportKeyMomentsValue(
-                                analytics?.keyPossessions.length ?? 0,
-                              ),
-                            ),
+                            for (final metric in metrics)
+                              SizedBox(width: metricWidth, child: metric),
                           ],
-                        ),
-                      ),
-                    ],
-                  ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      l10n.v2RecordedSample,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -698,8 +732,9 @@ class _ExportTeamScore extends StatelessWidget {
       children: [
         Text(
           name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          textAlign: alignment == CrossAxisAlignment.end
+              ? TextAlign.end
+              : TextAlign.start,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: color,
             fontWeight: FontWeight.w700,
@@ -735,18 +770,13 @@ class _ExportMetric extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              maxLines: 1,
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
+            Text(label, style: Theme.of(context).textTheme.labelMedium),
             Text(
               value,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
               style: Theme.of(
                 context,
               ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
@@ -947,9 +977,8 @@ class _ReplayOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
     final scoreCount = controller.scoreEventCount;
-    final completeness = scoreCount == 0
-        ? 0
-        : (controller.locatedShotCount / scoreCount * 100).round();
+    final fieldGoalAttempts = controller.fieldGoalAttemptCount;
+    final completeness = (controller.locationCoverage * 100).round();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -1004,10 +1033,20 @@ class _ReplayOverview extends StatelessWidget {
               value: '${controller.foulEventCount}',
             ),
             _Metric(
+              key: const Key('replay-location-coverage'),
               label: l10n.replayLocationCompleteness,
-              value: '$completeness%',
+              value: fieldGoalAttempts == 0
+                  ? l10n.replayNoData
+                  : '$completeness% · '
+                        '${controller.confirmedLocationCount}/$fieldGoalAttempts',
             ),
           ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          l10n.v2LocationScope,
+          key: const Key('replay-location-coverage-scope'),
+          style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: 20),
         _PossessionSegmentsCard(data: controller.data),
@@ -1192,7 +1231,7 @@ class _ShotLocationReasonDialogState extends State<_ShotLocationReasonDialog> {
 }
 
 class _Metric extends StatelessWidget {
-  const _Metric({required this.label, required this.value});
+  const _Metric({required this.label, required this.value, super.key});
 
   final String label;
   final String value;

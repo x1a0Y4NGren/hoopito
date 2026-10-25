@@ -3,19 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
-import 'package:hooptrace/features/home/home_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
+import 'package:hoopito/features/summary/match_summary_page.dart';
+import 'package:hoopito/features/home/home_page.dart';
 import 'package:go_router/go_router.dart';
 
 import '../test_helpers/test_database.dart';
@@ -23,46 +24,62 @@ import '../test_helpers/test_database.dart';
 void main() {
   final l10n = AppLocalizationsZh();
 
-  testWidgets('production decision finish commits then opens final replay', (
-    tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(3000, 1080));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    final database = createTestDatabase();
-    addTearDown(() async {
-      await tester.pumpWidget(const SizedBox.shrink());
-      await tester.pump(const Duration(milliseconds: 200));
-    });
-    await _seedDecision(database, 'route-finish');
+  testWidgets(
+    'production decision finish commits then opens result and replay',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(3000, 1080));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final database = createTestDatabase();
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump(const Duration(milliseconds: 200));
+      });
+      await _seedDecision(database, 'route-finish');
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [appDatabaseProvider.overrideWithValue(database)],
-        child: const HoopTraceApp(showEntryAnimation: false),
-      ),
-    );
-    await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
-    await _tapVisible(tester, find.byKey(const Key('home-resume')));
-    await _pumpUntilFound(tester, find.byType(ScoringPage));
-    expect(find.byKey(const Key('scoring-decision-dock')), findsOneWidget);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [appDatabaseProvider.overrideWithValue(database)],
+          child: const HoopitoApp(showEntryAnimation: false),
+        ),
+      );
+      await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
+      await _tapVisible(tester, find.byKey(const Key('home-resume')));
+      await _pumpUntilFound(tester, find.byType(ScoringPage));
+      expect(find.byKey(const Key('scoring-decision-dock')), findsOneWidget);
 
-    await tester.ensureVisible(
-      find.byKey(const Key('scoring-decision-finish')),
-    );
-    await _tapVisible(tester, find.byKey(const Key('scoring-decision-finish')));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('Red 1 : 0 Blue'), findsWidgets);
-    await _tapVisible(tester, find.byKey(const Key('scoring-finish-confirm')));
-    await _pumpUntilFound(tester, find.byType(ReplayPage));
-    await _pumpUntilFound(tester, find.text(l10n.replayFinished));
-    expect(find.byKey(const Key('replay-finish-match')), findsNothing);
+      await tester.ensureVisible(
+        find.byKey(const Key('scoring-decision-finish')),
+      );
+      await _tapVisible(
+        tester,
+        find.byKey(const Key('scoring-decision-finish')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Red 1 : 0 Blue'), findsWidgets);
+      await _tapVisible(
+        tester,
+        find.byKey(const Key('scoring-finish-confirm')),
+      );
+      await _pumpUntilFound(tester, find.byType(MatchSummaryPage));
+      await tester.pumpAndSettle();
+      expect(
+        GoRouterState.of(
+          tester.element(find.byType(MatchSummaryPage)),
+        ).uri.path,
+        '/matches/route-finish/summary',
+      );
+      await _tapVisible(tester, find.byKey(const Key('summary-replay')));
+      await _pumpUntilFound(tester, find.byType(ReplayPage));
+      await _pumpUntilFound(tester, find.text(l10n.replayFinished));
+      expect(find.byKey(const Key('replay-finish-match')), findsNothing);
 
-    final match = await database.select(database.matches).getSingle();
-    expect(match.lifecycle, MatchLifecycle.finished.name);
-    expect(await database.select(database.activeSessions).get(), isEmpty);
-  });
+      final match = await database.select(database.matches).getSingle();
+      expect(match.lifecycle, MatchLifecycle.finished.name);
+      expect(await database.select(database.activeSessions).get(), isEmpty);
+    },
+  );
 
-  testWidgets('production manual finish commits and opens canonical replay', (
+  testWidgets('production manual finish commits and opens canonical result', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(1095, 616));
@@ -78,7 +95,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(database)],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -92,16 +109,19 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('Red 1 : 0 Blue'), findsOneWidget);
     await _tapVisible(tester, find.byKey(const Key('scoring-finish-confirm')));
-    await _pumpUntilFound(tester, find.byType(ReplayPage));
-    await _pumpUntilFound(tester, find.text(l10n.replayFinished));
+    await _pumpUntilFound(tester, find.byType(MatchSummaryPage));
+    await tester.pumpAndSettle();
 
     final match = await database.select(database.matches).getSingle();
     expect(match.lifecycle, MatchLifecycle.finished.name);
     expect(await database.select(database.activeSessions).get(), isEmpty);
     expect(
-      _routerFrom(tester).routeInformationProvider.value.uri.path,
-      '/matches/route-manual-finish/replay',
+      GoRouterState.of(tester.element(find.byType(MatchSummaryPage))).uri.path,
+      '/matches/route-manual-finish/summary',
     );
+    await _tapVisible(tester, find.byKey(const Key('summary-replay')));
+    await _pumpUntilFound(tester, find.byType(ReplayPage));
+    await _pumpUntilFound(tester, find.text(l10n.replayFinished));
   });
 
   testWidgets('production decision continue keeps the match active', (
@@ -119,7 +139,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [appDatabaseProvider.overrideWithValue(database)],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -174,7 +194,7 @@ void main() {
           matchCommandServiceProvider.overrideWithValue(service),
           automaticBackupServiceProvider.overrideWithValue(backup),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -234,7 +254,7 @@ void main() {
           appDatabaseProvider.overrideWithValue(database),
           matchCommandServiceProvider.overrideWithValue(service),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -294,7 +314,7 @@ void main() {
             appDatabaseProvider.overrideWithValue(database),
             matchCommandServiceProvider.overrideWithValue(service),
           ],
-          child: const HoopTraceApp(showEntryAnimation: false),
+          child: const HoopitoApp(showEntryAnimation: false),
         ),
       );
       await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -339,7 +359,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [appDatabaseProvider.overrideWithValue(database)],
-          child: const HoopTraceApp(showEntryAnimation: false),
+          child: const HoopitoApp(showEntryAnimation: false),
         ),
       );
       await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));

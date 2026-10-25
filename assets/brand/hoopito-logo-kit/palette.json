@@ -1,0 +1,12 @@
+{
+  "brand": "Hoopito · 球豆",
+  "colors": {
+    "arenaOrange": "#FF5A1F",
+    "nearBlack": "#101112",
+    "warmWhite": "#F4F3EF"
+  },
+  "fonts": {
+    "latin": "Barlow Condensed Bold",
+    "chinese": "Noto Sans SC Regular"
+  }
+}

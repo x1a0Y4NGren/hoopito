@@ -1,0 +1,107 @@
+/* One-shot copper light cues. Layers never capture interaction or affect layout. */
+.demo-invitation-container {
+  position: relative;
+}
+.demo-invitation-layer,
+.demo-invitation-layer * {
+  pointer-events: none;
+}
+.demo-invitation-layer {
+  display: none;
+  position: absolute;
+  z-index: 8;
+  opacity: 0;
+  visibility: hidden;
+  border-radius: 10px;
+}
+.demo-invitation-layer[data-invitation-state='idle'],
+.demo-invitation-layer[data-invitation-state='done'] {
+  display: none;
+}
+.demo-invitation-light,
+.demo-invitation-shade {
+  position: absolute;
+  display: block;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+}
+.demo-invitation-light {
+  border: 1px solid #ffcf9cba;
+  background: radial-gradient(ellipse at 40% 45%, #ffc58f16, #ffc58f03 75%);
+  box-shadow:
+    0 0 23px #e4a16e42,
+    inset 0 0 15px #e4a16e15;
+}
+.demo-invitation-shade {
+  background: #05090d;
+}
+.demo-invitation-arrow {
+  position: absolute;
+  width: 74px;
+  height: 56px;
+  overflow: visible;
+  opacity: 0;
+  fill: none;
+  stroke: #ffd6ad;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 3px #ffb16c66);
+}
+.demo-invitation-arrow path {
+  vector-effect: non-scaling-stroke;
+}
+.demo-invitation-layer[data-cue-kind='court'] .demo-invitation-light {
+  inset: auto;
+  left: var(--court-hint-x, 50%);
+  top: var(--court-hint-y, 65%);
+  width: clamp(96px, 26%, 166px);
+  aspect-ratio: 1.25;
+  border: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    ellipse,
+    #ffd2a33d 0%,
+    #ffbd801e 35%,
+    #ffbd8000 72%
+  );
+  box-shadow: none;
+}
+.demo-invitation-layer[data-cue-kind='court'] .demo-invitation-arrow {
+  left: calc(var(--court-hint-x, 50%) - var(--court-arrow-width, 88px) * 0.25);
+  top: calc(
+    var(--court-hint-y, 65%) - var(--court-arrow-width, 88px) * 0.522727
+  );
+  width: var(--court-arrow-width, 88px);
+  height: auto;
+  aspect-ratio: 4 / 3;
+}
+.demo-invitation-layer[data-cue-kind='presets'] .demo-invitation-arrow {
+  left: calc(33.333% - 53px);
+  top: -22px;
+}
+.demo-invitation-layer[data-cue-kind='record'] .demo-invitation-arrow {
+  right: 42px;
+  top: -22px;
+}
+@media (max-width: 767px) {
+  .demo-invitation-arrow {
+    width: 64px;
+    height: 48px;
+  }
+  .demo-invitation-layer[data-cue-kind='presets'] .demo-invitation-arrow {
+    left: calc(33.333% - 44px);
+    top: -22px;
+  }
+  .demo-invitation-layer[data-cue-kind='record'] .demo-invitation-arrow {
+    right: 26px;
+    top: -22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .demo-invitation-layer {
+    display: none;
+  }
+}

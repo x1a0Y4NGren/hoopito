@@ -1,0 +1,204 @@
+/* Polished rose gold: a broad light band over a warm pink-copper surface. */
+.download-package {
+  --press-color: #f4d6d4ad;
+  --summary-press-color: #8a4a5c;
+  color-scheme: only light;
+  color: #36262d;
+  background:
+    radial-gradient(ellipse at 12% 0%, #fff6efad, transparent 52%),
+    linear-gradient(
+      115deg,
+      #d8aaa3 0%,
+      #edc8bc 28%,
+      #f7dfd4 46%,
+      #e3b7ab 72%,
+      #d6a39d 100%
+    );
+  border-color: #edc3b9;
+  box-shadow:
+    0 40px 80px -35px #000b,
+    inset 0 1px #fff5ebcf,
+    inset 0 0 0 1px #87505a40;
+}
+.download-package::before {
+  border-color: #9257651f;
+}
+.download-package .package-heading .eyebrow,
+.download-package .release-tag {
+  color: #59343f;
+}
+.download-package .release-tag {
+  background: #fff3eb30;
+  border-color: #87505a4d;
+}
+.download-package .version-line > b {
+  color: #79424d;
+}
+.download-package
+  :is(
+    .package-meta,
+    .release-link,
+    .install-note,
+    .checksum summary,
+    .download-extras a,
+    .qr-block span,
+    .upgrade summary,
+    .upgrade p
+  ) {
+  color: #53343e;
+}
+.download-package :is(.package-bottom, .upgrade) {
+  border-color: #87505a33;
+}
+.download-package .checksum code {
+  background: #87505a12;
+  color: #4e303b;
+}
+.download-package .qr-block img {
+  border-color: #9b606d40;
+}
+.download-package .button-dark {
+  color: #fff0e9;
+  background: #2d2228;
+  box-shadow: inset 0 1px #fff4ef1c;
+}
+.download-package .button-dark:hover {
+  background: #47323a;
+  box-shadow: 0 10px 24px #5e2f3b26;
+}
+
+/* Release identity stays complete; enlarged text can move onto its own row. */
+.version-line {
+  flex-wrap: wrap;
+  row-gap: 16px;
+}
+.version-line > b {
+  max-width: 100%;
+  line-height: 1;
+  white-space: nowrap;
+}
+.release-tag {
+  font-family: inherit;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+/* Pressing uses an inset rather than shifting controls or their hit targets. */
+.demo-actions button,
+.point-presets button,
+.download-package .button,
+.download-package summary,
+.faq summary {
+  transition:
+    background-color var(--feedback-duration, 200ms) ease,
+    border-color var(--feedback-duration, 200ms) ease,
+    box-shadow var(--feedback-duration, 200ms) ease,
+    color var(--feedback-duration, 200ms) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.demo-actions button:enabled:active,
+.point-presets button:enabled:active,
+.download-package .button:active {
+  transform: none;
+  box-shadow:
+    inset 0 0 0 2px var(--press-color, #f3c9a899),
+    inset 0 4px 12px #0003;
+}
+.download-package summary:active,
+.faq summary:active {
+  box-shadow: inset 3px 0 var(--summary-press-color, #b87b53);
+}
+.demo-actions button:enabled:focus-visible,
+.point-presets button:enabled:focus-visible,
+.download-package .button:focus-visible,
+.download-package summary:focus-visible,
+.faq summary:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 4px;
+}
+.download-package :is(.button, summary):focus-visible {
+  outline-color: #7a3e53;
+}
+.demo-actions button:disabled,
+.point-presets button:disabled {
+  transform: none;
+  box-shadow: none;
+}
+.demo-actions button:disabled::before,
+.point-presets button:disabled::before {
+  content: none;
+}
+
+@media (max-width: 1023px) {
+  .download-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .download-invitation,
+  .download-package,
+  .score-feature,
+  .score-feature > div {
+    min-width: 0;
+  }
+  .package-heading {
+    flex-wrap: wrap;
+    gap: 10px 20px;
+  }
+  .score-features {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+  .score-feature > div {
+    overflow-wrap: anywhere;
+  }
+  .demo-actions .button,
+  .demo-actions .reset-button,
+  .download-package .button,
+  .faq summary {
+    font-size: 0.875rem;
+    min-height: 48px;
+    line-height: 1.5;
+  }
+  .demo-actions .button,
+  .download-package .button {
+    min-height: 58px;
+  }
+  .demo-actions {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .demo-actions .button,
+  .demo-actions .reset-button {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .demo-actions .reset-button {
+    padding-inline: 14px;
+  }
+  .download-package .button {
+    gap: 14px;
+  }
+  .download-package .button .icon,
+  .faq summary > .icon {
+    flex-shrink: 0;
+  }
+  .faq summary {
+    padding-block: 18px;
+    /* A 19px plus rotates beyond its box by 4px; keep the full motion inside. */
+    padding-inline-end: 6px;
+  }
+  .version-line > b {
+    font-size: clamp(2.65rem, 12vw, 3.4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-actions button,
+  .point-presets button,
+  .download-package .button,
+  .download-package summary,
+  .faq summary {
+    transition: none;
+    transform: none;
+  }
+}

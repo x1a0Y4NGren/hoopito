@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match.dart' as domain_match;
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/home/home_page.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match.dart' as domain_match;
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/home/home_page.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
 
 import '../support/golden_fonts.dart';
 
 void main() {
-  setUpAll(loadHoopTraceGoldenFonts);
+  setUpAll(loadHoopitoGoldenFonts);
 
   testWidgets('English pregame defaults are localized before first paint', (
     tester,
@@ -107,7 +107,7 @@ void main() {
 
       await expectLater(
         find.byKey(const Key('task14-golden-root')),
-        matchesGoldenFile(hoopTraceGoldenFile(goldenCase.name)),
+        matchesGoldenFile(hoopitoGoldenFile(goldenCase.name)),
       );
       expect(tester.takeException(), isNull);
     });
@@ -135,8 +135,8 @@ Widget _fixture({
       GlobalCupertinoLocalizations.delegate,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
-    theme: buildHoopTraceTheme(),
-    darkTheme: buildHoopTraceTheme(brightness: Brightness.dark),
+    theme: buildHoopitoTheme(),
+    darkTheme: buildHoopitoTheme(brightness: Brightness.dark),
     themeMode: brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light,
     builder: (context, child) => MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaler: textScaler),
@@ -145,6 +145,7 @@ Widget _fixture({
     home: RepaintBoundary(
       key: const Key('task14-golden-root'),
       child: HomePage(
+        showDirectory: false,
         activeMatch: _activeMatch,
         onStartScoring: _noop,
         onContinue: _noop,

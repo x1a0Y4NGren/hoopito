@@ -18,7 +18,7 @@ class LegacySchemaDetectedException implements Exception {
   @override
   String toString() =>
       'LegacySchemaDetectedException: schema v$version is incompatible with '
-      'HoopTrace schema v3; start with a clean database.';
+      'Hoopito schema v3; start with a clean database.';
 }
 
 class Matches extends Table {
@@ -523,6 +523,30 @@ class AppDatabase extends _$AppDatabase {
       'audit_logs',
     ];
     const operations = <String>['INSERT', 'UPDATE', 'DELETE'];
+    // SQLite applies an outer UPSERT's conflict policy to statements inside a
+    // trigger. Avoid conflicting inserts altogether so ordinary domain and
+    // preference upserts cannot abort or replace backup metadata.
+    const dirtyStatements = '''
+      INSERT INTO app_settings(key, value_json, updated_at)
+        SELECT 'backup.automatic.dirtyRevision', '0', unixepoch()
+        WHERE NOT EXISTS(SELECT 1 FROM app_settings
+          WHERE key = 'backup.automatic.dirtyRevision');
+      INSERT INTO app_settings(key, value_json, updated_at)
+        SELECT 'backup.automatic.dirtySince',
+          json_quote(strftime('%Y-%m-%dT%H:%M:%fZ', 'now')), unixepoch()
+        WHERE NOT EXISTS(SELECT 1 FROM app_settings
+          WHERE key = 'backup.automatic.dirtySince');
+      UPDATE app_settings
+        SET value_json = CAST(CAST(value_json AS INTEGER) + 1 AS TEXT),
+            updated_at = unixepoch()
+        WHERE key = 'backup.automatic.dirtyRevision';
+      INSERT INTO app_settings(key, value_json, updated_at)
+        SELECT 'backup.automatic.dirty', 'true', unixepoch()
+        WHERE NOT EXISTS(SELECT 1 FROM app_settings
+          WHERE key = 'backup.automatic.dirty');
+      UPDATE app_settings SET value_json = 'true', updated_at = unixepoch()
+        WHERE key = 'backup.automatic.dirty';
+    ''';
     await transaction(() async {
       for (final table in tables) {
         for (final operation in operations) {
@@ -537,20 +561,7 @@ class AppDatabase extends _$AppDatabase {
               WHERE key = 'backup.automatic.enabled' AND value_json = 'true'
             )
             BEGIN
-              INSERT OR IGNORE INTO app_settings(key, value_json, updated_at)
-                VALUES('backup.automatic.dirtyRevision', '0', unixepoch());
-              INSERT OR IGNORE INTO app_settings(key, value_json, updated_at)
-                VALUES(
-                  'backup.automatic.dirtySince',
-                  json_quote(strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-                  unixepoch()
-                );
-              UPDATE app_settings
-                SET value_json = CAST(CAST(value_json AS INTEGER) + 1 AS TEXT),
-                    updated_at = unixepoch()
-                WHERE key = 'backup.automatic.dirtyRevision';
-              INSERT OR REPLACE INTO app_settings(key, value_json, updated_at)
-                VALUES('backup.automatic.dirty', 'true', unixepoch());
+              $dirtyStatements
             END
           ''');
         }
@@ -576,20 +587,7 @@ class AppDatabase extends _$AppDatabase {
             WHERE key = 'backup.automatic.enabled' AND value_json = 'true'
           ) AND ($keyPredicate)
           BEGIN
-            INSERT OR IGNORE INTO app_settings(key, value_json, updated_at)
-              VALUES('backup.automatic.dirtyRevision', '0', unixepoch());
-            INSERT OR IGNORE INTO app_settings(key, value_json, updated_at)
-              VALUES(
-                'backup.automatic.dirtySince',
-                json_quote(strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-                unixepoch()
-              );
-            UPDATE app_settings
-              SET value_json = CAST(CAST(value_json AS INTEGER) + 1 AS TEXT),
-                  updated_at = unixepoch()
-              WHERE key = 'backup.automatic.dirtyRevision';
-            INSERT OR REPLACE INTO app_settings(key, value_json, updated_at)
-              VALUES('backup.automatic.dirty', 'true', unixepoch());
+            $dirtyStatements
           END
         ''');
       }

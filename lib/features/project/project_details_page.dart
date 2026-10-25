@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/features/project/external_link_launcher.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/features/project/external_link_launcher.dart';
 
-const hoopTraceRepositoryUrl = 'https://github.com/x1a0Y4NGren/hooptrace';
-const hoopTraceLicenseUrl = '$hoopTraceRepositoryUrl/blob/main/LICENSE';
-const hoopTraceContributingUrl =
-    '$hoopTraceRepositoryUrl/blob/main/CONTRIBUTING.md';
-const hoopTraceIssuesUrl = '$hoopTraceRepositoryUrl/issues';
+const hoopitoRepositoryUrl = 'https://github.com/x1a0Y4NGren/hoopito';
+const hoopitoLicenseUrl = '$hoopitoRepositoryUrl/blob/main/LICENSE';
+const hoopitoContributingUrl =
+    '$hoopitoRepositoryUrl/blob/main/CONTRIBUTING.md';
+const hoopitoIssuesUrl = '$hoopitoRepositoryUrl/issues';
 
 class ProjectDetailsPage extends StatelessWidget {
   const ProjectDetailsPage({
@@ -49,13 +49,13 @@ class ProjectDetailsPage extends StatelessWidget {
             : null,
       ),
       body: ListView(
-        padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+        padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
         children: [
           Text(
-            'HOOPTRACE',
+            'Hoopito · 球豆',
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
               color: editorialThemeOf(context).ink,
-              fontFamily: HoopTraceTypography.displayFamily,
+              fontFamily: HoopitoTypography.displayFamily,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.8,
             ),
@@ -67,7 +67,7 @@ class ProjectDetailsPage extends StatelessWidget {
               color: editorialThemeOf(context).mutedInk,
             ),
           ),
-          const SizedBox(height: HoopTraceSpacing.section),
+          const SizedBox(height: HoopitoSpacing.section),
           EditorialSectionRule(label: l10n.projectTitle),
           const SizedBox(height: 4),
           _PromiseTile(
@@ -94,32 +94,32 @@ class ProjectDetailsPage extends StatelessWidget {
             title: l10n.projectPrivacy,
             detail: l10n.projectPrivacyDetail,
           ),
-          const SizedBox(height: HoopTraceSpacing.section),
+          const SizedBox(height: HoopitoSpacing.section),
           EditorialSectionRule(label: l10n.projectOpen),
           const SizedBox(height: 4),
           _ProjectLink(
             index: '01',
             icon: Icons.code,
             label: l10n.projectGitHub,
-            onTap: () => _open(context, hoopTraceRepositoryUrl),
+            onTap: () => _open(context, hoopitoRepositoryUrl),
           ),
           _ProjectLink(
             index: '02',
             icon: Icons.balance_outlined,
             label: l10n.projectLicense,
-            onTap: () => _open(context, hoopTraceLicenseUrl),
+            onTap: () => _open(context, hoopitoLicenseUrl),
           ),
           _ProjectLink(
             index: '03',
             icon: Icons.handshake_outlined,
             label: l10n.projectContribute,
-            onTap: () => _open(context, hoopTraceContributingUrl),
+            onTap: () => _open(context, hoopitoContributingUrl),
           ),
           _ProjectLink(
             index: '04',
             icon: Icons.bug_report_outlined,
             label: l10n.projectIssue,
-            onTap: () => _open(context, hoopTraceIssuesUrl),
+            onTap: () => _open(context, hoopitoIssuesUrl),
           ),
         ],
       ),

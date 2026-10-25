@@ -3,10 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/settings/motion_preference_cache.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/settings/motion_preference_cache.dart';
 
-export 'package:hooptrace/core/settings/motion_preference_cache.dart'
+export 'package:hoopito/core/settings/motion_preference_cache.dart'
     show MotionPreference;
 
 /// The single AppSettings row used by live scoring feedback preferences.

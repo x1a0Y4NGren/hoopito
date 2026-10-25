@@ -1,6 +1,6 @@
 # HoopTrace 1.1 Player Comparison Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Every production behavior change follows strict red-green-refactor TDD.
+> Historical 1.1 implementation plan, not release authorization or a new assignment. Execution instructions and checkboxes below describe that task only; see [history scope](../README.md).
 
 **Goal:** Release-ready `1.1.0+3` support for comparing two matches or adjacent rolling windows for one profile-linked player, backed by persistent analytics snapshots included in backups.
 

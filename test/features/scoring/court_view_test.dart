@@ -4,13 +4,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
-import 'package:hooptrace/features/scoring/widgets/court_painter.dart';
-import 'package:hooptrace/features/scoring/widgets/court_view.dart';
-import 'package:hooptrace/features/scoring/widgets/score_side_panel.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
+import 'package:hoopito/features/scoring/widgets/court_painter.dart';
+import 'package:hoopito/features/scoring/widgets/court_view.dart';
+import 'package:hoopito/features/scoring/widgets/score_side_panel.dart';
 
 void main() {
   testWidgets('court view accepts hidden durable ids and transient markers', (
@@ -47,6 +47,101 @@ void main() {
     final court = tester.widget<CourtView>(find.byType(CourtView));
     expect(court.hiddenShotLocationIds, contains('shot-1'));
     expect(court.transientMarkers.single.id, 'shot-1');
+  });
+
+  testWidgets('hidden markers do not intercept a new court point tap', (
+    tester,
+  ) async {
+    var courtTaps = 0;
+    var markerTaps = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 300,
+            height: 280,
+            child: CourtView(
+              shotLocations: [
+                ScoringShotLocation(
+                  id: 'hidden-miss',
+                  eventId: 'hidden-event',
+                  side: TeamSide.blue,
+                  points: 0,
+                  point: CourtPoint(x: 0.5, y: 0.5),
+                  isLocked: true,
+                ),
+              ],
+              hiddenShotLocationIds: const {'hidden-miss'},
+              onCourtPointTap: (_) => courtTaps++,
+              onShotLocationTap: (_) => markerTaps++,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tapAt(tester.getCenter(find.byType(CourtView)));
+    expect(courtTaps, 1);
+    expect(markerTaps, 0);
+  });
+
+  test('miss markers use a white fill and a team-colored cross', () async {
+    const teamBlue = Color(0xFF1769FF);
+    const teamRed = Color(0xFFE53935);
+    const markerRing = Color(0xFF202124);
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    const size = Size(300, 280);
+    final bluePoint = CourtPoint(x: 0.2, y: 0.4);
+    final redPoint = CourtPoint(x: 0.8, y: 0.4);
+    final madePoint = CourtPoint(x: 0.2, y: 0.7);
+    final painter = CourtPainter(
+      shotLocations: [
+        ScoringShotLocation(
+          id: 'blue-miss',
+          eventId: 'blue-miss-event',
+          side: TeamSide.blue,
+          points: 0,
+          point: bluePoint,
+          isLocked: true,
+        ),
+        ScoringShotLocation(
+          id: 'red-miss',
+          eventId: 'red-miss-event',
+          side: TeamSide.red,
+          points: 0,
+          point: redPoint,
+          isLocked: true,
+        ),
+        ScoringShotLocation(
+          id: 'blue-made',
+          eventId: 'blue-made-event',
+          side: TeamSide.blue,
+          points: 2,
+          point: madePoint,
+          isLocked: true,
+        ),
+      ],
+      teamBlueColor: teamBlue,
+      teamRedColor: teamRed,
+      markerRingColor: markerRing,
+    );
+    painter.paint(canvas, size);
+    final image = await recorder.endRecording().toImage(300, 280);
+    final bytes = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+    expect(bytes, isNotNull);
+    expect(
+      _pixelAt(bytes!, width: 300, x: 60, y: 116).toARGB32(),
+      Colors.white.toARGB32(),
+    );
+    expect(
+      _pixelAt(bytes, width: 300, x: 240, y: 116).toARGB32(),
+      Colors.white.toARGB32(),
+    );
+    expect(_pixelAt(bytes, width: 300, x: 60, y: 196), teamBlue);
+    expect(_pixelAt(bytes, width: 300, x: 60, y: 112), teamBlue);
+    expect(_pixelAt(bytes, width: 300, x: 240, y: 112), teamRed);
+    image.dispose();
   });
 
   test('court painter renders an eraser presentation marker', () {
@@ -284,7 +379,6 @@ void main() {
                   score: 12,
                   fouls: 1,
                   onScore: (_) {},
-                  onFoul: () {},
                   missEnabled: true,
                   onMiss: () {},
                 ),

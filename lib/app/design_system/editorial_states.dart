@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:hooptrace/app/design_system/editorial_masthead.dart';
-import 'package:hooptrace/app/design_system/editorial_primitives.dart';
-import 'package:hooptrace/app/design_system/editorial_tokens.dart';
+import 'package:hoopito/app/design_system/editorial_masthead.dart';
+import 'package:hoopito/app/design_system/editorial_primitives.dart';
+import 'package:hoopito/app/design_system/editorial_tokens.dart';
 
 class EditorialSheet extends StatelessWidget {
   const EditorialSheet({
@@ -10,7 +10,7 @@ class EditorialSheet extends StatelessWidget {
     this.title,
     this.titleTrailing,
     this.actions = const [],
-    this.padding = const EdgeInsets.all(HoopTraceSpacing.page),
+    this.padding = const EdgeInsets.all(HoopitoSpacing.page),
     super.key,
   });
 

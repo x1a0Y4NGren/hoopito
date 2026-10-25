@@ -1,5 +1,11 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    # Compiles against archived v1 source in an isolated package configuration.
+    # Its legacy package:hooptrace imports are intentional, not current code.
+    - tool/release/generate_v1_upgrade_fixture.dart
+
 linter:
   rules:
     prefer_single_quotes: true

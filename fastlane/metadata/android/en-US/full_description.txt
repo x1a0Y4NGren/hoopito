@@ -1,13 +1,13 @@
-HoopTrace is an offline scoring, replay, and player-development tool for one-on-one basketball.
+Hoopito is an offline app for one-on-one basketball. Start quickly, record on court, understand your results, and build a player history.
 
-Choose a fast one-tap mode or a detailed court-first mode. Record points, attempts, fouls, possession, match events, and confirmed shot locations. Recover an interrupted active match and use count-up, countdown, or overtime clocks with explicit finish decisions.
+Match, History, and Players tabs retain your browsing state. Start with temporary names, existing profiles, or a new player. Reuse the last setup, swap sides, and review the rules. Tap the target score to enter an integer from 1 to 999. Choose whether you will mainly keep score or record every shot; both use the same landscape workspace, with points, misses, fouls, locations, undo, save status, retry feedback, and a skippable guide.
 
-Review the game through a local timeline, shot chart, scoring flow, key moments, and analytics that clearly reflect tracking coverage. Profile-linked career views provide 7/30/90-day and all-time growth, opponent filters, recorded shooting trends, and zone heatmaps.
+Confirm the final score and recording scope, then open a result summary, full replay, or share report. Link a temporary participant to a profile while keeping their match name, or start a fresh rematch. Player careers and comparisons show recorded evidence: field-goal and free-throw percentages use separate denominators, and incomplete or zero-attempt samples show no percentage. Growth charts, two-match comparisons, and 7/30/90-day windows help you see changes over time.
 
-Manage players and scoring rules, archive history, correct finished records with a human-readable audit trail, and export complete JSON backups, CSV data, or a replay image. Versioned restore supports safe replacement and deterministic merge. Optional automatic backup writes only to a user-approved folder with bounded retention.
+Export complete JSON, readable CSV, or a replay image. Replacement and rollback require a verified private safety copy; active matches block replacement. The two latest valid copies are normally retained. Export and import share a 32 MiB, 100,000-rows-per-table, 200,000-total-row capacity contract. Private copies do not replace an external backup.
 
-All records stay on the device by default. HoopTrace has no account, cloud sync, ads, analytics, tracking, or personal-data upload. Automatic backup is optional, disabled by default, and writes only to a folder explicitly selected by the user.
+All records stay on the device by default. There is no account, cloud sync, advertising, analytics, tracking, or personal-data upload. Optional automatic backup is off by default and writes only to a user-approved folder. The official Hoopito project remains permanently free and open source under the MIT License.
 
-The official HoopTrace project is permanently free and open source under the MIT License.
+The black, white, and orange cyclops basketball icon has a silent elastic launch bounce with a wave and a brief final ripple. Skip it or use reduced/disabled motion. Simplified Chinese and English, system/light/dark themes, system font settings, and adaptive layouts are available.
 
-The complete interface is available in Simplified Chinese and English, with system/light/dark themes, large-text accessibility, and adaptive phone, tablet, foldable, and multi-window layouts. Android is the supported release platform; no iOS binary is promised.
+Android is the current release platform; iOS is not formally released. Version 2.0 uses a new certificate and cannot update the historical v1 package in place. To retain old records, export a complete JSON backup and confirm it is saved, then uninstall v1, install v2, and restore. Uninstalling deletes private app data; internal safety copies do not replace an external JSON backup.

@@ -14,12 +14,9 @@ import UIKit
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
-    let registrar = engineBridge.pluginRegistry.registrar(
-      forPlugin: "HoopTraceEntryMotionPreference"
-    )
     let channel = FlutterMethodChannel(
       name: "io.github.x1a0y4ngren.hooptrace/entry_motion_preference",
-      binaryMessenger: registrar.messenger()
+      binaryMessenger: engineBridge.applicationRegistrar.messenger()
     )
     channel.setMethodCallHandler { call, result in
       let defaults = UserDefaults.standard

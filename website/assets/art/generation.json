@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "generated_at": "2026-10-12",
+  "assets": [
+    {
+      "id": "arena-wide",
+      "source": "source/arena-wide.png",
+      "prompt": "Create a premium cinematic photographic background plate for an artistic basketball app website. Very wide horizontal landscape aspect, indoor basketball arena at night, grounded architectural realism, dark graphite ceiling steel trusses, a few long warm white suspended LED luminaires, distant transparent backboard and orange rim on the RIGHT third, elegant fine maple hardwood court fading into black in the foreground, restrained copper-orange light spilling across wood, volumetric haze subtly revealing depth, deep textured darks not flat black, left half mostly very dark clear negative space for website typography, moody but impeccably crisp material details, fine restrained film grain, high-end sports campaign and architectural photography, no outdoor poles, no people, no basketball foreground, no text or logos, no neon blue, no excessive flare, no borders. Camera near floor with shallow depth of field. This is a background atmosphere image, not a finished website.",
+      "transparent": false
+    },
+    {
+      "id": "arena-tall",
+      "source": "source/arena-tall.png",
+      "prompt": "Create a vertical portrait cinematic photographic background plate for a premium basketball website phone hero. Indoor basketball arena at night, realistic scale, ceiling steel trusses and warm white suspended LED strips at top, distant transparent backboard and warm copper orange rim in the upper RIGHT third at mid-height, fine maple court and warm orange reflection near bottom, large clean very dark negative space in upper left for typography. Deep graphite, warm ivory light, copper orange, refined subtle atmospheric haze and fine restrained filmgrain. High-end sports campaign cinematography, architectural realism, impeccably detailed but calm minimal composition. No people, no ball in foreground, no outdoor streetlight poles, no text, no logos, no frame. Foreground dark enough for separate orange basketball image layer near lower center. It must feel like the same warm dark indoor arena as a wide campaign frame.",
+      "transparent": false
+    },
+    {
+      "id": "basketball",
+      "source": "source/basketball.png",
+      "prompt": "Generate an isolated photorealistic premium regulation basketball as a transparent PNG cutout, centered full round ball with generous transparent margin, three-quarter subtle rotation so sweeping deep dark recessed curved rubber seams give an elegant dynamic composition. True orange copper leather, immaculate finely detailed pebble grain, realistic physical texture, sophisticated cinematic studio illumination: warm amber rim light from upper right along silhouette, restrained soft warm ivory key from front upper left, dark charcoal shadow on lower left, rich nuanced dark leather, no clipped highlights, exquisite high-end sports campaign product photography. Single sphere only, no court, no text, no logos, no hands, no glow outside object, no base pedestal, no background, no cast shadow outside ball. Full object entirely inside canvas. This will be layered over a dark indoor basketball arena website and must look tangible and refined even on mobile.",
+      "transparent": true
+    }
+  ]
+}

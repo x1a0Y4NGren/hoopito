@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/clock_state.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/core/export/backup_merge_service.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/clock_state.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/export/backup_merge_service.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
 
 import '../../test_helpers/test_database.dart';
 
@@ -1552,6 +1552,328 @@ void main() {
       isTrue,
     );
   });
+
+  test(
+    'live undo follows audit chronology across every user-recorded event',
+    () async {
+      final database = createTestDatabase();
+      final service = MatchCommandService(database, now: () => _anchor);
+      await service.start(_start());
+      await service.record(
+        _score(commandId: 'undo-all-score', eventId: 'undo-all-score-event'),
+      );
+      await service.record(
+        RecordMatchEventCommand(
+          commandId: 'undo-all-foul',
+          matchId: 'match-clock',
+          eventId: 'undo-all-foul-event',
+          type: EventKind.foul,
+          side: TeamSide.blue,
+          points: 0,
+          occurredAt: _anchor,
+        ),
+      );
+      await service.record(
+        RecordMatchEventCommand(
+          commandId: 'undo-all-possession',
+          matchId: 'match-clock',
+          eventId: 'undo-all-possession-event',
+          type: EventKind.possession,
+          side: TeamSide.blue,
+          points: 0,
+          occurredAt: _anchor,
+        ),
+      );
+      await service.record(
+        RecordMatchEventCommand(
+          commandId: 'undo-all-note',
+          matchId: 'match-clock',
+          eventId: 'undo-all-note-event',
+          type: EventKind.note,
+          side: null,
+          points: 0,
+          note: 'Timeout adjustment',
+          occurredAt: _anchor,
+        ),
+      );
+      await service.record(
+        RecordMatchEventCommand(
+          commandId: 'undo-all-custom',
+          matchId: 'match-clock',
+          eventId: 'undo-all-custom-event',
+          type: EventKind.custom,
+          side: null,
+          points: 0,
+          customLabel: 'Lineup change',
+          occurredAt: _anchor,
+        ),
+      );
+
+      var projection = await service.undoLastScoringAction(
+        UndoLastScoringActionCommand(
+          commandId: 'undo-all-custom-action',
+          matchId: 'match-clock',
+        ),
+      );
+      expect(
+        projection.events
+            .singleWhere((event) => event.id == 'undo-all-custom-event')
+            .isDeleted,
+        isTrue,
+      );
+      expect(projection.redScore, 1);
+      expect(projection.blueFouls, 1);
+
+      projection = await service.undoLastScoringAction(
+        UndoLastScoringActionCommand(
+          commandId: 'undo-all-note-action',
+          matchId: 'match-clock',
+        ),
+      );
+      expect(
+        projection.events
+            .singleWhere((event) => event.id == 'undo-all-note-event')
+            .isDeleted,
+        isTrue,
+      );
+
+      projection = await service.undoLastScoringAction(
+        UndoLastScoringActionCommand(
+          commandId: 'undo-all-possession-action',
+          matchId: 'match-clock',
+        ),
+      );
+      expect(
+        projection.events
+            .singleWhere((event) => event.id == 'undo-all-possession-event')
+            .isDeleted,
+        isTrue,
+      );
+      expect(projection.currentPossession, isNull);
+
+      projection = await service.undoLastScoringAction(
+        UndoLastScoringActionCommand(
+          commandId: 'undo-all-foul-action',
+          matchId: 'match-clock',
+        ),
+      );
+      expect(projection.blueFouls, 0);
+      expect(projection.redScore, 1);
+
+      projection = await service.undoLastScoringAction(
+        UndoLastScoringActionCommand(
+          commandId: 'undo-all-score-action',
+          matchId: 'match-clock',
+        ),
+      );
+      expect(projection.redScore, 0);
+    },
+  );
+
+  test('a newer foul is undone before a supplemented shot location', () async {
+    final database = createTestDatabase();
+    final service = MatchCommandService(database, now: () => _anchor);
+    await service.start(_start());
+    await service.record(
+      _score(commandId: 'undo-order-score', eventId: 'undo-order-event'),
+    );
+    await service.confirmShotLocation(
+      ConfirmShotLocationCommand(
+        commandId: 'undo-order-location',
+        matchId: 'match-clock',
+        eventId: 'undo-order-event',
+        point: CourtPoint(x: 0.4, y: 0.6),
+        requestedAtUtc: _anchor.add(const Duration(seconds: 1)),
+      ),
+    );
+    await service.record(
+      RecordMatchEventCommand(
+        commandId: 'undo-order-foul',
+        matchId: 'match-clock',
+        eventId: 'undo-order-foul-event',
+        type: EventKind.foul,
+        side: TeamSide.red,
+        points: 0,
+        occurredAt: _anchor.add(const Duration(seconds: 2)),
+      ),
+    );
+
+    final foulUndo = await service.undoLastScoringAction(
+      UndoLastScoringActionCommand(
+        commandId: 'undo-order-foul-action',
+        matchId: 'match-clock',
+      ),
+    );
+    expect(foulUndo.redFouls, 0);
+    expect(foulUndo.redScore, 1);
+    expect(foulUndo.locatedShotCount, 1);
+
+    final locationUndo = await service.undoLastScoringAction(
+      UndoLastScoringActionCommand(
+        commandId: 'undo-order-location-action',
+        matchId: 'match-clock',
+      ),
+    );
+    expect(locationUndo.redScore, 1);
+    expect(locationUndo.locatedShotCount, 0);
+  });
+
+  test(
+    'a location supplemented after a foul is undone before that foul',
+    () async {
+      final database = createTestDatabase();
+      final service = MatchCommandService(database, now: () => _anchor);
+      await service.start(_start());
+      await service.record(
+        _score(
+          commandId: 'undo-reverse-order-score',
+          eventId: 'undo-reverse-order-event',
+        ),
+      );
+      await service.record(
+        RecordMatchEventCommand(
+          commandId: 'undo-reverse-order-foul',
+          matchId: 'match-clock',
+          eventId: 'undo-reverse-order-foul-event',
+          type: EventKind.foul,
+          side: TeamSide.blue,
+          points: 0,
+          occurredAt: _anchor.add(const Duration(seconds: 1)),
+        ),
+      );
+      await service.confirmShotLocation(
+        ConfirmShotLocationCommand(
+          commandId: 'undo-reverse-order-location',
+          matchId: 'match-clock',
+          eventId: 'undo-reverse-order-event',
+          point: CourtPoint(x: 0.25, y: 0.75),
+          requestedAtUtc: _anchor.add(const Duration(seconds: 2)),
+        ),
+      );
+
+      final locationUndo = await service.undoLastScoringAction(
+        UndoLastScoringActionCommand(
+          commandId: 'undo-reverse-order-location-action',
+          matchId: 'match-clock',
+        ),
+      );
+      expect(locationUndo.locatedShotCount, 0);
+      expect(locationUndo.blueFouls, 1);
+      expect(locationUndo.redScore, 1);
+
+      final foulUndo = await service.undoLastScoringAction(
+        UndoLastScoringActionCommand(
+          commandId: 'undo-reverse-order-foul-action',
+          matchId: 'match-clock',
+        ),
+      );
+      expect(foulUndo.blueFouls, 0);
+      expect(foulUndo.redScore, 1);
+    },
+  );
+
+  test(
+    'pause semantics stay recorded while undo skips to the latest user action',
+    () async {
+      final database = createTestDatabase();
+      final service = MatchCommandService(database, now: () => _anchor);
+      await service.start(_start(timerEnabled: true));
+      await service.record(
+        _score(commandId: 'undo-pause-score', eventId: 'undo-pause-event'),
+      );
+      await service.pause(
+        PauseMatchCommand(
+          commandId: 'undo-pause-semantic',
+          matchId: 'match-clock',
+          occurredAt: _anchor.add(const Duration(seconds: 2)),
+        ),
+      );
+
+      final undone = await service.undoLastScoringAction(
+        UndoLastScoringActionCommand(
+          commandId: 'undo-pause-action',
+          matchId: 'match-clock',
+        ),
+      );
+
+      expect(undone.redScore, 0);
+      expect(
+        undone.events
+            .singleWhere((event) => event.id == 'undo-pause-semantic:event')
+            .isDeleted,
+        isFalse,
+      );
+    },
+  );
+
+  test(
+    'failed foul undo rolls back completely and the same command retries',
+    () async {
+      final database = createTestDatabase();
+      var failUndo = false;
+      var failureInjected = false;
+      final service = MatchCommandService(
+        database,
+        now: () => _anchor,
+        failureInjector: (point) {
+          if (failUndo &&
+              !failureInjected &&
+              point == MatchCommandFailurePoint.afterEventWritten) {
+            failureInjected = true;
+            throw StateError('undo failed once');
+          }
+        },
+      );
+      await service.start(_start());
+      await service.record(
+        RecordMatchEventCommand(
+          commandId: 'undo-rollback-foul',
+          matchId: 'match-clock',
+          eventId: 'undo-rollback-foul-event',
+          type: EventKind.foul,
+          side: TeamSide.red,
+          points: 0,
+          occurredAt: _anchor,
+        ),
+      );
+      failUndo = true;
+      final command = UndoLastScoringActionCommand(
+        commandId: 'undo-rollback-action',
+        matchId: 'match-clock',
+      );
+
+      await expectLater(
+        service.undoLastScoringAction(command),
+        throwsA(isA<CommandTransactionFailure>()),
+      );
+      var foul = (await database.select(database.matchEvents).get())
+          .singleWhere((event) => event.id == 'undo-rollback-foul-event');
+      expect(foul.isDeleted, isFalse);
+      expect(
+        (await database.select(database.auditLogs).get()).where(
+          (audit) =>
+              audit.targetId == 'undo-rollback-foul-event' &&
+              audit.action == 'undo',
+        ),
+        isEmpty,
+      );
+
+      final retried = await service.undoLastScoringAction(command);
+      expect(retried.redFouls, 0);
+      foul = (await database.select(database.matchEvents).get()).singleWhere(
+        (event) => event.id == 'undo-rollback-foul-event',
+      );
+      expect(foul.isDeleted, isTrue);
+      expect(
+        (await database.select(database.auditLogs).get()).where(
+          (audit) =>
+              audit.targetId == 'undo-rollback-foul-event' &&
+              audit.action == 'undo',
+        ),
+        hasLength(1),
+      );
+    },
+  );
 
   test(
     'mixed legacy event rows keep the newest row as supplement owner and undo target',

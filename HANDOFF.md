@@ -1,30 +1,215 @@
-# HoopTrace 1.1 交接记录
+# Hoopito · 球豆交接记录
 
-更新日期：2026-08-28
+## 官网发布与本轮收尾（2026-10-25）
 
-## 当前状态
+当前维护 checkout 为 `D:/GitHub/hoopito`、分支 `main`。官网 [hoopito.com](https://hoopito.com/) 已正式上线，最新已验收、推送并部署的源码为 `f001703ebf230240b159ed9bf82a24e0bef7dd5e`；网站树为 `4c569bf13b8955c91752c36635fbfb6a31a84990`。下文“生产暂停”“仅保护预览”等描述保留其历史时点，不代表现在的官网状态。
 
-HoopTrace v1.0.0（versionCode 2）已在 `v1.0.0` tag 和 GitHub Release 发布，当前工作基线为该发布后的 `main`（提交 `8ac4dac`）。Android APK 已发布；iOS 尚未正式发布。核心功能保持离线，无账号、云同步、广告、遥测或运营后端。
+本次发布包含下载渠道弹窗和球友社区：国内蓝奏云在前、GitHub 在后，不接入百度网盘；蓝奏提取码在入口下方显示。QQ 群号为 `1129560287`，邀请图原始二维码像素保留，维护者已确认扫码和群号正确。无 JavaScript 时下载按钮仍直达 GitHub 正式附件；官网同域静态 APK 地址继续可用。网站源码、隐私说明、README、素材来源和实际场景占位已同步。
 
-本 worktree 用于执行 1.1 Player Comparison 计划。计划执行文件位于 `docs/superpowers/plans/2026-08-28-hooptrace-1-1-player-comparison.md`，仅在本地跟踪，不进行 push、tag、Release 或 F-Droid 提交。
+Vercel Production 为 `dpl_6CcBttmH8PqxKa7Yr5H6V9LeNgRf`，绑定上述源码且 `READY`；[不可变部署](https://hoopito-website-ea8aeluf4-xyr175-9459s-projects.vercel.app)与正式域名分别保留其身份。`www` 以 308 转到根域，保留路径与查询。预览认证保护保持开启，`main` 的 Git 自动生产部署仍关闭；此次通过精确 Git 来源构建、完整 CI 后再提升到生产，不将旧部署冒称当前版本。
 
-## v1.0 已交付
+[Website CI 40114499257](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40114499257) 的六组全部通过：154 项单元测试；三浏览器 UI 加两组软件 WebGL 共 532 通过、2 项能力跳过、0 失败、0 flaky。跳过为 Firefox／WebKit 不支持 Chromium CDP 原生双指注入的用例，共享大图控件仍有三浏览器覆盖。干净云端构建共 65 文件、83,456,578 字节，摘要 `4b06cfbd079872ba4c937a5d902f622b66a47463f8161d72fc7da05845a2e0cd`；本地有保留的历史未引用素材，不能声称本地 dist 聚合摘要与云端相同。[同源码 App CI 40114499390](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40114499390) 五组亦全部通过；本轮没有修改 App 或准备新发行。
 
-- “黑场编辑部”视觉与统一计分、回放、历史、球员、规则和设置体验；
-- 可恢复活动比赛、计时/暂停/结束、撤回、赛后修正及不可变审计；
-- 离线 JSON 备份、替换/确定性合并、用户授权目录自动备份；
-- 简体中文/英文、明暗主题、200% 字体和 Android 优先适配；
-- v1.0 发布资料、Android 签名 APK 和隐私声明已就绪。
+线上双语桌面／移动视口检查通过：下载弹窗顺序、键盘与关闭焦点恢复、原页面保留、社区图和群号、隐私页、canonical、robots、四页 sitemap，以及静态 APK 的附件响应与 206 分段请求。通过已发布弹窗完成一次真实 GitHub APK 下载，完整大小及 SHA-256 与正式包一致；蓝奏渠道复用此前完整下载并重新校验的同一 APK，未重复传输。线上移动画面是 Chrome 视口模拟，不重标为新 Android 模拟器或实体手机检查。资源预算 29/29 通过：移动首屏最大 493.4KiB／500，桌面增量最大 736.1KiB／800。
 
-## 1.1 约束与验收
+正式 App 仍为 `2.0.1+5`，APK 来源 `4ecd960e5af1f6b12124a43e330d67efb628281b`、文件 76,441,047 字节、SHA-256 `c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9`；签名、安装身份和公开附件不变。后续收尾文档及治理提交不改变网站部署或 APK 构建来源。
 
-- 保持永久免费、开源、离线优先和 1v1；不升级主要依赖；
-- 保留 schema v2 数据并兼容 v1.0 format-1/schema-2 备份；
-- 完成计划中的测试、性能和本地构建核验后再评估下一次发布；
-- 不在本任务中执行任何远程发布、F-Droid 提交或 iOS 发布操作。
+用户本次明确要求一并收尾，并允许为未完成的 Logo 整理建立待办。[Issue #16](https://github.com/x1a0Y4NGren/hoopito/issues/16) 跟踪独立导出复现、小尺寸和六种组合字标视觉确认及后续正式同步。套件与导出脚本以待验整理稿保存，入口见 [assets/brand/README.md](assets/brand/README.md)；来源、输出摘要和三张 master 与生产源一致性已核对，不把原图历史批准等同于套件最终验收。
 
-## 注意事项
+本轮仅保存收尾的本地提交，不新增推送、部署、发行或远端资源删除。发布证据保留于 `website/output/publish-20261025/`，包含精确源码、CI 门禁、云端构建摘要、公共 HTTP／浏览器结果与双语截图；失败的浏览器辅助脚本样本亦保留。`browser-check.log` 含短期公开附件交付签名查询，仅本地保存，不作为公开报告。收尾范围、资产校验、资源处理及 AOCI／Git 实际回执保留于 `website/output/closeout-20261025/`；治理对齐与完整认知读取是不同结论，以实际回执区分。
 
-- 修改 Drift 表或查询后重新生成并提交 `app_database.g.dart`；
-- Golden 变更须人工检查；不要提交签名密钥、真实数据或构建产物；
-- 运行完整测试时应确认没有 Drift multiple-database warning。
+保留历史计划、场景捕获、发行来源与失败样本；仍在使用的本地预览、原 Pixel AVD 及共享缓存不清理。AMD 画面呈现专项已被维护者停止，不因收尾恢复；[#10](https://github.com/x1a0Y4NGren/hoopito/issues/10) 的旧呈现门槛不冒称通过。Logo 待办之外的 App 真机、自然 24 小时备份、商店／F-Droid 和 iOS 安装限制仍按原发行证据理解，均不自动恢复为本轮任务。
+
+## Issue #6 交付与项目收尾（2026-10-13）
+
+[Issue #6](https://github.com/x1a0Y4NGren/hoopito/issues/6) 已完成并关闭为 `completed`。交付检查点为 `14f8e3cffd229011cf186138b6cdd11821d8a041`，GitHub 仓库为 `x1a0Y4NGren/hoopito`；本机唯一活动 checkout 为 `D:/GitHub/hoopito`，Codex 同一项目入口的名称与保存路径已核验。此前 `D:/GitHub/hooptrace`、旧网站分支和下方未发布状态均属于历史记录。
+
+正式 [v2.0.1](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1) 为 Android `2.0.1+5`。签名 tag 与 APK 构建来源固定为 `4ecd960e5af1f6b12124a43e330d67efb628281b`；APK `Hoopito-v2.0.1-android.apk` 为 76,441,047 字节，SHA-256 `c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9`。沿用 v2 证书 `2820ba06e898be1152d38536492282127e9fb0734a0863bb42db63f8a75611dd`，公开匿名回读与再次安装已验证。后续文档、宣传、网站与 AOCI 提交不改变 APK 来源，也不替换公开附件。
+
+既有 Vercel 项目已更名为 `hoopito-website`，身份与认证保护保留；`codex/hoopito-website` 为预览分支。[交付时的不可变 Preview](https://hoopito-website-7s1plgt2c-xyr175-9459s-projects.vercel.app) 绑定 `14f8e3c`，`READY`，双语桌面／移动首页、隐私页、截图、分享图、下载、摘要及禁止收录等 **207 项检查通过**。[分支入口](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app) 随后续成功部署更新，不能用其地址替代构建来源。生产分支 `main` 的 Git 部署保持关闭，生产上线、商店与 F-Droid 发布、购买域名继续暂停。
+
+应用来源 `4ecd960` 的五项 App CI、对应网站 CI 与正式包 API24 全新安装、API36 公开 v2 同证覆盖、冷进程恢复、旧 JSON 导入及新旧混合备份保留已验收；交付检查点 `14f8e3c` 的 [App CI 38330612839](https://github.com/x1a0Y4NGren/hoopito/actions/runs/38330612839) 同样五项成功。网站输入未变，复用发行记录列明的成功网站 CI。本次收尾只整理文档、治理资产和本地资源，按文档范围检查链接与 diff，不机械重跑 Flutter、设备、APK 或远端部署。完整来源、失败样本及限制见 [v2.0.1 发行记录](docs/release/v2.0.1-release-record.md)。
+
+本轮两台专用合成 AVD `Hoopito_Brand_API24`／`Hoopito_Brand_API36` 在设置恢复后通过 `avdmanager` 删除，原 `Pixel_API_36` 的全部文件与配置摘要未变；没有删除共享 Android 系统镜像。清理 checkout 的 `build`、`.dart_tool`、`android/.gradle`、网站 `dist` 与 `.astro`，共 1,373,516,105 字节逻辑缓存。网站本地报告与失败图像共 1,475 文件及六份发行构建附件移到仓库外并逐项回读摘要；原始发行 APK、公开回读、设备数据库、截图、CI 日志和失败证据继续保留。依赖缓存、`node_modules`、签名配置、密钥与恢复材料保留；下次本地运行先按 README 生成依赖与构建输出。
+
+收尾证据目录为 `D:/DevCache/HoopitoArtifacts/issue-6-20261012/task-closeout-20261013/`，资源实际清理与保留见 `resource-cleanup.json`，治理与 Git 结果以该目录的最终检查回执为准。用户在 issue 完成后单独授权本次收尾，AOCI 在文档与清理达到稳定状态后增量维护；此前“125 份资产原摘要一致”只描述迁移时点，不把后续维护冒称原字节未变。
+
+自然 24 小时调度、实体设备和 iOS 正式签名安装仍未验；旧 Vulkan 模拟器 ANR 根因没有证明消除。API36 首次升级后业务与设置不变，但既有规则播种触发三项备份运行字段变化，不能称首次启动后整库完全相同。拒绝候选的原生 `kotlin.Unit` 崩溃与网络／早期部署失败样本保留，不能改标最终成功。后续工作按新的明确需求开始，历史计划的未勾选项不自动恢复为待办。
+
+以下内容保留各阶段的真实旧名、源码、路径与验收范围，不代表当前交付状态。
+
+## 介绍与下载网站本地交付（2026-10-11）
+
+网站在同一仓库 `website/` 独立维护，当前分支 `codex/hooptrace-website`；网站实现提交为 `6a6f0fa1ea5427c6e95554034bb7f8c16191bdc2`。中英文静态介绍、真实截图、下载与安装说明、连续桌面 3D 球场、手机二维投篮演示、动效偏好和异常降级已实现，网站 CI 与维护文档已配置。当前仅本地提交，未推送或合入 main。后续交接／AOCI 文档提交不改变网站构建来源。
+
+本轮锁定安装、格式、26 文件类型检查、3 项演示状态测试和生产构建通过；三种浏览器 102 项中 88 通过、14 项按引擎能力跳过，0 失败。gzip 移动首屏中文 306.3 KiB、英文 305.7 KiB，桌面 3D 增量 145.4 KiB。固定移动环境独立复测 LCP 0.908～1.224s、CLS 小于 0.1；同构建并发负载下的 2.668s 超目标样本继续保留。实际 AMD GPU 的 headless Chrome 平均渲染循环 89～136 FPS，不冒称物理屏幕帧率；下载章 p95 20.9ms 如实记录。详细环境、范围与限制见[网站验收记录](website/VERIFICATION.md)。
+
+维护者明确暂停 Vercel 相关工作，只有再次提出开始时才恢复连接和部署。本轮不等待认证、不创建远端预览；本地可通过 `website/` 的 `npm run preview` 查看构建。App、数据库、签名和公开 APK 未改，应用来源仍为 `dd1a315894c248acf547aa140a538c9619499829`／发行检查点 `96bb6d15b8b2e62e6139ab9f4a5af69c8d4a8812`。网站新增对象在最终稳定状态按 AOCI 维护并核验；下方记录保留其历史来源。
+
+## 主工作区统一与 AOCI 收尾（2026-10-09）
+
+维护者明确要求不新增备份，统一主工作区并提交到远端 main。`D:/GitHub/hooptrace` 已从本地旧 1.1 提交快进到已发布的 2.0；有效仓库规范和 AOCI 接入保留，已同步或过时的本地文档采用 v2 内容。后续只维护这个 main 检出，不再保留另一份活动候选工作树。旧候选已在上一轮可恢复归档，其路径不再是可用源码目录。
+
+本轮应用、依赖、平台和测试输入与发行检查点 `96bb6d15b8b2e62e6139ab9f4a5af69c8d4a8812` 一致；发行应用源码仍为 `dd1a315894c248acf547aa140a538c9619499829`，版本 2.0.0+4／schema 3／JSON2。只整理文档、忽略规则和 AOCI 正式认知及治理资产，不重建或替换已公开 APK，不重跑输入未变的 Flutter、设备或 CI 验收。索引按当前 v2 证据维护；收尾须以 AOCI Verify、Check、Guide 对齐及 Git 本地／远端相同提交、干净状态为完成依据。
+
+AOCI 正式索引、共享配置和基线进入版本管理，日志、事务、临时草稿与本机 Codex 配置仍忽略。原主工作区“保留 32 个旧用户文件”的记录只描述此前保护状态，不再要求继续维护 1.1。下方发行及候选记录保留当时来源和实际限制。
+
+## 本轮任务收尾（2026-10-09）
+
+维护者确认本轮结束。v2.0.0 的实现、适用验收、正式发行和公开包复验已完成；已知限制继续如实保留，不再等待自然备份观察或建立长期监控。签名 tag 与 APK 来源不变，收尾仅修改交接文档。
+
+两台专用 AVD 已恢复设置并删除，原 Pixel 保留；候选的 `build` 和 `.dart_tool` 已清理，共移除 1,263,860,806 字节的逻辑缓存。204 份未跟踪验证记录、失败图像及本机配置另存为当前 Windows 用户 DPAPI 加密归档，逐项回读哈希通过；17 份 Python 字节码缓存无需保留。归档位于 `C:/Users/48029/.hooptrace/task-archives/hooptrace-v2-20261009/`，清单、恢复说明及工作树归档实际回执保存在 `D:/DevCache/HoopTraceV2Artifacts/release-20261008/task-closeout/`。仓库外的正式 APK、CI 原始日志、失败样本、密钥及可移植签名恢复包继续保留原位置。
+
+远端 main 已包含 v2.0.0；原 `D:/GitHub/hooptrace` 检出仍为旧提交，32 个用户文件保持原哈希，未为同步版本而覆盖或暂存它们。后续维护请以远端 main 或签名 tag 为源码依据，并先核对实际工作区版本。已合并候选工作树按 Codex 可恢复归档处理，具体成功或保留状态以仓库外回执为准。
+
+## 当前状态：已公开发行（2026-10-09）
+
+[v2.0.0](https://github.com/x1a0Y4NGren/hooptrace/releases/tag/v2.0.0) GitHub 正式发行和公开包核验已完成。版本 `2.0.0+4`／schema 3／JSON2；签名 tag、干净正式构建及[五项完整 CI](https://github.com/x1a0Y4NGren/hooptrace/actions/runs/37810025006) 均绑定 `96bb6d15b8b2e62e6139ab9f4a5af69c8d4a8812`，应用源码 `dd1a315894c248acf547aa140a538c9619499829`。后续纯文档提交不改变 APK 来源。
+
+正式 APK SHA-256 `03dd03a13c3f01b9c8734ee5cec4e8e278f2447056b7f0d88336274e61099280`，新证书 `2820ba06e898be1152d38536492282127e9fb0734a0863bb42db63f8a75611dd`。API24／36 最终包的目标分、大字体和真实冷进程复验通过；公开 APK 未认证回读、签名和版本核验后另作 API24 全新安装／冷启动，十二表一致。其余未变输入保留原证据，不冒称重跑。专用设备已恢复设置并删除，原 Pixel 和 main 用户改动保留。
+
+同证 v1 覆盖升级免验；自然 24 小时调度未测且非阻断。Vulkan 模拟器 ANR 未证明根因消除，没有实体设备、商店或 iOS 安装包验收。维护者确认本机加一份 U 盘可移植签名备份和另存口令；不称两份离线备份。实际门槛、来源及公开下载见[发行记录](docs/release/v2.0.0-release-record.md)。
+
+以下各节按当时源码和包保留历史来源；旧“尚未发布”“签名阻断”不代表当前状态。
+
+## 历史发行前验收（2026-10-09）
+
+候选应用源码 `dd1a315894c248acf547aa140a538c9619499829`，版本2.0.0+4／schema3／JSON2。API24高键盘导致初始提示裁剪（内容可滚达）；最终布局去重复标题、保留semanticLabel与字段标签、固定12dp内部留白，312dp回归和标签越边回归先失败再通过。123项赛前、1185项全量Flutter、分析及12幅Windows Golden通过；12幅实际Linux Golden来自run37754771273并无更新复验、逐文件哈希一致，临时workflow已删除。最终CI和正式包设备复验待完成，尚未创建v2 tag／Release。
+
+发行已获维护者授权。原签名丢失且无用户，同证升级免验、不记通过；新证书、可跨电脑恢复、本机和一份G盘副本及另存口令已确认。自然24小时未测且非阻断，无长期监控。原main检出32个用户文件保持。继续依据[发行记录](docs/release/v2.0.0-release-record.md)推进最终CI、同检查点正式构建、API24／36实际大字体、签名tag／公开Release及公开包回读。下方是历史来源，勿把旧“签名阻断”或未合并状态当当前状态。
+
+## GitHub 发行恢复（2026-10-08）
+
+维护者查找 U 盘后确认没有可用原签名，恢复发行任务，沿用已生成的新证书 `2820ba06…`；旧 keystore 保留，原证书覆盖升级继续免验、不记通过。候选续接点 `0dfbabd`，应用 `480984f`，后续修复、CI 和正式包结果按实际完成追加，不改写下方历史来源。
+
+已制作 6,203 字节的可跨电脑加密 PKCS12 恢复包，独立口令恢复到新 JKS、同证书和真实私钥签名验证通过，错误口令拒绝；不用原 JKS 口令或 DPAPI 参与恢复。维护者选择本机和一份 U 盘副本，调整两份离线模板要求，实际不称两份离线；本机与 `G:/key备份` 副本回读哈希一致，维护者确认已另存恢复口令。双语发行资料已整理；应用 `c99a443` 以 16dp 弹窗边距修复窄屏大字体范围／错误说明裁剪，真实字体先失败再通过，1177 项全量 Flutter、格式与分析通过。八张 Windows 和八张实际 Linux Golden 已检查，旧常规基准不变。候选 `f65fafd` 已正常推送，正式五项 CI 正在执行，不预先称为通过。尚未合并 main、建 v2 tag 或公开 Release。当前 main 新增的 AOCI 和既有用户文档保留；本轮 32 个用户文件重新建立基线，不把用户后来修改误记为代理破坏。
+
+本轮入口见[发行执行记录](docs/release/v2.0.0-release-record.md)及[双语发行说明](docs/release/v2.0.0-release-notes.md)。
+
+更新：2026-10-06 · 版本 `2.0.0+4` · 最新应用源码 `480984fd61dc59dd907e435eb12e7b0eb30e11e4` · 历史完整旅程验收检查点 `94bb58e094736dfeaf42e524e308236de876a059`。
+
+继续在隔离 worktree `C:/Users/48029/.codex/worktrees/hooptrace-v2/hooptrace`、分支 `codex/hooptrace-v2` 执行。原 `D:/GitHub/hooptrace` 的既有文档修改完整保留，当前 27 项逐文件 hash 未变。本轮按批准计划正常推送候选 `2ef56aa`，包含应用 `480984f` 的完整远端 CI 首次五项全部通过；后续文档提交不改变实际 CI／APK 来源。未合并 main、创建 PR、tag 或 GitHub Release。公开正式版仍为 v1.0.0，**不标记发布就绪**。
+
+## 发行设备复验补充（2026-10-08）
+
+远端 main 与候选已快进至 `f537888`，原 main 检出的 32 个用户文件未改；对应五项 CI 全部通过，正式包 `2c6a3116…61f6220` 身份核验成功。但 API24／36 实际 200% 字体仍出现目标分说明裁剪，此包不发布，原始失败保留。应用 `9ab4db8` 增加 320dp 最小弹窗宽度，新增 Android 非线性缩放回归先失败再通过；八项布局、1181 项全量 Flutter及分析通过。十二幅 Windows 基准已更新，Linux与最终正式包／新完整CI仍待复验；尚未创建 v2 tag／Release。旧行文和后续各节仅描述当时来源，不能作为当前状态。
+
+## 新正式签名与正式包续验（2026-10-06）
+
+维护者确认没有现有用户，批准保留应用 ID 并创建新正式签名。原证书覆盖升级与旧用户迁移本轮免验，不记录为通过；无需继续找回旧口令。原 keystore 保留且哈希未变。新口令在本机随机生成，DPAPI 当前用户加密与 owner／SYSTEM ACL 保护，C／D 本机加密副本回读通过；它们不等于两份离线备份，发行收尾仍需维护者保存可恢复的离线密钥与口令。
+
+正式 Release 候选已构建：应用源码 `480984fd61dc59dd907e435eb12e7b0eb30e11e4`，干净构建检查点 `462e9d1ec12c7db2bdddd09161ebf29001932ba0`；APK SHA-256 `bdd9df0bac226a334c64616a3bfdc54eebd5633ad467850046e1acd27b4293cf`，新证书 SHA-256 `2820ba06e898be1152d38536492282127e9fb0734a0863bb42db63f8a75611dd`。版本 `2.0.0+4`、schema 3、JSON 2 不变；包名不变、不可调试、min24／target36、allowBackup=false、SQLite 三 ABI 及正式签名已核验。当前应用／工作流输入未改，复用 `2ef56aa`／run `37429173938` 五项 CI，未将未签名可复现结果称为新已签名 APK 字节复现。
+
+仓库外根目录 `D:/DevCache/HoopTraceV2Artifacts/new-signing-480984f-20261006/` 保存正式 APK、公开包检查、截图／XML／文件库及分享证明。API36 已实测 100 分终场、999 最近配置双击仅建一场、零出手完整记录、FG／FT 各 50%、成长三场场均 34.3、真实文件库冷进程恢复及撤回，PNG／JSON／三文件 CSV 系统分享、损坏备份拒绝、安全副本替换／回退、不可用目录不破坏现有数据。
+
+**API24／36 正式包核心验收已完成，保留各项实际范围。** API24 手输目标100、双击仅建一场；计时显示按Android epoch／anchor核对，两次真实冷进程以新PID继续按序撤回。100配置再赛改999后取消不建比赛，最近配置999双击只有一个新ID、零事件、时钟0及默认scoresOnly；零出手显式完整仍无百分比。新档案保留当场姓名，完整复盘返回正确，成长两场场均1.0。系统实际接收PNG 187,680字节、SHA-256 `65228bbb613b91cd0dc7963686c59948cad24e0cbc073d813cb332b0ad90d29c`；两场JSON正常导出并生产恢复。新增第三场后经正常SAF替换3→2，再安全副本回退2→3，11组全字段canonical相同、5事件／31审计插入顺序相同、保留两份副本；派生缓存2→3单独记录。关键证明为 `device-api24/b18-cold-undo-proof.json`、`d38-preset-repeat-proof.json`、`g49-replace-rollback-proof.json`，不复用旧Debug结果冒称正式包通过。
+
+API36实际正式包JSON为434,432字节，SHA-256 `d364fd24a5571c08752479a3f548e00928cab566ef05296a335f54800fb4d8f5`；生产codec恢复12组／154行、再次导出字节一致。精确证明为 `host-validation/formal-two-match-utf8/synthetic-selftest-proof.json`，SHA-256 `7e3b97c04fd4ee8ef9bf4ef4dc84d63027acc0f49029f55fcf0c027d59ab7740`。API24实际JSON为57,556字节、SHA-256 `68a0b26b8181de15f616e3147028f0a2634fc0432a8af85ef9848eb4a8004319`，生产codec恢复12组／46行、完整字段和持久顺序相同，往返字节一致；证明 `host-validation/formal-api24-two-match-utf8/synthetic-selftest-proof.json` SHA-256 `1a7cbdaf6d54a67d0f2b6196c37eb1c9243b53acf1d669b4b5b957d42a56628d`，独立附件哈希检查通过。这些都是设备UI实际导出的合成数据，不冒称自然Worker调度通过。
+
+API24首个模拟器因compositor失败，尚未安装APK；调整原生合成／pipe后在host OpenGL下完成验收，原失败保留。旧系统SAF RecyclerView不响应ADB注入tap，实际改用D-pad选取文件，正常SAF回调和替换事务通过；该环节不声称触控验证通过。API36大字体首次两张screencap全黑，保留原片；后续两张正常、数字键盘Enter提交100成功。200%英文辅助说明行截断，数字及按钮可用，视觉限制保留；旧Vulkan ANR根因未证明消除。
+
+两台临时AVD已按记录恢复设置并通过avdmanager删除，原Pixel保留，ADB无运行设备；结束采样D／C可用55.18／23.34GiB。原key与main27文件哈希不变，814份公开文本未含真实口令值，C／D本机加密副本回读解密一致。完整当前范围见[正式包验收](docs/release/v2.0.0-formal-package-verification.md)和[签名策略](docs/release/v2.0.0-signing-upgrade-verification.md)。本轮新签名与正式包核心验收完成；自然调度未实测且非阻断，无长期监控。发行前仍需可恢复的离线密钥备份、上述限制复核及发行收尾，**不标记发布就绪**；未合并main、创建PR／tag／Release或发布商店。以下各历史检查点保持当时来源和状态，不作为当前设备仍在运行或旧签名仍阻断的说明。
+
+## 历史正式签名续验：口令恢复阻断（2026-10-06，策略调整前）
+
+用户授权继续签名／升级后，重新核验原 keystore 哈希 `7dec9b85729f4594181e51bf71c0d1ffcf9936d3a7465c820c5867719ef3d03c`、正式 v1 APK 和原证书均一致；实际 v1 schema 2 基线再次通过 11 原表／rowid／审计顺序、完整性和外键核验。应用源码仍为 `480984f`，干净构建检查点为 `c7ac5fe`；原 CI `2ef56aa` 的五项成功输入不变。
+
+已准备仓库外本机遮蔽口令窗口及正式构建入口，10 项合成辅助检查通过；Java Properties 真实解码、特殊字符、配置不覆盖／发布失败、错误口令日志不泄漏均验证。固定 Temurin 17.0.20+8 通过 492 个逐文件校验的硬链接保留在 `C:/Users/48029/.hooptrace/toolchains/temurin-17.0.20+8`，不受 `flutter clean` 删除，没有重复下载或 D 盘二进制复制，也未改全局 Flutter／Java 配置。
+
+用户随后确认两个口令遗忘或不确定。本机窗口已关闭；两工作区、`.hooptrace`、文档同步和项目验收目录的限定配置文件名搜索均无副本。没有生成 `key.properties`、真实私钥探针或正式 v2 APK，未猜测口令、创建替代证书、新建 AVD 或恢复长期监控。现阶段需维护者找回原口令或旧配置；正式签名／同证升级／正式包设备继续阻断，不能将准备工作记作通过。材料在 `D:/DevCache/HoopTraceV2Artifacts/signed-upgrade-480984f-20261006/`，详情见[签名准备记录](docs/release/v2.0.0-signing-upgrade-verification.md)。本次仅提交本地交接文档，不推送或发布。
+
+## 当前候选完整 CI（2026-10-06）
+
+CI 提交 `2ef56aaad86f55f9d9a95379bf23a0f8ac516e78`、应用源码 `480984f`；[37429173938 / attempt 1](https://github.com/x1a0Y4NGren/hooptrace/actions/runs/37429173938) 首次 **5/5 作业全部成功**：质量／Debug、API24 两项集成、API36 四项集成、两份 fresh 未签名 Android 完整字节一致、macOS iOS 无签名 Release。1173 项远端 Flutter、63 项工具及 16 项 schema 通过；查询历史／复盘为 15.951／48.247ms，API36 命令 p95 为 37.332ms／100 样本，原门槛不变。
+
+仓库外 `D:/DevCache/HoopTraceV2Artifacts/ci-480984f-20261006/run-37429173938/attempt-1/` 保存五份完整日志、终态、产物 metadata、独立核验和 `SHA256SUMS`。CI 报告未签名 APK SHA-256 `689c1e0724241c54a5f27c448b343c5ae3b93757ea9d39722603ceb706c0366d`；没有下载重复二进制，不声称本机回读或 Debug APK 的远端哈希。未改应用／工作流，无重跑，未建立本地设备；main 27 文件哈希未变。后续纯文档提交只同步记录，详见[本次 CI 验收](docs/release/v2.0.0-final-ci-verification.md)。正式签名／同证升级／正式包设备仍待条件，CI 不证明旧 ANR 根因已消除；自然调度未测且非阻断。
+
+## 清理后的续验（2026-10-06）
+
+用户要求继续中断任务后，仅建立一台可删除的合成 API36：`HoopTrace_V2_Resume_API36 / emulator-5564 / user10`，不操作原 Pixel 或真实数据。发现计分页将已累计的时钟投影再次计算，现场显示偏快，持久库与终场时长未重复累计；`480984f` 修复显示读取并保留到时／回退停止状态。两项正／倒计时回归先失败再通过，计分模块 110 项、分析、1173 项全量 Flutter 通过。新 Debug APK 位于 `D:/DevCache/HoopTraceV2Artifacts/resumed-acceptance-20261006/hooptrace-2.0.0+4-480984f-debug.apk`，SHA-256 `d09b4e9dc3baa2f66da7ce079faaa924bd9cc5076829b1e60905b3860b868e47`；版本、schema、JSON 不变。
+
+新包保留合成数据覆盖安装后，恢复暂停、继续／记分／撤回、真实冷进程及下一步撤回通过；12 表及 rowid 在冷进程前后相同，运行显示按 Android epoch 和数据库 anchor 核对通过。实际记到 100:0，主要记分不显示可信命中率；最近配置 999 双击开始仅建一场，零事件且不复制完整度，显式完整零出手无百分比。成长页混合两场场均 54.5，完整场 FG/FT 为 100%/50%，不完整场图表留空。
+
+实际当前 UI 导出 JSON 447,497 字节，12 组／175 行，SHA-256 `ffcc8ccdd2ac0a6cb9bfa90815c414ba59912a44c3e37429e3655a2bb12863a9`；生产 codec 恢复及第二次导出字节一致，证明附件独立核验通过。新证明 SHA-256 `346e1c4ae1de3cc0101cd5f9189701c59e0fe133eca22d06883551d9a30e534a`。损坏 checksum 拒绝并无成功证明。原 `996146f` 验证器和旧证据不改写。
+
+正常 SAF 选取实际 JSON 后三场／两档案替换为两场／一档案，再通过手机安全副本回退恢复原三场／两档案；11 组业务及设置表字段、47 事件及 117 审计插入顺序相同，回退前也生成保护文件，实际保留两份。派生快照在保护导出时从 2 刷新为 4，独立记录而非声称全表行数不变。英文暗色 200% 字体目标输入／键盘／取消可用，关闭系统动画的真实冷启动进首页。设备、字体／主题／语言／动画／HWUI 临时设置恢复并回读；专用 AVD 已删除、原 Pixel 保留，ADB 无运行设备，D 可用约 53.97 GiB。main 27 文件、历史验证器 95 文件和既有六项关键哈希再次核验未变。
+
+初始旧包 guest HWUI Vulkan 出现真实输入 ANR，完整线程栈显示 HWUI／gfxstream 提交等待；切换该独立设备的新进程后，实际 `Pipeline=Skia (OpenGL)` 下完成功能续验。它不证明根因消除，也不覆盖旧 T1 性能。日志、失败读样本、截图及文件库在上述仓库外目录，精确范围见[计时与设备续验](docs/release/v2.0.0-clock-device-verification.md)。旧启动／平台输入不变的证据保留原源码；该续验轮结束时新应用 CI 尚未运行；后续获授权的完整 CI 已在上方记录。正式签名／同证升级／正式包设备继续阻断，自然调度仍未测且非阻断。设备续验轮没有推送、发布或重启长期监控。
+
+## 剩余验收与 D 盘清理（2026-10-06，清理阶段记录）
+
+用户取消长期监控后，已删除暂停的 `hooptrace` 自动任务；自然调度准确保留为未完成实测的非阻断项。当前 `996146f` 生产 codec 合成自测和证明身份保护已完成，实际当前包 UI 导出 JSON 及其恢复证明仍待验。独立 API24 已安装正式 v1、加载真实 v1 命令生成的合成 fixture，实际取库核验 schema 2 的 11 表原始夹具行、rowid 及审计顺序保持；v1 初始化另加 4 条内置规则，规则总数 1→5，并非全表行数不变。正式 v2 签名条件仍缺失。独立 API36 仅完成当前 Debug 身份、离线首页和取消不建比赛，其余完整旅程尚未完成。
+
+验收过程中用户要求优先释放 D 盘：先通过 Android 自带管理器删除六台专用测试 AVD（含本轮 5564／5566），通过 main Gradle `:app:clean` 清理 app 构建输出，释放约 41.21 GiB。普通文件删除被自动审批拒绝后，用户在本机执行核对脚本，余下 42 项旧 APK／Linux Golden 工具副本／Gradle transforms 已全部删除；执行日志无错误，再只读核验全部路径不存在。第二轮卷空间增加约 14.23 GiB，D 当前可用约 57.12 GiB，两轮累计约 55.45 GiB。原 Pixel、正式 v1、当前两个 APK、95 个历史恢复验证文件、小型证据和原 main 27 个未提交文件均核验保留；原待清理清单保存历史状态，最新结果为外部 `cleanup-completed-verification.json`。设备验收的未完成项保持待验。详情见[本轮剩余验收与清理](docs/release/v2.0.0-remaining-acceptance.md)。下方各历史设备运行状态只描述当时，六台已删除设备需有实际验收需求时再复建。
+
+## 启动性能环境验收（2026-10-06）
+
+新增独立 `HoopTrace_V2_Stable_API36 / emulator-5562 / user10`。同一 `996146f` Profile APK 在 ASG／隐藏 Qt／NVIDIA Vulkan 原生合成配置下，三组共 30 次及模拟器冷重启后 10 次均为 standard；各组构建／绘制 p95 均低于原 16.7ms 门槛，合并 2597 帧为 **2.948／11.064ms**。**T1 模拟器性能与连续录屏通过**，不替代实体设备或正式包验收。应用、Logo、48×48 网格、动作和等待期限未改；120 次原始记录及八组失败均保留。
+
+新比较工具／CI 入口为 `89ed822`，本地 Python 69 项（63 通过、6 跳过）；[新增工具 CI](https://github.com/x1a0Y4NGren/hooptrace/actions/runs/37345318798) 首轮 **5/5 作业全部通过**，包含 1171 项 Flutter、63 项 Linux 工具测试、API24／36 集成、未签名 Android 可复现构建和 iOS 无签名编译。五份作业日志与远端产物 metadata 已保存。guest／进程设置已回读恢复，新设备停止，原 5560 启动状态恢复，原 main 27 项 hash 不变。新原片、SHA 和复建步骤见[环境验收](docs/release/v2.0.0-startup-lab.md)。下方 10-05 失败结论保持原环境来源。
+
+## 启动性能续验（2026-10-05）
+
+本轮以首页提前挂载和绘制隔离各做十次实验，同一旧包前后绘制 p95 17.761／25.990ms 表明环境波动较大，收益未获证明，两项实验实现全部撤回。最终 `996146f` 相对 `f4ffcea` 仅保留 Profile handoff mark 和更完整的 Python presented 测量；原启动／页面时机、Logo、网格、轨迹、数据库顺序与期限不变。最终本地格式、分析、1171 项全量 Flutter、原 Golden 和 Python 59 项（53通过、6项 POSIX 跳过）通过。
+
+独立 `emulator-5560` API36／NVIDIA host GPU／Impeller GLES 的最终十次全为标准动作；620 个 presented 帧构建／绘制 p95 **3.287／30.827ms**，原 visual 为 1.641／24.653ms，**绘制仍失败，T1 未完成**。新工具包含原生交接等待与可见静止准备，旧日志兼容原 visual；全部失败样本保留。3.034056 秒完整原片及当前 Debug／Profile 已核验，Debug 空比赛文件库冷进程 smoke／返回前台通过，首次设备读取失败及新目录重试均留证。T1 临时设置和原 foreground user0 已恢复。当前源码的 [CI 37332931443](https://github.com/x1a0Y4NGren/hooptrace/actions/runs/37332931443) 首轮五项全部通过：质量、API24／36 集成、两份 fresh 源码未签名 Android 可复现构建和 macOS iOS 无签名编译。完整日志与远端产物 metadata 已保存。
+
+自然备份 `emulator-5556` 与防休眠进程已停止，最后同 boot 记录停在 10-05 22:32:56，距原基线仅 27110 秒／27109.78 秒；旧区间不能通过。原 `a51203c` APK 来源、基线及中断前后 status 保留，未重启或重置，新的完整区间需要另行授权。详情及原始记录见[启动续验](docs/release/v2.0.0-startup-performance.md)和[备份设备观察](docs/release/v2.0.0-backup-device-verification.md)。下方旧记录保留历史来源，不表示当前观察设备仍在运行。
+
+## 前一轮发布前任务（a51203c，2026-10-05）
+
+最新源码增加 Profile 准备阶段诊断、按显示尺寸解码和逐列复用水波计算，正式 Logo／48×48 网格／节奏不变。设备验收发现动态无障碍或动画模式切换会丢弃终场确认，已修复并补三项 RED→GREEN 回归。格式、分析及 1157 项全量 Flutter 测试通过，原 Golden 未改变。备份观察工具独立审查的三项问题修复后，Windows Python 45 项与 WSL shell 6 项通过。
+
+独立 API36 使用 NVIDIA 宿主 GPU、Impeller OpenGLES，原模拟器 user10 未动。最终十次 Profile 冷启动为 6 次标准／4 次降级，构建／绘制 p95 为 10.202／55.829ms，**性能门槛仍失败**；完整标准启动到首页的最终连续录屏已取得，录屏不替代帧预算。真实 v1 源码生成的 schema 2 合成库已在 Debug 冷进程升级到 schema 3，原 11 表与审计顺序保留，重启后按正确顺序继续两次撤回。正式 keystore 公开证书与 v1 APK 相同，正式签名配置仍缺失，不能以此 Debug 检查代替同证覆盖升级。
+
+最终候选 CI [37268869963](https://github.com/x1a0Y4NGren/hooptrace/actions/runs/37268869963) 对应 `a51203c`，5/5 作业全部通过；已修复首轮 Android action shell 解析和 Swift nullable registrar 编译错误，API24／36 全部集成、Android fresh 可复现及 macOS iOS 无签名编译均有当前证据。API24 的离线旅程／100与999／重复开始／冷进程撤回和大字体键盘已验证；API36 的实际 JSON／PNG 分享、授权撤销 Worker、重新授权及安全副本替换／回退通过，完整度与混合成长样本按当前结果归档。自然基线于北京时间 2026-10-05 15:01:08 开始，最早 10-06 15:01:08 后方可验收；新 WorkSpec `4e982fc6-7a21-4d4d-bace-ebca8bbd05ad`，观察区间冻结应用操作。当前线程每天 16:00 继续核验（automation `hooptrace`），结果仍 pending；设备／基线路径与恢复临时设置步骤见下方验收。最终 Debug／Profile 的 hash、录屏、原始测量及逐项状态见[本轮验收](docs/release/v2.0.0-pre-release-verification.md)，签名步骤见[同证升级准备](docs/release/v2.0.0-signing-upgrade-verification.md)，自然调度规范见[备份设备观察](docs/release/v2.0.0-backup-device-verification.md)。后续文档提交不改变这些 APK 来源；本轮不进行发行收尾。
+
+## 目标分编辑（2026-10-05）
+
+按本轮批准方案，赛前目标分可编辑为 1～999；点击数字打开预填、全选并自动聚焦的输入框，确认或键盘完成提交。空值、0、负数、小数、非数字和超限值保留输入并显示错误；取消、返回或外部关闭不改原值，连续打开／提交均有保护。数字控件保持至少 48dp，并将朗读标签、当前值和点击动作合并为一个无障碍按钮。范围常量由控制器、加减按钮及校验共用，模板默认及重置行为不变。
+
+最新源码 `6d1b6cc`：格式与分析通过、1151 项全量测试通过；新增 Windows／Linux 双语明暗弹窗 Golden，原赛前 Golden 未改变。数据库持久化、最近配置／交换再赛、目标达到提示及双语窄屏 200% 字体／键盘布局均有回归。schema 3、JSON 格式 2 与版本 `2.0.0+4` 不变；既有规则、历史快照和备份不迁移、不截断。最终 Debug APK 已覆盖安装，SHA-256 `00AE09F8B47C08821070032D53E01E65C501B89D2A1AF812039D3F67A01A7676`；API36 实测输入／取消／键盘完成及英文亮色 200% 字体可用，原有 11 张业务表逐行一致，临时设置已恢复。本轮 APK、实际设备截图及校验和见[目标分验收](docs/release/v2.0.0-target-score.md)。其他验收仍保留原始源码；此次不重验启动性能或正式发行门槛。
+
+## 项目文档同步（2026-10-03）
+
+本轮按后续请求，将原工作区已有的指导文件改进同步到候选分支，更新 AGENTS、贡献指南、PR 模板、发行模板、历史范围说明及文档入口。README 修正本地验收状态；隐私说明补齐实际自动备份策略和 2.0 私有安全副本，安全政策修正过期的 1.0 候选表述。
+
+原工作区 main 的应用仍为 `1.1.0+3`；其 README/HANDOFF 已注明候选所在分支与本机路径，已有的 1.1 交接内容保留。文档同步前的原文已独立保存，原工作区改动继续保持未提交。本轮只校对文档与链接，不重建 APK、不将旧验收改标为新提交；上方应用源码、现有 APK 和发行阻断项保持原有来源。
+
+完整文档入口见 [docs/README.md](docs/README.md)；指导规则以 [AGENTS.md](AGENTS.md) 和 [CONTRIBUTING.md](CONTRIBUTING.md) 为准。文件实际版本、工作区状态与 APK 来源分别记录，避免将候选实现当作 main 已合并或正式已发布。
+
+2026-10-04 本轮再次同步项目级文档：AGENTS/贡献指南补齐候选启动契约和证据要求，README、文档索引、PR/发行模板与候选记录同步最新应用来源和剩余门槛；修正已完成安装/设置恢复仍显示待补的交接文字。本轮仅执行文档内容、链接及 diff 检查；原 main 既有改动继续保留，各 APK 来源不变。
+
+## 正式标识替换（2026-10-04）
+
+用户明确批准 C「独眼球怪」并要求淘汰旧标识。内置 ImageGen 生成透明源图后，统一三色与单色源图、Android/iOS 启动器和原生启动画面、Flutter 入口、两语言商店图标及 README。旧 hoop PNG、原生引用和直接绘制篮板／篮网／轨迹的入口画笔已删除；新入口采用同一球怪的弹跳、轻微倾斜和落地回弹，保留跳过、反馈、关闭动画及进程内播放契约。
+
+来源、生成命令和本轮资源／入口／Android 检查见[品牌记录](docs/design/brand/README.md)及[本轮验收](docs/design/brand/verification.md)。下方完整旅程结果与 `94bb58e` APK 保留原始来源，不包括本次标识替换。原 main 的未提交文档不变；签名、远端 CI 和 macOS 条件仍是发行阻断项。
+
+## 实现
+
+2026-10-04 后续启动动效：按用户批准的 Q 弹方案加入 48×48 纹理网格、衰减水波和局部余波；启动静音无震动，慢初始化显示静态品牌等待，淡出保留页面实例，跳过平滑归零。设计与本轮独立验证见[启动动效记录](docs/design/brand/entry-motion.md)。既有完整旅程、标识替换 APK 和发行阻断项仍保留各自来源。
+
+启动动效轮最终应用源码 `ec9efae59da86d595cab8c2391dcc5494404afaa`：1125 项全量测试、静态分析、Dart 格式及 11 项 Python 回归通过；9 张亮色 Golden 覆盖阶段及双语窄屏 200% 字体，暗主题通过 API36 实际启动检查。Linux 9 项 Golden 复用 `cce17cd` 生产快照及文字基准修正，其静态帧输入未受后续单次解码修复影响。
+
+Profile 与 Debug 最终构建成功。调试 APK 为 `D:/DevCache/HoopTraceV2Artifacts/entry-motion-20261004/hooptrace-2.0.0+4-elastic-debug.apk`，SHA-256 `C6C3BAAEBB25DEB1A7FD2D5F8D9ED1F9544852CB854E8AECABCBD4E67E61D35A`；Android Debug 签名，非正式发行包。API36 SwiftShader 恢复后的 10 次冷启动包含 1 次标准动作、9 次降级淡出；可见阶段构建/绘制 p95 为 83.925/160.203ms，**16.7ms 门槛未通过**，10 次完整动作及实体设备流畅度未验收。最终 Debug 已覆盖安装并通过冷启动及返回前台检查，既有比赛保留，测试设置已恢复。标准动作直至首页的完整连续设备录屏仍未验收；Flutter 渲染预览和设备录屏分别保留范围。旧测量和中断记录均独立保留，后续文档提交不改变 APK 来源。
+
+三入口与保留浏览状态、有界最近三场、紧凑开赛/档案创建/预填交换、统一横屏记录/补点/撤回/重试/可跳过指引、终场总结/再赛/档案关联/分享/成长已贯通。完整度确认与纠正保留事务/审计/receipt/旧指纹，FG/FT分开且不完整或零出手不给可信百分比；落点采用确认运动战落点/记录运动战出手。
+
+替换和回退先在数据库外保存回读验证的原子安全副本，写预留覆盖全过程，保留两份，活动比赛阻断。schema3/JSON2不变，支持schema2升级及两组旧备份。导入导出统一32MiB/100k单表/200k总行上限，不删receipt。实际分享裁切、旧自动备份trigger冷启动Sqlite1555、历史刷新及复盘统计/大字体布局已修复。
+
+`3c829d5` 修正落点13%·1/8与200%分析；`94bb58e` 修正英文大字体竖屏误分栏。详细范围、双语发行说明、来源和限制见[候选记录](docs/release/v2.0.0-candidate.md)与[升级指南](docs/release/v2.0.0-upgrade.md)。
+
+## 完整旅程检查点验证与产物（94bb58e）
+
+- 该检查点源码：1093项全量通过、全仓分析无问题、291文件格式0改动；WindowsGolden无更新，Linux24项无更新通过；主机查询历史查询 15.464ms、复盘投影 50.827ms 均低于 500ms。
+- 该检查点源码API24/36 main_loop各+1、退出0；当前MAIN Debug实际复盘13%·1/8与中英文200%亲验，集成测试后MAIN重建SHA一致，user10三场/档案/备份保留、临时设置恢复。
+- 输入未变的备份/文件恢复/比较/命令性能/原生JUnit/依赖/分享证据复用且不改标：SwiftShader命令p95=81.951ms/100低于100ms；宿主GPU失败623.61ms并列保留。详见reused-inputs.json与候选逐项记录。
+- 两份fresh源码固定路径unsignedRelease完整APK字节一致；版本/权限/allowBackup/证书报告/校验和齐全。可安装Debug：`D:/DevCache/HoopTraceV2Artifacts/94bb58e/hooptrace-2.0.0+4-debug.apk`；unsignedRelease及SHA256SUMS同目录。
+- 8张真实Fastlane发行图仍为3a未改动页面来源，新复盘PNG/metadata另记当前源码；真实share/SAF/受控Worker文件、授权失效、旧库启动及进程重启证据保留原始提交。
+
+## 仍需条件
+
+新正式签名与 API24／36 核心正式包验收已完成，原证书升级按无现有用户情况免验。发行前还需可恢复的离线密钥／口令备份，复核大字体提示截断、首次黑截图与 API24 系统选择器触控限制；旧 Vulkan ANR 根因未证明消除。实际范围与未完成项见顶部及[正式包记录](docs/release/v2.0.0-formal-package-verification.md)。最新应用 `480984f`、完整 CI `2ef56aa` 五项通过；`996146f` 的 40 次标准启动与录屏保留原模式、设备和输入。自然调度未实测且非阻断、监控已取消，授权失效 Worker 保持 `a51203c` 来源；不扩张模拟器或合成数据结论。
+
+完成剩余门槛后按[发行清单](docs/release/release-checklist.md)复核。后续纯文档提交不改变上面的应用来源；没有新的发布授权。

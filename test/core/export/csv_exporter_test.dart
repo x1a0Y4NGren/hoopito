@@ -1,7 +1,7 @@
 import 'package:csv/csv.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/export/csv_exporter.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/export/csv_exporter.dart';
 
 void main() {
   group('CsvExporter', () {
@@ -93,15 +93,65 @@ void main() {
           matchesPlayed: 4,
           wins: 3,
           points: 28,
-          madeShots: 12,
-          attemptedShots: 20,
+          fieldGoalMade: 12,
+          fieldGoalAttempts: 20,
+          freeThrowMade: 4,
+          freeThrowAttempts: 5,
+          attemptsComplete: true,
         ),
       ]);
 
       final rows = _decodeCsv(encoded);
       expect(rows.first, CsvExporter.playerStatisticsHeaders);
-      expect(rows[1], ['player-1', 'A, Ace', 4, 3, 28, 12, 20, 60.0]);
-      expect(encoded, endsWith(',60.00'));
+      expect(rows[1], [
+        'player-1',
+        'A, Ace',
+        '',
+        '',
+        4,
+        3,
+        28,
+        12,
+        20,
+        60.0,
+        4,
+        5,
+        80.0,
+      ]);
+      expect(encoded, endsWith(',80.00'));
+    });
+
+    test('incomplete and zero samples export empty percentage cells', () {
+      final rows = _decodeCsv(
+        CsvExporter.playerStatistics([
+          const PlayerStatisticsRow(
+            playerId: 'incomplete',
+            playerName: 'Incomplete',
+            matchesPlayed: 1,
+            wins: 1,
+            points: 7,
+            fieldGoalMade: 2,
+            fieldGoalAttempts: 3,
+            freeThrowMade: 3,
+            freeThrowAttempts: 4,
+            attemptsComplete: false,
+          ),
+          const PlayerStatisticsRow(
+            playerId: 'zero',
+            playerName: 'Zero',
+            matchesPlayed: 1,
+            wins: 0,
+            points: 0,
+            fieldGoalMade: 0,
+            fieldGoalAttempts: 0,
+            freeThrowMade: 0,
+            freeThrowAttempts: 0,
+            attemptsComplete: true,
+          ),
+        ]),
+      );
+      expect(rows[1].skip(7), [2, 3, '', 3, 4, '']);
+      expect(rows[2].skip(7), [0, 0, '', 0, 0, '']);
     });
   });
 }

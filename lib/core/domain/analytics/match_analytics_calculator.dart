@@ -1,12 +1,12 @@
 import 'dart:math' as math;
 
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/possession_segment.dart';
-import 'package:hooptrace/core/domain/entities/shot_location.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/possession_segment.dart';
+import 'package:hoopito/core/domain/entities/shot_location.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 class MatchAnalyticsCalculator {
   MatchAnalytics calculate(
@@ -199,15 +199,13 @@ class MatchAnalyticsCalculator {
     closeRun();
 
     final attempts = madeShotCount + missedShotCount;
-    final effectiveCoverage =
-        trackingCoverage ??
-        (missedShotCount > 0
-            ? TrackingCoverage.shotAttempts
-            : TrackingCoverage.scoresOnly);
+    final effectiveCoverage = trackingCoverage ?? TrackingCoverage.scoresOnly;
     final isReliable =
-        attempts > 0 &&
+        fieldGoalAttemptCount > 0 &&
         effectiveCoverage.index >= TrackingCoverage.shotAttempts.index;
-    final recordedPercentage = isReliable ? madeShotCount / attempts : null;
+    final recordedPercentage = isReliable
+        ? fieldGoalMadeCount / fieldGoalAttemptCount
+        : null;
 
     final locationsByEvent = <String, ShotLocation>{};
     for (final location in shotLocations) {

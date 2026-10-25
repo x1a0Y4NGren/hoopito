@@ -98,10 +98,340 @@ abstract class AppLocalizations {
     Locale('zh'),
   ];
 
+  /// No description provided for @v2Saving.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在保存'**
+  String get v2Saving;
+
+  /// No description provided for @v2Saved.
+  ///
+  /// In zh, this message translates to:
+  /// **'已保存到本机'**
+  String get v2Saved;
+
+  /// No description provided for @v2SaveFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'保存失败，请重试'**
+  String get v2SaveFailed;
+
+  /// No description provided for @v2LastAction.
+  ///
+  /// In zh, this message translates to:
+  /// **'上次操作'**
+  String get v2LastAction;
+
+  /// No description provided for @v2GrowthChartRange.
+  ///
+  /// In zh, this message translates to:
+  /// **'显示最近 {count} 场，共 {total} 场'**
+  String v2GrowthChartRange(int count, int total);
+
+  /// No description provided for @v2SafetyWriteError.
+  ///
+  /// In zh, this message translates to:
+  /// **'无法保存并验证安全副本，当前数据未替换。请确认设备存储空间后重试。'**
+  String get v2SafetyWriteError;
+
+  /// No description provided for @v2SafetyLoadError.
+  ///
+  /// In zh, this message translates to:
+  /// **'无法读取安全副本，请重试。'**
+  String get v2SafetyLoadError;
+
+  /// No description provided for @v2BackupRows.
+  ///
+  /// In zh, this message translates to:
+  /// **'行'**
+  String get v2BackupRows;
+
+  /// No description provided for @v2BackupCapacityError.
+  ///
+  /// In zh, this message translates to:
+  /// **'备份超过支持容量（当前 {measured}，上限 {limit}）。原数据已保留。'**
+  String v2BackupCapacityError(String measured, String limit);
+
+  /// No description provided for @v2SwapSides.
+  ///
+  /// In zh, this message translates to:
+  /// **'交换双方'**
+  String get v2SwapSides;
+
+  /// No description provided for @v2PresetApplied.
+  ///
+  /// In zh, this message translates to:
+  /// **'已沿用双方与规则，可继续调整'**
+  String get v2PresetApplied;
+
+  /// No description provided for @v2RulesSummary.
+  ///
+  /// In zh, this message translates to:
+  /// **'规则概览'**
+  String get v2RulesSummary;
+
+  /// No description provided for @v2StartFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'比赛未能开始，请重试。'**
+  String get v2StartFailed;
+
+  /// No description provided for @v2PointsDifference.
+  ///
+  /// In zh, this message translates to:
+  /// **'最近两场得分差值'**
+  String get v2PointsDifference;
+
+  /// No description provided for @v2MarginDifference.
+  ///
+  /// In zh, this message translates to:
+  /// **'最近两场分差变化'**
+  String get v2MarginDifference;
+
+  /// No description provided for @v2Matches.
+  ///
+  /// In zh, this message translates to:
+  /// **'比赛'**
+  String get v2Matches;
+
+  /// No description provided for @v2RecentMatches.
+  ///
+  /// In zh, this message translates to:
+  /// **'最近三场'**
+  String get v2RecentMatches;
+
+  /// No description provided for @v2RecentPreset.
+  ///
+  /// In zh, this message translates to:
+  /// **'沿用上场设置'**
+  String get v2RecentPreset;
+
+  /// No description provided for @v2Result.
+  ///
+  /// In zh, this message translates to:
+  /// **'赛果'**
+  String get v2Result;
+
+  /// No description provided for @v2Rematch.
+  ///
+  /// In zh, this message translates to:
+  /// **'再来一场'**
+  String get v2Rematch;
+
+  /// No description provided for @v2Share.
+  ///
+  /// In zh, this message translates to:
+  /// **'分享战报'**
+  String get v2Share;
+
+  /// No description provided for @v2Replay.
+  ///
+  /// In zh, this message translates to:
+  /// **'完整复盘'**
+  String get v2Replay;
+
+  /// No description provided for @v2CoverageTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'记录范围'**
+  String get v2CoverageTitle;
+
+  /// No description provided for @v2CoverageScores.
+  ///
+  /// In zh, this message translates to:
+  /// **'主要记分'**
+  String get v2CoverageScores;
+
+  /// No description provided for @v2CoverageComplete.
+  ///
+  /// In zh, this message translates to:
+  /// **'记录了每次投篮'**
+  String get v2CoverageComplete;
+
+  /// No description provided for @v2CoverageHelp.
+  ///
+  /// In zh, this message translates to:
+  /// **'只有确认全场投篮（含未中）都已记录，才会显示可信命中率。漏记时请选择“主要记分”。'**
+  String get v2CoverageHelp;
+
+  /// No description provided for @v2CorrectCoverage.
+  ///
+  /// In zh, this message translates to:
+  /// **'纠正记录范围'**
+  String get v2CorrectCoverage;
+
+  /// No description provided for @v2CoverageReason.
+  ///
+  /// In zh, this message translates to:
+  /// **'记录范围纠正'**
+  String get v2CoverageReason;
+
+  /// No description provided for @v2FieldGoalPercentage.
+  ///
+  /// In zh, this message translates to:
+  /// **'运动战命中率'**
+  String get v2FieldGoalPercentage;
+
+  /// No description provided for @v2FreeThrowPercentage.
+  ///
+  /// In zh, this message translates to:
+  /// **'罚球命中率'**
+  String get v2FreeThrowPercentage;
+
+  /// No description provided for @v2RecordedSample.
+  ///
+  /// In zh, this message translates to:
+  /// **'以下图表仅表示已记录的样本'**
+  String get v2RecordedSample;
+
+  /// No description provided for @v2LocationScope.
+  ///
+  /// In zh, this message translates to:
+  /// **'已确认落点 / 已记录运动战出手'**
+  String get v2LocationScope;
+
+  /// No description provided for @v2SavePlayer.
+  ///
+  /// In zh, this message translates to:
+  /// **'保存到球员档案'**
+  String get v2SavePlayer;
+
+  /// No description provided for @v2CreatePlayer.
+  ///
+  /// In zh, this message translates to:
+  /// **'新建球员档案'**
+  String get v2CreatePlayer;
+
+  /// No description provided for @v2SelectPlayer.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择已有球员'**
+  String get v2SelectPlayer;
+
+  /// No description provided for @v2PlayerSaved.
+  ///
+  /// In zh, this message translates to:
+  /// **'已关联档案，当场姓名保留'**
+  String get v2PlayerSaved;
+
+  /// No description provided for @v2Retry.
+  ///
+  /// In zh, this message translates to:
+  /// **'重试'**
+  String get v2Retry;
+
+  /// No description provided for @v2GuideTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'快速上手'**
+  String get v2GuideTitle;
+
+  /// No description provided for @v2GuideScore.
+  ///
+  /// In zh, this message translates to:
+  /// **'直接记分'**
+  String get v2GuideScore;
+
+  /// No description provided for @v2GuideScoreBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'点双方的 +1、+2、+3 即可记分。'**
+  String get v2GuideScoreBody;
+
+  /// No description provided for @v2GuideLocation.
+  ///
+  /// In zh, this message translates to:
+  /// **'补落点与未中'**
+  String get v2GuideLocation;
+
+  /// No description provided for @v2GuideLocationBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'先点球场再记分，或记分后在 10 秒内补落点；未中也能记录。'**
+  String get v2GuideLocationBody;
+
+  /// No description provided for @v2GuideUndo.
+  ///
+  /// In zh, this message translates to:
+  /// **'撤回与结束'**
+  String get v2GuideUndo;
+
+  /// No description provided for @v2GuideUndoBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'撤回恢复上一步；点击顶部结束比赛并确认记录范围。'**
+  String get v2GuideUndoBody;
+
+  /// No description provided for @v2GuideSkip.
+  ///
+  /// In zh, this message translates to:
+  /// **'跳过'**
+  String get v2GuideSkip;
+
+  /// No description provided for @v2GuideNext.
+  ///
+  /// In zh, this message translates to:
+  /// **'下一步'**
+  String get v2GuideNext;
+
+  /// No description provided for @v2GuideDone.
+  ///
+  /// In zh, this message translates to:
+  /// **'知道了'**
+  String get v2GuideDone;
+
+  /// No description provided for @v2AbandonedMatch.
+  ///
+  /// In zh, this message translates to:
+  /// **'比赛未完赛'**
+  String get v2AbandonedMatch;
+
+  /// No description provided for @v2AbandonedMatchHelp.
+  ///
+  /// In zh, this message translates to:
+  /// **'可以复盘已保存的记录；本场不计入已完成比赛统计。'**
+  String get v2AbandonedMatchHelp;
+
+  /// No description provided for @v2SafetyTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'恢复安全副本'**
+  String get v2SafetyTitle;
+
+  /// No description provided for @v2SafetyHelp.
+  ///
+  /// In zh, this message translates to:
+  /// **'替换前自动保护当前数据，保留最近两份。回退前也会保护当前数据。'**
+  String get v2SafetyHelp;
+
+  /// No description provided for @v2SafetyEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'尚无安全副本'**
+  String get v2SafetyEmpty;
+
+  /// No description provided for @v2SafetyRestore.
+  ///
+  /// In zh, this message translates to:
+  /// **'恢复这份副本'**
+  String get v2SafetyRestore;
+
+  /// No description provided for @v2SafetyConfirm.
+  ///
+  /// In zh, this message translates to:
+  /// **'恢复安全副本会替换当前数据；当前数据会先另存为安全副本。'**
+  String get v2SafetyConfirm;
+
+  /// No description provided for @v2GrowthSample.
+  ///
+  /// In zh, this message translates to:
+  /// **'按比赛顺序显示运动战命中率；空缺表示记录不完整或无出手。'**
+  String get v2GrowthSample;
+
   /// No description provided for @appName.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace'**
+  /// **'球豆'**
   String get appName;
 
   /// No description provided for @startScoring.
@@ -113,7 +443,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayHistory.
   ///
   /// In zh, this message translates to:
-  /// **'复盘历史'**
+  /// **'历史'**
   String get replayHistory;
 
   /// No description provided for @settings.
@@ -1893,19 +2223,19 @@ abstract class AppLocalizations {
   /// No description provided for @legacyBootstrapTitle.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace 数据兼容性检查'**
+  /// **'球豆数据兼容性检查'**
   String get legacyBootstrapTitle;
 
   /// No description provided for @legacyBootstrapHeadline.
   ///
   /// In zh, this message translates to:
-  /// **'无法打开 HoopTrace v0.1 数据'**
+  /// **'无法打开旧版 v0.1 数据'**
   String get legacyBootstrapHeadline;
 
   /// No description provided for @legacyBootstrapBody.
   ///
   /// In zh, this message translates to:
-  /// **'检测到不兼容的旧数据库版本{version}。现有文件会保持原样；HoopTrace 不会静默迁移、删除或清空它。请先导出或备份旧文件，再使用当前版本创建新的本地数据。'**
+  /// **'检测到不兼容的旧数据库版本{version}。现有文件会保持原样；球豆不会静默迁移、删除或清空它。请先导出或备份旧文件，再使用当前版本创建新的本地数据。'**
   String legacyBootstrapBody(Object version);
 
   /// No description provided for @bootstrapFailureBody.
@@ -1913,6 +2243,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'本地数据库暂时无法打开，现有数据未被修改。请稍后重试，或创建新的本地数据库。'**
   String get bootstrapFailureBody;
+
+  /// No description provided for @entryPreparingRecords.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在打开本地记录…'**
+  String get entryPreparingRecords;
 
   /// No description provided for @settingsDefaultSection.
   ///
@@ -2112,6 +2448,48 @@ abstract class AppLocalizations {
   /// **'数据'**
   String get settingsDataSection;
 
+  /// No description provided for @settingsDataManagementTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'管理数据与备份'**
+  String get settingsDataManagementTitle;
+
+  /// No description provided for @settingsDataManagementSubtitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'导出、恢复和自动备份都在这里'**
+  String get settingsDataManagementSubtitle;
+
+  /// No description provided for @settingsManualDataSection.
+  ///
+  /// In zh, this message translates to:
+  /// **'导出与恢复'**
+  String get settingsManualDataSection;
+
+  /// No description provided for @settingsAutomaticBackupSection.
+  ///
+  /// In zh, this message translates to:
+  /// **'自动备份设置'**
+  String get settingsAutomaticBackupSection;
+
+  /// No description provided for @settingsExportDataTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'导出数据'**
+  String get settingsExportDataTitle;
+
+  /// No description provided for @settingsExportDataSubtitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择可恢复的 JSON 备份或用于分析的 CSV 文件'**
+  String get settingsExportDataSubtitle;
+
+  /// No description provided for @settingsExportDataDialogTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择导出格式'**
+  String get settingsExportDataDialogTitle;
+
   /// No description provided for @settingsStatisticsSection.
   ///
   /// In zh, this message translates to:
@@ -2247,7 +2625,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsBackupRetentionSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'仅清理 HoopTrace 自动备份，不影响手动或安全备份'**
+  /// **'仅清理球豆自动备份，不影响手动或安全备份'**
   String get settingsBackupRetentionSubtitle;
 
   /// No description provided for @settingsPrivacySection.
@@ -2313,7 +2691,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAboutTitle.
   ///
   /// In zh, this message translates to:
-  /// **'关于 HoopTrace'**
+  /// **'关于球豆'**
   String get settingsAboutTitle;
 
   /// No description provided for @settingsAboutSection.
@@ -2337,7 +2715,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsRestorePickerTitle.
   ///
   /// In zh, this message translates to:
-  /// **'选择 HoopTrace 备份'**
+  /// **'选择球豆备份'**
   String get settingsRestorePickerTitle;
 
   /// No description provided for @settingsMergeTitle.
@@ -2379,7 +2757,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsReplaceConfirmBody.
   ///
   /// In zh, this message translates to:
-  /// **'文件验证通过后，HoopTrace 会先创建一份恢复前安全备份，再一次性替换本机数据。'**
+  /// **'文件验证通过后，球豆会先创建一份恢复前安全备份，再一次性替换本机数据。'**
   String get settingsReplaceConfirmBody;
 
   /// No description provided for @settingsReplaceConfirmAction.
@@ -2481,7 +2859,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsErrorFutureVersion.
   ///
   /// In zh, this message translates to:
-  /// **'该备份由更高版本创建，请升级 HoopTrace 后再试'**
+  /// **'该备份由更高版本创建，请升级球豆后再试'**
   String get settingsErrorFutureVersion;
 
   /// No description provided for @settingsErrorInvalidBackup.
@@ -2559,7 +2937,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeClockNotConfigured.
   ///
   /// In zh, this message translates to:
-  /// **'计时未配置'**
+  /// **'未开启计时'**
   String get homeClockNotConfigured;
 
   /// No description provided for @homeClockRegulationExpired.
@@ -2583,13 +2961,13 @@ abstract class AppLocalizations {
   /// No description provided for @homeLastPersistedUnknown.
   ///
   /// In zh, this message translates to:
-  /// **'最近持久化：未知'**
+  /// **'最近保存：时间未知'**
   String get homeLastPersistedUnknown;
 
   /// No description provided for @homeLastPersisted.
   ///
   /// In zh, this message translates to:
-  /// **'最近持久化：{date}'**
+  /// **'最近保存：{date}'**
   String homeLastPersisted(Object date);
 
   /// No description provided for @homeResumeMatch.
@@ -3096,6 +3474,24 @@ abstract class AppLocalizations {
   /// **'目标分'**
   String get pregameTargetScore;
 
+  /// No description provided for @pregameEditTargetScore.
+  ///
+  /// In zh, this message translates to:
+  /// **'编辑目标分'**
+  String get pregameEditTargetScore;
+
+  /// No description provided for @pregameConfirmTargetScore.
+  ///
+  /// In zh, this message translates to:
+  /// **'确认'**
+  String get pregameConfirmTargetScore;
+
+  /// No description provided for @pregameTargetScoreRange.
+  ///
+  /// In zh, this message translates to:
+  /// **'请输入 {min}～{max} 的整数'**
+  String pregameTargetScoreRange(int min, int max);
+
   /// No description provided for @pregamePoint.
   ///
   /// In zh, this message translates to:
@@ -3261,7 +3657,7 @@ abstract class AppLocalizations {
   /// No description provided for @pregameNameSnapshot.
   ///
   /// In zh, this message translates to:
-  /// **'{side}姓名快照'**
+  /// **'{side}本场姓名'**
   String pregameNameSnapshot(Object side);
 
   /// No description provided for @pregameTemporaryHint.
@@ -3273,7 +3669,7 @@ abstract class AppLocalizations {
   /// No description provided for @pregameSnapshotHint.
   ///
   /// In zh, this message translates to:
-  /// **'比赛开始时保存当前显示的姓名快照。'**
+  /// **'修改本场姓名不会更改球员档案。'**
   String get pregameSnapshotHint;
 
   /// No description provided for @pregameRed.
@@ -3357,7 +3753,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringMissed.
   ///
   /// In zh, this message translates to:
-  /// **'未中'**
+  /// **'未命中'**
   String get scoringMissed;
 
   /// No description provided for @scoringPoints.
@@ -4035,7 +4431,7 @@ abstract class AppLocalizations {
   /// No description provided for @exportBackupDialogTitle.
   ///
   /// In zh, this message translates to:
-  /// **'选择 HoopTrace 备份'**
+  /// **'选择球豆备份'**
   String get exportBackupDialogTitle;
 
   /// No description provided for @exportAutomaticBackupDialogTitle.
@@ -4047,25 +4443,25 @@ abstract class AppLocalizations {
   /// No description provided for @exportFullBackupSubject.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace 完整本地备份'**
+  /// **'球豆完整本地备份'**
   String get exportFullBackupSubject;
 
   /// No description provided for @exportSafetyBackupSubject.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace 恢复前安全备份'**
+  /// **'球豆恢复前安全备份'**
   String get exportSafetyBackupSubject;
 
   /// No description provided for @exportCsvSubject.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace CSV 数据导出'**
+  /// **'球豆 CSV 数据导出'**
   String get exportCsvSubject;
 
   /// No description provided for @exportReplaySubject.
   ///
   /// In zh, this message translates to:
-  /// **'HoopTrace 比赛复盘'**
+  /// **'球豆比赛复盘'**
   String get exportReplaySubject;
 
   /// No description provided for @projectGitHub.
@@ -4164,6 +4560,12 @@ abstract class AppLocalizations {
   /// **'犯规'**
   String get scoringFoul;
 
+  /// No description provided for @scoringFoulForSide.
+  ///
+  /// In zh, this message translates to:
+  /// **'{side}犯规'**
+  String scoringFoulForSide(Object side);
+
   /// No description provided for @scoringMore.
   ///
   /// In zh, this message translates to:
@@ -4175,6 +4577,30 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'投篮'**
   String get scoringShotsGroup;
+
+  /// No description provided for @scoringShotDisplayGroup.
+  ///
+  /// In zh, this message translates to:
+  /// **'投篮显示'**
+  String get scoringShotDisplayGroup;
+
+  /// No description provided for @scoringShowMissMarkers.
+  ///
+  /// In zh, this message translates to:
+  /// **'显示{side}未命中点'**
+  String scoringShowMissMarkers(Object side);
+
+  /// No description provided for @scoringDisplayShown.
+  ///
+  /// In zh, this message translates to:
+  /// **'已显示'**
+  String get scoringDisplayShown;
+
+  /// No description provided for @scoringDisplayHidden.
+  ///
+  /// In zh, this message translates to:
+  /// **'已隐藏'**
+  String get scoringDisplayHidden;
 
   /// No description provided for @scoringFreeThrowsGroup.
   ///
@@ -4218,6 +4644,12 @@ abstract class AppLocalizations {
   /// **'补充{side} +{points} 落点 · {seconds}秒'**
   String scoringSupplementPrompt(Object points, Object seconds, Object side);
 
+  /// No description provided for @scoringMissSupplementPrompt.
+  ///
+  /// In zh, this message translates to:
+  /// **'补充{side}未命中落点 · {seconds}秒'**
+  String scoringMissSupplementPrompt(Object seconds, Object side);
+
   /// No description provided for @scoringSupplementExpired.
   ///
   /// In zh, this message translates to:
@@ -4239,6 +4671,18 @@ abstract class AppLocalizations {
     Object seconds,
     Object side,
   );
+
+  /// No description provided for @scoringMissSemantics.
+  ///
+  /// In zh, this message translates to:
+  /// **'{side}未命中'**
+  String scoringMissSemantics(Object side);
+
+  /// No description provided for @scoringMissLocationPendingSemantics.
+  ///
+  /// In zh, this message translates to:
+  /// **'{side}未命中，待补落点 {seconds} 秒'**
+  String scoringMissLocationPendingSemantics(Object seconds, Object side);
 }
 
 class _AppLocalizationsDelegate

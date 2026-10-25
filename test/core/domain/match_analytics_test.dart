@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics_calculator.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/possession_segment.dart';
-import 'package:hooptrace/core/domain/entities/shot_location.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics_calculator.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/possession_segment.dart';
+import 'package:hoopito/core/domain/entities/shot_location.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 void main() {
   final calculator = MatchAnalyticsCalculator();
@@ -114,7 +114,7 @@ void main() {
         occurredAt: start.add(const Duration(seconds: 4)),
         isDeleted: true,
       ),
-    ]);
+    ], trackingCoverage: TrackingCoverage.shotAttempts);
 
     expect(analytics.madeShotCount, 2);
     expect(analytics.missedShotCount, 2);
@@ -285,8 +285,9 @@ void main() {
     expect(analytics.madeShotCount, 3);
     expect(analytics.missedShotCount, 2);
     expect(analytics.shotAttemptCount, 5);
-    expect(analytics.shootingPercentage, closeTo(0.6, 0.0001));
-    expect(analytics.recordedShootingPercentage, closeTo(0.6, 0.0001));
+    expect(analytics.shootingPercentage, closeTo(0.5, 0.0001));
+    expect(analytics.recordedShootingPercentage, closeTo(0.5, 0.0001));
+    expect(analytics.reliableFreeThrowPercentage, 1);
     expect(analytics.fieldGoalMadeCount, 2);
     expect(analytics.fieldGoalAttemptCount, 4);
     expect(analytics.freeThrowMadeCount, 1);

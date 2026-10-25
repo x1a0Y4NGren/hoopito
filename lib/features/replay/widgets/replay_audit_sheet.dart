@@ -1,12 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/audit/audit_diff.dart';
-import 'package:hooptrace/core/audit/audit_log_entry.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/audit/audit_diff.dart';
+import 'package:hoopito/core/audit/audit_log_entry.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 /// Audit history is a review surface, so it owns its presentation rather than
 /// leaking storage action names or JSON keys into the timeline UI.
@@ -139,6 +139,7 @@ class ReplayAuditFormatter {
       'isDeleted',
       'x',
       'y',
+      'trackingCoverage',
     }.contains(key);
   }
 
@@ -154,6 +155,7 @@ class ReplayAuditFormatter {
       'isDeleted' => l10n.replayAuditFieldDeleted,
       'x' => l10n.replayAuditFieldX,
       'y' => l10n.replayAuditFieldY,
+      'trackingCoverage' => l10n.v2CoverageTitle,
       _ => l10n.replayAuditFieldType,
     };
   }
@@ -164,6 +166,15 @@ class ReplayAuditFormatter {
     }
     if (key == 'isDeleted' && value is bool) {
       return value ? l10n.replayAuditValueDeleted : l10n.replayAuditValueActive;
+    }
+    if (key == 'trackingCoverage') {
+      return switch (value) {
+        'scoresOnly' => l10n.v2CoverageScores,
+        'shotAttempts' => l10n.v2CoverageComplete,
+        'locations' => l10n.replayAnalyticsTrackingLocations,
+        'full' => l10n.replayAnalyticsTrackingFull,
+        _ => l10n.replayNoData,
+      };
     }
     if (key == 'side' && value is String) {
       return value == TeamSide.red.name

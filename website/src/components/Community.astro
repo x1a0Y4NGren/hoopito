@@ -1,0 +1,66 @@
+---
+import Icon from './Icon.astro';
+import { content, type Locale } from '../data/content';
+import { community } from '../data/community';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale].community;
+---
+
+<section
+  id="community"
+  class="community content-width"
+  aria-labelledby="community-title"
+  data-community
+>
+  <div class="community-copy">
+    <p class="eyebrow">{c.eyebrow}</p>
+    <h2 id="community-title">
+      {c.title.map((line) => (
+        <span>{line}</span>
+      ))}
+    </h2>
+    <p class="community-description">{c.body}</p>
+    <div class="community-number">
+      <span>{c.groupLabel}</span>
+      <strong class="display" data-community-number>
+        {community.groupNumber}
+      </strong>
+    </div>
+    <p class="community-instructions">{c.instructions}</p>
+    <a
+      class="community-save text-link"
+      href={community.posterDownload}
+      download="Hoopito-QQ-1129560287.png"
+      data-community-save
+    >
+      {c.save}
+      <Icon name="download" />
+    </a>
+    <p class="community-note">{c.note}</p>
+  </div>
+  <figure class="community-artwork">
+    <a
+      class="community-poster-link"
+      href={community.posterDownload}
+      target="_blank"
+      rel="noopener"
+      aria-label={c.view}
+    >
+      <img
+        src={community.posterImage}
+        width={community.imageWidth}
+        height={community.imageHeight}
+        loading="lazy"
+        decoding="async"
+        alt={c.imageAlt}
+      />
+    </a>
+    <figcaption>
+      <span class="display">HOOPITO COMMUNITY</span>
+      <span>{c.caption}</span>
+    </figcaption>
+  </figure>
+</section>

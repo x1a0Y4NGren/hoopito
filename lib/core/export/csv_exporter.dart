@@ -1,5 +1,5 @@
 import 'package:csv/csv.dart';
-import 'package:hooptrace/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database.dart';
 
 class PlayerStatisticsRow {
   const PlayerStatisticsRow({
@@ -8,8 +8,13 @@ class PlayerStatisticsRow {
     required this.matchesPlayed,
     required this.wins,
     required this.points,
-    required this.madeShots,
-    required this.attemptedShots,
+    required this.fieldGoalMade,
+    required this.fieldGoalAttempts,
+    required this.freeThrowMade,
+    required this.freeThrowAttempts,
+    required this.attemptsComplete,
+    this.matchId = '',
+    this.participantId = '',
   });
 
   final String playerId;
@@ -17,11 +22,21 @@ class PlayerStatisticsRow {
   final int matchesPlayed;
   final int wins;
   final int points;
-  final int madeShots;
-  final int attemptedShots;
+  final String matchId;
+  final String participantId;
+  final int fieldGoalMade;
+  final int fieldGoalAttempts;
+  final int freeThrowMade;
+  final int freeThrowAttempts;
+  final bool attemptsComplete;
 
-  double get shootingPercentage =>
-      attemptedShots == 0 ? 0 : madeShots / attemptedShots * 100;
+  double? get fieldGoalPercentage => attemptsComplete && fieldGoalAttempts > 0
+      ? fieldGoalMade / fieldGoalAttempts * 100
+      : null;
+
+  double? get freeThrowPercentage => attemptsComplete && freeThrowAttempts > 0
+      ? freeThrowMade / freeThrowAttempts * 100
+      : null;
 }
 
 class CsvExporter {
@@ -56,12 +71,17 @@ class CsvExporter {
   static const playerStatisticsHeaders = [
     'player_id',
     'player_name',
+    'match_id',
+    'participant_id',
     'matches_played',
     'wins',
     'points',
-    'made_shots',
-    'attempted_shots',
-    'shooting_percentage',
+    'field_goal_made',
+    'field_goal_attempts',
+    'field_goal_percentage',
+    'free_throw_made',
+    'free_throw_attempts',
+    'free_throw_percentage',
   ];
 
   static String matchList(
@@ -121,7 +141,11 @@ class CsvExporter {
           return a.playerId.isEmpty ? 1 : -1;
         }
         final idOrder = a.playerId.compareTo(b.playerId);
-        return idOrder == 0 ? a.playerName.compareTo(b.playerName) : idOrder;
+        if (idOrder != 0) return idOrder;
+        final matchOrder = a.matchId.compareTo(b.matchId);
+        return matchOrder == 0
+            ? a.participantId.compareTo(b.participantId)
+            : matchOrder;
       });
     return _encode([
       playerStatisticsHeaders,
@@ -129,12 +153,17 @@ class CsvExporter {
         (player) => [
           player.playerId,
           player.playerName,
+          player.matchId,
+          player.participantId,
           player.matchesPlayed,
           player.wins,
           player.points,
-          player.madeShots,
-          player.attemptedShots,
-          player.shootingPercentage.toStringAsFixed(2),
+          player.fieldGoalMade,
+          player.fieldGoalAttempts,
+          player.fieldGoalPercentage?.toStringAsFixed(2) ?? '',
+          player.freeThrowMade,
+          player.freeThrowAttempts,
+          player.freeThrowPercentage?.toStringAsFixed(2) ?? '',
         ],
       ),
     ]);

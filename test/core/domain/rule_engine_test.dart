@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/rules/rule_engine.dart';
-import 'package:hooptrace/core/domain/scoring/score_state.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/rules/rule_engine.dart';
+import 'package:hoopito/core/domain/scoring/score_state.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 void main() {
   test('projected target score creates a non-blocking target reached hint', () {

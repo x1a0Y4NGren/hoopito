@@ -1,0 +1,472 @@
+{
+  "source_commit": "3a0166c3a4a510e76a3093142a8b2d559ba7be93",
+  "build_type": "MAIN Debug",
+  "apk_sha256": "6e08827d8a9f2dc1d30d0d1e54b66e3f4950d720bcad831c63a57d36e62d4cda",
+  "device": "Pixel_API_36 x86_64 emulator",
+  "api": 36,
+  "synthetic_android_user": 10,
+  "capture_method": "Unmodified adb exec-out screencap -p; no crop or mock rendering",
+  "privacy": "All player names and match data are synthetic; system bars retained",
+  "scope": "Eight release images from three independent synthetic matches; this record does not prove production signing, a physical foldable hinge, or natural 24-hour scheduling",
+  "archive_note": "During the Hoopito rename, these original v2.0.0 PNGs were copied byte for byte to versioned archive paths. original_path preserves each former Fastlane location. This is a path migration, not a recapture; source commit, build type, APK hash, pixels and capture metadata are unchanged.",
+  "captures": [
+    {
+      "path": "docs/release/screenshots/v2.0.0/zh-CN/1-home.png",
+      "original_path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/1-home.png",
+      "source_capture": "final-api36-zh-light-home",
+      "png_sha256": "397bffe8b292966fce22c109ac1c6b31bb99b97cc2c7a7c5bf4500ee3ca6cb89",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "zh",
+      "theme": "light",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-02T07:21:45.330690+00:00",
+      "route": "home",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1790917711974266",
+            "tracking_coverage": "shotAttempts",
+            "created_at": 1790917711,
+            "started_at": 1790917711,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 8,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "evidence_source": "Readonly synthetic user10 final SQLite copy + saved actual UI XML + chronological normal UI actions; capture lifecycle overrides final finished state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "docs/release/screenshots/v2.0.0/zh-CN/2-scoring.png",
+      "original_path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/2-scoring.png",
+      "source_capture": "final-api36-zh-dark-scoring",
+      "png_sha256": "342733461c87afbc73482505ed119843ec68a2c0107f2b638ddf1d5fd429973c",
+      "dimensions_px": [
+        1920,
+        1080
+      ],
+      "locale": "zh",
+      "theme": "dark",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-02T07:32:44.667918+00:00",
+      "route": "scoring",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1790926293812338",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1790926293,
+            "started_at": 1790926293,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 7,
+            "lifecycle_at_capture": "active"
+          }
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": "match-1790926293812338",
+        "evidence_source": "Readonly synthetic user10 final SQLite copy + saved actual UI XML + chronological normal UI actions; capture lifecycle overrides final finished state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "docs/release/screenshots/v2.0.0/zh-CN/3-summary.png",
+      "original_path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/3-summary.png",
+      "source_capture": "final-api36-zh-light-summary",
+      "png_sha256": "7297f899ff4ba644b5811f4c9533f265fc6580361848ceec66e2307cd1fd6032",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "zh",
+      "theme": "light",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-02T07:21:21.830068+00:00",
+      "route": "summary",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1790917711974266",
+            "tracking_coverage": "shotAttempts",
+            "created_at": 1790917711,
+            "started_at": 1790917711,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 8,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "evidence_source": "Readonly synthetic user10 final SQLite copy + saved actual UI XML + chronological normal UI actions; capture lifecycle overrides final finished state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "docs/release/screenshots/v2.0.0/zh-CN/4-history.png",
+      "original_path": "fastlane/metadata/android/zh-CN/images/phoneScreenshots/4-history.png",
+      "source_capture": "final-api36-zh-light-history",
+      "png_sha256": "17b7483a7a4d1739056c23f9bf429588aa7379cac0fec3d0ee0f12a42c4b3823",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "zh",
+      "theme": "light",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-02T07:21:25.775557+00:00",
+      "route": "history",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1790917711974266",
+            "tracking_coverage": "shotAttempts",
+            "created_at": 1790917711,
+            "started_at": 1790917711,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 8,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "evidence_source": "Readonly synthetic user10 final SQLite copy + saved actual UI XML + chronological normal UI actions; capture lifecycle overrides final finished state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "docs/release/screenshots/v2.0.0/en-US/1-home.png",
+      "original_path": "fastlane/metadata/android/en-US/images/phoneScreenshots/1-home.png",
+      "source_capture": "final-api36-en-dark-home",
+      "png_sha256": "82f5b2ae9e5083e04b7570b926da513f3979b47e71508be6cee154e89558ea35",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "en",
+      "theme": "dark",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-02T07:24:53.149621+00:00",
+      "route": "home",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1790925738127845",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1790925738,
+            "started_at": 1790925738,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 2,
+              "red": 3
+            },
+            "effective_event_count": 2,
+            "lifecycle_at_capture": "active"
+          },
+          {
+            "id": "match-1790917711974266",
+            "tracking_coverage": "shotAttempts",
+            "created_at": 1790917711,
+            "started_at": 1790917711,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 8,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": "match-1790925738127845",
+        "evidence_source": "Readonly synthetic user10 final SQLite copy + saved actual UI XML + chronological normal UI actions; capture lifecycle overrides final finished state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "docs/release/screenshots/v2.0.0/en-US/2-scoring.png",
+      "original_path": "fastlane/metadata/android/en-US/images/phoneScreenshots/2-scoring.png",
+      "source_capture": "final-api36-en-dark-scoring",
+      "png_sha256": "10dd539ce29119bbfff905469965f3c7cf0499a30dbe55a26735278e73b4d733",
+      "dimensions_px": [
+        1920,
+        1080
+      ],
+      "locale": "en",
+      "theme": "dark",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-02T07:24:56.750229+00:00",
+      "route": "scoring",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1790925738127845",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1790925738,
+            "started_at": 1790925738,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 2,
+              "red": 3
+            },
+            "effective_event_count": 2,
+            "lifecycle_at_capture": "active"
+          }
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": "match-1790925738127845",
+        "evidence_source": "Readonly synthetic user10 final SQLite copy + saved actual UI XML + chronological normal UI actions; capture lifecycle overrides final finished state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "docs/release/screenshots/v2.0.0/en-US/3-summary.png",
+      "original_path": "fastlane/metadata/android/en-US/images/phoneScreenshots/3-summary.png",
+      "source_capture": "final-api36-en-dark-summary",
+      "png_sha256": "f4b3871c0734ec64c424535b655b763cfc80f2b459fbaf0e483ccb3d4e4653fd",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "en",
+      "theme": "dark",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-02T07:26:45.354775+00:00",
+      "route": "summary",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1790925738127845",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1790925738,
+            "started_at": 1790925738,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 2,
+              "red": 3
+            },
+            "effective_event_count": 2,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "evidence_source": "Readonly synthetic user10 final SQLite copy + saved actual UI XML + chronological normal UI actions; capture lifecycle overrides final finished state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    },
+    {
+      "path": "docs/release/screenshots/v2.0.0/en-US/4-history.png",
+      "original_path": "fastlane/metadata/android/en-US/images/phoneScreenshots/4-history.png",
+      "source_capture": "final-api36-en-dark-history",
+      "png_sha256": "9bee80b729054f3fc591d699fa5194418b876fbdb1aa95d3d00f2846ad895aa7",
+      "dimensions_px": [
+        1080,
+        1920
+      ],
+      "locale": "en",
+      "theme": "dark",
+      "font_scale": "1.0",
+      "wm_size": "Physical size: 1080x1920",
+      "wm_density": "Physical density: 420",
+      "captured_at_utc": "2026-10-02T07:27:48.394016+00:00",
+      "route": "history",
+      "fixture": {
+        "synthetic_only": true,
+        "matches_visible_or_referenced_at_capture": [
+          {
+            "id": "match-1790925738127845",
+            "tracking_coverage": "scoresOnly",
+            "created_at": 1790925738,
+            "started_at": 1790925738,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 2,
+              "red": 3
+            },
+            "effective_event_count": 2,
+            "lifecycle_at_capture": "finished"
+          },
+          {
+            "id": "match-1790917711974266",
+            "tracking_coverage": "shotAttempts",
+            "created_at": 1790917711,
+            "started_at": 1790917711,
+            "timer_enabled": 0,
+            "participants": [
+              {
+                "side": "blue",
+                "name_snapshot": "Jordan",
+                "player_profile_id": "f71eaa7b-425c-4d54-833c-bf651982012a"
+              },
+              {
+                "side": "red",
+                "name_snapshot": "River",
+                "player_profile_id": "c7e86c0f-9c49-4680-89c4-7e5812afe2aa"
+              }
+            ],
+            "scores": {
+              "blue": 8,
+              "red": 11
+            },
+            "effective_event_count": 8,
+            "lifecycle_at_capture": "finished"
+          }
+        ],
+        "prospective_rematch": null,
+        "active_match_at_capture": null,
+        "evidence_source": "Readonly synthetic user10 final SQLite copy + saved actual UI XML + chronological normal UI actions; capture lifecycle overrides final finished state"
+      },
+      "review": "Root inspected the original-resolution actual PNG; accepted"
+    }
+  ]
+}

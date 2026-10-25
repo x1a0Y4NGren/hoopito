@@ -228,12 +228,12 @@ internal class AutomaticBackupStorageDelegate(
             fileName.isNotEmpty() &&
                 fileName.none { it.code < 0x20 || it.code == 0x7f } &&
                 WRITE_FILE_NAME_PATTERN.matches(fileName),
-        ) { "A safe HoopTrace backup basename is required." }
+        ) { "A safe Hoopito backup basename is required." }
     }
 
     companion object {
         private const val JSON_MIME_TYPE = "application/json"
         private val WRITE_FILE_NAME_PATTERN =
-            Regex("^hooptrace-(?:auto|backup|safety-backup)-[A-Za-z0-9][A-Za-z0-9._-]*\\.json$")
+            Regex("^hoop(?:trace|ito)-(?:auto|backup|safety-backup)-[A-Za-z0-9][A-Za-z0-9._-]*\\.json$")
     }
 }

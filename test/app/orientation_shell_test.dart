@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/orientation_shell.dart';
+import 'package:hoopito/app/orientation_shell.dart';
 
 void main() {
   test(
@@ -9,7 +9,7 @@ void main() {
     () {
       expect(
         preferredOrientationsForWindow(
-          HoopTraceOrientationMode.landscapeRequired,
+          HoopitoOrientationMode.landscapeRequired,
           shortestSide: 390,
         ),
         const [
@@ -19,14 +19,14 @@ void main() {
       );
       expect(
         preferredOrientationsForWindow(
-          HoopTraceOrientationMode.landscapeRequired,
+          HoopitoOrientationMode.landscapeRequired,
           shortestSide: 700,
         ),
         DeviceOrientation.values,
       );
       expect(
         preferredOrientationsForWindow(
-          HoopTraceOrientationMode.landscapeRequired,
+          HoopitoOrientationMode.landscapeRequired,
           shortestSide: 390,
           displayShortestSide: 800,
         ),
@@ -34,7 +34,7 @@ void main() {
       );
       expect(
         preferredOrientationsForWindow(
-          HoopTraceOrientationMode.portraitFriendly,
+          HoopitoOrientationMode.portraitFriendly,
           shortestSide: 390,
         ),
         DeviceOrientation.values,
@@ -60,7 +60,7 @@ void main() {
       const MediaQuery(
         data: MediaQueryData(size: Size(390, 844)),
         child: OrientationShell(
-          mode: HoopTraceOrientationMode.landscapeRequired,
+          mode: HoopitoOrientationMode.landscapeRequired,
           child: SizedBox.expand(),
         ),
       ),
@@ -77,7 +77,7 @@ void main() {
       const MediaQuery(
         data: MediaQueryData(size: Size(390, 844)),
         child: OrientationShell(
-          mode: HoopTraceOrientationMode.landscapeRequired,
+          mode: HoopitoOrientationMode.landscapeRequired,
           child: SizedBox.expand(),
         ),
       ),

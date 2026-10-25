@@ -1,5 +1,7 @@
 # 规则与审计编辑支线
 
+> 历史首发任务，非当前待办；使用边界见 [README](README.md)。
+
 - 中文名：规则与审计编辑支线
 - Branch：`codex/rules-audit-edit`
 - Worktree：`.worktrees/rules-audit-edit`

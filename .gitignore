@@ -147,6 +147,7 @@ vite.config.ts.timestamp-*
 .worktrees/
 
 # Flutter / Dart
+__pycache__/
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
@@ -160,3 +161,7 @@ ios/Flutter/flutter_export_environment.sh
 
 # Codex / planning scratch
 .superpowers/
+
+# AOCI agent host integration (machine-bound; do not commit)
+.codex/config.toml
+.codex/config.toml.backup.*

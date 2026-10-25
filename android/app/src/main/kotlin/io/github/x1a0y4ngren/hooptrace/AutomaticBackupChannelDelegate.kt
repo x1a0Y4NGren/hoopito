@@ -73,6 +73,9 @@ internal class AutomaticBackupChannelDelegate(
                     call.requireString("directory").toUri(),
                     call.requireString("fileName"),
                 )
+                // StandardMethodCodec cannot encode Kotlin Unit. Dart expects
+                // a void success envelope after the deletion completes.
+                null
             }
             else -> result.notImplemented()
         }

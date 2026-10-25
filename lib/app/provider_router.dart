@@ -3,34 +3,66 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/app/match_view_data_mapper.dart';
-import 'package:hooptrace/app/orientation_shell.dart';
-import 'package:hooptrace/app/player_routes.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/data/repositories/match_lifecycle_repository.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/match_history_entry.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/player.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/features/history/history_controller.dart';
-import 'package:hooptrace/features/history/history_page.dart';
-import 'package:hooptrace/features/home/home_page.dart';
-import 'package:hooptrace/features/pregame/pregame_controller.dart';
-import 'package:hooptrace/features/pregame/start_match_mapper.dart';
-import 'package:hooptrace/features/pregame/pregame_page.dart';
-import 'package:hooptrace/features/project/project_details_page.dart';
-import 'package:hooptrace/features/replay/replay_controller.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
-import 'package:hooptrace/features/rules/rule_template_list_page.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
-import 'package:hooptrace/features/settings/settings_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/app/match_view_data_mapper.dart';
+import 'package:hoopito/app/orientation_shell.dart';
+import 'package:hoopito/app/player_routes.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/data/repositories/match_lifecycle_repository.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/match_setup_preset.dart';
+import 'package:hoopito/core/domain/entities/match_history_entry.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/features/history/history_controller.dart';
+import 'package:hoopito/features/history/history_page.dart';
+import 'package:hoopito/features/home/home_page.dart';
+import 'package:hoopito/features/pregame/pregame_controller.dart';
+import 'package:hoopito/features/pregame/start_match_mapper.dart';
+import 'package:hoopito/features/pregame/pregame_page.dart';
+import 'package:hoopito/features/project/project_details_page.dart';
+import 'package:hoopito/features/replay/replay_controller.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
+import 'package:hoopito/features/rules/rule_template_list_page.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
+import 'package:hoopito/features/settings/data_management_page.dart';
+import 'package:hoopito/features/settings/settings_page.dart';
+import 'package:hoopito/app/summary_route.dart';
+import 'package:hoopito/app/route_status.dart';
+import 'package:uuid/uuid.dart';
+
+// Keep a finish intent stable across a failed transaction and UI retry.
+final _finishIntentsProvider = Provider<Map<String, FinishMatchCommand>>(
+  (ref) => {},
+);
+
+FinishMatchCommand _finishIntent(
+  WidgetRef ref,
+  String matchId,
+  int red,
+  int blue,
+  TrackingCoverage coverage,
+) {
+  final intents = ref.read(_finishIntentsProvider);
+  final key = '$matchId:$red:$blue:${coverage.name}';
+  return intents.putIfAbsent(
+    key,
+    () => FinishMatchCommand(
+      matchId: matchId,
+      endedAt: DateTime.now().toUtc(),
+      confirmFinalScore: true,
+      expectedRedScore: red,
+      expectedBlueScore: blue,
+      trackingCoverage: coverage,
+    ),
+  );
+}
 
 enum LeaveScoringAction { keep, pause }
 
@@ -83,10 +115,35 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 GoRouter buildProviderAppRouter() {
   return GoRouter(
     routes: [
-      GoRoute(path: '/', builder: (context, state) => const _HomeRoute()),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, shell) => _MainNavigation(shell: shell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/',
+                builder: (context, state) => const _HomeRoute(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/history',
+                builder: (context, state) => const _HistoryRoute(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(routes: [buildPlayerRoutes().first]),
+        ],
+      ),
       GoRoute(
         path: '/pregame',
-        builder: (context, state) => const _PregameRoute(),
+        builder: (context, state) => _PregameRoute(
+          initialPreset: state.extra is MatchSetupPreset
+              ? state.extra as MatchSetupPreset
+              : null,
+        ),
       ),
       GoRoute(
         path: '/settings/rules',
@@ -101,19 +158,19 @@ GoRouter buildProviderAppRouter() {
         builder: (context, state) {
           final matchId = state.pathParameters['matchId']!;
           return OrientationShell(
-            mode: HoopTraceOrientationMode.landscapeRequired,
+            mode: HoopitoOrientationMode.landscapeRequired,
             child: _ScoringRoute(matchId: matchId),
           );
         },
       ),
-      GoRoute(
-        path: '/history',
-        builder: (context, state) => const _HistoryRoute(),
-      ),
-      ...buildPlayerRoutes(),
+      ...buildPlayerRoutes().skip(1),
       GoRoute(
         path: '/settings',
         builder: (context, state) => const _SettingsRoute(),
+      ),
+      GoRoute(
+        path: '/settings/data',
+        builder: (context, state) => const _DataManagementRoute(),
       ),
       GoRoute(
         path: '/about',
@@ -124,12 +181,62 @@ GoRouter buildProviderAppRouter() {
         builder: (context, state) => const ProjectDetailsPage(),
       ),
       GoRoute(
+        path: '/matches/:matchId/summary',
+        builder: (context, state) =>
+            SummaryRoute(matchId: state.pathParameters['matchId']!),
+      ),
+      GoRoute(
         path: '/matches/:matchId/replay',
         builder: (context, state) =>
             _ReplayRoute(matchId: state.pathParameters['matchId']!),
       ),
     ],
   );
+}
+
+class _MainNavigation extends StatelessWidget {
+  const _MainNavigation({required this.shell});
+  final StatefulNavigationShell shell;
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 48,
+        title: Text(l10n.appName),
+        actions: [
+          IconButton(
+            key: homeSettingsShortcutKey,
+            tooltip: l10n.settings,
+            onPressed: () => context.push('/settings'),
+            icon: const Icon(Icons.settings_outlined),
+          ),
+        ],
+      ),
+      body: shell,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: shell.currentIndex,
+        onDestinationSelected: (index) => shell.goBranch(index),
+        destinations: [
+          NavigationDestination(
+            key: const Key('nav-matches'),
+            icon: const Icon(Icons.sports_basketball_outlined),
+            label: l10n.v2Matches,
+          ),
+          NavigationDestination(
+            key: const Key('nav-history'),
+            icon: const Icon(Icons.history),
+            label: l10n.replayHistory,
+          ),
+          NavigationDestination(
+            key: const Key('nav-players'),
+            icon: const Icon(Icons.person_outline),
+            label: l10n.playersTitle,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _HomeRoute extends ConsumerWidget {
@@ -139,16 +246,33 @@ class _HomeRoute extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
     final active = ref.watch(activeMatchProvider);
-    final latestFinished = ref.watch(latestFinishedMatchProvider).valueOrNull;
+    final recent =
+        ref.watch(recentMatchSummariesProvider).valueOrNull ??
+        const <MatchHistoryEntry>[];
     return active.when(
-      loading: () => const _RouteLoading(),
-      error: (error, stackTrace) => _RouteMessage(
+      loading: () => const RouteLoading(),
+      error: (error, stackTrace) => RouteMessage(
         title: l10n.routeHomeLoadError,
         message: l10n.actionFailedRetry,
       ),
       data: (detail) => HomePage(
         activeMatch: detail,
-        latestFinishedMatch: latestFinished,
+        showDirectory: false,
+        recentMatches: recent,
+        onRecentMatchTap: (id) => context.push('/matches/$id/summary'),
+        onRecentPreset: recent.isEmpty
+            ? null
+            : () async {
+                final detail = await ref
+                    .read(matchRepositoryProvider)
+                    .getMatchDetail(recent.first.id);
+                if (context.mounted && detail != null) {
+                  context.push(
+                    '/pregame',
+                    extra: MatchSetupPreset.fromMatchDetail(detail),
+                  );
+                }
+              },
         onStartScoring: () {
           if (detail != null) {
             ScaffoldMessenger.of(context)
@@ -162,7 +286,7 @@ class _HomeRoute extends ConsumerWidget {
         },
         onContinue: detail == null
             ? () {}
-            : () => context.go('/scoring/${detail.match.id}'),
+            : () => context.push('/scoring/${detail.match.id}'),
         onAbandon: detail == null
             ? () async {}
             : () => _abandon(context, ref, detail.match.id),
@@ -177,15 +301,16 @@ class _HomeRoute extends ConsumerWidget {
 }
 
 class _PregameRoute extends ConsumerWidget {
-  const _PregameRoute();
+  const _PregameRoute({this.initialPreset});
+  final MatchSetupPreset? initialPreset;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
     final activeState = ref.watch(activeMatchProvider);
-    if (activeState.isLoading) return const _RouteLoading();
+    if (activeState.isLoading) return const RouteLoading();
     if (activeState.hasError) {
-      return _RouteMessage(
+      return RouteMessage(
         title: l10n.routeActiveMatchCheckError,
         message: l10n.routeActiveMatchCheckBody,
       );
@@ -202,7 +327,7 @@ class _PregameRoute extends ConsumerWidget {
     final templates = ref.watch(ruleTemplatesProvider);
     final players = ref.watch(playerProfilesProvider);
     return templates.when(
-      loading: () => const _RouteLoading(),
+      loading: () => const RouteLoading(),
       error: (error, stackTrace) => _buildPregamePage(
         context,
         ref,
@@ -210,9 +335,16 @@ class _PregameRoute extends ConsumerWidget {
         players,
         l10n: l10n,
         templatesError: true,
+        initialPreset: initialPreset,
       ),
-      data: (values) =>
-          _buildPregamePage(context, ref, values, players, l10n: l10n),
+      data: (values) => _buildPregamePage(
+        context,
+        ref,
+        values,
+        players,
+        l10n: l10n,
+        initialPreset: initialPreset,
+      ),
     );
   }
 }
@@ -224,32 +356,48 @@ Widget _buildPregamePage(
   AsyncValue<List<Player>> players, {
   required AppLocalizations l10n,
   bool templatesError = false,
+  MatchSetupPreset? initialPreset,
 }) {
   return players.when(
     loading: () => PregamePage(
+      initialPreset: initialPreset,
+      onCancel: () => context.canPop() ? context.pop() : context.go('/'),
       templates: templates,
       playersNotice: templatesError
           ? l10n.pregameTemplatesFallbackLoading
           : l10n.pregamePlayersLoading,
       onManageRules: () => context.push('/settings/rules'),
-      onStartMatch: (setup) => unawaited(_startMatch(context, ref, setup)),
+      onStartMatch: (setup) => _startMatch(context, ref, setup),
     ),
     error: (error, stackTrace) => PregamePage(
+      initialPreset: initialPreset,
+      onCancel: () => context.canPop() ? context.pop() : context.go('/'),
       templates: templates,
       playersNotice: templatesError
           ? l10n.pregameTemplatesPlayersError
           : l10n.pregamePlayersError,
       onManageRules: () => context.push('/settings/rules'),
-      onStartMatch: (setup) => unawaited(_startMatch(context, ref, setup)),
+      onStartMatch: (setup) => _startMatch(context, ref, setup),
     ),
     data: (values) => PregamePage(
+      initialPreset: initialPreset,
+      onCancel: () => context.canPop() ? context.pop() : context.go('/'),
+      onCreatePlayer: (nickname) async {
+        final player = Player(
+          id: const Uuid().v4(),
+          nickname: nickname,
+          createdAt: DateTime.now().toUtc(),
+        );
+        await ref.read(playerRepositoryProvider).save(player);
+        return player;
+      },
       templates: templates,
       players: values,
       playersNotice: templatesError
           ? l10n.pregameTemplatesFallbackNotice
           : null,
       onManageRules: () => context.push('/settings/rules'),
-      onStartMatch: (setup) => unawaited(_startMatch(context, ref, setup)),
+      onStartMatch: (setup) => _startMatch(context, ref, setup),
     ),
   );
 }
@@ -268,7 +416,7 @@ class _ScoringRoute extends ConsumerWidget {
     // reconstructed cannot mask a useful explanation with an endless
     // loading page.
     if (detail.hasError) {
-      return _RouteMessage(
+      return RouteMessage(
         title: l10n.routeMatchLoadError,
         message: l10n.actionFailedRetry,
         onHome: () => context.go('/'),
@@ -281,7 +429,7 @@ class _ScoringRoute extends ConsumerWidget {
           (projection.match.lifecycle == MatchLifecycle.finished ||
               projection.match.lifecycle == MatchLifecycle.archived);
       if (projection == null || projection.match.lifecycle.name != 'active') {
-        return _RouteMessage(
+        return RouteMessage(
           title: l10n.routeMatchNotActive,
           message: l10n.routeMatchNotActiveBody,
           onHome: () => context.go('/'),
@@ -292,7 +440,7 @@ class _ScoringRoute extends ConsumerWidget {
       }
       final controller = ref.watch(scoringControllerProvider(matchId));
       if (controller == null) {
-        return _RouteMessage(
+        return RouteMessage(
           title: l10n.routeMatchRestoring,
           message: l10n.routeMatchRestoringBody,
           onHome: () => context.go('/'),
@@ -306,6 +454,17 @@ class _ScoringRoute extends ConsumerWidget {
       final feedback = ref.watch(scoringFeedbackServiceProvider);
       return ScoringPage(
         controller: controller,
+        showInitialGuide:
+            ref.watch(scoringGuideSeenProvider).valueOrNull == false,
+        onGuideDismissed: () => unawaited(
+          ref
+              .read(scoringGuidePreferencesProvider)
+              .markSeen()
+              .then(
+                (_) => ref.invalidate(scoringGuideSeenProvider),
+                onError: (Object error, StackTrace stack) {},
+              ),
+        ),
         onOpenReplay: () => context.push('/matches/$matchId/replay'),
         onRequestLeave: () => _leaveScoring(context, ref, matchId),
         onResumeClock: canResumeClock
@@ -315,13 +474,14 @@ class _ScoringRoute extends ConsumerWidget {
         onContinueDecision: projection.decision?.canContinue == true
             ? () => _continueScoringDecision(ref, matchId)
             : null,
-        onFinishDecision: projection.decision?.canFinish != false
-            ? (redScore, blueScore) => _finishScoringDecision(
+        onFinishWithCoverage: projection.decision?.canFinish != false
+            ? (redScore, blueScore, coverage) => _finishScoringDecision(
                 context,
                 ref,
                 matchId,
                 redScore,
                 blueScore,
+                coverage,
               )
             : null,
         onActionCommitted: feedback.emitCommitted,
@@ -329,7 +489,7 @@ class _ScoringRoute extends ConsumerWidget {
         motionPreferenceLoader: () async => (await feedback.load()).motion,
       );
     }
-    return const _RouteLoading();
+    return const RouteLoading();
   }
 }
 
@@ -342,8 +502,12 @@ class _HistoryRoute extends ConsumerStatefulWidget {
 
 class _HistoryRouteState extends ConsumerState<_HistoryRoute> {
   late final HistoryController _controller;
+  StreamSubscription<void>? _historyChanges;
   List<HistoryMatchSummary> _importedIncompleteMatches = const [];
   bool _importedIncompleteLoadError = false;
+  bool _loadingImportedIncomplete = false;
+  bool _importedReloadPending = false;
+  int _importedRequestGeneration = 0;
 
   @override
   void initState() {
@@ -355,11 +519,26 @@ class _HistoryRouteState extends ConsumerState<_HistoryRoute> {
         ref.read(matchLifecycleRepositoryProvider),
       ),
     );
+    _historyChanges = ref
+        .read(matchRepositoryProvider)
+        .watchHistoryChanges()
+        .listen((_) {
+          unawaited(_controller.refreshVisible());
+          unawaited(_loadImportedIncomplete());
+        });
     unawaited(_controller.loadNextPage());
     unawaited(_loadImportedIncomplete());
   }
 
   Future<void> _loadImportedIncomplete() async {
+    if (!mounted) return;
+    if (_loadingImportedIncomplete) {
+      _importedReloadPending = true;
+      _importedRequestGeneration++;
+      return;
+    }
+    _loadingImportedIncomplete = true;
+    final generation = ++_importedRequestGeneration;
     if (mounted) {
       setState(() => _importedIncompleteLoadError = false);
     }
@@ -367,7 +546,7 @@ class _HistoryRouteState extends ConsumerState<_HistoryRoute> {
       final page = await ref
           .read(matchRepositoryProvider)
           .queryImportedIncomplete();
-      if (!mounted) return;
+      if (!mounted || generation != _importedRequestGeneration) return;
       setState(() {
         _importedIncompleteMatches = page.entries
             .map(historySummaryFromEntry)
@@ -375,13 +554,21 @@ class _HistoryRouteState extends ConsumerState<_HistoryRoute> {
         _importedIncompleteLoadError = false;
       });
     } on Object {
-      if (!mounted) return;
+      if (!mounted || generation != _importedRequestGeneration) return;
       setState(() => _importedIncompleteLoadError = true);
+    } finally {
+      _loadingImportedIncomplete = false;
+      if (mounted && _importedReloadPending) {
+        _importedReloadPending = false;
+        unawaited(_loadImportedIncomplete());
+      }
     }
   }
 
   @override
   void dispose() {
+    _importedRequestGeneration++;
+    unawaited(_historyChanges?.cancel());
     _controller.dispose();
     super.dispose();
   }
@@ -394,7 +581,7 @@ class _HistoryRouteState extends ConsumerState<_HistoryRoute> {
       activeMatch: active == null ? null : _historySummaryFromActive(active),
       onResumeActive: active == null
           ? null
-          : () => context.go('/scoring/${active.match.id}'),
+          : () => context.push('/scoring/${active.match.id}'),
       importedIncompleteMatches: _importedIncompleteMatches,
       onResumeImportedIncomplete: (matchId) =>
           _resumeImportedIncomplete(context, ref, matchId),
@@ -403,7 +590,7 @@ class _HistoryRouteState extends ConsumerState<_HistoryRoute> {
       onArchive: (matchId) => _controller.archiveMatch(matchId),
       onUnarchive: (matchId) => _controller.unarchiveMatch(matchId),
       onDelete: (matchId) => _controller.deleteMatch(matchId, confirmed: true),
-      onMatchTap: (matchId) => context.push('/matches/$matchId/replay'),
+      onMatchTap: (matchId) => context.push('/matches/$matchId/summary'),
       onHome: () => context.go('/'),
     );
   }
@@ -519,7 +706,26 @@ class _SettingsRoute extends ConsumerWidget {
       themeController: ref.watch(themePreferencesControllerProvider),
       languageController: ref.watch(languagePreferencesControllerProvider),
       onOpenProject: () => context.push('/about'),
-      onOpenRules: () => context.push('/settings/rules'),
+      onOpenData: () => context.push('/settings/data'),
+    );
+  }
+}
+
+class _DataManagementRoute extends ConsumerWidget {
+  const _DataManagementRoute();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DataManagementPage(
+      controller: ref.watch(settingsControllerProvider),
+      onBack: () {
+        final router = GoRouter.of(context);
+        if (router.canPop()) {
+          router.pop();
+        } else {
+          router.go('/settings');
+        }
+      },
       onDataRestored: () => context.go('/'),
     );
   }
@@ -572,7 +778,7 @@ class _ReplayRouteState extends ConsumerState<_ReplayRoute> {
     if (!_isCurrent(generation, matchId)) return false;
     final modalRoute = ModalRoute.of(context);
     return modalRoute?.isCurrent == true ||
-        router.routeInformationProvider.value.uri.path ==
+        router.routerDelegate.currentConfiguration.last.matchedLocation ==
             '/matches/$matchId/replay';
   }
 
@@ -732,7 +938,7 @@ class _ReplayRouteState extends ConsumerState<_ReplayRoute> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return _RouteMessage(
+          return RouteMessage(
             title: l10n.routeReplayOpenError,
             message: l10n.routeReplayOpenErrorBody,
             onHome: () => context.go('/'),
@@ -740,11 +946,11 @@ class _ReplayRouteState extends ConsumerState<_ReplayRoute> {
           );
         }
         if (snapshot.connectionState != ConnectionState.done) {
-          return const _RouteLoading();
+          return const RouteLoading();
         }
         final controller = snapshot.data;
         if (controller == null) {
-          return _RouteMessage(
+          return RouteMessage(
             title: l10n.routeReplayNotFound,
             message: l10n.routeReplayNotFoundBody,
             onHome: () => context.go('/'),
@@ -786,8 +992,8 @@ class _ReplayRouteState extends ConsumerState<_ReplayRoute> {
                 matchId: matchId,
                 subject: l10n.exportReplaySubject,
               ),
-          onFinishMatch: active
-              ? (redScore, blueScore) async {
+          onFinishWithCoverage: active
+              ? (redScore, blueScore, coverage) async {
                   final router = GoRouter.of(context);
                   final commandService = ref.read(matchCommandServiceProvider);
                   final automaticBackup = ref.read(
@@ -795,12 +1001,12 @@ class _ReplayRouteState extends ConsumerState<_ReplayRoute> {
                   );
                   try {
                     await commandService.finish(
-                      FinishMatchCommand(
-                        matchId: routeMatchId,
-                        endedAt: DateTime.now().toUtc(),
-                        confirmFinalScore: true,
-                        expectedRedScore: redScore,
-                        expectedBlueScore: blueScore,
+                      _finishIntent(
+                        ref,
+                        routeMatchId,
+                        redScore,
+                        blueScore,
+                        coverage,
                       ),
                     );
                   } on Object {
@@ -818,7 +1024,16 @@ class _ReplayRouteState extends ConsumerState<_ReplayRoute> {
                   )) {
                     return;
                   }
-                  router.go('/matches/$routeMatchId/replay');
+                  if (router.canPop()) {
+                    final matches =
+                        router.routerDelegate.currentConfiguration.matches;
+                    if (matches.length > 1 &&
+                        matches[matches.length - 2].matchedLocation ==
+                            '/scoring/$routeMatchId') {
+                      router.pop();
+                    }
+                  }
+                  router.replace('/matches/$routeMatchId/summary');
                   await _refreshController(
                     generation: generation,
                     matchId: routeMatchId,
@@ -978,7 +1193,7 @@ Future<void> _startMatch(
     await ref
         .read(matchCommandServiceProvider)
         .start(buildStartMatchCommand(setup));
-    if (context.mounted) context.go('/scoring/${setup.matchId}');
+    if (context.mounted) context.pushReplacement('/scoring/${setup.matchId}');
   } on PregameSetupValidationException catch (error) {
     if (context.mounted) {
       final message = error.result.errors
@@ -1063,29 +1278,24 @@ Future<void> _finishScoringDecision(
   String matchId,
   int redScore,
   int blueScore,
+  TrackingCoverage coverage,
 ) async {
   final router = GoRouter.of(context);
   final commandService = ref.read(matchCommandServiceProvider);
   final automaticBackup = ref.read(automaticBackupServiceProvider);
   await commandService.finish(
-    FinishMatchCommand(
-      matchId: matchId,
-      endedAt: DateTime.now().toUtc(),
-      confirmFinalScore: true,
-      expectedRedScore: redScore,
-      expectedBlueScore: blueScore,
-    ),
+    _finishIntent(ref, matchId, redScore, blueScore, coverage),
   );
   unawaited(_runAutomaticBackup(automaticBackup));
-  if (!_isScoringRouteForMatch(router, matchId)) return;
-  router.go('/matches/$matchId/replay');
+  if (!context.mounted || !_isScoringRouteForMatch(router, matchId)) return;
+  router.replace('/matches/$matchId/summary');
 }
 
 bool _isScoringRouteForMatch(GoRouter router, String matchId) {
-  final segments = router.routeInformationProvider.value.uri.pathSegments;
-  return segments.length == 2 &&
-      segments[0] == 'scoring' &&
-      segments[1] == matchId;
+  // The platform URI omits imperative pushes. The leaf match represents
+  // the page on screen, including Home → Continue and History → Resume.
+  return router.routerDelegate.currentConfiguration.last.matchedLocation ==
+      '/scoring/$matchId';
 }
 
 Future<void> _runAutomaticBackup(AutomaticBackupService service) async {
@@ -1179,95 +1389,6 @@ Future<void> _leaveScoring(
     // Scoring is entered with `go`, so there may be no back-stack entry to
     // pop. Leaving must return to the durable home projection explicitly.
     context.go('/');
-  }
-}
-
-class _RouteLoading extends StatelessWidget {
-  const _RouteLoading();
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Semantics(
-            label: l10n.routeLoading,
-            liveRegion: true,
-            child: const CircularProgressIndicator(),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RouteMessage extends StatelessWidget {
-  const _RouteMessage({
-    required this.title,
-    required this.message,
-    this.onHome,
-    this.onReplay,
-    this.onRetry,
-  });
-
-  final String title;
-  final String message;
-  final VoidCallback? onHome;
-  final VoidCallback? onReplay;
-  final VoidCallback? onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
-    return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Semantics(
-                  header: true,
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(message, textAlign: TextAlign.center),
-                if (onReplay != null) ...[
-                  const SizedBox(height: 20),
-                  OutlinedButton(
-                    key: const Key('route-message-replay'),
-                    onPressed: onReplay,
-                    child: Text(l10n.replayTitle),
-                  ),
-                ],
-                if (onRetry != null) ...[
-                  const SizedBox(height: 20),
-                  OutlinedButton(
-                    key: const Key('route-message-retry'),
-                    onPressed: onRetry,
-                    child: Text(l10n.retryAction),
-                  ),
-                ],
-                if (onHome != null) ...[
-                  const SizedBox(height: 20),
-                  FilledButton(
-                    key: const Key('route-message-home'),
-                    onPressed: onHome,
-                    child: Text(l10n.historyHomeTooltip),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 

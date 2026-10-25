@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
 
 import '../test_helpers/test_database.dart';
 
@@ -180,7 +180,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        HoopTraceApp(database: database, showEntryAnimation: false),
+        HoopitoApp(database: database, showEntryAnimation: false),
       );
       await _pumpUntilFound(tester, find.byKey(const Key('home-resume-card')));
       expect(find.text('重建红方'), findsOneWidget);
@@ -190,7 +190,7 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpWidget(
-        HoopTraceApp(database: database, showEntryAnimation: false),
+        HoopitoApp(database: database, showEntryAnimation: false),
       );
       await _pumpUntilFound(tester, find.byKey(const Key('home-resume-card')));
       expect(find.text('重建红方'), findsOneWidget);
@@ -198,54 +198,45 @@ void main() {
     },
   );
 
-  testWidgets(
-    'new match is blocked until active match is explicitly abandoned',
-    (tester) async {
-      final database = createTestDatabase();
-      _closeDatabaseAfterWidgetTest(tester, database);
-      final now = DateTime.utc(2026, 8, 23, 12);
-      await MatchCommandService(database).start(
-        StartMatchCommand(
-          commandId: 'task6-block-start',
-          matchId: 'task6-block',
-          redName: '已进行红方',
-          blueName: '已进行蓝方',
-          ruleTemplate: const RuleTemplate(
-            id: 'free',
-            name: '自由计分',
-            scoreButtons: [1, 2, 3],
-          ),
-          recordingMode: RecordingMode.simple,
-          createdAt: now,
-          startedAt: now,
+  testWidgets('active match hides new match entry until explicitly abandoned', (
+    tester,
+  ) async {
+    final database = createTestDatabase();
+    _closeDatabaseAfterWidgetTest(tester, database);
+    final now = DateTime.utc(2026, 8, 23, 12);
+    await MatchCommandService(database).start(
+      StartMatchCommand(
+        commandId: 'task6-block-start',
+        matchId: 'task6-block',
+        redName: '已进行红方',
+        blueName: '已进行蓝方',
+        ruleTemplate: const RuleTemplate(
+          id: 'free',
+          name: '自由计分',
+          scoreButtons: [1, 2, 3],
         ),
-      );
+        recordingMode: RecordingMode.simple,
+        createdAt: now,
+        startedAt: now,
+      ),
+    );
 
-      await tester.pumpWidget(
-        HoopTraceApp(database: database, showEntryAnimation: false),
-      );
-      await _pumpUntilFound(
-        tester,
-        find.byKey(const Key('home-start-scoring')),
-      );
-      await tester.tap(find.byKey(const Key('home-start-scoring')));
-      await tester.pump();
-      expect(find.text(l10n.routeActiveMatchTitle), findsOneWidget);
+    await tester.pumpWidget(
+      HoopitoApp(database: database, showEntryAnimation: false),
+    );
+    await _pumpUntilFound(tester, find.byKey(const Key('home-resume-card')));
+    expect(find.byKey(const Key('home-start-scoring')), findsNothing);
 
-      await tester.tap(find.byKey(const Key('active-abandon')));
-      await tester.pump();
-      expect(find.text(l10n.homeAbandonTitle), findsOneWidget);
-      await tester.tap(find.text(l10n.homeConfirmAbandon));
-      await _pumpUntilFound(
-        tester,
-        find.byKey(const Key('home-start-scoring')),
-      );
-      expect(find.byKey(const Key('home-resume-card')), findsNothing);
+    await tester.tap(find.byKey(const Key('active-abandon')));
+    await tester.pump();
+    expect(find.text(l10n.homeAbandonTitle), findsOneWidget);
+    await tester.tap(find.text(l10n.homeConfirmAbandon));
+    await _pumpUntilFound(tester, find.byKey(const Key('home-start-scoring')));
+    expect(find.byKey(const Key('home-resume-card')), findsNothing);
 
-      await tester.tap(find.byKey(const Key('home-start-scoring')));
-      await _pumpUntilFound(tester, find.text(l10n.pregameTitle));
-    },
-  );
+    await tester.tap(find.byKey(const Key('home-start-scoring')));
+    await _pumpUntilFound(tester, find.text(l10n.pregameTitle));
+  });
 
   testWidgets('leaving live scoring offers keep running, pause and stay', (
     tester,
@@ -274,35 +265,49 @@ void main() {
     );
 
     await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
+      HoopitoApp(database: database, showEntryAnimation: false),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume-card')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('home-resume')));
     await _pumpUntilFound(tester, find.byType(ScoringPage));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('scoring-leave')));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text(l10n.routeLeaveTitle), findsOneWidget);
     expect(find.byKey(const Key('leave-stay')), findsOneWidget);
     expect(find.byKey(const Key('leave-keep-running')), findsOneWidget);
     expect(find.byKey(const Key('leave-pause-and-leave')), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('leave-stay')));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.byType(ScoringPage), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('scoring-leave')));
-    await tester.pump();
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('leave-keep-running')));
-    await _pumpUntilFound(tester, find.byKey(const Key('home-resume-card')));
+    await _pumpUntilFound(
+      tester,
+      find.byKey(const Key('home-resume')).hitTestable(),
+    );
+    await tester.pumpAndSettle();
     expect((await commandService.readClock('task6-leave'))?.isRunning, isTrue);
 
     await tester.tap(find.byKey(const Key('home-resume')));
     await _pumpUntilFound(tester, find.byType(ScoringPage));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('scoring-leave')));
-    await tester.pump();
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('leave-pause-and-leave')));
-    await _pumpUntilFound(tester, find.byKey(const Key('home-resume-card')));
+    await _pumpUntilMissing(tester, find.byType(ScoringPage));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('scoring-paused-panel')), findsNothing);
+    await _pumpUntilFound(
+      tester,
+      find.byKey(const Key('home-resume')).hitTestable(),
+    );
+    await tester.pumpAndSettle();
     expect((await commandService.readClock('task6-leave'))?.isRunning, isFalse);
   });
 
@@ -320,7 +325,7 @@ void main() {
                 (_) async => throw const LegacySchemaDetectedException(1),
           ),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('legacy-bootstrap')));
@@ -370,4 +375,15 @@ Future<void> _pumpUntilFound(WidgetTester tester, Finder finder) async {
     );
   }
   fail('Timed out waiting for $finder');
+}
+
+Future<void> _pumpUntilMissing(WidgetTester tester, Finder finder) async {
+  for (var attempt = 0; attempt < 100; attempt++) {
+    await tester.pump(const Duration(milliseconds: 20));
+    if (finder.evaluate().isEmpty) return;
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 5)),
+    );
+  }
+  fail('Timed out waiting for $finder to disappear');
 }

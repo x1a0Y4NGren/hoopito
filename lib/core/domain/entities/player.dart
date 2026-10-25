@@ -1,4 +1,4 @@
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
 class Player {
   const Player({

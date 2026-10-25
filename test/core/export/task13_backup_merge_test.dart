@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/export/backup_merge_service.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/export/backup_merge_service.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
 
 import '../../test_helpers/test_database.dart';
 

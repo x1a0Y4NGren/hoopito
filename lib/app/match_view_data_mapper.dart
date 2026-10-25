@@ -1,10 +1,10 @@
-import 'package:hooptrace/core/domain/analytics/match_analytics_calculator.dart';
-import 'package:hooptrace/core/domain/entities/match_detail.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/entities/match_history_entry.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/features/history/history_controller.dart';
-import 'package:hooptrace/features/replay/replay_controller.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics_calculator.dart';
+import 'package:hoopito/core/domain/entities/match_detail.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/entities/match_history_entry.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/features/history/history_controller.dart';
+import 'package:hoopito/features/replay/replay_controller.dart';
 
 ReplayMatchData replayDataFromDetail(MatchDetail detail) {
   final locationsByEvent = {

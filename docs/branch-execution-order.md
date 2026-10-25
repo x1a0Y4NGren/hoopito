@@ -1,6 +1,6 @@
-# HoopTrace 分支对话执行顺序
+# HoopTrace 历史分支对话执行顺序
 
-本文档说明 HoopTrace 后续如何用多个 Codex 分支对话推进实现。
+> 本文保留首发阶段的执行记录，不是后续任务的默认流程。不要据此重建全部 worktree 或等待旧波次；当前工作以 [AGENTS.md](../AGENTS.md)、[CONTRIBUTING.md](../CONTRIBUTING.md) 和本次需求为准。
 
 ## 基本工作流
 

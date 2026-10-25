@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "generated_with": "image_gen.imagegen",
+  "mode": "built-in",
+  "use_case": "compositing",
+  "prompt": "Use case: compositing. Asset type: premium square community invitation artwork for the existing Hoopito basketball app website and GitHub README.\nInput image 1 is the user's QQ group invitation screenshot (group 1129560287), used only as context for the community and basketball mascot brand. Redesign its surrounding presentation into a refined cinematic indoor-night basketball invitation. Generate a 1536 x 1536 square, flat print-ready artwork, not a photographed mockup.\nVisual direction: near-black graphite #101112, refined warm ivory highlights, restrained copper-orange #FF5A1F and a very subtle rose-gold edge reflection, real fine dark basketball leather and faint parquet texture along the outer margins, a delicate curved basketball seam motif at bottom-right, soft stadium rim light from top-right. Beautiful editorial restraint and rich dark tonal detail, polished and elegant, no gaudy gold, no purple or blue gradients.\nComposition: quiet upper 25% and bottom 10% for real typography to be added later. Keep the central-lower 60% calm and very dark so an actual large white square QR insert can be placed on top; all basketball details confined to outer margins. Do NOT generate any QR code, imitation code, circles/dots of a code, text, numbers, logo, watermark, device frame or screenshot UI. The original machine-readable QQ QR code, approved mascot, and accurate bilingual wording will be composited pixel-exactly afterward; do not redraw them. Produce only the finished atmospheric invitation background with this generous functional negative space.",
+  "generated_source": "source/arena-invitation-imagegen.png",
+  "generated_source_sha256": "d5c94ee5e7c0fd538b228515d0b45f7b19df9a096231e4fcbc56ac44e3f0e612",
+  "original_qr_source": "source/qq-group-original.jpg",
+  "original_qr_sha256": "d51b306178c156eaa669a7ecc927716ad15b6729d502df3e39be12e5a4c28e31",
+  "original_dimensions_px": [1370, 2435],
+  "group_number": "1129560287",
+  "qr_crop": {
+    "left": 220,
+    "top": 800,
+    "width": 928,
+    "height": 928
+  },
+  "poster_dimensions_px": [1536, 1536],
+  "qr_destination": {
+    "left": 304,
+    "top": 428
+  },
+  "quiet_panel": {
+    "left": 176,
+    "top": 300,
+    "width": 1184,
+    "height": 1184
+  },
+  "invariants": "ImageGen supplies only the atmospheric background. Original QQ code pixels, including the colored dots, circular markers and QQ symbol, are inserted unresized without redraw or recoloring. Accurate lettering uses bundled Barlow/Noto fonts and the approved mascot.",
+  "scan_verification": "Native QQ circular-code format: ordinary QR decoding is unavailable. Output-to-source pixel equality is checked during preparation. On 2026-10-25 the user confirmed a successful QQ client scan and correct group number 1129560287 for the full PNG with SHA-256 ffb7c3ac3655adf704d6910933342a4f95093ada56c5eeb26a21b72b38ddc740."
+}

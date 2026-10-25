@@ -1,10 +1,15 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+
+const _flowCardPadding = EdgeInsets.symmetric(horizontal: 8, vertical: 7);
+const _flowCardBorderWidth = 4.0;
 
 class ReplayAnalyticsSummary extends StatelessWidget {
   const ReplayAnalyticsSummary({
@@ -21,7 +26,7 @@ class ReplayAnalyticsSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
-    final attempts = analytics.attempts;
+    final attempts = analytics.fieldGoalAttemptCount;
     final percentage = analytics.reliableShootingPercentage == null
         ? null
         : (analytics.reliableShootingPercentage! * 100).round();
@@ -54,13 +59,19 @@ class ReplayAnalyticsSummary extends StatelessWidget {
                 value: largestLead,
               ),
               _AnalyticsMetric(
-                label: l10n.replayAnalyticsShootingPercentage,
+                label: l10n.v2FieldGoalPercentage,
                 value: _shootingValue(
                   analytics,
                   attempts: attempts,
                   percentage: percentage,
                   l10n: l10n,
                 ),
+              ),
+              _AnalyticsMetric(
+                label: l10n.v2FreeThrowPercentage,
+                value: analytics.reliableFreeThrowPercentage == null
+                    ? l10n.replayNoData
+                    : '${(analytics.reliableFreeThrowPercentage! * 100).round()}% · ${analytics.freeThrowMadeCount}/${analytics.freeThrowAttemptCount}',
               ),
               _AnalyticsMetric(
                 label: l10n.replayAnalyticsKeyMoments,
@@ -101,14 +112,15 @@ class ReplayAnalyticsSummary extends StatelessWidget {
                 value: _coverageLabel(analytics.trackingCoverage, l10n),
               ),
               _AnalyticsMetric(
-                label: l10n.replayAnalyticsLocationCoverage,
-                value: analytics.shotAttemptCount == null
+                label: l10n.v2LocationScope,
+                value: analytics.fieldGoalAttemptCount == 0
                     ? l10n.replayNoData
                     : '${analytics.confirmedLocationCount}/${analytics.fieldGoalAttemptCount}',
               ),
             ],
           ),
           const SizedBox(height: 18),
+          Text(l10n.v2RecordedSample),
           _AnalyticsSubheading(title: l10n.replayAnalyticsScoringRun),
           const SizedBox(height: 8),
           if (analytics.scoringRuns.isEmpty)
@@ -151,26 +163,7 @@ class ReplayAnalyticsSummary extends StatelessWidget {
           if (analytics.scoringFlow.isEmpty)
             Text(l10n.replayAnalyticsNoScoringEvents)
           else
-            SizedBox(
-              height: 72,
-              child: ListView.separated(
-                key: const Key('replay-scoring-flow'),
-                scrollDirection: Axis.horizontal,
-                itemCount: analytics.scoringFlow.length,
-                separatorBuilder: (_, _) => const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6),
-                  child: Icon(Icons.chevron_right, size: 18),
-                ),
-                itemBuilder: (context, index) {
-                  final entry = analytics.scoringFlow[index];
-                  return _ScoringFlowItem(
-                    entry: entry,
-                    sideName: _sideName(entry.side),
-                    l10n: l10n,
-                  );
-                },
-              ),
-            ),
+            _scoringFlow(context, l10n),
           const SizedBox(height: 18),
           _AnalyticsSubheading(title: l10n.replayAnalyticsKeyPossessions),
           const SizedBox(height: 4),
@@ -196,6 +189,97 @@ class ReplayAnalyticsSummary extends StatelessWidget {
     return side == TeamSide.red ? redName : blueName;
   }
 
+  Widget _scoringFlow(BuildContext context, AppLocalizations l10n) {
+    final textTheme = Theme.of(context).textTheme;
+    final scoreStyle = textTheme.titleSmall?.copyWith(
+      fontWeight: FontWeight.w800,
+    );
+    final sideStyle = textTheme.labelSmall;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Measure scaled text so the flow can grow while keeping lazy cards.
+        final scorePainter = TextPainter(
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+          locale: Localizations.maybeLocaleOf(context),
+        );
+        final sidePainter = TextPainter(
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+          locale: Localizations.maybeLocaleOf(context),
+          maxLines: 1,
+          ellipsis: '…',
+        );
+        var width = 80.0;
+        var height = 72.0;
+        try {
+          for (final entry in analytics.scoringFlow) {
+            scorePainter.text = TextSpan(
+              text: '${entry.redScore} : ${entry.blueScore}',
+              style: scoreStyle,
+            );
+            scorePainter.layout();
+            width = math.max(
+              width,
+              scorePainter.width +
+                  _flowCardPadding.horizontal +
+                  _flowCardBorderWidth,
+            );
+          }
+          width = math.min(width, constraints.maxWidth);
+          for (final entry in analytics.scoringFlow) {
+            scorePainter.text = TextSpan(
+              text: '${entry.redScore} : ${entry.blueScore}',
+              style: scoreStyle,
+            );
+            sidePainter.text = TextSpan(
+              text: '${_sideName(entry.side)} +${entry.points}',
+              style: sideStyle,
+            );
+            final textWidth = math.max(
+              0.0,
+              width - _flowCardPadding.horizontal - _flowCardBorderWidth,
+            );
+            scorePainter.layout(maxWidth: textWidth);
+            sidePainter.layout(maxWidth: textWidth);
+            height = math.max(
+              height,
+              scorePainter.height +
+                  sidePainter.height +
+                  _flowCardPadding.vertical,
+            );
+          }
+        } finally {
+          scorePainter.dispose();
+          sidePainter.dispose();
+        }
+        return SizedBox(
+          height: height,
+          child: ListView.separated(
+            key: const Key('replay-scoring-flow'),
+            scrollDirection: Axis.horizontal,
+            itemCount: analytics.scoringFlow.length,
+            separatorBuilder: (_, _) => const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6),
+              child: Icon(Icons.chevron_right, size: 18),
+            ),
+            itemBuilder: (context, index) {
+              final entry = analytics.scoringFlow[index];
+              return _ScoringFlowItem(
+                entry: entry,
+                sideName: _sideName(entry.side),
+                l10n: l10n,
+                width: width,
+                scoreStyle: scoreStyle,
+                sideStyle: sideStyle,
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   String _shootingValue(
     MatchAnalytics analytics, {
     required int attempts,
@@ -204,7 +288,7 @@ class ReplayAnalyticsSummary extends StatelessWidget {
   }) {
     if (attempts == 0) return l10n.replayAnalyticsNoAttempts;
     if (analytics.hasReliableShootingPercentage && percentage != null) {
-      return '$percentage% · ${analytics.madeShotCount}/$attempts';
+      return '$percentage% · ${analytics.fieldGoalMadeCount}/$attempts';
     }
     return '${l10n.replayAnalyticsIncompleteShooting} · '
         '${l10n.replayAnalyticsRecordedAttempts} · $attempts';
@@ -245,11 +329,13 @@ class _AnalyticsHeading extends StatelessWidget {
       children: [
         Icon(icon, size: 20, color: editorialThemeOf(context).arenaAccent),
         const SizedBox(width: 8),
-        Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+        Expanded(
+          child: Text(
+            title,
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+          ),
         ),
       ],
     );
@@ -329,11 +415,17 @@ class _ScoringFlowItem extends StatelessWidget {
     required this.entry,
     required this.sideName,
     required this.l10n,
+    required this.width,
+    required this.scoreStyle,
+    required this.sideStyle,
   });
 
   final ScoringFlowEntry entry;
   final String sideName;
   final AppLocalizations l10n;
+  final double width;
+  final TextStyle? scoreStyle;
+  final TextStyle? sideStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -349,26 +441,24 @@ class _ScoringFlowItem extends StatelessWidget {
         entry.blueScore,
       ),
       child: Container(
-        width: 80,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+        width: width,
+        padding: _flowCardPadding,
         decoration: BoxDecoration(
-          border: Border(left: BorderSide(color: color, width: 4)),
+          border: Border(
+            left: BorderSide(color: color, width: _flowCardBorderWidth),
+          ),
           color: color.withValues(alpha: 0.07),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '${entry.redScore} : ${entry.blueScore}',
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
-            ),
+            Text('${entry.redScore} : ${entry.blueScore}', style: scoreStyle),
             Text(
               '$sideName +${entry.points}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelSmall,
+              style: sideStyle,
             ),
           ],
         ),
@@ -394,6 +484,13 @@ class _KeyPossessionRow extends StatelessWidget {
     final color = possession.side == TeamSide.red
         ? editorial.teamRed
         : editorial.teamBlue;
+    final label = Text(
+      '$sideName · ${_label(possession.type, l10n)}',
+      style: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+    );
+    final score = Text('${possession.redScore} : ${possession.blueScore}');
     return Container(
       constraints: const BoxConstraints(minHeight: 48),
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -406,20 +503,30 @@ class _KeyPossessionRow extends StatelessWidget {
           ),
         ),
       ),
-      child: Row(
-        children: [
-          Container(width: 4, height: 28, color: color),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              '$sideName · ${_label(possession.type, l10n)}',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
-            ),
-          ),
-          Text('${possession.redScore} : ${possession.blueScore}'),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final compact =
+              constraints.maxWidth < 240 ||
+              MediaQuery.textScalerOf(context).scale(1) >= 1.5;
+          return Row(
+            children: [
+              Container(width: 4, height: 28, color: color),
+              const SizedBox(width: 10),
+              if (compact)
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [label, const SizedBox(height: 4), score],
+                  ),
+                )
+              else ...[
+                Expanded(child: label),
+                score,
+              ],
+            ],
+          );
+        },
       ),
     );
   }

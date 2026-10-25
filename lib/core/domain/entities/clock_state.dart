@@ -1,4 +1,4 @@
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
 /// Persisted clock projection; display time is reconstructed from this state
 /// and [runningSinceUtc], rather than writing once per tick.

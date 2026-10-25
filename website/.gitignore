@@ -1,0 +1,13 @@
+.astro/
+.vercel/
+dist/
+.cache/downloads/
+.playwright-cli/
+build-artifact.json
+node_modules/
+test-results/
+output/
+playwright-report/
+.env
+.env.*
+!.env.example

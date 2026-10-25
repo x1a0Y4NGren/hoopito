@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/core/data/repositories/match_repository.dart';
-import 'package:hooptrace/core/domain/entities/match_event.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/core/data/repositories/match_repository.dart';
+import 'package:hoopito/core/domain/entities/match_event.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
 
 import '../test_helpers/test_database.dart';
 
@@ -22,7 +22,7 @@ void main() {
     await _createFinishedMatch(repository, 'match-a', 'Alpha', 1);
     await _createFinishedMatch(repository, 'match-b', 'Bravo', 3);
     await tester.pumpWidget(
-      HoopTraceApp(database: database, showEntryAnimation: false),
+      HoopitoApp(database: database, showEntryAnimation: false),
     );
     await tester.pumpAndSettle();
     final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -30,13 +30,18 @@ void main() {
 
     router.go('/matches/match-a/replay');
     await _pumpUntilFound(tester, find.byType(ReplayPage));
-    expect(find.text('Alpha'), findsWidgets);
+    await tester.pumpAndSettle();
+    final replay = find.byType(ReplayPage);
+    final alpha = find.descendant(of: replay, matching: find.text('Alpha'));
+    final bravo = find.descendant(of: replay, matching: find.text('Bravo'));
+    expect(alpha, findsWidgets);
 
     router.go('/matches/match-b/replay');
-    await _pumpUntilFound(tester, find.text('Bravo'));
+    await _pumpUntilFound(tester, bravo);
+    await tester.pumpAndSettle();
 
-    expect(find.text('Bravo'), findsWidgets);
-    expect(find.text('Alpha'), findsNothing);
+    expect(bravo, findsWidgets);
+    expect(alpha, findsNothing);
   });
 }
 

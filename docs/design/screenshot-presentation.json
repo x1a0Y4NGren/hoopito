@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "source_record": "docs/release/v2.0.1-screenshots.json",
+  "purpose": "Public presentation copies remove Android system bars and the landscape display-cutout inset. Raw Release capture pixels and provenance remain unchanged.",
+  "calibration": "Reviewed against all eight v2.0.1 captures at original resolution. Portrait crops begin at y=74 to remove the taller portrait status area, and end at y=1857 above the navigation area. Landscape status/navigation areas are 63px tall, with a 102px left system inset. These values apply only to this capture set.",
+  "screenshots": {
+    "home": {
+      "source_dimensions_px": [1080, 1920],
+      "extract": { "left": 0, "top": 74, "width": 1080, "height": 1783 }
+    },
+    "scoring": {
+      "source_dimensions_px": [1920, 1080],
+      "extract": { "left": 102, "top": 63, "width": 1818, "height": 954 }
+    },
+    "summary": {
+      "source_dimensions_px": [1080, 1920],
+      "extract": { "left": 0, "top": 74, "width": 1080, "height": 1783 }
+    },
+    "history": {
+      "source_dimensions_px": [1080, 1920],
+      "extract": { "left": 0, "top": 74, "width": 1080, "height": 1783 }
+    }
+  }
+}

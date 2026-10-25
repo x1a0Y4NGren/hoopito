@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/features/history/history_controller.dart';
+import 'package:hoopito/features/history/history_controller.dart';
 
 void main() {
   test('orders recent matches and derives winner and completeness', () {

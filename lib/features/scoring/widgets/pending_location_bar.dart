@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
 
 class PendingLocationBar extends StatelessWidget {
   const PendingLocationBar({

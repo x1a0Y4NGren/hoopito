@@ -1,5 +1,7 @@
 # 项目地基支线
 
+> 历史首发任务，非当前待办；使用边界见 [README](README.md)。
+
 - 中文名：项目地基支线
 - Branch：`codex/flutter-scaffold`
 - Worktree：`.worktrees/flutter-scaffold`

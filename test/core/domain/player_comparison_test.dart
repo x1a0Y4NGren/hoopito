@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/analytics/player_comparison.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/analytics/player_comparison.dart';
 
 void main() {
   test('match evidence reports exact changes without interpretation', () {
@@ -75,7 +75,7 @@ void main() {
     );
     expect(
       report.evidenceFor(PlayerComparisonMetric.locationCoverage)?.trend,
-      ComparisonTrend.unavailable,
+      ComparisonTrend.equal,
     );
   });
 

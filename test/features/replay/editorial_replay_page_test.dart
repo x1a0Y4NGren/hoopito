@@ -2,13 +2,13 @@ import 'dart:ui' show Tristate;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/replay/replay_controller.dart';
-import 'package:hooptrace/features/replay/replay_page.dart';
-import 'package:hooptrace/features/scoring/widgets/court_view.dart';
-import 'package:hooptrace/features/scoring/widgets/court_painter.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/replay/replay_controller.dart';
+import 'package:hoopito/features/replay/replay_page.dart';
+import 'package:hoopito/features/scoring/widgets/court_view.dart';
+import 'package:hoopito/features/scoring/widgets/court_painter.dart';
 
 void main() {
   testWidgets('court marker selection synchronizes the editorial event rail', (
@@ -121,7 +121,9 @@ void main() {
       final target = tester.getRect(
         find.byKey(Key('replay-court-marker-$eventId')),
       );
-      expect(target.size, const Size(48, 48));
+      // RenderBox coordinate subtraction may introduce sub-pixel rounding.
+      expect(target.width, closeTo(48, 1e-9));
+      expect(target.height, closeTo(48, 1e-9));
       expect(target.left, greaterThanOrEqualTo(paintedCourt.left));
       expect(target.top, greaterThanOrEqualTo(paintedCourt.top));
       expect(target.right, lessThanOrEqualTo(paintedCourt.right));

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database.dart';
 
 /// Creates an isolated in-memory database and registers its close operation
 /// with the current test.

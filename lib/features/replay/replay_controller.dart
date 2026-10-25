@@ -1,13 +1,13 @@
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:hooptrace/core/audit/audit_log_entry.dart';
-import 'package:hooptrace/core/domain/analytics/match_analytics.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/value_objects/court_point.dart';
-import 'package:hooptrace/core/domain/value_objects/team_side.dart';
-import 'package:hooptrace/features/scoring/scoring_controller.dart';
-import 'package:hooptrace/features/replay/replay_event_filter.dart';
+import 'package:hoopito/core/audit/audit_log_entry.dart';
+import 'package:hoopito/core/domain/analytics/match_analytics.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/features/scoring/scoring_controller.dart';
+import 'package:hoopito/features/replay/replay_event_filter.dart';
 
 enum ReplayEventKind { score, foul, miss, other }
 
@@ -69,6 +69,8 @@ class ReplayEventData {
   final Duration elapsed;
   final String? note;
   final String? locationId;
+
+  /// Confirmed court point; pending locations are omitted by the data mapper.
   final CourtPoint? shotPoint;
 
   /// The persisted event vocabulary. [kind] remains the display category.
@@ -293,6 +295,33 @@ class ReplayController extends ChangeNotifier {
       .length;
 
   int get locatedShotCount => shotLocations.length;
+
+  /// Full-match coverage is independent of the timeline and court filters.
+  int get fieldGoalAttemptCount =>
+      _data.analytics?.fieldGoalAttemptCount ?? _fieldGoalAttempts.length;
+
+  int get confirmedLocationCount =>
+      _data.analytics?.confirmedLocationCount ??
+      _fieldGoalAttempts.where((event) => event.shotPoint != null).length;
+
+  double get locationCoverage =>
+      _data.analytics?.locationCoverage ??
+      (fieldGoalAttemptCount == 0
+          ? 0
+          : confirmedLocationCount / fieldGoalAttemptCount);
+
+  Iterable<ReplayEventData> get _fieldGoalAttempts => _data.events.where(
+    (event) =>
+        !event.isDeleted &&
+        event.side != null &&
+        switch (event.rawKind) {
+          EventKind.score || EventKind.fieldGoal || EventKind.miss => true,
+          null =>
+            event.kind == ReplayEventKind.score ||
+                event.kind == ReplayEventKind.miss,
+          _ => false,
+        },
+  );
 
   void setKindFilter(ReplayKindFilter value) {
     if (_kindFilter == value) return;

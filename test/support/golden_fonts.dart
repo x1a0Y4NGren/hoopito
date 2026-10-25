@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-String hoopTraceGoldenFile(String name) =>
+String hoopitoGoldenFile(String name) =>
     Platform.isLinux ? 'goldens/${name}_linux.png' : 'goldens/$name.png';
 
-Future<void> loadHoopTraceGoldenFonts() async {
+Future<void> loadHoopitoGoldenFonts() async {
   await (FontLoader(
     'Noto Sans SC',
   )..addFont(rootBundle.load('assets/fonts/NotoSansSC-Regular.otf'))).load();

@@ -1,5 +1,7 @@
 # 核心模型与数据库支线
 
+> 历史首发任务，非当前待办；使用边界见 [README](README.md)。
+
 - 中文名：核心模型与数据库支线
 - Branch：`codex/domain-data-kernel`
 - Worktree：`.worktrees/domain-data-kernel`

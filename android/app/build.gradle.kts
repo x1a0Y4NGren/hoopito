@@ -13,7 +13,7 @@ val keystorePropertiesFile = rootProject.file("key.properties")
 val hasReleaseSigning = keystorePropertiesFile.exists()
 val allowUnsignedRelease =
     providers.gradleProperty("allowUnsignedRelease").orNull?.toBoolean() == true ||
-        System.getenv("HOOPTRACE_ALLOW_UNSIGNED_RELEASE")?.toBoolean() == true
+        System.getenv("HOOPITO_ALLOW_UNSIGNED_RELEASE")?.toBoolean() == true
 if (hasReleaseSigning) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }

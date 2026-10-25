@@ -1,24 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/backup_merge_service.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/settings/language_preferences.dart';
-import 'package:hooptrace/core/settings/scoring_feedback.dart';
-import 'package:hooptrace/core/settings/theme_preferences.dart';
-import 'package:hooptrace/features/settings/settings_controller.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/settings/language_preferences.dart';
+import 'package:hoopito/core/settings/scoring_feedback.dart';
+import 'package:hoopito/core/settings/theme_preferences.dart';
+import 'package:hoopito/features/settings/settings_controller.dart';
+import 'package:hoopito/features/settings/settings_error_message.dart';
+import 'package:hoopito/features/settings/settings_action_tile.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     required this.controller,
     this.onOpenProject,
-    this.onOpenRules,
-    this.onDataRestored,
+    this.onOpenData,
     this.themeController,
     this.languageController,
     super.key,
@@ -26,8 +23,7 @@ class SettingsPage extends StatefulWidget {
 
   final SettingsController controller;
   final VoidCallback? onOpenProject;
-  final VoidCallback? onOpenRules;
-  final VoidCallback? onDataRestored;
+  final VoidCallback? onOpenData;
   final ThemePreferencesController? themeController;
   final LanguagePreferencesController? languageController;
 
@@ -46,7 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
     widget.controller.addListener(_refresh);
     widget.themeController?.addListener(_refresh);
     widget.languageController?.addListener(_refresh);
-    unawaited(_load());
+    _scheduleLoad();
   }
 
   @override
@@ -55,7 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller.removeListener(_refresh);
       widget.controller.addListener(_refresh);
-      unawaited(_load());
+      _scheduleLoad();
     }
     if (oldWidget.themeController != widget.themeController) {
       oldWidget.themeController?.removeListener(_refresh);
@@ -79,19 +75,25 @@ class _SettingsPageState extends State<SettingsPage> {
     if (mounted) setState(() {});
   }
 
+  void _scheduleLoad() {
+    if (widget.controller.initialized) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !widget.controller.initialized) unawaited(_load());
+    });
+  }
+
   Future<void> _load() async {
     try {
       await widget.controller.load();
     } on Object catch (error) {
       if (!mounted) return;
-      _showMessage(_friendlyError(error, _localizations(context)));
+      _showMessage(settingsFriendlyError(error, _localizations(context)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final controller = widget.controller;
-    final backup = controller.backupState;
     final l10n = _localizations(context);
     return EditorialScaffold(
       masthead: EditorialMasthead(
@@ -111,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (controller.busy) const LinearProgressIndicator(minHeight: 2),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+              padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
               children: [
                 _SettingsSection(
                   title: l10n.settingsAppearanceSection,
@@ -192,15 +194,22 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ],
                   ),
-                _dataManagementSection(
-                  controller: controller,
-                  backup: backup,
-                  l10n: l10n,
+                _SettingsSection(
+                  title: l10n.settingsDataSection,
+                  children: [
+                    SettingsActionTile(
+                      key: const Key('settings-data-row'),
+                      icon: Icons.storage_outlined,
+                      title: l10n.settingsDataManagementTitle,
+                      subtitle: l10n.settingsDataManagementSubtitle,
+                      onTap: widget.onOpenData,
+                    ),
+                  ],
                 ),
                 _SettingsSection(
                   title: l10n.settingsAboutSection,
                   children: [
-                    _SettingTile(
+                    SettingsActionTile(
                       key: const Key('settings-about-row'),
                       icon: Icons.info_outline,
                       title: l10n.settingsAboutTitle,
@@ -217,243 +226,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _dataManagementSection({
-    required SettingsController controller,
-    required AutomaticBackupState backup,
-    required AppLocalizations l10n,
-  }) {
-    return _SettingsSection(
-      title: l10n.settingsDataSection,
-      children: [
-        _SettingTile(
-          icon: Icons.tune,
-          title: l10n.settingsRulesTemplateTitle,
-          subtitle: l10n.settingsRulesTemplateSubtitle,
-          onTap: widget.onOpenRules,
-        ),
-        _SettingTile(
-          icon: Icons.archive_outlined,
-          title: l10n.settingsExportBackupTitle,
-          subtitle: l10n.settingsExportBackupSubtitle,
-          enabled: !controller.busy,
-          onTap: () => _run(
-            () => controller.shareJsonBackup(
-              subject: l10n.exportFullBackupSubject,
-            ),
-            success: l10n.settingsExportBackupSuccess,
-          ),
-        ),
-        _SettingTile(
-          icon: Icons.settings_backup_restore,
-          title: l10n.settingsRestoreTitle,
-          subtitle: controller.canRestoreBackup
-              ? l10n.settingsRestoreSubtitleMerge
-              : l10n.settingsRestoreSubtitleBlocked,
-          enabled: !controller.busy,
-          onTap: _chooseRestoreMode,
-        ),
-        _SettingTile(
-          icon: Icons.table_view_outlined,
-          title: l10n.settingsExportCsvTitle,
-          subtitle: l10n.settingsExportCsvSubtitle,
-          enabled: !controller.busy,
-          onTap: () => _run(
-            () => controller.shareCsvExports(subject: l10n.exportCsvSubject),
-            success: l10n.settingsExportCsvSuccess,
-          ),
-        ),
-        _RuledControl(
-          child: SwitchListTile(
-            key: const Key('automatic-backup-switch'),
-            minTileHeight: 64,
-            contentPadding: EdgeInsets.zero,
-            secondary: const Icon(Icons.backup_outlined),
-            title: Text(l10n.settingsAutomaticBackupTitle),
-            subtitle: Text(
-              backup.enabled
-                  ? l10n.settingsAutomaticBackupEnabled
-                  : l10n.settingsAutomaticBackupDisabled,
-            ),
-            value: backup.enabled,
-            onChanged: controller.busy ? null : _setAutomaticBackupEnabled,
-          ),
-        ),
-        _SettingTile(
-          icon: Icons.folder_outlined,
-          title: l10n.settingsBackupDirectoryTitle,
-          subtitle:
-              backup.directoryLabel ??
-              backup.directory ??
-              l10n.settingsBackupDirectoryUnselected,
-          enabled: !controller.busy,
-          onTap: _configureDirectory,
-        ),
-        _SettingTile(
-          key: const Key('settings-backup-now-row'),
-          icon: Icons.backup,
-          title: l10n.settingsBackupNowTitle,
-          subtitle: _lastBackupLabel(backup, l10n),
-          enabled: !controller.busy && backup.isConfigured,
-          onTap: _runBackupNow,
-        ),
-        _SettingsControlRow(
-          key: const Key('backup-retention-limit'),
-          icon: Icons.delete_sweep_outlined,
-          title: l10n.settingsBackupRetentionTitle,
-          subtitle: l10n.settingsBackupRetentionSubtitle,
-          control: DropdownButton<int>(
-            key: const Key('backup-retention-dropdown'),
-            value: backup.retentionLimit,
-            items: _retentionOptions(backup.retentionLimit)
-                .map(
-                  (value) => DropdownMenuItem<int>(
-                    value: value,
-                    child: Text('$value'),
-                  ),
-                )
-                .toList(growable: false),
-            onChanged: controller.busy
-                ? null
-                : (value) {
-                    if (value != null) unawaited(_setRetentionLimit(value));
-                  },
-          ),
-        ),
-        _SettingTile(
-          icon: Icons.lock_outline,
-          title: l10n.settingsPrivacyTitle,
-          subtitle: l10n.settingsPrivacySubtitle,
-        ),
-      ],
-    );
-  }
-
-  Future<void> _chooseRestoreMode() async {
-    final l10n = _localizations(context);
-    final mode = await showDialog<RestoreMode>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.settingsRestoreDialogTitle),
-        contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              key: const Key('backup-mode-merge'),
-              leading: const Icon(Icons.merge_type),
-              title: Text(l10n.settingsMergeTitle),
-              subtitle: Text(l10n.settingsMergeSubtitle),
-              onTap: () => Navigator.pop(dialogContext, RestoreMode.merge),
-            ),
-            ListTile(
-              key: const Key('backup-mode-replace'),
-              enabled: widget.controller.canRestoreBackup,
-              leading: const Icon(Icons.find_replace_outlined),
-              title: Text(l10n.settingsReplaceTitle),
-              subtitle: Text(
-                widget.controller.canRestoreBackup
-                    ? l10n.settingsReplaceSubtitle
-                    : l10n.settingsReplaceBlocked,
-              ),
-              onTap: widget.controller.canRestoreBackup
-                  ? () => Navigator.pop(dialogContext, RestoreMode.replace)
-                  : null,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(l10n.cancelAction),
-          ),
-        ],
-      ),
-    );
-    if (mode == null) return;
-    if (mode == RestoreMode.replace && !await _confirmReplace()) return;
-    try {
-      final restored = await widget.controller.restoreBackup(
-        mode: mode,
-        safetySubject: l10n.exportSafetyBackupSubject,
-        pickerDialogTitle: l10n.settingsRestorePickerTitle,
-      );
-      if (!mounted) return;
-      if (!restored) {
-        _showMessage(l10n.settingsRestoreNotSelected);
-        return;
-      }
-      _showMessage(
-        mode == RestoreMode.merge
-            ? l10n.settingsMergeCompleted
-            : l10n.settingsReplaceCompleted,
-      );
-      widget.onDataRestored?.call();
-    } on Object catch (error) {
-      _showMessage(_friendlyError(error, l10n));
-    }
-  }
-
-  Future<bool> _confirmReplace() async {
-    final l10n = _localizations(context);
-    return await showDialog<bool>(
-          context: context,
-          builder: (dialogContext) => AlertDialog(
-            title: Text(l10n.settingsReplaceConfirmTitle),
-            content: Text(l10n.settingsReplaceConfirmBody),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext, false),
-                child: Text(l10n.cancelAction),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(dialogContext, true),
-                child: Text(l10n.settingsReplaceConfirmAction),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
-
-  Future<void> _configureDirectory() async {
-    final l10n = _localizations(context);
-    try {
-      final selected = await widget.controller.configureBackupDirectory(
-        dialogTitle: l10n.settingsBackupDirectoryPickerTitle,
-      );
-      if (!mounted) return;
-      _showMessage(
-        selected
-            ? l10n.settingsDirectoryUpdated
-            : l10n.settingsDirectoryNotSelected,
-      );
-    } on Object catch (error) {
-      _showMessage(_friendlyError(error, l10n));
-    }
-  }
-
-  Future<void> _setAutomaticBackupEnabled(bool enabled) async {
-    final l10n = _localizations(context);
-    try {
-      final changed = await widget.controller.setAutomaticBackupEnabled(
-        enabled,
-        dialogTitle: l10n.settingsBackupDirectoryPickerTitle,
-      );
-      if (!mounted) return;
-      if (!changed) {
-        _showMessage(l10n.settingsAutomaticBackupNotConfigured);
-      } else {
-        _showMessage(
-          enabled
-              ? l10n.settingsAutomaticBackupTurnedOn
-              : l10n.settingsAutomaticBackupTurnedOff,
-        );
-      }
-    } on Object catch (error) {
-      _showMessage(_friendlyError(error, l10n));
-    }
-  }
-
   Future<void> _setHapticFeedbackEnabled(bool enabled) async {
     final l10n = _localizations(context);
     try {
@@ -464,7 +236,7 @@ class _SettingsPageState extends State<SettingsPage> {
         );
       }
     } on Object catch (error) {
-      _showMessage(_friendlyError(error, l10n));
+      _showMessage(settingsFriendlyError(error, l10n));
     }
   }
 
@@ -478,7 +250,7 @@ class _SettingsPageState extends State<SettingsPage> {
         );
       }
     } on Object catch (error) {
-      _showMessage(_friendlyError(error, l10n));
+      _showMessage(settingsFriendlyError(error, l10n));
     }
   }
 
@@ -486,42 +258,9 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       await widget.controller.setMotionPreference(preference);
     } on Object catch (error) {
-      if (mounted) _showMessage(_friendlyError(error, _localizations(context)));
-    }
-  }
-
-  Future<void> _runBackupNow() async {
-    final l10n = _localizations(context);
-    try {
-      await widget.controller.runBackupNow();
-      if (mounted) _showMessage(l10n.settingsBackupWritten);
-    } on Object catch (error) {
-      _showMessage(_friendlyError(error, l10n));
-    }
-  }
-
-  Future<void> _setRetentionLimit(int value) async {
-    final l10n = _localizations(context);
-    try {
-      await widget.controller.setBackupRetentionLimit(value);
       if (mounted) {
-        _showMessage(l10n.settingsRetentionUpdated(value));
+        _showMessage(settingsFriendlyError(error, _localizations(context)));
       }
-    } on Object catch (error) {
-      _showMessage(_friendlyError(error, l10n));
-    }
-  }
-
-  Future<void> _run(
-    Future<void> Function() action, {
-    required String success,
-  }) async {
-    final l10n = _localizations(context);
-    try {
-      await action();
-      if (mounted) _showMessage(success);
-    } on Object catch (error) {
-      _showMessage(_friendlyError(error, l10n));
     }
   }
 
@@ -530,53 +269,6 @@ class _SettingsPageState extends State<SettingsPage> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  static String _lastBackupLabel(
-    AutomaticBackupState state,
-    AppLocalizations l10n,
-  ) {
-    final value = state.lastBackupAt?.toLocal();
-    if (value == null) return l10n.settingsBackupNever;
-    String two(int number) => number.toString().padLeft(2, '0');
-    return l10n.settingsBackupLastSuccess(
-      '${value.year}-${two(value.month)}-${two(value.day)}',
-      '${two(value.hour)}:${two(value.minute)}',
-    );
-  }
-
-  static List<int> _retentionOptions(int current) {
-    return <int>{1, 5, 10, 20, 30, 50, current}.toList()..sort();
-  }
-
-  static String _friendlyError(Object error, AppLocalizations l10n) {
-    if (error is BackupChecksumException) {
-      return l10n.settingsErrorChecksum;
-    }
-    if (error is UnsupportedBackupSchemaException) {
-      return l10n.settingsErrorFutureVersion;
-    }
-    if (error is BackupFormatException ||
-        error is BackupValidationException ||
-        error is BackupRestoreException) {
-      return l10n.settingsErrorInvalidBackup;
-    }
-    if (error is BackupMergeException) {
-      return l10n.settingsErrorMerge;
-    }
-    if (error is BackupDirectoryNotConfiguredException) {
-      return l10n.settingsErrorDirectoryRequired;
-    }
-    if (error is BackupDirectoryUnavailableException) {
-      return l10n.settingsErrorDirectoryUnavailable;
-    }
-    if (error is AutomaticBackupWriteException) {
-      return l10n.settingsErrorBackupWrite;
-    }
-    if (error is BackupRestoreBlockedException) {
-      return l10n.settingsErrorRestoreBlocked;
-    }
-    return l10n.settingsErrorGeneric;
   }
 }
 
@@ -681,7 +373,7 @@ class _MotionPreviewState extends State<_MotionPreview> {
     final reduced =
         widget.preference == MotionPreference.reduced ||
         media?.accessibleNavigation == true;
-    final motion = Theme.of(context).extension<HoopTraceMotionTheme>();
+    final motion = Theme.of(context).extension<HoopitoMotionTheme>();
     final duration = systemDisabled
         ? Duration.zero
         : reduced
@@ -881,7 +573,7 @@ class _SettingsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: HoopTraceSpacing.section),
+      padding: const EdgeInsets.only(bottom: HoopitoSpacing.section),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -890,90 +582,6 @@ class _SettingsSection extends StatelessWidget {
           ...children,
         ],
       ),
-    );
-  }
-}
-
-class _SettingTile extends StatelessWidget {
-  const _SettingTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    this.enabled = true,
-    this.onTap,
-    super.key,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final bool enabled;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final editorial = editorialThemeOf(context);
-    final actionable = onTap != null;
-    final tile = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 64),
-      child: InkWell(
-        onTap: enabled ? onTap : null,
-        excludeFromSemantics: actionable,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: editorial.rule)),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 48, child: Icon(icon)),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: enabled ? editorial.ink : editorial.mutedInk,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: editorial.mutedInk,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (actionable) ...[
-                const SizedBox(width: 8),
-                SizedBox.square(
-                  dimension: 48,
-                  child: Icon(
-                    enabled ? Icons.arrow_forward : Icons.block,
-                    key: enabled ? null : const Key('setting-disabled-cue'),
-                    size: 20,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
-    if (!actionable) return tile;
-    return Semantics(
-      container: true,
-      button: true,
-      enabled: enabled,
-      label: '$title. $subtitle',
-      onTap: enabled ? onTap : null,
-      excludeSemantics: true,
-      child: tile,
     );
   }
 }

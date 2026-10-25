@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:hooptrace/app/provider_router.dart';
+import 'package:hoopito/app/provider_router.dart';
 
 export 'provider_router.dart' show appRouterProvider, buildProviderAppRouter;
 

@@ -54,6 +54,7 @@ androidx.work:work-runtime-ktx:2.11.2
 androidx.work:work-runtime:2.11.2
 com.getkeepsafe.relinker:relinker:1.4.5
 com.google.guava:listenablefuture:1.0
+org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0
 org.jetbrains.kotlin:kotlin-stdlib:2.2.20
 org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0
 org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.11.0

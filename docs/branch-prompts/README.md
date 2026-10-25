@@ -1,13 +1,9 @@
-# HoopTrace Branch Prompts
+# HoopTrace 历史分支提示
 
-这些文件用于在 Codex 中创建分支对话。每个分支对话只负责一个明确范围，避免多个对话同时修改同一批核心文件。
+本目录保留首发开发时使用的分支提示，供追溯职责划分；不是当前任务清单，也不要求重新创建这些分支或 worktree。
 
-使用方式：
+当前维护按 [AGENTS.md](../../AGENTS.md) 和 [CONTRIBUTING.md](../../CONTRIBUTING.md) 执行；最近状态见 [HANDOFF.md](../../HANDOFF.md)。无需为了小改启动多波代理、建立工作树或等待历史分支合并。
 
-1. 先阅读 `docs/branch-execution-order.md`，确认当前应该启动哪一波。
-2. 运行 `scripts/setup-worktrees.ps1 -DryRun` 查看将创建的 worktree。
-3. 到合适波次时运行 `scripts/setup-worktrees.ps1 -Create -Wave <wave>`。
-4. 在 Codex 中新建对话，把工作目录设置为对应 `.worktrees/<name>`。
-5. 打开本目录对应 prompt 文件，把其中的 Prompt 复制给新对话。
+历史任务顺序记录在 [分支执行顺序](../branch-execution-order.md)。其中的初始搭建命令、目录、波次和技能要求仅适用于当时任务，不能直接作为今天的实施或发布授权。
 
-不要跳过依赖顺序。前四个分支应顺序推进：项目地基、核心模型与数据库、现场计分主线、复盘历史。
+确需复用时，先核对当前代码和本次需求，只提取相关背景，并为实际独立的子任务明确文件边界与交付结果。

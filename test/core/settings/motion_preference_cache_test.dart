@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/settings/motion_preference_cache.dart';
+import 'package:hoopito/core/settings/motion_preference_cache.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -52,19 +52,19 @@ void main() {
     expect(
       motionPreferenceFromEntrypointArguments(const [
         '--unrelated=value',
-        '--hooptrace-entry-motion=standard',
+        '--hoopito-entry-motion=standard',
       ]),
       MotionPreference.standard,
     );
     expect(
       motionPreferenceFromEntrypointArguments(const [
-        '--hooptrace-entry-motion=reduced',
+        '--hoopito-entry-motion=reduced',
       ]),
       MotionPreference.reduced,
     );
     expect(
       motionPreferenceFromEntrypointArguments(const [
-        '--hooptrace-entry-motion=future-mode',
+        '--hoopito-entry-motion=future-mode',
       ]),
       isNull,
     );
@@ -75,7 +75,7 @@ void main() {
     expect(entryAnimationEnabledFromEntrypointArguments(const []), isTrue);
     expect(
       entryAnimationEnabledFromEntrypointArguments(const [
-        '--hooptrace-entry-animation=disabled',
+        '--hoopito-entry-animation=disabled',
       ]),
       isFalse,
     );

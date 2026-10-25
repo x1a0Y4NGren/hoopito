@@ -1,0 +1,6 @@
+Enter target scores from 1 to 999. Fixed repeated clock accumulation.
+Cyclops icon with a silent elastic bounce and wave.
+Match/History/Players tabs, quick setup, save feedback, summaries, profile linking, growth comparisons and rematches.
+Separate FG%/FT%; honest incomplete samples. Verified safety copies before recovery.
+JSON format 2/schema 3; format 1/schema 2 supported.
+New certificate: export and save full JSON, uninstall historical v1, install v2, then restore.

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_providers.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/app/l10n/app_localizations_zh.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/commands/match_command_service.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/features/scoring/scoring_page.dart';
+import 'package:hoopito/app/app_providers.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/app/l10n/app_localizations_zh.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/features/scoring/scoring_page.dart';
 
 void main() {
   final l10n = AppLocalizationsZh();
@@ -121,7 +121,7 @@ void main() {
           appDatabaseProvider.overrideWithValue(database),
           matchCommandServiceProvider.overrideWithValue(failingService),
         ],
-        child: const HoopTraceApp(showEntryAnimation: false),
+        child: const HoopitoApp(showEntryAnimation: false),
       ),
     );
     await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
@@ -183,7 +183,7 @@ Future<void> _startMatch(
 
 Future<void> _enterScoring(WidgetTester tester, AppDatabase database) async {
   await tester.pumpWidget(
-    HoopTraceApp(database: database, showEntryAnimation: false),
+    HoopitoApp(database: database, showEntryAnimation: false),
   );
   await _pumpUntilFound(tester, find.byKey(const Key('home-resume')));
   await tester.tap(find.byKey(const Key('home-resume')));

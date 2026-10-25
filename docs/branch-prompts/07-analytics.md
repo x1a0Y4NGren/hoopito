@@ -1,5 +1,7 @@
 # 复盘统计支线
 
+> 历史首发任务，非当前待办；使用边界见 [README](README.md)。
+
 - 中文名：复盘统计支线
 - Branch：`codex/analytics`
 - Worktree：`.worktrees/analytics`

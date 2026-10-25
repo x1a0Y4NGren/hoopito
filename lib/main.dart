@@ -2,19 +2,25 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hooptrace/app/app_metadata.dart';
-import 'package:hooptrace/app/hoop_trace_app.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/data/app_database_provider.dart';
-import 'package:hooptrace/core/export/automatic_backup_scheduler.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/device_automatic_backup_storage.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
-import 'package:hooptrace/core/settings/motion_preference_cache.dart';
+import 'package:hoopito/app/app_metadata.dart';
+import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/app/entry/entry_diagnostic_binding.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/data/app_database_provider.dart';
+import 'package:hoopito/core/diagnostics/startup_diagnostics.dart';
+import 'package:hoopito/core/export/automatic_backup_scheduler.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/device_automatic_backup_storage.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/settings/motion_preference_cache.dart';
 
 void main(List<String> arguments) {
+  if (StartupDiagnostics.enabled &&
+      entryAnimationEnabledFromEntrypointArguments(arguments)) {
+    EntryDiagnosticBinding();
+  }
   runApp(
-    HoopTraceApp(
+    HoopitoApp(
       showEntryAnimation: entryAnimationEnabledFromEntrypointArguments(
         arguments,
       ),
@@ -43,7 +49,7 @@ Future<void> automaticBackupBackgroundMain() async {
     final storage = DeviceAutomaticBackupStorage(useAndroidSaf: true);
     final service = AutomaticBackupService(
       database,
-      JsonBackupCodec(database, appVersion: hoopTraceAppVersion),
+      JsonBackupCodec(database, appVersion: hoopitoAppVersion),
       storage: storage,
       scheduler: DeviceAutomaticBackupScheduler(useAndroid: true),
     );

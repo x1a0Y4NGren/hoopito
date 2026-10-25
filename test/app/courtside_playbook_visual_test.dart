@@ -4,28 +4,28 @@ import 'dart:ui' show Tristate;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
 import 'package:lottie/lottie.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('light and dark themes expose editorial and motion extensions', () {
-    final light = buildHoopTraceTheme();
-    final dark = buildHoopTraceTheme(brightness: Brightness.dark);
+    final light = buildHoopitoTheme();
+    final dark = buildHoopitoTheme(brightness: Brightness.dark);
 
-    final lightVisual = light.extension<HoopTraceEditorialTheme>();
-    final darkVisual = dark.extension<HoopTraceEditorialTheme>();
-    final lightMotion = light.extension<HoopTraceMotionTheme>();
-    final darkMotion = dark.extension<HoopTraceMotionTheme>();
+    final lightVisual = light.extension<HoopitoEditorialTheme>();
+    final darkVisual = dark.extension<HoopitoEditorialTheme>();
+    final lightMotion = light.extension<HoopitoMotionTheme>();
+    final darkMotion = dark.extension<HoopitoMotionTheme>();
 
     expect(lightVisual, isNotNull);
     expect(darkVisual, isNotNull);
     expect(lightMotion, isNotNull);
     expect(darkMotion, isNotNull);
-    expect(lightVisual!.canvas, HoopTraceColors.offWhite);
-    expect(darkVisual!.canvas, HoopTraceColors.charcoal);
+    expect(lightVisual!.canvas, HoopitoColors.offWhite);
+    expect(darkVisual!.canvas, HoopitoColors.charcoal);
     expect(lightMotion!.scoreFlight, const Duration(milliseconds: 480));
     expect(lightMotion.impact, const Duration(milliseconds: 180));
     expect(darkMotion!.scoreFlight, lightMotion.scoreFlight);
@@ -36,7 +36,7 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: const Scaffold(
             body: EditorialSurface(
               child: Column(
@@ -64,7 +64,7 @@ void main() {
       var presses = 0;
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: Scaffold(
             body: EditorialTapTarget(
               label: 'Add point',
@@ -104,7 +104,7 @@ void main() {
       final disabledHandle = tester.ensureSemantics();
       await tester.pumpWidget(
         MaterialApp(
-          theme: buildHoopTraceTheme(),
+          theme: buildHoopitoTheme(),
           home: Scaffold(
             body: EditorialTapTarget(
               label: 'Disabled',
@@ -132,7 +132,7 @@ void main() {
     final semanticsHandle = tester.ensureSemantics();
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: Scaffold(
           body: EditorialTapTarget(
             label: 'Unavailable',

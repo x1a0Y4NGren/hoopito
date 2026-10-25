@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $setupScript = Join-Path $PSScriptRoot 'setup-worktrees.ps1'
-$tempWorktreeRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("hooptrace-worktree-test-" + [guid]::NewGuid().ToString('N'))
+$tempWorktreeRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("hoopito-worktree-test-" + [guid]::NewGuid().ToString('N'))
 
 if (-not (Test-Path -LiteralPath $setupScript)) {
     throw "Missing setup script: $setupScript"

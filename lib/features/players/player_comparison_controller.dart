@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:hooptrace/core/domain/analytics/player_comparison.dart';
+import 'package:hoopito/core/domain/analytics/player_comparison.dart';
 
 typedef PlayerComparisonMatchLoader =
     Future<List<PlayerComparisonMatch>> Function(String playerId);

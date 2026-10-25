@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Semantic colors for the black-court editorial visual language.
 @immutable
-class HoopTraceEditorialTheme extends ThemeExtension<HoopTraceEditorialTheme> {
-  const HoopTraceEditorialTheme({
+class HoopitoEditorialTheme extends ThemeExtension<HoopitoEditorialTheme> {
+  const HoopitoEditorialTheme({
     required this.canvas,
     required this.surface,
     required this.inverseSurface,
@@ -22,7 +22,7 @@ class HoopTraceEditorialTheme extends ThemeExtension<HoopTraceEditorialTheme> {
     required this.danger,
   });
 
-  const HoopTraceEditorialTheme.light()
+  const HoopitoEditorialTheme.light()
     : this(
         canvas: const Color(0xFFF4F3EF),
         surface: const Color(0xFFFFFFFF),
@@ -42,7 +42,7 @@ class HoopTraceEditorialTheme extends ThemeExtension<HoopTraceEditorialTheme> {
         danger: const Color(0xFFA41E29),
       );
 
-  const HoopTraceEditorialTheme.dark()
+  const HoopitoEditorialTheme.dark()
     : this(
         canvas: const Color(0xFF0C0D0E),
         surface: const Color(0xFF151719),
@@ -80,7 +80,7 @@ class HoopTraceEditorialTheme extends ThemeExtension<HoopTraceEditorialTheme> {
   final Color danger;
 
   @override
-  HoopTraceEditorialTheme copyWith({
+  HoopitoEditorialTheme copyWith({
     Color? canvas,
     Color? surface,
     Color? inverseSurface,
@@ -98,7 +98,7 @@ class HoopTraceEditorialTheme extends ThemeExtension<HoopTraceEditorialTheme> {
     Color? warning,
     Color? danger,
   }) {
-    return HoopTraceEditorialTheme(
+    return HoopitoEditorialTheme(
       canvas: canvas ?? this.canvas,
       surface: surface ?? this.surface,
       inverseSurface: inverseSurface ?? this.inverseSurface,
@@ -119,12 +119,9 @@ class HoopTraceEditorialTheme extends ThemeExtension<HoopTraceEditorialTheme> {
   }
 
   @override
-  HoopTraceEditorialTheme lerp(
-    covariant HoopTraceEditorialTheme? other,
-    double t,
-  ) {
+  HoopitoEditorialTheme lerp(covariant HoopitoEditorialTheme? other, double t) {
     if (other == null) return this;
-    return HoopTraceEditorialTheme(
+    return HoopitoEditorialTheme(
       canvas: Color.lerp(canvas, other.canvas, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       inverseSurface: Color.lerp(inverseSurface, other.inverseSurface, t)!,

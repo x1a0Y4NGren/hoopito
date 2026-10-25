@@ -4,13 +4,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
-import 'package:hooptrace/app/app_theme.dart';
-import 'package:hooptrace/app/design_system/design_system.dart';
-import 'package:hooptrace/app/l10n/app_localizations.dart';
-import 'package:hooptrace/core/data/repositories/rule_template_repository.dart';
-import 'package:hooptrace/core/domain/entities/rule_template.dart';
-import 'package:hooptrace/features/rules/rule_template_editor_page.dart';
-import 'package:hooptrace/features/rules/rule_template_list_page.dart';
+import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/design_system/design_system.dart';
+import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/features/rules/rule_template_editor_page.dart';
+import 'package:hoopito/features/rules/rule_template_list_page.dart';
 
 import '../../test_helpers/test_database.dart';
 
@@ -36,7 +36,7 @@ void main() {
             MediaQuery(
               data: const MediaQueryData(textScaler: TextScaler.linear(2)),
               child: MaterialApp(
-                theme: buildHoopTraceTheme(brightness: brightness),
+                theme: buildHoopitoTheme(brightness: brightness),
                 locale: locale,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
@@ -62,7 +62,7 @@ void main() {
             MediaQuery(
               data: const MediaQueryData(textScaler: TextScaler.linear(2)),
               child: MaterialApp(
-                theme: buildHoopTraceTheme(brightness: brightness),
+                theme: buildHoopitoTheme(brightness: brightness),
                 locale: locale,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,
@@ -102,7 +102,7 @@ void main() {
     );
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: RuleTemplateListPage(repository: repository),
       ),
     );
@@ -121,7 +121,7 @@ void main() {
     final database = createTestDatabase();
     await tester.pumpWidget(
       MaterialApp(
-        theme: buildHoopTraceTheme(),
+        theme: buildHoopitoTheme(),
         home: RuleTemplateEditorPage(
           repository: RuleTemplateRepository(database),
         ),

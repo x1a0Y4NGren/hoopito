@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:drift/drift.dart' hide isNull;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
 
 import '../../test_helpers/test_database.dart';
 
@@ -45,7 +45,7 @@ void main() {
 
       final document = jsonDecode(exported) as Map<String, dynamic>;
       final manifest = document['manifest'] as Map<String, dynamic>;
-      expect(manifest['appName'], 'HoopTrace');
+      expect(manifest['appName'], 'Hoopito');
       expect(manifest['appVersion'], '0.1.0+1');
       expect(manifest['schemaVersion'], restored.schemaVersion);
       expect(manifest['exportedAt'], exportedAt.toIso8601String());

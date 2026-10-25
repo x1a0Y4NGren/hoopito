@@ -1,13 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:csv/csv.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
-import 'package:hooptrace/core/export/automatic_backup_service.dart';
-import 'package:hooptrace/core/export/export_coordinator.dart';
-import 'package:hooptrace/core/export/json_backup_codec.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/export/automatic_backup_service.dart';
+import 'package:hoopito/core/export/export_coordinator.dart';
+import 'package:hoopito/core/export/json_backup_codec.dart';
 
 import '../../test_helpers/test_database.dart';
 
@@ -19,8 +21,13 @@ void main() {
     late AutomaticBackupService automaticBackup;
     late ExportCoordinator coordinator;
     late String replacementBackup;
+    late Directory safetyDirectory;
 
     setUp(() async {
+      safetyDirectory = await Directory.systemTemp.createTemp(
+        'hoopito-safety-',
+      );
+      addTearDown(() => safetyDirectory.delete(recursive: true));
       replacementBackup = await withTestDatabase((source) async {
         await source
             .into(source.players)
@@ -54,19 +61,25 @@ void main() {
         codec,
         gateway: gateway,
         automaticBackup: automaticBackup,
+        safetyBackups: SafetyBackupStore(
+          codec,
+          storage: IoSafetyBackupStorage(
+            resolveDirectory: () async => safetyDirectory,
+          ),
+        ),
         now: () => DateTime.utc(2026, 8, 21, 10, 30),
       );
       await _seed(database);
     });
 
     test('shares a complete JSON backup with a stable filename', () async {
-      await coordinator.shareJsonBackup(subject: 'HoopTrace full local backup');
+      await coordinator.shareJsonBackup(subject: 'Hoopito full local backup');
 
       expect(gateway.shares, hasLength(1));
       final artifact = gateway.shares.single.single;
-      expect(artifact.fileName, 'hooptrace-backup-20260821-103000.json');
+      expect(artifact.fileName, 'hoopito-backup-20260821-103000.json');
       expect(artifact.mimeType, 'application/json');
-      expect(gateway.subjects.single, 'HoopTrace full local backup');
+      expect(gateway.subjects.single, 'Hoopito full local backup');
       final root = jsonDecode(utf8.decode(artifact.bytes)) as Map;
       expect(
         (root['data'] as Map).keys,
@@ -84,19 +97,37 @@ void main() {
     });
 
     test('shares match, event and player statistics CSV files', () async {
-      await coordinator.shareCsvExports(subject: 'HoopTrace CSV export');
+      await coordinator.shareCsvExports(subject: 'Hoopito CSV export');
 
       final files = gateway.shares.single;
       expect(files.map((file) => file.fileName), [
-        'hooptrace-matches-20260821-103000.csv',
-        'hooptrace-events-20260821-103000.csv',
-        'hooptrace-player-stats-20260821-103000.csv',
+        'hoopito-matches-20260821-103000.csv',
+        'hoopito-events-20260821-103000.csv',
+        'hoopito-player-stats-20260821-103000.csv',
       ]);
       final stats = _decodeCsv(utf8.decode(files.last.bytes));
-      expect(stats[1], ['player-red', '赤焰', 1, 1, 2, 1, 2, 50.0]);
+      expect(
+        stats.first,
+        containsAll(['field_goal_percentage', 'free_throw_percentage']),
+      );
+      expect(stats[1], [
+        'player-red',
+        '赤焰',
+        '',
+        '',
+        1,
+        1,
+        2,
+        1,
+        2,
+        '',
+        0,
+        0,
+        '',
+      ]);
       expect(stats[2][0], '');
       expect(stats[2][1], '海浪');
-      expect(gateway.subjects.single, 'HoopTrace CSV export');
+      expect(gateway.subjects.single, 'Hoopito CSV export');
     });
 
     test(
@@ -113,18 +144,18 @@ void main() {
 
         expect(
           await coordinator.restorePickedBackup(
-            safetySubject: 'HoopTrace safety backup before restore',
+            safetySubject: 'Hoopito safety backup before restore',
           ),
           isTrue,
         );
 
-        expect(gateway.shares, hasLength(1));
-        final safety = gateway.shares.single.single;
-        expect(safety.fileName, 'hooptrace-safety-backup-20260821-103000.json');
-        expect(
-          (jsonDecode(utf8.decode(safety.bytes)) as Map<String, dynamic>),
-          containsPair('manifest', isA<Map<String, dynamic>>()),
+        expect(gateway.shares, isEmpty);
+        final backups = await coordinator.listSafetyBackups();
+        expect(backups, hasLength(1));
+        final safety = coordinator.codec.decodeAndValidate(
+          await coordinator.safetyBackups.read(backups.single),
         );
+        expect(safety.players.single.id, 'player-red');
         expect(
           (await database.select(database.players).get()).single.id,
           'replacement',
@@ -132,6 +163,201 @@ void main() {
         final state = await automaticBackup.loadState();
         expect(state.enabled, isFalse);
         expect(state.directory, isNull);
+      },
+    );
+
+    test(
+      'CSV separates field goals and free throws and excludes deleted shots',
+      () async {
+        await database
+            .update(database.matches)
+            .write(
+              const MatchesCompanion(trackingCoverage: Value('shotAttempts')),
+            );
+        for (final event in [
+          _shot(
+            'blue-made',
+            'match-1',
+            side: 'blue',
+            type: 'fieldGoal',
+            points: 3,
+            outcome: 'made',
+          ),
+          _shot(
+            'blue-missed',
+            'match-1',
+            side: 'blue',
+            type: 'fieldGoal',
+            points: 0,
+            outcome: 'missed',
+          ),
+          _shot(
+            'red-ft-one',
+            'match-1',
+            type: 'freeThrow',
+            points: 1,
+            outcome: 'made',
+          ),
+          _shot(
+            'red-ft-two',
+            'match-1',
+            type: 'freeThrow',
+            points: 1,
+            outcome: 'made',
+          ),
+          _shot(
+            'red-ft-missed',
+            'match-1',
+            type: 'freeThrow',
+            points: 0,
+            outcome: 'missed',
+          ),
+          _shot(
+            'red-deleted',
+            'match-1',
+            type: 'fieldGoal',
+            points: 3,
+            outcome: 'made',
+            deleted: true,
+          ),
+        ]) {
+          await database.into(database.matchEvents).insert(event);
+        }
+
+        await coordinator.shareCsvExports(subject: 'stats');
+
+        final stats = _decodeCsv(utf8.decode(gateway.shares.single.last.bytes));
+        expect(stats[1], [
+          'player-red',
+          '赤焰',
+          '',
+          '',
+          1,
+          1,
+          4,
+          1,
+          2,
+          50.0,
+          2,
+          3,
+          66.67,
+        ]);
+        expect(stats[2], [
+          '',
+          '海浪',
+          'match-1',
+          'participant-blue',
+          1,
+          0,
+          3,
+          1,
+          2,
+          50.0,
+          0,
+          0,
+          '',
+        ]);
+      },
+    );
+
+    test(
+      'CSV keeps temporary names separate and aggregates profiles by ID',
+      () async {
+        await (database.update(database.matchParticipants)..where(
+              (participant) => participant.id.equals('participant-blue'),
+            ))
+            .write(const MatchParticipantsCompanion(nameSnapshot: Value('赤焰')));
+        await _seedCsvMatch(
+          database,
+          'match-2',
+          lifecycle: 'archived',
+          coverage: 'shotAttempts',
+        );
+        await database
+            .into(database.matchEvents)
+            .insert(_shot('second-red', 'match-2', points: 2));
+        await database
+            .into(database.matchEvents)
+            .insert(_shot('second-blue', 'match-2', side: 'blue', points: 3));
+
+        await coordinator.shareCsvExports(subject: 'stats');
+
+        final stats = _decodeCsv(utf8.decode(gateway.shares.single.last.bytes));
+        expect(stats, hasLength(4));
+        expect(stats[1], [
+          'player-red',
+          '赤焰',
+          '',
+          '',
+          2,
+          1,
+          4,
+          2,
+          3,
+          '',
+          0,
+          0,
+          '',
+        ]);
+        expect(stats[2], [
+          '',
+          '赤焰',
+          'match-1',
+          'participant-blue',
+          1,
+          0,
+          0,
+          0,
+          0,
+          '',
+          0,
+          0,
+          '',
+        ]);
+        expect(stats[3], [
+          '',
+          '赤焰',
+          'match-2',
+          'match-2-blue',
+          1,
+          1,
+          3,
+          1,
+          1,
+          100.0,
+          0,
+          0,
+          '',
+        ]);
+      },
+    );
+
+    test(
+      'CSV career totals exclude active and abandoned matches while raw exports keep them',
+      () async {
+        for (final lifecycle in ['active', 'abandoned']) {
+          final matchId = 'match-$lifecycle';
+          await _seedCsvMatch(
+            database,
+            matchId,
+            lifecycle: lifecycle,
+            coverage: 'shotAttempts',
+          );
+          await database
+              .into(database.matchEvents)
+              .insert(_shot('event-$lifecycle', matchId, points: 3));
+        }
+
+        await coordinator.shareCsvExports(subject: 'stats');
+
+        final files = gateway.shares.single;
+        final matches = _decodeCsv(utf8.decode(files.first.bytes));
+        final events = _decodeCsv(utf8.decode(files[1].bytes));
+        final stats = _decodeCsv(utf8.decode(files.last.bytes));
+        expect(matches, hasLength(4));
+        expect(events, hasLength(5));
+        expect(stats, hasLength(3));
+        expect(stats[1].skip(4).take(3), [1, 1, 2]);
       },
     );
 
@@ -145,7 +371,7 @@ void main() {
 
       await expectLater(
         () => coordinator.restorePickedBackup(
-          safetySubject: 'HoopTrace safety backup before restore',
+          safetySubject: 'Hoopito safety backup before restore',
         ),
         throwsA(isA<BackupRestoreBlockedException>()),
       );
@@ -170,7 +396,7 @@ void main() {
 
         await expectLater(
           () => coordinator.restorePickedBackup(
-            safetySubject: 'HoopTrace safety backup before restore',
+            safetySubject: 'Hoopito safety backup before restore',
           ),
           throwsA(isA<BackupRestoreBlockedException>()),
         );
@@ -199,7 +425,7 @@ void main() {
 
         await expectLater(
           () => coordinator.restorePickedBackup(
-            safetySubject: 'HoopTrace safety backup before restore',
+            safetySubject: 'Hoopito safety backup before restore',
           ),
           throwsA(isA<BackupException>()),
         );
@@ -225,7 +451,7 @@ void main() {
         expect(
           await coordinator.restorePickedBackup(
             mode: RestoreMode.merge,
-            safetySubject: 'HoopTrace safety backup before restore',
+            safetySubject: 'Hoopito safety backup before restore',
           ),
           isTrue,
         );
@@ -246,12 +472,12 @@ void main() {
     test('returns false when the import picker is cancelled', () async {
       expect(
         await coordinator.restorePickedBackup(
-          safetySubject: 'HoopTrace safety backup before restore',
-          pickerDialogTitle: '选择 HoopTrace 备份',
+          safetySubject: 'Hoopito safety backup before restore',
+          pickerDialogTitle: '选择 Hoopito 备份',
         ),
         isFalse,
       );
-      expect(gateway.lastBackupDialogTitle, '选择 HoopTrace 备份');
+      expect(gateway.lastBackupDialogTitle, '选择 Hoopito 备份');
     });
 
     test('forwards a localized directory picker title', () async {
@@ -265,14 +491,14 @@ void main() {
       await coordinator.shareReplayImage(
         png,
         matchId: 'match:/1',
-        subject: 'HoopTrace match replay',
+        subject: 'Hoopito match replay',
       );
 
       final artifact = gateway.shares.single.single;
-      expect(artifact.fileName, 'hooptrace-replay-match-1.png');
+      expect(artifact.fileName, 'hoopito-replay-match-1.png');
       expect(artifact.mimeType, 'image/png');
       expect(artifact.bytes, png);
-      expect(gateway.subjects.single, 'HoopTrace match replay');
+      expect(gateway.subjects.single, 'Hoopito match replay');
     });
 
     test('uses a caller-provided localized share subject', () async {
@@ -288,6 +514,65 @@ List<List<dynamic>> _decodeCsv(String encoded) {
     dynamicTyping: true,
     decoderTransform: (field, _, _) => field is bool ? field.toString() : field,
   ).decode(encoded);
+}
+
+MatchEventRow _shot(
+  String id,
+  String matchId, {
+  String side = 'red',
+  String type = 'score',
+  required int points,
+  String? outcome,
+  bool deleted = false,
+}) => MatchEventRow(
+  id: id,
+  matchId: matchId,
+  side: side,
+  type: type,
+  points: points,
+  occurredAt: DateTime.utc(2026, 8, 21, 9, 1),
+  outcome: outcome,
+  isDeleted: deleted,
+);
+
+Future<void> _seedCsvMatch(
+  AppDatabase database,
+  String id, {
+  required String lifecycle,
+  required String coverage,
+}) async {
+  await database
+      .into(database.matches)
+      .insert(
+        MatchesCompanion.insert(
+          id: id,
+          lifecycle: Value(lifecycle),
+          trackingCoverage: Value(coverage),
+          ruleTemplateJson: '{}',
+          createdAt: DateTime.utc(2026, 8, 21),
+        ),
+      );
+  await database
+      .into(database.matchParticipants)
+      .insert(
+        MatchParticipant(
+          id: '$id-red',
+          matchId: id,
+          side: 'red',
+          nameSnapshot: '赤焰',
+          playerProfileId: 'player-red',
+        ),
+      );
+  await database
+      .into(database.matchParticipants)
+      .insert(
+        MatchParticipant(
+          id: '$id-blue',
+          matchId: id,
+          side: 'blue',
+          nameSnapshot: '赤焰',
+        ),
+      );
 }
 
 class _MemoryExportGateway implements ExportGateway {
@@ -352,7 +637,15 @@ Future<void> _seed(AppDatabase database) async {
           lifecycle: 'finished',
           recordingMode: 'simple',
           trackingCoverage: 'scoresOnly',
-          ruleTemplateJson: '{}',
+          ruleTemplateJson: jsonEncode({
+            'id': 'test-rule',
+            'name': 'Test rule',
+            'scoreButtons': [1, 2, 3],
+            'targetScore': 11,
+            'winByTwo': false,
+            'possessionHintEnabled': false,
+            'customEventTypes': <String>[],
+          }),
           createdAt: startedAt,
           startedAt: startedAt,
           endedAt: startedAt.add(const Duration(minutes: 5)),
@@ -361,6 +654,16 @@ Future<void> _seed(AppDatabase database) async {
         ),
       );
   await database.batch((batch) {
+    batch.insert(
+      database.matchClocks,
+      const MatchClock(
+        id: 'clock-1',
+        matchId: 'match-1',
+        mode: 'countUp',
+        phase: 'regulation',
+        accumulatedSeconds: 300,
+      ),
+    );
     batch.insertAll(database.matchEvents, [
       MatchEventRow(
         id: 'event-made',

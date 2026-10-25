@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:hooptrace/core/data/app_database.dart';
-import 'package:hooptrace/core/domain/analytics/player_analytics_snapshot.dart';
-import 'package:hooptrace/core/domain/analytics/player_analytics_snapshot_calculator.dart';
-import 'package:hooptrace/core/domain/domain_enums.dart';
+import 'package:hoopito/core/data/app_database.dart';
+import 'package:hoopito/core/domain/analytics/player_analytics_snapshot.dart';
+import 'package:hoopito/core/domain/analytics/player_analytics_snapshot_calculator.dart';
+import 'package:hoopito/core/domain/domain_enums.dart';
 
 /// Rebuilds derived snapshots from one bounded canonical match query.
 class PlayerAnalyticsSnapshotRepository {

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate HoopTrace launch artwork and the original entry swish sound."""
+"""Generate Hoopito launch artwork and the original entry swish sound."""
 
 from __future__ import annotations
 
@@ -9,12 +9,11 @@ import struct
 import wave
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FOREGROUND = ROOT / "assets/icons/hooptrace-app-icon-foreground.png"
-FLUTTER_HOOP = ROOT / "assets/icons/hooptrace-entry-hoop.png"
+FOREGROUND = ROOT / "assets/icons/hoopito-app-icon-foreground.png"
 AUDIO = ROOT / "assets/audio/entry_swish.wav"
 
 ANDROID_DENSITIES = {
@@ -32,66 +31,6 @@ SWISH_SECONDS = 0.18
 SWISH_SEED = 0x48545243
 
 
-def draw_clean_hoop() -> Image.Image:
-    antialias = 4
-    canvas = Image.new("RGBA", (1024 * antialias, 1024 * antialias), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(canvas)
-    white = (244, 243, 239, 255)
-
-    def point(value: tuple[float, float]) -> tuple[int, int]:
-        return (round(value[0] * antialias), round(value[1] * antialias))
-
-    def line(points: list[tuple[float, float]], width: float) -> None:
-        draw.line(
-            [point(item) for item in points],
-            fill=white,
-            width=round(width * antialias),
-            joint="curve",
-        )
-
-    def quadratic(
-        start: tuple[float, float],
-        control: tuple[float, float],
-        end: tuple[float, float],
-        width: float,
-    ) -> None:
-        points = []
-        for index in range(33):
-            t = index / 32
-            inverse = 1 - t
-            points.append(
-                (
-                    inverse * inverse * start[0]
-                    + 2 * inverse * t * control[0]
-                    + t * t * end[0],
-                    inverse * inverse * start[1]
-                    + 2 * inverse * t * control[1]
-                    + t * t * end[1],
-                )
-            )
-        line(points, width)
-
-    line([(390, 379), (767, 379), (767, 642), (329, 642), (329, 417)], 30)
-    draw.rounded_rectangle(
-        tuple(value * antialias for value in (457, 482, 636, 610)),
-        radius=3 * antialias,
-        outline=white,
-        width=24 * antialias,
-    )
-    draw.ellipse(
-        tuple(value * antialias for value in (416, 583, 681, 652)),
-        outline=white,
-        width=25 * antialias,
-    )
-    quadratic((438, 636), (470, 724), (483, 807), 18)
-    quadratic((657, 636), (626, 724), (613, 807), 18)
-    quadratic((470, 642), (520, 720), (613, 807), 18)
-    quadratic((626, 642), (576, 720), (483, 807), 18)
-    quadratic((505, 642), (526, 721), (577, 793), 18)
-    quadratic((590, 642), (570, 721), (518, 793), 18)
-    return canvas.resize((1024, 1024), Image.Resampling.LANCZOS)
-
-
 def scale_about_center(source: Image.Image, factor: float) -> Image.Image:
     width = round(source.width * factor)
     height = round(source.height * factor)
@@ -105,17 +44,13 @@ def scale_about_center(source: Image.Image, factor: float) -> Image.Image:
 
 
 def write_launch_artwork() -> None:
-    Image.open(FOREGROUND).verify()
-    hoop = draw_clean_hoop()
-    FLUTTER_HOOP.parent.mkdir(parents=True, exist_ok=True)
-    hoop.resize((512, 512), Image.Resampling.LANCZOS).save(FLUTTER_HOOP)
-
-    native = scale_about_center(hoop, INITIAL_SCALE)
+    with Image.open(FOREGROUND) as foreground:
+        native = scale_about_center(foreground.convert('RGBA'), INITIAL_SCALE)
     for density, scale in ANDROID_DENSITIES.items():
         size = round(LAUNCH_CANVAS_POINTS * scale)
         destination = (
             ROOT
-            / f"android/app/src/main/res/drawable-{density}/launch_hoop.png"
+            / f"android/app/src/main/res/drawable-{density}/launch_mark.png"
         )
         destination.parent.mkdir(parents=True, exist_ok=True)
         native.resize((size, size), Image.Resampling.LANCZOS).save(destination)
