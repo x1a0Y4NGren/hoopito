@@ -849,9 +849,22 @@ for (const locale of locales) {
       .poll(async () => (await stage.boundingBox())!.y)
       .toBeCloseTo(85, 0);
     await expect(page.locator('[data-replay-red]')).toHaveText('11');
-    // A large forward scroll can leave normally; snapping must not pull back.
+    // Clicking the fixed header moves the pointer there. Deliver this gesture
+    // over page content, then wait for its full native delta and settled frames.
+    await page.mouse.move(700, 400);
+    const forwardStart = await page.evaluate(() => scrollY);
     await page.mouse.wheel(0, 1000);
-    await page.waitForTimeout(700);
+    await expect
+      .poll(() =>
+        page.evaluate(async () => {
+          const top = scrollY;
+          await new Promise(requestAnimationFrame);
+          await new Promise(requestAnimationFrame);
+          return scrollY === top ? top : -1;
+        }),
+      )
+      .toBeCloseTo(forwardStart + 1000, 0);
+    // A large forward scroll can leave normally; snapping must not pull back.
     const left = await page.evaluate(() => scrollY);
     expect(left).toBeGreaterThan(range.end + 100);
     await page.waitForTimeout(400);
@@ -1868,10 +1881,20 @@ test('scoring feedback pauses until both gallery and hidden-page reasons are rel
 test('clicking during the button invitation restores the page and only selects the clicked feature', async ({
   page,
 }) => {
+  // The invitation lasts 1.45 seconds. Hold its clock before entering the
+  // section so navigation and locator checks cannot consume the playing phase.
+  await page.clock.install();
   await page.setViewportSize({ width: 390, height: 900 });
-  await page.goto('/#scoring');
+  await page.goto('/');
   const first = page.locator('[data-score-feature="0"]');
-  await first.scrollIntoViewIfNeeded();
+  await expect(first).toBeEnabled();
+  await page.evaluate(() => document.fonts.ready);
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
+  await expect(first).toHaveAttribute('data-score-invitation', 'idle');
+  await first.evaluate((element) =>
+    element.scrollIntoView({ behavior: 'instant', block: 'center' }),
+  );
+  await page.clock.runFor(300);
   await expect(first).toHaveAttribute('data-score-invitation', 'playing');
   await page.locator('[data-score-feature="1"]').click();
   await expect(first).toHaveAttribute('data-score-invitation', 'done');
