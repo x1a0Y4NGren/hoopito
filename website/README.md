@@ -458,12 +458,18 @@ Vercel 项目 Root Directory 设置为 `website`，Node.js 为 24.x，安装命�
 跳转至主域名。首次正式部署为 `dpl_FnxezeHNKKawui9NGstwDh8LQSLf`，当时的网站构建源码为
 `64944b7e59ffb9fca9b8307ab238789bb6b3f125`。
 
-预览分支 `codex/hoopito-website` 的受保护
-[分支预览](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app)
+预览分支 `preview/website` 的受保护
+[分支预览](https://hoopito-website-git-preview-website-xyr175-9459s-projects.vercel.app)
 随该分支成功部署更新。各阶段的源码、验证结果与不可变预览地址见
 [VERIFICATION.md](VERIFICATION.md)；品牌同步基线的实际源码与预览记录保留在
 [v2.0.1 发行记录](../docs/release/v2.0.1-release-record.md)。
 旧品牌预览仅属于历史部署，来源保留在 [VERIFICATION.md](VERIFICATION.md)。
+2026-10-25 的分支命名迁移保留旧预览网站内容，仅将 CI 分支触发名更新为
+`preview/website`；源码为 `f83a26892b9c9dfd21f1043858cc72b60ee3c528`，
+[网站 CI](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40202329365) 与
+[不可变 Preview](https://hoopito-website-mol58jum6-xyr175-9459s-projects.vercel.app)
+分别绑定该源码，部署身份为 `dpl_J258RCMpQk4R9Yb1xG9rmcR1k3Yq`。
+分支入口已从 Vercel 回读并验证中英文页面与匿名认证跳转；该预览不替代当前生产版本。
 Preview 继续保留 Vercel Authentication；账号登录后可访问，也可通过 Deployment 页面
 的 Share 功能创建有期限的分享链接。分享凭据不写入源码或验证报告。
 分支地址随该分支成功部署更新；每次部署的不可变地址与实际 Git 提交可在

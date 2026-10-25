@@ -55,7 +55,7 @@ dart run build_runner build --delete-conflicting-outputs
 - 需要新建开发分支时，从最新 `main` 创建短生命周期分支。普通分支使用 `<类型>/<改动目的>`，例如 `feat/match-presets`、`fix/scoring-undo`、`docs/contributing`、`ci/dependency-checks`。
 - 类型固定为 `feat`（新功能）、`fix`（缺陷）、`refactor`（结构调整）、`perf`（性能）、`docs`（文档）、`test`（测试）、`build`（构建）、`ci`（持续集成）、`chore`（维护）或 `revert`（撤销变更）。目的使用小写英文字母、数字及单个连字符分隔的词，只有一层 `/`；不能以连字符开头或结尾。Issue 编号可选，例如 `fix/42-backup-rollback`。
 - 分支按工作内容分类，不以作者、工具或平台标识作为前缀或附加来源标记；使用什么工具不影响命名。改动本身确实针对某项工具时，可以在目的中说明该工具。
-- `main` 是维护分支，`preview/website` 是长期预览分支的迁移目标；预览保留名只用于本仓库，不对 fork 中的同名分支提供例外。`deps/<自动生成内容>` 专用于本仓库 Dependabot 创建的依赖分支，允许机器人生成的多层路径；人工修复依赖仍使用 `build/` 或 `chore/`。
+- `main` 是维护分支，`preview/website` 是受保护的长期预览分支；预览保留名只用于本仓库，不对 fork 中的同名分支提供例外。`deps/<自动生成内容>` 专用于本仓库 Dependabot 创建的依赖分支，允许机器人生成的多层路径；人工修复依赖仍使用 `build/` 或 `chore/`。
 - 一个 Pull Request 处理一个明确问题，避免夹带无关重构。
 - `main` 的修改统一通过 Pull Request；维护者自己的修改也适用。合并前分支必须与最新 `main` 对齐，且 `App CI required`、`Website CI required`、`Repository policy required` 全部通过。门禁按路径选择实际工作，纯文档 PR 也必须得到明确的门禁结果。
 - 单人维护阶段要求 0 个 approving review，不要求 CODEOWNER 或最后一次 push 的他人批准；[CODEOWNERS](.github/CODEOWNERS) 用于标识责任人与路由审阅，不代替 CI 或维护者人工检查。
@@ -66,7 +66,7 @@ dart run build_runner build --delete-conflicting-outputs
 
 `Repository policy required` 在 PR 中检查分支名和标题，标题编辑后重新检查。机器人命名例外同时核对真实作者身份和来源仓库，不能仅靠分支前缀获得例外。既有依赖 PR #17、#18、#19、#21、#22、#23、#24、#25、#27 仅允许各自固定的原 head 名称过渡，不手动改名打断审阅；未来新 PR 不继承旧名称豁免。普通分支的内容是否准确表达改动仍由审阅者判断。
 
-仓库保护、必需检查、Dependabot 节奏、分支保留和故障恢复见[仓库设置策略](docs/repository-settings.md)。短生命周期分支在 PR 合并后由 GitHub 自动删除。预览迁移尚未验收完成时，继续保留并保护 `codex/hoopito-website`，使用[已记录的旧预览入口](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app)；只有新分支的 CI、受保护预览和真实入口验证通过后才退役旧名。删除旧分支前仍需确认整合结果、预览依赖及当前授权；自动删除开关不替代历史分支审计或本地工作树收尾。
+仓库保护、必需检查、Dependabot 节奏、分支保留和故障恢复见[仓库设置策略](docs/repository-settings.md)。短生命周期分支在 PR 合并后由 GitHub 自动删除；长期预览使用受保护的 `preview/website` 和[已验证的分支入口](https://hoopito-website-git-preview-website-xyr175-9459s-projects.vercel.app)，迁移来源见[网站维护说明](website/README.md#vercel-预览与正式域名)。删除旧分支前仍需确认整合结果、预览依赖及当前授权；自动删除开关不替代历史分支审计或本地工作树收尾。
 
 小型文档维护可直接使用当前 checkout；并行修改或需要隔离时再创建 worktree，只创建实际要使用的目录。只读审查无需独立 worktree。普通任务结束时保留未提交内容与验证证据，不自动提交或归档工作树；这些事项仅在用户明确要求项目收尾或单独授权该操作时执行，不批量强删目录。
 
