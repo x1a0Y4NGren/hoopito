@@ -7,8 +7,9 @@
 | 对象 | 策略 |
 | --- | --- |
 | `main` | 默认维护分支；禁止 force push 和删除；所有修改经 PR；0 个必需批准；要求解决 review conversation；合并前与最新基线对齐并通过必需检查。 |
-| `codex/hoopito-website` | 保留的预览分支，禁止 force push 和删除；更新预览仍须当前任务明确授权。不要把默认分支的 PR/CI 门禁误加到只保留历史预览的分支。 |
-| 普通开发分支 | 使用短生命周期 PR；合并后自动删除远端 head branch。删除保护只匹配需要保留的分支，不覆盖整个 `codex/*`。 |
+| `preview/website` | 长期预览分支的迁移目标；禁止 force push 和删除。迁移验收完成前保留旧预览分支，不提前宣称新入口可用。 |
+| `codex/hoopito-website` | 迁移期间保留并保护的旧预览分支，仍使用已记录的入口；新分支的 CI、部署身份、认证和真实地址验证完成后才退役。 |
+| 普通开发分支 | 按工作类型和目的命名，使用短生命周期 PR；合并后自动删除远端 head branch。删除保护只匹配实际保留的分支。 |
 | `v*` tag | 允许创建；禁止更新和删除，无常规 bypass。发布前仍须创建并验证签名 annotated tag，tag 规则不等于签名校验。 |
 
 默认只允许 squash merge，并对 `main` 要求 linear history；保留 Update branch 按钮。关闭 auto-merge，不配置 Dependabot 自动批准或自动合并。squash 适用于一个 PR 一个完整改动；合并后从最新 `main` 新建分支，避免复用旧 head 导致重复历史。既有 merge commit 和签名 tag 保持原样，不为新规则重写历史。
@@ -16,6 +17,16 @@
 单人维护不能批准自己的 PR，因此 required approval count 为 0；不启用 required CODEOWNER review 或 require last push approval。[CODEOWNERS](../.github/CODEOWNERS) 只标识关键路径责任人并路由审阅，维护者仍须人工核对改动、风险和 CI。[GitHub 的批准限制](https://docs.github.com/en/pull-requests/how-tos/review-pull-requests/approving-a-pull-request-with-required-reviews)
 
 2026-10-25 已按审计结果删除四个已整合的历史远端分支：`dependabot/github_actions/actions/checkout-7.0.1`、`codex/screenshot-presentation`、`codex/hooptrace-website` 和 `codex/hooptrace-1-1-comparison`；`codex/hoopito-website` 保留并保护。该清单记录本轮范围，不是未来任意清理的常驻授权。squash 合并后的 branch-only commit 不足以证明存在未整合代码；删除前核对 PR、实际树差异和预览引用。自动删除 head branch 的开关不负责回收本地分支、工作树或历史证据。[GitHub 自动删除说明](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches)
+
+## 分支命名与 PR 标题
+
+日常维护流程和命名格式统一以[贡献指南](../CONTRIBUTING.md#日常维护流程)为入口；人工贡献者及自动化工具遵循相同规则。普通分支使用 `类型/改动目的`，PR 标题和最终 squash 提交使用 `类型(可选范围)!: 改动说明`，其中 `!` 只在破坏性变更时使用，范围可省略。中间提交格式仅为建议，不为命名规范重写历史。
+
+`Repository policy required` 对 PR 检查名称与标题，标题编辑时重新运行；只读取事件元数据，不将标题或分支名拼接到 shell。PR 事件缺少必要元数据时失败，push 和手动运行跳过 PR 元数据检查。该门禁校验名称形状，改动目的是否准确仍须人工审阅。
+
+新的 Dependabot 分支使用 `deps/<自动生成内容>`，PR/提交前缀使用 `chore` 并包含依赖 scope；机器人生成的依赖路径允许多层结构。命名例外必须同时匹配真实的本仓库 Dependabot 作者和来源仓库；人工依赖修复使用普通 `build/` 或 `chore/` 分支。既有 #17、#18、#19、#21、#22、#23、#24、#25、#27 依赖 PR 仅按各自 PR 编号与固定原 head 名称过渡，不批量改名，也不给未来任意 `dependabot/*` 分支豁免。
+
+预览迁移按以下顺序执行：保存旧 SHA → 保护新旧分支 → 从旧预览源码建立新分支并更新其自身 CI → 核对同源码的完整网站 CI 与受保护 Vercel Preview → 回读真实地址并更新当前入口 → 确认旧 SHA 未变后收敛保护和删除旧引用。main 的工作流和预览分支内的工作流分别更新，不整体合入 main 以替代迁移。Vercel 权限不足或验收未完成时，继续使用[已记录的旧预览入口](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app)，明确标记迁移未完成；不影响生产官网。历史发行、验证记录和不可变部署地址保留原样。
 
 ## 合并门禁与分阶段启用
 
@@ -25,7 +36,7 @@
 | --- | --- |
 | `App CI required` | 每个 PR 都报告结果；按路径选择 Flutter、Android、iOS 等现有检查；适用工作失败或取消时不得通过。 |
 | `Website CI required` | 每个 PR 都报告结果；按路径选择网站格式、类型、单元、构建、预算、三浏览器和软件 WebGL 检查。 |
-| `Repository policy required` | 当前检查顶层远程 Action 的 SHA 固定与允许来源，以及约定的 CI matrix；不提供通用 YAML/schema 校验。 |
+| `Repository policy required` | 检查 PR 分支名称和标题、顶层远程 Action 的 SHA 固定与允许来源，以及约定的 CI matrix；不提供通用 YAML/schema 校验。 |
 
 不要把会被 workflow 级 `paths` 过滤而不产生结果的 job 直接设为必需检查。聚合门禁必须区分“不适用”和“失败/取消/缺少适用结果”，不以 `always()` 后无条件成功掩盖下游失败；job 名称保持跨 workflow 唯一。`main` 要求 strict up-to-date，别的 PR 合入后需更新分支并重新取得当前基线结果。仅手动 `workflow_dispatch` 成功不能代替 PR 事件的必需检查。[必需检查行为](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks)
 

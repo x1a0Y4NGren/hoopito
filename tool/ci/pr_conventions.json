@@ -1,0 +1,15 @@
+{
+  "types": ["feat", "fix", "refactor", "perf", "docs", "test", "build", "ci", "chore", "revert"],
+  "preview_branch": "preview/website",
+  "legacy_dependabot_prs": {
+    "17": "dependabot/npm_and_yarn/website/fast-uri-3.1.9",
+    "18": "dependabot/npm_and_yarn/website/zod-4.6.7",
+    "19": "dependabot/npm_and_yarn/website/undici-8.12.3",
+    "21": "dependabot/gradle/android/com.android.application-9.4.1",
+    "22": "dependabot/npm_and_yarn/website/website-runtime-minor-patch-36a47cafb7",
+    "23": "dependabot/npm_and_yarn/website/website-tooling-minor-patch-5b08a5449e",
+    "24": "dependabot/npm_and_yarn/website/typescript-7.0.2",
+    "25": "dependabot/pub/cupertino_icons-2.0.0",
+    "27": "dependabot/pub/audioplayers-6.8.1"
+  }
+}
