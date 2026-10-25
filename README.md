@@ -169,7 +169,7 @@ Hoopito · 球豆沿用 2.0 的“黑场编辑部”界面：近黑比赛顶栏�
 
 2.0 统一使用已审核的 C「独眼球怪」平台图标和启动画面；Flutter 启动层采用原图纹理网格，提供约一秒的 Q 弹跳跃、上半部水波与收尾余波，全程静音。原图与资源来源见[品牌记录](docs/design/brand/README.md)，设计参数、预览及设备验收范围见[启动动效记录](docs/design/brand/entry-motion.md)。
 
-现有 Logo 的多尺寸图和组合字标见[品牌素材入口](assets/brand/README.md)。这组整理稿仍待最终验收，由 [Issue #16](https://github.com/x1a0Y4NGren/hoopito/issues/16) 跟踪，不替换已有生产图标。
+现有 Logo 的多尺寸图、组合字标及复现验证见[品牌素材入口](assets/brand/README.md)。[Issue #16](https://github.com/x1a0Y4NGren/hoopito/issues/16) 的整理与验证已通过审阅，不替换已有生产图标。
 
 `assets/animations/paint_ball.json` 与 `assets/animations/paint_splash.json` 是项目原创的、自包含 Lottie JSON 动效，不含外部资源，随应用本地打包并支持离线运行。运行时使用 `lottie 3.3.3`，其 MIT 许可文本记录在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 

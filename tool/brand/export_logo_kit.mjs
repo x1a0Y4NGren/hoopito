@@ -15,10 +15,16 @@ const requireFont = createRequire(requireWebsite.resolve("subset-font"));
 const hb = await requireFont("harfbuzzjs");
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const read = (path) => readFile(join(repo, path));
+// Text provenance uses LF bytes, independent of core.autocrlf or the host OS.
+// Do not rewrite historical sources; only normalize their exported representation.
+const readText = async (path) =>
+  Buffer.from(
+    (await readFile(join(repo, path), "utf8")).replace(/\r\n/g, "\n"),
+  );
 const foreground = await read("assets/icons/hoopito-app-icon-foreground.png");
 const appIcon = await read("assets/icons/hoopito-app-icon.png");
 const monochrome = await read("assets/icons/hoopito-app-icon-monochrome.png");
-const approvalBytes = await read("docs/design/brand/source.json");
+const approvalBytes = await readText("docs/design/brand/source.json");
 const approval = JSON.parse(approvalBytes);
 assert.equal(hash(foreground), approval.normalizedForegroundSha256);
 const bold = await read("assets/fonts/BarlowCondensed-Bold.ttf");
@@ -123,7 +129,7 @@ await save(
 await save(
   "00-masters/approval-record.json",
   approvalBytes,
-  "Unmodified historical approval and ImageGen provenance; original source names remain historical.",
+  "Historical approval and ImageGen provenance, normalized to UTF-8/LF only; original text and source names retained.",
 );
 
 for (const size of [512, 256, 128, 64, 32]) {
@@ -229,15 +235,22 @@ await save(
     .toBuffer(),
   "Contact sheet of English, Chinese and bilingual lockups on light and dark brand backgrounds.",
 );
+const licenseSources = [];
 for (const [source, name] of [
   ["LICENSE", "LICENSE-Artwork.txt"],
   ["assets/fonts/OFL.txt", "OFL-Barlow.txt"],
   ["assets/fonts/OFL-NotoSansSC.txt", "OFL-NotoSansSC.txt"],
 ]) {
+  const bytes = await readText(source);
+  licenseSources.push({
+    path: source,
+    sha256: hash(bytes),
+    normalization: "utf8-lf",
+  });
   await save(
     `04-licenses/${name}`,
-    await read(source),
-    "Unmodified repository artwork license or bundled font license.",
+    bytes,
+    "Repository artwork or bundled font license; text unchanged, UTF-8/LF representation.",
   );
 }
 await save(
@@ -281,6 +294,8 @@ const readme = `# Hoopito · 球豆 Logo 套件
 
 \`on-light\` 表示适合浅色背景，\`on-dark\` 表示适合深色背景；两者文件本身均透明。暖白单色图案只适合有足够对比的深色背景，眼睛、笑和球纹为空白负空间。不要改变三色图案中的黑色眼瞳、笑和球纹，不拉伸、不旋转、不添加描边、阴影或渐变。
 
+小尺寸使用：保留原安全边距的 32px 图中，角色实际约 20px，眼睛和轮廓可辨，笑和球纹会软化；64px 图保留更多细节。小型导航优先使用紧裁版，角色显示宽度至少 32px，另留 10% 空白。组合字标包含较大的上下留白，建议显示画布高度至少 96px（文字和图形实高约 43px）；不要把画布高度当作可见字高。
+
 正式源画布为 1024×1024，但主体原始有效区域约 620×614px；扩大输出不代表增加原图细节。SVG 是“内嵌 PNG 图标＋已转路径文字”的混合文件，**不是纯矢量图标**。适合网页和常规排版；大型喷绘需要另行确认源图分辨率，不能把此文件当作无限精度矢量原稿。
 
 品牌色：竞技橙 \`#FF5A1F\`、近黑 \`#101112\`、暖白 \`#F4F3EF\`。字标沿用项目的 Barlow Condensed／Noto Sans SC，字形已转路径，无需安装字体也能显示。
@@ -295,7 +310,9 @@ const readme = `# Hoopito · 球豆 Logo 套件
 node tool/brand/export_logo_kit.mjs
 \`\`\`
 
-该命令只更新本文件夹中由其生成的文件，不修改原始 Logo 或网站资源。图形沿用仓库 MIT 许可；字体及其转路径字形遵守附带 SIL OFL 1.1。没有另行加入第三方图片。
+该命令只更新本文件夹中由其生成的文件，不修改原始 Logo 或网站资源。历史批准记录及许可副本统一为 UTF-8／LF，除换行外保留原文；清单中 \`normalization: utf8-lf\` 的来源摘要也按该表示计算，不使用当前 checkout 的 CRLF 字节。图像和字体按原字节计算摘要，\`website/package-lock.json\` 记录依赖版本来源。
+
+运行 \`node --test tool/brand/export_logo_kit.test.mjs\` 可在隔离输出中检查 LF／CRLF 一致性、来源与输出摘要，以及未批准图形的拒绝行为。图形沿用仓库 MIT 许可；字体及其转路径字形遵守附带 SIL OFL 1.1。没有另行加入第三方图片。
 `;
 await save(
   "README.md",
@@ -317,9 +334,19 @@ const manifest = {
       path: "assets/icons/hoopito-app-icon-monochrome.png",
       sha256: hash(monochrome),
     },
-    { path: "docs/design/brand/source.json", sha256: hash(approvalBytes) },
+    {
+      path: "docs/design/brand/source.json",
+      sha256: hash(approvalBytes),
+      normalization: "utf8-lf",
+    },
     { path: "assets/fonts/BarlowCondensed-Bold.ttf", sha256: hash(bold) },
     { path: "assets/fonts/NotoSansSC-Regular.otf", sha256: hash(noto) },
+    ...licenseSources,
+    {
+      path: "website/package-lock.json",
+      sha256: hash(await readText("website/package-lock.json")),
+      normalization: "utf8-lf",
+    },
   ],
   outputs: records,
 };

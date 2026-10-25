@@ -6,8 +6,6 @@
 /docs/release/*-screenshots.json text eol=lf
 /assets/fonts/OFL*.txt text eol=lf
 /assets/brand/hoopito-logo-kit/** -text
-/assets/brand/hoopito-logo-kit/00-masters/approval-record.json whitespace=cr-at-eol
-/assets/brand/hoopito-logo-kit/04-licenses/LICENSE-Artwork.txt whitespace=cr-at-eol
 /tool/brand/*.mjs text eol=lf
 /aoci*.txt text eol=lf
 /THIRD_PARTY_NOTICES.md whitespace=-trailing-space,-space-before-tab

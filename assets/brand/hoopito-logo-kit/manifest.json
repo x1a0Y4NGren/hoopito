@@ -2,7 +2,7 @@
   "brand": "Hoopito · 球豆",
   "approvalDate": "2026-10-04",
   "generatedBy": "node tool/brand/export_logo_kit.mjs",
-  "generatorSha256": "4df6f2a5a1912f257513bf108648db5596995a93dc616fdd1df9b684ba5962d6",
+  "generatorSha256": "d739728c039b59162462e961575162be33a71dac1d2909e4211dda5c2365fd00",
   "sources": [
     {
       "path": "assets/icons/hoopito-app-icon-foreground.png",
@@ -18,7 +18,8 @@
     },
     {
       "path": "docs/design/brand/source.json",
-      "sha256": "b39af8dac597afc1633a39fc9d28efc4677874a5d4c00694dbc5b47ace7b9757"
+      "sha256": "c7f820373f93064359d0835d6d83a33c27bf585513b48e39c1757ed704db5972",
+      "normalization": "utf8-lf"
     },
     {
       "path": "assets/fonts/BarlowCondensed-Bold.ttf",
@@ -27,6 +28,26 @@
     {
       "path": "assets/fonts/NotoSansSC-Regular.otf",
       "sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "acbf518c1b23d031d820c9b9c6c5a1afbf73c6e08700ddda0edcc9b3e3b37d51",
+      "normalization": "utf8-lf"
+    },
+    {
+      "path": "assets/fonts/OFL.txt",
+      "sha256": "10b0e6bb43166a50fbe7cde2895bd7f703738a5da843acb5c97c95dc9ea26817",
+      "normalization": "utf8-lf"
+    },
+    {
+      "path": "assets/fonts/OFL-NotoSansSC.txt",
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+      "normalization": "utf8-lf"
+    },
+    {
+      "path": "website/package-lock.json",
+      "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84",
+      "normalization": "utf8-lf"
     }
   ],
   "outputs": [
@@ -59,9 +80,9 @@
     },
     {
       "path": "00-masters/approval-record.json",
-      "bytes": 1964,
-      "sha256": "b39af8dac597afc1633a39fc9d28efc4677874a5d4c00694dbc5b47ace7b9757",
-      "description": "Unmodified historical approval and ImageGen provenance; original source names remain historical."
+      "bytes": 1946,
+      "sha256": "c7f820373f93064359d0835d6d83a33c27bf585513b48e39c1757ed704db5972",
+      "description": "Historical approval and ImageGen provenance, normalized to UTF-8/LF only; original text and source names retained."
     },
     {
       "path": "01-symbol/hoopito-symbol-transparent-512.png",
@@ -272,21 +293,21 @@
     },
     {
       "path": "04-licenses/LICENSE-Artwork.txt",
-      "bytes": 1089,
-      "sha256": "aaa323f5ffaf2e2e33a07cd794600cdb7e98fe3e496a2ab12834d6c57048f1bb",
-      "description": "Unmodified repository artwork license or bundled font license."
+      "bytes": 1068,
+      "sha256": "acbf518c1b23d031d820c9b9c6c5a1afbf73c6e08700ddda0edcc9b3e3b37d51",
+      "description": "Repository artwork or bundled font license; text unchanged, UTF-8/LF representation."
     },
     {
       "path": "04-licenses/OFL-Barlow.txt",
       "bytes": 4376,
       "sha256": "10b0e6bb43166a50fbe7cde2895bd7f703738a5da843acb5c97c95dc9ea26817",
-      "description": "Unmodified repository artwork license or bundled font license."
+      "description": "Repository artwork or bundled font license; text unchanged, UTF-8/LF representation."
     },
     {
       "path": "04-licenses/OFL-NotoSansSC.txt",
       "bytes": 4301,
       "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
-      "description": "Unmodified repository artwork license or bundled font license."
+      "description": "Repository artwork or bundled font license; text unchanged, UTF-8/LF representation."
     },
     {
       "path": "palette.json",
@@ -296,8 +317,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2573,
-      "sha256": "ec52bde5ab1a92044ad5d0b044c7674a65d0c01d1264649b2ed645c6be812c60",
+      "bytes": 3446,
+      "sha256": "e3e850aaabcfcfcd6be4ba358354907d37cfa994bb29a1af5cdb5ad59a0a15ac",
       "description": "Usage, source identity, safe-space and mixed bitmap/vector limitations."
     }
   ]
