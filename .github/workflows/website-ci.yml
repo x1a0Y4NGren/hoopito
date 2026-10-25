@@ -2,7 +2,7 @@ name: Website CI
 
 on:
   push:
-    branches: [main, codex/hoopito-website]
+    branches: [main, preview/website]
     paths: ["website/**", ".github/workflows/website-ci.yml"]
   pull_request:
     branches: [main]
