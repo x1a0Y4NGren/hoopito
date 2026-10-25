@@ -7,8 +7,7 @@
 | 对象 | 策略 |
 | --- | --- |
 | `main` | 默认维护分支；禁止 force push 和删除；所有修改经 PR；0 个必需批准；要求解决 review conversation；合并前与最新基线对齐并通过必需检查。 |
-| `preview/website` | 长期预览分支的迁移目标；禁止 force push 和删除。迁移验收完成前保留旧预览分支，不提前宣称新入口可用。 |
-| `codex/hoopito-website` | 迁移期间保留并保护的旧预览分支，仍使用已记录的入口；新分支的 CI、部署身份、认证和真实地址验证完成后才退役。 |
+| `preview/website` | 受保护的长期网站预览分支，禁止 force push 和删除；预览更新仍须当前任务授权。 |
 | 普通开发分支 | 按工作类型和目的命名，使用短生命周期 PR；合并后自动删除远端 head branch。删除保护只匹配实际保留的分支。 |
 | `v*` tag | 允许创建；禁止更新和删除，无常规 bypass。发布前仍须创建并验证签名 annotated tag，tag 规则不等于签名校验。 |
 
@@ -27,6 +26,8 @@
 新的 Dependabot 分支使用 `deps/<自动生成内容>`，PR/提交前缀使用 `chore` 并包含依赖 scope；机器人生成的依赖路径允许多层结构。命名例外必须同时匹配真实的本仓库 Dependabot 作者和来源仓库；人工依赖修复使用普通 `build/` 或 `chore/` 分支。既有 #17、#18、#19、#21、#22、#23、#24、#25、#27 依赖 PR 仅按各自 PR 编号与固定原 head 名称过渡，不批量改名，也不给未来任意 `dependabot/*` 分支豁免。
 
 预览迁移按以下顺序执行：保存旧 SHA → 保护新旧分支 → 从旧预览源码建立新分支并更新其自身 CI → 核对同源码的完整网站 CI 与受保护 Vercel Preview → 回读真实地址并更新当前入口 → 确认旧 SHA 未变后收敛保护和删除旧引用。main 的工作流和预览分支内的工作流分别更新，不整体合入 main 以替代迁移。Vercel 权限不足或验收未完成时，继续使用[已记录的旧预览入口](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app)，明确标记迁移未完成；不影响生产官网。历史发行、验证记录和不可变部署地址保留原样。
+
+2026-10-25，`preview/website` 从旧预览源码 `0085686ffa1bd74882dca9f7b593f8100c7a5981` 派生为 `f83a26892b9c9dfd21f1043858cc72b60ee3c528`，仅修改自身 CI 的分支触发名，网站内容原样保留。[同源码网站 CI](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40202329365) 检查构建、三浏览器和两组软件 WebGL。实际部署为 `dpl_J258RCMpQk4R9Yb1xG9rmcR1k3Yq`，Git 来源和 Preview 环境已回读；[新的受保护分支入口](https://hoopito-website-git-preview-website-xyr175-9459s-projects.vercel.app) 对已有授权访问返回双语页面，匿名访问进入 Vercel SSO。生产部署、域名和认证保护未变，未创建新的访问绕过令牌。旧分支按上述验收和精确 SHA 条件退役，旧预览部署与历史记录继续保留。
 
 ## 合并门禁与分阶段启用
 
