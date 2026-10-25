@@ -850,20 +850,34 @@ for (const locale of locales) {
       .toBeCloseTo(85, 0);
     await expect(page.locator('[data-replay-red]')).toHaveText('11');
     // Clicking the fixed header moves the pointer there. Deliver this gesture
-    // over page content, then wait for its full native delta and settled frames.
+    // over content and wait for departure; engines need not scroll its exact delta.
     await page.mouse.move(700, 400);
-    const forwardStart = await page.evaluate(() => scrollY);
-    await page.mouse.wheel(0, 1000);
-    await expect
-      .poll(() =>
-        page.evaluate(async () => {
-          const top = scrollY;
-          await new Promise(requestAnimationFrame);
-          await new Promise(requestAnimationFrame);
-          return scrollY === top ? top : -1;
-        }),
-      )
-      .toBeCloseTo(forwardStart + 1000, 0);
+    const forwardGesture = await page.evaluateHandle(() => {
+      const gesture = { seen: false, stop: () => {} };
+      const onWheel = () => {
+        gesture.seen = true;
+      };
+      window.addEventListener('wheel', onWheel, { once: true, passive: true });
+      gesture.stop = () => window.removeEventListener('wheel', onWheel);
+      return gesture;
+    });
+    try {
+      await page.mouse.wheel(0, 1000);
+      await expect
+        .poll(() =>
+          forwardGesture.evaluate(async (gesture, end) => {
+            if (!gesture.seen || scrollY <= end + 100) return false;
+            const top = scrollY;
+            await new Promise(requestAnimationFrame);
+            await new Promise(requestAnimationFrame);
+            return scrollY === top;
+          }, range.end),
+        )
+        .toBe(true);
+    } finally {
+      await forwardGesture.evaluate((gesture) => gesture.stop());
+      await forwardGesture.dispose();
+    }
     // A large forward scroll can leave normally; snapping must not pull back.
     const left = await page.evaluate(() => scrollY);
     expect(left).toBeGreaterThan(range.end + 100);
