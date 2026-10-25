@@ -45,8 +45,13 @@ dart run build_runner build --delete-conflicting-outputs
 - 需要新建开发分支时，从最新 `main` 创建短生命周期分支；已分配的任务分支可继续使用。
 - 推荐分支前缀：`feat/`、`fix/`、`docs/`、`test/` 或 `codex/`。
 - 一个 Pull Request 处理一个明确问题，避免夹带无关重构。
+- `main` 的修改统一通过 Pull Request；维护者自己的修改也适用。合并前分支必须与最新 `main` 对齐，且 `App CI required`、`Website CI required`、`Repository policy required` 全部通过。门禁按路径选择实际工作，纯文档 PR 也必须得到明确的门禁结果。
+- 单人维护阶段要求 0 个 approving review，不要求 CODEOWNER 或最后一次 push 的他人批准；[CODEOWNERS](.github/CODEOWNERS) 用于标识责任人与路由审阅，不代替 CI 或维护者人工检查。
+- 使用 squash merge 保留每个 PR 的完整结果；不启用自动合并。依赖更新须人工核对上游变更、兼容性、许可及适用测试，再合并；安全更新优先处理，不等待普通版本更新的冷静期。
 - 提交信息使用命令式短句，例如 `fix: keep scoring header within compact screens`。
 - 不提交构建产物、密钥、`key.properties`、设备数据或 IDE 临时文件。
+
+仓库保护、必需检查、Dependabot 节奏、分支保留和故障恢复见[仓库设置策略](docs/repository-settings.md)。短生命周期分支在 PR 合并后由 GitHub 自动删除；`codex/hoopito-website` 是保留并保护的预览分支。删除旧分支前仍需确认整合结果、预览依赖及当前授权；自动删除开关不替代历史分支审计或本地工作树收尾。
 
 小型文档维护可直接使用当前 checkout；并行修改或需要隔离时再创建 worktree，只创建实际要使用的目录。只读审查无需独立 worktree。普通任务结束时保留未提交内容与验证证据，不自动提交或归档工作树；这些事项仅在用户明确要求项目收尾或单独授权该操作时执行，不批量强删目录。
 

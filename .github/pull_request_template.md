@@ -23,6 +23,13 @@ Choose checks using [CONTRIBUTING.md](../CONTRIBUTING.md#测试要求). Document
 - Visual evidence, when appearance changed / 有视觉变化时的截图:
 - Required checks blocked by the environment, if any / 必要检查的环境阻碍（如有）:
 
+For CI or dependency changes / 涉及 CI 或依赖时：
+
+- [ ] Check action SHAs, runner/toolchain compatibility, and upstream migration notes / 核对 Action SHA、runner／工具链兼容性与上游迁移说明。
+- [ ] Keep token permissions minimal; no secrets or privileged execution for untrusted PR code / 保持最小 token 权限，不向不可信 PR 代码提供密钥或特权执行。
+- [ ] Preserve source-bound artifacts, checksums, failure evidence and retention / 保留绑定源码的产物、校验和、失败证据及保留期限。
+- [ ] Merge dependencies manually after `App CI required`, `Website CI required`, and `Repository policy required` pass on the current base / 依赖更新通过当前基线的三项门禁后人工合并。
+
 ## Release risk / 发布风险
 
 - Rollback or recovery path:

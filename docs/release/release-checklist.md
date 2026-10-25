@@ -57,6 +57,7 @@ flutter build apk --debug
 如果同一工作树此前运行过 Android Integration Test，正式 release 构建不得使用 `--no-pub`：Flutter 必须在 release 模式重新生成 `GeneratedPluginRegistrant.java`，从而排除仅适用于调试构建的 `integration_test`，同时保留运行时插件。正式构建优先使用全新 clone。
 
 - [ ] 所有命令退出码为 0。
+- [ ] 发行源码经 PR 合入最新 `main`，`App CI required`、`Website CI required`、`Repository policy required` 全部通过；保存精确源码与 CI 来源，不用后续文档提交替换构建来源。
 - [ ] GitHub Actions 的 quality 和 Android integration jobs 均通过。
 - [ ] CI 的 golden/widget 测试、Drift schema 测试、API 36 主流程及 Android 命令 p95
       基准均通过；日志保留 `TASK15_QUERY_BENCHMARK` 和
@@ -100,15 +101,19 @@ flutter build apk --debug
 - [ ] 检查 `fastlane/metadata/android/en-US` 和 `zh-CN` 的短描述、完整描述、图标及对应 `versionCode` Changelog。
 - [ ] 确认短描述少于 80 个字符，Changelog 不超过 500 个字符。
 - [ ] 在目标发布提交创建签名 tag，例如 `v1.0.0`。
+- [ ] 验证签名 tag（`git tag -v <tag>`），确认远端 tag 指向相同对象；`v*` 保护禁止更新和删除，不重建既有正式 tag。
 - [ ] 确认 tag 中的版本号、源码和构建 APK 完全对应。
 
 ## 7. GitHub Release
 
-- [ ] 以版本 tag 创建非草稿 Release。
+- [ ] 确认仓库对未来发行启用 release immutability；这不会追溯锁定旧 Release，也不改变旧发行的来源或保留责任，见[仓库设置策略](../repository-settings.md)。
+- [ ] 使用已经验证的版本 tag 创建 **draft Release**；命令行创建时使用 `--draft --verify-tag`，避免意外创建 tag 或提前发布。
 - [ ] 发布说明包含主要变化、升级说明、隐私声明链接和已知限制。
-- [ ] 上传正式签名 APK 和 `SHA256SUMS`；新发行 APK 命名为 `Hoopito-v<version>-android.apk`，既有 `HoopTrace-v2.0.0-android.apk` 保留原名。
+- [ ] 向草稿上传全部正式资产，包括签名 APK 和 `SHA256SUMS`；新发行 APK 命名为 `Hoopito-v<version>-android.apk`，既有 `HoopTrace-v2.0.0-android.apk` 保留原名。
+- [ ] 从草稿重新下载全部待发布资产，核验文件集合、大小、SHA-256、APK 签名与源码/tag 对应关系；`SHA256SUMS` 覆盖所有需要校验的发布附件，禁止包含密钥或设备数据。
 - [ ] 保留 GitHub 自动生成的 source code archives。
 - [ ] 明确 Android 优先状态以及 iOS 尚未正式发布。
+- [ ] 全部资产与校验和确认后，再在本次发布授权内发布草稿；不可变 Release 发布后不能补传、替换或删除附件，也不能移动关联 tag，修复使用新版本。
 - [ ] 从公开 Release 页面重新下载 APK，核验 SHA-256 和签名后安装冒烟测试。
 
 ## 8. F-Droid 准备
