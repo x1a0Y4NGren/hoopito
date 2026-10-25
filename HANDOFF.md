@@ -1,5 +1,19 @@
 # Hoopito · 球豆交接记录
 
+## Logo 与 CI 同步后的阶段收尾（2026-10-25）
+
+当前维护分支为 `main`。Logo 整理已通过维护者审阅，以 `11e1ba51a4889bcf90826f35d514c32e62ebbced` 合入并推送，[Issue #16](https://github.com/x1a0Y4NGren/hoopito/issues/16) 已按完成关闭。套件 34 个输出及清单共 35 文件在 Windows 两份干净 checkout 与原生 Linux／WSL2 中逐字节一致，10 项来源摘要一致，三个环境各 5／5 导出测试通过；所有图像及 SVG 字节与原整理稿相同。历史来源不改写，文字副本与来源摘要明确规范为 UTF-8／LF。小尺寸、留白和混合 SVG 使用限制见[品牌入口](assets/brand/README.md)与[验证记录](assets/brand/VALIDATION.md)。
+
+保留的网站测试改动已由并行整合的 [PR #2](https://github.com/x1a0Y4NGren/hoopito/pull/2) 合入 `cbb534df8e97a6561e1d89bca8ebef0721e87a6d`，本轮核实测试 blob 为 `f5d1cacd921949c4bd9cbd789b99eac6a90e84c9`，未重复创建提交。前向滚轮等待真实事件送达、离开复盘范围并稳定，再验证不回拉；不把事件像素值当成跨浏览器页面位移契约。按钮邀请用受控时钟保留播放窗口，仍以真实点击验证取消和选择。三浏览器定点复验 9／9、0 重试、0 flaky；同一测试版本此前 27 项重复与 9 项英文延迟压力检查亦保留。
+
+[Website CI 40171778160](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40171778160) 对应 `cbb534d`，六组全部成功：154 项单元测试、532 项 UI／软件 WebGL 检查通过，2 项能力跳过，0 失败、0 flaky。五个浏览器任务核对同一源码与构建摘要；干净云端输出为 65 文件、83,456,578 字节，摘要 `4b06cfbd079872ba4c937a5d902f622b66a47463f8161d72fc7da05845a2e0cd`，与已发布构建相同。格式、类型、构建、来源与预算检查均通过。
+
+[同提交 App CI 40171778168](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40171778168) 最终第二次运行的五组均成功。第一次 API 24 在准备 Android Emulator SDK 时报告 `Error on ZipFile unknown archive`，尚未运行应用测试即退出；原始失败日志和两次 job 结果保留，没有把首次失败改标为通过。本轮未修改 App 源码、正式签名 APK 或发行标签。
+
+官网生产来源仍为 `f001703ebf230240b159ed9bf82a24e0bef7dd5e`，Production 仍为 `dpl_6CcBttmH8PqxKa7Yr5H6V9LeNgRf`；没有执行新部署。正式 APK 继续绑定 `4ecd960e5af1f6b12124a43e330d67efb628281b`。后续素材、CI 和收尾提交不改变以上来源。下文保留首轮收尾及更早阶段的实际状态，不把当时的 Logo 待验、本地未推送等描述当作当前待办。
+
+用户本次明确授权依次完成测试余项和最终交接／AOCI 维护。新证据保存在本地 `website/output/final-stage-20261025/`，Logo 证据仍在 `website/output/logo-acceptance-20261025/`；失败、压力测试和历史证据不删除或改标。AOCI 依据当前 Header、绑定候选与实际源码逐项维护，最终 Verify、Check、Guide 及 Git 回执保存在新证据目录，不以旧收尾的对齐结果代替本次，也不宣称完成了新的全库认知验证。保留原 Pixel AVD、共享依赖和历史未跟踪场景素材；不恢复 AMD 专项、App 发行、商店／F-Droid 或 iOS 安装工作。
+
 ## 官网发布与本轮收尾（2026-10-25）
 
 当前维护 checkout 为 `D:/GitHub/hoopito`、分支 `main`。官网 [hoopito.com](https://hoopito.com/) 已正式上线，最新已验收、推送并部署的源码为 `f001703ebf230240b159ed9bf82a24e0bef7dd5e`；网站树为 `4c569bf13b8955c91752c36635fbfb6a31a84990`。下文“生产暂停”“仅保护预览”等描述保留其历史时点，不代表现在的官网状态。

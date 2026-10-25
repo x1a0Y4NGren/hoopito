@@ -1,13 +1,13 @@
 {
   "version": 1,
   "created_at": "2026-10-07T06:13:57Z",
-  "updated_at": "2026-10-25T00:39:52Z",
+  "updated_at": "2026-10-25T08:19:15Z",
   "files": {
     ".gitattributes": {
       "role": "index",
-      "sha256": "f5f618f69b53ee07d16acfc3a751f9bd4cbcc3984032f0fab4f11b6635f85ed1",
-      "size": 712,
-      "normalized_sha256": "d02ac606ee87c7a1716f520bfc887fe5c6cfbeb70854c28a4d201b7f819a2f5d"
+      "sha256": "19d78095c6021b662b47f62f12f5b7cdf762fdd00a37a552c0b9848f40cab8c0",
+      "size": 542,
+      "normalized_sha256": "13d2c0c141ec8700e30eb6a48327eb8803897d783e1890d976b1a7f85c4fd767"
     },
     ".github/ISSUE_TEMPLATE/bug_report.yml": {
       "role": "index",
@@ -41,15 +41,15 @@
     },
     ".github/workflows/flutter-ci.yml": {
       "role": "index",
-      "sha256": "4b25fc0c3b0d93113c6d390544c984c37546a5370069c5bd844213b14cff189e",
-      "size": 8577,
-      "normalized_sha256": "df096c9e3d348b10db34c34d978a1e32da2fc8a9fcd905fcff8f3e5f4f049844"
+      "sha256": "1d7ed12cd57cb3084cf83c637534fbde6f31ec906af302eb36760194805451a4",
+      "size": 8621,
+      "normalized_sha256": "afc2716983ab204f814386825917a24acb153998c04d93c2f13b5384bd9120b1"
     },
     ".github/workflows/website-ci.yml": {
       "role": "index",
-      "sha256": "83bc7444b18228cb8d52128c5f7f6152ebed16bacaa1bc33e52db784e2a97401",
-      "size": 10880,
-      "normalized_sha256": "83bc7444b18228cb8d52128c5f7f6152ebed16bacaa1bc33e52db784e2a97401"
+      "sha256": "132a050ad44028aa28f88b1ad85cd5c8af622ff3dbbaec8834f0f2cbb24d7e3f",
+      "size": 11178,
+      "normalized_sha256": "08d531a1442a92fb19d5495dc2063776b844104a2541406c984400ac2a8218c0"
     },
     ".gitignore": {
       "role": "index",
@@ -122,9 +122,9 @@
     },
     "HANDOFF.md": {
       "role": "index",
-      "sha256": "267786ff421081a455296be6ae2de417e358c344d005aaf2229f2d9cf4b5f6b8",
-      "size": 45317,
-      "normalized_sha256": "476a6e29960e3774bc8077145a1b95d7edbeeaff3f1998308de9890d058d237d"
+      "sha256": "f6fba44c563802082f9fbd3ee6e45d9bc3e9f40cd725a75e55f44165979241bc",
+      "size": 48674,
+      "normalized_sha256": "ef5200001c55077b90fa52bea75d30e27c2a96bffffc55daaddaed42b744ce38"
     },
     "LICENSE": {
       "role": "index",
@@ -140,9 +140,9 @@
     },
     "README.md": {
       "role": "index",
-      "sha256": "1e0fa36376577a3bddaf613f3aafaa5f9c30b0c8856989309f036f42d746547a",
-      "size": 13567,
-      "normalized_sha256": "1e0fa36376577a3bddaf613f3aafaa5f9c30b0c8856989309f036f42d746547a"
+      "sha256": "31759547449b2f5fe1d68f3086aa825cbab17d0f7208b2563ec9ee4e24451863",
+      "size": 13569,
+      "normalized_sha256": "31759547449b2f5fe1d68f3086aa825cbab17d0f7208b2563ec9ee4e24451863"
     },
     "SECURITY.md": {
       "role": "index",
@@ -528,9 +528,9 @@
     },
     "aoci.code.txt": {
       "role": "index",
-      "sha256": "b2e4b203c6a9327c73225beeef5c31692680a2d4e20758bf2f6b61d11c7bc3e2",
-      "size": 229465,
-      "normalized_sha256": "b2e4b203c6a9327c73225beeef5c31692680a2d4e20758bf2f6b61d11c7bc3e2"
+      "sha256": "541b7d812386145bdb1f42ecd3f46532d401df06c863cc6e70ef97a7c5fcec8e",
+      "size": 230034,
+      "normalized_sha256": "541b7d812386145bdb1f42ecd3f46532d401df06c863cc6e70ef97a7c5fcec8e"
     },
     "aoci.meta.txt": {
       "role": "index",
@@ -569,9 +569,15 @@
     },
     "assets/brand/README.md": {
       "role": "index",
-      "sha256": "61f6ae53f2ff88ff11755eed2ee56b5e2c6e78386fd4385e121d4d1ba3102ef9",
-      "size": 1339,
-      "normalized_sha256": "61f6ae53f2ff88ff11755eed2ee56b5e2c6e78386fd4385e121d4d1ba3102ef9"
+      "sha256": "818c9b9546e34c6cb0788e28fe51d95de080c848a47f06feee284ebc77968ef3",
+      "size": 1812,
+      "normalized_sha256": "818c9b9546e34c6cb0788e28fe51d95de080c848a47f06feee284ebc77968ef3"
+    },
+    "assets/brand/VALIDATION.md": {
+      "role": "index",
+      "sha256": "9e8f7cf5dfbc3418f47d25b2077e3f069444ea13aed3a7a3ea146042bb0d3372",
+      "size": 5057,
+      "normalized_sha256": "9e8f7cf5dfbc3418f47d25b2077e3f069444ea13aed3a7a3ea146042bb0d3372"
     },
     "assets/brand/hoopito-logo-kit/00-masters/approval-record.json": {
       "role": "index",
@@ -635,15 +641,15 @@
     },
     "assets/brand/hoopito-logo-kit/README.md": {
       "role": "index",
-      "sha256": "ec52bde5ab1a92044ad5d0b044c7674a65d0c01d1264649b2ed645c6be812c60",
-      "size": 2573,
-      "normalized_sha256": "ec52bde5ab1a92044ad5d0b044c7674a65d0c01d1264649b2ed645c6be812c60"
+      "sha256": "e3e850aaabcfcfcd6be4ba358354907d37cfa994bb29a1af5cdb5ad59a0a15ac",
+      "size": 3446,
+      "normalized_sha256": "e3e850aaabcfcfcd6be4ba358354907d37cfa994bb29a1af5cdb5ad59a0a15ac"
     },
     "assets/brand/hoopito-logo-kit/manifest.json": {
       "role": "index",
-      "sha256": "21e3af50cebfe98d3bbdc300ba16772d4dfbae7390ea2570b2421276099d9834",
-      "size": 12398,
-      "normalized_sha256": "21e3af50cebfe98d3bbdc300ba16772d4dfbae7390ea2570b2421276099d9834"
+      "sha256": "d0c152e74365dcb6471d1d7a442db38e580c44fb88e55de27ae3b8277d9ff4f1",
+      "size": 13191,
+      "normalized_sha256": "d0c152e74365dcb6471d1d7a442db38e580c44fb88e55de27ae3b8277d9ff4f1"
     },
     "assets/brand/hoopito-logo-kit/palette.json": {
       "role": "index",
@@ -3555,9 +3561,15 @@
     },
     "tool/brand/export_logo_kit.mjs": {
       "role": "index",
-      "sha256": "4df6f2a5a1912f257513bf108648db5596995a93dc616fdd1df9b684ba5962d6",
-      "size": 12835,
-      "normalized_sha256": "4df6f2a5a1912f257513bf108648db5596995a93dc616fdd1df9b684ba5962d6"
+      "sha256": "d739728c039b59162462e961575162be33a71dac1d2909e4211dda5c2365fd00",
+      "size": 14425,
+      "normalized_sha256": "d739728c039b59162462e961575162be33a71dac1d2909e4211dda5c2365fd00"
+    },
+    "tool/brand/export_logo_kit.test.mjs": {
+      "role": "index",
+      "sha256": "c308b59b36071ac2d7796618efc3c6a1ff790242c5da0d8cd766842cbafacec8",
+      "size": 6059,
+      "normalized_sha256": "c308b59b36071ac2d7796618efc3c6a1ff790242c5da0d8cd766842cbafacec8"
     },
     "tool/release/build_android_release.ps1": {
       "role": "index",
@@ -3741,9 +3753,9 @@
     },
     "website/VERIFICATION.md": {
       "role": "index",
-      "sha256": "bf25370044854e51fe3488237e6057da612eb84c2a3edd9172d0950afb3ed1ad",
-      "size": 30393,
-      "normalized_sha256": "bf25370044854e51fe3488237e6057da612eb84c2a3edd9172d0950afb3ed1ad"
+      "sha256": "93a3ce52bda8218143fb42061198e237490cf277de12c9f0e03d81613e53fc82",
+      "size": 31770,
+      "normalized_sha256": "93a3ce52bda8218143fb42061198e237490cf277de12c9f0e03d81613e53fc82"
     },
     "website/assets/art/generation.json": {
       "role": "index",
@@ -3946,6 +3958,18 @@
       "sha256": "e223cf2826ff90cd7a45775ec8794f5af10825462e98ca2fe66c1afd28776f24",
       "size": 16922,
       "normalized_sha256": "e223cf2826ff90cd7a45775ec8794f5af10825462e98ca2fe66c1afd28776f24"
+    },
+    "website/output/playwright/dependabot-review/invitation-english.probe.spec.ts": {
+      "role": "observe",
+      "sha256": "9a5b56ef941bb2778c25bfe7a95f5a3a3748dfde8c658469fdeeffbfbb66d715",
+      "size": 1709,
+      "normalized_sha256": "51bce8282e766cd0df05234eb7ea46ce9622d021b8989477874c8ee9f7c0d80b"
+    },
+    "website/output/playwright/dependabot-review/pointer.probe.spec.ts": {
+      "role": "observe",
+      "sha256": "1292e1d77db868391fbf11f09b0715740d2b41b67fa71179e5eb9e5a603ae08e",
+      "size": 6258,
+      "normalized_sha256": "8069c538fbf6b376014e1f7d0bf0d316c9a6b4e09a7afacdd085350e698f6dc5"
     },
     "website/output/wheel-fluidity-20261016/baseline-dist/fonts/OFL-Barlow.txt": {
       "role": "observe",
@@ -4649,9 +4673,9 @@
     },
     "website/tests/site.spec.ts": {
       "role": "observe",
-      "sha256": "229150e8ca704fb4a01fd0e92e7e4b70fc5f841cab6951bceb336fa1bc44c79d",
-      "size": 139115,
-      "normalized_sha256": "229150e8ca704fb4a01fd0e92e7e4b70fc5f841cab6951bceb336fa1bc44c79d"
+      "sha256": "b72a3d3126321fb89c7ca9248577a0c9ca5e32be471c9c1094d2eab8251240b8",
+      "size": 140699,
+      "normalized_sha256": "b72a3d3126321fb89c7ca9248577a0c9ca5e32be471c9c1094d2eab8251240b8"
     },
     "website/tests/viewer-focus.test.ts": {
       "role": "observe",
