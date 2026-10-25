@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, edited]
   workflow_dispatch:
 
 permissions:
@@ -27,6 +28,8 @@ jobs:
           persist-credentials: false
       - name: Test routing, merge gates and workflow policy
         run: python3 -m unittest discover -s tool/ci/tests -v
+      - name: Check branch purpose and pull request title
+        run: python3 tool/ci/check_pr_conventions.py
       - name: Check approved actions, full SHA pins and matrix coverage
         run: python3 tool/ci/check_workflows.py
       - name: Check submitted whitespace

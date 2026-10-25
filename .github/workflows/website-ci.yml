@@ -2,7 +2,7 @@ name: Website CI
 
 on:
   push:
-    branches: [main, codex/hoopito-website]
+    branches: [main, preview/website]
   pull_request:
     branches: [main]
   workflow_dispatch:

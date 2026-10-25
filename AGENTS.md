@@ -8,6 +8,14 @@ Read only relevant guidance: [CONTRIBUTING.md](CONTRIBUTING.md) for development,
 
 The maintained checkout is `main`, currently the 2.0 codebase branded Hoopito · 球豆 (formerly HoopTrace). Read HANDOFF and check the actual branch before continuing. Use temporary worktrees only when isolation is needed. Integrate changes only within current authorization; worktree archival and project cleanup belong to explicitly requested closeout. Keep build and test evidence tied to its actual application source commit; later documentation commits do not change APK provenance.
 
+## Branch and PR Conventions
+
+Use [CONTRIBUTING.md](CONTRIBUTING.md#分支与提交) as the naming authority for humans and automation. Create ordinary branches as `<type>/<purpose>` using `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore`, or `revert`, and a lowercase ASCII alphanumeric, single-hyphen-separated purpose. Do not use an author, tool, or platform as a branch category or append an origin marker; repository conventions override a tool's default branch prefix. A purpose may name a tool when that tool is what the change actually addresses.
+
+Keep `main` as the maintenance branch. `preview/website` is the long-lived preview migration target; retain the protected `codex/hoopito-website` and its recorded preview entry until the migration's CI, deployment identity, protection and real URL are verified. `deps/` is reserved for genuine same-repository Dependabot branches; human dependency fixes use an ordinary `build/` or `chore/` branch. Do not bulk rename historical local branches or rewrite recorded source identities.
+
+PR titles and final squash commits follow `type(scope)!: subject`, with scope and `!` optional; scope uses the same lowercase ASCII word syntax and subjects may be Chinese or English. Intermediate commit formatting is advisory. `Repository policy required` validates PR metadata and reruns after title edits; repair the name or title rather than bypassing the check. A naming exception must match the actual bot author and source repository, including an exact PR/head pair for legacy transitions.
+
 ## 项目收尾：仅由用户明确触发
 
 只有用户以当前行动指令明确要求“做项目收尾”“执行项目收尾工作”“给本轮项目收尾”等同义事项时，才启动 [CONTRIBUTING.md 的项目收尾流程](CONTRIBUTING.md#项目收尾流程)。授权仅覆盖这次指定任务或阶段，不延续到后续开发任务；用户暂停或撤销后立即停止收尾。

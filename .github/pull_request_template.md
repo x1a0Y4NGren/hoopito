@@ -1,7 +1,15 @@
+<!--
+Use a purpose-based branch and a title such as `fix(scoring): 修复撤回后的比分` or `docs: clarify recovery`.
+Branch and title rules: CONTRIBUTING.md#分支与提交. Title edits rerun Repository policy required.
+按改动目的命名分支和 PR；仅在确实解决问题时使用 Closes #编号，无需为填写模板另建 Issue。
+-->
+
 ## Outcome / 结果
 
 Describe the user-visible problem and the finished behavior.
 说明用户问题及完成后的行为。
+
+- Related issue, when one exists / 已有相关 Issue（如有）:
 
 ## Design and data decisions / 设计与数据决策
 

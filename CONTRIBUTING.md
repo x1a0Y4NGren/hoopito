@@ -7,9 +7,19 @@
 ## 开始之前
 
 1. 有相关 Issue 时查阅其上下文，避免重复工作；无需为每个小改搜索全部 Issue 或另建提案。
-2. 较大的功能或数据模型变更先明确使用场景、范围和迁移策略。已有 Issue 或当前对话中确认的需求即可作为依据，不必重新走一轮提案和批准。
-3. 安全问题不要公开披露；请使用 GitHub 仓库的 Private vulnerability reporting。
+2. 新功能和重大变更先讨论使用场景、范围，以及适用的数据、隐私和迁移策略。已有 Issue 或当前对话中确认的需求即可作为依据，不必重新走一轮提案和批准。
+3. 安全问题不要公开披露；请按 [SECURITY.md](SECURITY.md) 使用 GitHub 仓库的 Private vulnerability reporting。
 4. 所有贡献都按仓库的 MIT License 提供。
+
+## 日常维护流程
+
+1. 确认问题、期望结果与本轮范围；有相关 Issue 时复用，不为小修复强制新建 Issue。新报告使用 `needs-triage` 表示待核实，维护者复现或明确需求后分类为 `bug`、`enhancement` 或 `question`，再移除待核实标签；重复或不采纳时说明原因。
+2. 从最新 `main` 创建[按改动目的命名的短期分支](#分支与提交)，一个 PR 处理一个明确问题。人工贡献者和自动化工具遵循同一套约定。
+3. 实现后按[验证矩阵](#测试要求)选择检查，记录真实结果和适用源码；保留失败、跳过及环境限制。未受影响的有效证据可以复用。
+4. 按 [PR 模板](.github/pull_request_template.md)说明问题、结果、取舍和验证；关联已有 Issue，只有确实解决时才使用 `Closes #编号`。维护者审阅差异和风险，分支与最新 `main` 对齐并通过三项必需检查后手动 squash 合并。
+5. GitHub 自动删除已合并的短期远端分支；后续工作从最新 `main` 另建分支。涉及[依赖维护](docs/repository-settings.md#依赖与安全)或[正式发行](docs/release/release-checklist.md)时使用对应约定；合入源码、正式发行和生产部署分别报告实际状态。
+
+以上是日常协作流程，不触发[项目收尾](#项目收尾流程)、本地工作树清理或发布授权。
 
 ## 不可破坏的约束
 
@@ -42,16 +52,21 @@ dart run build_runner build --delete-conflicting-outputs
 
 ## 分支与提交
 
-- 需要新建开发分支时，从最新 `main` 创建短生命周期分支；已分配的任务分支可继续使用。
-- 推荐分支前缀：`feat/`、`fix/`、`docs/`、`test/` 或 `codex/`。
+- 需要新建开发分支时，从最新 `main` 创建短生命周期分支。普通分支使用 `<类型>/<改动目的>`，例如 `feat/match-presets`、`fix/scoring-undo`、`docs/contributing`、`ci/dependency-checks`。
+- 类型固定为 `feat`（新功能）、`fix`（缺陷）、`refactor`（结构调整）、`perf`（性能）、`docs`（文档）、`test`（测试）、`build`（构建）、`ci`（持续集成）、`chore`（维护）或 `revert`（撤销变更）。目的使用小写英文字母、数字及单个连字符分隔的词，只有一层 `/`；不能以连字符开头或结尾。Issue 编号可选，例如 `fix/42-backup-rollback`。
+- 分支按工作内容分类，不以作者、工具或平台标识作为前缀或附加来源标记；使用什么工具不影响命名。改动本身确实针对某项工具时，可以在目的中说明该工具。
+- `main` 是维护分支，`preview/website` 是长期预览分支的迁移目标；预览保留名只用于本仓库，不对 fork 中的同名分支提供例外。`deps/<自动生成内容>` 专用于本仓库 Dependabot 创建的依赖分支，允许机器人生成的多层路径；人工修复依赖仍使用 `build/` 或 `chore/`。
 - 一个 Pull Request 处理一个明确问题，避免夹带无关重构。
 - `main` 的修改统一通过 Pull Request；维护者自己的修改也适用。合并前分支必须与最新 `main` 对齐，且 `App CI required`、`Website CI required`、`Repository policy required` 全部通过。门禁按路径选择实际工作，纯文档 PR 也必须得到明确的门禁结果。
 - 单人维护阶段要求 0 个 approving review，不要求 CODEOWNER 或最后一次 push 的他人批准；[CODEOWNERS](.github/CODEOWNERS) 用于标识责任人与路由审阅，不代替 CI 或维护者人工检查。
 - 使用 squash merge 保留每个 PR 的完整结果；不启用自动合并。依赖更新须人工核对上游变更、兼容性、许可及适用测试，再合并；安全更新优先处理，不等待普通版本更新的冷静期。
-- 提交信息使用命令式短句，例如 `fix: keep scoring header within compact screens`。
+- PR 标题和最终 squash 提交使用 `类型(可选范围): 改动说明`，例如 `fix(scoring): 修复撤回后比分不同步` 或 `docs: clarify backup recovery`。类型沿用上述十类；范围可省略，填写时也使用小写英文、数字和单个连字符分隔的词；破坏性变更在类型或范围后加 `!`，例如 `feat(backup)!: update import contract`，并在 PR 中说明迁移影响。
+- 改动说明可用中文或英文，不能为空、不能跨行或保留首尾空白，冒号后留一个空格。中间提交建议使用相同格式和命令式短句，不要求为了格式重写既有提交历史。
 - 不提交构建产物、密钥、`key.properties`、设备数据或 IDE 临时文件。
 
-仓库保护、必需检查、Dependabot 节奏、分支保留和故障恢复见[仓库设置策略](docs/repository-settings.md)。短生命周期分支在 PR 合并后由 GitHub 自动删除；`codex/hoopito-website` 是保留并保护的预览分支。删除旧分支前仍需确认整合结果、预览依赖及当前授权；自动删除开关不替代历史分支审计或本地工作树收尾。
+`Repository policy required` 在 PR 中检查分支名和标题，标题编辑后重新检查。机器人命名例外同时核对真实作者身份和来源仓库，不能仅靠分支前缀获得例外。既有依赖 PR #17、#18、#19、#21、#22、#23、#24、#25、#27 仅允许各自固定的原 head 名称过渡，不手动改名打断审阅；未来新 PR 不继承旧名称豁免。普通分支的内容是否准确表达改动仍由审阅者判断。
+
+仓库保护、必需检查、Dependabot 节奏、分支保留和故障恢复见[仓库设置策略](docs/repository-settings.md)。短生命周期分支在 PR 合并后由 GitHub 自动删除。预览迁移尚未验收完成时，继续保留并保护 `codex/hoopito-website`，使用[已记录的旧预览入口](https://hoopito-website-git-codex-hoopito-website-xyr175-9459s-projects.vercel.app)；只有新分支的 CI、受保护预览和真实入口验证通过后才退役旧名。删除旧分支前仍需确认整合结果、预览依赖及当前授权；自动删除开关不替代历史分支审计或本地工作树收尾。
 
 小型文档维护可直接使用当前 checkout；并行修改或需要隔离时再创建 worktree，只创建实际要使用的目录。只读审查无需独立 worktree。普通任务结束时保留未提交内容与验证证据，不自动提交或归档工作树；这些事项仅在用户明确要求项目收尾或单独授权该操作时执行，不批量强删目录。
 
