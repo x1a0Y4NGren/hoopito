@@ -351,6 +351,13 @@ WOFF2 子集；Barlow 保留原有字形集。它同时更新二维码和
 转换方式和拍摄来源。生成命令需要仓库中的原始素材，不适用于只复制 `website/`
 且没有父目录原始文件的环境。
 
+更新传递依赖时，按安全公告定向更新锁文件并检查实际安装版本、父依赖范围和 `npm audit`。
+`package-lock.json` 也是场景占位与 Logo 套件的来源输入；即使页面源码没有变化，也要完成
+Astro 引导构建、启动本地 preview、`node scripts/export-scene-poster.mjs`、`npm run assets`
+和最终 `npm run build`，保留新捕获原图及来源记录。随后在仓库根目录运行
+`node tool/brand/export_logo_kit.mjs` 和对应测试，同步 Logo 清单的锁文件摘要。
+历史验证记录继续绑定原测量版本；新来源不能只手改摘要或冒称旧捕获。
+
 新增球场材质使用内置 ImageGen 生成，原始 PNG 保存在
 [`assets/materials/source/`](assets/materials/source/)；每张图的完整提示词与生成方式
 保存在 [`assets/materials/generation.json`](assets/materials/generation.json)。

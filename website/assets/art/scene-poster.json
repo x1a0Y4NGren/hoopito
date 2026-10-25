@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "captured_at": "2026-10-24T16:36:44.890Z",
+  "captured_at": "2026-10-25T13:35:57.630Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "capture_method": "The actual production page scene observed at its dynamic factory export; no second renderer or authored capture pose.",
   "browser": "156.0.8078.47",
@@ -131,7 +131,7 @@
     },
     {
       "path": "package-lock.json",
-      "sha256": "cf0b2e23ab8df45b2f97d59015b796ed885d7f8ee7d41daeb2fa12044c234c84"
+      "sha256": "8f597a249f78ba0e049283f27fc0bf15f8a06bfbef5a7364f364f49cc7c1d81b"
     },
     {
       "path": "scripts/export-scene-poster.mjs",
@@ -141,8 +141,8 @@
   "captures": [
     {
       "id": "compact",
-      "source": "source/scene-poster-compact-2026-10-24T16-36-37-853Z.webp",
-      "source_sha256": "8dab8ec5c8a553508f90c63e88aa630adacd877ff5a126ac696ed1622fcc2759",
+      "source": "source/scene-poster-compact-2026-10-25T13-35-50-791Z.webp",
+      "source_sha256": "ab81bc14df47ba256cd6a9f4c1e94a4cde0c96ee0a48be149c74be600a6671fd",
       "viewport": {
         "width": 1024,
         "height": 768,
@@ -170,7 +170,7 @@
         "width": 491.515625,
         "height": 678
       },
-      "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 492,
       "height": 678,
@@ -181,8 +181,8 @@
     },
     {
       "id": "standard",
-      "source": "source/scene-poster-standard-2026-10-24T16-36-37-853Z.webp",
-      "source_sha256": "179acce9031b01db8ad394dbf26d6537ef2902f4e4ea78480faa9e16b3ae2bd3",
+      "source": "source/scene-poster-standard-2026-10-25T13-35-50-791Z.webp",
+      "source_sha256": "047d35e09c370ab32a091f36701e243b989051535bb92d53402c4e1d8010610b",
       "viewport": {
         "width": 1440,
         "height": 900,
@@ -210,7 +210,7 @@
         "width": 691.1875,
         "height": 810
       },
-      "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 691,
       "height": 810,
@@ -221,8 +221,8 @@
     },
     {
       "id": "wide",
-      "source": "source/scene-poster-wide-2026-10-24T16-36-37-853Z.webp",
-      "source_sha256": "7b7fe66e441f0cb825cb990cb2b7027b632e4ce23b1547d96d8c5e0418ff725b",
+      "source": "source/scene-poster-wide-2026-10-25T13-35-50-791Z.webp",
+      "source_sha256": "97b062d99efaa5883671f226e2d7f6d9135b71146c74293a98e34b55aceaa930",
       "viewport": {
         "width": 1920,
         "height": 1080,
@@ -250,7 +250,7 @@
         "width": 921.59375,
         "height": 990
       },
-      "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 922,
       "height": 990,
@@ -261,8 +261,8 @@
     },
     {
       "id": "demo-compact",
-      "source": "source/scene-poster-demo-compact-2026-10-24T16-36-37-853Z.webp",
-      "source_sha256": "fff9d6157491a666e0b3c82702397659ef43b43d837e42b3fb503bf8e4d59e11",
+      "source": "source/scene-poster-demo-compact-2026-10-25T13-35-50-791Z.webp",
+      "source_sha256": "303b53cd84bd5d576be602d3de875576bba5061dd1415224696f2601e1f0dfcb",
       "viewport": {
         "width": 1024,
         "height": 768,
@@ -290,7 +290,7 @@
         "width": 491.515625,
         "height": 678
       },
-      "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 492,
       "height": 678,
@@ -301,8 +301,8 @@
     },
     {
       "id": "demo-standard",
-      "source": "source/scene-poster-demo-standard-2026-10-24T16-36-37-853Z.webp",
-      "source_sha256": "06769f3059ed710a71aca69d21c2291da730ec694863cee7358be7462134c2ba",
+      "source": "source/scene-poster-demo-standard-2026-10-25T13-35-50-791Z.webp",
+      "source_sha256": "c38018d4885ed0414df9211d78dd0071f83c40d8ac33e7845e429164a74542e4",
       "viewport": {
         "width": 1440,
         "height": 900,
@@ -330,7 +330,7 @@
         "width": 691.1875,
         "height": 810
       },
-      "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 691,
       "height": 810,
@@ -341,8 +341,8 @@
     },
     {
       "id": "demo-wide",
-      "source": "source/scene-poster-demo-wide-2026-10-24T16-36-37-853Z.webp",
-      "source_sha256": "a460966d3ab3c8885dd3fb92d270752b3504ae6ae0199a1dc24f07fff8587769",
+      "source": "source/scene-poster-demo-wide-2026-10-25T13-35-50-791Z.webp",
+      "source_sha256": "1a4fa70feb5d61783e9d6bd117b4ac163a63e2cdb8d45e8fc4acd3280a8c9bfa",
       "viewport": {
         "width": 1920,
         "height": 1080,
@@ -370,7 +370,7 @@
         "width": 921.59375,
         "height": 990
       },
-      "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11)",
       "engine": "three.js r186",
       "width": 922,
       "height": 990,
