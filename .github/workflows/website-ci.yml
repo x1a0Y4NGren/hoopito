@@ -3,10 +3,8 @@ name: Website CI
 on:
   push:
     branches: [main, codex/hoopito-website]
-    paths: ["website/**", ".github/workflows/website-ci.yml"]
   pull_request:
     branches: [main]
-    paths: ["website/**", ".github/workflows/website-ci.yml"]
   workflow_dispatch:
 
 permissions:
@@ -17,7 +15,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Classify Website CI inputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      app: ${{ steps.classify.outputs.app }}
+      website: ${{ steps.classify.outputs.website }}
+    steps:
+      - name: Check out source and comparison history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Classify changed files
+        id: classify
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: python3 tool/ci/classify_changes.py
+
   validate:
+    needs: changes
+    if: needs.changes.outputs.website == 'true'
     name: Format, types, unit tests, build and budgets
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -28,6 +49,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -118,6 +141,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -197,6 +222,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -256,3 +283,19 @@ jobs:
           path: website/output/playwright/webgl-chromium-${{ matrix.shard }}/
           if-no-files-found: warn
           retention-days: 14
+
+  required:
+    name: Website CI required
+    if: always()
+    needs: [changes, validate, ui, webgl]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out gate implementation
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate every applicable job result
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: python3 tool/ci/required_gate.py website

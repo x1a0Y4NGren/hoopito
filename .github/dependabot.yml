@@ -1,6 +1,59 @@
 version: 2
+# Version updates stay reviewable; security updates do not wait for cooldowns.
+# Every dependency PR is reviewed and merged manually after the required CI gates.
 updates:
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: weekly
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+    groups:
+      actions-minor-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: npm
+    directory: "/website"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-major-days: 30
+    groups:
+      website-runtime-minor-patch:
+        applies-to: version-updates
+        dependency-type: production
+        patterns: ["*"]
+        update-types: [minor, patch]
+      website-tooling-minor-patch:
+        applies-to: version-updates
+        dependency-type: development
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: pub
+    directory: "/"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    allow:
+      - dependency-type: all
+    groups:
+      # Keep the runtime and generator together, including major updates.
+      drift:
+        applies-to: version-updates
+        patterns: [drift, drift_dev]
+      drift-security:
+        applies-to: security-updates
+        patterns: [drift, drift_dev]
+
+  - package-ecosystem: gradle
+    directory: "/android"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 1
+    # Review AGP, Kotlin, Gradle and Flutter compatibility as one toolchain.
