@@ -1,3 +1,22 @@
+# Logo 与 CI 余项验证（2026-10-25）
+
+Logo 整理已通过维护者审阅，以 `11e1ba5` 合入 `main`，#16 已关闭；独立 Windows／Linux
+导出复现及 5 项回归见[品牌验证记录](../assets/brand/VALIDATION.md)，未替换生产图标。
+
+测试余项在 `cbb534df8e97a6561e1d89bca8ebef0721e87a6d` 合入，测试 blob 为
+`f5d1cacd921949c4bd9cbd789b99eac6a90e84c9`。本轮三浏览器定点复验 9／9，0 重试、0 flaky；
+不再将原生滚轮事件的像素值当作页面实际位移，仍检查真实事件、离场与不回拉。
+邀请取消测试预先安装受控时钟以保留短暂播放窗口，功能选择仍使用真实点击。
+
+[Website CI 40171778160](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40171778160)
+六组成功：154 单元、532 UI／WebGL 通过，2 项能力跳过，0 失败、0 flaky。
+五组浏览器任务均核验同次构建；65 文件、83,456,578 字节，摘要
+`4b06cfbd079872ba4c937a5d902f622b66a47463f8161d72fc7da05845a2e0cd`，与生产构建相同。
+运行摘要、validate 产物和日志位于本地 `output/final-stage-20261025/ci-validation/`。
+同提交 App CI 首次 API 24 的 SDK 准备失败已保存，第二次五组成功；没有 App 或 APK 变更。
+
+本轮仅同步素材、测试与交接，不新增部署。下面的生产来源和原线上验收保持其实际身份。
+
 # 当前官网发布验收（2026-10-25）
 
 最新正式网站源码为 `f001703ebf230240b159ed9bf82a24e0bef7dd5e`，线上入口为
