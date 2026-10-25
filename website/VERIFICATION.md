@@ -1,3 +1,29 @@
+# 当前官网发布验收（2026-10-25）
+
+最新正式网站源码为 `f001703ebf230240b159ed9bf82a24e0bef7dd5e`，线上入口为
+[hoopito.com](https://hoopito.com/)，Production 为 `dpl_6CcBttmH8PqxKa7Yr5H6V9LeNgRf`。
+本节说明当前下载渠道与社区发布；下文保留各次实际来源和历史结果，不能作为当前构建的重复验收。
+
+[Website CI 40114499257](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40114499257)
+六组全部成功：154 项单元测试、532 项 UI／WebGL 检查通过，2 项非 Chromium
+CDP 双指用例按能力跳过，0 失败、0 flaky。格式、类型、生产构建及 29 组来源／资源预算通过，
+移动首屏最大 493.4KiB，桌面增量最大 736.1KiB。软件 WebGL 生命周期验证不证明硬件呈现帧率，
+已停止的 AMD 专项不在本轮重新验收。
+
+精确提交的干净云端 dist 为 65 文件、83,456,578 字节，摘要
+`4b06cfbd079872ba4c937a5d902f622b66a47463f8161d72fc7da05845a2e0cd`。
+线上中英文、1440／390px 的下载渠道顺序、提取码、弹窗关闭／焦点恢复、社区图片／群号检查通过；
+蓝奏打开独立分享页，GitHub 通过真实浏览器下载完整正式 APK，原页面保持。
+GitHub 新下载与此前蓝奏下载重新校验均为 76,441,047 字节、
+SHA-256 `c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9`。
+蓝奏未重新完整下载，线上移动视口不标为新模拟器或实机验收。
+
+四个公开页面、canonical、robots、sitemap、www 308、社区资源摘要与同域静态 APK 的
+附件响应／206 请求已检查。双语截图、结果和失败辅助脚本样本位于本地
+`output/publish-20261025/`，其中 `acceptance.json` 是绑定源码和构建的汇总，
+`public-http.json`、`public-browser.json` 为不含临时交付签名查询的对外摘要。
+App 和签名 APK 没有改变；本轮后续收尾文档不改变以上来源。
+
 # 计分章节自然滚动与点击说明（2026-10-13）
 
 运行时源码：`cfc75ae4d0ec840daf48839c214880d9e90b3aab`。维护者要求取消此章节

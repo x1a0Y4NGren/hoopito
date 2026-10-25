@@ -1,5 +1,25 @@
 # Hoopito · 球豆交接记录
 
+## 官网发布与本轮收尾（2026-10-25）
+
+当前维护 checkout 为 `D:/GitHub/hoopito`、分支 `main`。官网 [hoopito.com](https://hoopito.com/) 已正式上线，最新已验收、推送并部署的源码为 `f001703ebf230240b159ed9bf82a24e0bef7dd5e`；网站树为 `4c569bf13b8955c91752c36635fbfb6a31a84990`。下文“生产暂停”“仅保护预览”等描述保留其历史时点，不代表现在的官网状态。
+
+本次发布包含下载渠道弹窗和球友社区：国内蓝奏云在前、GitHub 在后，不接入百度网盘；蓝奏提取码在入口下方显示。QQ 群号为 `1129560287`，邀请图原始二维码像素保留，维护者已确认扫码和群号正确。无 JavaScript 时下载按钮仍直达 GitHub 正式附件；官网同域静态 APK 地址继续可用。网站源码、隐私说明、README、素材来源和实际场景占位已同步。
+
+Vercel Production 为 `dpl_6CcBttmH8PqxKa7Yr5H6V9LeNgRf`，绑定上述源码且 `READY`；[不可变部署](https://hoopito-website-ea8aeluf4-xyr175-9459s-projects.vercel.app)与正式域名分别保留其身份。`www` 以 308 转到根域，保留路径与查询。预览认证保护保持开启，`main` 的 Git 自动生产部署仍关闭；此次通过精确 Git 来源构建、完整 CI 后再提升到生产，不将旧部署冒称当前版本。
+
+[Website CI 40114499257](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40114499257) 的六组全部通过：154 项单元测试；三浏览器 UI 加两组软件 WebGL 共 532 通过、2 项能力跳过、0 失败、0 flaky。跳过为 Firefox／WebKit 不支持 Chromium CDP 原生双指注入的用例，共享大图控件仍有三浏览器覆盖。干净云端构建共 65 文件、83,456,578 字节，摘要 `4b06cfbd079872ba4c937a5d902f622b66a47463f8161d72fc7da05845a2e0cd`；本地有保留的历史未引用素材，不能声称本地 dist 聚合摘要与云端相同。[同源码 App CI 40114499390](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40114499390) 五组亦全部通过；本轮没有修改 App 或准备新发行。
+
+线上双语桌面／移动视口检查通过：下载弹窗顺序、键盘与关闭焦点恢复、原页面保留、社区图和群号、隐私页、canonical、robots、四页 sitemap，以及静态 APK 的附件响应与 206 分段请求。通过已发布弹窗完成一次真实 GitHub APK 下载，完整大小及 SHA-256 与正式包一致；蓝奏渠道复用此前完整下载并重新校验的同一 APK，未重复传输。线上移动画面是 Chrome 视口模拟，不重标为新 Android 模拟器或实体手机检查。资源预算 29/29 通过：移动首屏最大 493.4KiB／500，桌面增量最大 736.1KiB／800。
+
+正式 App 仍为 `2.0.1+5`，APK 来源 `4ecd960e5af1f6b12124a43e330d67efb628281b`、文件 76,441,047 字节、SHA-256 `c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9`；签名、安装身份和公开附件不变。后续收尾文档及治理提交不改变网站部署或 APK 构建来源。
+
+用户本次明确要求一并收尾，并允许为未完成的 Logo 整理建立待办。[Issue #16](https://github.com/x1a0Y4NGren/hoopito/issues/16) 跟踪独立导出复现、小尺寸和六种组合字标视觉确认及后续正式同步。套件与导出脚本以待验整理稿保存，入口见 [assets/brand/README.md](assets/brand/README.md)；来源、输出摘要和三张 master 与生产源一致性已核对，不把原图历史批准等同于套件最终验收。
+
+本轮仅保存收尾的本地提交，不新增推送、部署、发行或远端资源删除。发布证据保留于 `website/output/publish-20261025/`，包含精确源码、CI 门禁、云端构建摘要、公共 HTTP／浏览器结果与双语截图；失败的浏览器辅助脚本样本亦保留。`browser-check.log` 含短期公开附件交付签名查询，仅本地保存，不作为公开报告。收尾范围、资产校验、资源处理及 AOCI／Git 实际回执保留于 `website/output/closeout-20261025/`；治理对齐与完整认知读取是不同结论，以实际回执区分。
+
+保留历史计划、场景捕获、发行来源与失败样本；仍在使用的本地预览、原 Pixel AVD 及共享缓存不清理。AMD 画面呈现专项已被维护者停止，不因收尾恢复；[#10](https://github.com/x1a0Y4NGren/hoopito/issues/10) 的旧呈现门槛不冒称通过。Logo 待办之外的 App 真机、自然 24 小时备份、商店／F-Droid 和 iOS 安装限制仍按原发行证据理解，均不自动恢复为本轮任务。
+
 ## Issue #6 交付与项目收尾（2026-10-13）
 
 [Issue #6](https://github.com/x1a0Y4NGren/hoopito/issues/6) 已完成并关闭为 `completed`。交付检查点为 `14f8e3cffd229011cf186138b6cdd11821d8a041`，GitHub 仓库为 `x1a0Y4NGren/hoopito`；本机唯一活动 checkout 为 `D:/GitHub/hoopito`，Codex 同一项目入口的名称与保存路径已核验。此前 `D:/GitHub/hooptrace`、旧网站分支和下方未发布状态均属于历史记录。

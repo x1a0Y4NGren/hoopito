@@ -1,16 +1,16 @@
 #AOCI-CODE-VOLUME: 1
 
 ===D:/GitHub/hooptrace/===
-.gitattributes[FV6T]: F:固定平台脚本、网站、截图记录与AOCI卷的行尾及第三方空白检查边界 | R:code:android/gradlew,code:website/scripts/prepare-assets.mjs | A:Git attributes；网站生成二进制禁文本转换；AOCI卷LF | S:网站源输入摘要按提交字节绑定，不能由checkout行尾转换改变生成资源来源
+.gitattributes[FV6T]: F:固定平台网站脚本和认知卷行尾并保护生成品牌资产的原始字节及第三方空白边界 | R:code:tool/brand/export_logo_kit.mjs,code:website/scripts/prepare-assets.mjs | A:网站及品牌脚本LF；Logo套件及public禁转换；原样CRLF副本仅允许行末CR | S:生成清单绑定实际字节，自动行尾转换不得破坏SHA；历史来源跨平台差异仍须复现，CR例外不豁免其他空白错误
 .gitignore[FV6S]: F:界定构建缓存、设备数据、签名秘密及本机配置的Git忽略范围 | R:code:.aoci/.gitignore,code:android/.gitignore | A:Git ignore patterns；忽略Python缓存及Codex本机配置 | S:正式AOCI卷与共享治理配置可追踪，运行资产及本机绝对路径配置不能提交
 .metadata[FV4T]: F:保存Flutter项目类型、创建版本和迁移基准 | R:code:.github/workflows/flutter-ci.yml | A:Flutter migrate metadata | S:由Flutter工具维护；main.dart和iOS工程排除迁移
-AGENTS.md[SG9S]: F:记录Hoopito源码约束、影响验证、显式收尾范围及AOCI读取维护合同 | R:code:CONTRIBUTING.md,code:HANDOFF.md,code:docs/design/brand/naming-and-compatibility.md | A:用户当前指令优先；开发与收尾分别授权；临时工作树按隔离需要使用 | S:普通任务结束或Dirty不授权治理写入；完整收尾默认仅本地提交，整合推送发布仍按各自授权；备份替换持写预约且禁止活动比赛，schema3/JSON2及安装身份保留
+AGENTS.md[SG9S]: F:规定Hoopito源码兼容、展示截图、本地审阅与显式收尾及AOCI认知维护边界 | R:code:CONTRIBUTING.md,code:HANDOFF.md | A:命令事务；schema3及JSON2；展示副本裁除系统栏且保留原证据 | S:普通完成或Dirty不授权收尾；明确收尾默认仅本地提交；推送部署另按当前授权；完整认知截断停链不得补答；签名安装身份保留
 CHANGELOG.md[SV6T]: F:按版本记录Hoopito品牌同步及既有功能兼容和修复 | R:code:pubspec.yaml,code:docs/release/v2.0.1-release-notes.md | A:2.0.1品牌与备份回调修复；Unreleased与历史版本比较 | S:v2.0.0更换v1证书而v2.0.1沿用v2；旧App不能导入新名称JSON，签名与数据兼容分别判断
-CONTRIBUTING.md[SQ7S]: F:定义贡献与影响验证矩阵、独立网站维护及明确触发的项目收尾流程 | R:code:HANDOFF.md,code:website/README.md | A:检查交接资源治理提交整合汇报八步；未变输入复用验证 | S:用户明确收尾才维护AOCI及本地提交；暂停事项不恢复，推送发布须另有授权；先稳定业务文档与资源再治理；保留失败证据和用户改动
-HANDOFF.md[SW7S]: F:交接issue6正式发行、保护预览、本机迁移与收尾资源并保留历史阶段证据 | R:code:docs/release/v2.0.1-release-record.md,code:website/VERIFICATION.md | A:14f8e3c交付；4ecd960正式APK；207项Preview；本轮专用AVD与缓存清理 | S:后续文档治理不改APK来源；生产和商店继续暂停；旧路径待办按历史理解；自然24h实体设备iOS安装未验，不能改标成功
+CONTRIBUTING.md[SQ7M]: F:定义按影响验证、干净展示截图和明确触发的八步项目收尾流程 | R:code:AGENTS.md,code:HANDOFF.md | A:未变输入复用证据；先稳定文档资源再认知维护；逐批维护后Verify及Check及Guide证明对齐 | S:普通任务不自动治理或清理；推送发布分别授权；裁剪须校准并记录摘要，不改原截图；文件重开不冒称冷进程
+HANDOFF.md[SW7L]: F:交接当前官网发布、Logo待办及各历史阶段的真实来源与限制 | R:code:website/VERIFICATION.md,code:assets/brand/README.md | A:官网f001703；CI六组及App五组成功；渠道与社区已上线；Logo issue16待验 | S:网站及文档提交不改4ecd960正式APK来源；旧生产暂停属历史；AMD专项停止且呈现未证；本轮收尾仅本地提交，治理对齐以实际回执为准
 LICENSE[SG6T]: F:以MIT许可授予项目软件及文档的使用、复制、修改、分发和再许可权，并规定声明保留与免责 | R:code:README.md,code:CONTRIBUTING.md | A:MIT License；版权归2026 x1a0Y4NGren；副本及实质部分须保留版权和许可声明；软件按原样提供且无担保 | S:-
 PRIVACY.md[SS8T]: F:说明Hoopito离线数据、权限、备份、内部副本及删除与分享边界 | R:code:android/app/src/main/AndroidManifest.xml,code:lib/core/export/safety_backup_store.dart | A:无账号云同步追踪广告；自动备份默认关闭；SAF用户授权 | S:私有副本随卸载清数据丢失；替换回退先保护当前且禁止活动比赛；网页与GitHub访问日志不属于App上传
-README.md[SG7S]: F:介绍Hoopito离线单挑旅程并导航v2.0.1正式下载、源码与受保护双语预览 | R:code:docs/release/v2.0.1-release-record.md,code:website/README.md,code:PRIVACY.md | A:免费MIT；2.0.1+5；新目录hoopito；正式包八张原图 | S:APK固定4ecd960不随后续提交改变；v2同证覆盖保数据，v1须先外部JSON后卸载；旧App拒新名称备份；网站生产仍暂停
+README.md[SG7M]: F:介绍Hoopito离线单挑旅程并导航正式官网、同签名下载、社区与品牌素材 | R:code:website/README.md,code:assets/brand/README.md | A:2.0.1+5；双语干净App截图；QQ1129560287；GitHub正式来源及蓝奏同包 | S:APK来源固定4ecd960；v2同证覆盖保数据，v1先外部JSON后卸载；旧App拒新名称JSON；Logo整理待最终验收
 SECURITY.md[SS8T]: F:规定最新正式版的安全支持、私密报告和发行可信来源核验 | R:code:PRIVACY.md,code:docs/release/release-checklist.md,code:android/app/src/main/AndroidManifest.xml | A:最新正式版获修复；私密GitHub报告；7日确认、14日分级为尽力目标 | S:危及数据、SAF边界或代码执行的问题不公开报告；禁含真实球员数据和密钥；正式APK必须对应签名tag、校验和和维护者证书，Debug与未签名产物不算发行
 analysis_options.yaml[FQ5T]: F:继承Flutter lint并配置格式习惯及旧源码夹具分析边界 | R:code:pubspec.yaml,code:tool/release/generate_v1_upgrade_fixture.dart | A:单引号尾逗号避免print优先final；flutter analyze | S:历史v1夹具有意导入package:hooptrace并排除当前包分析，不能因此改写归档源码依赖
 l10n.yaml[FL6T]: F:指定Flutter中文ARB模板与本地化代码输出位置和类名 | R:code:lib/app/l10n/app_zh.arb,code:lib/app/l10n/app_localizations.dart | A:arb-dir=lib/app/l10n；AppLocalizations；app_localizations.dart | S:-
@@ -28,7 +28,7 @@ pull_request_template.md[SQ6T]: F:组织变更结果、数据决策、验证证�
 
 ===D:/GitHub/hooptrace/.github/workflows/===
 flutter-ci.yml[OV8M]: F:对固定源码执行质量门禁、API24/36集成、两份全新源码的未签名Android逐字节复现及iOS无签名构建 | R:code:tool/release/run_android_integration_ci.sh,code:tool/release/verify_unsigned_reproducible_android.sh,code:third_party/android_runtime/coordinates.txt | A:quality、reproducible-android、integration(API24/36)、ios-no-sign；workflow_dispatch和分支事件 | S:锁定Flutter/JDK/SDK/NDK；保留依赖、查询、命令延迟及Golden门槛；单shell集成脚本避免模拟器动作分步漂移；复现产物未签名不能作为正式APK
-website-ci.yml[OV7T]: F:验证双语静态网站的格式类型、单元测试、构建预算与三浏览器行为并留存证据 | R:code:website/package.json,code:website/playwright.config.ts | A:main及codex/hoopito-website网站变更；Node24锁定安装；UI两worker与软件WebGL单worker分开 | S:失败仍上传报告；SwiftShader生命周期通过不证明硬件帧率，源码路径过滤不触发纯根文档提交
+website-ci.yml[OV8M]: F:单次构建绑定提交摘要后并行验证三浏览器UI与两组软件WebGL并保存诊断 | R:code:website/scripts/build-artifact.mjs,code:website/playwright.webgl.config.ts | A:Node24；validate15分钟；UI两worker；WebGL独立runner单worker和两shard；报告保留14天 | S:下载仅当前run的SHA产物并逐文件验摘要；fail-fast关闭且拒flaky；软件生命周期不证明硬件呈现帧率
 
 ===D:/GitHub/hooptrace/.superpowers/sdd/2026-08-22-hooptrace-1-0/===
 task-3-report.md[SQ4S]: F:记录1.0任务3的领域模型、Drift schema v2、原生旧库拒绝、备份图校验及两轮复审的提交和RED/GREEN证据 | R:code:lib/core/data/app_database.dart,code:lib/core/data/schema_v2.dart | A:- | S:schema v2历史验收；现行数据库版本为3
@@ -176,6 +176,10 @@ README.md[SW5T]: F:定义设计与执行记录目录的历史用途及按需追�
 2026-09-24-hooptrace-v2.md[SW6T]: F:保存已完成v2五阶段实施分解、架构复用和评审关注点 | R:code:docs/superpowers/specs/2026-09-24-hooptrace-v2-design.md,code:HANDOFF.md | A:覆盖契约、安全恢复、导航开赛、赛果成长、候选验证五任务 | S:历史计划不是当前分配或发布授权；勾选不代替源码绑定验收，schema3/JSON2保持
 2026-10-05-v2-pre-release-verification.md[SW6T]: F:存档T1性能、T2CI、T3签名准备、T4设备四组发布前计划 | R:code:docs/release/v2.0.0-pre-release-verification.md,code:HANDOFF.md | A:固定6d1b6cc基线；独立设备；标准动作与16.7ms预算；失败证据留存 | S:只表达当时授权范围，旧24h观察和签名阻断以最新交接为准，不恢复取消任务
 2026-10-06-hooptrace-v2-final-ci.md[SW6T]: F:存档含计时修复候选的正常推送与五作业CI验收计划和执行状态 | R:code:docs/release/v2.0.0-final-ci-verification.md,code:.github/workflows/flutter-ci.yml | A:2ef56aa候选/480984f应用；同SHA避免重复dispatch；失败有界复验 | S:不构成后续常驻推送或发布授权；未下载包不声称本机回读，文档提交不改实际CI SHA
+2026-10-15-website-chapter-polish.md[SW5T]: F:保存体验建筑剖切、复盘阅读光线与手机下载层级的历史实施及验收计划 | R:code:website/README.md,code:HANDOFF.md | A:单一场景；相机高度驱动剖切；复盘共享时间轴；保留既有视觉 | S:旧本地范围与勾选状态不授予当前推送发布，不恢复后续停止的性能任务
+2026-10-16-fluidity-acceptance.md[SW5T]: F:保存双GPU流畅度与整页路径验收的历史计划及分项实际结果 | R:code:HANDOFF.md,code:website/VERIFICATION.md | A:提交与呈现独立判定；完整用户路径；原视觉与像素投影契约 | S:AMD历史失败和呈现unavailable保留，不把勾选实施项当性能全通过；旧本地边界不授权后续发布
+2026-10-17-amd-layer-isolation.md[SW5T]: F:保存有界AMD扫光投影遮罩隔离实验设计、对照及未找到稳定收益的历史结果 | R:code:website/scripts/gpu-wheel-input.mjs,code:HANDOFF.md | A:原生滚轮；1920及DPR2；临时注入；交错控制和诊断资格 | S:隔离不计完整视觉性能通过；产品未变且专项后来停止，不执行未勾选分支
+2026-10-17-amd-system-trace.md[SW5T]: F:保存有界Windows调度与合成队列诊断的历史采集及权限安全方案 | R:code:HANDOFF.md | A:六段三秒；命名WPR实例；Chrome不提升；明确自有会话清理 | S:旧普通令牌失败非采集成功；管理员权限须明确同意；专项已停止，计划不授权重新采集
 
 ===D:/GitHub/hooptrace/docs/superpowers/specs/===
 2026-05-12-hooptrace-design.md[SG6L]: F:保存首发产品设计的范围、页面、事件流、审计、统计、离线备份及分层架构，列明Android优先与后续开放决策 | R:code:docs/superpowers/README.md,code:docs/superpowers/plans/2026-05-12-hooptrace-first-release.md,code:docs/superpowers/plans/2026-08-26-editorial-ui-redesign.md,code:CONTRIBUTING.md | A:首发永久免费开源离线且无账号云同步；规则提示允许手动纠正；JSON完整恢复及CSV图片导出；自动备份默认关闭并授权；坐标规范化为0至1 | S:方案要求比分缓存可重算且编辑保存前后审计；暖纸视觉和待落点阻塞须按当前代码复核
@@ -711,22 +715,23 @@ match_summary_page_test.dart[TU7S]: F:验证赛果在双语明暗窄横屏200%�
 
 ===D:/GitHub/hooptrace/website/===
 .gitattributes[FV4T]: F:允许网页上游许可副本保留原始空白而不触发Git空白检查 | R:code:website/scripts/prepare-assets.mjs | A:public/licenses/*.txt -whitespace | S:-
-.gitignore[FV5T]: F:排除网站依赖、构建、浏览器证据和本机环境配置 | R:code:website/playwright.config.ts,code:website/package.json | A:dist/node_modules/output/.astro/.vercel；允许.env.example | S:网页public源素材与许可仍须提交，APK不复制到网站
+.gitignore[FV5T]: F:排除网站依赖、构建、下载缓存、验证报告与本地认证环境 | R:code:website/package.json | A:dist及output及APK摘要缓存；保留env示例 | S:正式素材来源可跟踪，凭据与完整安装包不进Git
 .prettierignore[FQ4T]: F:限定格式检查跳过构建缓存、锁文件及生成素材和通知 | R:code:website/package.json | A:public、ASSET_SOURCES、THIRD_PARTY_NOTICES及工具输出 | S:-
 .prettierrc.json[FQ4T]: F:统一网页源码的两空格、单引号、尾逗号与Astro格式解析 | R:code:website/package.json | A:prettier-plugin-astro；*.astro解析器 | S:-
-ASSET_SOURCES.json[FV7L]: F:绑定44项网站生成资源的原始输入、输出摘要与正式包截图来源 | R:code:website/scripts/prepare-assets.mjs,code:docs/release/v2.0.1-screenshots.json,code:website/assets/art/scene-poster.json | A:八图来自4ecd960签名v2.0.1；源输出SHA和尺寸；字体子集、QR、材质及场景海报 | S:不改App原像素；截图采集状态与后续网站提交分开；文案或受绑定输入改变需重生成，不将生成宣传图视为App截图
-README.md[SV7M]: F:说明Hoopito双语网站构建验证、场景降级、正式资源维护和受保护预览交付 | R:code:website/package.json,code:website/ASSET_SOURCES.json,code:website/VERIFICATION.md | A:Node24/npm ci；main整合；hoopito-website；v2.0.1下载和正式包截图 | S:生产仍暂停且main部署禁用；Preview保认证、noindex和空sitemap；网站不写App数据；硬件提交节奏不证明屏幕帧率
+ASSET_SOURCES.json[FV7L]: F:绑定51项网站生成资产与截图原始发行来源、转换方式和完整性摘要 | R:code:website/scripts/prepare-assets.mjs,code:docs/release/v2.0.1-screenshots.json | A:群码与字体；干净截图裁剪；六场景占位；材质和许可 | S:截图APK来源固定4ecd960且原证据不改；生成摘要不替代实机或扫码，旧副本不重标新来源
+README.md[SV7L]: F:说明双语官网的连续场景、可访问交互、素材再现、下载和部署维护 | R:code:website/package.json,code:website/VERIFICATION.md | A:原生滚动；540度卡牌；同模型俯视；蓝奏与GitHub；QQ群及静态APK | S:预览认证和禁止收录保留；生产需SITE_URL且main自动部署关闭；截图保真实像素，重导出占位须绑定实际构建
 THIRD_PARTY_NOTICES.md[SV6T]: F:区分网站MIT资产与库、字体和构建工具许可及正式截图来源 | R:code:website/ASSET_SOURCES.json,code:website/package.json,code:docs/release/v2.0.1-screenshots.json | A:Astro/Three MIT；GSAP标准许可；字体OFL；sharp0.35.5 Apache2；八图来自4ecd960正式包 | S:GSAP不能标MIT；旧v2.0.0 Debug记录保真实历史来源，不改标新正式截图
-VERIFICATION.md[SQ7S]: F:保存2026-10-11网站6a6f0fa的本地功能资源画面和移动GPU实验验收历史 | R:code:website/scripts/measure-performance.mjs,code:website/tests/site.spec.ts,code:docs/release/v2.0.1-release-record.md | A:88通过14跳过；26素材/旧Debug截图；固定移动三次每语言；AMD180帧每章 | S:保留并发2.668s失败与下载p95超16.7ms；headless rAF不证明屏幕FPS；当时未部署描述只属该提交，当前CI和Preview按v2.0.1交付记录核对
+VERIFICATION.md[SQ7L]: F:按实际源码与环境保存官网上线和历史视觉交互性能验收证据及失败限制 | R:code:HANDOFF.md,code:website/README.md | A:f001703正式站；六组CI；532浏览器通过及两能力跳过；APK回读 | S:文档不改部署或APK来源；移动视口非新真机验收；软件生命周期和提交频率不证明硬件呈现，AMD专项已停止
 astro.config.mjs[FV7T]: F:配置静态Astro双语路由、公开origin及独立动态Three引擎分块 | R:code:website/src/components/Layout.astro,code:website/src/pages/robots.txt.ts | A:中文无前缀、英文/en/；尾斜线；SITE_URL或预览origin | S:生产缺SITE_URL直接失败；manualChunks为函数兼容Rolldown；分块不能让手机预加载Three
 package-lock.json[FV7L]: F:锁定独立网站npm依赖图、精确版本、来源和完整性摘要 | R:code:website/package.json,code:.github/workflows/website-ci.yml | A:lockfileVersion3；Astro/GSAP/Three及工具、可选平台包 | S:npm ci复用锁而不升级；与Flutter锁及App发行来源独立
-package.json[FV7T]: F:声明Node24静态网站与固定依赖并集中开发、资产和验证命令 | R:code:website/astro.config.mjs,code:website/scripts/check-budget.mjs,code:website/playwright.config.ts | A:private ESM；check/build/test/e2e/assets/measure:perf/format:check | S:build强制检查预算；资产生成另执行，需仓库原始素材；npm测试用Node原生TS
-playwright.config.ts[TQ7T]: F:配置三浏览器网站验收、本地预览与失败证据和CI运行限制 | R:code:website/tests/site.spec.ts,code:.github/workflows/website-ci.yml | A:Chromium/Firefox/WebKit；4321；本地30s/3worker、CI90s/2worker/一次重试 | S:CI软件WebGL延长测试时间不改网站8s初始化期限；SwiftShader通过不证明硬件性能；仅本地复用服务
+package.json[FV7T]: F:声明Astro静态站的固定Node24依赖与素材测试构建入口 | R:code:website/package-lock.json,code:website/scripts/prepare-download.mjs | A:Astro7及GSAP3及Three；build先Astro再验证APK再预算；独立于Flutter | S:APK为构建附件不是首屏资源；锁定依赖不在维护中隐式升级
+playwright.config.ts[TQ7T]: F:配置六套网站规格、三浏览器、失败取证与本地生产预览 | R:code:website/playwright.webgl.config.ts,code:website/tests/site.spec.ts | A:CI一retry及两worker；本地三worker；完整Chromium与Firefox及WebKit；4321预览 | S:CI测试90秒及断言20秒不改变产品八秒降级；历史output不在testMatch，能力跳过不算已验
 tsconfig.json[FQ5T]: F:对Astro及网页TypeScript启用严格检查并排除生成和验证输出 | R:code:website/package.json | A:astro/tsconfigs/strict；Node类型；允许TS扩展导入 | S:-
-vercel.json[FV7T]: F:配置Hoopito静态站构建输出、安全响应头并禁止main自动部署 | R:code:website/package.json,code:website/README.md | A:git.deploymentEnabled.main=false；npm ci/build；dist；nosniff/referrer/禁相机麦克风定位 | S:其他分支仍可Preview部署；认证保护属于远端项目设置，不能由此配置推断；生产暂停不等于Preview不可访问
+vercel.json[FV7T]: F:配置Vercel静态构建输出与正式APK附件及全站安全响应头 | R:code:website/package.json,code:website/src/data/release.ts | A:npm ci及build；dist；APK MIME及attachment文件名及版本路径immutable缓存 | S:main自动Git生产部署保持关闭，推送不自动上线；附件身份来自正式release，不经运行时代理
+playwright.webgl.config.ts[TQ7T]: F:复用基础规格并单worker执行带WebGL标签的Chromium生命周期检查 | R:code:website/playwright.config.ts,code:.github/workflows/website-ci.yml | A:CI有窗口配合Xvfb；swiftshader-webgl仅用于WebGL | S:不把整个浏览器合成切到SwiftShader；本地沿用原选项，软件结果不证明硬件FPS
 
 ===D:/GitHub/hooptrace/website/public/brand/===
-release-qr.svg[FV5T]: F:以本地矢量二维码连接官方v2发行页面 | R:code:website/src/data/release.ts,code:website/scripts/prepare-assets.mjs | A:256方形；四模块静区；高对比 | S:指向发行页而非APK直链，更新发行配置后须重新生成
+release-qr.svg[FV5T]: F:提供指向官网当前下载章节的可缩放标准二维码 | R:code:website/src/data/release.ts,code:website/scripts/prepare-assets.mjs | A:payload为https官网根域加download锚点；四模块白静区 | S:二维码打开下载入口而非锁死GitHub或APK文件，新渠道由网页选择
 
 ===D:/GitHub/hooptrace/website/public/licenses/===
 GSAP.txt[SV5T]: F:保留GSAP与ScrollTrigger版权识别及标准许可权威入口 | R:code:website/THIRD_PARTY_NOTICES.md | A:3.15.0；GreenSock与Webflow通知；标准许可链接 | S:这是许可识别而非全文副本，不能改标MIT
@@ -738,24 +743,42 @@ three.txt[SG3T]: F:保留Three.js上游MIT授权、版权声明及免责 | R:cod
 typescript.txt[SV3T]: F:保留TypeScript工具的Apache2使用、专利及再分发条款 | R:code:website/THIRD_PARTY_NOTICES.md | A:完整1至9条；授权及免责 | S:-
 
 ===D:/GitHub/hooptrace/website/scripts/===
-check-budget.mjs[XP7M]: F:按响应图片选择与依赖图核算双语移动首屏和桌面3D增量压缩预算 | R:code:website/package.json,code:website/src/data/court-materials.ts,code:website/astro.config.mjs | A:16种移动语言宽度DPR格式组合；500/800KiB；gzip9门禁、Brotli11报告 | S:显式计入非导入贴图及桌面首屏图；共享图扣重；缺资源、远程URL、越界路径或超限失败；不是网络实测
+check-budget.mjs[XP7L]: F:按生成HTML实际响应式资源图核算双语移动首屏及桌面场景独立压缩预算 | R:code:website/src/data/court-materials.ts,code:website/package.json | A:29组；390至1920及DPR1或2；gzip500及800KiB；Brotli只报告 | S:递归静态依赖并覆盖全部桌面纹理；仅锚点APK不计首屏；预算不验证来源摘要，不能替代prepare-assets
 measure-performance.mjs[XP7M]: F:在固定移动模拟环境采集双语冷加载、实际首屏传输和宣传图预算证据 | R:code:website/VERIFICATION.md,code:website/scripts/measure-gpu.mjs | A:390×844/DPR1；4倍CPU/150ms/1.6Mbps；每语言三次；LCP中位≤2.5s、CLS≤0.1；500/160KiB | S:新目录拒覆盖，绑定构建manifest与脚本SHA；手机不得请求3D贴图和引擎；headless实验不是Android现场CWV或桌面显示帧率；失败保原样本
-prepare-assets.mjs[XV7L]: F:从已绑定来源派生正式截图、C标识、宣传图材质海报、字体QR分享图和许可清单 | R:code:website/ASSET_SOURCES.json,code:docs/release/v2.0.1-screenshots.json,code:website/assets/art/scene-poster.json | A:44资产；签名v2.0.1八图无损WebP；源输出SHA/尺寸；HarfBuzz缺字门禁 | S:原图不改；场景海报14输入过期即拒生成；字体文案变需再生；普通build不生成资产；GSAP保独立许可；Node工具许可按已装包读取
-export-scene-poster.mjs[XV6S]: F:用已构建的真实球场模块导出三视口hero静态海报和输入来源记录 | R:code:website/src/scripts/court-scene.ts,code:website/assets/art/scene-poster.json,code:website/scripts/prepare-assets.mjs | A:Chrome；createCourtScene/exportFrame；14输入SHA；hero进度0；写WebP和元数据 | S:仅开发工具需build和本地预览，不向网站装第二渲染器；finally释放场景、取消和浏览器；会覆盖海报来源记录
-measure-gpu.mjs[XP7L]: F:以独立Chrome进程核验GPU身份并采集开场滚动投篮的实际场景提交节奏和诊断trace | R:code:website/src/scripts/court-scene.ts,code:website/VERIFICATION.md | A:Windows DXGI LUID选卡；新输出目录；构建manifest和脚本SHA；58FPS/p95≤20ms；四视口DPR | S:拒软件或不匹配渲染器；只计active场景提交，不含idle；headless不得通过有窗验收；JS返回和合成trace不证明GPU完成、物理屏幕扫描或Retina；不改系统GPU偏好，失败保证据
+prepare-assets.mjs[XV7L]: F:从批准原图及正式包截图生成网站素材、字体子集、二维码和完整来源清单 | R:code:website/ASSET_SOURCES.json,code:website/scripts/prepare-community.mjs | A:干净截图；六场景占位；材质；逐资产SHA及许可；字形缺失拒绝 | S:原App图不改；占位输入变化须重导出；QR指官网入口；QQ码独立保原像素；GSAP许可不冒称MIT，APK来源不随网站变化
+export-scene-poster.mjs[XV6L]: F:通过实际生产页面的单一场景工厂导出开场和俯视占位并绑定源码构建 | R:code:website/assets/art/scene-poster.json,code:website/src/scripts/court-scene.ts | A:六种章节视口；包装真实导出；暂停后exportFrame；旧记录备份 | S:核对同一背景canvas与唯一工厂；全部成功才更新记录；origin默认本地但未拒远端，不能仅凭本地摘要证明任意远端来源
+measure-gpu.mjs[XO7L]: F:串行测双GPU视口密度矩阵的首次和预热动画并分离提交及呈现证据 | R:code:website/scripts/gpu-measurement.mjs,code:website/scripts/gpu-wheel-input.mjs | A:开场及真实滚轮跨章投篮；新进程；1920双密度及失败补三次；短追踪另列 | S:核实实际GPU焦点画质缓冲；不覆盖证据；缺呈现身份链不冒称60FPS且不为缺证重跑矩阵；现有工具不恢复已停止专项
 responsive-images.mjs[KP6T]: F:为资源预算按media、格式、sizes与DPR选择实际响应图片候选 | R:code:website/scripts/check-budget.mjs,code:website/tests/resources.test.ts | A:selectImageResource；min/max-width及pointer；AVIF回退；w/x描述符 | S:仅支持显式媒体和vw/px尺寸，未知条件或缺pointer失败，不假装完整浏览器图片选择器
+active-gpu-probe.mjs[XO7L]: F:在原页面回调与既有WebGL2上下文周围异步测GPU区间并报告提交归属及缺口 | R:code:website/scripts/diagnose-active-gpu.mjs,code:website/tests/active-gpu-probe.test.ts | A:installActiveGpuProbe及CPU适配；最多四query；16毫秒轮询和一秒超时 | S:不嵌套外部查询，不额外绘制或同步读回；失焦后台disjoint异常均失效清理；单绘制子集不是呈现或无插桩验收，恢复原hook
+build-artifact.mjs[XV7M]: F:创建与核验绑定完整源码SHA的dist逐文件清单及聚合摘要 | R:code:.github/workflows/website-ci.yml,code:website/tests/build-artifact.test.ts | A:create及verify；CLI核对git HEAD；排序文件集大小和SHA256 | S:拒越界路径及非普通文件；缺多文件和同大小篡改均失败；源码SHA不单独证明本地工作区干净
+check-journey.mjs[XQ7L]: F:在本地已构建站执行桌面或既有Android模拟器双语完整路径并保存绑定证据 | R:code:website/src/data/release.ts,code:website/tests/site-audit.spec.ts | A:desktop或android互斥；动态识别Pixel_API_36；实际滚轮或浏览器触摸 | S:仅loopback且HTML匹配dist；不装App或下载APK；既有包重验SHA；恢复旋转reverse与设备连接，超时先落失败及清理证据
+ci-runtime-sampler.mjs[XO6L]: F:在CI测试子进程旁有界记录资源压力及自有Chrome进程指标并保留原退出结果 | R:code:.github/workflows/website-ci.yml | A:collectSample及runSampler；Linux proc和cgroup；串行JSONL及final样本 | S:不记录完整命令或环境秘密；只转发自有进程组信号；诊断失败不覆测试结果；采样不是呈现帧率
+diagnose-active-gpu.mjs[XO6M]: F:对本地AMD三个原生滚轮边界注入私有timer查询并保存活跃GPU诊断覆盖 | R:code:website/scripts/active-gpu-probe.mjs,code:website/scripts/gpu-wheel-input.mjs | A:1920及DPR2；每段独立Chrome；实际focus与renderer资格 | S:仅loopback且不覆盖已有输出；插桩结果不作无插桩验收；保留原错误及独立清理失败，定义存在不授权恢复已停止专项
+gpu-measurement.mjs[XO7M]: F:分别判定硬件环境、活跃提交节奏及呈现身份链的证据可用性 | R:code:website/scripts/measure-gpu.mjs,code:website/tests/gpu-measurement.test.ts | A:assessEnvironment及summarizeSubmissions及assessPresentation；58次每秒和p95二十毫秒 | S:保留活跃长帧及末次间隔；计数跳跃为unavailable；合成事件没有业务帧身份链仍不可判呈现通过
+gpu-wheel-input.mjs[XQ6S]: F:从实际章节几何生成可重放原生滚轮序列并保留限时输入和失败归属 | R:code:website/scripts/measure-gpu.mjs | A:native-wheel-v1；三段；六十输入每四十毫秒；createWheelWorkload及runWheelInput | S:测量驱动不以DOM滚动替代wheel；起点错位拒绝；总deadline及逐输入证据，错误仅序列化纯数据
+install-ci-browser.sh[XV6T]: F:为一次性Linux Actions runner安装指定完整浏览器及依赖并恢复临时网络配置 | R:code:.github/workflows/website-ci.yml | A:只允许chromium或firefox或webkit；playwright install带no-shell | S:仅GitHub Linux运行；不覆盖既有自有配置；仅替换已知Ubuntu镜像且trap恢复，不改签名或放宽下载验证
+prepare-community.mjs[XV6M]: F:合成夜场背景、原生QQ群码及准确字标并导出完整邀请图和轻量预览 | R:code:website/assets/community/generation.json,code:website/src/data/community.ts | A:prepareCommunityAssets；1536无损PNG及WebP；768预览；输出来源条目 | S:原码928方形不缩放重绘，完整成品逐像素回读校验；128白静区；预览不称原像素相同，扫码须QQ人工确认
+prepare-download.mjs[XV8L]: F:构建时从本地或摘要缓存及固定Release流式准备校验后的正式APK | R:code:website/src/data/release.ts,code:website/tests/prepare-download.test.ts | A:prepareDownload；HOOPITO_APK_PATH；验证后原子写入版本化dist | S:逐次复用核对大小SHA；仅网络失败可重试一次；120秒覆盖头及传输；完整性或错误页面立即失败；拒越界及symlink，失败保旧包清自有临时文件
+screenshot-presentation.mjs[XV6T]: F:解析已校准正式截图的内容裁剪矩形供展示副本和尺寸元数据共用 | R:code:docs/design/screenshot-presentation.json,code:website/scripts/prepare-assets.mjs | A:presentationForCapture按去编号basename和原图尺寸匹配 | S:未知图或尺寸不符失败关闭；矩形整数且在原画布内；新拍摄须重新校准，原发行证据不改
 
 ===D:/GitHub/hooptrace/website/src/components/===
-CourtDiagram.astro[CU6T]: F:渲染二维演示半场及选点、命中和篮球的独立SVG图层 | R:code:website/src/scripts/main.ts,code:website/src/styles/site.css | A:600×560 viewBox；本地木纹和线条；外供可朗读标签 | S:落点归一化只映射28至572、28至532的场内矩形；SVG hidden须配套CSS才能隐藏
+CourtDiagram.astro[EU6S]: F:提供手机与异常降级的可访问SVG半场及选点投篮篮网图层 | R:code:website/src/scripts/shot-timing.ts,code:website/src/scripts/main.ts | A:viewBox600乘560；可玩范围28至572及28至532；木面临近加载 | S:装饰区域不映射选点；光环及命中初始隐藏；桌面就绪后透明host操作真实模型
 Icon.astro[CU4T]: F:提供随文字颜色绘制的五种本地装饰图标 | R:code:website/src/components/Landing.astro | A:arrow/download/reset/github/plus；24方形SVG | S:-
-Landing.astro[EU8L]: F:生成Hoopito双语五章介绍、响应宣传图和场景海报、正式截图及官方APK入口 | R:code:website/src/data/content.ts,code:website/src/data/release.ts,code:website/src/scripts/main.ts | A:locale；hero/scoring/experience/replay/download；6:6内存演示；键盘预设；v2.0.1下载摘要 | S:无JS仍交付介绍下载而演示禁用；图片按语言和视口选取，静态海报支持3D交接；网页不保存App事实；版本体积摘要由集中配置提供
-Layout.astro[CU7T]: F:组织双语HTML外壳、本地字体预载、分享和搜索元数据与跳到正文入口 | R:code:website/src/data/content.ts,code:website/src/styles/site.css | A:locale/title/description/privacy；hreflang三项；OG与Twitter；CSS槽位 | S:只有production环境且SITE_URL存在才启收录和canonical；其他构建noindex；系统减动效在JS前生效
-Privacy.astro[EU6T]: F:呈现区分网页访问与App离线记录的双语隐私页及政策和反馈入口 | R:code:website/src/data/content.ts,code:website/src/components/Layout.astro | A:locale；同类隐私路由语言切换；返回对应首页 | S:托管技术日志与网页示例内存状态、App记录分别说明；外部下载按GitHub政策处理
+Landing.astro[EU7L]: F:组织双语五章叙事、页面权威演示控件及下载社区与唯一持久背景画布 | R:code:website/src/scripts/main.ts,code:website/src/components/DownloadChooser.astro | A:响应式场景占位；透明俯视host；共享截图dialog；初始6比6 | S:手机不请求桌面画面；下载无JS直达GitHub，增强后选择渠道；处理后真截图保持原比例，场景不拥有比分
+Layout.astro[EU6S]: F:统一双语页面头部元数据、字体与样式、可访问入口和生产收录门禁 | R:code:website/src/data/content.ts,code:website/astro.config.mjs | A:语言替代及分享图；中文字体按需预载；skip正文链接 | S:仅生产且SITE_URL存在输出canonical及index；预览禁止收录；减少动态效果禁动画，noscript保SVG可见
+Privacy.astro[EU6T]: F:呈现与离线App分开的双语网站隐私及下载社区外部服务边界 | R:code:website/src/components/Layout.astro,code:website/src/data/content.ts | A:双语隐私路由；返回首页；Vercel及GitHub及蓝奏声明链接 | S:浏览图片不自动联系QQ，平台下载由用户选择后触发，不声明网站可读App数据库
+Community.astro[EU5T]: F:渲染双语球友社区介绍、群号与本地邀请图保存及大图入口 | R:code:website/src/data/community.ts,code:website/src/data/content.ts | A:community锚点；图片lazy及async；完整PNG可保存 | S:浏览不自动联系QQ；加入由用户在QQ主动完成，不依赖离线App数据
+DownloadChooser.astro[EU6S]: F:提供双语原生下载渠道对话框及版本安装包信息 | R:code:website/src/data/release.ts,code:website/src/scripts/download-chooser.ts | A:蓝奏国内在前及可见密码；GitHub国际在后；48像素关闭按钮 | S:渠道仅原生链接用户主动打开，不伪报完成；没有百度占位，外部请求与离线App分开
+ReplayShowcase.astro[EU6M]: F:组合真实赛果历史截图卡牌、明确虚构的比分走势与可读复盘说明 | R:code:website/src/data/replay-example.ts,code:website/src/scripts/replay-cards.ts | A:干净截图比例取裁剪元数据；正反卡面；完整终场图和大图链接 | S:虚构8比11走势不是截图真实逐球记录，也不承接交互6比6到8比6；无JS保持正面可读
+ScoringShowcase.astro[EU6M]: F:呈现真实横屏计分截图及只由用户激活的三项区域演示和首次邀请 | R:code:docs/design/screenshot-presentation.json,code:website/src/scripts/scoring-feedback.ts | A:裁剪坐标统一遮罩箭头光圈；三个aria-pressed按钮；干净大图 | S:初始无默认选中且无计分框；邀请只指首按钮；装饰不重绘或篡改真实App截图
+ScreenshotViewer.astro[EU5T]: F:提供双语截图大图的原生dialog与加载重试及缩放控件语义结构 | R:code:website/src/scripts/screenshot-viewer.ts,code:website/src/data/content.ts | A:共享viewport；状态live region；放大缩小适应按钮；初始禁用至就绪 | S:按钮增强不替代原图链接，展示入口仅使用已清洁截图
 
 ===D:/GitHub/hooptrace/website/src/data/===
-content.ts[FL7M]: F:集中网站中英文产品叙事、安装答疑、示例状态和网站隐私文案 | R:code:website/src/components/Landing.astro,code:website/src/components/Privacy.astro | A:zh/en常量字典；Locale；版本和体积占位符；截图alt与ARIA状态 | S:网页需网络不混同App离线；明确示例数据和内存状态；旧v1外部JSON后卸载；FG/FT及完整度不作推断
-release.ts[FV8T]: F:集中Hoopito正式APK版本体积摘要与GitHub发行和资料入口 | R:code:website/src/components/Landing.astro,code:website/scripts/prepare-assets.mjs | A:2.0.1+5；API24/Android7；76441047字节；Hoopito-v2.0.1-android.apk；c42a9a71摘要 | S:正式包源码固定4ecd960；后续网站提交不改变APK来源；GitHub附件不复制或重建，发行页变化需重生成QR和资源清单
+content.ts[FL7L]: F:集中官网五章、计分演示、图库下载社区与隐私的中英文字典 | R:code:website/src/components/Landing.astro,code:website/src/components/Privacy.astro | A:Locale为zh及en；功能状态与ARIA标签；渠道和QQ自愿参与说明 | S:示例数据与真实截图分开，记录完整明确声明；下载点击不代表完成，App离线承诺与托管访问日志分开
+release.ts[FV8T]: F:固定官网与两个下载渠道共用的正式版本、附件身份、摘要及发行来源 | R:code:website/scripts/prepare-download.mjs,code:website/src/components/DownloadChooser.astro | A:2.0.1加5；API24；76441047字节；官网路径及GitHub附件；蓝奏公开分享与密码 | S:APK来源4ecd960不随网站提交改变；下载QR指官网章节；渠道分发同一签名包，不生成新发行
 court-materials.ts[FU6T]: F:统一桌面3D场景和构建预算使用的五张本地贴图地址 | R:code:website/src/scripts/court-textures.ts,code:website/scripts/check-budget.mjs,code:website/scripts/prepare-assets.mjs | A:maple/metal/glass/leather/leatherDetail；courtTextures | S:只由合资格桌面场景加载，手机不因共享预算注册表请求贴图
+community.ts[FC5T]: F:集中QQ群号及本地预览和完整邀请图的公开路径与尺寸 | R:code:website/src/components/Community.astro,code:website/scripts/prepare-community.mjs | A:1129560287；768预览；完整PNG下载 | S:仅公开邀请信息，不含用户登录或追踪数据
+replay-example.ts[DA5S]: F:定义独立虚构比赛的阶梯比分序列、关键回合与可测试图表投影 | R:code:website/src/scripts/replay-cards.ts,code:website/src/components/ReplayShowcase.astro | A:0比0至6比2领先及6平再反超终场8比11；getReplayState及Paths | S:不是截图实际逐球重建，也不是交互演示延续；非有限进度归零且比分在事件处跳变
 
 ===D:/GitHub/hooptrace/website/src/pages/en/===
 index.astro[EL5T]: F:把英文根路由绑定到共享网站介绍组件 | R:code:website/src/components/Landing.astro | A:/en/；locale=en | S:-
@@ -768,22 +791,38 @@ robots.txt.ts[EV6T]: F:静态输出网站爬虫访问规则及正式站点地图
 sitemap.xml.ts[EV5T]: F:静态输出双语介绍与隐私四路由的正式站点地图 | R:code:website/astro.config.mjs | A:GET；UTF8 XML urlset | S:production、SITE_URL和site条件不齐时输出空地图，避免预览索引
 
 ===D:/GitHub/hooptrace/website/src/scripts/===
-court-scene.ts[IU8L]: F:构建室内半场材质光影篮架篮球并执行连续叙事、装饰投篮和按活动帧调画质 | R:code:website/src/scripts/main.ts,code:website/src/scripts/scene-performance.ts,code:website/src/scripts/court-hardware.ts,code:website/src/scripts/story-pose.ts | A:createCourtScene；full/effects/density；GPU预校准；HDR或原生MSAA直绘；exportFrame | S:DOM拥有比分；Abort/失败释放纹理位图渲染器时间线；只在运动/滚动绘连续帧，下载章停绘；减动效保同一场景静态hero；相同落点恢复保余下网兜回弹，重置使旧代次失效；不沿用旧慢帧退二维阈值
+court-scene.ts[AU8L]: F:拥有单一持久背景Three场景及渲染器并提供连续构图、投影和投篮表现 | R:code:website/src/scripts/scene-contract.ts,code:website/src/scripts/camera-placement.ts | A:createCourtScene；真实篮架木面；按需渲染；先当前首帧后显露；相机同值去重 | S:不拥有比分也不监听点击；俯视到位且可见未暂停才射线选点；迟到场景采用现有投篮elapsed，代次隔离重置；后台下载停刷；资源按拥有权释放
 demo-state.ts[DD7T]: F:纯归约网页示例选点、记两分、完成与重置的内存状态 | R:code:website/src/scripts/main.ts,code:website/tests/demo.test.ts | A:initialDemoState/reduceDemo；ready/shooting/scored；blue/red/point/generation | S:有效有限归一坐标才接受；6:6只记录一次至8:6；reset增代次，旧完成回调不能重建标记；无持久化
-main.ts[AU8L]: F:连接网页内存演示、二维和3D输入及同一原生滚动叙事和页面生命周期 | R:code:website/src/scripts/demo-state.ts,code:website/src/scripts/court-scene.ts,code:website/src/components/Landing.astro | A:GSAP/ScrollTrigger；StoryFrame；键盘预设/SVG反算；语言保hash；系统减动效 | S:仅1024以上精细指针WebGL2加载Three；8s超时取消并释放迟到场景，真实失败锁止；减动效保静态3D并立即完成投篮；比分完成归DOM且代次拒旧回调；BFCache仅暂停，真正离页释放
-scene-contract.ts[CU7T]: F:定义球场叙事输入质量生命周期协议及同次投篮余波保留状态机 | R:code:website/src/scripts/main.ts,code:website/src/scripts/court-scene.ts | A:CourtScene/Options；StoryFrame；full/effects/density；exportFrame；ShotContinuation | S:DOM拥有计分完成，场景飞行只装饰；恢复同落点保未完网兜回弹，异落点或reset取消且旧代次失效；系统减动效不换渲染器
-court-floor.ts[KU6M]: F:预采静态灯光并以缓存属性绘制枫木地板、有限视角清漆高光和篮架接触柔影 | R:code:website/src/scripts/court-scene.ts,code:website/src/scripts/court-textures.ts | A:sampleFloorLighting/createCourtFloor；setLight有限钳制；64×96细分平面 | S:前两盏叙事灯分离强度，其余缓存；不接实时阴影；own托管材质几何，场线和比赛坐标仍由场景管理
-court-hardware.ts[IU7L]: F:程序化构建篮架玻璃金属吊灯和有厚度绳网并按材质合并绘制 | R:code:website/src/scripts/court-scene.ts,code:website/src/scripts/court-textures.ts | A:createCourtHardware；group/setNetImpact/setCeilingVisibility；固定顶端网兜扩张回弹 | S:合并后释放临时几何，成品归own；网不投影且包围球留动效余量；网法线跟随变形；顶棚按镜头淡出不遮俯视画面
+main.ts[AU8L]: F:编排原生导航、共享GSAP故事、桌面延迟场景与权威演示状态及两个弹窗 | R:code:website/src/scripts/scene-contract.ts,code:website/src/scripts/demo-state.ts | A:首屏75及体验32及复盘75视口固定增量；共享卡牌比分时间线；实际标题锚点和刷新恢复 | S:计分说明无默认选择且仅点击；隐藏图库下载缓存分别暂停；选点拒拖动或滚动；八秒失败降级，迟到3D不重复记分；媒体清理保原生滚动而不接管滚轮
+scene-contract.ts[CG7S]: F:定义页面与单一场景共享的章节、CSS区域、质量和投篮续播接口 | R:code:website/src/scripts/court-scene.ts,code:website/src/scripts/main.ts | A:StoryFrame及CourtScene；CameraPlacement；pointFromClient及projectPoint；presentFrame；ShotContinuation | S:页面拥有比分；同点恢复保剩余回弹，其他恢复取消旧代次；投影使用CSS像素而非buffer密度
+court-floor.ts[KU6M]: F:构建连续枫木地板并缓存五灯漫反射及篮架局部接触阴影 | R:code:website/src/scripts/court-scene.ts | A:createCourtFloor返回mesh及setLight及setViewCutaway；64乘96网格；两主灯有界镜面 | S:使用缓存着色非全场实时反射；灯位与场景须同步，支撑剖切同时淡出接触阴影；共享纹理由调用方拥有
+court-hardware.ts[KU7L]: F:构建细节篮架篮网与低成本远处球馆硬件并按材质合并几何 | R:code:website/src/scripts/court-scene.ts,code:website/src/scripts/shot-timing.ts | A:createCourtHardware；setNetImpact及CeilingVisibility及ViewCutaway；固定篮网上沿 | S:篮网顶点和法线同步变形；支撑独立材质不改篮板，透明状态须刷新缓存阴影；释放临时几何而不销毁外部共享纹理
 court-textures.ts[IP7T]: F:按场景取消信号并行加载五张本地贴图并绑定解码位图和纹理生命周期 | R:code:website/src/data/court-materials.ts,code:website/src/scripts/court-scene.ts | A:loadCourtTextures(signal,own)；fetch/createImageBitmap；RepeatWrapping | S:玻璃和皮革细节用线性空间，其余sRGB；迟到且已取消的位图立即关闭；own负责正常释放，失败不得泄漏解码资源
 gpu-calibration.ts[KP7T]: F:用WebGL2计时查询测量已准备绘制的GPU耗时中位数 | R:code:website/src/scripts/court-scene.ts | A:preparedDrawCost；三样本；EXT_disjoint_timer_query_webgl2；每项240ms等待 | S:无扩展、disjoint、超时或丢上下文返回null，取消抛AbortError；finally删除查询；排除编译网络加载，不证明最终屏幕呈现
-scene-performance.ts[KP7S]: F:按有效活动帧调整三档画质并集中渲染密度和连续绘制资格 | R:code:website/src/scripts/court-scene.ts,code:website/src/scripts/scene-contract.ts | A:ActiveFrameMonitor；1400ms窗；full/effects/density；renderDensity/sceneRenderRoute/shouldRenderContinuously | S:idle空隙不计慢帧，8s空闲清窗口；孤立>250ms暂存而连续过载不隐藏；降档6s冷却、恢复15s；Retina密度至少1.5；仅原生AA可低档直绘，下载/暂停/静止不连续绘制
-story-pose.ts[KU6S]: F:从五章共享锚点计算可逆连续的球场镜头、目标、视角和灯光姿态 | R:code:website/src/scripts/scene-contract.ts,code:website/src/scripts/court-scene.ts | A:storyPose；六锚点/五段Bezier；有限进度钳0至1；边界精确复制 | S:相邻章终点等于下一起点且边界导数归零；减少动效固定同一hero姿态而章节状态仍由调用者保存，不改业务演示状态
+scene-performance.ts[KP7S]: F:纯计算活跃采样、三档画质滞回、渲染密度和按需刷新资格 | R:code:website/src/scripts/court-scene.ts,code:website/tests/scene.test.ts | A:ActiveFrameMonitor；500毫秒稳定期和1.4秒窗口；6秒降档及15秒升档；prepared ceiling | S:高密度最低1.5普通最低1；短闲置保证据，超八秒重置；孤立超250毫秒可丢而连续超长保留；回调节奏非真实呈现
+story-pose.ts[KU7S]: F:定义章节共享相机灯光和视角锚点并连续插值正反故事路径 | R:code:website/src/scripts/camera-placement.ts,code:website/src/scripts/scene-contract.ts | A:storyPose；六共享锚点；smoothstep与Bezier；端点克隆；体验固定俯视 | S:区域适配及up运输由camera-placement处理；不决定active暂停或选点，减少动态效果不另造渲染器
+arrow-drawing.ts[KU6T]: F:按同一SVG弧长端点和局部切线绘制连续揭示的箭杆与箭头 | R:code:website/src/scripts/scoring-feedback.ts,code:website/src/scripts/demo-invitation.ts | A:createArrowDrawing返回draw；测长一次；描边偏移和头部路径同步 | S:弯曲及撤回箭头不能独立手写朝向；调用方提供有限进度并持有时间线
+camera-placement.ts[KU7M]: F:把共享相机连续组合进CSS区域并在真实地板上双向映射选点 | R:code:website/src/scripts/story-pose.ts,code:website/src/scripts/scene-contract.ts | A:normalize及compose；24像素内边距；projectCourtPoint及courtPointFromClient；标量缓存 | S:画布不搬移或裁切；up向量连续运输避免极点末端突转；投影统一y等于零，不用标记视觉抬升坐标
+demo-invitation.ts[AU6M]: F:按可见性依次播放球场局部聚光、位置按钮及记分按钮的一次性提示 | R:code:website/src/scripts/arrow-drawing.ts,code:website/src/scripts/main.ts | A:createDemoInvitation；invite及selected及refresh；pause及resume及cancel；真实投影定位 | S:不产生选点或得分；不画全场发光框；先读几何再写同值跳过；减少动效直接消费提示，全局暂停原因由main聚合
+download-chooser.ts[AU7S]: F:以原生dialog增强主下载入口并维护关闭焦点滚动恢复及独立暂停信号 | R:code:website/src/components/DownloadChooser.astro,code:website/src/scripts/main.ts | A:createDownloadChooser返回dispose；普通点击拦截；Esc及关闭及遮罩；显式Tab循环 | S:修饰键保原链接；渠道仍原生导航下载，无虚假进度；关闭只清自身暂停，销毁移除监听不抢回旧焦点
+presentation-state.ts[KU5T]: F:纯计算截图大图的有界缩放平移与缩放锚点保持 | R:code:website/src/scripts/screenshot-viewer.ts | A:ViewState及ViewSize；constrainView及zoomView；一至四倍 | S:缩放后平移受图像溢出范围约束，非有限输入由调用方保证，无DOM副作用
+replay-cards.ts[AU7S]: F:在同一滚动时间轴协调两张540度卡牌落位、说明光影与虚构比分图 | R:code:website/src/data/replay-example.ts,code:website/src/scripts/main.ts | A:addReplayCardChoreography；update及restore；Y负180到360；同值进度写入跳过 | S:比分与卡牌读取同一playhead，剩余不足一CSS像素统一终态；图像只临近预解码，失败不阻塞阅读；restore不冒领外层时间线清理
+scoring-feedback.ts[AU7M]: F:播放计分截图点击操作聚光箭头与独立首次按钮邀请并统一取消暂停 | R:code:website/src/scripts/arrow-drawing.ts,code:website/src/components/ScoringShowcase.astro | A:invite及play及cancel及pause及resume；光圈半径22至112；箭头沿路径切线 | S:不默认选中或改App像素；中心用原截图坐标避免变换漂移；重播切换先杀旧反馈，取消不抹用户手动选择
+screenshot-viewer.ts[AU7L]: F:增强干净截图链接为原生大图dialog并处理缩放拖拽双指和加载重试 | R:code:website/src/scripts/presentation-state.ts,code:website/src/components/ScreenshotViewer.astro | A:createScreenshotViewer；一至四倍；十二秒解码deadline；按钮键盘及ResizeObserver | S:代次拒迟到图片且先清旧src；关闭统一恢复焦点滚动并仅清自身暂停；销毁清timer和监听，始终不展示带系统栏原图
+shot-feedback.ts[AU6T]: F:用可暂停GSAP时钟驱动二维球飞行拖尾篮网并在记录时刻单次回调 | R:code:website/src/scripts/shot-timing.ts,code:website/src/scripts/main.ts | A:createShotFeedback；start及elapsed及cancel及pause及resume | S:1.55秒交结果后仍保回弹至2.13秒；revision隔离取消旧回调，恢复沿同一活跃时钟不重复记分
+shot-timing.ts[KU6S]: F:共享二维与三维投篮时序、球轨迹及固定上沿篮网形变纯函数 | R:code:website/src/scripts/shot-feedback.ts,code:website/src/scripts/court-scene.ts | A:飞行1.20秒及穿网0.35及回弹0.58；shotFrame及netResponse及netPath | S:1.55秒记录而非回弹结束；下部随深度变形，上沿不位移；不拥有比分或完成回调
 
 ===D:/GitHub/hooptrace/website/src/scripts/shaders/===
 court.ts[KU6S]: F:以米制解析距离和导数覆盖绘制抗锯齿场线及篮球拖尾光窗 | R:code:website/src/scripts/court-scene.ts | A:court/trail vertex/fragment；15×14坐标；uReveal/uHead/uOpacity | S:导数须在透明discard前计算；sRGB场线转线性并经过tone mapping；亚像素线保覆盖不膨胀闪烁；不控制DOM正文显隐
 
 ===D:/GitHub/hooptrace/website/src/styles/===
-site.css[CU7L]: F:实现Hoopito室内夜场排版、右侧场景交接和双语设备截图与手机二维响应布局 | R:code:website/src/components/Landing.astro,code:website/src/components/Layout.astro | A:本地字体；48px目标；响应宣传图/海报；画质档位；隐私与下载 | S:桌面精细指针显示静态海报并向canvas交接；降低画质同步移除背景模糊和颗粒；SVG hidden显式隐藏；系统减少动效归静态且下载控件保持可用
+site.css[FU7L]: F:定义双语夜场网站的本地字体、基础主题、固定导航场景与五章响应式结构 | R:code:website/src/components/Layout.astro,code:website/src/styles/refinement.css | A:右侧48vw固定背景；aria-current导航线；全局hidden与focus；手机独立图像 | S:仅3D首帧就绪显示canvas；后加载refinement及玫瑰金样式覆盖基础旧规则；不能把旧下载卡颜色当最终呈现
+community.css[FU5S]: F:排版双语球友社区、可选群号与本地邀请图保存入口及响应式层次 | R:code:website/src/components/Community.astro,code:website/src/components/Layout.astro | A:桌面双列及767以下单列；群号任意换行；48像素操作 | S:没有QQ请求或自主动画；减少动态效果由Layout全局规则覆盖，内容无JS仍可读
+demo-invitation.css[FU5S]: F:提供真实投影球场点和按钮的一次性聚光箭头非交互图层 | R:code:website/src/scripts/demo-invitation.ts | A:局部court-hint坐标及箭宽；圆滑非缩放描边；手机偏移 | S:所有层不拦指针；球场为椭圆柔光而非全场矩形；idle与done及减少动态效果隐藏避免残留溢出
+download-chooser.css[FU5M]: F:设置紧凑下载dialog、国内密码区域及键盘触屏和小屏排版 | R:code:website/src/components/DownloadChooser.astro,code:website/src/components/Layout.astro | A:220毫秒入场；可滚动视口限高；48像素关闭；根滚动锁 | S:渠道次序及链接由数据决定；Layout全局reduce禁入场动画，CSS不伪报下载状态
+mobile-download-polish.css[FU6S]: F:覆盖下载卡为已批准玫瑰金材质并细化各尺寸操作反馈和阅读层级 | R:code:website/src/components/Layout.astro,code:website/src/components/Landing.astro | A:所有视口玫瑰金；200毫秒内描边；手机14像素及48目标；完整版本号 | S:文件虽名mobile仍负责桌面最终配色，覆盖site旧浅金；禁用不做按压动画，减少动态效果保对比
+refinement.css[FU7L]: F:统一石墨设备、点击标注、大图对话框和复盘层次并融合无外框背景俯视场景 | R:code:website/src/components/Layout.astro,code:website/src/scripts/main.ts | A:200毫秒反馈；court-blend及replay-focus；透明输入host；桌面匹配占位 | S:最终覆盖旧球场边框，不移动canvas；等待3D时SVG隐藏依赖Layout的noscript恢复；装饰不抢输入，大图锁滚动
+replay-cards.css[FU6M]: F:提供复盘卡牌双面厚度高光投影与比分图图例和关键时刻视觉状态 | R:code:website/src/scripts/replay-cards.ts,code:website/src/components/ReplayShowcase.astro | A:preserve3D及背面隐藏；静态渐变影；前后面及说明独立层 | S:540度翻转和比分由同一脚本时间线负责，CSS不另建播放时钟；无JS及减少动态效果保持正面可读
 
 ===D:/GitHub/hooptrace/android/app/src/main/res/values-zh/===
 strings.xml[FL6T]: F:提供中文Android安装和启动器名称球豆 | R:code:android/app/src/main/AndroidManifest.xml,code:android/app/src/main/res/values/strings.xml | A:app_name=球豆；values-zh | S:-
@@ -796,8 +835,43 @@ InfoPlist.strings[FL5T]: F:提供iOS中文安装显示名球豆 | R:code:ios/Run
 
 ===D:/GitHub/hooptrace/website/assets/art/===
 generation.json[FV5T]: F:保存网站横竖室内夜场氛围与透明篮球宣传源图的精确生成提示 | R:code:website/scripts/prepare-assets.mjs,code:website/ASSET_SOURCES.json | A:2026-10-12；image_gen内置；arena-wide/arena-tall/basketball；透明性 | S:这是宣传图生成来源，不是App截图或运行时3D材质；保原始提示
-scene-poster.json[FV6S]: F:绑定运行时球场导出三种静态海报的源码输入和捕获身份 | R:code:website/scripts/export-scene-poster.mjs,code:website/scripts/prepare-assets.mjs,code:website/src/scripts/court-scene.ts | A:14输入SHA；compact/standard/wide；hero进度0；浏览器、AMD渲染器、尺寸和输出SHA | S:场景海报来自同一createCourtScene而非另绘近似图；捕获不证明屏幕性能，绑定输入改变须重新采集
+scene-poster.json[FV6M]: F:绑定真实生产场景导出的开场及俯视占位、编译模块和32项源码输入 | R:code:website/scripts/export-scene-poster.mjs,code:website/scripts/prepare-assets.mjs | A:三种48百分比画布尺寸；六次捕获；浏览器与时间及SHA | S:不另造渲染器或捕获姿态；输入变化必须重新构建导出再生成，避免旧构图闪现
 
 ===D:/GitHub/hooptrace/website/assets/materials/===
 generation-v1.json[FV4T]: F:保留首轮枫木、石墨金属和玻璃微细节材质的原始ImageGen提示 | R:code:website/assets/materials/generation.json | A:2026-10-11；内置生成；无烘焙灯光、场线或文字 | S:历史HoopTrace提示保原名；当前玻璃来源沿用此轮，不能重标生成日期
-generation.json[FV6S]: F:绑定当前五张球场材质的生成提示、源图摘要及转换规格 | R:code:website/assets/materials/generation-v1.json,code:website/scripts/prepare-assets.mjs,code:website/src/data/court-materials.ts | A:v2枫木/金属/皮革；旧玻璃；皮革灰度派生；尺寸质量色彩空间 | S:皮革细节与色图共享源，玻璃保旧日期；运行时负责光照几何场线，生成提示旧品牌保原文
+generation.json[FV6S]: F:记录当前室内球场与无标经典比赛篮球材质的ImageGen来源及转换 | R:code:website/scripts/prepare-assets.mjs,code:website/src/data/court-materials.ts | A:木面金属玻璃；v3皮革及同源灰度微表面；尺寸和SHA | S:经典八片黑槽由球体实现，贴图不含商标或烘焙光影；参考官网仅用于形态研究，未复制厂商图片
+generation-v2.json[FV5S]: F:保存室内木面金属玻璃与旧篮球皮革的ImageGen提示及派生来源 | R:code:website/assets/materials/generation.json | A:均匀照明无标线；玻璃沿用v1；皮革灰度微表面派生 | S:历史皮革v2不冒称当前v3；照明标线及几何由运行时提供
+
+===D:/GitHub/hooptrace/assets/brand/===
+README.md[SV5T]: F:导航Logo整理套件并记录最终验收及跨平台来源复现待办和字节保护 | R:code:assets/brand/hoopito-logo-kit/README.md,code:.gitattributes | A:Issue16；输出校验；套件禁转换及脚本LF；小尺寸组合字标待验 | S:原图批准不等于套件通过；历史source.json工作区与Git行尾不同，不冒称跨平台复现；混合SVG非纯矢量，不替换生产入口
+
+===D:/GitHub/hooptrace/assets/brand/hoopito-logo-kit/00-masters/===
+approval-record.json[FV5T]: F:原样保存已批准C独眼球怪的ImageGen提示词、配色与生产源摘要 | R:code:assets/brand/hoopito-logo-kit/manifest.json | A:2026-10-04批准；透明源保黑色眼瞳笑与球纹 | S:历史HoopTrace名称和生成文件名属于来源，不改写为当前验收证据
+
+===D:/GitHub/hooptrace/assets/brand/hoopito-logo-kit/03-lockups/===
+hoopito-bilingual-on-dark.svg[FU4T]: F:提供深色背景使用的透明双语Logo组合与暖白路径字形 | R:code:assets/brand/hoopito-logo-kit/manifest.json | A:原C位图加HOOPITO及球豆；固定viewBox | S:内嵌PNG使图标仍有分辨率限制，非纯矢量原稿
+hoopito-bilingual-on-light.svg[FU4T]: F:提供浅色背景使用的透明双语Logo组合与近黑路径字形 | R:code:assets/brand/hoopito-logo-kit/manifest.json | A:原C位图加HOOPITO及球豆；固定viewBox | S:内嵌PNG使图标仍有分辨率限制，非纯矢量原稿
+hoopito-en-on-dark.svg[FU4T]: F:提供深色背景使用的透明英文Logo组合与暖白路径字形 | R:code:assets/brand/hoopito-logo-kit/manifest.json | A:C位图及HOOPITO字标；Barlow字形转路径 | S:图标为内嵌PNG，放大不增加原始细节
+hoopito-en-on-light.svg[FU4T]: F:提供浅色背景使用的透明英文Logo组合与近黑路径字形 | R:code:assets/brand/hoopito-logo-kit/manifest.json | A:C位图及HOOPITO字标；Barlow字形转路径 | S:图标为内嵌PNG，放大不增加原始细节
+hoopito-zh-on-dark.svg[FU4T]: F:提供深色背景使用的透明中文球豆Logo组合与暖白路径字形 | R:code:assets/brand/hoopito-logo-kit/manifest.json | A:C位图及Noto中文路径；固定viewBox | S:图标为内嵌PNG，放大不增加原始细节
+hoopito-zh-on-light.svg[FU4T]: F:提供浅色背景使用的透明中文球豆Logo组合与近黑路径字形 | R:code:assets/brand/hoopito-logo-kit/manifest.json | A:C位图及Noto中文路径；固定viewBox | S:图标为内嵌PNG，放大不增加原始细节
+
+===D:/GitHub/hooptrace/assets/brand/hoopito-logo-kit/04-licenses/===
+LICENSE-Artwork.txt[SG4T]: F:附带Logo图形的MIT版权许可、声明保留条件与免责条款 | R:code:LICENSE | A:版权2026 x1a0Y4NGren；允许使用修改分发 | S:-
+OFL-Barlow.txt[SG4T]: F:附带组合字标所用Barlow字体的SIL OFL1.1许可 | R:code:assets/brand/hoopito-logo-kit/README.md | A:允许嵌入分发；保留版权及许可；字体不得单独销售 | S:字体许可与图形MIT分开，不把混合字标说成全矢量字体文件
+OFL-NotoSansSC.txt[SG4T]: F:附带中文组合字标所用Noto字体的SIL OFL1.1许可 | R:code:assets/brand/hoopito-logo-kit/README.md | A:允许嵌入分发；保留版权及许可；字体不得单独销售 | S:字体许可与图形MIT分开，修改字体须遵守保留名称条款
+
+===D:/GitHub/hooptrace/assets/brand/hoopito-logo-kit/===
+README.md[SV5T]: F:说明原批准Logo整理套件的目录、留白、使用限制与确定性导出入口 | R:code:assets/brand/README.md,code:assets/brand/hoopito-logo-kit/manifest.json | A:多尺寸透明图及六种组合；原三色与Barlow及Noto；源图1024画布 | S:实际主体约620像素，混合SVG非无限精度；仅整理副本不更换生产入口；待验状态由上级README保存
+manifest.json[FV5L]: F:绑定Logo套件六个源输入、生成脚本及34项导出文件的完整性与转换说明 | R:code:assets/brand/hoopito-logo-kit/README.md | A:SHA256及字节；图像尺寸和alpha；字标字体转路径 | S:摘要一致证明来源完整性，不替代独立导出复现和最终视觉验收
+palette.json[FU4T]: F:声明套件沿用的竞技橙、近黑、暖白及中英文字体 | R:code:assets/brand/hoopito-logo-kit/README.md | A:FF5A1F及101112及F4F3EF；Barlow Bold与Noto Regular | S:-
+
+===D:/GitHub/hooptrace/docs/design/===
+screenshot-presentation.json[FV6T]: F:校准八张正式包展示副本的系统栏与横屏留白裁剪矩形 | R:code:docs/release/v2.0.1-screenshots.json,code:website/scripts/screenshot-presentation.mjs | A:竖图1080乘1783；横图1818乘954；原图尺寸及来源记录 | S:坐标仅适用该拍摄集；保App像素与原始证据，新设备必须重新校准
+
+===D:/GitHub/hooptrace/tool/brand/===
+export_logo_kit.mjs[XV6M]: F:从已批准生产图与原字体导出Logo多尺寸图、六种组合、许可、预览及来源清单 | R:code:assets/brand/hoopito-logo-kit/manifest.json,code:assets/brand/README.md | A:Sharp及HarfBuzz；保源字节；文字转路径；输出SHA尺寸alpha | S:仅写套件目录；图标仍内嵌PNG非纯矢量；不替换平台或网站资源，历史批准不等于新套件验收
+
+===D:/GitHub/hooptrace/website/assets/community/===
+README.md[SV5T]: F:说明QQ群邀请图的来源、像素合成、预览和更换群码验收流程 | R:code:website/assets/community/generation.json,code:website/scripts/prepare-community.mjs | A:1129560287；完整PNG已由用户实扫；本地查看保存 | S:完整图保原码像素，缩小预览不作相同承诺；通用解码器不支持QQ圆码，换码须重校准并实扫
+generation.json[FV6T]: F:绑定夜场邀请背景的完整ImageGen提示、原群码摘要、合成坐标和人工扫码记录 | R:code:website/scripts/prepare-community.mjs | A:原码928方形；1536画布；128白静区；源图及成品SHA | S:ImageGen只生成背景，不重绘码点或标志；用户确认只对指定完整PNG有效
