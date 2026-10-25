@@ -78,7 +78,7 @@ jobs:
 
       - name: Upload golden failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hoopito-golden-failures
           path: test/**/failures/**
@@ -109,7 +109,7 @@ jobs:
         run: ./android/gradlew -p android :app:testDebugUnitTest
 
       - name: Upload debug APK
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hoopito-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
@@ -147,7 +147,7 @@ jobs:
 
       - name: Upload reproducibility failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hoopito-reproducibility-failures
           path: build/reproducible-diagnostics
@@ -155,7 +155,7 @@ jobs:
           retention-days: 3
 
       - name: Upload verified unsigned release APK
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hoopito-unsigned-reproducible-apk
           path: |
