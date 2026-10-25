@@ -15,7 +15,7 @@
 
 单人维护不能批准自己的 PR，因此 required approval count 为 0；不启用 required CODEOWNER review 或 require last push approval。[CODEOWNERS](../.github/CODEOWNERS) 只标识关键路径责任人并路由审阅，维护者仍须人工核对改动、风险和 CI。[GitHub 的批准限制](https://docs.github.com/en/pull-requests/how-tos/review-pull-requests/approving-a-pull-request-with-required-reviews)
 
-本轮历史分支清理范围为已经审计整合的 `dependabot/github_actions/actions/checkout-7.0.1`、`codex/screenshot-presentation`、`codex/hooptrace-website` 和 `codex/hooptrace-1-1-comparison`；`codex/hoopito-website` 保留。该清单记录本轮范围，不是未来任意清理的常驻授权，也不表示删除已经完成。squash 合并后的 branch-only commit 不足以证明存在未整合代码；删除前核对 PR、实际树差异和预览引用。自动删除 head branch 的开关不负责回收本地分支、工作树或历史证据。[GitHub 自动删除说明](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches)
+2026-10-25 已按审计结果删除四个已整合的历史远端分支：`dependabot/github_actions/actions/checkout-7.0.1`、`codex/screenshot-presentation`、`codex/hooptrace-website` 和 `codex/hooptrace-1-1-comparison`；`codex/hoopito-website` 保留并保护。该清单记录本轮范围，不是未来任意清理的常驻授权。squash 合并后的 branch-only commit 不足以证明存在未整合代码；删除前核对 PR、实际树差异和预览引用。自动删除 head branch 的开关不负责回收本地分支、工作树或历史证据。[GitHub 自动删除说明](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches)
 
 ## 合并门禁与分阶段启用
 
@@ -38,6 +38,8 @@
 5. 回读并核验分支、tag、Actions、安全与 release 设置；历史分支按本轮批准范围单独处理。记录实际失败或未启用项，不把目标策略写成已验收状态。
 
 不配置日常 bypass。门禁异常时先查看 PR 的规则、实际 job 和日志，修复工作流或补足真实验证；若错误配置确实阻断恢复，由 owner 显式编辑或暂时关闭命中的规则，保留原因、范围与前后配置，恢复后回读并验证。不要通过伪造成功状态、放宽失败断言或默认 bypass 绕过检查。[Ruleset 与恢复入口](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/managing-rulesets-for-a-repository)
+
+2026-10-25，[配置 PR #20](https://github.com/x1a0Y4NGren/hoopito/pull/20) 在完整 App、网站及 CodeQL 检查通过后合入，随后启用 `main` 规则。后续只修改本文件等维护文档的 PR，应看到两个分类任务成功、无关 App/网站构建与测试跳过、三项必需门禁成功；不应因路径跳过而无限等待必需检查。
 
 CodeQL 的 ruleset merge protection 与三项 status check 门禁不同；GitHub 明确豁免由 default setup 分析的 Dependabot PR。这不是仓库设置的日常 bypass，也不免除依赖 PR 的三项 CI 门禁和人工审阅。[Code scanning 合并保护的例外](https://docs.github.com/en/code-security/concepts/code-scanning/merge-protection#exceptions-and-limitations)
 
@@ -66,7 +68,7 @@ CodeQL 的 ruleset merge protection 与三项 status check 门禁不同；GitHub
 
 2026-10-25 启用安全功能后发现 8 条既有 npm Dependabot 告警（2 high、4 medium、2 low）。这是实际待处理清单，不代表本轮配置引入了 8 个漏洞，也不能称仓库已无漏洞。本轮设置任务不包含依赖修复或合并；后续逐项核对影响、修复版本并经 PR/CI 处理。
 
-Actions、JavaScript/TypeScript 和 Python 的首次 CodeQL 扫描均已执行成功；首次 `remote_and_local` 配置记录 47 条告警，多数涉及本地 CLI 的命令或路径输入。逐项结合真实调用者和输入边界审阅后，将配置恢复为标准 remote threat model；保留首次配置与扫描记录，不批量 dismiss，也不把配置切换后的告警数量变化当作修复证据。最终配置和新扫描结果仍需回读核验。[Threat model 配置](https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/edit-default-setup)
+Actions、JavaScript/TypeScript 和 Python 的首次 CodeQL 扫描均已执行成功；首次 `remote_and_local` 配置记录 47 条告警，多数涉及本地 CLI 的命令或路径输入。逐项结合真实调用者和输入边界审阅后，将配置恢复为标准 remote threat model；保留首次配置与扫描记录，不批量 dismiss，也不把配置切换后的告警数量变化当作修复证据。最终配置已回读核验，三个语言扫描成功；仍有两条既有告警，位于网站预算检查脚本和测试审计脚本，需结合实际输入边界另行处置，不能宣称安全告警已清零。[Threat model 配置](https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/edit-default-setup)
 
 自动基线聚焦远端不可信输入；CLI 工具的本地参数、环境变量、文件路径等输入威胁仍须人工审阅，不能因未纳入该基线就视为安全。本轮不新增原生 Java/Kotlin CodeQL 构建扫描，也不提交 Gradle 传递依赖图；先评估 Flutter 工具链、生成源码和快照来源后再单独实施。Dependabot 的 Gradle manifest 更新不等于完整 Android 运行时传递依赖覆盖。Dart 未获 CodeQL 扫描，仍依赖现有 analyze、测试与依赖核验。
 
@@ -77,5 +79,7 @@ Actions、JavaScript/TypeScript 和 Python 的首次 CodeQL 扫描均已执行�
 本轮不强制所有 commit 签名：GitHub 的 signed-commit 规则会检查 PR 引入的 commit，即便最终 squash commit 由 GitHub 签名也可能被未签名的 head commit 阻断。保留正式 signed tag，不为加规则改写发行历史；后续若引入全量 commit 签名，先验证本地、人工作业和机器人补丁路径。[签名规则](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#require-signed-commits)
 
 保留已上线网站及 Vercel `main` Git 自动生产部署关闭的状态，不创建外部发行、不恢复暂停渠道、不改变预览认证；当前更新不触发网站生产部署。保留旧的 HANDOFF、网站验收、发行来源、失败样本和待维护的认知状态，不把新设置回填成历史验收。
+
+GitHub 的 `Production` environment 仅允许 `main` 分支部署，预览环境保留原配置。此限制只约束使用该 GitHub environment 的任务，不代替 Vercel 的部署控制或用户对发布的授权。
 
 账号 2FA、PAT/SSH/GPG 密钥、第三方 App 安装与权限、Vercel 授权/环境变量、组织策略、计费和仓库外 secrets 不在本轮变更范围；发现风险应记录并由维护者另行决策，不读取或调整这些账号级资产。
