@@ -51,7 +51,7 @@
         },
         {
           "source": "website/scripts/prepare-community.mjs",
-          "sha256": "25ca7f4ba8841f774a2e543e3e9f4c0a74e6b319bfcfb1554357c350e6e37b34"
+          "sha256": "02e81dcb9736f5e722bbb4f0d5f8f3a9fa2ee3eca8c06bd3c7bd76974b8a98b8"
         },
         {
           "source": "assets/icons/hoopito-app-icon-foreground.png",
@@ -104,7 +104,7 @@
         },
         {
           "source": "website/scripts/prepare-community.mjs",
-          "sha256": "25ca7f4ba8841f774a2e543e3e9f4c0a74e6b319bfcfb1554357c350e6e37b34"
+          "sha256": "02e81dcb9736f5e722bbb4f0d5f8f3a9fa2ee3eca8c06bd3c7bd76974b8a98b8"
         },
         {
           "source": "assets/icons/hoopito-app-icon-foreground.png",
@@ -157,7 +157,7 @@
         },
         {
           "source": "website/scripts/prepare-community.mjs",
-          "sha256": "25ca7f4ba8841f774a2e543e3e9f4c0a74e6b319bfcfb1554357c350e6e37b34"
+          "sha256": "02e81dcb9736f5e722bbb4f0d5f8f3a9fa2ee3eca8c06bd3c7bd76974b8a98b8"
         },
         {
           "source": "assets/icons/hoopito-app-icon-foreground.png",
@@ -455,10 +455,10 @@
       "output": "public/art/scene-poster-compact.webp",
       "bytes": 20952,
       "sha256": "63b2133d6f36f6f657d40846834cc04f05edf926a4f8ec7aa40fd4f3335782f9",
-      "source": "website/assets/art/source/scene-poster-compact-2026-10-26T07-20-14-413Z.webp",
+      "source": "website/assets/art/source/scene-poster-compact-2026-10-26T08-11-25-633Z.webp",
       "source_sha256": "ab81bc14df47ba256cd6a9f4c1e94a4cde0c96ee0a48be149c74be600a6671fd",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "049bf280cb9046f7dd64c9e404ff4cbf86aabfeb74c8c6afc1e4f51befa80b63",
+      "capture_record_sha256": "0017aa656983129cfbb2c1d733fe055db8b97f5c7fd7eb6d0d48651c1c2382c0",
       "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -583,7 +583,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "ca037f23631890941df9d55cd984397e1affbc3b01a554df62bc136827775ae9"
+          "sha256": "d6a9e698942cf477ae9f89920746dcfac1b4f2a7c4d3825a9c977bfcb11da494"
         },
         {
           "path": "scripts/export-scene-poster.mjs",
@@ -605,10 +605,10 @@
       "output": "public/art/scene-poster-standard.webp",
       "bytes": 36030,
       "sha256": "b849891c03402b35fe15b5881b208132bc95f2e04d78b6c57d7864282d08122c",
-      "source": "website/assets/art/source/scene-poster-standard-2026-10-26T07-20-14-413Z.webp",
+      "source": "website/assets/art/source/scene-poster-standard-2026-10-26T08-11-25-633Z.webp",
       "source_sha256": "047d35e09c370ab32a091f36701e243b989051535bb92d53402c4e1d8010610b",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "049bf280cb9046f7dd64c9e404ff4cbf86aabfeb74c8c6afc1e4f51befa80b63",
+      "capture_record_sha256": "0017aa656983129cfbb2c1d733fe055db8b97f5c7fd7eb6d0d48651c1c2382c0",
       "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -733,7 +733,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "ca037f23631890941df9d55cd984397e1affbc3b01a554df62bc136827775ae9"
+          "sha256": "d6a9e698942cf477ae9f89920746dcfac1b4f2a7c4d3825a9c977bfcb11da494"
         },
         {
           "path": "scripts/export-scene-poster.mjs",
@@ -755,10 +755,10 @@
       "output": "public/art/scene-poster-wide.webp",
       "bytes": 53770,
       "sha256": "5dd98e10349bea88ef681e9ced15f46c40dd80ee6e481e303a0d572872a8d904",
-      "source": "website/assets/art/source/scene-poster-wide-2026-10-26T07-20-14-413Z.webp",
+      "source": "website/assets/art/source/scene-poster-wide-2026-10-26T08-11-25-633Z.webp",
       "source_sha256": "97b062d99efaa5883671f226e2d7f6d9135b71146c74293a98e34b55aceaa930",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "049bf280cb9046f7dd64c9e404ff4cbf86aabfeb74c8c6afc1e4f51befa80b63",
+      "capture_record_sha256": "0017aa656983129cfbb2c1d733fe055db8b97f5c7fd7eb6d0d48651c1c2382c0",
       "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -883,7 +883,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "ca037f23631890941df9d55cd984397e1affbc3b01a554df62bc136827775ae9"
+          "sha256": "d6a9e698942cf477ae9f89920746dcfac1b4f2a7c4d3825a9c977bfcb11da494"
         },
         {
           "path": "scripts/export-scene-poster.mjs",
@@ -905,10 +905,10 @@
       "output": "public/art/scene-poster-demo-compact.webp",
       "bytes": 5930,
       "sha256": "f975dc818df0d88729713d5a71e31a46f4434ffa9194ee2438246ecdfa37437c",
-      "source": "website/assets/art/source/scene-poster-demo-compact-2026-10-26T07-20-14-413Z.webp",
+      "source": "website/assets/art/source/scene-poster-demo-compact-2026-10-26T08-11-25-633Z.webp",
       "source_sha256": "303b53cd84bd5d576be602d3de875576bba5061dd1415224696f2601e1f0dfcb",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "049bf280cb9046f7dd64c9e404ff4cbf86aabfeb74c8c6afc1e4f51befa80b63",
+      "capture_record_sha256": "0017aa656983129cfbb2c1d733fe055db8b97f5c7fd7eb6d0d48651c1c2382c0",
       "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -1033,7 +1033,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "ca037f23631890941df9d55cd984397e1affbc3b01a554df62bc136827775ae9"
+          "sha256": "d6a9e698942cf477ae9f89920746dcfac1b4f2a7c4d3825a9c977bfcb11da494"
         },
         {
           "path": "scripts/export-scene-poster.mjs",
@@ -1055,10 +1055,10 @@
       "output": "public/art/scene-poster-demo-standard.webp",
       "bytes": 9964,
       "sha256": "509c7241be50f7af51da6493d319c47dd999ac85dfc89d8b8609201b29adb95b",
-      "source": "website/assets/art/source/scene-poster-demo-standard-2026-10-26T07-20-14-413Z.webp",
+      "source": "website/assets/art/source/scene-poster-demo-standard-2026-10-26T08-11-25-633Z.webp",
       "source_sha256": "c38018d4885ed0414df9211d78dd0071f83c40d8ac33e7845e429164a74542e4",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "049bf280cb9046f7dd64c9e404ff4cbf86aabfeb74c8c6afc1e4f51befa80b63",
+      "capture_record_sha256": "0017aa656983129cfbb2c1d733fe055db8b97f5c7fd7eb6d0d48651c1c2382c0",
       "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -1183,7 +1183,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "ca037f23631890941df9d55cd984397e1affbc3b01a554df62bc136827775ae9"
+          "sha256": "d6a9e698942cf477ae9f89920746dcfac1b4f2a7c4d3825a9c977bfcb11da494"
         },
         {
           "path": "scripts/export-scene-poster.mjs",
@@ -1205,10 +1205,10 @@
       "output": "public/art/scene-poster-demo-wide.webp",
       "bytes": 11292,
       "sha256": "b9628932bf766bfaf3b15a29d69f471888568189cc4d34b002dc8b395b500933",
-      "source": "website/assets/art/source/scene-poster-demo-wide-2026-10-26T07-20-14-413Z.webp",
+      "source": "website/assets/art/source/scene-poster-demo-wide-2026-10-26T08-11-25-633Z.webp",
       "source_sha256": "1a4fa70feb5d61783e9d6bd117b4ac163a63e2cdb8d45e8fc4acd3280a8c9bfa",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "049bf280cb9046f7dd64c9e404ff4cbf86aabfeb74c8c6afc1e4f51befa80b63",
+      "capture_record_sha256": "0017aa656983129cfbb2c1d733fe055db8b97f5c7fd7eb6d0d48651c1c2382c0",
       "captured_with": "156.0.8078.47; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -1333,7 +1333,7 @@
         },
         {
           "path": "package-lock.json",
-          "sha256": "ca037f23631890941df9d55cd984397e1affbc3b01a554df62bc136827775ae9"
+          "sha256": "d6a9e698942cf477ae9f89920746dcfac1b4f2a7c4d3825a9c977bfcb11da494"
         },
         {
           "path": "scripts/export-scene-poster.mjs",
@@ -2440,7 +2440,7 @@
       "bytes": 112963,
       "sha256": "b74a382dbdedb119fab75e8b0d2f2c07153cbfe1ec1646e35f0add5921572cfa",
       "source": "scripts/prepare-assets.mjs",
-      "source_sha256": "06e0283f993b0a304f2ed429e38312b1905e50cc1375c1536f8e3e01878985d7",
+      "source_sha256": "6a54f1c90086a4edbff69a85e7321a2ec07e294782cef132e798f396a3594675",
       "source_dependencies": [
         {
           "source": "assets/icons/hoopito-app-icon-foreground.png",
@@ -2532,7 +2532,7 @@
       "source": "node_modules/subset-font/LICENSE",
       "source_sha256": "b6a2bd466724fee12c200fc7a5ebd22c98606ecc1c4206cbae50ccb69b4c36f3",
       "package": "subset-font",
-      "version": "2.5.0",
+      "version": "2.9.0",
       "license": "BSD-3-Clause",
       "transformation": "Verbatim upstream package license"
     },

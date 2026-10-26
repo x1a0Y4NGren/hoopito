@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { dirname, join, relative } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import sharp from 'sharp';
 import subsetFont from 'subset-font';
 import QRCode from 'qrcode';
@@ -25,7 +25,7 @@ const fontTools = createRequire(
   createRequire(import.meta.url).resolve('subset-font'),
 );
 const fontverter = fontTools('fontverter');
-const hb = await fontTools('harfbuzzjs');
+const hb = await import(pathToFileURL(fontTools.resolve('harfbuzzjs')).href);
 const sourceRecord = 'docs/release/v2.0.1-screenshots.json';
 const screenshots = JSON.parse(
   await readFile(join(repositoryRoot, sourceRecord), 'utf8'),
@@ -214,41 +214,31 @@ async function sourceFiles(directory) {
 }
 
 function withFont(bytes, run) {
-  const blob = hb.createBlob(bytes);
-  const face = hb.createFace(blob, 0);
-  const font = hb.createFont(face);
-  try {
-    return run(font, face);
-  } finally {
-    font.destroy();
-    face.destroy();
-    blob.destroy();
-  }
+  const blob = new hb.Blob(bytes);
+  const face = new hb.Face(blob, 0);
+  const font = new hb.Font(face);
+  return run(font, face);
 }
 
 function glyphPaths(bytes, text, { x, y, size, color, tracking = 0 }) {
   return withFont(bytes, (font, face) => {
-    const buffer = hb.createBuffer();
-    try {
-      buffer.addText(text);
-      buffer.guessSegmentProperties();
-      hb.shape(font, buffer);
-      const scale = size / face.upem;
-      let advance = 0;
-      const paths = buffer
-        .json()
-        .map((glyph) => {
-          if (!glyph.g)
-            throw new Error(`Share graphic font cannot render ${text}`);
-          const path = `<path d="${font.glyphToPath(glyph.g)}" transform="translate(${advance + glyph.dx} ${glyph.dy})"/>`;
-          advance += glyph.ax + tracking / scale;
-          return path;
-        })
-        .join('');
-      return `<g fill="${color}" transform="translate(${x} ${y}) scale(${scale} ${-scale})">${paths}</g>`;
-    } finally {
-      buffer.destroy();
-    }
+    const buffer = new hb.Buffer();
+    buffer.addText(text);
+    buffer.guessSegmentProperties();
+    hb.shape(font, buffer);
+    const scale = size / face.upem;
+    let advance = 0;
+    const paths = buffer
+      .getGlyphInfosAndPositions()
+      .map((glyph) => {
+        if (!glyph.codepoint)
+          throw new Error(`Share graphic font cannot render ${text}`);
+        const path = `<path d="${font.glyphToPath(glyph.codepoint)}" transform="translate(${advance + glyph.xOffset} ${glyph.yOffset})"/>`;
+        advance += glyph.xAdvance + tracking / scale;
+        return path;
+      })
+      .join('');
+    return `<g fill="${color}" transform="translate(${x} ${y}) scale(${scale} ${-scale})">${paths}</g>`;
   });
 }
 
@@ -394,18 +384,14 @@ const requiredGlyphs = [
   ...new Set(`${ascii}${glyphText.match(/\p{Script=Han}/gu)?.join('') ?? ''}`),
 ].join('');
 withFont(await fontverter.convert(notoSubset, 'sfnt'), (font) => {
-  const buffer = hb.createBuffer();
-  try {
-    buffer.addText(requiredGlyphs);
-    buffer.guessSegmentProperties();
-    hb.shape(font, buffer);
-    if (buffer.json().some(({ g }) => g === 0))
-      throw new Error(
-        'The Chinese subset is missing a required website character.',
-      );
-  } finally {
-    buffer.destroy();
-  }
+  const buffer = new hb.Buffer();
+  buffer.addText(requiredGlyphs);
+  buffer.guessSegmentProperties();
+  hb.shape(font, buffer);
+  if (buffer.getGlyphInfos().some(({ codepoint }) => codepoint === 0))
+    throw new Error(
+      'The Chinese subset is missing a required website character.',
+    );
 });
 await output('fonts/noto-sc.woff2', notoSubset, {
   source: noto.source,

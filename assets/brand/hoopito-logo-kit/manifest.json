@@ -2,7 +2,7 @@
   "brand": "Hoopito · 球豆",
   "approvalDate": "2026-10-04",
   "generatedBy": "node tool/brand/export_logo_kit.mjs",
-  "generatorSha256": "d739728c039b59162462e961575162be33a71dac1d2909e4211dda5c2365fd00",
+  "generatorSha256": "6a8f63c2d4ee733f4165f99e47c6fdbae66e20ac2cc8bc9f4f3ca77a13e19ab8",
   "sources": [
     {
       "path": "assets/icons/hoopito-app-icon-foreground.png",
@@ -46,7 +46,7 @@
     },
     {
       "path": "website/package-lock.json",
-      "sha256": "ca037f23631890941df9d55cd984397e1affbc3b01a554df62bc136827775ae9",
+      "sha256": "d6a9e698942cf477ae9f89920746dcfac1b4f2a7c4d3825a9c977bfcb11da494",
       "normalization": "utf8-lf"
     }
   ],

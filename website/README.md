@@ -358,6 +358,8 @@ Astro 引导构建、启动本地 preview、`node scripts/export-scene-poster.mj
 `node tool/brand/export_logo_kit.mjs` 和对应测试，同步 Logo 清单的锁文件摘要。
 历史验证记录继续绑定原测量版本；新来源不能只手改摘要或冒称旧捕获。
 
+网站 CI 会实际运行素材生成器与 Logo 导出测试，并检查生成后的字体字形、许可和社区二维码像素；CI 使用已记录的真实场景捕获，不重新拍摄或代写来源摘要。
+
 新增球场材质使用内置 ImageGen 生成，原始 PNG 保存在
 [`assets/materials/source/`](assets/materials/source/)；每张图的完整提示词与生成方式
 保存在 [`assets/materials/generation.json`](assets/materials/generation.json)。
