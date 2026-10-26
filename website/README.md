@@ -359,6 +359,7 @@ Astro 引导构建、启动本地 preview、`node scripts/export-scene-poster.mj
 历史验证记录继续绑定原测量版本；新来源不能只手改摘要或冒称旧捕获。
 
 网站 CI 会实际运行素材生成器与 Logo 导出测试，并检查生成后的字体字形、许可和社区二维码像素；CI 使用已记录的真实场景捕获，不重新拍摄或代写来源摘要。
+构建产物同时保存该次生成的 `ASSET_SOURCES.json`；跨平台编码产生不同输出时，以同次构建的来源清单与逐文件摘要核对，不能用另一平台的摘要替代。
 
 新增球场材质使用内置 ImageGen 生成，原始 PNG 保存在
 [`assets/materials/source/`](assets/materials/source/)；每张图的完整提示词与生成方式
