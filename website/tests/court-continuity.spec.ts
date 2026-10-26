@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { installContractClock } from './controlled-clock';
 import type { CourtPoint, CourtScene } from '../src/scripts/scene-contract';
 
 const sceneChunk = /court-scene[^/]*\.(?:js|ts)(?:\?|$)/;
@@ -1059,9 +1060,9 @@ test(
     );
     // Install before GSAP loads. Advance every animation frame with runFor;
     // this checks the time contract independently of software GPU wall time.
-    await page.clock.install();
+    const pauseClock = await installContractClock(page);
     // Freeze on the blank page, before expensive GL work can block the command.
-    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
+    await pauseClock();
     await page.setViewportSize({ width: 1024, height: 768 });
     await exposeSceneInTest(page, true);
     const draws = await observeCourtDraws(page);

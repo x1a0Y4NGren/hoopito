@@ -1,6 +1,7 @@
 import { expect, test as base, type Page } from '@playwright/test';
 import { storyPose } from '../src/scripts/story-pose';
 import type { StoryFrame } from '../src/scripts/scene-contract';
+import { installContractClock } from './controlled-clock';
 
 const test = base.extend({
   page: async ({ page }, use, testInfo) => {
@@ -1698,7 +1699,7 @@ for (const locale of locales) {
     }) => {
       // Install before loading GSAP so its ticker uses this clock. Frame-by-frame
       // advancement verifies the animation contract, not host rendering speed.
-      await page.clock.install();
+      const pauseClock = await installContractClock(page);
       await page.route(threeChunk, (route) => route.abort());
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`${locale.path}#scoring`);
@@ -1707,7 +1708,7 @@ for (const locale of locales) {
       await page.locator('[data-story-device] img').evaluate(async (image) => {
         await (image as HTMLImageElement).decode();
       });
-      await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
+      await pauseClock();
       await page.clock.runFor(2000);
       const device = page.locator('[data-story-device]');
       await expect(device).toHaveAttribute('data-score-focus', 'none');
@@ -1892,18 +1893,40 @@ test('scoring feedback pauses until both gallery and hidden-page reasons are rel
   );
 });
 
+test('controlled clock remains valid when delivery of the pause command is delayed', async ({
+  page,
+}) => {
+  const pauseClock = await installContractClock(page);
+  const pauseAt = page.clock.pauseAt.bind(page.clock);
+  // Reproduce host/protocol latency while keeping the real browser clock.
+  page.clock.pauseAt = async (time) => {
+    await page.waitForTimeout(250);
+    await pauseAt(time);
+  };
+  try {
+    await pauseClock();
+    const paused = await page.evaluate(() => Date.now());
+    await page.waitForTimeout(250);
+    expect(await page.evaluate(() => Date.now())).toBe(paused);
+    await page.clock.runFor(400);
+    expect(await page.evaluate(() => Date.now())).toBe(paused + 400);
+  } finally {
+    page.clock.pauseAt = pauseAt;
+  }
+});
+
 test('clicking during the button invitation restores the page and only selects the clicked feature', async ({
   page,
 }) => {
   // The invitation lasts 1.45 seconds. Hold its clock before entering the
   // section so navigation and locator checks cannot consume the playing phase.
-  await page.clock.install();
+  const pauseClock = await installContractClock(page);
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto('/');
   const first = page.locator('[data-score-feature="0"]');
   await expect(first).toBeEnabled();
   await page.evaluate(() => document.fonts.ready);
-  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
+  await pauseClock();
   await expect(first).toHaveAttribute('data-score-invitation', 'idle');
   await first.evaluate((element) =>
     element.scrollIntoView({ behavior: 'instant', block: 'center' }),
@@ -1965,7 +1988,7 @@ for (const width of [390, 1440]) {
     }) => {
       // Geometry needs every reveal phase, independent of host load. This
       // controlled browser clock is not a measurement of display frame rate.
-      await page.clock.install();
+      const pauseClock = await installContractClock(page);
       await page.route(threeChunk, (route) => route.abort());
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/#scoring');
@@ -1973,7 +1996,7 @@ for (const width of [390, 1440]) {
       await page.evaluate(() => document.fonts.ready);
       // install() still lets the fake clock follow wall time. Pause it after
       // loading so locator checks cannot advance beyond the sampled phase.
-      await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
+      await pauseClock();
       await page.clock.runFor(2000);
       const action = page.locator(`[data-score-action="${index}"]`);
       await expect(action.locator('.score-operation-head')).toHaveCount(1);
