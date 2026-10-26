@@ -8,7 +8,7 @@ applies to `website/`; it does not change the Flutter app's dependency notices.
 
 | Dependency | Version | License | Local notice |
 | --- | --- | --- | --- |
-| Astro | 7.3.8 | MIT | [License](public/licenses/astro.txt) |
+| Astro | 7.4.0 | MIT | [License](public/licenses/astro.txt) |
 | Three.js | 0.186.1 | MIT | [License](public/licenses/three.txt) |
 | GSAP / ScrollTrigger | 3.15.0 | Standard “No Charge” GSAP License | [Identification](public/licenses/GSAP.txt) |
 

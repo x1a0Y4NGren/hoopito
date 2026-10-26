@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "captured_at": "2026-10-25T13:35:57.630Z",
+  "captured_at": "2026-10-26T07:20:21.005Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "capture_method": "The actual production page scene observed at its dynamic factory export; no second renderer or authored capture pose.",
   "browser": "156.0.8078.47",
@@ -131,7 +131,7 @@
     },
     {
       "path": "package-lock.json",
-      "sha256": "8f597a249f78ba0e049283f27fc0bf15f8a06bfbef5a7364f364f49cc7c1d81b"
+      "sha256": "ca037f23631890941df9d55cd984397e1affbc3b01a554df62bc136827775ae9"
     },
     {
       "path": "scripts/export-scene-poster.mjs",
@@ -141,7 +141,7 @@
   "captures": [
     {
       "id": "compact",
-      "source": "source/scene-poster-compact-2026-10-25T13-35-50-791Z.webp",
+      "source": "source/scene-poster-compact-2026-10-26T07-20-14-413Z.webp",
       "source_sha256": "ab81bc14df47ba256cd6a9f4c1e94a4cde0c96ee0a48be149c74be600a6671fd",
       "viewport": {
         "width": 1024,
@@ -181,7 +181,7 @@
     },
     {
       "id": "standard",
-      "source": "source/scene-poster-standard-2026-10-25T13-35-50-791Z.webp",
+      "source": "source/scene-poster-standard-2026-10-26T07-20-14-413Z.webp",
       "source_sha256": "047d35e09c370ab32a091f36701e243b989051535bb92d53402c4e1d8010610b",
       "viewport": {
         "width": 1440,
@@ -221,7 +221,7 @@
     },
     {
       "id": "wide",
-      "source": "source/scene-poster-wide-2026-10-25T13-35-50-791Z.webp",
+      "source": "source/scene-poster-wide-2026-10-26T07-20-14-413Z.webp",
       "source_sha256": "97b062d99efaa5883671f226e2d7f6d9135b71146c74293a98e34b55aceaa930",
       "viewport": {
         "width": 1920,
@@ -261,7 +261,7 @@
     },
     {
       "id": "demo-compact",
-      "source": "source/scene-poster-demo-compact-2026-10-25T13-35-50-791Z.webp",
+      "source": "source/scene-poster-demo-compact-2026-10-26T07-20-14-413Z.webp",
       "source_sha256": "303b53cd84bd5d576be602d3de875576bba5061dd1415224696f2601e1f0dfcb",
       "viewport": {
         "width": 1024,
@@ -301,7 +301,7 @@
     },
     {
       "id": "demo-standard",
-      "source": "source/scene-poster-demo-standard-2026-10-25T13-35-50-791Z.webp",
+      "source": "source/scene-poster-demo-standard-2026-10-26T07-20-14-413Z.webp",
       "source_sha256": "c38018d4885ed0414df9211d78dd0071f83c40d8ac33e7845e429164a74542e4",
       "viewport": {
         "width": 1440,
@@ -341,7 +341,7 @@
     },
     {
       "id": "demo-wide",
-      "source": "source/scene-poster-demo-wide-2026-10-25T13-35-50-791Z.webp",
+      "source": "source/scene-poster-demo-wide-2026-10-26T07-20-14-413Z.webp",
       "source_sha256": "1a4fa70feb5d61783e9d6bd117b4ac163a63e2cdb8d45e8fc4acd3280a8c9bfa",
       "viewport": {
         "width": 1920,

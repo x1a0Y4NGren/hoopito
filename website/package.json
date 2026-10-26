@@ -18,7 +18,7 @@
     "assets": "node scripts/prepare-assets.mjs"
   },
   "dependencies": {
-    "astro": "7.3.8",
+    "astro": "7.4.0",
     "gsap": "3.15.0",
     "three": "0.186.1"
   },
