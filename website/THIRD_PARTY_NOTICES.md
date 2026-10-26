@@ -41,9 +41,9 @@ licenses retained here.
 | TypeScript | 6.0.3 | Apache-2.0 | [License](public/licenses/typescript.txt) |
 | sharp | 0.35.5 | Apache-2.0 | [License](public/licenses/sharp.txt) |
 | qrcode | 1.5.4 | MIT | [License](public/licenses/qrcode.txt) |
-| subset-font | 2.5.0 | BSD-3-Clause | [License](public/licenses/subset-font.txt) |
+| subset-font | 2.9.0 | BSD-3-Clause | [License](public/licenses/subset-font.txt) |
 
-Font conversion and shaping use subset-font's fontverter and harfbuzzjs
+Font conversion and shaping use subset-font's fontverter and harfbuzzjs 1.6.3
 dependencies, retaining their upstream licenses in the installed build tools.
 The lockfile records the complete dependency graph. These build tools are not
 served as website scripts.

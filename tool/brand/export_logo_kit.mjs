@@ -5,14 +5,14 @@ import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const output = join(repo, "assets/brand/hoopito-logo-kit");
 const requireWebsite = createRequire(join(repo, "website/package.json"));
 const sharp = requireWebsite("sharp");
 const requireFont = createRequire(requireWebsite.resolve("subset-font"));
-const hb = await requireFont("harfbuzzjs");
+const hb = await import(pathToFileURL(requireFont.resolve("harfbuzzjs")).href);
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const read = (path) => readFile(join(repo, path));
 // Text provenance uses LF bytes, independent of core.autocrlf or the host OS.
@@ -54,35 +54,28 @@ async function save(path, bytes, description) {
 }
 
 function glyphs(bytes, text, x, y, size, color, tracking = 0) {
-  const blob = hb.createBlob(bytes),
-    face = hb.createFace(blob, 0),
-    font = hb.createFont(face);
-  const buffer = hb.createBuffer();
-  try {
-    buffer.addText(text);
-    buffer.guessSegmentProperties();
-    hb.shape(font, buffer);
-    const scale = size / face.upem;
-    let advance = 0;
-    const paths = buffer
-      .json()
-      .map((glyph) => {
-        assert.ok(glyph.g, `Missing glyph for ${text}`);
-        const path = `<path d="${font.glyphToPath(glyph.g)}" transform="translate(${advance + glyph.dx} ${glyph.dy})"/>`;
-        advance += glyph.ax + tracking / scale;
-        return path;
-      })
-      .join("");
-    return {
-      width: advance * scale - tracking,
-      svg: `<g fill="${color}" transform="translate(${x} ${y}) scale(${scale} ${-scale})">${paths}</g>`,
-    };
-  } finally {
-    buffer.destroy();
-    font.destroy();
-    face.destroy();
-    blob.destroy();
-  }
+  const blob = new hb.Blob(bytes),
+    face = new hb.Face(blob, 0),
+    font = new hb.Font(face);
+  const buffer = new hb.Buffer();
+  buffer.addText(text);
+  buffer.guessSegmentProperties();
+  hb.shape(font, buffer);
+  const scale = size / face.upem;
+  let advance = 0;
+  const paths = buffer
+    .getGlyphInfosAndPositions()
+    .map((glyph) => {
+      assert.ok(glyph.codepoint, `Missing glyph for ${text}`);
+      const path = `<path d="${font.glyphToPath(glyph.codepoint)}" transform="translate(${advance + glyph.xOffset} ${glyph.yOffset})"/>`;
+      advance += glyph.xAdvance + tracking / scale;
+      return path;
+    })
+    .join("");
+  return {
+    width: advance * scale - tracking,
+    svg: `<g fill="${color}" transform="translate(${x} ${y}) scale(${scale} ${-scale})">${paths}</g>`,
+  };
 }
 
 function lockup(locale, ink, background = "") {

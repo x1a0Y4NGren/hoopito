@@ -113,6 +113,60 @@ test("LF and CRLF source checkouts export identical files and provenance", async
   }
 });
 
+test("English, Chinese and bilingual lockups retain visible outlines and finite layout", async () => {
+  const widths = new Map();
+  for (const locale of ["en", "zh", "bilingual"]) {
+    for (const theme of ["on-light", "on-dark"]) {
+      const path = `03-lockups/hoopito-${locale}-${theme}.svg`;
+      const svg = await readFile(join(lf, kit, path), "utf8");
+      assert.doesNotMatch(svg, /<text\b/i, `${path} must embed font outlines`);
+      const dimensions = svg.match(
+        /<svg\b[^>]*\bwidth="([\d.]+)" height="([\d.]+)"/,
+      );
+      assert.ok(dimensions, `${path} must declare its dimensions`);
+      const width = Number(dimensions[1]);
+      assert.ok(Number.isFinite(width) && width > 178, path);
+      assert.equal(Number(dimensions[2]), 240, path);
+      widths.set(`${locale}-${theme}`, width);
+
+      const outlines = [...svg.matchAll(/<path\b[^>]*\bd="([^"]*)"/g)];
+      const expectedGlyphs = { en: 8, zh: 2, bilingual: 10 }[locale];
+      assert.equal(outlines.length, expectedGlyphs, `${path} lost lettering`);
+      for (const [, outline] of outlines) {
+        assert.doesNotMatch(outline, /\b(?:NaN|Infinity|undefined)\b/, path);
+        assert.match(outline, /[MLCQ]/i, `${path} has an empty glyph`);
+      }
+      const transforms = [...svg.matchAll(/\btransform="([^"]+)"/g)];
+      assert.ok(transforms.length >= expectedGlyphs, path);
+      for (const [, transform] of transforms) {
+        assert.doesNotMatch(transform, /\b(?:NaN|Infinity|undefined)\b/, path);
+        const values = transform.match(
+          /[-+]?(?:\d*\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/gi,
+        );
+        assert.ok(values?.length, `${path}: ${transform}`);
+        assert.ok(
+          values.every((value) => Number.isFinite(Number(value))),
+          path,
+        );
+      }
+      const raster = await readFile(
+        join(lf, kit, `03-lockups/hoopito-${locale}-${theme}@2x.png`),
+      );
+      assert.deepEqual(
+        raster.subarray(0, 8),
+        Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
+        `${path} must have a PNG counterpart`,
+      );
+      assert.equal(raster.readUInt32BE(16), width * 2, path);
+      assert.equal(raster.readUInt32BE(20), 480, path);
+    }
+  }
+  for (const theme of ["on-light", "on-dark"]) {
+    assert.ok(widths.get(`bilingual-${theme}`) > widths.get(`en-${theme}`));
+    assert.ok(widths.get(`bilingual-${theme}`) > widths.get(`zh-${theme}`));
+  }
+});
+
 test("approval and licenses preserve their text with an explicit LF representation", async () => {
   const manifest = JSON.parse(await readFile(join(crlf, kit, "manifest.json")));
   for (const [source, output] of textSources) {

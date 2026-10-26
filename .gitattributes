@@ -4,6 +4,7 @@
 /website/** text=auto eol=lf
 /website/public/** -text
 /docs/release/*-screenshots.json text eol=lf
+/docs/design/screenshot-presentation.json text eol=lf
 /assets/fonts/OFL*.txt text eol=lf
 /assets/brand/hoopito-logo-kit/** -text
 /tool/brand/*.mjs text eol=lf

@@ -77,6 +77,14 @@ jobs:
         id: unit
         run: npm test 2>&1 | tee output/playwright/validate/unit.log
 
+      - name: Exercise asset and Logo generators with the locked toolchain
+        id: assets
+        run: |
+          npm run assets 2>&1 | tee output/playwright/validate/assets.log
+          node --test tests/font-assets.test.ts tests/community-assets.test.ts 2>&1 | tee output/playwright/validate/generated-assets.log
+          node --test ../tool/brand/export_logo_kit.test.mjs 2>&1 | tee output/playwright/validate/logo-export.log
+          cp ASSET_SOURCES.json output/playwright/validate/generated-asset-sources.json
+
       - name: Build once and enforce resource budgets
         id: build
         run: npm run build 2>&1 | tee output/playwright/validate/build.log
@@ -96,6 +104,7 @@ jobs:
           path: |
             website/dist/
             website/build-artifact.json
+            website/ASSET_SOURCES.json
           if-no-files-found: error
           overwrite: true
           retention-days: 14
