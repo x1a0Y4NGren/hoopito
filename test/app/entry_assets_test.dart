@@ -1,41 +1,35 @@
+import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('entry swish is a short mono PCM asset', () async {
-    final bytes = await File('assets/audio/entry_swish.wav').readAsBytes();
-    final data = ByteData.sublistView(bytes);
-
-    expect(String.fromCharCodes(bytes.sublist(0, 4)), 'RIFF');
-    expect(String.fromCharCodes(bytes.sublist(8, 12)), 'WAVE');
-    expect(data.getUint16(22, Endian.little), 1);
-    expect(data.getUint32(24, Endian.little), 44100);
-    expect(data.getUint16(34, Endian.little), 16);
-    final dataBytes = data.getUint32(40, Endian.little);
-    final seconds = dataBytes / (44100 * 2);
-    expect(seconds, closeTo(0.18, 0.001));
-
-    var peak = 0;
-    for (var offset = 44; offset < bytes.length; offset += 2) {
-      final sample = data.getInt16(offset, Endian.little).abs();
-      if (sample > peak) peak = sample;
-    }
-    expect(peak / 32767, closeTo(0.55, 0.01));
-  });
-
-  test('entry swish uses non-interrupting UI audio categories', () {
-    final source = File('lib/app/entry/entry_feedback.dart').readAsStringSync();
-
-    expect(source, contains('AndroidUsageType.assistanceSonification'));
-    expect(source, isNot(contains('AndroidUsageType.notificationRingtone')));
-    expect(source, contains('AVAudioSessionCategory.ambient'));
-    expect(source, contains('AndroidAudioFocus.none'));
-  });
+  test(
+    'application bundle excludes unused swish audio and Cupertino font',
+    () async {
+      final assets = await AssetManifest.loadFromAssetBundle(rootBundle);
+      expect(
+        assets.listAssets(),
+        isNot(contains('assets/audio/entry_swish.wav')),
+      );
+      final fonts =
+          (jsonDecode(await rootBundle.loadString('FontManifest.json')) as List)
+              .cast<Map<String, dynamic>>();
+      final families = fonts.map((font) => font['family']).toList();
+      expect(
+        families,
+        containsAll(['MaterialIcons', 'Barlow Condensed', 'Noto Sans SC']),
+      );
+      expect(
+        families,
+        isNot(contains('packages/cupertino_icons/CupertinoIcons')),
+      );
+    },
+  );
 
   test('platform launch artwork has deterministic dimensions', () async {
     final expectedDimensions = <String, int>{

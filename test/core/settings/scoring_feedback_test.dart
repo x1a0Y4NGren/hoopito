@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hoopito/core/data/app_database.dart';
 import 'package:hoopito/core/settings/motion_preference_cache.dart';
@@ -9,6 +10,33 @@ import 'package:hoopito/core/settings/scoring_feedback.dart';
 import '../../test_helpers/test_database.dart';
 
 void main() {
+  testWidgets('scoring sound and vibration use Flutter system feedback', (
+    tester,
+  ) async {
+    final calls = <MethodCall>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        calls.add(call);
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+    const platform = FlutterScoringFeedbackPlatform();
+    await platform.click();
+    await platform.lightImpact();
+    expect(calls, hasLength(2));
+    expect(calls[0].method, 'SystemSound.play');
+    expect(calls[0].arguments, 'SystemSoundType.click');
+    expect(calls[1].method, 'HapticFeedback.vibrate');
+    expect(calls[1].arguments, 'HapticFeedbackType.lightImpact');
+  });
+
   test('defaults to haptic enabled and sound disabled', () async {
     final database = createTestDatabase();
     final repository = ScoringFeedbackPreferencesRepository(database);
