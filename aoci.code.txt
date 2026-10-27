@@ -1,13 +1,13 @@
 #AOCI-CODE-VOLUME: 1
 
 ===D:/GitHub/hooptrace/===
-.gitattributes[FV6T]: F:固定平台和工具脚本行尾并保护生成品牌素材及第三方文件的字节边界 | R:code:tool/brand/export_logo_kit.mjs | A:品牌脚本LF；套件与网站public禁行尾转换；字体OFL固定LF | S:清单绑定生成字节；文本来源由导出器规范LF，不再靠CR空白例外容忍副本差异
+.gitattributes[FV6T]: F:固定脚本与来源清单行尾并保护图像及生成物字节 | R:code:tool/brand/export_logo_kit.mjs | A:网站文本及截图裁剪配置LF；网站public与Logo套件禁转换 | S:文本来源摘要按导出器规范LF计算，不能通过空白例外掩盖来源差异
 .gitignore[FV6S]: F:界定构建缓存、设备数据、签名秘密及本机配置的Git忽略范围 | R:code:.aoci/.gitignore,code:android/.gitignore | A:Git ignore patterns；忽略Python缓存及Codex本机配置 | S:正式AOCI卷与共享治理配置可追踪，运行资产及本机绝对路径配置不能提交
 .metadata[FV4T]: F:保存Flutter项目类型、创建版本和迁移基准 | R:code:.github/workflows/flutter-ci.yml | A:Flutter migrate metadata | S:由Flutter工具维护；main.dart和iOS工程排除迁移
-AGENTS.md[SG9S]: F:规定Hoopito源码兼容、展示截图、本地审阅与显式收尾及AOCI认知维护边界 | R:code:CONTRIBUTING.md,code:HANDOFF.md | A:命令事务；schema3及JSON2；展示副本裁除系统栏且保留原证据 | S:普通完成或Dirty不授权收尾；明确收尾默认仅本地提交；推送部署另按当前授权；完整认知截断停链不得补答；签名安装身份保留
+AGENTS.md[SG9S]: F:约束源码兼容、展示证据、语义分支命名及显式收尾和AOCI操作 | R:code:CONTRIBUTING.md,code:HANDOFF.md | A:类型目的命名覆盖工具默认；preview及deps保留用途；命令事务与schema3及JSON2 | S:普通完成不授权治理或清理；收尾默认仅本地提交，整合发布分别授权；原签名及持久身份保持；认知截断不得补答
 CHANGELOG.md[SV6T]: F:按版本记录Hoopito品牌同步及既有功能兼容和修复 | R:code:pubspec.yaml,code:docs/release/v2.0.1-release-notes.md | A:2.0.1品牌与备份回调修复；Unreleased与历史版本比较 | S:v2.0.0更换v1证书而v2.0.1沿用v2；旧App不能导入新名称JSON，签名与数据兼容分别判断
-CONTRIBUTING.md[SQ7M]: F:定义按影响验证、干净展示截图和明确触发的八步项目收尾流程 | R:code:AGENTS.md,code:HANDOFF.md | A:未变输入复用证据；先稳定文档资源再认知维护；逐批维护后Verify及Check及Guide证明对齐 | S:普通任务不自动治理或清理；推送发布分别授权；裁剪须校准并记录摘要，不改原截图；文件重开不冒称冷进程
-HANDOFF.md[SW7L]: F:交接官网发布、Logo验收及CI余项的实际来源并区分历史状态 | R:code:website/VERIFICATION.md,code:assets/brand/VALIDATION.md | A:Logo11e1ba5且16关闭；测试cbb534d；CI六组及App重试成功；最终维护证据 | S:线上仍f001703且APK仍4ecd960；API24首次SDK失败保留；新文档不改变产物来源；AMD专项与历史发行待验不自动恢复
+CONTRIBUTING.md[SQ7M]: F:统一问题确认、目的分支、按影响验证、PR审阅与显式收尾流程 | R:code:AGENTS.md,code:docs/repository-settings.md,code:docs/release/release-checklist.md | A:十种分支类型；PR及squash标题；strict三门禁及零必需批准；八步收尾 | S:中间提交不强制重写；命名例外核对身份及来源；本地提交不自动授权推送；未变有效证据可复用
+HANDOFF.md[SW7M]: F:交接仓库治理、规范及预览迁移来源并保留历史发布和失败证据 | R:code:docs/repository-settings.md,code:website/README.md | A:20及26设置；28规范；29入口；源码与CI配对；89份证据摘要保存 | S:合并后描述编辑失败独立保留；仅排除明确关闭状态的修正仍在本地；历史告警数不代表当前；后续文档不改变生产或APK来源
 LICENSE[SG6T]: F:以MIT许可授予项目软件及文档的使用、复制、修改、分发和再许可权，并规定声明保留与免责 | R:code:README.md,code:CONTRIBUTING.md | A:MIT License；版权归2026 x1a0Y4NGren；副本及实质部分须保留版权和许可声明；软件按原样提供且无担保 | S:-
 PRIVACY.md[SS8T]: F:说明Hoopito离线数据、权限、备份、内部副本及删除与分享边界 | R:code:android/app/src/main/AndroidManifest.xml,code:lib/core/export/safety_backup_store.dart | A:无账号云同步追踪广告；自动备份默认关闭；SAF用户授权 | S:私有副本随卸载清数据丢失；替换回退先保护当前且禁止活动比赛；网页与GitHub访问日志不属于App上传
 README.md[SG7M]: F:介绍离线单挑应用并导航正式下载、官网社区及已审阅品牌套件 | R:code:website/README.md,code:assets/brand/README.md | A:2.0.1+5；双语展示截图；QQ1129560287；GitHub发行源及同包渠道 | S:正式APK来源固定4ecd960；v2同证覆盖保数据，v1先外部JSON备份；Logo整理不替换生产图标
@@ -18,17 +18,19 @@ pubspec.lock[FV7L]: F:锁定Dart与Flutter依赖解析版本、来源及hosted�
 pubspec.yaml[FV8T]: F:声明hoopito包2.0.1+5、SDK、固定依赖、本地化字体与SQLite源码hook | R:code:pubspec.lock,code:lib/app/app_metadata.dart,code:third_party/sqlite/README.md | A:不发布pub；Drift2.34；gen-l10n；Barlow/Noto Sans SC；sqlite3 source:path | S:SQLite从仓库amalgamation编译不下载二进制；版本同步常量；双ARB变更重新生成
 
 ===D:/GitHub/hooptrace/.github/ISSUE_TEMPLATE/===
-bug_report.yml[SQ4T]: F:收集双语缺陷复现、设备、版本和诊断证据 | R:code:SECURITY.md | A:GitHub Bug表单 | S:禁止公开真实球员数据与签名信息，安全问题走私密渠道
+bug_report.yml[SQ4T]: F:收集双语缺陷的版本设备、复现步骤和诊断证据 | R:code:SECURITY.md | A:GitHub表单标bug与needs-triage；2.0.1版本示例 | S:安全漏洞走私密报告，不上传真实球员数据或签名秘密
 config.yml[FS4T]: F:关闭空白Issue并提供私密安全报告入口 | R:code:SECURITY.md | A:GitHub Issue contact_links | S:-
 feature_request.yml[SW4T]: F:收集球场场景、目标行为及权限和数据影响 | R:code:CONTRIBUTING.md | A:GitHub Feature表单 | S:建议必须保持离线计分且属于单挑范围
 
 ===D:/GitHub/hooptrace/.github/===
-dependabot.yml[FV3T]: F:每周检查仓库GitHub Actions依赖更新 | R:code:.github/workflows/flutter-ci.yml | A:Dependabot github-actions weekly | S:-
-pull_request_template.md[SQ6T]: F:组织变更结果、数据决策、验证证据和发布风险 | R:code:CONTRIBUTING.md | A:PR说明模板 | S:验证按贡献矩阵选取，可复用仍适用的证据；无需为填写模板另建Issue
+dependabot.yml[FV6T]: F:配置Actions与npm周更、pub与Gradle月更及依赖分组 | R:code:docs/repository-settings.md | A:deps分支；chore依赖scope；限额与普通更新冷静期；Drift运行库及生成器成组 | S:安全更新不等待普通冷静期；Gradle单项升级不证明整体工具链兼容
+pull_request_template.md[SQ6T]: F:引导按目的命名PR并说明结果、决策、验证和发布风险 | R:code:CONTRIBUTING.md | A:相关Issue可选；CI与依赖附加审查；记录源码环境和限制 | S:不为填写模板另建Issue；证据复用不免除当前基线门禁
+CODEOWNERS[FC5T]: F:为关键源码、CI、治理文档和发行工具标记维护责任人 | R:code:CONTRIBUTING.md | A:GitHub审阅路由至维护者 | S:当前不要求所有者批准，责任标记不替代CI或人工审阅
 
 ===D:/GitHub/hooptrace/.github/workflows/===
-flutter-ci.yml[OV8M]: F:执行应用质量门禁、Android双API集成、独立源码未签名复现和iOS无签名编译 | R:code:tool/release/prepare_android_toolchain.sh,code:tool/release/run_android_integration_ci.sh,code:tool/release/verify_unsigned_reproducible_android.sh | A:quality后并行reproducible-android、API24/36及ios-no-sign；固定Actions与工具链 | S:流水线只验证构建不签名发布；两份独立源码复现产物不可替代正式APK；iOS编译不证明实机签名安装
-website-ci.yml[OV8M]: F:一次构建绑定源码和文件摘要后独立验证三浏览器UI及两组软件WebGL | R:code:website/scripts/build-artifact.mjs,code:website/playwright.webgl.config.ts | A:validate门禁；UI两worker矩阵；WebGL单worker双shard；always保留14天证据 | S:只下载本run按SHA命名的产物且摘要不符即失败；逐文件验摘要并拒flaky；软件生命周期不证明硬件呈现帧率；本流程不部署
+flutter-ci.yml[OV8M]: F:按变更路径运行应用质量、双API集成、未签名复现和iOS编译并汇总门禁 | R:code:tool/release/prepare_android_toolchain.sh,code:tool/release/run_android_integration_ci.sh,code:tool/release/verify_unsigned_reproducible_android.sh | A:分类后quality；API24及36、双源码复现、iOS并行；always汇总 | S:未知输入运行全套；不适用须全部跳过，适用须全部成功；无签名产物不代表正式APK或iOS安装
+website-ci.yml[OV8M]: F:按路径构建来源绑定网站并验证三浏览器及双分片软件WebGL后汇总门禁 | R:code:website/scripts/build-artifact.mjs,code:website/playwright.webgl.config.ts | A:main及preview分支触发；分类validate与矩阵；always保留14天证据及汇总 | S:只下载本run同SHA产物且先验逐文件摘要；失败取消不可被不适用掩盖；软件渲染不证明硬件帧率；本流程不部署
+repository-policy.yml[OQ7T]: F:提供统一命名、工作流来源与提交空白的必需策略门禁 | R:code:CONTRIBUTING.md,code:.github/pull_request_template.md | A:main推送及手动运行；PR创建同步重开与编辑；stdlib测试及只读token | S:仅明确关闭的PR跳过job，避免删除head后的无效比较；缺失状态不跳过既有元数据校验；标题分支只作为数据读取
 
 ===D:/GitHub/hooptrace/.superpowers/sdd/2026-08-22-hooptrace-1-0/===
 task-3-report.md[SQ4S]: F:记录1.0任务3的领域模型、Drift schema v2、原生旧库拒绝、备份图校验及两轮复审的提交和RED/GREEN证据 | R:code:lib/core/data/app_database.dart,code:lib/core/data/schema_v2.dart | A:- | S:schema v2历史验收；现行数据库版本为3
@@ -122,6 +124,7 @@ README.md[SV5T]: F:说明已审核C独眼球怪的三色生产图、平台派生
 ===D:/GitHub/hooptrace/docs/===
 README.md[SG6T]: F:导航Hoopito当前v2.0.1发行、品牌兼容和历史设计验收文档 | R:code:HANDOFF.md,code:docs/release/v2.0.1-release-record.md,code:docs/design/brand/naming-and-compatibility.md | A:4ecd960正式应用；八张正式包截图；历史v2分区 | S:后续文档网站提交不改APK来源，历史计划不授权重建工作区或任务
 branch-execution-order.md[SW3S]: F:保留首发九条分支的依赖波次、worktree准备、合并检查和安全清理流程，供追溯当时的职责划分与执行顺序 | R:code:scripts/setup-worktrees.ps1,code:docs/branch-prompts/README.md | A:历史Wave 1、2、3、4、5A、5B、5C、6及all的分支映射 | S:旧流程不要求重建worktree或等待历史波次
+repository-settings.md[SC7T]: F:记录仓库分支保护、固定CI契约、依赖安全、发行及恢复策略 | R:code:CONTRIBUTING.md,code:.github/dependabot.yml | A:strict三检查及零批准；语义命名；preview迁移；最小Actions权限；不可变发行 | S:文档目标不证明远端生效；嵌套cache阻止全局SHA强制，顶层另验；扫描成功不等于清零；不配置日常bypass
 
 ===D:/GitHub/hooptrace/docs/branch-prompts/===
 01-flutter-scaffold.md[SW3T]: F:保存首发项目地基分支的Task1-2提示，限定Flutter依赖、主题、路由、本地化和首页脚手架，并列当轮验证及交付要求 | R:code:docs/branch-prompts/README.md,code:docs/superpowers/plans/2026-05-12-hooptrace-first-release.md | A:历史分支codex/flutter-scaffold与.worktrees/flutter-scaffold；限Task1-2 | S:历史提示不构成当前待办或分支授权
@@ -138,7 +141,7 @@ README.md[SW6T]: F:界定首发分支提示目录的历史用途、当前维护�
 ===D:/GitHub/hooptrace/docs/release/===
 fdroid-notes.md[SV7S]: F:记录Hoopito上游v2.0.1发行、固定工具链元数据与待执行F-Droid渠道准备 | R:code:docs/release/release-checklist.md,code:docs/release/reproducible-builds.md,code:docs/release/v2.0.1-release-record.md | A:versionCode5；Hoopito正式APK与八图；固定安装身份；recipe/lint/server build仍待执行 | S:尚未收录；项目要求同证上游验签与可复现不等于F-Droid通用条件；源码tag与后续元数据分开核对，不改已发版本
 performance.md[SP6S]: F:定义有界历史与复盘查询及真实文件命令性能门槛，保留历轮实测与环境敏感性证据 | R:code:test/performance/task15_query_benchmarks_test.dart,code:integration_test/command_performance_test.dart | A:1000场10000事件；查询500ms；预热5后100命令p95小于100ms | S:同源码host GPU失败和SwiftShader通过均保留，不能推断唯一根因、跨设备保证或放宽门槛
-release-checklist.md[SV8S]: F:提供GitHub正式发行的版本、隐私、干净构建、签名升级、设备与启动验收、元数据和公开产物核验模板 | R:code:CONTRIBUTING.md,code:HANDOFF.md,code:tool/release/build_android_release.ps1,code:docs/release/reproducible-builds.md,code:docs/release/fdroid-notes.md | A:仅正式发行准备适用；版本/源码/tag/APK对应；适用CI与设备验证；签名、公开下载核验和归档；第8节仅按当前F-Droid渠道范围执行 | S:准备不授予tag、发布或F-Droid申请权限；Debug、未签名复现、文件重开和模拟器不能替代同证升级、远端CI、进程重启或实体设备证据；不得替换已公开二进制
+release-checklist.md[SV8S]: F:规范正式发行的版本、构建、签名、升级与公开附件验收 | R:code:CONTRIBUTING.md,code:tool/release/build_android_release.ps1,code:docs/release/reproducible-builds.md | A:最新main三门禁；签名tag；draft上传并回读全资产后publish；按需F-Droid | S:不可变Release发布后不能补传替换，修复须递增版本；准备不授权发布；Debug及无签名复现不替代正式同证验证
 reproducible-builds.md[SV8S]: F:规定Linux和Windows同runner固定路径两份fresh源码完整未签名APK复现与诊断 | R:code:tool/release/verify_unsigned_reproducible_android.sh,code:tool/release/verify_unsigned_reproducible_android.ps1,code:tool/release/prepare_android_toolchain.sh | A:固定源码/锁/工具链/epoch；完整字节相等；runner与工具链证据 | S:不证明跨OS或正式签名包复现；Windows清理限本次拥有路径且拒重解析点；实际Flutter选中JDK须核对；失败保留两包，不降级为部分文件比较
 screenshots-checklist.md[SQ6S]: F:记录v2.0.1正式包八图及v2.0.0历史截图矩阵、合成数据和逐图来源 | R:code:docs/release/v2.0.1-screenshots.json,code:docs/release/v2.0.0-screenshots.json | A:4ecd960正式APK；API36；中文浅色与英文深色；首页计分赛果历史 | S:当前仅100%选图；历史200%矩阵不改标新包；保原像素、采集状态和摘要，不证明全排列、真机或自然调度
 source-build-1.0.md[SV7T]: F:说明v1.0公开源码的固定工具链、未签名Android构建、旧数据库阻断及完整APK复现核验 | R:code:pubspec.yaml,code:tool/release/prepare_android_toolchain.sh,code:tool/release/verify_unsigned_reproducible_android.sh | A:v1.0.0源码；锁文件强制；SQLite源码hook；显式HOOPTRACE_ALLOW_UNSIGNED_RELEASE | S:未签名构建不执行发布；缺维护者签名不会回退debug；v0.1数据和备份不迁移，应用不静默删除
@@ -718,13 +721,13 @@ match_summary_page_test.dart[TU7S]: F:验证赛果在双语明暗窄横屏200%�
 .gitignore[FV5T]: F:排除网站依赖、构建、下载缓存、验证报告与本地认证环境 | R:code:website/package.json | A:dist及output及APK摘要缓存；保留env示例 | S:正式素材来源可跟踪，凭据与完整安装包不进Git
 .prettierignore[FQ4T]: F:限定格式检查跳过构建缓存、锁文件及生成素材和通知 | R:code:website/package.json | A:public、ASSET_SOURCES、THIRD_PARTY_NOTICES及工具输出 | S:-
 .prettierrc.json[FQ4T]: F:统一网页源码的两空格、单引号、尾逗号与Astro格式解析 | R:code:website/package.json | A:prettier-plugin-astro；*.astro解析器 | S:-
-ASSET_SOURCES.json[FV7L]: F:绑定51项网站生成资产与截图原始发行来源、转换方式和完整性摘要 | R:code:website/scripts/prepare-assets.mjs,code:docs/release/v2.0.1-screenshots.json | A:群码与字体；干净截图裁剪；六场景占位；材质和许可 | S:截图APK来源固定4ecd960且原证据不改；生成摘要不替代实机或扫码，旧副本不重标新来源
-README.md[SV7L]: F:说明双语官网的连续场景、可访问交互、素材再现、下载和部署维护 | R:code:website/package.json,code:website/VERIFICATION.md | A:原生滚动；540度卡牌；同模型俯视；蓝奏与GitHub；QQ群及静态APK | S:预览认证和禁止收录保留；生产需SITE_URL且main自动部署关闭；截图保真实像素，重导出占位须绑定实际构建
-THIRD_PARTY_NOTICES.md[SV6T]: F:区分网站MIT资产与库、字体和构建工具许可及正式截图来源 | R:code:website/ASSET_SOURCES.json,code:website/package.json,code:docs/release/v2.0.1-screenshots.json | A:Astro/Three MIT；GSAP标准许可；字体OFL；sharp0.35.5 Apache2；八图来自4ecd960正式包 | S:GSAP不能标MIT；旧v2.0.0 Debug记录保真实历史来源，不改标新正式截图
+ASSET_SOURCES.json[FV7L]: F:绑定网站生成素材、原始来源、转换方式与逐文件完整性摘要 | R:code:website/scripts/prepare-assets.mjs,code:docs/release/v2.0.1-screenshots.json,code:docs/design/screenshot-presentation.json | A:字体字形与许可；干净展示截图；六场景捕获；材质群码和生成器来源 | S:截图APK来源固定4ecd960且原证据不改；当前展示副本使用校准裁剪；生成摘要不替代实机或扫码，旧证据不重标新来源
+README.md[SV7L]: F:说明双语产品网站、本地开发、素材生成、来源验证与受保护预览维护 | R:code:website/package.json,code:website/VERIFICATION.md,code:docs/repository-settings.md | A:真实场景及降级；干净截图；字体群码；preview/website实际入口；锁文件变更需重捕获 | S:预览认证及禁止索引独立验证；生产需正式SITE_URL且main自动部署关闭；网站来源不改变APK身份；历史性能记录不冒称验证新来源
+THIRD_PARTY_NOTICES.md[SV5T]: F:说明网站运行库、字体、素材与构建工具的来源和许可义务 | R:code:website/package.json,code:website/ASSET_SOURCES.json | A:Astro及Three的MIT；GSAP标准许可；字体OFL；subset-font及HarfBuzz构建依赖 | S:GSAP不能改标MIT；构建字体工具不作为网页脚本分发；历史截图拍摄来源与当前展示处理以各来源清单区分
 VERIFICATION.md[SQ7L]: F:按实际源码与构建记录官网、Logo及CI交互验证和历史限制 | R:code:HANDOFF.md,code:assets/brand/VALIDATION.md | A:Logo已审阅；测试cbb534d三浏览器定点；云端六组；发布f001703及APK回读 | S:同输出摘要不改变线上来源；App首轮SDK失败与重试分开；移动视口非真机，软件WebGL不证明硬件帧率
 astro.config.mjs[FV7T]: F:配置静态Astro双语路由、公开origin及独立动态Three引擎分块 | R:code:website/src/components/Layout.astro,code:website/src/pages/robots.txt.ts | A:中文无前缀、英文/en/；尾斜线；SITE_URL或预览origin | S:生产缺SITE_URL直接失败；manualChunks为函数兼容Rolldown；分块不能让手机预加载Three
-package-lock.json[FV7L]: F:锁定独立网站npm依赖图、精确版本、来源和完整性摘要 | R:code:website/package.json,code:.github/workflows/website-ci.yml | A:lockfileVersion3；Astro/GSAP/Three及工具、可选平台包 | S:npm ci复用锁而不升级；与Flutter锁及App发行来源独立
-package.json[FV7T]: F:声明Astro静态站的固定Node24依赖与素材测试构建入口 | R:code:website/package-lock.json,code:website/scripts/prepare-download.mjs | A:Astro7及GSAP3及Three；build先Astro再验证APK再预算；独立于Flutter | S:APK为构建附件不是首屏资源；锁定依赖不在维护中隐式升级
+package-lock.json[FV7L]: F:锁定独立网站npm依赖图的精确版本、来源与完整性摘要 | R:code:website/package.json,code:.github/workflows/website-ci.yml | A:lockfileVersion3；运行库及生成工具；HarfBuzz的ESM类API；可选平台包 | S:npm ci按锁安装，定向更新须校验真实父依赖及兼容；锁文件还是场景和Logo来源输入；不代表Flutter依赖或App发行来源
+package.json[FV7T]: F:声明独立静态网站的Node24环境、运行依赖及开发验证命令 | R:code:website/package-lock.json,code:website/scripts/prepare-assets.mjs,code:website/scripts/check-budget.mjs | A:Astro7.4、Three和GSAP；本机dev及preview；构建下载与预算；素材、类型和测试命令 | S:素材生成独立于普通构建且需仓库原图；网站包版本不是App发行版本；依赖升级同时验证生成器与来源
 playwright.config.ts[TQ7T]: F:配置六套网站规格、三浏览器、失败取证与本地生产预览 | R:code:website/playwright.webgl.config.ts,code:website/tests/site.spec.ts | A:CI一retry及两worker；本地三worker；完整Chromium与Firefox及WebKit；4321预览 | S:CI测试90秒及断言20秒不改变产品八秒降级；历史output不在testMatch，能力跳过不算已验
 tsconfig.json[FQ5T]: F:对Astro及网页TypeScript启用严格检查并排除生成和验证输出 | R:code:website/package.json | A:astro/tsconfigs/strict；Node类型；允许TS扩展导入 | S:-
 vercel.json[FV7T]: F:配置Vercel静态构建输出与正式APK附件及全站安全响应头 | R:code:website/package.json,code:website/src/data/release.ts | A:npm ci及build；dist；APK MIME及attachment文件名及版本路径immutable缓存 | S:main自动Git生产部署保持关闭，推送不自动上线；附件身份来自正式release，不经运行时代理
@@ -745,7 +748,7 @@ typescript.txt[SV3T]: F:保留TypeScript工具的Apache2使用、专利及再分
 ===D:/GitHub/hooptrace/website/scripts/===
 check-budget.mjs[XP7L]: F:按生成HTML实际响应式资源图核算双语移动首屏及桌面场景独立压缩预算 | R:code:website/src/data/court-materials.ts,code:website/package.json | A:29组；390至1920及DPR1或2；gzip500及800KiB；Brotli只报告 | S:递归静态依赖并覆盖全部桌面纹理；仅锚点APK不计首屏；预算不验证来源摘要，不能替代prepare-assets
 measure-performance.mjs[XP7M]: F:在固定移动模拟环境采集双语冷加载、实际首屏传输和宣传图预算证据 | R:code:website/VERIFICATION.md,code:website/scripts/measure-gpu.mjs | A:390×844/DPR1；4倍CPU/150ms/1.6Mbps；每语言三次；LCP中位≤2.5s、CLS≤0.1；500/160KiB | S:新目录拒覆盖，绑定构建manifest与脚本SHA；手机不得请求3D贴图和引擎；headless实验不是Android现场CWV或桌面显示帧率；失败保原样本
-prepare-assets.mjs[XV7L]: F:从批准原图及正式包截图生成网站素材、字体子集、二维码和完整来源清单 | R:code:website/ASSET_SOURCES.json,code:website/scripts/prepare-community.mjs | A:干净截图；六场景占位；材质；逐资产SHA及许可；字形缺失拒绝 | S:原App图不改；占位输入变化须重导出；QR指官网入口；QQ码独立保原像素；GSAP许可不冒称MIT，APK来源不随网站变化
+prepare-assets.mjs[XV8L]: F:生成网站字体、干净截图、场景与品牌素材并写来源及许可清单 | R:code:website/ASSET_SOURCES.json,code:website/assets/art/scene-poster.json,code:docs/design/screenshot-presentation.json,code:website/scripts/prepare-community.mjs | A:Sharp转换；源码字形子集及HarfBuzz类API整形；发布页二维码；来源回读 | S:核对批准Logo、截图原始摘要尺寸及合成声明后按校准矩形仅裁系统区域；场景来源或捕获摘要不符即失败，不手改来源；原字体与截图保持；HarfBuzz从subset-font解析并动态导入，缺字拒绝生成；群码与发布页码分离
 export-scene-poster.mjs[XV6L]: F:通过实际生产页面的单一场景工厂导出开场和俯视占位并绑定源码构建 | R:code:website/assets/art/scene-poster.json,code:website/src/scripts/court-scene.ts | A:六种章节视口；包装真实导出；暂停后exportFrame；旧记录备份 | S:核对同一背景canvas与唯一工厂；全部成功才更新记录；origin默认本地但未拒远端，不能仅凭本地摘要证明任意远端来源
 measure-gpu.mjs[XO7L]: F:串行测双GPU视口密度矩阵的首次和预热动画并分离提交及呈现证据 | R:code:website/scripts/gpu-measurement.mjs,code:website/scripts/gpu-wheel-input.mjs | A:开场及真实滚轮跨章投篮；新进程；1920双密度及失败补三次；短追踪另列 | S:核实实际GPU焦点画质缓冲；不覆盖证据；缺呈现身份链不冒称60FPS且不为缺证重跑矩阵；现有工具不恢复已停止专项
 responsive-images.mjs[KP6T]: F:为资源预算按media、格式、sizes与DPR选择实际响应图片候选 | R:code:website/scripts/check-budget.mjs,code:website/tests/resources.test.ts | A:selectImageResource；min/max-width及pointer；AVIF回退；w/x描述符 | S:仅支持显式媒体和vw/px尺寸，未知条件或缺pointer失败，不假装完整浏览器图片选择器
@@ -757,7 +760,7 @@ diagnose-active-gpu.mjs[XO6M]: F:对本地AMD三个原生滚轮边界注入私�
 gpu-measurement.mjs[XO7M]: F:分别判定硬件环境、活跃提交节奏及呈现身份链的证据可用性 | R:code:website/scripts/measure-gpu.mjs,code:website/tests/gpu-measurement.test.ts | A:assessEnvironment及summarizeSubmissions及assessPresentation；58次每秒和p95二十毫秒 | S:保留活跃长帧及末次间隔；计数跳跃为unavailable；合成事件没有业务帧身份链仍不可判呈现通过
 gpu-wheel-input.mjs[XQ6S]: F:从实际章节几何生成可重放原生滚轮序列并保留限时输入和失败归属 | R:code:website/scripts/measure-gpu.mjs | A:native-wheel-v1；三段；六十输入每四十毫秒；createWheelWorkload及runWheelInput | S:测量驱动不以DOM滚动替代wheel；起点错位拒绝；总deadline及逐输入证据，错误仅序列化纯数据
 install-ci-browser.sh[XV6T]: F:为一次性Linux Actions runner安装指定完整浏览器及依赖并恢复临时网络配置 | R:code:.github/workflows/website-ci.yml | A:只允许chromium或firefox或webkit；playwright install带no-shell | S:仅GitHub Linux运行；不覆盖既有自有配置；仅替换已知Ubuntu镜像且trap恢复，不改签名或放宽下载验证
-prepare-community.mjs[XV6M]: F:合成夜场背景、原生QQ群码及准确字标并导出完整邀请图和轻量预览 | R:code:website/assets/community/generation.json,code:website/src/data/community.ts | A:prepareCommunityAssets；1536无损PNG及WebP；768预览；输出来源条目 | S:原码928方形不缩放重绘，完整成品逐像素回读校验；128白静区；预览不称原像素相同，扫码须QQ人工确认
+prepare-community.mjs[XV6S]: F:组合社区邀请背景、品牌路径字标与原生QQ码并验证全尺寸码像素 | R:code:website/assets/community/generation.json,code:website/ASSET_SOURCES.json | A:校准原图及生成背景摘要；1536无损PNG和WebP；768预览；动态导入HarfBuzz类API | S:QR仅裁原图不重采样重绘，全尺寸回读逐像素比对；缩略预览不作同像素证明；扫码仍依赖真实人工记录
 prepare-download.mjs[XV8L]: F:构建时从本地或摘要缓存及固定Release流式准备校验后的正式APK | R:code:website/src/data/release.ts,code:website/tests/prepare-download.test.ts | A:prepareDownload；HOOPITO_APK_PATH；验证后原子写入版本化dist | S:逐次复用核对大小SHA；仅网络失败可重试一次；120秒覆盖头及传输；完整性或错误页面立即失败；拒越界及symlink，失败保旧包清自有临时文件
 screenshot-presentation.mjs[XV6T]: F:解析已校准正式截图的内容裁剪矩形供展示副本和尺寸元数据共用 | R:code:docs/design/screenshot-presentation.json,code:website/scripts/prepare-assets.mjs | A:presentationForCapture按去编号basename和原图尺寸匹配 | S:未知图或尺寸不符失败关闭；矩形整数且在原画布内；新拍摄须重新校准，原发行证据不改
 
@@ -835,7 +838,7 @@ InfoPlist.strings[FL5T]: F:提供iOS中文安装显示名球豆 | R:code:ios/Run
 
 ===D:/GitHub/hooptrace/website/assets/art/===
 generation.json[FV5T]: F:保存网站横竖室内夜场氛围与透明篮球宣传源图的精确生成提示 | R:code:website/scripts/prepare-assets.mjs,code:website/ASSET_SOURCES.json | A:2026-10-12；image_gen内置；arena-wide/arena-tall/basketball；透明性 | S:这是宣传图生成来源，不是App截图或运行时3D材质；保原始提示
-scene-poster.json[FV6M]: F:绑定真实生产场景导出的开场及俯视占位、编译模块和32项源码输入 | R:code:website/scripts/export-scene-poster.mjs,code:website/scripts/prepare-assets.mjs | A:三种48百分比画布尺寸；六次捕获；浏览器与时间及SHA | S:不另造渲染器或捕获姿态；输入变化必须重新构建导出再生成，避免旧构图闪现
+scene-poster.json[FV6M]: F:绑定真实生产页面场景的六个占位捕获及编译模块与32项来源摘要 | R:code:website/scripts/export-scene-poster.mjs,code:website/scripts/prepare-assets.mjs | A:三种宽度的开场及演示姿态；48百分比画布；浏览器时间与渲染器记录 | S:不另建渲染器或编造拍摄姿态；来源变化须重新构建捕获生成，不能只修改摘要以混用旧图
 
 ===D:/GitHub/hooptrace/website/assets/materials/===
 generation-v1.json[FV4T]: F:保留首轮枫木、石墨金属和玻璃微细节材质的原始ImageGen提示 | R:code:website/assets/materials/generation.json | A:2026-10-11；内置生成；无烘焙灯光、场线或文字 | S:历史HoopTrace提示保原名；当前玻璃来源沿用此轮，不能重标生成日期
@@ -864,16 +867,24 @@ OFL-NotoSansSC.txt[SG4T]: F:附带中文组合字标所用Noto字体的SIL OFL1.
 
 ===D:/GitHub/hooptrace/assets/brand/hoopito-logo-kit/===
 README.md[SV5T]: F:说明批准Logo整理套件的目录、尺寸、留白、配色、许可与导出方法 | R:code:assets/brand/README.md,code:assets/brand/hoopito-logo-kit/manifest.json | A:多尺寸透明图及六组合；32px主体约20px；紧裁至少10%空白；组合画布建议96px | S:1024画布主体仅约620px，SVG内嵌PNG；文本副本LF保原文；不替换App和网站图标
-manifest.json[FV5M]: F:绑定Logo导出器、十项来源和三十四项输出的字节完整性及处理说明 | R:code:tool/brand/export_logo_kit.mjs | A:生成器与源SHA256；文本utf8-lf标记；输出大小尺寸alpha；字标混合SVG | S:图像字体按原字节，标记文本按LF算摘要；清单不含自身；摘要匹配不替代独立复现或视觉验收
+manifest.json[FV5M]: F:绑定Logo导出器、原始来源及套件输出的摘要、尺寸和处理方式 | R:code:tool/brand/export_logo_kit.mjs | A:来源SHA256与文本LF标记；图像alpha和尺寸；输出文件完整性 | S:清单不含自身；字体图像按原字节；清单匹配不能代替独立复现或视觉验收
 palette.json[FU4T]: F:声明套件沿用的竞技橙、近黑、暖白及中英文字体 | R:code:assets/brand/hoopito-logo-kit/README.md | A:FF5A1F及101112及F4F3EF；Barlow Bold与Noto Regular | S:-
 
 ===D:/GitHub/hooptrace/docs/design/===
 screenshot-presentation.json[FV6T]: F:校准八张正式包展示副本的系统栏与横屏留白裁剪矩形 | R:code:docs/release/v2.0.1-screenshots.json,code:website/scripts/screenshot-presentation.mjs | A:竖图1080乘1783；横图1818乘954；原图尺寸及来源记录 | S:坐标仅适用该拍摄集；保App像素与原始证据，新设备必须重新校准
 
 ===D:/GitHub/hooptrace/tool/brand/===
-export_logo_kit.mjs[XV6M]: F:从批准生产图和既有字体导出多尺寸Logo、六字标、许可预览及来源清单 | R:code:assets/brand/hoopito-logo-kit/manifest.json,code:tool/brand/export_logo_kit.test.mjs | A:Sharp图像变换；HarfBuzz字形路径；10来源与34输出摘要；仅写套件 | S:写入前校验前景批准SHA；原件不改，文本副本规范LF；SVG仍含PNG；不将套件复制到生产入口
-export_logo_kit.test.mjs[TV5S]: F:在独立输入和输出中验证Logo导出的行尾稳定性与来源保护 | R:code:tool/brand/export_logo_kit.mjs | A:LF与CRLF全文件一致；许可及锁文件摘要；master原字节；未批准前景拒绝 | S:依赖只链接已有node_modules；仅删双重路径检查通过的本次唯一临时目录；测试不改原图或证明跨OS运行
+export_logo_kit.mjs[XV6M]: F:从批准图像与原字体生成多尺寸Logo、路径字标和来源清单 | R:code:assets/brand/hoopito-logo-kit/manifest.json,code:tool/brand/export_logo_kit.test.mjs | A:Sharp处理；动态导入subset-font所属HarfBuzz类API；字形位置与轮廓；仅写套件 | S:先校验前景批准SHA；历史来源不改，文本副本LF；字标SVG仍嵌PNG，不冒称纯矢量
+export_logo_kit.test.mjs[TV5S]: F:验证Logo独立导出的行尾、来源保护与六种字标轮廓和布局 | R:code:tool/brand/export_logo_kit.mjs | A:LF及CRLF逐字节比对；有限变换及字形数；PNG尺寸；未批准前景拒绝 | S:仅链接已有依赖；双重校验后删本次临时目录；本测试不宣称已做跨OS或人工视觉验收
 
 ===D:/GitHub/hooptrace/website/assets/community/===
 README.md[SV5T]: F:说明QQ群邀请图的来源、像素合成、预览和更换群码验收流程 | R:code:website/assets/community/generation.json,code:website/scripts/prepare-community.mjs | A:1129560287；完整PNG已由用户实扫；本地查看保存 | S:完整图保原码像素，缩小预览不作相同承诺；通用解码器不支持QQ圆码，换码须重校准并实扫
 generation.json[FV6T]: F:绑定夜场邀请背景的完整ImageGen提示、原群码摘要、合成坐标和人工扫码记录 | R:code:website/scripts/prepare-community.mjs | A:原码928方形；1536画布；128白静区；源图及成品SHA | S:ImageGen只生成背景，不重绘码点或标志；用户确认只对指定完整PNG有效
+
+===D:/GitHub/hooptrace/tool/ci/===
+check_pr_conventions.py[XQ7S]: F:从事件JSON验证main目标PR的目的分支与约定标题 | R:code:tool/ci/pr_conventions.json,code:.github/workflows/repository-policy.yml | A:十种类型及可选scope与破坏标记；中文英文说明；元数据类型与编号一致性 | S:机器人例外须Bot身份、准确login及同源仓库ID与全名；旧名还绑定PR及head；缺失元数据失败，push与手动不检查PR
+check_whitespace.py[XQ5T]: F:检查提交范围的真实空白错误并传递Git退出码 | R:code:tool/ci/classify_changes.py,code:.github/workflows/repository-policy.yml | A:PR三点范围；push两点范围；无有效范围检查HEAD提交 | S:不能以干净工作区的空diff代替提交检查；真实范围历史缺失不会被吞掉
+check_workflows.py[XQ7T]: F:用标准库扫描工作流动作来源与不可删减的必需矩阵 | R:code:.github/workflows/flutter-ci.yml,code:.github/workflows/website-ci.yml | A:顶层动作全40位SHA及批准来源；API24和36；三浏览器及双WebGL分片；禁止忽略失败 | S:只支持明文块映射及标量列表，拒绝易藏键的语法；跳过脚本块；不是完整YAML解析器，仍需actionlint
+classify_changes.py[XQ7T]: F:保守地将Git变更分类为App与网站验证输入 | R:code:.github/workflows/flutter-ci.yml,code:.github/workflows/website-ci.yml,code:tool/ci/required_gate.py | A:有效SHA范围及NUL路径；禁重命名折叠；共享品牌截图与CI影响双域；字符串布尔输出 | S:未知路径、缺失历史或手动运行均跑双域；仅明确文档跳过，网站内容Markdown仍触发网站
+pr_conventions.json[FC6T]: F:集中定义分支类型、预览保留名与九个旧Dependabot过渡配对 | R:code:tool/ci/check_pr_conventions.py,code:CONTRIBUTING.md | A:十种普通类型；preview/website；准确PR编号至head名称映射 | S:名单本身不证明身份；旧名前缀没有永久豁免，校验器仍核对机器人与来源仓库
+required_gate.py[XQ8T]: F:将分类结果和适用任务状态汇总为稳定必需合并门禁 | R:code:.github/workflows/flutter-ci.yml,code:.github/workflows/website-ci.yml,code:tool/ci/classify_changes.py | A:App四组及网站三组；NEEDS_JSON；摘要与非零失败 | S:分类先成功且布尔输出完整；适用任务须全success，不适用须全skipped；缺失失败取消不能放行；逐矩阵成员覆盖由工作流策略另验
