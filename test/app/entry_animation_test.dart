@@ -59,11 +59,7 @@ void main() {
     tester,
   ) async {
     final calls = <MethodCall>[];
-    for (final channel in [
-      SystemChannels.platform,
-      const MethodChannel('xyz.luan/audioplayers'),
-      const MethodChannel('xyz.luan/audioplayers.global'),
-    ]) {
+    for (final channel in [SystemChannels.platform]) {
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
         call,
       ) async {
@@ -89,9 +85,7 @@ void main() {
       calls.where(
         (c) =>
             c.method.contains('HapticFeedback') ||
-            c.method == 'play' ||
-            c.method == 'create' ||
-            c.method == 'setSourceBytes',
+            c.method == 'SystemSound.play',
       ),
       isEmpty,
     );
