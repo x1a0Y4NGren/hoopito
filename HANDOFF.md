@@ -1,5 +1,27 @@
 # Hoopito · 球豆交接记录
 
+## 收尾默认整合 main（2026-10-27）
+
+用户本轮明确要求：每次明确项目收尾完成既有验证、交接、证据保存、资源处理、AOCI 对齐和本地提交后，默认推送本轮分支，通过 PR 和当前 main 保护检查后手动 squash 合并，无需再询问同一推送或合并授权。[贡献指南](CONTRIBUTING.md#项目收尾流程) 与 [AGENTS](AGENTS.md#项目收尾仅由用户明确触发) 同步该默认范围；普通完成或单独修改规则不触发收尾，用户暂停、仅本地等限制优先。tag、正式发行、网站部署、长期预览更新与无关资源删除继续单独授权，main 的 strict 三门禁、CodeQL、0 必需批准和关闭 auto-merge 均保留。
+
+本轮沿用 `chore/repository-maintenance-closeout`，保留先前本地收尾 `68c4f1385fc1ec5d0ba0d1cca0441c8b38bb1bf6`，同步 `main@317991680ea81e1342657ba29b1e3a4ef232eb14` 后更新规则；#31 的 App 依赖清理属于其他任务，不冒称本轮实现。先前“仅本地、待授权”的记录描述当时阶段，本轮授权继续完成整合。合并前本地 32 项策略测试、工作流规则检查、actionlint 和两份规则的 23 个本地文档链接通过；既有补丁仅跳过明确关闭的 PR，开放 PR 的标题编辑与缺失元数据校验保留。
+
+本轮以同步后的实际源码重新维护 AOCI；PR、当前基线检查、最终 squash SHA、合并后 CI 与可恢复工作树归档的实际结果保存到 `D:/DevCache/HoopitoArtifacts/closeout-main-integration-20261027/` 并最终汇报，不预写成功，也不为回填自身合并记录再提交第二轮 PR。旧证据继续保存在 `D:/DevCache/HoopitoArtifacts/repository-maintenance-closeout-20261027/`。未完成整合或必要验证前保留工作树；主工作区未跟踪素材和其他任务工作树不处理。本轮不发布 App 或生产网站，不改变正式 APK 和既有部署来源。
+
+## 仓库设置与维护规范收尾（2026-10-27）
+
+本轮仓库设置和维护规范已分别通过 [PR #20](https://github.com/x1a0Y4NGren/hoopito/pull/20)、[PR #26](https://github.com/x1a0Y4NGren/hoopito/pull/26)、[PR #28](https://github.com/x1a0Y4NGren/hoopito/pull/28) 和 [PR #29](https://github.com/x1a0Y4NGren/hoopito/pull/29) 合入，最终功能整合点为 `d2ec9aa3a8e001a3bf87b4789fb075776814f58d`。贡献指南是人工与自动化维护的统一入口：普通分支使用类型／目的，新增 Dependabot 分支使用 `deps/`，PR 标题与最终 squash 提交采用约定格式。现有依赖 PR 的旧名例外绑定准确 PR、head、作者与来源仓库，不授予任意同名前缀豁免。`main` 保留 0 个必需批准、严格最新基线与三项必需 CI；合并后自动删除短期分支，发行标签与未来不可变 Release 的约定见[仓库设置策略](docs/repository-settings.md)。
+
+规范源码 `3ac31eb6bd468d75b5c9036c2377016fb81db4f9` 对应 [App CI 40200961800](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40200961800) 和 [Website CI 40200961806](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40200961806)，全部适用任务成功；CodeQL 亦成功。策略的 opened 与 edited 两次运行均成功，标题编辑会真实触发重验。本地 32 项策略测试、actionlint、Dependabot schema、链接与空白检查通过；保留初始失败、网络和验收脚本修正证据，不将其改标为首次成功。PR #29 的纯文档路径正确跳过无关构建，三项门禁成功。
+
+另保留 [PR #29 合并后的描述编辑失败 40203635716](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40203635716)：旧 head 自动删除后，空白检查无法解析旧比较范围，退出 128；它发生在合并之后，不能抹去或冒称通过。收尾补丁仅跳过明确已关闭 PR 的策略 job，push 和手动检查继续执行；开放 PR 的标题编辑仍触发原门禁，状态字段缺失也不会绕过既有元数据校验。该补丁仅本地验证和提交，尚未推送或取得新的远端 CI；本轮工作树因此保留，等待后续授权整合，不提前归档未合入修正。
+
+长期预览已迁移为受保护的 `preview/website`。[预览源码](https://github.com/x1a0Y4NGren/hoopito/commit/f83a26892b9c9dfd21f1043858cc72b60ee3c528) 从旧 `0085686ffa1bd74882dca9f7b593f8100c7a5981` 派生，仅改网站 CI 分支触发名；[40202329365](https://github.com/x1a0Y4NGren/hoopito/actions/runs/40202329365) 的构建、三浏览器与两组 WebGL 全部通过。实际 Preview 为 `dpl_J258RCMpQk4R9Yb1xG9rmcR1k3Yq`，已回读项目、Git 来源与[真实分支入口](https://hoopito-website-git-preview-website-xyr175-9459s-projects.vercel.app)，双语页面访问成功、匿名访问转向 SSO。旧分支在新入口、CI 与保护验证后按精确 SHA 删除；历史部署和记录保留。没有新建认证绕过令牌，没有发布生产网站或 App。
+
+本次用户单独要求收尾；隔离工作区已基于当前维护 `main@792cba0ae0c707f6efdddec6349eefb08d19a63c` 整理。后续依赖更新属于其他任务，不回填为本轮实现或验证。2026-10-25 启用扫描时记录的 8 条依赖和 2 条 CodeQL 告警是当时基线，不当作当前未解决数量；当前处理状态以 Security 与对应依赖任务为准。官网生产来源仍按既有发布记录，正式 APK 来源仍为 `4ecd960e5af1f6b12124a43e330d67efb628281b`，本轮提交不改变其来源。
+
+设置快照、规则回读、精确分支恢复 SHA、迁移和失败证据共 89 文件已复制并逐项回读摘要，保存在本地 `D:/DevCache/HoopitoArtifacts/repository-maintenance-closeout-20261027/`；`preserved-evidence-manifest.json` 记录来源、大小与 SHA-256。该目录继续保存本次 AOCI、Git 和工作树回执，实际成功与剩余状态以最终回执为准。收尾内容本地提交，当前收尾指令不单独授权新的远端发布或推送；归档只处理本轮已交付的隔离工作树，其他任务工作树、主工作区未跟踪素材、共享缓存、登录态和原始证据保留。
+
 ## Logo 与 CI 同步后的阶段收尾（2026-10-25）
 
 当前维护分支为 `main`。Logo 整理已通过维护者审阅，以 `11e1ba51a4889bcf90826f35d514c32e62ebbced` 合入并推送，[Issue #16](https://github.com/x1a0Y4NGren/hoopito/issues/16) 已按完成关闭。套件 34 个输出及清单共 35 文件在 Windows 两份干净 checkout 与原生 Linux／WSL2 中逐字节一致，10 项来源摘要一致，三个环境各 5／5 导出测试通过；所有图像及 SVG 字节与原整理稿相同。历史来源不改写，文字副本与来源摘要明确规范为 UTF-8／LF。小尺寸、留白和混合 SVG 使用限制见[品牌入口](assets/brand/README.md)与[验证记录](assets/brand/VALIDATION.md)。

@@ -26,7 +26,9 @@ PR titles and final squash commits follow `type(scope)!: subject`, with scope an
 
 完成需求本身的源码、必要使用文档、格式化、测试、构建及内容／链接检查照常进行；本次操作造成的临时设备设置或资源占用须及时恢复，不等待收尾授权。按需读取已有 AOCI 合同和认知用于理解代码不属于收尾，但不得借读取触发写入、治理或修复；只为修改规则等局部文档任务，不额外启动全库认知读取。未维护的索引继续标为 Dirty/Stale，不冒称当前对齐；必要时在普通交付中简短说明待用户要求收尾后处理，不创建 AOCI 待办写入。
 
-明确收尾后，顺序为：核对本轮范围与授权 → 检查改动及适用验证 → 保存来源与更新必要交接文档 → 处理本轮临时资源 → 最终稳定状态下维护 AOCI 并证明对齐 → 审查差异并本地提交 → 按已有授权整合或推送 → 汇报实际结果与剩余事项。完整步骤、跳过条件和安全边界见 CONTRIBUTING。收尾默认允许本轮改动的本地提交；合并、推送、PR、tag、发布、部署、远端或共享资源删除仍须各自的明确授权，已暂停事项继续暂停。用户直接单独要求其中一项时，仅执行该项，不据此扩展成整套收尾。
+明确收尾后，顺序为：核对本轮范围与限制 → 检查改动及适用验证 → 保存来源与更新必要交接文档 → 处理不依赖合并的本轮临时资源 → 最终稳定状态下维护 AOCI 并证明对齐 → 审查差异并本地提交 → 推送本轮分支并创建或更新 PR → 通过最新 main 基线的全部保护检查后手动 squash 合入 main → 核验整合与合并后 CI、保存回执并安全归档本轮工作树 → 汇报实际结果。完整步骤、跳过条件和安全边界见 CONTRIBUTING。
+
+明确的项目收尾默认授权本轮本地提交、分支推送、创建或更新 PR，以及通过检查后的 main 合并，无需再次询问同一整合授权。用户明确的暂停、仅本地、禁止提交或推送等限制优先；tag、正式发行、网站部署、长期预览分支更新及无关远端或共享资源删除仍须单独授权。用户直接单独要求其中一项时，仅执行该项，不据此扩展成整套收尾。本轮结果已经在 main 时只核验，不创建空 PR 或重复合并；保护检查失败或整合未完成时保留分支、工作树与证据，不绕过门禁，也不报告完整收尾完成。合并后的 SHA 和 CI 回执保存到外部证据并汇报，不为回填自身合并记录再创建一轮提交和 PR。
 
 ## Project Structure
 
@@ -70,11 +72,11 @@ Keep startup evidence tied to its source commit, build mode, renderer, and devic
 
 ## Collaboration and Delivery
 
-网站每次改动默认先在本地实现、验证并运行，提供本地地址供用户检查和审阅。只有用户在当前行动中明确要求“推送”“更新远端预览”等时才推送；此前网站提交／部署授权不自动覆盖后续改动。完成本地检查后保持本地改动，等待用户审阅，不主动推送或发布。
+网站每次改动默认先在本地实现、验证并运行，提供本地地址供用户检查和审阅。普通开发完成本地检查后保持本地改动，等待用户审阅；用户明确要求“推送”或“项目收尾”时，按本轮范围推送，其中明确收尾默认继续通过 PR 合入 main。更新长期远端预览或部署网站仍需该次明确授权；此前提交／部署授权不自动覆盖后续改动，收尾合并不等于发布网站。
 
 Delegate independent, bounded work when useful. Create worktrees only when isolation is needed. Wait only for an actual dependency; use completion notifications or bounded waits instead of fixed sleeps and repeated unchanged polls.
 
-When committing is authorized, use short imperative commits, such as `fix: guard replay navigation`. Report the result, actual verification, and remaining blockers. Project closeout follows the explicit trigger above; merging, pushing, and publishing follow their own authorization for the current task. Historical release instructions do not grant it.
+When committing is authorized, use short imperative commits, such as `fix: guard replay navigation`. Report the result, actual verification, and remaining blockers. Explicit project closeout includes the current task's commit, branch push, PR and checked squash merge into main, subject to the user's narrower limits. Publishing, deployment and long-lived preview updates remain separately authorized; historical release instructions do not grant them.
 
 <!-- aoci:begin -->
 ## AOCI 仓库认知
