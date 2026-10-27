@@ -1,5 +1,13 @@
 # Hoopito · 球豆交接记录
 
+## 收尾默认整合 main（2026-10-27）
+
+用户本轮明确要求：每次明确项目收尾完成既有验证、交接、证据保存、资源处理、AOCI 对齐和本地提交后，默认推送本轮分支，通过 PR 和当前 main 保护检查后手动 squash 合并，无需再询问同一推送或合并授权。[贡献指南](CONTRIBUTING.md#项目收尾流程) 与 [AGENTS](AGENTS.md#项目收尾仅由用户明确触发) 同步该默认范围；普通完成或单独修改规则不触发收尾，用户暂停、仅本地等限制优先。tag、正式发行、网站部署、长期预览更新与无关资源删除继续单独授权，main 的 strict 三门禁、CodeQL、0 必需批准和关闭 auto-merge 均保留。
+
+本轮沿用 `chore/repository-maintenance-closeout`，保留先前本地收尾 `68c4f1385fc1ec5d0ba0d1cca0441c8b38bb1bf6`，同步 `main@317991680ea81e1342657ba29b1e3a4ef232eb14` 后更新规则；#31 的 App 依赖清理属于其他任务，不冒称本轮实现。先前“仅本地、待授权”的记录描述当时阶段，本轮授权继续完成整合。合并前本地 32 项策略测试、工作流规则检查、actionlint 和两份规则的 23 个本地文档链接通过；既有补丁仅跳过明确关闭的 PR，开放 PR 的标题编辑与缺失元数据校验保留。
+
+本轮以同步后的实际源码重新维护 AOCI；PR、当前基线检查、最终 squash SHA、合并后 CI 与可恢复工作树归档的实际结果保存到 `D:/DevCache/HoopitoArtifacts/closeout-main-integration-20261027/` 并最终汇报，不预写成功，也不为回填自身合并记录再提交第二轮 PR。旧证据继续保存在 `D:/DevCache/HoopitoArtifacts/repository-maintenance-closeout-20261027/`。未完成整合或必要验证前保留工作树；主工作区未跟踪素材和其他任务工作树不处理。本轮不发布 App 或生产网站，不改变正式 APK 和既有部署来源。
+
 ## 仓库设置与维护规范收尾（2026-10-27）
 
 本轮仓库设置和维护规范已分别通过 [PR #20](https://github.com/x1a0Y4NGren/hoopito/pull/20)、[PR #26](https://github.com/x1a0Y4NGren/hoopito/pull/26)、[PR #28](https://github.com/x1a0Y4NGren/hoopito/pull/28) 和 [PR #29](https://github.com/x1a0Y4NGren/hoopito/pull/29) 合入，最终功能整合点为 `d2ec9aa3a8e001a3bf87b4789fb075776814f58d`。贡献指南是人工与自动化维护的统一入口：普通分支使用类型／目的，新增 Dependabot 分支使用 `deps/`，PR 标题与最终 squash 提交采用约定格式。现有依赖 PR 的旧名例外绑定准确 PR、head、作者与来源仓库，不授予任意同名前缀豁免。`main` 保留 0 个必需批准、严格最新基线与三项必需 CI；合并后自动删除短期分支，发行标签与未来不可变 Release 的约定见[仓库设置策略](docs/repository-settings.md)。

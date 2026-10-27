@@ -4,18 +4,18 @@
 .gitattributes[FV6T]: F:固定脚本与来源清单行尾并保护图像及生成物字节 | R:code:tool/brand/export_logo_kit.mjs | A:网站文本及截图裁剪配置LF；网站public与Logo套件禁转换 | S:文本来源摘要按导出器规范LF计算，不能通过空白例外掩盖来源差异
 .gitignore[FV6S]: F:界定构建缓存、设备数据、签名秘密及本机配置的Git忽略范围 | R:code:.aoci/.gitignore,code:android/.gitignore | A:Git ignore patterns；忽略Python缓存及Codex本机配置 | S:正式AOCI卷与共享治理配置可追踪，运行资产及本机绝对路径配置不能提交
 .metadata[FV4T]: F:保存Flutter项目类型、创建版本和迁移基准 | R:code:.github/workflows/flutter-ci.yml | A:Flutter migrate metadata | S:由Flutter工具维护；main.dart和iOS工程排除迁移
-AGENTS.md[SG9S]: F:约束源码兼容、展示证据、语义分支命名及显式收尾和AOCI操作 | R:code:CONTRIBUTING.md,code:HANDOFF.md | A:类型目的命名覆盖工具默认；preview及deps保留用途；命令事务与schema3及JSON2 | S:普通完成不授权治理或清理；收尾默认仅本地提交，整合发布分别授权；原签名及持久身份保持；认知截断不得补答
+AGENTS.md[SG9S]: F:约束源码兼容、展示证据、语义分支及明确收尾后默认PR整合与AOCI操作 | R:code:CONTRIBUTING.md,code:HANDOFF.md | A:目的分支覆盖工具默认；preview及deps保留；命令事务与schema3及JSON2；收尾后最新基线squash | S:普通完成不触发治理或清理；明确收尾含本轮提交推送PR及main合并，用户更窄限制优先；发行部署和长期预览另授权；已在main不重复，合并回执不引发第二轮PR；原签名及持久身份保持
 CHANGELOG.md[SV6T]: F:按版本记录Hoopito品牌同步及既有功能兼容和修复 | R:code:pubspec.yaml,code:docs/release/v2.0.1-release-notes.md | A:2.0.1品牌与备份回调修复；Unreleased与历史版本比较 | S:v2.0.0更换v1证书而v2.0.1沿用v2；旧App不能导入新名称JSON，签名与数据兼容分别判断
-CONTRIBUTING.md[SQ7M]: F:统一问题确认、目的分支、按影响验证、PR审阅与显式收尾流程 | R:code:AGENTS.md,code:docs/repository-settings.md,code:docs/release/release-checklist.md | A:十种分支类型；PR及squash标题；strict三门禁及零必需批准；八步收尾 | S:中间提交不强制重写；命名例外核对身份及来源；本地提交不自动授权推送；未变有效证据可复用
-HANDOFF.md[SW7M]: F:交接仓库治理、规范及预览迁移来源并保留历史发布和失败证据 | R:code:docs/repository-settings.md,code:website/README.md | A:20及26设置；28规范；29入口；源码与CI配对；89份证据摘要保存 | S:合并后描述编辑失败独立保留；仅排除明确关闭状态的修正仍在本地；历史告警数不代表当前；后续文档不改变生产或APK来源
+CONTRIBUTING.md[SQ7M]: F:统一问题确认、目的分支、按影响验证及明确收尾后默认合入main的维护流程 | R:code:AGENTS.md,code:docs/repository-settings.md,code:docs/release/release-checklist.md | A:十种类型；PR及squash标题；strict三门禁及零批准；八步收尾至核验归档 | S:收尾含本轮推送PR和检查后main合并，不复问；用户限制优先；发行部署另授权；已合入不造空PR；合并回执存外部避免循环；变更输入须重验索引
+HANDOFF.md[SW7M]: F:交接仓库治理、预览迁移与收尾默认整合规则并保留来源及失败证据 | R:code:CONTRIBUTING.md,code:docs/repository-settings.md,code:website/README.md | A:20及26设置；28规范；29入口；68c4f13本地收尾；3179916后默认整合；证据目录 | S:旧待授权状态保留当时事实；最终合并结果以外部回执为准，不预写成功；其他任务源码不归本轮；历史告警非当前数量；APK与生产来源不改
 LICENSE[SG6T]: F:以MIT许可授予项目软件及文档的使用、复制、修改、分发和再许可权，并规定声明保留与免责 | R:code:README.md,code:CONTRIBUTING.md | A:MIT License；版权归2026 x1a0Y4NGren；副本及实质部分须保留版权和许可声明；软件按原样提供且无担保 | S:-
 PRIVACY.md[SS8T]: F:说明Hoopito离线数据、权限、备份、内部副本及删除与分享边界 | R:code:android/app/src/main/AndroidManifest.xml,code:lib/core/export/safety_backup_store.dart | A:无账号云同步追踪广告；自动备份默认关闭；SAF用户授权 | S:私有副本随卸载清数据丢失；替换回退先保护当前且禁止活动比赛；网页与GitHub访问日志不属于App上传
 README.md[SG7M]: F:介绍离线单挑应用并导航正式下载、官网社区及已审阅品牌套件 | R:code:website/README.md,code:assets/brand/README.md | A:2.0.1+5；双语展示截图；QQ1129560287；GitHub发行源及同包渠道 | S:正式APK来源固定4ecd960；v2同证覆盖保数据，v1先外部JSON备份；Logo整理不替换生产图标
 SECURITY.md[SS8T]: F:规定最新正式版的安全支持、私密报告和发行可信来源核验 | R:code:PRIVACY.md,code:docs/release/release-checklist.md,code:android/app/src/main/AndroidManifest.xml | A:最新正式版获修复；私密GitHub报告；7日确认、14日分级为尽力目标 | S:危及数据、SAF边界或代码执行的问题不公开报告；禁含真实球员数据和密钥；正式APK必须对应签名tag、校验和和维护者证书，Debug与未签名产物不算发行
 analysis_options.yaml[FQ5T]: F:继承Flutter lint并配置格式习惯及旧源码夹具分析边界 | R:code:pubspec.yaml,code:tool/release/generate_v1_upgrade_fixture.dart | A:单引号尾逗号避免print优先final；flutter analyze | S:历史v1夹具有意导入package:hooptrace并排除当前包分析，不能因此改写归档源码依赖
 l10n.yaml[FL6T]: F:指定Flutter中文ARB模板与本地化代码输出位置和类名 | R:code:lib/app/l10n/app_zh.arb,code:lib/app/l10n/app_localizations.dart | A:arb-dir=lib/app/l10n；AppLocalizations；app_localizations.dart | S:-
-pubspec.lock[FV7L]: F:锁定Dart与Flutter依赖解析版本、来源及hosted校验和 | R:code:pubspec.yaml,code:.github/workflows/flutter-ci.yml | A:direct/transitive包；Dart>=3.11<4；Flutter>=3.38.4 | S:发行构建enforce-lockfile不能升级依赖；此锁不替代Android运行时Maven清单
-pubspec.yaml[FV8T]: F:声明hoopito包2.0.1+5、SDK、固定依赖、本地化字体与SQLite源码hook | R:code:pubspec.lock,code:lib/app/app_metadata.dart,code:third_party/sqlite/README.md | A:不发布pub；Drift2.34；gen-l10n；Barlow/Noto Sans SC；sqlite3 source:path | S:SQLite从仓库amalgamation编译不下载二进制；版本同步常量；双ARB变更重新生成
+pubspec.lock[FV7L]: F:锁定Dart与Flutter依赖的版本、来源和hosted校验和 | R:code:pubspec.yaml,code:.github/workflows/flutter-ci.yml | A:direct与transitive；Dart3.11及Flutter3.38.4下界；移除未用音频和Cupertino依赖链 | S:构建用enforce-lockfile拒绝隐式升级；删除插件不改变系统计分反馈；此锁文件不能替代Android运行时Maven清单
+pubspec.yaml[FV8T]: F:声明hoopito应用版本、SDK依赖、字体资源及本地SQLite源码hook | R:code:pubspec.lock,code:lib/app/app_metadata.dart,code:third_party/sqlite/README.md | A:2.0.1+5禁pub发布；Drift2.34；gen-l10n；Barlow及Noto；SQLite source/path | S:SQLite用仓库amalgamation编译，不下载二进制；启动音频不入包且无播放器插件，计分保留系统反馈；原生版本及双ARB保持同步
 
 ===D:/GitHub/hooptrace/.github/ISSUE_TEMPLATE/===
 bug_report.yml[SQ4T]: F:收集双语缺陷的版本设备、复现步骤和诊断证据 | R:code:SECURITY.md | A:GitHub表单标bug与needs-triage；2.0.1版本示例 | S:安全漏洞走私密报告，不上传真实球员数据或签名秘密
@@ -116,7 +116,7 @@ paint_ball.json[FU5T]: F:声明飞行阶段使用的120×120、60fps、30帧Lott
 paint_splash.json[FU5T]: F:声明落点阶段使用的180×180、60fps、36帧Lottie素材，54直径橙圆从35%缩放至第24帧的100%，外配78直径墨色环 | R:code:lib/features/scoring/motion/scoring_motion.dart,code:lib/features/scoring/motion/scoring_motion_overlay.dart | A:Lottie 5.7.15；teamFill与inkFill命名层；无外部素材 | S:形状组透明度为0；三层teamFill名称供宿主球队着色，实际播放时长由宿主覆盖
 
 ===D:/GitHub/hooptrace/assets/audio/===
-README.md[SU4T]: F:说明保留的原创180ms启动音效的确定性合成、固定种子和MIT来源 | R:code:tool/release/generate_entry_assets.py,code:lib/app/entry/entry_feedback.dart | A:entry_swish.wav；单声道44.1kHz；0x48545243；无第三方录音 | S:资产保留不代表当前静音启动会加载或播放
+README.md[SU4T]: F:说明历史原创180ms启动音效的固定种子合成与MIT来源 | R:code:tool/release/generate_entry_assets.py,code:pubspec.yaml | A:entry_swish.wav；单声道44.1kHz；0x48545243；无第三方录音 | S:历史WAV不入包，当前启动静音；生成器不再重建音频
 
 ===D:/GitHub/hooptrace/assets/icons/===
 README.md[SV5T]: F:说明已审核C独眼球怪的三色生产图、平台派生和静音启动资源流程 | R:code:tool/release/generate_launcher_icons.py,code:tool/release/generate_entry_assets.py,code:docs/design/brand/source.json | A:1024透明前景、620安全区、平台图标与商店图、单色负空间 | S:黑色瞳孔、嘴和篮球纹路必须保留；旧音频仍可确定性生成但启动不加载播放
@@ -300,7 +300,6 @@ recording_confirmation.dart[CU8T]: F:为计分终场、复盘和完整度修正�
 score_flow_chart.dart[CU6T]: F:将既有比分流绘为红蓝双折线、网格和可朗读最终比分 | R:code:lib/core/domain/analytics/match_analytics.dart,code:lib/features/summary/match_summary_page.dart | A:entries与双方名称；140高度；主题队色 | S:横轴按已记录事件顺序均分而非墙钟间隔，不重算或改比赛事实
 
 ===D:/GitHub/hooptrace/lib/app/entry/===
-entry_feedback.dart[IU5T]: F:保留可预载短音效的旧启动播放器实现并管理单池限时停止释放 | R:code:assets/audio/README.md,code:test/app/entry_assets_test.dart | A:EntryFeedbackPlayer/AssetEntryFeedbackPlayer；prepare/playSwish/dispose；0.32音量/240ms | S:当前静音启动未调用此实现；只准备一次，未准备不播；迟到准备在销毁后释放；Android不抢焦点，iOS ambient
 entry_brand_image.dart[IU7T]: F:按固定启动画布物理像素解码已批准透明C标识并记录可选准备耗时 | R:code:lib/app/entry/entry_motion_pose.dart,code:lib/core/diagnostics/startup_diagnostics.dart | A:decodeEntryBrandImage(devicePixelRatio)返回ui.Image；禁止上采样 | S:调用方拥有图像，codec必释放；资源与静止几何不变，解码deadline由Gate执行
 entry_creature.dart[KU8M]: F:以48×48纹理网格对C标识做整体Q弹与受保护上半部水波和局部余波 | R:code:lib/app/entry/entry_motion_pose.dart,code:lib/app/entry/entry_brand_image.dart | A:EntryCreature/EntryCreatureMesh；复用拓扑、权重、49列波与帧缓冲 | S:起止直接绘原图避免采样偏差；眼嘴局部波衰减；绘制失败锁定静态原图不每帧重试；image归Gate，shader/vertices各自释放
 entry_diagnostic_binding.dart[IO5T]: F:为可选Profile启动诊断包围框架drawFrame并捕获未提交帧的同步耗时 | R:code:lib/core/diagnostics/startup_diagnostics.dart,code:lib/main.dart | A:EntryDiagnosticBinding.drawFrame | S:补充FrameTiming缺失的deferred框架帧，不作为正常运行持久日志
@@ -483,8 +482,8 @@ editorial_design_system_test.dart[TU7L]: F:校验编辑式对比、焦点语义�
 editorial_feature_goldens_test.dart[TU7M]: F:以真实字体校验赛果、赛前、非法目标输入、计分及复盘的双语明暗图像 | R:code:test/support/golden_fonts.dart,code:lib/features/summary/match_summary_page.dart | A:五页面场景×双语×明暗；390×844或731×411；目标输入1000错误 | S:静态夹具不证明端到端或设备性能；平台分别选Golden，恢复view
 editorial_golden_font_pipeline_test.dart[TU6M]: F:用实际栅格检测Golden字体是否为Roboto/Noto/MaterialIcons而非Ahem或缺字 | R:code:test/support/golden_fonts.dart,code:lib/app/app_theme.dart | A:字体职责；tune图标非缺字；拉丁中文墨内白比例阈值 | S:比例阈值容纳平台抗锯齿，不固定图像hash；捕获后释放ui.Image
 entry_animation_golden_test.dart[TU6S]: F:用实际C纹理对七个标准姿态及中英窄屏大字等待提示作Golden回归 | R:code:lib/app/entry/entry_creature.dart,code:test/support/golden_fonts.dart | A:0/150/330/480/690/860/930ms；390×844；320×240/200% | S:直接姿态采样不证明播放时序或帧率；图像codec和纹理明确释放
-entry_animation_test.dart[TU8L]: F:以可控时钟、解码和原生就绪回调回归静音启动、平滑跳过及失败终态 | R:code:lib/app/entry/hoopito_entry_gate.dart,code:lib/app/entry/entry_renderer_ready.dart | A:无音频触觉调用；慢初始化/原生交接/截止时间/禁减动效/进程资格 | S:墙钟UI阻塞仍拒迟到纹理并释放；首静止帧提交且原生退出才跳；取消不穿透；偏好和资源迟到不重播；Widget/mock不证明真机性能
-entry_assets_test.dart[TH7S]: F:核验生成音频、C启动图密度、平台近黑背景及动效偏好缓存资源契约 | R:code:tool/release/generate_entry_assets.py,code:lib/core/settings/motion_preference_cache.dart | A:WAV参数；PNG解码尺寸；launch_mark替代旧launch_hoop | S:旧音频资产检查不表示启动播放；平台静态匹配不等于实际交接验收
+entry_animation_test.dart[TU8L]: F:以可控时钟图像及原生回调回归静音启动、平滑跳过与失败终态 | R:code:lib/app/entry/hoopito_entry_gate.dart,code:lib/app/entry/entry_renderer_ready.dart | A:静音平台调用；慢初始化及原生交接；终止与后台；减弱关闭动效；图像释放 | S:UI阻塞拒绝迟到图像并释放；首静帧提交及原生退出先于跳动；取消不能点透；偏好及资源迟到不能重启；Widget与mock不证明实机帧率或引擎实际交接
+entry_assets_test.dart[TH7S]: F:验证启动资源包排除、C标记密度尺寸及原生窗口和动效缓存契约 | R:code:pubspec.yaml,code:tool/release/generate_entry_assets.py,code:lib/core/settings/motion_preference_cache.dart | A:AssetManifest无历史WAV；保留三种字体且无Cupertino；PNG尺寸；平台静态入口 | S:静态平台源码匹配不证明实际交接帧率；测试不生成或恢复历史音频
 ios_deployment_target_test.dart[TV6T]: F:静态核对CocoaPods与Xcode最低iOS版本 | R:code:ios/Podfile,code:ios/Runner.xcodeproj/project.pbxproj | A:Podfile精确14.0；Xcode匹配非空且均>=14 | S:精确声明与正则匹配不替代iOS编译设备验收
 match_session_coordinator_test.dart[TD7T]: F:验证会话快照保存及终场后复盘修改保护 | R:code:lib/app/match_session_coordinator.dart | A:撤回红分后蓝3分唯一事件；终场后saveCurrent保留Reviewed备注 | S:未注入命令服务，只覆盖旧快照适配；终场保存不得覆盖后续复盘
 match_view_data_mapper_test.dart[TB7M]: F:验证比赛到回放模型的事实统计球权映射 | R:code:lib/app/match_view_data_mapper.dart | A:时长elapsed/确认位置/软删原字段；FG/FT结果；手动建议来源 | S:软删事件留供复核；命中未中不证明记录完整；缺失或反向球权边界丢弃
@@ -520,7 +519,7 @@ entry_creature_test.dart[TU7M]: F:逐毫秒校验48×48网格无翻折、表情�
 entry_motion_pose_test.dart[TU6S]: F:验证Q弹关键姿态、连续一阶导数、衰减波和140ms余波的数值契约 | R:code:lib/app/entry/entry_motion_pose.dart | A:12dp跃起/3dp波/2dp余波；零strength精确rest；逐毫秒边界 | S:数值模型回归不证明最终栅格或设备流畅度
 entry_renderer_ready_test.dart[TH6T]: F:验证Android Surface和原生启动退出通道成功、销毁失败及iOS无需桥接 | R:code:lib/app/entry/entry_renderer_ready.dart | A:waitUntilReady/waitUntilPresented；false抛StateError | S:通道mock不证明真实Surface交接
 entry_startup_host_test.dart[TW8M]: F:回归稳定启动宿主跨数据库和语言就绪、慢加载、失败旧库及深链放行 | R:code:lib/app/hoopito_app.dart,code:lib/app/app_providers.dart | A:保持同一Gate state；2s提示无spinner；已消费与关闭动画静态等待；/history深链 | S:初始化兼容→内置规则→辅助备份先后由Completer验证；内存库和Widget会话不构成冷进程证明
-recording_confirmation_test.dart[TU6T]: F:验证完整度确认保留历史locations/full并可显式降级 | R:code:lib/app/design_system/recording_confirmation.dart | A:原等级直接确认不变；关闭完整开关确认scoresOnly | S:Widget弹窗回归不证明终场事务
+recording_confirmation_test.dart[TU6T]: F:验证Android与iOS确认面板保留locations/full覆盖或显式降为scoresOnly | R:code:lib/app/design_system/recording_confirmation.dart | A:平台及原覆盖双循环；保存不改初值；取消完整勾选后保存；无Widget异常 | S:只覆盖确认投影，不证明日常完整记录或持久化
 v2_history_refresh_test.dart[TW8M]: F:验证保留历史页的有界变更刷新、筛选滚动保持及替换恢复列表更新 | R:code:lib/core/data/repositories/match_repository.dart,code:lib/app/provider_router.dart | A:45场载40条，跨导航终场修分后仍40；续页46唯一；恢复结束及导入列表 | S:变更通知不读详情且设置不触发；每页≤20、全部重读才替换；内存库不是设备重启
 v2_navigation_summary_test.dart[TU7S]: F:验证三导航保历史搜索、赛果返回原列表与冷路由显式关联档案刷新 | R:code:lib/app/summary_route.dart,code:lib/app/provider_router.dart | A:Visitor搜索保留；Canonical关联Temporary；保存入口消失 | S:关联保当场姓名不按同名合并；cold指冷路由，不是冷进程
 
@@ -579,7 +578,7 @@ rebrand_compatibility_test.dart[TR8S]: F:回归新品牌导出、旧清单恢复
 
 ===D:/GitHub/hooptrace/test/core/settings/===
 motion_preference_cache_test.dart[TH6S]: F:验证原生动效缓存枚举与入口参数兼容及活动重建禁播 | R:code:lib/core/settings/motion_preference_cache.dart | A:read/write稳定名；未知null；缺插件及时抛；entry-animation=disabled | S:未知缓存视缺失；禁播参数与动效偏好分别解析；通道mock非原生恢复证据
-scoring_feedback_test.dart[TU8L]: F:验证反馈偏好持久化、串行写入通知、缓存失效及触感声音故障隔离 | R:code:lib/core/settings/scoring_feedback.dart | A:默认触感开声音关；v1稳定JSON；motion通知；原生缓存镜像；并发加载 | S:invalidate后旧异步读不能覆盖新值或发布丢失动效；挂起原生缓存不阻塞持久化；反馈通道各自失败仍尝试另一个；恢复后须invalidate
+scoring_feedback_test.dart[TU8L]: F:验证系统计分反馈、偏好持久化并发与失效恢复及启动动效缓存 | R:code:lib/core/settings/scoring_feedback.dart,code:lib/core/settings/motion_preference_cache.dart | A:系统click及轻震通道；v1稳定JSON；motion通知；缓存异常与超时；每通道失败隔离 | S:invalidate后的旧异步结果不能覆盖新值或发布丢失动效；原生缓存失败不破坏持久化；系统通道mock不证明设备可听可感或物理反馈强度
 theme_preferences_test.dart[TU6T]: F:验证主题默认system、控制器重建保留dark及未来值回退 | R:code:lib/core/settings/theme_preferences.dart | A:load/setPreference；themeMode；坏或version99回system | S:控制器复用同一测试库，不建立冷进程恢复证据
 
 ===D:/GitHub/hooptrace/test/features/history/===
@@ -674,8 +673,8 @@ test_database_test.dart[TQ5T]: F:验证助手连续打开独立数据库不共�
 safety_backup_storage.dart[XQ6T]: F:为Widget测试提供复制字节的内存安全副本存储和生产Store工厂 | R:code:lib/core/export/safety_backup_store.dart | A:list/read/delete/writeAndFlush/publish；read超限typed异常 | S:模拟存储避免假时间等待宿主磁盘，Store校验仍执行；不证明实际flush或原子rename
 
 ===D:/GitHub/hooptrace/third_party/android_runtime/===
-README.md[SV6T]: F:说明Android运行坐标清单、完整许可证与Kotlin JDK7兼容组件核验 | R:code:third_party/android_runtime/coordinates.txt,code:tool/release/generate_third_party_notices.dart | A:Gradle -p android导出；CI字节核对；jdk7解析1.8.0/POM Apache2 | S:排引擎许可归SDK、插件归Dart；新坐标逐POM审核，不能以摘要代许可
-coordinates.txt[FV6T]: F:固定Android releaseRuntime解析坐标供依赖与许可门禁 | R:code:android/app/build.gradle.kts,code:tool/release/generate_third_party_notices.dart | A:排序Maven坐标；Work2.11.2、stdlib2.2.20及jdk7兼容1.8.0 | S:解析版本与插件请求版本可不同；排Flutter引擎，图变需审核更新通知
+README.md[SV6T]: F:说明Android运行时坐标清单的生成、许可核验与完整通知再现 | R:code:third_party/android_runtime/coordinates.txt,code:tool/release/generate_third_party_notices.dart | A:Gradle导出并字节核对；Apache2全文；SDK和Dart插件分别采集 | S:插件移除后按真实运行图删无用JDK7兼容件，不保留历史依赖特判；新增坐标仍须审POM许可
+coordinates.txt[FV6T]: F:固定Android releaseRuntime Maven坐标供许可生成与CI对照 | R:code:android/app/build.gradle.kts,code:tool/release/generate_third_party_notices.dart | A:排序后的运行图；Work2.11.2及Kotlin2.2.20；不含已移除音频链的JDK7兼容件 | S:坐标版本不等于插件版本；排除Flutter引擎；图变更同步通知并核验新增POM许可
 
 ===D:/GitHub/hooptrace/third_party/sqlite/===
 README.md[SV7T]: F:记录SQLite3.53.4官方amalgamation来源、双文件hash及本地编译约定 | R:code:pubspec.yaml,code:tool/release/verify_sqlite_source.dart | A:2026官方3530400归档；C/H SHA256；public-domain notice | S:C与H须同上游归档一起更新；同步来源hash和复现说明，不能只换一个文件
@@ -683,7 +682,7 @@ sqlite3.h[LD7L]: F:声明固定SQLite3.53.4的公共C类型常量与数据库语
 
 ===D:/GitHub/hooptrace/tool/release/===
 build_android_release.ps1[OV8M]: F:构建Hoopito签名APK并导出版本证书权限摘要和原生ABI证据 | R:code:android/app/build.gradle.kts,code:tool/release/release_helpers.ps1 | A:Hoopito-v版本-android.apk；构建前后Git净；锁工具链SQLite；可选format/analyze/test | S:新旧ALLOW_UNSIGNED_RELEASE任一启用均拒正式发行；SkipChecks只跳格式分析测试；registrant排integration_test；验签不自动比指定证书，权限仅导出；同版本资产覆盖且失败可留部分
-generate_entry_assets.py[XU7S]: F:从已批准C前景派生居中原生启动图并保留确定性旧音效生成 | R:code:assets/icons/hoopito-app-icon-foreground.png,code:ios/Runner/Base.lproj/LaunchScreen.storyboard | A:288画布/0.78缩放；Android五密度launch_mark和iOS三倍图；44.1kHz/180ms | S:缩放写入位图不能叠加；生成WAV不代表当前启动播放，v2静音
+generate_entry_assets.py[XU7T]: F:从批准C前景图生成静音启动所需的Android与iOS原生位图 | R:code:assets/icons/hoopito-app-icon-foreground.png,code:ios/Runner/Base.lproj/LaunchScreen.storyboard | A:Pillow透明居中缩放0.78；288点画布；Android五密度及iOS三倍率 | S:仅写启动图像，音频生成已移除；历史WAV保留不代表入包或播放；前景几何与黑色细节不得重绘
 generate_launcher_icons.py[XV7M]: F:规范三色C标识并生成校验平台图标、单色负空间和裁切预览 | R:code:ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json,code:docs/design/brand/source.json | A:透明导入；1024/620安全区；五密度；双语商店512；iOS；contact-sheet | S:黑眼嘴纹路保留；单色挖空黑细节，alpha对对应单色源而非彩前景；先覆盖后assert，python -O不可作验证
 generate_third_party_notices.dart[XV7M]: F:从解析Flutter包图和固定Maven清单按许可正文分组生成通知 | R:code:third_party/android_runtime/coordinates.txt,code:THIRD_PARTY_NOTICES.md | A:repo cwd/pub get；SDK含开发包排自身；稳定排序唯一坐标；覆盖输出 | S:Maven归找到的Apache正文非逐件许可审核；SQLite许可缺失静默省略
 prepare_android_toolchain.sh[OV7T]: F:安装固定SDK组件并检查Flutter Temurin Gradle版本摘要 | R:code:android/gradle/wrapper/gradle-wrapper.properties | A:平台36/tools36.1.0/NDK28.2；Flutter3.41.9固定修订；Java17.0.20+8；Gradle8.14 | S:只安装三SDK组件；FlutterJava须已有；覆盖值仍须匹配；依赖latest/sdkmanager
