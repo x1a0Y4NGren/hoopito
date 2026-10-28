@@ -131,7 +131,7 @@ abstract class AppLocalizations {
   /// No description provided for @v2SafetyWriteError.
   ///
   /// In zh, this message translates to:
-  /// **'无法保存并验证安全副本，当前数据未替换。请确认设备存储空间后重试。'**
+  /// **'未能保存并验证替换前的安全副本，本机数据未替换。请检查存储空间后重试。'**
   String get v2SafetyWriteError;
 
   /// No description provided for @v2SafetyLoadError.
@@ -161,7 +161,7 @@ abstract class AppLocalizations {
   /// No description provided for @v2PresetApplied.
   ///
   /// In zh, this message translates to:
-  /// **'已沿用双方与规则，可继续调整'**
+  /// **'已沿用双方和规则，还可以调整'**
   String get v2PresetApplied;
 
   /// No description provided for @v2RulesSummary.
@@ -245,13 +245,13 @@ abstract class AppLocalizations {
   /// No description provided for @v2CoverageComplete.
   ///
   /// In zh, this message translates to:
-  /// **'记录了每次投篮'**
+  /// **'记录全部投篮与罚球'**
   String get v2CoverageComplete;
 
   /// No description provided for @v2CoverageHelp.
   ///
   /// In zh, this message translates to:
-  /// **'只有确认全场投篮（含未中）都已记录，才会显示可信命中率。漏记时请选择“主要记分”。'**
+  /// **'主要记分不显示命中率。完整记录需记下每次投篮和罚球，包括未命中。'**
   String get v2CoverageHelp;
 
   /// No description provided for @v2CorrectCoverage.
@@ -287,7 +287,7 @@ abstract class AppLocalizations {
   /// No description provided for @v2LocationScope.
   ///
   /// In zh, this message translates to:
-  /// **'已确认落点 / 已记录运动战出手'**
+  /// **'已确认运动战落点 / 已记录运动战出手'**
   String get v2LocationScope;
 
   /// No description provided for @v2SavePlayer.
@@ -311,7 +311,7 @@ abstract class AppLocalizations {
   /// No description provided for @v2PlayerSaved.
   ///
   /// In zh, this message translates to:
-  /// **'已关联档案，当场姓名保留'**
+  /// **'已关联球员档案，本场姓名不变'**
   String get v2PlayerSaved;
 
   /// No description provided for @v2Retry.
@@ -341,25 +341,25 @@ abstract class AppLocalizations {
   /// No description provided for @v2GuideLocation.
   ///
   /// In zh, this message translates to:
-  /// **'补落点与未中'**
+  /// **'记落点和未命中'**
   String get v2GuideLocation;
 
   /// No description provided for @v2GuideLocationBody.
   ///
   /// In zh, this message translates to:
-  /// **'先点球场再记分，或记分后在 10 秒内补落点；未中也能记录。'**
+  /// **'可以先点球场再记分，也可以记分后在 10 秒内补落点。未命中也能记。'**
   String get v2GuideLocationBody;
 
   /// No description provided for @v2GuideUndo.
   ///
   /// In zh, this message translates to:
-  /// **'撤回与结束'**
+  /// **'撤销和结束比赛'**
   String get v2GuideUndo;
 
   /// No description provided for @v2GuideUndoBody.
   ///
   /// In zh, this message translates to:
-  /// **'撤回恢复上一步；点击顶部结束比赛并确认记录范围。'**
+  /// **'点撤销可退回上一步。打完后，点顶部结束比赛，再确认这场投篮是否记全。'**
   String get v2GuideUndoBody;
 
   /// No description provided for @v2GuideSkip.
@@ -389,7 +389,7 @@ abstract class AppLocalizations {
   /// No description provided for @v2AbandonedMatchHelp.
   ///
   /// In zh, this message translates to:
-  /// **'可以复盘已保存的记录；本场不计入已完成比赛统计。'**
+  /// **'已保存的记录仍可复盘；本场不计入已完成比赛统计。'**
   String get v2AbandonedMatchHelp;
 
   /// No description provided for @v2SafetyTitle.
@@ -401,7 +401,7 @@ abstract class AppLocalizations {
   /// No description provided for @v2SafetyHelp.
   ///
   /// In zh, this message translates to:
-  /// **'替换前自动保护当前数据，保留最近两份。回退前也会保护当前数据。'**
+  /// **'安全副本是替换前自动保存的本机数据备份，保留最近两份，可在这里恢复。恢复前也会先保存并验证当前数据的副本。'**
   String get v2SafetyHelp;
 
   /// No description provided for @v2SafetyEmpty.
@@ -419,7 +419,7 @@ abstract class AppLocalizations {
   /// No description provided for @v2SafetyConfirm.
   ///
   /// In zh, this message translates to:
-  /// **'恢复安全副本会替换当前数据；当前数据会先另存为安全副本。'**
+  /// **'这份副本将替换全部本机数据。球豆会先保存并验证当前数据的安全副本，失败就不会替换。请先结束正在进行的比赛。'**
   String get v2SafetyConfirm;
 
   /// No description provided for @v2GrowthSample.
@@ -461,13 +461,13 @@ abstract class AppLocalizations {
   /// No description provided for @ruleTargetReached.
   ///
   /// In zh, this message translates to:
-  /// **'已达到目标分数，请确认结束或继续'**
+  /// **'已达到目标分，要结束还是继续？'**
   String get ruleTargetReached;
 
   /// No description provided for @ruleWinByTwoRequired.
   ///
   /// In zh, this message translates to:
-  /// **'已达到目标分数，但还需领先两分，请继续'**
+  /// **'已达到目标分，还要领先 2 分才能赢，请继续比赛。'**
   String get ruleWinByTwoRequired;
 
   /// No description provided for @ruleMatchPoint.
@@ -485,7 +485,7 @@ abstract class AppLocalizations {
   /// No description provided for @ruleFoulLimit.
   ///
   /// In zh, this message translates to:
-  /// **'{side}犯规已达到{limit}次'**
+  /// **'{side}犯规已达 {limit} 次上限'**
   String ruleFoulLimit(Object limit, Object side);
 
   /// No description provided for @finishOrContinueOvertime.
@@ -658,7 +658,7 @@ abstract class AppLocalizations {
   /// No description provided for @historyDeleteBody.
   ///
   /// In zh, this message translates to:
-  /// **'比赛事件、落点和审计记录都会被删除，且无法恢复。'**
+  /// **'这场比赛及其事件、投篮落点和操作记录都会永久删除，无法恢复。'**
   String get historyDeleteBody;
 
   /// No description provided for @historyLoadMore.
@@ -700,7 +700,7 @@ abstract class AppLocalizations {
   /// No description provided for @historySimpleMode.
   ///
   /// In zh, this message translates to:
-  /// **'简单记录'**
+  /// **'简洁记录'**
   String get historySimpleMode;
 
   /// No description provided for @historyDetailedMode.
@@ -778,7 +778,7 @@ abstract class AppLocalizations {
   /// No description provided for @historyLocationCompleteness.
   ///
   /// In zh, this message translates to:
-  /// **'落点完整度'**
+  /// **'落点记录比例'**
   String get historyLocationCompleteness;
 
   /// No description provided for @replayTitle.
@@ -796,7 +796,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayAuditTooltip.
   ///
   /// In zh, this message translates to:
-  /// **'审计历史'**
+  /// **'操作记录'**
   String get replayAuditTooltip;
 
   /// No description provided for @replayEditMode.
@@ -808,7 +808,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayReadOnly.
   ///
   /// In zh, this message translates to:
-  /// **'只读模式'**
+  /// **'仅查看'**
   String get replayReadOnly;
 
   /// No description provided for @replayFinished.
@@ -832,7 +832,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayExportDescription.
   ///
   /// In zh, this message translates to:
-  /// **'落点与分析会生成一张本地图片'**
+  /// **'将落点图和比赛分析合成一张本地图片'**
   String get replayExportDescription;
 
   /// No description provided for @replayClose.
@@ -922,7 +922,7 @@ abstract class AppLocalizations {
   /// No description provided for @replaySaveLocation.
   ///
   /// In zh, this message translates to:
-  /// **'保存落点位置'**
+  /// **'保存落点'**
   String get replaySaveLocation;
 
   /// No description provided for @replayOverview.
@@ -940,7 +940,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayScoringEvents.
   ///
   /// In zh, this message translates to:
-  /// **'得分事件'**
+  /// **'得分记录'**
   String get replayScoringEvents;
 
   /// No description provided for @replayFouls.
@@ -952,31 +952,31 @@ abstract class AppLocalizations {
   /// No description provided for @replayLocationCompleteness.
   ///
   /// In zh, this message translates to:
-  /// **'落点完整度'**
+  /// **'落点记录比例'**
   String get replayLocationCompleteness;
 
   /// No description provided for @replayPossession.
   ///
   /// In zh, this message translates to:
-  /// **'球权分段'**
+  /// **'球权记录'**
   String get replayPossession;
 
   /// No description provided for @replayFinishedBoundary.
   ///
   /// In zh, this message translates to:
-  /// **'终场边界'**
+  /// **'比赛已结束'**
   String get replayFinishedBoundary;
 
   /// No description provided for @replayInProgressBoundary.
   ///
   /// In zh, this message translates to:
-  /// **'进行中边界'**
+  /// **'比赛未完成'**
   String get replayInProgressBoundary;
 
   /// No description provided for @replayNoPossession.
   ///
   /// In zh, this message translates to:
-  /// **'暂无已记录的球权分段'**
+  /// **'暂无球权记录'**
   String get replayNoPossession;
 
   /// No description provided for @replayPossessionManual.
@@ -994,7 +994,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayPossessionCurrent.
   ///
   /// In zh, this message translates to:
-  /// **'当前进行中'**
+  /// **'未记录结束时间'**
   String get replayPossessionCurrent;
 
   /// No description provided for @replayPossessionEnded.
@@ -1018,13 +1018,13 @@ abstract class AppLocalizations {
   /// No description provided for @replaySuggestedReason.
   ///
   /// In zh, this message translates to:
-  /// **'命中后按规则建议'**
+  /// **'命中后根据规则建议球权'**
   String get replaySuggestedReason;
 
   /// No description provided for @replayTimeline.
   ///
   /// In zh, this message translates to:
-  /// **'事件时间线'**
+  /// **'比赛记录'**
   String get replayTimeline;
 
   /// No description provided for @replayFilters.
@@ -1036,7 +1036,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayNoEvents.
   ///
   /// In zh, this message translates to:
-  /// **'没有符合筛选条件的事件'**
+  /// **'没有符合筛选条件的记录'**
   String get replayNoEvents;
 
   /// No description provided for @replayFilterAll.
@@ -1162,7 +1162,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayEditorTitle.
   ///
   /// In zh, this message translates to:
-  /// **'编辑事件'**
+  /// **'编辑记录'**
   String get replayEditorTitle;
 
   /// No description provided for @replayEditorSide.
@@ -1174,7 +1174,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayEditorEventKind.
   ///
   /// In zh, this message translates to:
-  /// **'事件类型'**
+  /// **'记录类型'**
   String get replayEditorEventKind;
 
   /// No description provided for @replayEditorPoints.
@@ -1240,7 +1240,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayEditorDelete.
   ///
   /// In zh, this message translates to:
-  /// **'软删除'**
+  /// **'删除'**
   String get replayEditorDelete;
 
   /// No description provided for @replayEditorRestore.
@@ -1276,13 +1276,13 @@ abstract class AppLocalizations {
   /// No description provided for @replayEditorDeleteTitle.
   ///
   /// In zh, this message translates to:
-  /// **'删除这条事件？'**
+  /// **'删除这条记录？'**
   String get replayEditorDeleteTitle;
 
   /// No description provided for @replayEditorDeleteBody.
   ///
   /// In zh, this message translates to:
-  /// **'事件将被标记为已删除，并保留完整审计记录。'**
+  /// **'删除后，这条记录不再计入比分和统计，操作记录会保留。之后可显示已删除记录，再将它恢复。'**
   String get replayEditorDeleteBody;
 
   /// No description provided for @replayEditorConfirmDelete.
@@ -1294,13 +1294,13 @@ abstract class AppLocalizations {
   /// No description provided for @replayEditorRestoreTitle.
   ///
   /// In zh, this message translates to:
-  /// **'恢复这条事件？'**
+  /// **'恢复这条记录？'**
   String get replayEditorRestoreTitle;
 
   /// No description provided for @replayEditorRestoreBody.
   ///
   /// In zh, this message translates to:
-  /// **'恢复后事件会重新计入比赛投影。'**
+  /// **'恢复后，这条记录会重新计入比分和统计。'**
   String get replayEditorRestoreBody;
 
   /// No description provided for @replayEditorConfirmRestore.
@@ -1312,13 +1312,13 @@ abstract class AppLocalizations {
   /// No description provided for @replayAuditTitle.
   ///
   /// In zh, this message translates to:
-  /// **'审计历史'**
+  /// **'操作记录'**
   String get replayAuditTitle;
 
   /// No description provided for @replayAuditEmpty.
   ///
   /// In zh, this message translates to:
-  /// **'暂无编辑记录'**
+  /// **'暂无操作记录'**
   String get replayAuditEmpty;
 
   /// No description provided for @replayAuditReason.
@@ -1372,13 +1372,13 @@ abstract class AppLocalizations {
   /// No description provided for @replayAuditActionCommand.
   ///
   /// In zh, this message translates to:
-  /// **'命令'**
+  /// **'执行操作'**
   String get replayAuditActionCommand;
 
   /// No description provided for @replayAuditActionLocate.
   ///
   /// In zh, this message translates to:
-  /// **'定位'**
+  /// **'设置落点'**
   String get replayAuditActionLocate;
 
   /// No description provided for @replayAuditActionPossession.
@@ -1402,7 +1402,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayAuditTargetEvent.
   ///
   /// In zh, this message translates to:
-  /// **'事件'**
+  /// **'记录'**
   String get replayAuditTargetEvent;
 
   /// No description provided for @replayAuditTargetLocation.
@@ -1420,13 +1420,13 @@ abstract class AppLocalizations {
   /// No description provided for @replayAuditTargetCommand.
   ///
   /// In zh, this message translates to:
-  /// **'命令'**
+  /// **'操作'**
   String get replayAuditTargetCommand;
 
   /// No description provided for @replayAuditFieldType.
   ///
   /// In zh, this message translates to:
-  /// **'事件类型'**
+  /// **'记录类型'**
   String get replayAuditFieldType;
 
   /// No description provided for @replayAuditFieldSide.
@@ -1528,7 +1528,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayAnalyticsKeyMoments.
   ///
   /// In zh, this message translates to:
-  /// **'关键节点'**
+  /// **'关键时刻'**
   String get replayAnalyticsKeyMoments;
 
   /// No description provided for @replayAnalyticsNoAttempts.
@@ -1540,13 +1540,13 @@ abstract class AppLocalizations {
   /// No description provided for @replayAnalyticsScoringFlow.
   ///
   /// In zh, this message translates to:
-  /// **'比分流'**
+  /// **'比分走势'**
   String get replayAnalyticsScoringFlow;
 
   /// No description provided for @replayAnalyticsNoScoringEvents.
   ///
   /// In zh, this message translates to:
-  /// **'本场暂无得分事件'**
+  /// **'本场暂无得分记录'**
   String get replayAnalyticsNoScoringEvents;
 
   /// No description provided for @replayAnalyticsKeyPossessions.
@@ -1641,7 +1641,7 @@ abstract class AppLocalizations {
   /// No description provided for @replayAnalyticsTrackingCoverage.
   ///
   /// In zh, this message translates to:
-  /// **'记录完整度'**
+  /// **'记录范围'**
   String get replayAnalyticsTrackingCoverage;
 
   /// No description provided for @replayAnalyticsLocationCoverage.
@@ -1743,7 +1743,7 @@ abstract class AppLocalizations {
   /// No description provided for @playerAnalyticsWindow.
   ///
   /// In zh, this message translates to:
-  /// **'统计周期'**
+  /// **'统计时段'**
   String get playerAnalyticsWindow;
 
   /// No description provided for @playerAnalyticsSevenDays.
@@ -1851,7 +1851,7 @@ abstract class AppLocalizations {
   /// No description provided for @playerAnalyticsNoReliablePercentage.
   ///
   /// In zh, this message translates to:
-  /// **'暂无足够的完整出手记录，暂不显示命中率'**
+  /// **'暂无可显示的投篮命中率，需要记录完整且有运动战出手的比赛。'**
   String get playerAnalyticsNoReliablePercentage;
 
   /// No description provided for @playerAnalyticsZoneHeatmap.
@@ -1887,7 +1887,7 @@ abstract class AppLocalizations {
   /// No description provided for @playerAnalyticsLoadErrorBody.
   ///
   /// In zh, this message translates to:
-  /// **'无法读取生涯分析，请重试以刷新本地比赛数据。'**
+  /// **'无法读取球员分析，请重试。'**
   String get playerAnalyticsLoadErrorBody;
 
   /// No description provided for @playerAnalyticsNotFound.
@@ -1929,7 +1929,7 @@ abstract class AppLocalizations {
   /// No description provided for @playerComparisonMatchMode.
   ///
   /// In zh, this message translates to:
-  /// **'对局'**
+  /// **'比赛'**
   String get playerComparisonMatchMode;
 
   /// No description provided for @playerComparisonWindowMode.
@@ -1941,25 +1941,25 @@ abstract class AppLocalizations {
   /// No description provided for @playerComparisonMatchModeHint.
   ///
   /// In zh, this message translates to:
-  /// **'比较该球员已关联的两场已完成比赛。'**
+  /// **'选择该球员的两场已完成比赛进行比较。'**
   String get playerComparisonMatchModeHint;
 
   /// No description provided for @playerComparisonWindowModeHint.
   ///
   /// In zh, this message translates to:
-  /// **'比较以打开页面时刻为终点的两个相邻且不重叠时间窗。'**
+  /// **'比较相邻且不重叠的两个时段，后一时段截止于打开此页面时。'**
   String get playerComparisonWindowModeHint;
 
   /// No description provided for @playerComparisonBaseline.
   ///
   /// In zh, this message translates to:
-  /// **'基线'**
+  /// **'参照数据'**
   String get playerComparisonBaseline;
 
   /// No description provided for @playerComparisonCurrent.
   ///
   /// In zh, this message translates to:
-  /// **'当前样本'**
+  /// **'比较数据'**
   String get playerComparisonCurrent;
 
   /// No description provided for @playerComparisonDifference.
@@ -1971,31 +1971,31 @@ abstract class AppLocalizations {
   /// No description provided for @playerComparisonSelectBaseline.
   ///
   /// In zh, this message translates to:
-  /// **'选择基线对局'**
+  /// **'选择参照比赛'**
   String get playerComparisonSelectBaseline;
 
   /// No description provided for @playerComparisonSelectCurrent.
   ///
   /// In zh, this message translates to:
-  /// **'选择当前对局'**
+  /// **'选择比较比赛'**
   String get playerComparisonSelectCurrent;
 
   /// No description provided for @playerComparisonSwap.
   ///
   /// In zh, this message translates to:
-  /// **'交换基线与当前对局'**
+  /// **'交换两场比赛'**
   String get playerComparisonSwap;
 
   /// No description provided for @playerComparisonChooseGame.
   ///
   /// In zh, this message translates to:
-  /// **'选择对局'**
+  /// **'选择比赛'**
   String get playerComparisonChooseGame;
 
   /// No description provided for @playerComparisonLoading.
   ///
   /// In zh, this message translates to:
-  /// **'正在生成比较'**
+  /// **'正在比较'**
   String get playerComparisonLoading;
 
   /// No description provided for @playerComparisonLoadError.
@@ -2007,7 +2007,7 @@ abstract class AppLocalizations {
   /// No description provided for @playerComparisonLoadErrorBody.
   ///
   /// In zh, this message translates to:
-  /// **'无法从本地比赛数据重建分析，请检查记录后重试。'**
+  /// **'无法读取比赛比较，请重试。'**
   String get playerComparisonLoadErrorBody;
 
   /// No description provided for @playerComparisonRetry.
@@ -2025,7 +2025,7 @@ abstract class AppLocalizations {
   /// No description provided for @playerComparisonNoMatchesBody.
   ///
   /// In zh, this message translates to:
-  /// **'请先使用该关联球员档案完成一场比赛。'**
+  /// **'先用该球员档案完成一场比赛，再来比较。'**
   String get playerComparisonNoMatchesBody;
 
   /// No description provided for @playerComparisonNeedTwoMatches.
@@ -2037,37 +2037,37 @@ abstract class AppLocalizations {
   /// No description provided for @playerComparisonNeedTwoMatchesBody.
   ///
   /// In zh, this message translates to:
-  /// **'再完成一场已关联比赛即可比较单场对局；目前仍可使用时段比较。'**
+  /// **'再用该球员档案完成一场比赛，即可比较两场比赛；现在也可以比较时段数据。'**
   String get playerComparisonNeedTwoMatchesBody;
 
   /// No description provided for @playerComparisonEmptyWindows.
   ///
   /// In zh, this message translates to:
-  /// **'两个时间窗都没有比赛'**
+  /// **'两个时段都没有比赛'**
   String get playerComparisonEmptyWindows;
 
   /// No description provided for @playerComparisonEmptyWindowsBody.
   ///
   /// In zh, this message translates to:
-  /// **'可以选择更长时段，或取消对手筛选。'**
+  /// **'试试更长的时段，或取消对手筛选。'**
   String get playerComparisonEmptyWindowsBody;
 
   /// No description provided for @playerComparisonBaselineEmpty.
   ///
   /// In zh, this message translates to:
-  /// **'基线时间窗没有比赛。'**
+  /// **'参照时段没有比赛。'**
   String get playerComparisonBaselineEmpty;
 
   /// No description provided for @playerComparisonCurrentEmpty.
   ///
   /// In zh, this message translates to:
-  /// **'当前时间窗没有比赛。'**
+  /// **'比较时段没有比赛。'**
   String get playerComparisonCurrentEmpty;
 
   /// No description provided for @playerComparisonSummary.
   ///
   /// In zh, this message translates to:
-  /// **'证据摘要'**
+  /// **'数据对比'**
   String get playerComparisonSummary;
 
   /// No description provided for @playerComparisonResult.
@@ -2115,19 +2115,19 @@ abstract class AppLocalizations {
   /// No description provided for @playerComparisonFieldGoalsMade.
   ///
   /// In zh, this message translates to:
-  /// **'投篮命中'**
+  /// **'运动战命中'**
   String get playerComparisonFieldGoalsMade;
 
   /// No description provided for @playerComparisonFieldGoalAttempts.
   ///
   /// In zh, this message translates to:
-  /// **'投篮出手'**
+  /// **'运动战出手'**
   String get playerComparisonFieldGoalAttempts;
 
   /// No description provided for @playerComparisonFieldGoalPercentage.
   ///
   /// In zh, this message translates to:
-  /// **'投篮命中率'**
+  /// **'运动战命中率'**
   String get playerComparisonFieldGoalPercentage;
 
   /// No description provided for @playerComparisonFreeThrowsMade.
@@ -2151,19 +2151,19 @@ abstract class AppLocalizations {
   /// No description provided for @playerComparisonLocationCoverage.
   ///
   /// In zh, this message translates to:
-  /// **'落点覆盖'**
+  /// **'落点记录比例'**
   String get playerComparisonLocationCoverage;
 
   /// No description provided for @playerComparisonConfirmedZones.
   ///
   /// In zh, this message translates to:
-  /// **'区域已确认落点占比'**
+  /// **'已确认落点的区域分布'**
   String get playerComparisonConfirmedZones;
 
   /// No description provided for @playerComparisonConfirmedZonesNote.
   ///
   /// In zh, this message translates to:
-  /// **'区域百分比仅使用已确认落点样本。'**
+  /// **'各区域占比只按已确认的运动战落点计算。'**
   String get playerComparisonConfirmedZonesNote;
 
   /// No description provided for @playerComparisonIncrease.
@@ -2235,13 +2235,13 @@ abstract class AppLocalizations {
   /// No description provided for @legacyBootstrapBody.
   ///
   /// In zh, this message translates to:
-  /// **'检测到不兼容的旧数据库版本{version}。现有文件会保持原样；球豆不会静默迁移、删除或清空它。请先导出或备份旧文件，再使用当前版本创建新的本地数据。'**
+  /// **'旧版数据库{version}与当前版本不兼容。原文件会保持原样，球豆不会自动转换、删除或清空它。请先导出或备份旧文件，再用当前版本新建本地数据。'**
   String legacyBootstrapBody(Object version);
 
   /// No description provided for @bootstrapFailureBody.
   ///
   /// In zh, this message translates to:
-  /// **'本地数据库暂时无法打开，现有数据未被修改。请稍后重试，或创建新的本地数据库。'**
+  /// **'本地记录暂时打不开，现有数据没有改动。请稍后重试，或新建本地数据库。'**
   String get bootstrapFailureBody;
 
   /// No description provided for @entryPreparingRecords.
@@ -2295,7 +2295,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsHapticTitle.
   ///
   /// In zh, this message translates to:
-  /// **'触觉反馈'**
+  /// **'振动反馈'**
   String get settingsHapticTitle;
 
   /// No description provided for @settingsHapticEnabled.
@@ -2373,7 +2373,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsThemeSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'选择应用的显示主题'**
+  /// **'选择浅色、深色或跟随系统'**
   String get settingsThemeSubtitle;
 
   /// No description provided for @settingsThemeSystem.
@@ -2403,7 +2403,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsMotionSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'选择界面动效程度'**
+  /// **'使用标准动效，或减少动画'**
   String get settingsMotionSubtitle;
 
   /// No description provided for @settingsMotionStandard.
@@ -2421,7 +2421,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsMotionHelp.
   ///
   /// In zh, this message translates to:
-  /// **'减少动效会缩短过渡并移除装饰性动画。'**
+  /// **'减少动效会缩短过渡，关闭装饰性动画。'**
   String get settingsMotionHelp;
 
   /// No description provided for @settingsMotionPreview.
@@ -2451,13 +2451,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsDataManagementTitle.
   ///
   /// In zh, this message translates to:
-  /// **'管理数据与备份'**
+  /// **'数据与备份'**
   String get settingsDataManagementTitle;
 
   /// No description provided for @settingsDataManagementSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'导出、恢复和自动备份都在这里'**
+  /// **'导出数据、恢复备份、设置自动备份'**
   String get settingsDataManagementSubtitle;
 
   /// No description provided for @settingsManualDataSection.
@@ -2481,7 +2481,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsExportDataSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'选择可恢复的 JSON 备份或用于分析的 CSV 文件'**
+  /// **'JSON 备份可恢复数据，CSV 文件可用于分析'**
   String get settingsExportDataSubtitle;
 
   /// No description provided for @settingsExportDataDialogTitle.
@@ -2517,13 +2517,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsExportBackupSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'包含比赛、球员、规则、事件与设置的 JSON 文件'**
+  /// **'JSON 文件，包含比赛、球员、规则、事件和设置'**
   String get settingsExportBackupSubtitle;
 
   /// No description provided for @settingsExportBackupSuccess.
   ///
   /// In zh, this message translates to:
-  /// **'已打开系统分享，可保存或发送备份文件'**
+  /// **'已打开分享界面，可保存或发送备份文件'**
   String get settingsExportBackupSuccess;
 
   /// No description provided for @settingsRestoreTitle.
@@ -2535,13 +2535,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsRestoreSubtitleMerge.
   ///
   /// In zh, this message translates to:
-  /// **'可安全合并，或在创建安全备份后替换本机数据'**
+  /// **'合并备份，或先备份当前数据再完整替换'**
   String get settingsRestoreSubtitleMerge;
 
   /// No description provided for @settingsRestoreSubtitleBlocked.
   ///
   /// In zh, this message translates to:
-  /// **'比赛进行中仍可合并；替换模式需先结束比赛'**
+  /// **'比赛进行中可以合并；替换数据需先结束比赛'**
   String get settingsRestoreSubtitleBlocked;
 
   /// No description provided for @settingsExportCsvTitle.
@@ -2553,13 +2553,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsExportCsvSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'比赛列表、事件列表与球员统计，共 3 个文件'**
+  /// **'导出 3 个文件：比赛列表、事件列表和球员统计'**
   String get settingsExportCsvSubtitle;
 
   /// No description provided for @settingsExportCsvSuccess.
   ///
   /// In zh, this message translates to:
-  /// **'已打开系统分享，可保存 3 个 CSV 文件'**
+  /// **'已打开分享界面，可保存 3 个 CSV 文件'**
   String get settingsExportCsvSuccess;
 
   /// No description provided for @settingsAutomaticBackupTitle.
@@ -2595,7 +2595,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsBackupDirectoryUnselected.
   ///
   /// In zh, this message translates to:
-  /// **'未选择，只会访问你明确选择的文件夹'**
+  /// **'尚未选择，只会访问你选择的文件夹'**
   String get settingsBackupDirectoryUnselected;
 
   /// No description provided for @settingsBackupNowTitle.
@@ -2607,25 +2607,25 @@ abstract class AppLocalizations {
   /// No description provided for @settingsBackupNever.
   ///
   /// In zh, this message translates to:
-  /// **'尚未执行手动或自动备份'**
+  /// **'还没有手动或自动备份记录'**
   String get settingsBackupNever;
 
   /// No description provided for @settingsBackupLastSuccess.
   ///
   /// In zh, this message translates to:
-  /// **'上次成功：{date} {time}'**
+  /// **'上次备份成功：{date} {time}'**
   String settingsBackupLastSuccess(Object date, Object time);
 
   /// No description provided for @settingsBackupRetentionTitle.
   ///
   /// In zh, this message translates to:
-  /// **'自动备份保留数量'**
+  /// **'保留几份自动备份'**
   String get settingsBackupRetentionTitle;
 
   /// No description provided for @settingsBackupRetentionSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'仅清理球豆自动备份，不影响手动或安全备份'**
+  /// **'只清理多余的球豆自动备份，手动备份和安全副本不受影响'**
   String get settingsBackupRetentionSubtitle;
 
   /// No description provided for @settingsPrivacySection.
@@ -2643,7 +2643,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsPrivacySubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'个人数据只保存在这台设备上，不会上传'**
+  /// **'个人数据保存在本机，球豆不会上传'**
   String get settingsPrivacySubtitle;
 
   /// No description provided for @settingsExperimentalSection.
@@ -2703,13 +2703,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAboutSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'永久开源免费、许可证与贡献方式'**
+  /// **'永久免费开源，查看许可证与贡献方式'**
   String get settingsAboutSubtitle;
 
   /// No description provided for @settingsRestoreDialogTitle.
   ///
   /// In zh, this message translates to:
-  /// **'选择备份导入方式'**
+  /// **'如何恢复备份？'**
   String get settingsRestoreDialogTitle;
 
   /// No description provided for @settingsRestorePickerTitle.
@@ -2727,7 +2727,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsMergeSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'保留本机设置；冲突数据会确定性重映射，不按昵称合并球员'**
+  /// **'保留本机设置和正在进行的比赛。冲突记录会另存，不会覆盖本机记录；不会仅因昵称相同就合并球员。'**
   String get settingsMergeSubtitle;
 
   /// No description provided for @settingsReplaceTitle.
@@ -2739,7 +2739,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsReplaceSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'先创建恢复前安全备份，再原子替换全部本地数据'**
+  /// **'先备份并验证当前数据，再用所选备份替换全部本机数据；失败则保留原数据'**
   String get settingsReplaceSubtitle;
 
   /// No description provided for @settingsReplaceBlocked.
@@ -2757,7 +2757,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsReplaceConfirmBody.
   ///
   /// In zh, this message translates to:
-  /// **'文件验证通过后，球豆会先创建一份恢复前安全备份，再一次性替换本机数据。'**
+  /// **'备份文件验证通过后，球豆会先保存并验证当前数据的备份（安全副本），再用所选备份替换全部本机数据。任一步失败都不会替换。请先结束正在进行的比赛。'**
   String get settingsReplaceConfirmBody;
 
   /// No description provided for @settingsReplaceConfirmAction.
@@ -2775,13 +2775,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsMergeCompleted.
   ///
   /// In zh, this message translates to:
-  /// **'备份合并完成，本机设置与活动比赛保持不变'**
+  /// **'备份已合并，本机设置和正在进行的比赛保持不变'**
   String get settingsMergeCompleted;
 
   /// No description provided for @settingsReplaceCompleted.
   ///
   /// In zh, this message translates to:
-  /// **'备份替换完成，自动备份位置已重置'**
+  /// **'已用备份替换本机数据，自动备份位置已重置'**
   String get settingsReplaceCompleted;
 
   /// No description provided for @settingsDirectoryUpdated.
@@ -2817,13 +2817,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsHapticTurnedOn.
   ///
   /// In zh, this message translates to:
-  /// **'触觉反馈已开启'**
+  /// **'振动反馈已开启'**
   String get settingsHapticTurnedOn;
 
   /// No description provided for @settingsHapticTurnedOff.
   ///
   /// In zh, this message translates to:
-  /// **'触觉反馈已关闭'**
+  /// **'振动反馈已关闭'**
   String get settingsHapticTurnedOff;
 
   /// No description provided for @settingsSoundTurnedOn.
@@ -2841,7 +2841,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsBackupWritten.
   ///
   /// In zh, this message translates to:
-  /// **'本地备份已写入所选文件夹'**
+  /// **'备份已保存到所选文件夹'**
   String get settingsBackupWritten;
 
   /// No description provided for @settingsRetentionUpdated.
@@ -2859,7 +2859,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsErrorFutureVersion.
   ///
   /// In zh, this message translates to:
-  /// **'该备份由更高版本创建，请升级球豆后再试'**
+  /// **'这份备份来自较新版本，请更新球豆后再试'**
   String get settingsErrorFutureVersion;
 
   /// No description provided for @settingsErrorInvalidBackup.
@@ -2883,13 +2883,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsErrorDirectoryUnavailable.
   ///
   /// In zh, this message translates to:
-  /// **'所选文件夹当前不可写，请重新选择'**
+  /// **'无法保存到所选文件夹，请重新选择'**
   String get settingsErrorDirectoryUnavailable;
 
   /// No description provided for @settingsErrorBackupWrite.
   ///
   /// In zh, this message translates to:
-  /// **'备份写入失败，请重新选择备份文件夹后再试'**
+  /// **'备份未能保存，请重新选择备份文件夹后再试'**
   String get settingsErrorBackupWrite;
 
   /// No description provided for @settingsErrorRestoreBlocked.
@@ -2907,7 +2907,7 @@ abstract class AppLocalizations {
   /// No description provided for @playerAnalyticsNoLocationData.
   ///
   /// In zh, this message translates to:
-  /// **'暂无位置数据'**
+  /// **'暂无落点数据'**
   String get playerAnalyticsNoLocationData;
 
   /// No description provided for @homePlayersTooltip.
@@ -2961,7 +2961,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeLastPersistedUnknown.
   ///
   /// In zh, this message translates to:
-  /// **'最近保存：时间未知'**
+  /// **'上次保存时间未知'**
   String get homeLastPersistedUnknown;
 
   /// No description provided for @homeLastPersisted.
@@ -2991,7 +2991,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeAbandonBody.
   ///
   /// In zh, this message translates to:
-  /// **'比赛会保留在本地记录中，但不会再出现在进行中入口。'**
+  /// **'比赛记录仍会保留，但不能再从主页继续这场比赛。'**
   String get homeAbandonBody;
 
   /// No description provided for @homeConfirmAbandon.
@@ -3039,7 +3039,7 @@ abstract class AppLocalizations {
   /// No description provided for @playersEmptyBody.
   ///
   /// In zh, this message translates to:
-  /// **'临时球员仍可直接参加比赛；保存档案后，下次更容易找到。'**
+  /// **'不保存档案也能直接比赛。保存后，下次选人更方便。'**
   String get playersEmptyBody;
 
   /// No description provided for @playersLoadError.
@@ -3141,7 +3141,7 @@ abstract class AppLocalizations {
   /// No description provided for @playerOpenErrorBody.
   ///
   /// In zh, this message translates to:
-  /// **'无法打开该球员档案，请检查本地数据后重试。'**
+  /// **'无法打开该球员档案，请重试。'**
   String get playerOpenErrorBody;
 
   /// No description provided for @playerNicknameLabel.
@@ -3213,7 +3213,7 @@ abstract class AppLocalizations {
   /// No description provided for @rulesEmptyBody.
   ///
   /// In zh, this message translates to:
-  /// **'创建自定义规则模板，为下一场比赛设定计分方式。'**
+  /// **'创建一套常用规则，下场比赛直接选。'**
   String get rulesEmptyBody;
 
   /// No description provided for @rulesCreate.
@@ -3231,7 +3231,7 @@ abstract class AppLocalizations {
   /// No description provided for @rulesLoadErrorBody.
   ///
   /// In zh, this message translates to:
-  /// **'无法读取规则模板，请检查本地数据后重试。'**
+  /// **'暂时读不到规则模板，请重试。'**
   String get rulesLoadErrorBody;
 
   /// No description provided for @rulesBuiltIn.
@@ -3327,7 +3327,7 @@ abstract class AppLocalizations {
   /// No description provided for @ruleTimeLimitLabel.
   ///
   /// In zh, this message translates to:
-  /// **'时限分钟（可选）'**
+  /// **'时限（分钟，可选）'**
   String get ruleTimeLimitLabel;
 
   /// No description provided for @ruleFoulLimitLabel.
@@ -3339,13 +3339,13 @@ abstract class AppLocalizations {
   /// No description provided for @ruleScoreButtonsLabel.
   ///
   /// In zh, this message translates to:
-  /// **'计分按钮（逗号分隔）'**
+  /// **'每次记几分（用逗号分隔）'**
   String get ruleScoreButtonsLabel;
 
   /// No description provided for @ruleCustomLabelsLabel.
   ///
   /// In zh, this message translates to:
-  /// **'自定义事件类型（逗号分隔）'**
+  /// **'自定义事件名称（用逗号分隔）'**
   String get ruleCustomLabelsLabel;
 
   /// No description provided for @ruleWinByTwoTitle.
@@ -3363,19 +3363,19 @@ abstract class AppLocalizations {
   /// No description provided for @rulePossessionHintSubtitle.
   ///
   /// In zh, this message translates to:
-  /// **'仅提示，不阻断手动计分'**
+  /// **'只作提示，仍可手动记分'**
   String get rulePossessionHintSubtitle;
 
   /// No description provided for @rulePossessionPolicyLabel.
   ///
   /// In zh, this message translates to:
-  /// **'得分后球权策略'**
+  /// **'得分后球权归谁'**
   String get rulePossessionPolicyLabel;
 
   /// No description provided for @rulePossessionPolicyHelper.
   ///
   /// In zh, this message translates to:
-  /// **'仅在启用球权提示时可选择自动建议。'**
+  /// **'先打开球权提示，再选择提示方式。'**
   String get rulePossessionPolicyHelper;
 
   /// No description provided for @ruleSaveAction.
@@ -3399,19 +3399,19 @@ abstract class AppLocalizations {
   /// No description provided for @rulePolicyManual.
   ///
   /// In zh, this message translates to:
-  /// **'手动纠正'**
+  /// **'手动设置'**
   String get rulePolicyManual;
 
   /// No description provided for @rulePolicySwitchAfterMade.
   ///
   /// In zh, this message translates to:
-  /// **'命中后交换'**
+  /// **'命中后交换球权'**
   String get rulePolicySwitchAfterMade;
 
   /// No description provided for @rulePolicyKeepAfterMade.
   ///
   /// In zh, this message translates to:
-  /// **'命中后保持'**
+  /// **'命中后保留球权'**
   String get rulePolicyKeepAfterMade;
 
   /// No description provided for @pregameTitle.
@@ -3561,7 +3561,7 @@ abstract class AppLocalizations {
   /// No description provided for @pregameTimerDisabled.
   ///
   /// In zh, this message translates to:
-  /// **'关闭时不记录比赛计时'**
+  /// **'关闭后不记录比赛时间'**
   String get pregameTimerDisabled;
 
   /// No description provided for @pregameCountUp.
@@ -3579,7 +3579,7 @@ abstract class AppLocalizations {
   /// No description provided for @pregameCountdownLabel.
   ///
   /// In zh, this message translates to:
-  /// **'倒计时分钟（1–180）'**
+  /// **'倒计时（1–180 分钟）'**
   String get pregameCountdownLabel;
 
   /// No description provided for @pregameCountdownHelper.
@@ -3597,13 +3597,13 @@ abstract class AppLocalizations {
   /// No description provided for @pregameProfileConflict.
   ///
   /// In zh, this message translates to:
-  /// **'该球员档案已用于另一方，请选择其他档案。'**
+  /// **'另一方已经选了这名球员，请换一个档案。'**
   String get pregameProfileConflict;
 
   /// No description provided for @pregameCountdownInvalid.
   ///
   /// In zh, this message translates to:
-  /// **'请输入 1 到 180 之间的整数分钟。'**
+  /// **'请输入 1 到 180 的整数分钟。'**
   String get pregameCountdownInvalid;
 
   /// No description provided for @pregameTrackingNone.
@@ -3645,7 +3645,7 @@ abstract class AppLocalizations {
   /// No description provided for @pregameParticipationMode.
   ///
   /// In zh, this message translates to:
-  /// **'参赛方式'**
+  /// **'选择球员'**
   String get pregameParticipationMode;
 
   /// No description provided for @pregameTemporaryName.
@@ -3669,7 +3669,7 @@ abstract class AppLocalizations {
   /// No description provided for @pregameSnapshotHint.
   ///
   /// In zh, this message translates to:
-  /// **'修改本场姓名不会更改球员档案。'**
+  /// **'只改这场比赛的姓名，球员档案保持原样。'**
   String get pregameSnapshotHint;
 
   /// No description provided for @pregameRed.
@@ -3699,19 +3699,19 @@ abstract class AppLocalizations {
   /// No description provided for @pregameValidationDuplicateProfile.
   ///
   /// In zh, this message translates to:
-  /// **'同一球员档案不能同时用于红方和蓝方。'**
+  /// **'双方不能选同一个球员档案。'**
   String get pregameValidationDuplicateProfile;
 
   /// No description provided for @pregameValidationRedMissing.
   ///
   /// In zh, this message translates to:
-  /// **'红方所选球员档案已不存在，请重新选择或改用临时姓名。'**
+  /// **'找不到红方选择的球员档案，请重选或输入临时姓名。'**
   String get pregameValidationRedMissing;
 
   /// No description provided for @pregameValidationBlueMissing.
   ///
   /// In zh, this message translates to:
-  /// **'蓝方所选球员档案已不存在，请重新选择或改用临时姓名。'**
+  /// **'找不到蓝方选择的球员档案，请重选或输入临时姓名。'**
   String get pregameValidationBlueMissing;
 
   /// No description provided for @pregameValidationModeRequired.
@@ -3723,13 +3723,13 @@ abstract class AppLocalizations {
   /// No description provided for @pregameValidationCountdownRequired.
   ///
   /// In zh, this message translates to:
-  /// **'倒计时必须先打开计时开关。'**
+  /// **'请先开启计时，再选择倒计时。'**
   String get pregameValidationCountdownRequired;
 
   /// No description provided for @pregameValidationCountdownDuration.
   ///
   /// In zh, this message translates to:
-  /// **'倒计时分钟数必须是 1 到 180 分钟。'**
+  /// **'倒计时请设为 1 到 180 分钟。'**
   String get pregameValidationCountdownDuration;
 
   /// No description provided for @scoringSimpleRedShot.
@@ -3807,7 +3807,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringMatchControlsBody.
   ///
   /// In zh, this message translates to:
-  /// **'你可以暂时离开比赛，也可以确认当前比分并结束比赛。'**
+  /// **'暂时离开可以先暂停；打完了就确认比分并结束比赛。'**
   String get scoringMatchControlsBody;
 
   /// No description provided for @scoringReturnToScoring.
@@ -3831,7 +3831,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringMatchPausedBody.
   ///
   /// In zh, this message translates to:
-  /// **'计分操作已锁定。继续比赛后可接着记录。'**
+  /// **'比赛暂停中，继续后就能接着记分。'**
   String get scoringMatchPausedBody;
 
   /// No description provided for @scoringReturnHome.
@@ -3843,13 +3843,13 @@ abstract class AppLocalizations {
   /// No description provided for @scoringPendingPauseExitBody.
   ///
   /// In zh, this message translates to:
-  /// **'当前球场上还有未完成的灰色落点。返回主页或结束比赛会丢弃这次草稿。'**
+  /// **'球场上还有灰色投篮点未确认。返回主页或结束比赛会丢弃这次未完成的记录。'**
   String get scoringPendingPauseExitBody;
 
   /// No description provided for @scoringDiscardDraft.
   ///
   /// In zh, this message translates to:
-  /// **'丢弃草稿'**
+  /// **'丢弃未完成记录'**
   String get scoringDiscardDraft;
 
   /// No description provided for @scoringResume.
@@ -3921,7 +3921,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringPendingLocationTitle.
   ///
   /// In zh, this message translates to:
-  /// **'当前有待定位投篮'**
+  /// **'这次投篮还没记完'**
   String get scoringPendingLocationTitle;
 
   /// No description provided for @scoringPendingDraftTitle.
@@ -3933,7 +3933,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringPendingLocationBody.
   ///
   /// In zh, this message translates to:
-  /// **'离开前请取消定位、确认落点或撤销这次记录。'**
+  /// **'可以继续把这次投篮记完，也可以取消未完成的操作后离开。'**
   String get scoringPendingLocationBody;
 
   /// No description provided for @scoringPendingDraftBody.
@@ -3951,7 +3951,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringCancelLocationLeave.
   ///
   /// In zh, this message translates to:
-  /// **'取消定位并离开'**
+  /// **'取消并离开'**
   String get scoringCancelLocationLeave;
 
   /// No description provided for @scoringCancelDraftLeave.
@@ -3975,13 +3975,13 @@ abstract class AppLocalizations {
   /// No description provided for @scoringMissTrackingDisabled.
   ///
   /// In zh, this message translates to:
-  /// **'当前跟踪设置不记录未中投篮'**
+  /// **'当前设置不记录未命中投篮'**
   String get scoringMissTrackingDisabled;
 
   /// No description provided for @scoringActionRejected.
   ///
   /// In zh, this message translates to:
-  /// **'当前操作被拒绝，请先完成落点或草稿'**
+  /// **'请先完成当前落点或未记完的投篮'**
   String get scoringActionRejected;
 
   /// No description provided for @scoringFreeThrowTrackingDisabled.
@@ -4011,7 +4011,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringUndoFailed.
   ///
   /// In zh, this message translates to:
-  /// **'撤销未提交'**
+  /// **'没能撤销'**
   String get scoringUndoFailed;
 
   /// No description provided for @scoringPauseFailed.
@@ -4047,13 +4047,13 @@ abstract class AppLocalizations {
   /// No description provided for @scoringNoteHint.
   ///
   /// In zh, this message translates to:
-  /// **'例如：暂停、战术或现场情况'**
+  /// **'例如：暂停、战术安排或场上情况'**
   String get scoringNoteHint;
 
   /// No description provided for @scoringRecordNote.
   ///
   /// In zh, this message translates to:
-  /// **'记录备注'**
+  /// **'保存备注'**
   String get scoringRecordNote;
 
   /// No description provided for @scoringRecordCustom.
@@ -4065,7 +4065,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringEventLabel.
   ///
   /// In zh, this message translates to:
-  /// **'事件标签'**
+  /// **'事件名称'**
   String get scoringEventLabel;
 
   /// No description provided for @scoringRecordEvent.
@@ -4083,7 +4083,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringTimerNotConfigured.
   ///
   /// In zh, this message translates to:
-  /// **'计时未配置'**
+  /// **'未开启计时'**
   String get scoringTimerNotConfigured;
 
   /// No description provided for @scoringOvertime.
@@ -4107,7 +4107,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringBackToScoringList.
   ///
   /// In zh, this message translates to:
-  /// **'返回计分列表'**
+  /// **'返回计分'**
   String get scoringBackToScoringList;
 
   /// No description provided for @scoringMatchTime.
@@ -4149,7 +4149,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringResolvePending.
   ///
   /// In zh, this message translates to:
-  /// **'请先确认、跳过或撤销当前落点'**
+  /// **'请先确认或取消落点，也可以撤销这次投篮'**
   String get scoringResolvePending;
 
   /// No description provided for @scoringReplay.
@@ -4167,7 +4167,7 @@ abstract class AppLocalizations {
   /// No description provided for @courtEditLabel.
   ///
   /// In zh, this message translates to:
-  /// **'篮球场落点编辑区'**
+  /// **'篮球场投篮位置编辑区'**
   String get courtEditLabel;
 
   /// No description provided for @courtReplayHint.
@@ -4197,13 +4197,13 @@ abstract class AppLocalizations {
   /// No description provided for @routeActiveMatchCheckError.
   ///
   /// In zh, this message translates to:
-  /// **'无法确认进行中的比赛'**
+  /// **'暂时查不到比赛状态'**
   String get routeActiveMatchCheckError;
 
   /// No description provided for @routeActiveMatchCheckBody.
   ///
   /// In zh, this message translates to:
-  /// **'请返回主页后重试，避免在状态未确认时创建新比赛。'**
+  /// **'请返回主页重试，先确认是否有比赛正在进行。'**
   String get routeActiveMatchCheckBody;
 
   /// No description provided for @routeMatchLoadError.
@@ -4215,13 +4215,13 @@ abstract class AppLocalizations {
   /// No description provided for @routeMatchNotActive.
   ///
   /// In zh, this message translates to:
-  /// **'比赛未在进行中'**
+  /// **'这场比赛不在进行中'**
   String get routeMatchNotActive;
 
   /// No description provided for @routeMatchNotActiveBody.
   ///
   /// In zh, this message translates to:
-  /// **'请从主页继续一场活动比赛。'**
+  /// **'请从主页继续进行中的比赛。'**
   String get routeMatchNotActiveBody;
 
   /// No description provided for @routeMatchRestoring.
@@ -4233,7 +4233,7 @@ abstract class AppLocalizations {
   /// No description provided for @routeMatchRestoringBody.
   ///
   /// In zh, this message translates to:
-  /// **'已读取比赛，但计分状态还在恢复，请稍候。'**
+  /// **'正在恢复计分记录，请稍候。'**
   String get routeMatchRestoringBody;
 
   /// No description provided for @routeReplayOpenError.
@@ -4281,7 +4281,7 @@ abstract class AppLocalizations {
   /// No description provided for @routeActiveCheckLoading.
   ///
   /// In zh, this message translates to:
-  /// **'正在确认是否已有进行中的比赛，请稍后再试。'**
+  /// **'正在查找进行中的比赛，请稍后再试。'**
   String get routeActiveCheckLoading;
 
   /// No description provided for @routeStartMatchConflict.
@@ -4323,7 +4323,7 @@ abstract class AppLocalizations {
   /// No description provided for @routeLeaveKeepRunning.
   ///
   /// In zh, this message translates to:
-  /// **'继续运行'**
+  /// **'继续计时'**
   String get routeLeaveKeepRunning;
 
   /// No description provided for @routeLeavePauseAndLeave.
@@ -4335,7 +4335,7 @@ abstract class AppLocalizations {
   /// No description provided for @routeClockCheckError.
   ///
   /// In zh, this message translates to:
-  /// **'无法确认计时状态，请留在比赛中重试。'**
+  /// **'暂时无法确认计时状态，请留在本场重试。'**
   String get routeClockCheckError;
 
   /// No description provided for @routeProjectLinkError.
@@ -4353,7 +4353,7 @@ abstract class AppLocalizations {
   /// No description provided for @projectTagline.
   ///
   /// In zh, this message translates to:
-  /// **'为一对一篮球而做的本地计分与复盘工具。'**
+  /// **'一对一篮球的本地计分与复盘工具。'**
   String get projectTagline;
 
   /// No description provided for @projectFreeForever.
@@ -4365,7 +4365,7 @@ abstract class AppLocalizations {
   /// No description provided for @projectFreeForeverDetail.
   ///
   /// In zh, this message translates to:
-  /// **'核心计分与复盘功能不会转为付费功能。'**
+  /// **'核心计分和复盘功能永久免费。'**
   String get projectFreeForeverDetail;
 
   /// No description provided for @projectOpenSource.
@@ -4377,7 +4377,7 @@ abstract class AppLocalizations {
   /// No description provided for @projectOpenSourceDetail.
   ///
   /// In zh, this message translates to:
-  /// **'源代码持续公开，任何人都可以审阅与参与。'**
+  /// **'源代码始终公开，欢迎查看和参与。'**
   String get projectOpenSourceDetail;
 
   /// No description provided for @projectOffline.
@@ -4389,7 +4389,7 @@ abstract class AppLocalizations {
   /// No description provided for @projectOfflineDetail.
   ///
   /// In zh, this message translates to:
-  /// **'无需账号或网络即可记录比赛。'**
+  /// **'不用注册，没网络也能记比赛。'**
   String get projectOfflineDetail;
 
   /// No description provided for @projectPrivacy.
@@ -4401,13 +4401,13 @@ abstract class AppLocalizations {
   /// No description provided for @projectPrivacyDetail.
   ///
   /// In zh, this message translates to:
-  /// **'球员与比赛数据只保存在你的设备上。'**
+  /// **'球员和比赛数据保存在本机，球豆不会上传。'**
   String get projectPrivacyDetail;
 
   /// No description provided for @projectOpen.
   ///
   /// In zh, this message translates to:
-  /// **'开放项目'**
+  /// **'查看与参与'**
   String get projectOpen;
 
   /// No description provided for @projectContribute.
@@ -4479,31 +4479,31 @@ abstract class AppLocalizations {
   /// No description provided for @historyImportedIncompleteTitle.
   ///
   /// In zh, this message translates to:
-  /// **'导入的未完成比赛'**
+  /// **'从备份导入的未完成比赛'**
   String get historyImportedIncompleteTitle;
 
   /// No description provided for @historyImportedIncompleteBody.
   ///
   /// In zh, this message translates to:
-  /// **'这场比赛来自备份，尚未完成；恢复后可以继续计分。'**
+  /// **'这场比赛从备份导入，还没结束，可以继续记分。'**
   String get historyImportedIncompleteBody;
 
   /// No description provided for @historyResumeImportedIncomplete.
   ///
   /// In zh, this message translates to:
-  /// **'恢复未完成导入'**
+  /// **'继续这场比赛'**
   String get historyResumeImportedIncomplete;
 
   /// No description provided for @historyResumeImportedIncompleteFailed.
   ///
   /// In zh, this message translates to:
-  /// **'无法恢复导入的未完成比赛，请确认没有其他活动比赛。'**
+  /// **'没能继续这场比赛，请先确认没有其他比赛正在进行。'**
   String get historyResumeImportedIncompleteFailed;
 
   /// No description provided for @historyImportedIncompleteLoadError.
   ///
   /// In zh, this message translates to:
-  /// **'无法查询导入的未完成比赛。'**
+  /// **'暂时读不到从备份导入的未完成比赛。'**
   String get historyImportedIncompleteLoadError;
 
   /// No description provided for @historyImportedIncompleteRetry.
@@ -4515,31 +4515,31 @@ abstract class AppLocalizations {
   /// No description provided for @pregameTemplatesFallbackLoading.
   ///
   /// In zh, this message translates to:
-  /// **'规则模板暂时无法读取，已使用内置规则；正在加载球员档案。'**
+  /// **'暂时读不到规则模板，先用内置规则。球员档案还在加载中。'**
   String get pregameTemplatesFallbackLoading;
 
   /// No description provided for @pregamePlayersLoading.
   ///
   /// In zh, this message translates to:
-  /// **'正在加载球员档案；也可以先输入临时姓名。'**
+  /// **'球员档案还在加载中，也可以先输入临时姓名。'**
   String get pregamePlayersLoading;
 
   /// No description provided for @pregameTemplatesPlayersError.
   ///
   /// In zh, this message translates to:
-  /// **'规则模板和球员档案暂时无法读取；可以使用临时姓名后重试。'**
+  /// **'暂时读不到规则模板和球员档案，可以先用临时姓名开赛。'**
   String get pregameTemplatesPlayersError;
 
   /// No description provided for @pregamePlayersError.
   ///
   /// In zh, this message translates to:
-  /// **'球员档案暂时无法读取；可以使用临时姓名后重试。'**
+  /// **'暂时读不到球员档案，可以先用临时姓名开赛。'**
   String get pregamePlayersError;
 
   /// No description provided for @pregameTemplatesFallbackNotice.
   ///
   /// In zh, this message translates to:
-  /// **'规则模板暂时无法读取，已使用内置规则。'**
+  /// **'暂时读不到规则模板，先用内置规则。'**
   String get pregameTemplatesFallbackNotice;
 
   /// No description provided for @scoringConfirmLocation.
@@ -4623,7 +4623,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringNotesCustomRecordsGroup.
   ///
   /// In zh, this message translates to:
-  /// **'备注/自定义记录'**
+  /// **'备注与自定义记录'**
   String get scoringNotesCustomRecordsGroup;
 
   /// No description provided for @scoringMatchGroup.
@@ -4641,19 +4641,19 @@ abstract class AppLocalizations {
   /// No description provided for @scoringSupplementPrompt.
   ///
   /// In zh, this message translates to:
-  /// **'补充{side} +{points} 落点 · {seconds}秒'**
+  /// **'补充{side} +{points} 落点 · 剩余 {seconds}秒'**
   String scoringSupplementPrompt(Object points, Object seconds, Object side);
 
   /// No description provided for @scoringMissSupplementPrompt.
   ///
   /// In zh, this message translates to:
-  /// **'补充{side}未命中落点 · {seconds}秒'**
+  /// **'补充{side}未命中落点 · 剩余 {seconds}秒'**
   String scoringMissSupplementPrompt(Object seconds, Object side);
 
   /// No description provided for @scoringSupplementExpired.
   ///
   /// In zh, this message translates to:
-  /// **'落点补充已过期'**
+  /// **'补落点的时间已过'**
   String get scoringSupplementExpired;
 
   /// No description provided for @scoringScoreSemantics.
@@ -4665,7 +4665,7 @@ abstract class AppLocalizations {
   /// No description provided for @scoringLocationPendingSemantics.
   ///
   /// In zh, this message translates to:
-  /// **'{side} +{points}，待补落点 {seconds} 秒'**
+  /// **'{side} +{points}，还有 {seconds} 秒可补落点'**
   String scoringLocationPendingSemantics(
     Object points,
     Object seconds,
@@ -4681,8 +4681,302 @@ abstract class AppLocalizations {
   /// No description provided for @scoringMissLocationPendingSemantics.
   ///
   /// In zh, this message translates to:
-  /// **'{side}未命中，待补落点 {seconds} 秒'**
+  /// **'{side}未命中，还有 {seconds} 秒可补落点'**
   String scoringMissLocationPendingSemantics(Object seconds, Object side);
+
+  /// No description provided for @updateTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'软件更新'**
+  String get updateTitle;
+
+  /// No description provided for @updateSubtitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'检查、下载并安装新版本'**
+  String get updateSubtitle;
+
+  /// No description provided for @updateCurrentVersion.
+  ///
+  /// In zh, this message translates to:
+  /// **'当前版本：{version}'**
+  String updateCurrentVersion(Object version);
+
+  /// No description provided for @updateAutoCheck.
+  ///
+  /// In zh, this message translates to:
+  /// **'启动时检查更新'**
+  String get updateAutoCheck;
+
+  /// No description provided for @updateAutoCheckDetail.
+  ///
+  /// In zh, this message translates to:
+  /// **'启动后会联网检查新版本，不上传比赛或球员记录。关闭后仍可手动检查。'**
+  String get updateAutoCheckDetail;
+
+  /// No description provided for @updateCheck.
+  ///
+  /// In zh, this message translates to:
+  /// **'检查更新'**
+  String get updateCheck;
+
+  /// No description provided for @updateChecking.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在检查更新…'**
+  String get updateChecking;
+
+  /// No description provided for @updateUpToDate.
+  ///
+  /// In zh, this message translates to:
+  /// **'已是最新版本'**
+  String get updateUpToDate;
+
+  /// No description provided for @updateAvailable.
+  ///
+  /// In zh, this message translates to:
+  /// **'发现新版本 {version}'**
+  String updateAvailable(Object version);
+
+  /// No description provided for @updateDownloadSize.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载大小：{size}'**
+  String updateDownloadSize(Object size);
+
+  /// No description provided for @updateNow.
+  ///
+  /// In zh, this message translates to:
+  /// **'立即更新'**
+  String get updateNow;
+
+  /// No description provided for @updateLater.
+  ///
+  /// In zh, this message translates to:
+  /// **'稍后'**
+  String get updateLater;
+
+  /// No description provided for @updateDownload.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载更新'**
+  String get updateDownload;
+
+  /// No description provided for @updateDownloadQueued.
+  ///
+  /// In zh, this message translates to:
+  /// **'等待系统开始下载'**
+  String get updateDownloadQueued;
+
+  /// No description provided for @updateDownloading.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在下载 {received} / {total}'**
+  String updateDownloading(Object received, Object total);
+
+  /// No description provided for @updateDownloadPaused.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载已暂停，系统会在条件允许时继续'**
+  String get updateDownloadPaused;
+
+  /// No description provided for @updateVerifying.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在校验安装包…'**
+  String get updateVerifying;
+
+  /// No description provided for @updateReady.
+  ///
+  /// In zh, this message translates to:
+  /// **'安装包已就绪'**
+  String get updateReady;
+
+  /// No description provided for @updateInstall.
+  ///
+  /// In zh, this message translates to:
+  /// **'安装更新'**
+  String get updateInstall;
+
+  /// No description provided for @updateCancelDownload.
+  ///
+  /// In zh, this message translates to:
+  /// **'取消下载'**
+  String get updateCancelDownload;
+
+  /// No description provided for @updateRetryDownload.
+  ///
+  /// In zh, this message translates to:
+  /// **'重新下载'**
+  String get updateRetryDownload;
+
+  /// No description provided for @updateCheckFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂时无法检查更新，请确认网络后重试。'**
+  String get updateCheckFailed;
+
+  /// No description provided for @updateDownloadFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载未完成，请检查网络和存储空间后重试。'**
+  String get updateDownloadFailed;
+
+  /// No description provided for @updateVerificationFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'安装包校验失败，请重新下载。'**
+  String get updateVerificationFailed;
+
+  /// No description provided for @updateFileMissing.
+  ///
+  /// In zh, this message translates to:
+  /// **'安装包已被移除，请重新下载。'**
+  String get updateFileMissing;
+
+  /// No description provided for @updateInstallBlocked.
+  ///
+  /// In zh, this message translates to:
+  /// **'请先完成或结束当前比赛，再安装更新。尚未确认比赛状态时，也无法安装。'**
+  String get updateInstallBlocked;
+
+  /// No description provided for @updatePermissionTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'允许安装更新'**
+  String get updatePermissionTitle;
+
+  /// No description provided for @updatePermissionBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'请在系统设置中允许球豆安装应用，再返回这里。最后还需要你在系统安装界面确认。'**
+  String get updatePermissionBody;
+
+  /// No description provided for @updateOpenSettings.
+  ///
+  /// In zh, this message translates to:
+  /// **'打开系统设置'**
+  String get updateOpenSettings;
+
+  /// No description provided for @updateInstallFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'无法打开安装界面，请检查系统安装权限后重试。'**
+  String get updateInstallFailed;
+
+  /// No description provided for @updateInstallerOpened.
+  ///
+  /// In zh, this message translates to:
+  /// **'已打开系统安装界面，请在那里确认安装。取消后可以再次点击安装。'**
+  String get updateInstallerOpened;
+
+  /// No description provided for @updateIncompatible.
+  ///
+  /// In zh, this message translates to:
+  /// **'新版本需要更新的 Android 系统，当前设备无法安装。'**
+  String get updateIncompatible;
+
+  /// No description provided for @updateUnsupported.
+  ///
+  /// In zh, this message translates to:
+  /// **'当前平台暂不支持应用内更新。'**
+  String get updateUnsupported;
+
+  /// No description provided for @updateSettingsFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'设置未保存，请重试。'**
+  String get updateSettingsFailed;
+
+  /// No description provided for @updateFallback.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在使用 GitHub 备用下载渠道'**
+  String get updateFallback;
+
+  /// No description provided for @pregameGoalScoringMode.
+  ///
+  /// In zh, this message translates to:
+  /// **'计分方式'**
+  String get pregameGoalScoringMode;
+
+  /// No description provided for @pregameGoalModeFree.
+  ///
+  /// In zh, this message translates to:
+  /// **'自由计分'**
+  String get pregameGoalModeFree;
+
+  /// No description provided for @pregameGoalModeTarget.
+  ///
+  /// In zh, this message translates to:
+  /// **'目标计分'**
+  String get pregameGoalModeTarget;
+
+  /// No description provided for @ruleBuiltInDefault.
+  ///
+  /// In zh, this message translates to:
+  /// **'默认规则'**
+  String get ruleBuiltInDefault;
+
+  /// No description provided for @scoringTargetReachedTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'已达到目标分'**
+  String get scoringTargetReachedTitle;
+
+  /// No description provided for @scoringTargetPoints.
+  ///
+  /// In zh, this message translates to:
+  /// **'目标 {target} 分'**
+  String scoringTargetPoints(int target);
+
+  /// No description provided for @scoringTargetReachedPlayer.
+  ///
+  /// In zh, this message translates to:
+  /// **'{name}已达到目标分'**
+  String scoringTargetReachedPlayer(String name);
+
+  /// No description provided for @scoringTargetReachedTie.
+  ///
+  /// In zh, this message translates to:
+  /// **'双方已达到目标分，当前平分'**
+  String get scoringTargetReachedTie;
+
+  /// No description provided for @scoringTargetSupplement.
+  ///
+  /// In zh, this message translates to:
+  /// **'可先补上最后一球的落点'**
+  String get scoringTargetSupplement;
+
+  /// No description provided for @scoringTargetSkipLocation.
+  ///
+  /// In zh, this message translates to:
+  /// **'跳过落点'**
+  String get scoringTargetSkipLocation;
+
+  /// No description provided for @scoringTargetUndoScore.
+  ///
+  /// In zh, this message translates to:
+  /// **'撤销上一笔得分'**
+  String get scoringTargetUndoScore;
+
+  /// No description provided for @scoringTargetContinueHelp.
+  ///
+  /// In zh, this message translates to:
+  /// **'继续后，本场不再提醒目标分'**
+  String get scoringTargetContinueHelp;
+
+  /// No description provided for @summaryGameFinished.
+  ///
+  /// In zh, this message translates to:
+  /// **'比赛结束'**
+  String get summaryGameFinished;
+
+  /// No description provided for @summaryWinner.
+  ///
+  /// In zh, this message translates to:
+  /// **'{name}获胜'**
+  String summaryWinner(String name);
 }
 
 class _AppLocalizationsDelegate

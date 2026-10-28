@@ -407,6 +407,7 @@ class _DataManagementPageState extends State<DataManagementPage> {
     return await showDialog<bool>(
           context: context,
           builder: (dialogContext) => AlertDialog(
+            scrollable: true,
             title: Text(l10n.settingsReplaceConfirmTitle),
             content: Text(l10n.settingsReplaceConfirmBody),
             actions: [

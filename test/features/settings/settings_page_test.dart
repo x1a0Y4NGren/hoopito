@@ -54,7 +54,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('管理数据与备份'), findsOneWidget);
+      expect(find.text('数据与备份'), findsOneWidget);
       expect(find.text('规则模板'), findsNothing);
       expect(find.text('导出完整备份'), findsNothing);
       expect(find.text('导出 CSV'), findsNothing);
@@ -366,7 +366,7 @@ void main() {
       );
       expect(
         find.text(
-          'Reduced motion shortens transitions and removes decorative movement.',
+          'Reduced motion shortens transitions and removes decorative animations.',
         ),
         findsOneWidget,
       );

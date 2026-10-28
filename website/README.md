@@ -409,7 +409,7 @@ Android 实机验收需由使用者打开预览，记录型号、浏览器和结
 
 ## 发行信息维护
 
-`src/data/release.ts` 集中维护版本、最低 Android 版本、官网 APK 相对路径、
+`src/data/release.ts` 集中维护已公开稳定版的版本、versionCode、双语更新说明、最低 Android 版本、官网 APK 相对路径、
 文件名、GitHub 原始附件地址、蓝奏云分享链接与密码、文件大小、SHA-256、下载页与发行说明地址。
 首屏和下载卡的主按钮打开原生渠道选择弹窗，上方为「蓝奏云下载渠道（国内）」，
 通过 `lanzouUrl` 打开分享页；下方为「GitHub下载渠道（国外）」，使用 `upstreamApkUrl`
@@ -436,6 +436,36 @@ Esc、键盘与触摸均可操作。
 一次；HTTP 错误、内容类型错误、长度或摘要不符会终止构建。只有验证成功的文件
 才进入 `dist/downloads/`，不会重新签名或重建 App，APK 和缓存均不提交。
 CI 的逐文件构建摘要包含 APK，网页首屏不会请求或预加载它。
+
+Android 更新元数据由 `src/data/android-update.ts` 的共享序列化器生成。Astro 构建输出
+`/updates/android/stable.json`，Release 附件导出为 `android-update.json`，两者逐字节一致。
+schemaVersion 1 只包含应用 ID、versionName、整数 versionCode、minimumApi、`zh`／`en`
+更新说明，以及 APK 字节数、SHA-256、官网 HTTPS URL 和同版本 GitHub 附件 URL。
+序列化会拒绝版本与 `appVersion` 不一致、无效类型、非官方地址和超过 64 KiB 的元数据。
+该配置描述最后公开稳定版，独立于开发中的 `pubspec.yaml`；开发 App 提前升级版本时不改 feed。
+当前仍指向原 v2.0.1+5 APK 和原摘要，不宣称该历史发行包已包含应用内更新器。
+
+在 `website/` 中导出发布附件：
+
+```powershell
+# 仅元数据导出（不代表已验证 APK）
+npm run export:android-update
+# 正式发行时必须核验选定签名 APK，使用与网站构建相同的流式大小/SHA-256 校验
+npm run export:android-update -- --apk "D:/release/Hoopito-v2.0.1-android.apk" --output "D:/release/android-update.json"
+```
+
+默认输出在忽略的 `output/releases/android-update.json`；不下载、不重建、不重新签名 APK。
+给定 `--apk` 时校验失败不会生成或覆盖附件；生成成功也不代替 APK 身份、版本与签名验收。
+`--help` 查看参数。未来发行时先用本次签名 APK 的真实数据更新配置，在草稿中准备 APK、
+`android-update.json`、覆盖两者的 `SHA256SUMS` 并重新下载核验，全部附件齐备后才发布新 Release。
+不得向已公开的旧 Release 补传附件。随后在该次明确的网站部署授权内构建和部署官网，
+确认线上 feed 与附件一致、官网 APK 可下载。合入源码与普通本地验证不授权发布或部署。
+
+包含更新器的 Android 版本默认启动检查一次，可在设置关闭；它优先读取官网 feed，主源失败或
+无效时读取 GitHub latest 的 `android-update.json`。有效旧主源仍优先，因此网站部署滞后时不会
+保证立即提示 GitHub 新版。仅点击下载才请求 APK，下载主源失败最多回退一次 GitHub 附件。
+feed 使用 `public, max-age=0, must-revalidate`，不沿用固定版本 APK 的 immutable 缓存。
+网络数据流见 [App 隐私说明](../PRIVACY.md)，发行顺序见[发布清单](../docs/release/release-checklist.md)。
 
 渠道弹窗可使用 `npm run dev` 本地审阅；验证官网保留的静态安装包请先构建，再使用
 `npm run preview`，Astro 开发服务器不提供仅存在于 `dist/` 的安装包。

@@ -586,6 +586,28 @@ class ScoringController extends ChangeNotifier {
     return _runExclusive(command, () => service.undoLastScoringAction(command));
   }
 
+  /// The target confirmation undoes the scoring action and its supplement in
+  /// one command; the toolbar retains its ordinary chronological undo policy.
+  Future<bool> undoTargetScoreCommitted() async {
+    if (_disposed ||
+        _exclusiveBusy ||
+        _drainingQueue ||
+        _commandQueue.isNotEmpty ||
+        _state.courtFirstShotDraft != null ||
+        _state.pendingLocation != null ||
+        _state.decision?.reason != MatchDecisionReason.targetReached) {
+      return false;
+    }
+    final service = _commandService;
+    if (service == null) return false;
+    final command = UndoLastScoringActionCommand(
+      matchId: _state.matchId,
+      undoTargetScore: true,
+      reason: 'Target confirmation undo',
+    );
+    return _runExclusive(command, () => service.undoLastScoringAction(command));
+  }
+
   bool _undoLocalScoringAction() {
     final action = _takeLatestLocalUndoAction();
     if (action == null) return false;
@@ -1420,12 +1442,27 @@ class ScoringController extends ChangeNotifier {
     // A made free throw can reach a target, but it does not establish a new
     // possession boundary: the command projection deliberately waits for the
     // end of the attempt sequence before suggesting possession.
-    if (event.type == EventKind.freeThrow) {
-      return List.unmodifiable(
-        hints.where((hint) => hint.type != RuleHintType.possessionChange),
-      );
-    }
-    return List.unmodifiable(hints);
+    final continuedTarget =
+        !projection.match.ruleTemplateSnapshot.winByTwo &&
+        activeEvents.any(
+          (event) =>
+              event.type == EventKind.pause &&
+              event.customLabel == 'continueTarget',
+        );
+    return List.unmodifiable(
+      hints.where((hint) {
+        if (event.type == EventKind.freeThrow &&
+            hint.type == RuleHintType.possessionChange) {
+          return false;
+        }
+        if (continuedTarget &&
+            (hint.type == RuleHintType.targetReached ||
+                hint.type == RuleHintType.matchPoint)) {
+          return false;
+        }
+        return true;
+      }),
+    );
   }
 
   static bool _isRuleScoringEvent(MatchEvent event) {

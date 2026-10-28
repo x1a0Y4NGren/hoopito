@@ -4,11 +4,18 @@ import 'package:hoopito/core/domain/entities/rule_template.dart';
 /// Built-in rule records keep stable ids and backwards-compatible stored names.
 /// The UI resolves those ids to the active locale instead of rendering the
 /// seed-language name saved in the database.
-String localizedRuleTemplateName(RuleTemplate template, AppLocalizations l10n) {
+String localizedRuleTemplateName(
+  RuleTemplate template,
+  AppLocalizations l10n, {
+  bool forNewMatch = false,
+}) {
   return switch (template.id) {
-    'free' => l10n.ruleBuiltInFreeScoring,
-    'eleven_win_by_two' => l10n.ruleBuiltInElevenWinByTwo,
-    'twenty_one' => l10n.ruleBuiltInTwentyOne,
+    'free' =>
+      forNewMatch ? l10n.ruleBuiltInDefault : l10n.ruleBuiltInFreeScoring,
+    'eleven_win_by_two' =>
+      forNewMatch ? l10n.pregameElevenPoint : l10n.ruleBuiltInElevenWinByTwo,
+    'twenty_one' =>
+      forNewMatch ? l10n.pregameTwentyOnePoint : l10n.ruleBuiltInTwentyOne,
     'timed_ten' => l10n.ruleBuiltInTimedTen,
     _ => template.name,
   };

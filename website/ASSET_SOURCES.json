@@ -1662,8 +1662,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 125228,
-      "sha256": "0c0fd48763beac75f34c8ae824e4afd56e1d9625a2900494ed4db2433349376c",
+      "bytes": 126440,
+      "sha256": "c45b52e6abbab0668cb5c6d80e8bc33c333cf551d63ace7ec5fa35b9fa4362a8",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -1808,6 +1808,7 @@
         20154,
         20165,
         20171,
+        20173,
         20174,
         20195,
         20197,
@@ -1931,6 +1932,7 @@
         23436,
         23448,
         23454,
+        23459,
         23481,
         23494,
         23545,
@@ -2029,6 +2031,7 @@
         26415,
         26426,
         26435,
+        26448,
         26463,
         26469,
         26500,
@@ -2065,6 +2068,7 @@
         28857,
         29255,
         29256,
+        29260,
         29366,
         29420,
         29575,
@@ -2107,6 +2111,7 @@
         31649,
         31726,
         31995,
+        32032,
         32034,
         32047,
         32418,
@@ -2177,6 +2182,7 @@
         36335,
         36339,
         36394,
+        36523,
         36712,
         36733,
         36739,
@@ -2223,6 +2229,7 @@
         39029,
         39030,
         39033,
+        39035,
         39046,
         39304,
         39564,
@@ -2275,6 +2282,10 @@
           "sha256": "004322044f105134a7c96f666fab05a62da425b54725522de97c4f8ac8da9416"
         },
         {
+          "path": "src/data/android-update.ts",
+          "sha256": "4a207905d997bebbd72e46f67d49fec346110e43b81901abf1ea1e734607455d"
+        },
+        {
           "path": "src/data/community.ts",
           "sha256": "1298127e981f955ca27d96c6c4da0badffebdae283e764d87bf7d2e822ee1944"
         },
@@ -2288,7 +2299,7 @@
         },
         {
           "path": "src/data/release.ts",
-          "sha256": "b79c57a2ca84dee2b9969c69bd70a5482d2a35daed9edef6a07f56e442d4e1bd"
+          "sha256": "f25cd4a141a7ba65be58e1ee32cc65bca8c7cc3f399faf07ba2dc3dd8ebb2de6"
         },
         {
           "path": "src/data/replay-example.ts",
@@ -2317,6 +2328,10 @@
         {
           "path": "src/pages/sitemap.xml.ts",
           "sha256": "7c4728b6e8bcbcf62405fe49a953e28d1a7217d634937b2e5f4ae7b9fd509120"
+        },
+        {
+          "path": "src/pages/updates/android/stable.json.ts",
+          "sha256": "21601d4ae0710a708283fc531a28601593f8e88156b64bd2eeff17c9e017a2fd"
         },
         {
           "path": "src/scripts/arrow-drawing.ts",
@@ -2430,7 +2445,7 @@
       "bytes": 1630,
       "sha256": "0a73f5b046f585c1372e45ca5a35149e3845b55f0c05f2586781f0f1adf7fc8b",
       "source": "src/data/release.ts",
-      "source_sha256": "b79c57a2ca84dee2b9969c69bd70a5482d2a35daed9edef6a07f56e442d4e1bd",
+      "source_sha256": "f25cd4a141a7ba65be58e1ee32cc65bca8c7cc3f399faf07ba2dc3dd8ebb2de6",
       "payload": "https://hoopito.com/#download",
       "transformation": "QR code generated with qrcode; four-module quiet zone preserved",
       "license": "MIT (repository-generated graphic)"
@@ -2456,7 +2471,7 @@
         },
         {
           "source": "website/public/fonts/noto-sc.woff2",
-          "sha256": "0c0fd48763beac75f34c8ae824e4afd56e1d9625a2900494ed4db2433349376c"
+          "sha256": "c45b52e6abbab0668cb5c6d80e8bc33c333cf551d63ace7ec5fa35b9fa4362a8"
         },
         {
           "source": "assets/fonts/BarlowCondensed-Medium.ttf",

@@ -97,6 +97,7 @@ class _ScoringPageState extends State<ScoringPage>
   bool _guideVisible = false;
   bool _leaveBusy = false;
   bool _decisionBusy = false;
+  bool _finishConfirmationOpen = false;
   bool _interactionPaused = false;
   bool _pauseTransitionBusy = false;
   bool _pausedPanelVisible = false;
@@ -590,9 +591,14 @@ class _ScoringPageState extends State<ScoringPage>
                                   ),
                                 ),
                               ),
-                            if (state.decision != null &&
-                                !decisionControlsDeferred)
-                              _buildDecisionOverlay(context, state),
+                            if (decisionControlsDeferred &&
+                                state.decision?.reason ==
+                                    MatchDecisionReason.targetReached)
+                              _buildTargetNotice(
+                                context,
+                                state,
+                                portrait: portrait,
+                              ),
                           ],
                         ),
                       ),
@@ -609,6 +615,8 @@ class _ScoringPageState extends State<ScoringPage>
                     ),
                   ),
                 ),
+                if (state.decision != null && !decisionControlsDeferred)
+                  _buildDecisionOverlay(context, state),
               ],
             );
           },
@@ -817,10 +825,15 @@ class _ScoringPageState extends State<ScoringPage>
   Widget _buildRuleHints(BuildContext context, MatchScoringState state) {
     final l10n = _localizations(context);
     final messages = <String>[
-      for (final hint in state.ruleHints) _localizedHint(l10n, hint),
+      for (final hint in state.ruleHints)
+        if (state.decision == null ||
+            (hint.type != RuleHintType.targetReached &&
+                hint.type != RuleHintType.winByTwoRequired))
+          _localizedHint(l10n, hint),
       for (final warning in state.ruleWarnings)
         l10n.ruleFoulLimit(warning.limit, _localizedSide(l10n, warning.side)),
     ];
+    if (messages.isEmpty) return const SizedBox.shrink();
     return Container(
       key: const Key('scoring-rule-hints'),
       width: double.infinity,
@@ -845,43 +858,204 @@ class _ScoringPageState extends State<ScoringPage>
         OutlinedButton(
           key: const Key('scoring-decision-continue'),
           onPressed: _decisionBusy ? null : _continueDecision,
+          style: OutlinedButton.styleFrom(minimumSize: const Size(48, 48)),
           child: Text(l10n.continueMatch),
         ),
       if (decision.canFinish && _canFinish)
         FilledButton(
           key: const Key('scoring-decision-finish'),
           onPressed: _decisionBusy ? null : _confirmFinishDecision,
+          style: FilledButton.styleFrom(minimumSize: const Size(48, 48)),
           child: Text(l10n.finishMatch),
+        ),
+      if (decision.reason == MatchDecisionReason.targetReached)
+        TextButton(
+          key: const Key('scoring-decision-undo-score'),
+          onPressed: _decisionBusy ? null : _undoTargetScore,
+          style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+          child: Text(l10n.scoringTargetUndoScore),
         ),
     ];
     return Positioned.fill(
       child: ColoredBox(
         color: Colors.black.withValues(alpha: 0.28),
-        child: Center(
-          child: EditorialSheet(
-            key: const Key('scoring-decision-dock'),
-            padding: const EdgeInsets.all(16),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                Text(
-                  l10n.finalScoreLine(
-                    state.blueName,
-                    decision.blueScore,
-                    state.redName,
-                    decision.redScore,
-                  ),
-                  style: Theme.of(context).textTheme.titleMedium,
+        child: LayoutBuilder(
+          builder: (context, constraints) => Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: 560,
+                maxHeight: (constraints.maxHeight - 16).clamp(
+                  0,
+                  double.infinity,
                 ),
-                ...actions,
-              ],
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(8),
+                child: EditorialSheet(
+                  key: const Key('scoring-decision-dock'),
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Semantics(
+                        liveRegion: true,
+                        header: true,
+                        child: Text(switch (decision.reason) {
+                          MatchDecisionReason.targetReached =>
+                            l10n.scoringTargetReachedTitle,
+                          MatchDecisionReason.winByTwoRequired =>
+                            l10n.ruleWinByTwoRequired,
+                          MatchDecisionReason.regulationExpired =>
+                            l10n.finishOrContinueOvertime,
+                        }, style: Theme.of(context).textTheme.titleLarge),
+                      ),
+                      if (decision.reason ==
+                          MatchDecisionReason.targetReached) ...[
+                        const SizedBox(height: 8),
+                        if (state.ruleTemplate.targetScore case final target?)
+                          Text(l10n.scoringTargetPoints(target)),
+                        Text(_targetReachedSide(l10n, state)),
+                      ],
+                      const SizedBox(height: 12),
+                      Text(
+                        l10n.finalScoreLine(
+                          state.blueName,
+                          decision.blueScore,
+                          state.redName,
+                          decision.redScore,
+                        ),
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      if (decision.reason ==
+                              MatchDecisionReason.targetReached &&
+                          !state.ruleTemplate.winByTwo) ...[
+                        const SizedBox(height: 8),
+                        Text(l10n.scoringTargetContinueHelp),
+                      ],
+                      const SizedBox(height: 16),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 12,
+                        runSpacing: 8,
+                        children: actions,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  String _targetReachedSide(AppLocalizations l10n, MatchScoringState state) {
+    if (state.score.redScore == state.score.blueScore) {
+      return l10n.scoringTargetReachedTie;
+    }
+    return l10n.scoringTargetReachedPlayer(
+      state.score.redScore > state.score.blueScore
+          ? state.redName
+          : state.blueName,
+    );
+  }
+
+  Widget _buildTargetNotice(
+    BuildContext context,
+    MatchScoringState state, {
+    required bool portrait,
+  }) {
+    final l10n = _localizations(context);
+    return LayoutBuilder(
+      builder: (context, constraints) => Stack(
+        children: [
+          Positioned(
+            left: 12,
+            right: 12,
+            top: portrait ? null : 8,
+            bottom: portrait ? 8 : null,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: portrait
+                    ? constraints.maxHeight.clamp(0, 294)
+                    : constraints.maxHeight * .45,
+              ),
+              child: SingleChildScrollView(
+                child: EditorialSheet(
+                  key: const Key('scoring-target-notice'),
+                  padding: const EdgeInsets.all(12),
+                  child: Semantics(
+                    liveRegion: true,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.scoringTargetReachedTitle,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          [
+                            if (state.ruleTemplate.targetScore
+                                case final target?)
+                              l10n.scoringTargetPoints(target),
+                            _targetReachedSide(l10n, state),
+                          ].join(' · '),
+                        ),
+                        Text(
+                          l10n.finalScoreLine(
+                            state.blueName,
+                            state.score.blueScore,
+                            state.redName,
+                            state.score.redScore,
+                          ),
+                        ),
+                        Wrap(
+                          spacing: 12,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(l10n.scoringTargetSupplement),
+                            TextButton(
+                              key: const Key('scoring-target-skip-location'),
+                              onPressed: () {
+                                if (!_controller
+                                    .cancelLocateLastUnlocatedShot()) {
+                                  return;
+                                }
+                                if (_controller.locationSupplementWindow !=
+                                    null) {
+                                  _controller.cancelLocateLastUnlocatedShot();
+                                }
+                              },
+                              style: TextButton.styleFrom(
+                                minimumSize: const Size(48, 48),
+                              ),
+                              child: Text(l10n.scoringTargetSkipLocation),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _undoTargetScore() async {
+    if (_decisionBusy) return;
+    setState(() => _decisionBusy = true);
+    try {
+      await _undoLastScoringAction(targetScore: true);
+    } finally {
+      if (mounted && !_disposed) setState(() => _decisionBusy = false);
+    }
   }
 
   void _handleCourtPoint(CourtPoint point) {
@@ -1170,7 +1344,7 @@ class _ScoringPageState extends State<ScoringPage>
     }
   }
 
-  Future<void> _undoLastScoringAction() async {
+  Future<void> _undoLastScoringAction({bool targetScore = false}) async {
     final l10n = _localizations(context);
     final generation = _actionGeneration;
     final controller = _controller;
@@ -1188,7 +1362,9 @@ class _ScoringPageState extends State<ScoringPage>
     }
     final before = List<ScoringShotLocation>.of(controller.state.shotLocations);
     try {
-      final accepted = await controller.undoLastScoringActionCommitted();
+      final accepted = targetScore
+          ? await controller.undoTargetScoreCommitted()
+          : await controller.undoLastScoringActionCommitted();
       if (!_isCurrentAction(generation, controller)) return;
       if (accepted) {
         final afterIds = controller.state.shotLocations
@@ -1330,7 +1506,11 @@ class _ScoringPageState extends State<ScoringPage>
     final l10n = _localizations(context);
     final saving = _controller.isSaving;
     final failed = _controller.hasSaveFailure;
-    final event = state.events.where((event) => !event.isDeleted).lastOrNull;
+    // Derived pauses and continue markers are storage semantics. The status
+    // describes the latest user record, including notes and fouls.
+    final event = state.events
+        .where((event) => !event.isDeleted && event.type.isLiveUndoable)
+        .lastOrNull;
     final action = event == null
         ? l10n.replayNoData
         : [
@@ -2334,6 +2514,7 @@ class _ScoringPageState extends State<ScoringPage>
     if (!_canFinish ||
         decision?.canFinish == false ||
         _decisionBusy ||
+        _finishConfirmationOpen ||
         _decisionControlsDeferred(controller.state)) {
       return false;
     }
@@ -2344,27 +2525,34 @@ class _ScoringPageState extends State<ScoringPage>
     final blueScore = decision?.blueScore ?? state.score.blueScore;
     final l10n = _localizations(context);
     final failureMessage = _labels(context).failureRetry;
-    final coverage = await confirmRecordingCoverage(
-      context,
-      title: l10n.confirmFinalScoreTitle,
-      scoreLine: l10n.finalScoreLine(
-        state.blueName,
-        blueScore,
-        state.redName,
-        redScore,
-      ),
-      draftNotice: hasDraft ? _labels(context).pendingPauseExitBody : null,
-      confirmLabel: l10n.finishMatch,
-      cancelKey: const Key('scoring-finish-cancel'),
-      confirmKey: const Key('scoring-finish-confirm'),
-    );
+    _finishConfirmationOpen = true;
+    TrackingCoverage? coverage;
+    try {
+      coverage = await confirmRecordingCoverage(
+        context,
+        title: l10n.confirmFinalScoreTitle,
+        scoreLine: l10n.finalScoreLine(
+          state.blueName,
+          blueScore,
+          state.redName,
+          redScore,
+        ),
+        draftNotice: hasDraft ? _labels(context).pendingPauseExitBody : null,
+        confirmLabel: l10n.finishMatch,
+        cancelKey: const Key('scoring-finish-cancel'),
+        confirmKey: const Key('scoring-finish-confirm'),
+      );
+    } finally {
+      _finishConfirmationOpen = false;
+    }
     if (coverage == null || !_isCurrentAction(generation, controller)) {
       return false;
     }
+    final confirmedCoverage = coverage;
     final coveredFinish = widget.onFinishWithCoverage;
     final Future<void> Function(int, int) finish = coveredFinish == null
         ? widget.onFinishDecision!
-        : (red, blue) => coveredFinish(red, blue, coverage);
+        : (red, blue) => coveredFinish(red, blue, confirmedCoverage);
     setState(() => _decisionBusy = true);
     try {
       await finish(redScore, blueScore);
@@ -2468,7 +2656,7 @@ class _ScoringPageState extends State<ScoringPage>
       'winByTwoRequired' => l10n.ruleWinByTwoRequired,
       'matchPoint' => l10n.ruleMatchPoint,
       'possessionChange' when hint.suggestedSide != null =>
-        '${_localizedSide(l10n, hint.suggestedSide!)}${l10n.rulePossessionSuggested}',
+        '${_localizedSide(l10n, hint.suggestedSide!)} · ${l10n.rulePossessionSuggested}',
       'possessionChange' => l10n.rulePossessionSuggested,
       _ => hint.message,
     };

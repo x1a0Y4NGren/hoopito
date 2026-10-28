@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hoopito/app/l10n/app_localizations_en.dart';
+import 'package:hoopito/app/l10n/rule_template_localizations.dart';
 import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
 import 'package:hoopito/core/domain/domain_enums.dart';
 import 'package:hoopito/core/domain/entities/rule_template.dart';
@@ -54,7 +56,7 @@ void main() {
         scoreButtons: [1, 2, 3],
         targetScore: 15,
         timeLimitSeconds: 420,
-        winByTwo: true,
+        winByTwo: false,
         foulLimit: 5,
         possessionHintEnabled: true,
         possessionPolicy: PossessionPolicy.switchAfterMade,
@@ -191,6 +193,51 @@ void main() {
     );
 
     expect(command.ruleTemplate.targetScore, 17);
+  });
+
+  test(
+    'new built-in eleven snapshots describe the plain target rule in history',
+    () async {
+      final repository = RuleTemplateRepository(createTestDatabase());
+      await repository.ensureBuiltIns();
+      final template = (await repository.getById('eleven_win_by_two'))!;
+      final controller = PregameController(templates: [template])
+        ..setRuleTemplateId(template.id);
+      final command = buildStartMatchCommand(controller.createMatchSetup());
+
+      expect(command.ruleTemplate.id, 'eleven_win_by_two');
+      expect(command.ruleTemplate.targetScore, 11);
+      expect(command.ruleTemplate.winByTwo, isFalse);
+      expect(command.ruleTemplate.name, '11 分制');
+      expect(
+        localizedStoredRuleTemplateName(
+          command.ruleTemplate.name,
+          AppLocalizationsEn(),
+        ),
+        '11-point game',
+      );
+      // Built-in identity and historical naming still resolve old snapshots.
+      expect(template.name, '11 分制（领先 2 分）');
+      expect(
+        localizedStoredRuleTemplateName('11 分制（领先 2 分）', AppLocalizationsEn()),
+        '11 points (win by 2)',
+      );
+    },
+  );
+
+  test('normalizing new built-in names leaves custom names untouched', () {
+    const template = RuleTemplate(
+      id: 'custom-eleven',
+      name: '11 分制（领先 2 分）',
+      scoreButtons: [1, 2, 3],
+      targetScore: 11,
+      winByTwo: true,
+    );
+    final controller = PregameController(templates: const [template])
+      ..setRuleTemplateId(template.id);
+    final command = buildStartMatchCommand(controller.createMatchSetup());
+    expect(command.ruleTemplate.name, '11 分制（领先 2 分）');
+    expect(command.ruleTemplate.winByTwo, isFalse);
   });
 
   for (final policy in [

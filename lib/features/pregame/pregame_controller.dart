@@ -87,6 +87,8 @@ class MatchSetup {
   final ClockMode clockMode;
 }
 
+enum GoalScoringMode { free, target }
+
 class PregameState {
   const PregameState({
     this.redName = defaultRedPlayerName,
@@ -96,6 +98,7 @@ class PregameState {
     this.ruleTemplateId = 'free',
     this.timerEnabled = false,
     this.clockMode = ClockMode.countUp,
+    this.goalScoringMode = GoalScoringMode.free,
     this.targetScore = 11,
     this.targetScoreOverridden = false,
     this.timeLimitMinutes = 10,
@@ -114,6 +117,7 @@ class PregameState {
   final String ruleTemplateId;
   final bool timerEnabled;
   final ClockMode clockMode;
+  final GoalScoringMode goalScoringMode;
   final int targetScore;
   final bool targetScoreOverridden;
   final int timeLimitMinutes;
@@ -134,6 +138,7 @@ class PregameState {
     String? ruleTemplateId,
     bool? timerEnabled,
     ClockMode? clockMode,
+    GoalScoringMode? goalScoringMode,
     int? targetScore,
     bool? targetScoreOverridden,
     int? timeLimitMinutes,
@@ -157,6 +162,7 @@ class PregameState {
       ruleTemplateId: ruleTemplateId ?? this.ruleTemplateId,
       timerEnabled: timerEnabled ?? this.timerEnabled,
       clockMode: clockMode ?? this.clockMode,
+      goalScoringMode: goalScoringMode ?? this.goalScoringMode,
       targetScore: targetScore ?? this.targetScore,
       targetScoreOverridden:
           targetScoreOverridden ?? this.targetScoreOverridden,
@@ -220,10 +226,16 @@ class PregameController {
       ruleTemplateId: preset.rules.id,
       timerEnabled: preset.timerEnabled,
       clockMode: preset.clockMode,
-      targetScore: preset.rules.targetScore ?? 11,
+      goalScoringMode: preset.rules.targetScore == null
+          ? GoalScoringMode.free
+          : GoalScoringMode.target,
+      targetScore: (preset.rules.targetScore ?? 11).clamp(
+        minTargetScore,
+        maxTargetScore,
+      ),
       timeLimitMinutes: preset.timeLimitMinutes,
       countdownMinutesText: '${preset.timeLimitMinutes}',
-      winByTwo: preset.rules.winByTwo,
+      winByTwo: false,
     );
   }
 
@@ -295,7 +307,13 @@ class PregameController {
       timerEnabled: selected?.timeLimitSeconds != null
           ? true
           : _state.timerEnabled,
-      targetScore: selected?.targetScore ?? _state.targetScore,
+      goalScoringMode: selected?.targetScore == null
+          ? GoalScoringMode.free
+          : GoalScoringMode.target,
+      targetScore: (selected?.targetScore ?? _state.targetScore).clamp(
+        minTargetScore,
+        maxTargetScore,
+      ),
       targetScoreOverridden: false,
       clockMode: selected?.timeLimitSeconds != null
           ? ClockMode.countdown
@@ -307,7 +325,7 @@ class PregameController {
           ? _state.countdownMinutesText
           : '${selected!.timeLimitSeconds! ~/ 60}',
       countdownDurationInputInvalid: false,
-      winByTwo: selected?.winByTwo ?? false,
+      winByTwo: false,
     );
   }
 
@@ -334,8 +352,8 @@ class PregameController {
     );
   }
 
-  void setWinByTwo(bool value) {
-    _state = _state.copyWith(winByTwo: value);
+  void setGoalScoringMode(GoalScoringMode value) {
+    _state = _state.copyWith(goalScoringMode: value);
   }
 
   void setTargetScore(int value) {
@@ -412,12 +430,12 @@ class PregameController {
       bluePlayerProfileId: _state.bluePlayerProfileId,
       ruleTemplateId: _state.ruleTemplateId,
       ruleTemplateName: selected?.name,
-      targetScore: selected == null || _state.targetScoreOverridden
+      targetScore: _state.goalScoringMode == GoalScoringMode.target
           ? _state.targetScore
-          : selected.targetScore,
+          : null,
       timerEnabled: _state.timerEnabled,
       timeLimitMinutes: _state.timeLimitMinutes,
-      winByTwo: _state.winByTwo,
+      winByTwo: false,
       scoreButtons: selected?.scoreButtons ?? const [1, 2, 3],
       foulLimit: selected?.foulLimit,
       possessionHintEnabled: selected?.possessionHintEnabled ?? false,

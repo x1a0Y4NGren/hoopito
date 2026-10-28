@@ -15,6 +15,37 @@ import 'package:hoopito/features/rules/rule_template_list_page.dart';
 import '../../test_helpers/test_database.dart';
 
 void main() {
+  testWidgets('rule target accepts blank or 1 through 999 only', (
+    tester,
+  ) async {
+    final repository = RuleTemplateRepository(createTestDatabase());
+    await tester.pumpWidget(
+      MaterialApp(home: RuleTemplateEditorPage(repository: repository)),
+    );
+    await tester.enterText(find.byKey(const Key('rule-name')), 'Target rule');
+    for (final invalid in ['0', '1000', '1.5']) {
+      await tester.ensureVisible(find.byKey(const Key('rule-target-score')));
+      await tester.enterText(
+        find.byKey(const Key('rule-target-score')),
+        invalid,
+      );
+      await tester.ensureVisible(find.byKey(const Key('rule-save')));
+      await tester.tap(find.byKey(const Key('rule-save')));
+      await tester.pumpAndSettle();
+      expect(find.text('请输入 1～999 的整数'), findsOneWidget);
+      expect(await repository.listAll(), isEmpty);
+    }
+    final target = tester.state<FormFieldState<String>>(
+      find.byKey(const Key('rule-target-score')),
+    );
+    for (final valid in ['', '1', '999']) {
+      await tester.ensureVisible(find.byKey(const Key('rule-target-score')));
+      await tester.enterText(find.byKey(const Key('rule-target-score')), valid);
+      expect(target.validate(), isTrue);
+      await tester.pump();
+    }
+  });
+
   testWidgets('rules list and editor stay usable across visual matrix', (
     tester,
   ) async {
@@ -189,15 +220,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Free scoring'), findsOneWidget);
+    expect(find.text('Default rules'), findsOneWidget);
     expect(find.byType(EditorialMasthead), findsOneWidget);
     expect(find.byType(EditorialIndexRow), findsAtLeastNWidgets(4));
     expect(find.byIcon(Icons.lock_outline), findsAtLeastNWidgets(4));
     expect(find.text('Built-in'), findsAtLeastNWidgets(4));
     expect(find.byIcon(Icons.edit_outlined), findsOneWidget);
     expect(find.text('Custom'), findsOneWidget);
-    expect(find.text('11 points (win by 2)'), findsOneWidget);
-    expect(find.text('21 points'), findsOneWidget);
+    expect(find.text('11-point game'), findsOneWidget);
+    expect(find.text('21-point game'), findsOneWidget);
     expect(find.text('10-minute timed'), findsOneWidget);
     expect(find.text('自由计分'), findsNothing);
   });
@@ -218,7 +249,7 @@ void main() {
 
     expect(find.byType(EditorialEmptyState), findsOneWidget);
     expect(find.text('暂无规则模板'), findsOneWidget);
-    expect(find.text('创建自定义规则模板，为下一场比赛设定计分方式。'), findsOneWidget);
+    expect(find.text('创建一套常用规则，下场比赛直接选。'), findsOneWidget);
     await tester.tap(find.text('新建规则').last);
     await tester.pumpAndSettle();
     expect(find.byType(RuleTemplateEditorPage), findsOneWidget);
@@ -245,7 +276,7 @@ void main() {
 
     expect(find.byType(EditorialErrorState), findsOneWidget);
     expect(find.text('规则模板读取失败'), findsOneWidget);
-    expect(find.text('无法读取规则模板，请检查本地数据后重试。'), findsOneWidget);
+    expect(find.text('暂时读不到规则模板，请重试。'), findsOneWidget);
     expect(repository.watchCalls, 1);
 
     await tester.tap(find.text('重试'));
@@ -299,8 +330,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('自由计分'), findsOneWidget);
-    expect(find.text('11 分制（领先 2 分）'), findsOneWidget);
+    expect(find.text('默认规则'), findsOneWidget);
+    expect(find.text('11 分制'), findsOneWidget);
     expect(find.text('21 分制'), findsOneWidget);
     expect(find.text('10 分钟计时'), findsOneWidget);
 
@@ -315,9 +346,7 @@ void main() {
       '1,3,5',
     );
     await tester.enterText(find.byKey(const Key('rule-event-types')), '抢断,盖帽');
-    await tester.ensureVisible(find.byKey(const Key('rule-win-by-two')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('rule-win-by-two')));
+    expect(find.byKey(const Key('rule-win-by-two')), findsNothing);
     await tester.ensureVisible(find.byKey(const Key('rule-possession-hint')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('rule-possession-hint')));
@@ -341,7 +370,7 @@ void main() {
     expect(custom.timeLimitSeconds, 420);
     expect(custom.foulLimit, 4);
     expect(custom.scoreButtons, [1, 3, 5]);
-    expect(custom.winByTwo, isTrue);
+    expect(custom.winByTwo, isFalse);
     expect(custom.possessionHintEnabled, isTrue);
     expect(custom.customEventTypes, ['抢断', '盖帽']);
 
@@ -391,7 +420,7 @@ void main() {
       );
       await tester.tap(find.byKey(const Key('rule-possession-policy')));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('命中后交换'));
+      await tester.tap(find.text('命中后交换球权'));
       await tester.pumpAndSettle();
 
       await tester.ensureVisible(find.byKey(const Key('rule-possession-hint')));
@@ -405,8 +434,8 @@ void main() {
             .onChanged,
         isNull,
       );
-      expect(find.text('手动纠正'), findsOneWidget);
-      expect(find.text('命中后交换'), findsNothing);
+      expect(find.text('手动设置'), findsOneWidget);
+      expect(find.text('命中后交换球权'), findsNothing);
 
       await tester.tap(find.byKey(const Key('rule-possession-hint')));
       await tester.pump();
@@ -415,7 +444,7 @@ void main() {
       );
       await tester.tap(find.byKey(const Key('rule-possession-policy')));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('命中后交换'));
+      await tester.tap(find.text('命中后交换球权'));
       await tester.pumpAndSettle();
 
       await tester.scrollUntilVisible(
@@ -460,7 +489,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('请输入名称'), findsOneWidget);
-    expect(find.textContaining('必须为正整数'), findsOneWidget);
+    expect(find.text('请输入 1～999 的整数'), findsOneWidget);
     expect(find.text('至少填写一个正整数'), findsOneWidget);
     expect(await repository.listAll(), isEmpty);
   });

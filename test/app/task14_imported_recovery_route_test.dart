@@ -93,7 +93,7 @@ void main() {
     await tester.tap(resume.hitTestable());
     await tester.pumpAndSettle();
 
-    expect(find.text('无法恢复导入的未完成比赛，请确认没有其他活动比赛。'), findsOneWidget);
+    expect(find.text('没能继续这场比赛，请先确认没有其他比赛正在进行。'), findsOneWidget);
     expect(
       find.byKey(const Key('history-imported-imported-conflict')),
       findsOneWidget,

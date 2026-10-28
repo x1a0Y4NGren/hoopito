@@ -41,7 +41,7 @@ void main() {
         tester.widget<CourtView>(find.byType(CourtView)).mode,
         CourtViewMode.readOnly,
       );
-      expect(find.text('只读模式'), findsOneWidget);
+      expect(find.text('仅查看'), findsOneWidget);
 
       await tester.tap(find.byKey(const Key('replay-edit-toggle')));
       await tester.pump();

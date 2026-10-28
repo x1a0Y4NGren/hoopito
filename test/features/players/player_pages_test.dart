@@ -390,7 +390,7 @@ void main() {
 
     expect(find.byType(EditorialErrorState), findsOneWidget);
     expect(find.text('无法打开球员档案'), findsOneWidget);
-    expect(find.text('无法打开该球员档案，请检查本地数据后重试。'), findsOneWidget);
+    expect(find.text('无法打开该球员档案，请重试。'), findsOneWidget);
     expect(loadCalls, 1);
 
     await tester.tap(find.text('重试'));

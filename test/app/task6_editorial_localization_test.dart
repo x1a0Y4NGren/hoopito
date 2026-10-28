@@ -18,8 +18,8 @@ void main() {
   test('task 6 semantic copy is exact and ARB keys remain in parity', () {
     final en = AppLocalizationsEn();
     final zh = AppLocalizationsZh();
-    expect(en.scoringNotesCustomRecordsGroup, 'Notes/Custom Records');
-    expect(zh.scoringNotesCustomRecordsGroup, '备注/自定义记录');
+    expect(en.scoringNotesCustomRecordsGroup, 'Notes and custom records');
+    expect(zh.scoringNotesCustomRecordsGroup, '备注与自定义记录');
     expect(en.settingsAboutSection, 'About');
     expect(zh.settingsAboutSection, '关于');
     expect(en.settingsDataSection, 'Data');

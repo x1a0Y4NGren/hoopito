@@ -360,118 +360,6 @@ class _PregamePageState extends State<PregamePage> {
                           _coverageChoices(l10n),
                           const SizedBox(height: 12),
                           KeyedSubtree(
-                            key: const Key('pregame-clock-section'),
-                            child: Semantics(
-                              container: true,
-                              label: l10n.pregameTimer,
-                              child: ExpansionTile(
-                                key: const Key('pregame-clock-settings'),
-                                tilePadding: EdgeInsets.zero,
-                                title: Text(l10n.pregameTimer),
-                                subtitle: Text(
-                                  state.timerEnabled
-                                      ? state.clockMode == ClockMode.countdown
-                                            ? '${l10n.pregameCountDown} · ${state.timeLimitMinutes} ${l10n.pregameMinutes}'
-                                            : l10n.pregameCountUp
-                                      : l10n.pregameTimerDisabled,
-                                ),
-                                maintainState: true,
-                                children: [
-                                  SwitchListTile(
-                                    key: const Key('pregame-timer'),
-                                    contentPadding: EdgeInsets.zero,
-                                    value: state.timerEnabled,
-                                    title: Text(l10n.pregameTimer),
-                                    subtitle: Text(
-                                      state.timerEnabled
-                                          ? l10n.pregameTimerEnabled
-                                          : l10n.pregameTimerDisabled,
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _controller.setTimerEnabled(value);
-                                        _clearValidation();
-                                      });
-                                    },
-                                  ),
-                                  if (state.timerEnabled) ...[
-                                    const SizedBox(height: 4),
-                                    _SectionLabel(text: l10n.pregameClockMode),
-                                    const SizedBox(height: 4),
-                                    Wrap(
-                                      spacing: 8,
-                                      runSpacing: 8,
-                                      children: [
-                                        _SelectionButton<ClockMode>(
-                                          key: const Key(
-                                            'pregame-clock-count-up',
-                                          ),
-                                          label: l10n.pregameCountUp,
-                                          selected:
-                                              state.clockMode ==
-                                              ClockMode.countUp,
-                                          onPressed: () => _selectClockMode(
-                                            ClockMode.countUp,
-                                          ),
-                                        ),
-                                        _SelectionButton<ClockMode>(
-                                          key: const Key(
-                                            'pregame-clock-countdown',
-                                          ),
-                                          label: l10n.pregameCountDown,
-                                          selected:
-                                              state.clockMode ==
-                                              ClockMode.countdown,
-                                          onPressed: () => _selectClockMode(
-                                            ClockMode.countdown,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    if (state.clockMode ==
-                                        ClockMode.countdown) ...[
-                                      const SizedBox(height: 12),
-                                      TextField(
-                                        key: const Key(
-                                          'pregame-countdown-minutes',
-                                        ),
-                                        controller: _countdownMinutesController,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter
-                                              .digitsOnly,
-                                        ],
-                                        keyboardType:
-                                            const TextInputType.numberWithOptions(
-                                              decimal: false,
-                                            ),
-                                        decoration: InputDecoration(
-                                          labelText: l10n.pregameCountdownLabel,
-                                          helperText:
-                                              l10n.pregameCountdownHelper,
-                                          suffixText: l10n.pregameMinutes,
-                                          border: const OutlineInputBorder(),
-                                          errorText: _countdownErrorText(
-                                            state,
-                                            l10n,
-                                          ),
-                                        ),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _controller.setCountdownMinutesText(
-                                              value,
-                                            );
-                                            _clearValidation();
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          KeyedSubtree(
                             key: const Key('pregame-advanced-section'),
                             child: Semantics(
                               container: true,
@@ -485,29 +373,22 @@ class _PregamePageState extends State<PregamePage> {
                                 onExpansionChanged:
                                     _controller.setAdvancedExpanded,
                                 children: [
-                                  SwitchListTile(
-                                    key: const Key('pregame-win-by-two'),
-                                    contentPadding: EdgeInsets.zero,
-                                    value: state.winByTwo,
-                                    title: Text(l10n.pregameWinByTwo),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _controller.setWinByTwo(value);
-                                        _clearValidation();
-                                      });
-                                    },
-                                  ),
-                                  _NumberSetting(
-                                    label: l10n.pregameTargetScore,
-                                    value: state.targetScore,
-                                    onEdit: _editTargetScore,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _controller.setTargetScore(value);
-                                        _clearValidation();
-                                      });
-                                    },
-                                  ),
+                                  _goalScoringModeChoices(l10n),
+                                  if (state.goalScoringMode ==
+                                      GoalScoringMode.target)
+                                    _NumberSetting(
+                                      label: l10n.pregameTargetScore,
+                                      value: state.targetScore,
+                                      onEdit: _editTargetScore,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _controller.setTargetScore(value);
+                                          _clearValidation();
+                                        });
+                                      },
+                                    ),
+                                  const SizedBox(height: 12),
+                                  _timerSettings(l10n),
                                 ],
                               ),
                             ),
@@ -595,6 +476,86 @@ class _PregamePageState extends State<PregamePage> {
     );
   }
 
+  Widget _timerSettings(AppLocalizations l10n) {
+    final state = _controller.state;
+    return KeyedSubtree(
+      key: const Key('pregame-clock-section'),
+      child: Semantics(
+        container: true,
+        label: l10n.pregameTimer,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SwitchListTile(
+              key: const Key('pregame-timer'),
+              contentPadding: EdgeInsets.zero,
+              value: state.timerEnabled,
+              title: Text(l10n.pregameTimer),
+              subtitle: Text(
+                state.timerEnabled
+                    ? l10n.pregameTimerEnabled
+                    : l10n.pregameTimerDisabled,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _controller.setTimerEnabled(value);
+                  _clearValidation();
+                });
+              },
+            ),
+            if (state.timerEnabled) ...[
+              const SizedBox(height: 4),
+              _SectionLabel(text: l10n.pregameClockMode),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  _SelectionButton<ClockMode>(
+                    key: const Key('pregame-clock-count-up'),
+                    label: l10n.pregameCountUp,
+                    selected: state.clockMode == ClockMode.countUp,
+                    onPressed: () => _selectClockMode(ClockMode.countUp),
+                  ),
+                  _SelectionButton<ClockMode>(
+                    key: const Key('pregame-clock-countdown'),
+                    label: l10n.pregameCountDown,
+                    selected: state.clockMode == ClockMode.countdown,
+                    onPressed: () => _selectClockMode(ClockMode.countdown),
+                  ),
+                ],
+              ),
+              if (state.clockMode == ClockMode.countdown) ...[
+                const SizedBox(height: 12),
+                TextField(
+                  key: const Key('pregame-countdown-minutes'),
+                  controller: _countdownMinutesController,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: false,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.pregameCountdownLabel,
+                    helperText: l10n.pregameCountdownHelper,
+                    suffixText: l10n.pregameMinutes,
+                    border: const OutlineInputBorder(),
+                    errorText: _countdownErrorText(state, l10n),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _controller.setCountdownMinutesText(value);
+                      _clearValidation();
+                    });
+                  },
+                ),
+              ],
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _coverageChoices(AppLocalizations l10n) {
     final coverage = _controller.state.trackingCoverage;
     return Column(
@@ -627,16 +588,55 @@ class _PregamePageState extends State<PregamePage> {
     );
   }
 
+  Widget _goalScoringModeChoices(AppLocalizations l10n) {
+    final mode = _controller.state.goalScoringMode;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l10n.pregameGoalScoringMode),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final value in GoalScoringMode.values)
+              Semantics(
+                selected: mode == value,
+                child: OutlinedButton(
+                  key: Key('pregame-goal-mode-${value.name}'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(48, 48),
+                    backgroundColor: mode == value
+                        ? Theme.of(context).colorScheme.secondaryContainer
+                        : null,
+                  ),
+                  onPressed: () => setState(() {
+                    _controller.setGoalScoringMode(value);
+                    _clearValidation();
+                  }),
+                  child: Text(
+                    value == GoalScoringMode.free
+                        ? l10n.pregameGoalModeFree
+                        : l10n.pregameGoalModeTarget,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
   String _rulesSummary(AppLocalizations l10n) {
     final state = _controller.state;
     final rules = _controller.selectedRules;
-    final target = rules == null || state.targetScoreOverridden
+    final target = state.goalScoringMode == GoalScoringMode.target
         ? state.targetScore
-        : rules.targetScore;
+        : null;
     final parts = [
       '${(rules?.scoreButtons ?? [1, 2, 3]).join(' / ')} ${l10n.pregamePoint}',
       if (target != null) l10n.rulesTarget(target),
-      if (state.winByTwo) l10n.pregameWinByTwo,
     ];
     return '${l10n.v2RulesSummary}: ${parts.join(' · ')}';
   }
@@ -839,7 +839,7 @@ class _PregamePageState extends State<PregamePage> {
 
   static String _templateLabel(RuleTemplate template, AppLocalizations l10n) {
     return switch (template.id) {
-      'free' => l10n.pregameFreeScoring,
+      'free' => l10n.ruleBuiltInDefault,
       'eleven_win_by_two' => l10n.pregameElevenPoint,
       'twenty_one' => l10n.pregameTwentyOnePoint,
       'timed_ten' => l10n.ruleBuiltInTimedTen,
@@ -1100,8 +1100,8 @@ class _SelectionButton<T> extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
-      child: SizedBox(
-        height: 48,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
         child: OutlinedButton(
           style: OutlinedButton.styleFrom(
             backgroundColor: selected

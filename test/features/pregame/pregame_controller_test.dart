@@ -2,10 +2,110 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hoopito/core/domain/domain_enums.dart';
 import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
 import 'package:hoopito/core/domain/entities/player.dart';
+import 'package:hoopito/core/domain/entities/match_setup_preset.dart';
 import 'package:hoopito/core/domain/entities/rule_template.dart';
 import 'package:hoopito/features/pregame/pregame_controller.dart';
 
 void main() {
+  for (final target in [0, 1000]) {
+    test('loaded target $target is bounded only for a new match', () {
+      final rules = RuleTemplate(
+        id: 'legacy-target',
+        name: 'Old custom target',
+        scoreButtons: const [1, 2, 3],
+        targetScore: target,
+        winByTwo: true,
+      );
+      final controller = PregameController(templates: [rules])
+        ..setRuleTemplateId(rules.id);
+      final expected = target.clamp(1, 999);
+      expect(controller.state.targetScore, expected);
+      expect(controller.createMatchSetup().targetScore, expected);
+      final rematch = PregameController(
+        initialPreset: MatchSetupPreset(
+          red: const SetupParticipantPreset(nameSnapshot: 'Red'),
+          blue: const SetupParticipantPreset(nameSnapshot: 'Blue'),
+          rules: rules,
+        ),
+      );
+      expect(rematch.state.targetScore, expected);
+      expect(rematch.createMatchSetup().targetScore, expected);
+      expect(rules.targetScore, target);
+      expect(rules.winByTwo, isTrue);
+    });
+  }
+
+  test('mode toggling retains target but only target mode starts with it', () {
+    final controller = PregameController();
+    expect(controller.state.goalScoringMode, GoalScoringMode.free);
+    controller.setGoalScoringMode(GoalScoringMode.target);
+    expect(controller.createMatchSetup().targetScore, 11);
+    controller.setTargetScore(37);
+    controller.setGoalScoringMode(GoalScoringMode.free);
+    expect(controller.createMatchSetup().targetScore, isNull);
+    controller.setGoalScoringMode(GoalScoringMode.target);
+    expect(controller.createMatchSetup().targetScore, 37);
+  });
+
+  test(
+    'real templates derive modes while refresh preserves manual selection',
+    () {
+      final controller = PregameController(
+        templates: RuleTemplateRepository.builtIns,
+      );
+      for (final entry in {'eleven_win_by_two': 11, 'twenty_one': 21}.entries) {
+        controller.setRuleTemplateId(entry.key);
+        expect(controller.createMatchSetup().targetScore, entry.value);
+        expect(controller.createMatchSetup().winByTwo, isFalse);
+        controller.setGoalScoringMode(GoalScoringMode.free);
+        controller.setTemplates(List.of(RuleTemplateRepository.builtIns));
+        expect(controller.createMatchSetup().targetScore, isNull);
+      }
+      for (final id in ['free', 'timed_ten']) {
+        controller.setRuleTemplateId(id);
+        expect(controller.createMatchSetup().targetScore, isNull);
+      }
+      controller.setGoalScoringMode(GoalScoringMode.target);
+      controller.setTargetScore(77);
+      controller.setTemplates(List.of(RuleTemplateRepository.builtIns));
+      expect(controller.createMatchSetup().targetScore, 77);
+    },
+  );
+
+  test('free setup has no ghost target while templates are loading', () {
+    final controller = PregameController();
+    expect(controller.createMatchSetup().targetScore, isNull);
+    controller.setTemplates(RuleTemplateRepository.builtIns);
+    expect(controller.createMatchSetup().targetScore, isNull);
+  });
+
+  test('legacy target template never enables win by two for a new setup', () {
+    final controller = PregameController(
+      templates: const [
+        RuleTemplate(
+          id: 'legacy',
+          name: 'Legacy',
+          scoreButtons: [1, 2, 3],
+          targetScore: 11,
+          winByTwo: true,
+        ),
+      ],
+    )..setRuleTemplateId('legacy');
+    expect(controller.createMatchSetup().targetScore, 11);
+    expect(controller.createMatchSetup().winByTwo, isFalse);
+  });
+
+  test(
+    'built in eleven keeps identity and stored name without new win by two',
+    () {
+      final eleven = RuleTemplateRepository.builtIns.firstWhere(
+        (template) => template.id == 'eleven_win_by_two',
+      );
+      expect(eleven.name, '11 分制（领先 2 分）');
+      expect(eleven.winByTwo, isFalse);
+    },
+  );
+
   test('pre-game state starts with default red and blue players', () {
     final controller = PregameController();
 
@@ -28,9 +128,9 @@ void main() {
     final controller = PregameController()
       ..setRedName('A Li')
       ..setBlueName('Bo')
+      ..setGoalScoringMode(GoalScoringMode.target)
       ..setTargetScore(21)
-      ..setTimerEnabled(true)
-      ..setWinByTwo(true);
+      ..setTimerEnabled(true);
 
     final setup = controller.createMatchSetup();
 
@@ -39,7 +139,7 @@ void main() {
     expect(setup.blueName, 'Bo');
     expect(setup.targetScore, 21);
     expect(setup.timerEnabled, isTrue);
-    expect(setup.winByTwo, isTrue);
+    expect(setup.winByTwo, isFalse);
   });
 
   test('timed template keeps a null target score in match setup', () {

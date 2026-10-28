@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hoopito/app/app_providers.dart';
 import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/app/app_update_host.dart';
 import 'package:hoopito/app/entry/hoopito_entry_gate.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/app/provider_router.dart';
@@ -71,6 +72,19 @@ class _HoopitoAppViewState extends ConsumerState<_HoopitoAppView> {
   // The bootstrap navigator becomes a Router when local startup is ready.
   // Preserve the entry timeline and its process claim across that handoff.
   final _entryGateKey = GlobalKey();
+  final _entryRevealed = ValueNotifier(false);
+
+  @override
+  void initState() {
+    super.initState();
+    _entryRevealed.value = !widget.showEntryAnimation;
+  }
+
+  @override
+  void dispose() {
+    _entryRevealed.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,19 +174,13 @@ class _HoopitoAppViewState extends ConsumerState<_HoopitoAppView> {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        builder: widget.showEntryAnimation
-            ? (context, child) => HoopitoEntryGate(
-                key: _entryGateKey,
-                motionPreferenceLoader: motionPreferenceLoader,
-                playbackSession:
-                    widget.entryPlaybackSession ?? _processEntryPlaybackSession,
-                startupStatus: startupStatus,
-                waitingLabel: AppLocalizations.of(
-                  context,
-                )!.entryPreparingRecords,
-                child: child ?? const SizedBox.shrink(),
-              )
-            : null,
+        builder: (context, child) => _buildRoot(
+          context,
+          child,
+          startupStatus,
+          motionPreferenceLoader,
+          routerConfig,
+        ),
         routerConfig: routerConfig,
         debugShowCheckedModeBanner: false,
       );
@@ -192,21 +200,41 @@ class _HoopitoAppViewState extends ConsumerState<_HoopitoAppView> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      builder: widget.showEntryAnimation
-          ? (context, child) => HoopitoEntryGate(
-              key: _entryGateKey,
-              motionPreferenceLoader: motionPreferenceLoader,
-              playbackSession:
-                  widget.entryPlaybackSession ?? _processEntryPlaybackSession,
-              startupStatus: startupStatus,
-              waitingLabel: AppLocalizations.of(context)!.entryPreparingRecords,
-              child: child ?? const SizedBox.shrink(),
-            )
-          : null,
+      builder: (context, child) => _buildRoot(
+        context,
+        child,
+        startupStatus,
+        motionPreferenceLoader,
+        null,
+      ),
       home: home,
       debugShowCheckedModeBanner: false,
     );
   }
+
+  Widget _buildRoot(
+    BuildContext context,
+    Widget? child,
+    EntryStartupStatus status,
+    EntryMotionPreferenceLoader motionLoader,
+    GoRouter? router,
+  ) => AppUpdateHost(
+    ready: status == EntryStartupStatus.ready,
+    entryRevealed: _entryRevealed,
+    router: router,
+    child: widget.showEntryAnimation
+        ? HoopitoEntryGate(
+            key: _entryGateKey,
+            motionPreferenceLoader: motionLoader,
+            playbackSession:
+                widget.entryPlaybackSession ?? _processEntryPlaybackSession,
+            startupStatus: status,
+            waitingLabel: AppLocalizations.of(context)!.entryPreparingRecords,
+            onRevealed: () => _entryRevealed.value = true,
+            child: child ?? const SizedBox.shrink(),
+          )
+        : child ?? const SizedBox.shrink(),
+  );
 }
 
 class LegacyDatabaseBootstrapPage extends StatelessWidget {

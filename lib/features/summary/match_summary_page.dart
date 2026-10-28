@@ -50,12 +50,34 @@ class MatchSummaryPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (detail.match.lifecycle == MatchLifecycle.finished ||
+                detail.match.lifecycle == MatchLifecycle.archived) ...[
+              Text(
+                l10n.summaryGameFinished,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Semantics(
+                header: true,
+                child: Text(
+                  detail.redScore == detail.blueScore
+                      ? l10n.historyDraw
+                      : l10n.summaryWinner(
+                          detail.redScore > detail.blueScore
+                              ? detail.match.redName
+                              : detail.match.blueName,
+                        ),
+                  key: const Key('summary-outcome'),
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
             MatchScoreRow(
               blueTeamName: detail.match.blueName,
               blueScore: detail.blueScore,
               redTeamName: detail.match.redName,
               redScore: detail.redScore,
-              contextLabel: l10n.v2Result,
             ),
             const SizedBox(height: 20),
             Wrap(

@@ -15,7 +15,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get v2Saved => 'Saved on device';
 
   @override
-  String get v2SaveFailed => 'Save failed; retry';
+  String get v2SaveFailed => 'Could not save. Try again.';
 
   @override
   String get v2LastAction => 'Last action';
@@ -27,10 +27,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get v2SafetyWriteError =>
-      'The safety copy could not be saved and verified. Current data was preserved. Check device storage and try again.';
+      'Could not save and verify a safety copy before replacement. Local data was not replaced. Check storage space and try again.';
 
   @override
-  String get v2SafetyLoadError => 'Safety copies could not be read. Try again.';
+  String get v2SafetyLoadError => 'Could not load safety copies. Try again.';
 
   @override
   String get v2BackupRows => 'rows';
@@ -45,7 +45,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get v2PresetApplied =>
-      'Players and rules copied; adjust before starting';
+      'Players and rules copied. You can still make changes.';
 
   @override
   String get v2RulesSummary => 'Rule summary';
@@ -87,11 +87,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get v2CoverageScores => 'Mainly scores';
 
   @override
-  String get v2CoverageComplete => 'Every shot recorded';
+  String get v2CoverageComplete => 'All shot attempts recorded';
 
   @override
   String get v2CoverageHelp =>
-      'Confirm only when every attempt, including misses, was recorded. Choose mainly scores if attempts were missed.';
+      'Mainly scores hides shooting percentages. Full recording includes every field goal and free throw, made or missed.';
 
   @override
   String get v2CorrectCoverage => 'Correct recording scope';
@@ -110,7 +110,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get v2LocationScope =>
-      'Confirmed locations / recorded field goal attempts';
+      'Confirmed field goal locations / recorded field goal attempts';
 
   @override
   String get v2SavePlayer => 'Save to player profile';
@@ -122,7 +122,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get v2SelectPlayer => 'Choose existing player';
 
   @override
-  String get v2PlayerSaved => 'Profile linked; match name preserved';
+  String get v2PlayerSaved =>
+      'Player profile linked. The name in this game stays the same.';
 
   @override
   String get v2Retry => 'Retry';
@@ -141,14 +142,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get v2GuideLocationBody =>
-      'Tap the court first, or add a location within 10 seconds after scoring. Record misses too.';
+      'Tap the court before scoring, or add a location within 10 seconds afterward. You can record misses too.';
 
   @override
   String get v2GuideUndo => 'Undo and finish';
 
   @override
   String get v2GuideUndoBody =>
-      'Undo restores the last action. Tap Finish at the top and confirm the recording scope.';
+      'Tap Undo to reverse the last action. When you’re done, tap Finish at the top and confirm whether every shot was recorded.';
 
   @override
   String get v2GuideSkip => 'Skip';
@@ -164,14 +165,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get v2AbandonedMatchHelp =>
-      'You can replay the saved record. This match is excluded from completed-match statistics.';
+      'You can still replay the saved record. This game is excluded from completed-game statistics.';
 
   @override
   String get v2SafetyTitle => 'Restore safety copies';
 
   @override
   String get v2SafetyHelp =>
-      'Current data is protected before replacement or rollback. The two most recent copies are kept.';
+      'A safety copy is a backup of your local data saved automatically before replacement. The latest two are kept here for recovery. Restoring one also saves and verifies a copy of your current data first.';
 
   @override
   String get v2SafetyEmpty => 'No safety copies yet';
@@ -181,7 +182,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get v2SafetyConfirm =>
-      'Restoring this copy replaces current data after saving another safety copy.';
+      'This copy will replace all local data. Hoopito first saves and verifies a safety copy of your current data. If that fails, nothing is replaced. End any ongoing match first.';
 
   @override
   String get v2GrowthSample =>
@@ -204,11 +205,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ruleTargetReached =>
-      'Target score reached. Confirm finish or continue.';
+      'Target score reached. Finish or keep playing?';
 
   @override
   String get ruleWinByTwoRequired =>
-      'Target reached, but a two-point lead is required. Continue?';
+      'Target score reached. Keep playing until one side leads by 2.';
 
   @override
   String get ruleMatchPoint => 'Match point';
@@ -218,7 +219,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String ruleFoulLimit(Object limit, Object side) {
-    return '$side foul limit reached ($limit).';
+    return '$side has reached the foul limit of $limit.';
   }
 
   @override
@@ -313,7 +314,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get historyDeleteBody =>
-      'Events, locations, and audit records will be deleted and cannot be recovered.';
+      'This match and its events, shot locations, and activity log will be permanently deleted. This cannot be undone.';
 
   @override
   String get historyLoadMore => 'Load more';
@@ -325,7 +326,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyAdvancedTitle => 'Advanced filters';
 
   @override
-  String get historyRuleLabel => 'Rule';
+  String get historyRuleLabel => 'Rule name';
 
   @override
   String get historyRecordingModeLabel => 'Recording mode';
@@ -375,7 +376,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get historyLocationCompleteness => 'Location completeness';
+  String get historyLocationCompleteness => 'Shot locations recorded';
 
   @override
   String get replayTitle => 'Match replay';
@@ -384,13 +385,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayExportTooltip => 'Export replay image';
 
   @override
-  String get replayAuditTooltip => 'Audit history';
+  String get replayAuditTooltip => 'Activity log';
 
   @override
   String get replayEditMode => 'Edit mode';
 
   @override
-  String get replayReadOnly => 'Read only';
+  String get replayReadOnly => 'View only';
 
   @override
   String get replayFinished => 'Final';
@@ -403,7 +404,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get replayExportDescription =>
-      'Locations and analysis will be saved as a local image.';
+      'Create a local image with the shot chart and game analysis.';
 
   @override
   String get replayClose => 'Close';
@@ -462,25 +463,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayDuration => 'Duration';
 
   @override
-  String get replayScoringEvents => 'Scoring events';
+  String get replayScoringEvents => 'Scoring records';
 
   @override
   String get replayFouls => 'Fouls';
 
   @override
-  String get replayLocationCompleteness => 'Location completeness';
+  String get replayLocationCompleteness => 'Shot location coverage';
 
   @override
-  String get replayPossession => 'Possession segments';
+  String get replayPossession => 'Possession history';
 
   @override
-  String get replayFinishedBoundary => 'Final boundary';
+  String get replayFinishedBoundary => 'Game finished';
 
   @override
-  String get replayInProgressBoundary => 'Live boundary';
+  String get replayInProgressBoundary => 'Unfinished game';
 
   @override
-  String get replayNoPossession => 'No possession segments recorded';
+  String get replayNoPossession => 'No possession history recorded';
 
   @override
   String get replayPossessionManual => 'Manual';
@@ -489,7 +490,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayPossessionSuggested => 'Suggested';
 
   @override
-  String get replayPossessionCurrent => 'In progress';
+  String get replayPossessionCurrent => 'No end time recorded';
 
   @override
   String replayPossessionEnded(Object time) {
@@ -505,16 +506,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayNoReason => 'No reason provided';
 
   @override
-  String get replaySuggestedReason => 'Suggested by the scoring rule';
+  String get replaySuggestedReason =>
+      'Possession suggested by the rule after a made shot';
 
   @override
-  String get replayTimeline => 'Event timeline';
+  String get replayTimeline => 'Game timeline';
 
   @override
   String get replayFilters => 'Replay filters';
 
   @override
-  String get replayNoEvents => 'No events match the filters';
+  String get replayNoEvents => 'No records match the filters';
 
   @override
   String get replayFilterAll => 'All';
@@ -581,13 +583,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get replayEditorTitle => 'Edit event';
+  String get replayEditorTitle => 'Edit record';
 
   @override
   String get replayEditorSide => 'Side';
 
   @override
-  String get replayEditorEventKind => 'Event type';
+  String get replayEditorEventKind => 'Record type';
 
   @override
   String get replayEditorPoints => 'Points';
@@ -620,7 +622,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayEditorReason => 'Reason (optional)';
 
   @override
-  String get replayEditorDelete => 'Soft delete';
+  String get replayEditorDelete => 'Delete';
 
   @override
   String get replayEditorRestore => 'Restore';
@@ -639,30 +641,30 @@ class AppLocalizationsEn extends AppLocalizations {
       'Location values must be between 0 and 1.';
 
   @override
-  String get replayEditorDeleteTitle => 'Delete this event?';
+  String get replayEditorDeleteTitle => 'Delete this record?';
 
   @override
   String get replayEditorDeleteBody =>
-      'The event will be marked deleted and its audit history will be preserved.';
+      'This record will no longer count toward the score or statistics. Its activity log is kept. You can show deleted records and restore it later.';
 
   @override
   String get replayEditorConfirmDelete => 'Delete';
 
   @override
-  String get replayEditorRestoreTitle => 'Restore this event?';
+  String get replayEditorRestoreTitle => 'Restore this record?';
 
   @override
   String get replayEditorRestoreBody =>
-      'The event will contribute to the match projection again.';
+      'This record will count toward the score and statistics again.';
 
   @override
   String get replayEditorConfirmRestore => 'Restore';
 
   @override
-  String get replayAuditTitle => 'Audit history';
+  String get replayAuditTitle => 'Activity log';
 
   @override
-  String get replayAuditEmpty => 'No edit history';
+  String get replayAuditEmpty => 'No activity yet';
 
   @override
   String replayAuditReason(Object reason) {
@@ -691,10 +693,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayAuditActionRestore => 'Restored';
 
   @override
-  String get replayAuditActionCommand => 'Command';
+  String get replayAuditActionCommand => 'Action performed';
 
   @override
-  String get replayAuditActionLocate => 'Located';
+  String get replayAuditActionLocate => 'Shot location set';
 
   @override
   String get replayAuditActionPossession => 'Possession updated';
@@ -706,7 +708,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayAuditActionUnknown => 'Unknown operation';
 
   @override
-  String get replayAuditTargetEvent => 'Event';
+  String get replayAuditTargetEvent => 'Record';
 
   @override
   String get replayAuditTargetLocation => 'Shot location';
@@ -715,10 +717,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayAuditTargetMatch => 'Match';
 
   @override
-  String get replayAuditTargetCommand => 'Command';
+  String get replayAuditTargetCommand => 'Action';
 
   @override
-  String get replayAuditFieldType => 'Event type';
+  String get replayAuditFieldType => 'Record type';
 
   @override
   String get replayAuditFieldSide => 'Side';
@@ -775,10 +777,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayAnalyticsNoAttempts => 'No attempts';
 
   @override
-  String get replayAnalyticsScoringFlow => 'Scoring flow';
+  String get replayAnalyticsScoringFlow => 'Score progression';
 
   @override
-  String get replayAnalyticsNoScoringEvents => 'No scoring events';
+  String get replayAnalyticsNoScoringEvents => 'No scores recorded';
 
   @override
   String get replayAnalyticsKeyPossessions => 'Key possessions';
@@ -831,7 +833,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayAnalyticsPossessions => 'Possessions';
 
   @override
-  String get replayAnalyticsTrackingCoverage => 'Recording coverage';
+  String get replayAnalyticsTrackingCoverage => 'Recording scope';
 
   @override
   String get replayAnalyticsLocationCoverage => 'Location coverage';
@@ -882,7 +884,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playerAnalyticsTitle => 'Player analytics';
 
   @override
-  String get playerAnalyticsWindow => 'Time window';
+  String get playerAnalyticsWindow => 'Time range';
 
   @override
   String get playerAnalyticsSevenDays => 'Last 7 days';
@@ -937,7 +939,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playerAnalyticsNoReliablePercentage =>
-      'Not enough complete attempts to show a percentage';
+      'No FG% to show. A game needs complete shot recording and at least one field goal attempt.';
 
   @override
   String get playerAnalyticsZoneHeatmap => 'Shot zones';
@@ -949,14 +951,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playerAnalyticsNoTrend => 'Not enough trend data yet';
 
   @override
-  String get playerAnalyticsOpponentNone => 'No opponent filter';
+  String get playerAnalyticsOpponentNone => 'All opponents';
 
   @override
   String get playerAnalyticsLoadError => 'Could not load analytics';
 
   @override
   String get playerAnalyticsLoadErrorBody =>
-      'Career analytics could not be loaded. Try again to refresh the local match data.';
+      'Could not load player analytics. Try again.';
 
   @override
   String get playerAnalyticsNotFound => 'Player not found';
@@ -981,46 +983,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playerComparisonMatchMode => 'Games';
 
   @override
-  String get playerComparisonWindowMode => 'Time windows';
+  String get playerComparisonWindowMode => 'Time ranges';
 
   @override
   String get playerComparisonMatchModeHint =>
-      'Compare two completed games linked to this player.';
+      'Choose two completed games linked to this player to compare.';
 
   @override
   String get playerComparisonWindowModeHint =>
-      'Compare two adjacent, non-overlapping windows ending when this page was opened.';
+      'Compare two consecutive time ranges that do not overlap. The later range ends when this page was opened.';
 
   @override
-  String get playerComparisonBaseline => 'Baseline';
+  String get playerComparisonBaseline => 'Reference';
 
   @override
-  String get playerComparisonCurrent => 'Current';
+  String get playerComparisonCurrent => 'Comparison';
 
   @override
   String get playerComparisonDifference => 'Difference';
 
   @override
-  String get playerComparisonSelectBaseline => 'Select baseline game';
+  String get playerComparisonSelectBaseline => 'Choose reference game';
 
   @override
-  String get playerComparisonSelectCurrent => 'Select current game';
+  String get playerComparisonSelectCurrent => 'Choose comparison game';
 
   @override
-  String get playerComparisonSwap => 'Swap baseline and current games';
+  String get playerComparisonSwap => 'Swap the two games';
 
   @override
   String get playerComparisonChooseGame => 'Choose a game';
 
   @override
-  String get playerComparisonLoading => 'Building comparison';
+  String get playerComparisonLoading => 'Comparing';
 
   @override
   String get playerComparisonLoadError => 'Could not load comparison';
 
   @override
   String get playerComparisonLoadErrorBody =>
-      'Local analytics could not be rebuilt. Check the match data and try again.';
+      'Could not load the game comparison. Try again.';
 
   @override
   String get playerComparisonRetry => 'Retry';
@@ -1030,31 +1032,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playerComparisonNoMatchesBody =>
-      'Finish a game with this linked player profile before comparing samples.';
+      'Finish a game with this player profile, then return to compare.';
 
   @override
   String get playerComparisonNeedTwoMatches => 'Two games are required';
 
   @override
   String get playerComparisonNeedTwoMatchesBody =>
-      'Finish one more linked game to compare individual games. Time-window comparison is still available.';
+      'Finish one more game with this player profile to compare two games. You can compare time ranges now.';
 
   @override
-  String get playerComparisonEmptyWindows => 'No games in either window';
+  String get playerComparisonEmptyWindows => 'No games in either time range';
 
   @override
   String get playerComparisonEmptyWindowsBody =>
-      'Try a longer window or remove the opponent filter.';
+      'Try a longer time range or remove the opponent filter.';
 
   @override
   String get playerComparisonBaselineEmpty =>
-      'The baseline window has no games.';
+      'The reference time range has no games.';
 
   @override
-  String get playerComparisonCurrentEmpty => 'The current window has no games.';
+  String get playerComparisonCurrentEmpty =>
+      'The comparison time range has no games.';
 
   @override
-  String get playerComparisonSummary => 'Evidence summary';
+  String get playerComparisonSummary => 'Stats comparison';
 
   @override
   String get playerComparisonResult => 'Result';
@@ -1096,14 +1099,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playerComparisonFreeThrowPercentage => 'Free throw percentage';
 
   @override
-  String get playerComparisonLocationCoverage => 'Location coverage';
+  String get playerComparisonLocationCoverage => 'Shot location coverage';
 
   @override
-  String get playerComparisonConfirmedZones => 'Confirmed shot-location share';
+  String get playerComparisonConfirmedZones =>
+      'Confirmed shot locations by zone';
 
   @override
   String get playerComparisonConfirmedZonesNote =>
-      'Zone percentages use confirmed shot locations only.';
+      'Zone percentages use confirmed field goal locations only.';
 
   @override
   String get playerComparisonIncrease => 'Increase';
@@ -1140,12 +1144,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String legacyBootstrapBody(Object version) {
-    return 'An incompatible legacy database version$version was detected. The existing file will remain unchanged; Hoopito will not silently migrate, delete, or clear it. Export or back up the old file first, then create new local data with this version.';
+    return 'This version cannot open the old database$version. The original file stays unchanged; Hoopito will not automatically convert, delete, or clear it. Export or back up the old file before creating new local data with this version.';
   }
 
   @override
   String get bootstrapFailureBody =>
-      'The local database could not be opened. Existing data was not modified. Try again later or create a new local database.';
+      'Could not open local records. Your existing data is unchanged. Try again later or create a new local database.';
 
   @override
   String get entryPreparingRecords => 'Opening local records…';
@@ -1213,10 +1217,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsThemeTitle => 'Theme';
 
   @override
-  String get settingsThemeSubtitle => 'Choose how the app is displayed';
+  String get settingsThemeSubtitle =>
+      'Choose light, dark, or your system theme';
 
   @override
-  String get settingsThemeSystem => 'System';
+  String get settingsThemeSystem => 'Follow system';
 
   @override
   String get settingsThemeLight => 'Light';
@@ -1229,7 +1234,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsMotionSubtitle =>
-      'Choose how much interface motion is used';
+      'Use standard motion or fewer animations';
 
   @override
   String get settingsMotionStandard => 'Standard motion';
@@ -1239,7 +1244,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsMotionHelp =>
-      'Reduced motion shortens transitions and removes decorative movement.';
+      'Reduced motion shortens transitions and removes decorative animations.';
 
   @override
   String get settingsMotionPreview => 'Motion preview';
@@ -1254,11 +1259,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsDataSection => 'Data';
 
   @override
-  String get settingsDataManagementTitle => 'Manage data and backups';
+  String get settingsDataManagementTitle => 'Data and backups';
 
   @override
   String get settingsDataManagementSubtitle =>
-      'Export, restore, and automatic backups in one place';
+      'Export data, restore backups, and set up automatic backups';
 
   @override
   String get settingsManualDataSection => 'Export and restore';
@@ -1271,7 +1276,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsExportDataSubtitle =>
-      'Choose a restorable JSON backup or CSV files for analysis';
+      'Use JSON backups to restore data or CSV files for analysis';
 
   @override
   String get settingsExportDataDialogTitle => 'Choose export format';
@@ -1290,22 +1295,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsExportBackupSubtitle =>
-      'JSON file containing matches, players, rules, events, and settings';
+      'A JSON file with matches, players, rules, events, and settings';
 
   @override
   String get settingsExportBackupSuccess =>
-      'System sharing opened; you can save or send the backup';
+      'Share sheet opened. Choose where to save or send the backup.';
 
   @override
   String get settingsRestoreTitle => 'Restore from backup';
 
   @override
   String get settingsRestoreSubtitleMerge =>
-      'Merge safely, or replace local data after creating a safety backup';
+      'Merge a backup, or back up current data before replacing it';
 
   @override
   String get settingsRestoreSubtitleBlocked =>
-      'Merging is allowed during a match; replacement requires ending it';
+      'You can merge during a match. End it before replacing data.';
 
   @override
   String get settingsExportCsvTitle => 'Export CSV';
@@ -1316,7 +1321,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsExportCsvSuccess =>
-      'System sharing opened; you can save the three CSV files';
+      'Share sheet opened. Choose where to save the three CSV files.';
 
   @override
   String get settingsAutomaticBackupTitle => 'Automatic backup';
@@ -1336,25 +1341,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsBackupDirectoryUnselected =>
-      'Not selected; only folders you explicitly choose are accessed';
+      'No folder selected. Only folders you choose are accessed.';
 
   @override
   String get settingsBackupNowTitle => 'Back up now';
 
   @override
-  String get settingsBackupNever => 'No manual or automatic backup has run yet';
+  String get settingsBackupNever => 'No manual or automatic backups yet';
 
   @override
   String settingsBackupLastSuccess(Object date, Object time) {
-    return 'Last success: $date $time';
+    return 'Last successful backup: $date $time';
   }
 
   @override
-  String get settingsBackupRetentionTitle => 'Automatic backup retention';
+  String get settingsBackupRetentionTitle => 'Automatic backups to keep';
 
   @override
   String get settingsBackupRetentionSubtitle =>
-      'Only Hoopito automatic backups are cleaned up; manual and safety backups are kept';
+      'Only older Hoopito automatic backups are removed. Manual backups and safety copies are kept.';
 
   @override
   String get settingsPrivacySection => 'Privacy';
@@ -1364,7 +1369,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsPrivacySubtitle =>
-      'Personal data stays on this device and is never uploaded';
+      'Personal data is stored on this device. Hoopito does not upload it.';
 
   @override
   String get settingsExperimentalSection => 'Experimental';
@@ -1396,27 +1401,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsAboutSubtitle =>
-      'Open source, free forever, with license and contribution details';
+      'Free and open source forever. See the license and how to contribute.';
 
   @override
-  String get settingsRestoreDialogTitle => 'Choose backup import mode';
+  String get settingsRestoreDialogTitle => 'How would you like to restore?';
 
   @override
   String get settingsRestorePickerTitle => 'Choose a Hoopito backup';
 
   @override
-  String get settingsMergeTitle => 'Merge import (recommended)';
+  String get settingsMergeTitle => 'Merge (recommended)';
 
   @override
   String get settingsMergeSubtitle =>
-      'Keep local settings; conflicts are deterministically remapped and players are not merged by nickname';
+      'Keep local settings and the ongoing match. Conflicting records are kept separately without overwriting local records. Players are not merged just because their nicknames match.';
 
   @override
   String get settingsReplaceTitle => 'Replace local data';
 
   @override
   String get settingsReplaceSubtitle =>
-      'Create a safety backup first, then atomically replace all local data';
+      'Back up and verify current data first, then replace all local data with the selected backup. If it fails, the original data is kept.';
 
   @override
   String get settingsReplaceBlocked => 'End the current match first';
@@ -1426,7 +1431,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsReplaceConfirmBody =>
-      'After validation, Hoopito will create a safety backup and atomically replace local data.';
+      'After checking the selected backup, Hoopito saves and verifies a backup of your current data (a safety copy), then replaces all local data. If any step fails, nothing is replaced. End any ongoing match first.';
 
   @override
   String get settingsReplaceConfirmAction => 'Choose backup';
@@ -1436,11 +1441,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsMergeCompleted =>
-      'Backup merged; local settings and the active match were kept';
+      'Backup merged. Local settings and the ongoing match are unchanged.';
 
   @override
   String get settingsReplaceCompleted =>
-      'Backup restored; automatic backup location was reset';
+      'Local data replaced with the backup. Automatic backup location reset.';
 
   @override
   String get settingsDirectoryUpdated => 'Automatic backup location updated';
@@ -1471,8 +1476,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsSoundTurnedOff => 'Action sounds disabled';
 
   @override
-  String get settingsBackupWritten =>
-      'Local backup written to the selected folder';
+  String get settingsBackupWritten => 'Backup saved to the selected folder';
 
   @override
   String settingsRetentionUpdated(Object count) {
@@ -1485,7 +1489,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsErrorFutureVersion =>
-      'This backup was created by a newer version; upgrade Hoopito and try again';
+      'This backup is from a newer version. Update Hoopito and try again.';
 
   @override
   String get settingsErrorInvalidBackup =>
@@ -1501,11 +1505,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsErrorDirectoryUnavailable =>
-      'The selected folder is not writable; choose it again';
+      'Cannot save to the selected folder. Choose it again.';
 
   @override
   String get settingsErrorBackupWrite =>
-      'Backup write failed; choose the backup folder again and retry';
+      'Could not save the backup. Choose the backup folder again and try again.';
 
   @override
   String get settingsErrorRestoreBlocked => 'End the current match first';
@@ -1514,7 +1518,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsErrorGeneric => 'The operation failed. Try again later.';
 
   @override
-  String get playerAnalyticsNoLocationData => 'No location data';
+  String get playerAnalyticsNoLocationData => 'No shot location data';
 
   @override
   String get homePlayersTooltip => 'Players';
@@ -1559,7 +1563,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeAbandonBody =>
-      'The match stays in local history but is removed from the active-match entry.';
+      'The match stays in history, but you can no longer resume it from home.';
 
   @override
   String get homeConfirmAbandon => 'Abandon';
@@ -1585,7 +1589,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playersEmptyBody =>
-      'Temporary players can still play immediately; save a profile to find them next time.';
+      'You can play without saving a profile. Save one to find the player easily next time.';
 
   @override
   String get playersLoadError => 'Could not load players';
@@ -1639,7 +1643,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playerOpenErrorBody =>
-      'This player could not be opened. Check the local data and try again.';
+      'Could not open this player profile. Try again.';
 
   @override
   String get playerNicknameLabel => 'Nickname';
@@ -1676,7 +1680,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rulesEmptyBody =>
-      'Create a custom rule template to define how the next game is scored.';
+      'Create a rule template to use in your next match.';
 
   @override
   String get rulesCreate => 'New rule';
@@ -1685,8 +1689,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rulesLoadError => 'Could not load rule templates';
 
   @override
-  String get rulesLoadErrorBody =>
-      'Rule templates could not be loaded. Check the local data and try again.';
+  String get rulesLoadErrorBody => 'Could not load rule templates. Try again.';
 
   @override
   String get rulesBuiltIn => 'Built-in';
@@ -1740,16 +1743,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ruleTargetLabel => 'Target points (optional)';
 
   @override
-  String get ruleTimeLimitLabel => 'Time limit minutes (optional)';
+  String get ruleTimeLimitLabel => 'Time limit in minutes (optional)';
 
   @override
   String get ruleFoulLimitLabel => 'Foul limit (optional)';
 
   @override
-  String get ruleScoreButtonsLabel => 'Scoring buttons (comma-separated)';
+  String get ruleScoreButtonsLabel => 'Points per button (comma-separated)';
 
   @override
-  String get ruleCustomLabelsLabel => 'Custom event labels (comma-separated)';
+  String get ruleCustomLabelsLabel => 'Custom event names (comma-separated)';
 
   @override
   String get ruleWinByTwoTitle => 'Win by 2 points';
@@ -1759,14 +1762,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rulePossessionHintSubtitle =>
-      'Suggestion only; manual scoring remains available';
+      'Hints only. You can still score manually.';
 
   @override
-  String get rulePossessionPolicyLabel => 'Possession policy after scoring';
+  String get rulePossessionPolicyLabel => 'Possession after scoring';
 
   @override
   String get rulePossessionPolicyHelper =>
-      'Automatic suggestions are available only when possession hints are enabled.';
+      'Turn on possession hints to choose how they work.';
 
   @override
   String get ruleSaveAction => 'Save rule';
@@ -1780,13 +1783,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ruleAtLeastOneInteger => 'Enter at least one positive integer';
 
   @override
-  String get rulePolicyManual => 'Manual correction';
+  String get rulePolicyManual => 'Set manually';
 
   @override
-  String get rulePolicySwitchAfterMade => 'Switch after made shot';
+  String get rulePolicySwitchAfterMade => 'Switch after a made shot';
 
   @override
-  String get rulePolicyKeepAfterMade => 'Keep after made shot';
+  String get rulePolicyKeepAfterMade => 'Keep after a made shot';
 
   @override
   String get pregameTitle => 'Pregame setup';
@@ -1842,7 +1845,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pregameTrackingCoverage => 'Miss tracking coverage';
 
   @override
-  String get pregameClockMode => 'Clock mode';
+  String get pregameClockMode => 'Timer mode';
 
   @override
   String get pregameTemporaryParticipant => 'Temporary name (no profile)';
@@ -1864,7 +1867,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pregameTimerEnabled => 'Enabled: choose a clock mode';
 
   @override
-  String get pregameTimerDisabled => 'When off, match time is not recorded';
+  String get pregameTimerDisabled => 'Match time is not recorded when off';
 
   @override
   String get pregameCountUp => 'Count up';
@@ -1873,7 +1876,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pregameCountDown => 'Countdown';
 
   @override
-  String get pregameCountdownLabel => 'Countdown minutes (1–180)';
+  String get pregameCountdownLabel => 'Countdown (1–180 minutes)';
 
   @override
   String get pregameCountdownHelper =>
@@ -1884,11 +1887,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pregameProfileConflict =>
-      'This player profile is already used by the other side.';
+      'The other side has already selected this player. Choose a different profile.';
 
   @override
   String get pregameCountdownInvalid =>
-      'Enter an integer number of minutes from 1 to 180.';
+      'Enter a whole number of minutes from 1 to 180.';
 
   @override
   String get pregameTrackingNone => 'Do not track attempts or misses';
@@ -1909,7 +1912,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pregameDeletedPlayer => 'Deleted player profile';
 
   @override
-  String get pregameParticipationMode => 'Participation';
+  String get pregameParticipationMode => 'Choose player';
 
   @override
   String pregameTemporaryName(Object side) {
@@ -1927,7 +1930,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pregameSnapshotHint =>
-      'Changing this match name does not change the player profile.';
+      'This name is for this match only. The player profile stays the same.';
 
   @override
   String get pregameRed => 'Red';
@@ -1943,15 +1946,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pregameValidationDuplicateProfile =>
-      'A player profile cannot be used on both sides.';
+      'Choose a different player profile for each side.';
 
   @override
   String get pregameValidationRedMissing =>
-      'The selected Red profile no longer exists; choose another or use a temporary name.';
+      'Red’s selected player profile was not found. Choose another or enter a temporary name.';
 
   @override
   String get pregameValidationBlueMissing =>
-      'The selected Blue profile no longer exists; choose another or use a temporary name.';
+      'Blue’s selected player profile was not found. Choose another or enter a temporary name.';
 
   @override
   String get pregameValidationModeRequired =>
@@ -1959,11 +1962,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pregameValidationCountdownRequired =>
-      'Turn on the timer before using countdown mode.';
+      'Turn on the timer before choosing countdown.';
 
   @override
   String get pregameValidationCountdownDuration =>
-      'Countdown minutes must be from 1 to 180.';
+      'Set the countdown to 1–180 minutes.';
 
   @override
   String get scoringSimpleRedShot => 'Red shot';
@@ -2005,7 +2008,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scoringMatchControlsBody =>
-      'Pause to step away, or confirm the current score and finish the match.';
+      'Pause if you need a break, or confirm the score to finish the match.';
 
   @override
   String get scoringReturnToScoring => 'Return to scoring';
@@ -2017,18 +2020,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scoringMatchPausedTitle => 'Match paused';
 
   @override
-  String get scoringMatchPausedBody =>
-      'Scoring is locked. Continue the match when you are ready to record again.';
+  String get scoringMatchPausedBody => 'Resume the match to keep scoring.';
 
   @override
   String get scoringReturnHome => 'Return home';
 
   @override
   String get scoringPendingPauseExitBody =>
-      'An unfinished gray court marker is still active. Returning home or finishing will discard this draft.';
+      'A gray shot marker is still unfinished. Returning home or finishing the match will discard this unfinished shot.';
 
   @override
-  String get scoringDiscardDraft => 'Discard draft';
+  String get scoringDiscardDraft => 'Discard unfinished shot';
 
   @override
   String get scoringResume => 'Resume';
@@ -2066,14 +2068,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get scoringPendingLocationTitle => 'A shot is waiting for a location';
+  String get scoringPendingLocationTitle => 'This shot is unfinished';
 
   @override
   String get scoringPendingDraftTitle => 'A shot draft is not submitted';
 
   @override
   String get scoringPendingLocationBody =>
-      'Cancel location, confirm it, or undo the shot before leaving.';
+      'Finish recording this shot, or cancel the unfinished step and leave.';
 
   @override
   String get scoringPendingDraftBody =>
@@ -2083,7 +2085,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scoringStay => 'Stay in match';
 
   @override
-  String get scoringCancelLocationLeave => 'Cancel location and leave';
+  String get scoringCancelLocationLeave => 'Cancel and leave';
 
   @override
   String get scoringCancelDraftLeave => 'Cancel draft and leave';
@@ -2096,11 +2098,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scoringMissTrackingDisabled =>
-      'Misses are not recorded with the current tracking setting';
+      'Missed shots are not recorded with these settings';
 
   @override
   String get scoringActionRejected =>
-      'Action rejected; finish the location or draft first';
+      'Finish the current shot or location first';
 
   @override
   String get scoringFreeThrowTrackingDisabled =>
@@ -2118,7 +2120,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The current location cannot be cancelled';
 
   @override
-  String get scoringUndoFailed => 'The undo was not committed';
+  String get scoringUndoFailed => 'Could not undo';
 
   @override
   String get scoringPauseFailed => 'The timer cannot be paused now';
@@ -2137,16 +2139,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scoringNoteHint =>
-      'For example: timeout, tactic, or game situation';
+      'For example: a timeout, a play, or what happened on court';
 
   @override
-  String get scoringRecordNote => 'Record note';
+  String get scoringRecordNote => 'Save note';
 
   @override
   String get scoringRecordCustom => 'Record custom event';
 
   @override
-  String get scoringEventLabel => 'Event label';
+  String get scoringEventLabel => 'Event name';
 
   @override
   String get scoringRecordEvent => 'Record event';
@@ -2155,7 +2157,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scoringNoTimer => 'No timer';
 
   @override
-  String get scoringTimerNotConfigured => 'Timer not configured';
+  String get scoringTimerNotConfigured => 'Timer off';
 
   @override
   String get scoringOvertime => 'Overtime';
@@ -2192,7 +2194,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scoringResolvePending =>
-      'Confirm, skip, or undo the current location first';
+      'Confirm or cancel the location, or undo the shot first';
 
   @override
   String get scoringReplay => 'Replay';
@@ -2201,7 +2203,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get courtReplayLabel => 'Replay court';
 
   @override
-  String get courtEditLabel => 'Basketball court location editor';
+  String get courtEditLabel => 'Shot location editor';
 
   @override
   String get courtReplayHint => 'View recorded shots';
@@ -2217,27 +2219,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routeHomeLoadError => 'Could not load the active match';
 
   @override
-  String get routeActiveMatchCheckError => 'Could not confirm the active match';
+  String get routeActiveMatchCheckError =>
+      'Could not check for a match in progress';
 
   @override
   String get routeActiveMatchCheckBody =>
-      'Return home and try again so a new match is not started with an unknown state.';
+      'Return home and try again to check whether a match is already in progress.';
 
   @override
   String get routeMatchLoadError => 'Could not load the match';
 
   @override
-  String get routeMatchNotActive => 'Match is not active';
+  String get routeMatchNotActive => 'This match is not in progress';
 
   @override
-  String get routeMatchNotActiveBody => 'Resume an active match from home.';
+  String get routeMatchNotActiveBody => 'Resume a match in progress from home.';
 
   @override
   String get routeMatchRestoring => 'Restoring match';
 
   @override
-  String get routeMatchRestoringBody =>
-      'The match was read, but scoring is still being restored.';
+  String get routeMatchRestoringBody => 'Restoring scoring. Please wait.';
 
   @override
   String get routeReplayOpenError => 'Could not open replay';
@@ -2263,7 +2265,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routeActiveCheckLoading =>
-      'Checking for an active match; try again shortly.';
+      'Checking for a match in progress. Try again shortly.';
 
   @override
   String get routeStartMatchConflict =>
@@ -2286,14 +2288,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routeLeaveStay => 'Stay in match';
 
   @override
-  String get routeLeaveKeepRunning => 'Keep running';
+  String get routeLeaveKeepRunning => 'Keep timer running';
 
   @override
   String get routeLeavePauseAndLeave => 'Pause and leave';
 
   @override
   String get routeClockCheckError =>
-      'Could not confirm the timer; stay in the match and try again.';
+      'Could not check the timer. Stay in the match and try again.';
 
   @override
   String get routeProjectLinkError =>
@@ -2311,31 +2313,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get projectFreeForeverDetail =>
-      'Core scoring and replay features will never become paid features.';
+      'Core scoring and replay features will always be free.';
 
   @override
   String get projectOpenSource => 'Open source forever';
 
   @override
   String get projectOpenSourceDetail =>
-      'The source stays public for anyone to review and contribute to.';
+      'The source code stays public for anyone to review or contribute to.';
 
   @override
   String get projectOffline => 'Local and offline';
 
   @override
   String get projectOfflineDetail =>
-      'Record matches without an account or network.';
+      'Record matches without an account or internet connection.';
 
   @override
   String get projectPrivacy => 'Personal data stays local';
 
   @override
   String get projectPrivacyDetail =>
-      'Player and match data stays on this device.';
+      'Player and match data is stored on this device. Hoopito does not upload it.';
 
   @override
-  String get projectOpen => 'Open project';
+  String get projectOpen => 'Explore and contribute';
 
   @override
   String get projectContribute => 'Contribution guide';
@@ -2373,45 +2375,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectLicense => 'License';
 
   @override
-  String get historyImportedIncompleteTitle => 'Imported incomplete match';
+  String get historyImportedIncompleteTitle => 'Unfinished match from a backup';
 
   @override
   String get historyImportedIncompleteBody =>
-      'This match came from a backup and is unfinished; resume it to continue scoring.';
+      'This match was imported from a backup. Resume it to keep scoring.';
 
   @override
-  String get historyResumeImportedIncomplete => 'Resume imported match';
+  String get historyResumeImportedIncomplete => 'Resume match';
 
   @override
   String get historyResumeImportedIncompleteFailed =>
-      'Could not resume the imported match. Confirm that no other match is active.';
+      'Could not resume this match. Check that no other match is in progress.';
 
   @override
   String get historyImportedIncompleteLoadError =>
-      'Could not check imported incomplete matches.';
+      'Could not load imported unfinished matches.';
 
   @override
   String get historyImportedIncompleteRetry => 'Retry';
 
   @override
   String get pregameTemplatesFallbackLoading =>
-      'Rule templates are unavailable; built-in rules are shown while player profiles load.';
+      'Using built-in rules because templates could not be loaded. Player profiles are still loading.';
 
   @override
   String get pregamePlayersLoading =>
-      'Player profiles are loading; you can enter temporary names now.';
+      'Player profiles are still loading. You can enter temporary names for now.';
 
   @override
   String get pregameTemplatesPlayersError =>
-      'Rule templates and player profiles are unavailable; try temporary names and retry.';
+      'Rule templates and player profiles could not be loaded. You can use temporary names to start.';
 
   @override
   String get pregamePlayersError =>
-      'Player profiles are unavailable; try temporary names and retry.';
+      'Player profiles could not be loaded. You can use temporary names to start.';
 
   @override
   String get pregameTemplatesFallbackNotice =>
-      'Rule templates are unavailable; built-in rules are shown.';
+      'Could not load rule templates. Using built-in rules for now.';
 
   @override
   String get scoringConfirmLocation => 'Confirm location';
@@ -2457,7 +2459,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scoringRecordsGroup => 'Records';
 
   @override
-  String get scoringNotesCustomRecordsGroup => 'Notes/Custom Records';
+  String get scoringNotesCustomRecordsGroup => 'Notes and custom records';
 
   @override
   String get scoringMatchGroup => 'Match';
@@ -2467,16 +2469,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String scoringSupplementPrompt(Object points, Object seconds, Object side) {
-    return 'Add $side +$points location · ${seconds}s';
+    return '$side +$points: add location · ${seconds}s left';
   }
 
   @override
   String scoringMissSupplementPrompt(Object seconds, Object side) {
-    return 'Add $side miss location · ${seconds}s';
+    return '$side miss: add location · ${seconds}s left';
   }
 
   @override
-  String get scoringSupplementExpired => 'Location supplement expired';
+  String get scoringSupplementExpired => 'Time to add a location has run out';
 
   @override
   String scoringScoreSemantics(Object points, Object side) {
@@ -2489,7 +2491,7 @@ class AppLocalizationsEn extends AppLocalizations {
     Object seconds,
     Object side,
   ) {
-    return '$side +$points, location pending $seconds seconds';
+    return '$side +$points, $seconds seconds left to add a location';
   }
 
   @override
@@ -2499,6 +2501,183 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String scoringMissLocationPendingSemantics(Object seconds, Object side) {
-    return '$side miss, location pending $seconds seconds';
+    return '$side miss, $seconds seconds left to add a location';
+  }
+
+  @override
+  String get updateTitle => 'Software update';
+
+  @override
+  String get updateSubtitle => 'Check for, download, and install new versions';
+
+  @override
+  String updateCurrentVersion(Object version) {
+    return 'Current version: $version';
+  }
+
+  @override
+  String get updateAutoCheck => 'Check for updates at startup';
+
+  @override
+  String get updateAutoCheckDetail =>
+      'Checks online for new versions after startup without uploading match or player records. You can still check manually when this is off.';
+
+  @override
+  String get updateCheck => 'Check for updates';
+
+  @override
+  String get updateChecking => 'Checking for updates…';
+
+  @override
+  String get updateUpToDate => 'You are up to date';
+
+  @override
+  String updateAvailable(Object version) {
+    return 'Version $version is available';
+  }
+
+  @override
+  String updateDownloadSize(Object size) {
+    return 'Download size: $size';
+  }
+
+  @override
+  String get updateNow => 'Update now';
+
+  @override
+  String get updateLater => 'Later';
+
+  @override
+  String get updateDownload => 'Download update';
+
+  @override
+  String get updateDownloadQueued =>
+      'Waiting for the system to start the download';
+
+  @override
+  String updateDownloading(Object received, Object total) {
+    return 'Downloading $received / $total';
+  }
+
+  @override
+  String get updateDownloadPaused =>
+      'Download paused; the system will continue when possible';
+
+  @override
+  String get updateVerifying => 'Verifying the installation package…';
+
+  @override
+  String get updateReady => 'Ready to install';
+
+  @override
+  String get updateInstall => 'Install update';
+
+  @override
+  String get updateCancelDownload => 'Cancel download';
+
+  @override
+  String get updateRetryDownload => 'Download again';
+
+  @override
+  String get updateCheckFailed =>
+      'Unable to check for updates. Check your connection and try again.';
+
+  @override
+  String get updateDownloadFailed =>
+      'Download did not finish. Check your connection and storage, then try again.';
+
+  @override
+  String get updateVerificationFailed =>
+      'Package verification failed. Download it again.';
+
+  @override
+  String get updateFileMissing =>
+      'The installation package was removed. Download it again.';
+
+  @override
+  String get updateInstallBlocked =>
+      'Finish or end the current match before installing. Installation is also blocked until the match status is confirmed.';
+
+  @override
+  String get updatePermissionTitle => 'Allow update installation';
+
+  @override
+  String get updatePermissionBody =>
+      'Allow Hoopito to install apps in system settings, then return here. You will still need to confirm in the system installer.';
+
+  @override
+  String get updateOpenSettings => 'Open system settings';
+
+  @override
+  String get updateInstallFailed =>
+      'Unable to open the installer. Check the system installation permission and try again.';
+
+  @override
+  String get updateInstallerOpened =>
+      'System installer opened. Confirm installation there. If you cancel, you can try again.';
+
+  @override
+  String get updateIncompatible =>
+      'This update needs a newer version of Android and cannot be installed on this device.';
+
+  @override
+  String get updateUnsupported =>
+      'In-app updates are not available on this platform yet.';
+
+  @override
+  String get updateSettingsFailed => 'The setting was not saved. Try again.';
+
+  @override
+  String get updateFallback => 'Using GitHub as a fallback download source';
+
+  @override
+  String get pregameGoalScoringMode => 'Scoring mode';
+
+  @override
+  String get pregameGoalModeFree => 'Free scoring';
+
+  @override
+  String get pregameGoalModeTarget => 'Target scoring';
+
+  @override
+  String get ruleBuiltInDefault => 'Default rules';
+
+  @override
+  String get scoringTargetReachedTitle => 'Target score reached';
+
+  @override
+  String scoringTargetPoints(int target) {
+    return 'Target: $target points';
+  }
+
+  @override
+  String scoringTargetReachedPlayer(String name) {
+    return '$name has reached the target';
+  }
+
+  @override
+  String get scoringTargetReachedTie =>
+      'Both sides reached the target. Scores are tied.';
+
+  @override
+  String get scoringTargetSupplement =>
+      'You can still add the last shot’s location';
+
+  @override
+  String get scoringTargetSkipLocation => 'Skip location';
+
+  @override
+  String get scoringTargetUndoScore => 'Undo last score';
+
+  @override
+  String get scoringTargetContinueHelp =>
+      'Continue to play past the target without further target reminders';
+
+  @override
+  String get summaryGameFinished => 'Game finished';
+
+  @override
+  String summaryWinner(String name) {
+    return '$name wins';
   }
 }

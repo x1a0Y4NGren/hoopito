@@ -35,6 +35,8 @@ import 'package:hoopito/features/settings/data_management_page.dart';
 import 'package:hoopito/features/settings/settings_page.dart';
 import 'package:hoopito/app/summary_route.dart';
 import 'package:hoopito/app/route_status.dart';
+import 'package:hoopito/app/update_providers.dart';
+import 'package:hoopito/features/settings/software_update_page.dart';
 import 'package:uuid/uuid.dart';
 
 // Keep a finish intent stable across a failed transaction and UI retry.
@@ -107,15 +109,22 @@ LeaveClockTransition leaveClockTransitionFor(
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final router = buildProviderAppRouter();
+  final router = buildProviderAppRouter(
+    observers: [ref.watch(updateNavigationObserverProvider)],
+  );
   ref.onDispose(router.dispose);
   return router;
 });
 
-GoRouter buildProviderAppRouter() {
+GoRouter buildProviderAppRouter({
+  List<NavigatorObserver> observers = const [],
+}) {
   return GoRouter(
+    observers: observers,
     routes: [
       StatefulShellRoute.indexedStack(
+        // Forward branch-local sheets/dialogs to the root update popup tracker.
+        notifyRootObserver: true,
         builder: (context, state, shell) => _MainNavigation(shell: shell),
         branches: [
           StatefulShellBranch(
@@ -171,6 +180,10 @@ GoRouter buildProviderAppRouter() {
       GoRoute(
         path: '/settings/data',
         builder: (context, state) => const _DataManagementRoute(),
+      ),
+      GoRoute(
+        path: '/settings/update',
+        builder: (context, state) => const _SoftwareUpdateRoute(),
       ),
       GoRoute(
         path: '/about',
@@ -707,8 +720,20 @@ class _SettingsRoute extends ConsumerWidget {
       languageController: ref.watch(languagePreferencesControllerProvider),
       onOpenProject: () => context.push('/about'),
       onOpenData: () => context.push('/settings/data'),
+      onOpenUpdate: () => context.push('/settings/update'),
     );
   }
+}
+
+class _SoftwareUpdateRoute extends ConsumerWidget {
+  const _SoftwareUpdateRoute();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => SoftwareUpdatePage(
+    controller: ref.watch(updateControllerProvider),
+    canInstall: canRestoreBackupFor(ref.watch(activeMatchProvider)),
+    canInstallNow: () => canRestoreBackupFor(ref.read(activeMatchProvider)),
+  );
 }
 
 class _DataManagementRoute extends ConsumerWidget {
