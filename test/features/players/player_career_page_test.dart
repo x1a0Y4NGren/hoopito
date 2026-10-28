@@ -291,7 +291,7 @@ void main() {
         ),
       );
       await tester.pump();
-      expect(find.text('暂无足够的完整出手记录，暂不显示命中率'), findsOneWidget);
+      expect(find.text('暂无可显示的投篮命中率，需要记录完整且有运动战出手的比赛。'), findsOneWidget);
       expect(tester.takeException(), isNull);
     },
   );
@@ -405,7 +405,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byKey(const Key('player-analytics-zone-empty')),
-          matching: find.text('暂无位置数据'),
+          matching: find.text('暂无落点数据'),
         ),
         findsOneWidget,
       );

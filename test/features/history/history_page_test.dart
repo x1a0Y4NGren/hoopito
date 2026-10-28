@@ -350,9 +350,9 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('导入的未完成比赛'), findsOneWidget);
-      expect(find.text('恢复未完成导入'), findsOneWidget);
-      await tester.tap(find.text('恢复未完成导入'));
+      expect(find.text('从备份导入的未完成比赛'), findsOneWidget);
+      expect(find.text('继续这场比赛'), findsOneWidget);
+      await tester.tap(find.text('继续这场比赛'));
       expect(resumedId, 'imported-recovery');
     },
   );

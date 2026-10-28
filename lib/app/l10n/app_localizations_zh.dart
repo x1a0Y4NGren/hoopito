@@ -26,7 +26,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get v2SafetyWriteError => '无法保存并验证安全副本，当前数据未替换。请确认设备存储空间后重试。';
+  String get v2SafetyWriteError => '未能保存并验证替换前的安全副本，本机数据未替换。请检查存储空间后重试。';
 
   @override
   String get v2SafetyLoadError => '无法读取安全副本，请重试。';
@@ -43,7 +43,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get v2SwapSides => '交换双方';
 
   @override
-  String get v2PresetApplied => '已沿用双方与规则，可继续调整';
+  String get v2PresetApplied => '已沿用双方和规则，还可以调整';
 
   @override
   String get v2RulesSummary => '规则概览';
@@ -85,10 +85,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get v2CoverageScores => '主要记分';
 
   @override
-  String get v2CoverageComplete => '记录了每次投篮';
+  String get v2CoverageComplete => '记录全部投篮与罚球';
 
   @override
-  String get v2CoverageHelp => '只有确认全场投篮（含未中）都已记录，才会显示可信命中率。漏记时请选择“主要记分”。';
+  String get v2CoverageHelp => '主要记分不显示命中率。完整记录需记下每次投篮和罚球，包括未命中。';
 
   @override
   String get v2CorrectCoverage => '纠正记录范围';
@@ -106,7 +106,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get v2RecordedSample => '以下图表仅表示已记录的样本';
 
   @override
-  String get v2LocationScope => '已确认落点 / 已记录运动战出手';
+  String get v2LocationScope => '已确认运动战落点 / 已记录运动战出手';
 
   @override
   String get v2SavePlayer => '保存到球员档案';
@@ -118,7 +118,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get v2SelectPlayer => '选择已有球员';
 
   @override
-  String get v2PlayerSaved => '已关联档案，当场姓名保留';
+  String get v2PlayerSaved => '已关联球员档案，本场姓名不变';
 
   @override
   String get v2Retry => '重试';
@@ -133,16 +133,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get v2GuideScoreBody => '点双方的 +1、+2、+3 即可记分。';
 
   @override
-  String get v2GuideLocation => '补落点与未中';
+  String get v2GuideLocation => '记落点和未命中';
 
   @override
-  String get v2GuideLocationBody => '先点球场再记分，或记分后在 10 秒内补落点；未中也能记录。';
+  String get v2GuideLocationBody => '可以先点球场再记分，也可以记分后在 10 秒内补落点。未命中也能记。';
 
   @override
-  String get v2GuideUndo => '撤回与结束';
+  String get v2GuideUndo => '撤销和结束比赛';
 
   @override
-  String get v2GuideUndoBody => '撤回恢复上一步；点击顶部结束比赛并确认记录范围。';
+  String get v2GuideUndoBody => '点撤销可退回上一步。打完后，点顶部结束比赛，再确认这场投篮是否记全。';
 
   @override
   String get v2GuideSkip => '跳过';
@@ -157,13 +157,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get v2AbandonedMatch => '比赛未完赛';
 
   @override
-  String get v2AbandonedMatchHelp => '可以复盘已保存的记录；本场不计入已完成比赛统计。';
+  String get v2AbandonedMatchHelp => '已保存的记录仍可复盘；本场不计入已完成比赛统计。';
 
   @override
   String get v2SafetyTitle => '恢复安全副本';
 
   @override
-  String get v2SafetyHelp => '替换前自动保护当前数据，保留最近两份。回退前也会保护当前数据。';
+  String get v2SafetyHelp =>
+      '安全副本是替换前自动保存的本机数据备份，保留最近两份，可在这里恢复。恢复前也会先保存并验证当前数据的副本。';
 
   @override
   String get v2SafetyEmpty => '尚无安全副本';
@@ -172,7 +173,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get v2SafetyRestore => '恢复这份副本';
 
   @override
-  String get v2SafetyConfirm => '恢复安全副本会替换当前数据；当前数据会先另存为安全副本。';
+  String get v2SafetyConfirm =>
+      '这份副本将替换全部本机数据。球豆会先保存并验证当前数据的安全副本，失败就不会替换。请先结束正在进行的比赛。';
 
   @override
   String get v2GrowthSample => '按比赛顺序显示运动战命中率；空缺表示记录不完整或无出手。';
@@ -193,10 +195,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get projectDetails => '项目详情';
 
   @override
-  String get ruleTargetReached => '已达到目标分数，请确认结束或继续';
+  String get ruleTargetReached => '已达到目标分，要结束还是继续？';
 
   @override
-  String get ruleWinByTwoRequired => '已达到目标分数，但还需领先两分，请继续';
+  String get ruleWinByTwoRequired => '已达到目标分，还要领先 2 分才能赢，请继续比赛。';
 
   @override
   String get ruleMatchPoint => '赛点';
@@ -206,7 +208,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String ruleFoulLimit(Object limit, Object side) {
-    return '$side犯规已达到$limit次';
+    return '$side犯规已达 $limit 次上限';
   }
 
   @override
@@ -298,7 +300,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get historyDeleteTitle => '永久删除比赛？';
 
   @override
-  String get historyDeleteBody => '比赛事件、落点和审计记录都会被删除，且无法恢复。';
+  String get historyDeleteBody => '这场比赛及其事件、投篮落点和操作记录都会永久删除，无法恢复。';
 
   @override
   String get historyLoadMore => '加载更多';
@@ -319,7 +321,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get historyAllModes => '全部模式';
 
   @override
-  String get historySimpleMode => '简单记录';
+  String get historySimpleMode => '简洁记录';
 
   @override
   String get historyDetailedMode => '详细记录';
@@ -360,7 +362,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get historyLocationCompleteness => '落点完整度';
+  String get historyLocationCompleteness => '落点记录比例';
 
   @override
   String get replayTitle => '比赛复盘';
@@ -369,13 +371,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayExportTooltip => '导出复盘图';
 
   @override
-  String get replayAuditTooltip => '审计历史';
+  String get replayAuditTooltip => '操作记录';
 
   @override
   String get replayEditMode => '编辑模式';
 
   @override
-  String get replayReadOnly => '只读模式';
+  String get replayReadOnly => '仅查看';
 
   @override
   String get replayFinished => '终场';
@@ -387,7 +389,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayExportTitle => '复盘分享图';
 
   @override
-  String get replayExportDescription => '落点与分析会生成一张本地图片';
+  String get replayExportDescription => '将落点图和比赛分析合成一张本地图片';
 
   @override
   String get replayClose => '关闭';
@@ -436,7 +438,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayCourt => '落点图';
 
   @override
-  String get replaySaveLocation => '保存落点位置';
+  String get replaySaveLocation => '保存落点';
 
   @override
   String get replayOverview => '总览';
@@ -445,25 +447,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayDuration => '时长';
 
   @override
-  String get replayScoringEvents => '得分事件';
+  String get replayScoringEvents => '得分记录';
 
   @override
   String get replayFouls => '犯规';
 
   @override
-  String get replayLocationCompleteness => '落点完整度';
+  String get replayLocationCompleteness => '落点记录比例';
 
   @override
-  String get replayPossession => '球权分段';
+  String get replayPossession => '球权记录';
 
   @override
-  String get replayFinishedBoundary => '终场边界';
+  String get replayFinishedBoundary => '比赛已结束';
 
   @override
-  String get replayInProgressBoundary => '进行中边界';
+  String get replayInProgressBoundary => '比赛未完成';
 
   @override
-  String get replayNoPossession => '暂无已记录的球权分段';
+  String get replayNoPossession => '暂无球权记录';
 
   @override
   String get replayPossessionManual => '人工';
@@ -472,7 +474,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayPossessionSuggested => '建议';
 
   @override
-  String get replayPossessionCurrent => '当前进行中';
+  String get replayPossessionCurrent => '未记录结束时间';
 
   @override
   String replayPossessionEnded(Object time) {
@@ -488,16 +490,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayNoReason => '未填写原因';
 
   @override
-  String get replaySuggestedReason => '命中后按规则建议';
+  String get replaySuggestedReason => '命中后根据规则建议球权';
 
   @override
-  String get replayTimeline => '事件时间线';
+  String get replayTimeline => '比赛记录';
 
   @override
   String get replayFilters => '筛选';
 
   @override
-  String get replayNoEvents => '没有符合筛选条件的事件';
+  String get replayNoEvents => '没有符合筛选条件的记录';
 
   @override
   String get replayFilterAll => '全部';
@@ -564,13 +566,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get replayEditorTitle => '编辑事件';
+  String get replayEditorTitle => '编辑记录';
 
   @override
   String get replayEditorSide => '所属方';
 
   @override
-  String get replayEditorEventKind => '事件类型';
+  String get replayEditorEventKind => '记录类型';
 
   @override
   String get replayEditorPoints => '分值';
@@ -603,7 +605,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayEditorReason => '修改原因（可选）';
 
   @override
-  String get replayEditorDelete => '软删除';
+  String get replayEditorDelete => '删除';
 
   @override
   String get replayEditorRestore => '恢复';
@@ -621,28 +623,29 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayEditorLocationRange => '落点数值必须在 0 到 1 之间。';
 
   @override
-  String get replayEditorDeleteTitle => '删除这条事件？';
+  String get replayEditorDeleteTitle => '删除这条记录？';
 
   @override
-  String get replayEditorDeleteBody => '事件将被标记为已删除，并保留完整审计记录。';
+  String get replayEditorDeleteBody =>
+      '删除后，这条记录不再计入比分和统计，操作记录会保留。之后可显示已删除记录，再将它恢复。';
 
   @override
   String get replayEditorConfirmDelete => '确认删除';
 
   @override
-  String get replayEditorRestoreTitle => '恢复这条事件？';
+  String get replayEditorRestoreTitle => '恢复这条记录？';
 
   @override
-  String get replayEditorRestoreBody => '恢复后事件会重新计入比赛投影。';
+  String get replayEditorRestoreBody => '恢复后，这条记录会重新计入比分和统计。';
 
   @override
   String get replayEditorConfirmRestore => '确认恢复';
 
   @override
-  String get replayAuditTitle => '审计历史';
+  String get replayAuditTitle => '操作记录';
 
   @override
-  String get replayAuditEmpty => '暂无编辑记录';
+  String get replayAuditEmpty => '暂无操作记录';
 
   @override
   String replayAuditReason(Object reason) {
@@ -671,10 +674,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayAuditActionRestore => '恢复';
 
   @override
-  String get replayAuditActionCommand => '命令';
+  String get replayAuditActionCommand => '执行操作';
 
   @override
-  String get replayAuditActionLocate => '定位';
+  String get replayAuditActionLocate => '设置落点';
 
   @override
   String get replayAuditActionPossession => '更新球权';
@@ -686,7 +689,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayAuditActionUnknown => '未知操作';
 
   @override
-  String get replayAuditTargetEvent => '事件';
+  String get replayAuditTargetEvent => '记录';
 
   @override
   String get replayAuditTargetLocation => '落点';
@@ -695,10 +698,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayAuditTargetMatch => '比赛';
 
   @override
-  String get replayAuditTargetCommand => '命令';
+  String get replayAuditTargetCommand => '操作';
 
   @override
-  String get replayAuditFieldType => '事件类型';
+  String get replayAuditFieldType => '记录类型';
 
   @override
   String get replayAuditFieldSide => '所属方';
@@ -749,16 +752,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayAnalyticsShootingPercentage => '投篮命中率';
 
   @override
-  String get replayAnalyticsKeyMoments => '关键节点';
+  String get replayAnalyticsKeyMoments => '关键时刻';
 
   @override
   String get replayAnalyticsNoAttempts => '暂无出手';
 
   @override
-  String get replayAnalyticsScoringFlow => '比分流';
+  String get replayAnalyticsScoringFlow => '比分走势';
 
   @override
-  String get replayAnalyticsNoScoringEvents => '本场暂无得分事件';
+  String get replayAnalyticsNoScoringEvents => '本场暂无得分记录';
 
   @override
   String get replayAnalyticsKeyPossessions => '关键回合';
@@ -810,7 +813,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get replayAnalyticsPossessions => '球权';
 
   @override
-  String get replayAnalyticsTrackingCoverage => '记录完整度';
+  String get replayAnalyticsTrackingCoverage => '记录范围';
 
   @override
   String get replayAnalyticsLocationCoverage => '位置覆盖';
@@ -861,7 +864,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playerAnalyticsTitle => '球员分析';
 
   @override
-  String get playerAnalyticsWindow => '统计周期';
+  String get playerAnalyticsWindow => '统计时段';
 
   @override
   String get playerAnalyticsSevenDays => '近 7 天';
@@ -915,7 +918,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playerAnalyticsRecordedShots => '记录出手';
 
   @override
-  String get playerAnalyticsNoReliablePercentage => '暂无足够的完整出手记录，暂不显示命中率';
+  String get playerAnalyticsNoReliablePercentage =>
+      '暂无可显示的投篮命中率，需要记录完整且有运动战出手的比赛。';
 
   @override
   String get playerAnalyticsZoneHeatmap => '出手区域';
@@ -933,7 +937,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playerAnalyticsLoadError => '无法读取分析数据';
 
   @override
-  String get playerAnalyticsLoadErrorBody => '无法读取生涯分析，请重试以刷新本地比赛数据。';
+  String get playerAnalyticsLoadErrorBody => '无法读取球员分析，请重试。';
 
   @override
   String get playerAnalyticsNotFound => '找不到球员';
@@ -954,46 +958,46 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playerComparisonMode => '比较方式';
 
   @override
-  String get playerComparisonMatchMode => '对局';
+  String get playerComparisonMatchMode => '比赛';
 
   @override
   String get playerComparisonWindowMode => '时段';
 
   @override
-  String get playerComparisonMatchModeHint => '比较该球员已关联的两场已完成比赛。';
+  String get playerComparisonMatchModeHint => '选择该球员的两场已完成比赛进行比较。';
 
   @override
-  String get playerComparisonWindowModeHint => '比较以打开页面时刻为终点的两个相邻且不重叠时间窗。';
+  String get playerComparisonWindowModeHint => '比较相邻且不重叠的两个时段，后一时段截止于打开此页面时。';
 
   @override
-  String get playerComparisonBaseline => '基线';
+  String get playerComparisonBaseline => '参照数据';
 
   @override
-  String get playerComparisonCurrent => '当前样本';
+  String get playerComparisonCurrent => '比较数据';
 
   @override
   String get playerComparisonDifference => '差值';
 
   @override
-  String get playerComparisonSelectBaseline => '选择基线对局';
+  String get playerComparisonSelectBaseline => '选择参照比赛';
 
   @override
-  String get playerComparisonSelectCurrent => '选择当前对局';
+  String get playerComparisonSelectCurrent => '选择比较比赛';
 
   @override
-  String get playerComparisonSwap => '交换基线与当前对局';
+  String get playerComparisonSwap => '交换两场比赛';
 
   @override
-  String get playerComparisonChooseGame => '选择对局';
+  String get playerComparisonChooseGame => '选择比赛';
 
   @override
-  String get playerComparisonLoading => '正在生成比较';
+  String get playerComparisonLoading => '正在比较';
 
   @override
   String get playerComparisonLoadError => '无法读取比较数据';
 
   @override
-  String get playerComparisonLoadErrorBody => '无法从本地比赛数据重建分析，请检查记录后重试。';
+  String get playerComparisonLoadErrorBody => '无法读取比赛比较，请重试。';
 
   @override
   String get playerComparisonRetry => '重试';
@@ -1002,29 +1006,29 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playerComparisonNoMatches => '暂无可比较比赛';
 
   @override
-  String get playerComparisonNoMatchesBody => '请先使用该关联球员档案完成一场比赛。';
+  String get playerComparisonNoMatchesBody => '先用该球员档案完成一场比赛，再来比较。';
 
   @override
   String get playerComparisonNeedTwoMatches => '至少需要两场比赛';
 
   @override
   String get playerComparisonNeedTwoMatchesBody =>
-      '再完成一场已关联比赛即可比较单场对局；目前仍可使用时段比较。';
+      '再用该球员档案完成一场比赛，即可比较两场比赛；现在也可以比较时段数据。';
 
   @override
-  String get playerComparisonEmptyWindows => '两个时间窗都没有比赛';
+  String get playerComparisonEmptyWindows => '两个时段都没有比赛';
 
   @override
-  String get playerComparisonEmptyWindowsBody => '可以选择更长时段，或取消对手筛选。';
+  String get playerComparisonEmptyWindowsBody => '试试更长的时段，或取消对手筛选。';
 
   @override
-  String get playerComparisonBaselineEmpty => '基线时间窗没有比赛。';
+  String get playerComparisonBaselineEmpty => '参照时段没有比赛。';
 
   @override
-  String get playerComparisonCurrentEmpty => '当前时间窗没有比赛。';
+  String get playerComparisonCurrentEmpty => '比较时段没有比赛。';
 
   @override
-  String get playerComparisonSummary => '证据摘要';
+  String get playerComparisonSummary => '数据对比';
 
   @override
   String get playerComparisonResult => '胜负';
@@ -1048,13 +1052,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playerComparisonMarginPerGame => '场均分差';
 
   @override
-  String get playerComparisonFieldGoalsMade => '投篮命中';
+  String get playerComparisonFieldGoalsMade => '运动战命中';
 
   @override
-  String get playerComparisonFieldGoalAttempts => '投篮出手';
+  String get playerComparisonFieldGoalAttempts => '运动战出手';
 
   @override
-  String get playerComparisonFieldGoalPercentage => '投篮命中率';
+  String get playerComparisonFieldGoalPercentage => '运动战命中率';
 
   @override
   String get playerComparisonFreeThrowsMade => '罚球命中';
@@ -1066,13 +1070,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playerComparisonFreeThrowPercentage => '罚球命中率';
 
   @override
-  String get playerComparisonLocationCoverage => '落点覆盖';
+  String get playerComparisonLocationCoverage => '落点记录比例';
 
   @override
-  String get playerComparisonConfirmedZones => '区域已确认落点占比';
+  String get playerComparisonConfirmedZones => '已确认落点的区域分布';
 
   @override
-  String get playerComparisonConfirmedZonesNote => '区域百分比仅使用已确认落点样本。';
+  String get playerComparisonConfirmedZonesNote => '各区域占比只按已确认的运动战落点计算。';
 
   @override
   String get playerComparisonIncrease => '增加';
@@ -1109,11 +1113,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String legacyBootstrapBody(Object version) {
-    return '检测到不兼容的旧数据库版本$version。现有文件会保持原样；球豆不会静默迁移、删除或清空它。请先导出或备份旧文件，再使用当前版本创建新的本地数据。';
+    return '旧版数据库$version与当前版本不兼容。原文件会保持原样，球豆不会自动转换、删除或清空它。请先导出或备份旧文件，再用当前版本新建本地数据。';
   }
 
   @override
-  String get bootstrapFailureBody => '本地数据库暂时无法打开，现有数据未被修改。请稍后重试，或创建新的本地数据库。';
+  String get bootstrapFailureBody => '本地记录暂时打不开，现有数据没有改动。请稍后重试，或新建本地数据库。';
 
   @override
   String get entryPreparingRecords => '正在打开本地记录…';
@@ -1140,7 +1144,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsFeedbackSection => '计分反馈';
 
   @override
-  String get settingsHapticTitle => '触觉反馈';
+  String get settingsHapticTitle => '振动反馈';
 
   @override
   String get settingsHapticEnabled => '已开启';
@@ -1179,7 +1183,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsThemeTitle => '主题';
 
   @override
-  String get settingsThemeSubtitle => '选择应用的显示主题';
+  String get settingsThemeSubtitle => '选择浅色、深色或跟随系统';
 
   @override
   String get settingsThemeSystem => '跟随系统';
@@ -1194,7 +1198,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsMotionTitle => '动效';
 
   @override
-  String get settingsMotionSubtitle => '选择界面动效程度';
+  String get settingsMotionSubtitle => '使用标准动效，或减少动画';
 
   @override
   String get settingsMotionStandard => '标准动效';
@@ -1203,7 +1207,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsMotionReduced => '减少动效';
 
   @override
-  String get settingsMotionHelp => '减少动效会缩短过渡并移除装饰性动画。';
+  String get settingsMotionHelp => '减少动效会缩短过渡，关闭装饰性动画。';
 
   @override
   String get settingsMotionPreview => '动效预览';
@@ -1218,10 +1222,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsDataSection => '数据';
 
   @override
-  String get settingsDataManagementTitle => '管理数据与备份';
+  String get settingsDataManagementTitle => '数据与备份';
 
   @override
-  String get settingsDataManagementSubtitle => '导出、恢复和自动备份都在这里';
+  String get settingsDataManagementSubtitle => '导出数据、恢复备份、设置自动备份';
 
   @override
   String get settingsManualDataSection => '导出与恢复';
@@ -1233,7 +1237,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsExportDataTitle => '导出数据';
 
   @override
-  String get settingsExportDataSubtitle => '选择可恢复的 JSON 备份或用于分析的 CSV 文件';
+  String get settingsExportDataSubtitle => 'JSON 备份可恢复数据，CSV 文件可用于分析';
 
   @override
   String get settingsExportDataDialogTitle => '选择导出格式';
@@ -1251,28 +1255,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsExportBackupTitle => '导出完整备份';
 
   @override
-  String get settingsExportBackupSubtitle => '包含比赛、球员、规则、事件与设置的 JSON 文件';
+  String get settingsExportBackupSubtitle => 'JSON 文件，包含比赛、球员、规则、事件和设置';
 
   @override
-  String get settingsExportBackupSuccess => '已打开系统分享，可保存或发送备份文件';
+  String get settingsExportBackupSuccess => '已打开分享界面，可保存或发送备份文件';
 
   @override
   String get settingsRestoreTitle => '从备份恢复';
 
   @override
-  String get settingsRestoreSubtitleMerge => '可安全合并，或在创建安全备份后替换本机数据';
+  String get settingsRestoreSubtitleMerge => '合并备份，或先备份当前数据再完整替换';
 
   @override
-  String get settingsRestoreSubtitleBlocked => '比赛进行中仍可合并；替换模式需先结束比赛';
+  String get settingsRestoreSubtitleBlocked => '比赛进行中可以合并；替换数据需先结束比赛';
 
   @override
   String get settingsExportCsvTitle => '导出 CSV';
 
   @override
-  String get settingsExportCsvSubtitle => '比赛列表、事件列表与球员统计，共 3 个文件';
+  String get settingsExportCsvSubtitle => '导出 3 个文件：比赛列表、事件列表和球员统计';
 
   @override
-  String get settingsExportCsvSuccess => '已打开系统分享，可保存 3 个 CSV 文件';
+  String get settingsExportCsvSuccess => '已打开分享界面，可保存 3 个 CSV 文件';
 
   @override
   String get settingsAutomaticBackupTitle => '自动备份';
@@ -1290,24 +1294,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsBackupDirectoryPickerTitle => '选择自动备份文件夹';
 
   @override
-  String get settingsBackupDirectoryUnselected => '未选择，只会访问你明确选择的文件夹';
+  String get settingsBackupDirectoryUnselected => '尚未选择，只会访问你选择的文件夹';
 
   @override
   String get settingsBackupNowTitle => '立即备份';
 
   @override
-  String get settingsBackupNever => '尚未执行手动或自动备份';
+  String get settingsBackupNever => '还没有手动或自动备份记录';
 
   @override
   String settingsBackupLastSuccess(Object date, Object time) {
-    return '上次成功：$date $time';
+    return '上次备份成功：$date $time';
   }
 
   @override
-  String get settingsBackupRetentionTitle => '自动备份保留数量';
+  String get settingsBackupRetentionTitle => '保留几份自动备份';
 
   @override
-  String get settingsBackupRetentionSubtitle => '仅清理球豆自动备份，不影响手动或安全备份';
+  String get settingsBackupRetentionSubtitle => '只清理多余的球豆自动备份，手动备份和安全副本不受影响';
 
   @override
   String get settingsPrivacySection => '隐私';
@@ -1316,7 +1320,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsPrivacyTitle => '本地数据';
 
   @override
-  String get settingsPrivacySubtitle => '个人数据只保存在这台设备上，不会上传';
+  String get settingsPrivacySubtitle => '个人数据保存在本机，球豆不会上传';
 
   @override
   String get settingsExperimentalSection => '实验功能';
@@ -1346,10 +1350,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsAboutSection => '关于';
 
   @override
-  String get settingsAboutSubtitle => '永久开源免费、许可证与贡献方式';
+  String get settingsAboutSubtitle => '永久免费开源，查看许可证与贡献方式';
 
   @override
-  String get settingsRestoreDialogTitle => '选择备份导入方式';
+  String get settingsRestoreDialogTitle => '如何恢复备份？';
 
   @override
   String get settingsRestorePickerTitle => '选择球豆备份';
@@ -1358,13 +1362,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsMergeTitle => '合并导入（推荐）';
 
   @override
-  String get settingsMergeSubtitle => '保留本机设置；冲突数据会确定性重映射，不按昵称合并球员';
+  String get settingsMergeSubtitle =>
+      '保留本机设置和正在进行的比赛。冲突记录会另存，不会覆盖本机记录；不会仅因昵称相同就合并球员。';
 
   @override
   String get settingsReplaceTitle => '替换本机数据';
 
   @override
-  String get settingsReplaceSubtitle => '先创建恢复前安全备份，再原子替换全部本地数据';
+  String get settingsReplaceSubtitle => '先备份并验证当前数据，再用所选备份替换全部本机数据；失败则保留原数据';
 
   @override
   String get settingsReplaceBlocked => '请先结束正在进行的比赛';
@@ -1374,7 +1379,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settingsReplaceConfirmBody =>
-      '文件验证通过后，球豆会先创建一份恢复前安全备份，再一次性替换本机数据。';
+      '备份文件验证通过后，球豆会先保存并验证当前数据的备份（安全副本），再用所选备份替换全部本机数据。任一步失败都不会替换。请先结束正在进行的比赛。';
 
   @override
   String get settingsReplaceConfirmAction => '选择备份';
@@ -1383,10 +1388,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsRestoreNotSelected => '未选择备份文件';
 
   @override
-  String get settingsMergeCompleted => '备份合并完成，本机设置与活动比赛保持不变';
+  String get settingsMergeCompleted => '备份已合并，本机设置和正在进行的比赛保持不变';
 
   @override
-  String get settingsReplaceCompleted => '备份替换完成，自动备份位置已重置';
+  String get settingsReplaceCompleted => '已用备份替换本机数据，自动备份位置已重置';
 
   @override
   String get settingsDirectoryUpdated => '自动备份位置已更新';
@@ -1404,10 +1409,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsAutomaticBackupTurnedOff => '自动备份已关闭';
 
   @override
-  String get settingsHapticTurnedOn => '触觉反馈已开启';
+  String get settingsHapticTurnedOn => '振动反馈已开启';
 
   @override
-  String get settingsHapticTurnedOff => '触觉反馈已关闭';
+  String get settingsHapticTurnedOff => '振动反馈已关闭';
 
   @override
   String get settingsSoundTurnedOn => '操作音效已开启';
@@ -1416,7 +1421,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsSoundTurnedOff => '操作音效已关闭';
 
   @override
-  String get settingsBackupWritten => '本地备份已写入所选文件夹';
+  String get settingsBackupWritten => '备份已保存到所选文件夹';
 
   @override
   String settingsRetentionUpdated(Object count) {
@@ -1427,7 +1432,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsErrorChecksum => '备份校验失败，文件可能已损坏或被修改';
 
   @override
-  String get settingsErrorFutureVersion => '该备份由更高版本创建，请升级球豆后再试';
+  String get settingsErrorFutureVersion => '这份备份来自较新版本，请更新球豆后再试';
 
   @override
   String get settingsErrorInvalidBackup => '备份内容无效，现有数据未被修改';
@@ -1439,10 +1444,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsErrorDirectoryRequired => '请先选择自动备份文件夹';
 
   @override
-  String get settingsErrorDirectoryUnavailable => '所选文件夹当前不可写，请重新选择';
+  String get settingsErrorDirectoryUnavailable => '无法保存到所选文件夹，请重新选择';
 
   @override
-  String get settingsErrorBackupWrite => '备份写入失败，请重新选择备份文件夹后再试';
+  String get settingsErrorBackupWrite => '备份未能保存，请重新选择备份文件夹后再试';
 
   @override
   String get settingsErrorRestoreBlocked => '请先结束正在进行的比赛';
@@ -1451,7 +1456,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsErrorGeneric => '操作失败，请稍后重试';
 
   @override
-  String get playerAnalyticsNoLocationData => '暂无位置数据';
+  String get playerAnalyticsNoLocationData => '暂无落点数据';
 
   @override
   String get homePlayersTooltip => '球员';
@@ -1478,7 +1483,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeClockPaused => '计时已暂停';
 
   @override
-  String get homeLastPersistedUnknown => '最近保存：时间未知';
+  String get homeLastPersistedUnknown => '上次保存时间未知';
 
   @override
   String homeLastPersisted(Object date) {
@@ -1495,7 +1500,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeAbandonTitle => '放弃这场比赛？';
 
   @override
-  String get homeAbandonBody => '比赛会保留在本地记录中，但不会再出现在进行中入口。';
+  String get homeAbandonBody => '比赛记录仍会保留，但不能再从主页继续这场比赛。';
 
   @override
   String get homeConfirmAbandon => '确认放弃';
@@ -1519,7 +1524,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playersEmptyTitle => '还没有保存的球员';
 
   @override
-  String get playersEmptyBody => '临时球员仍可直接参加比赛；保存档案后，下次更容易找到。';
+  String get playersEmptyBody => '不保存档案也能直接比赛。保存后，下次选人更方便。';
 
   @override
   String get playersLoadError => '无法读取球员';
@@ -1570,7 +1575,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get playerOpenError => '无法打开球员档案';
 
   @override
-  String get playerOpenErrorBody => '无法打开该球员档案，请检查本地数据后重试。';
+  String get playerOpenErrorBody => '无法打开该球员档案，请重试。';
 
   @override
   String get playerNicknameLabel => '昵称';
@@ -1606,7 +1611,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get rulesEmptyTitle => '暂无规则模板';
 
   @override
-  String get rulesEmptyBody => '创建自定义规则模板，为下一场比赛设定计分方式。';
+  String get rulesEmptyBody => '创建一套常用规则，下场比赛直接选。';
 
   @override
   String get rulesCreate => '新建规则';
@@ -1615,7 +1620,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get rulesLoadError => '规则模板读取失败';
 
   @override
-  String get rulesLoadErrorBody => '无法读取规则模板，请检查本地数据后重试。';
+  String get rulesLoadErrorBody => '暂时读不到规则模板，请重试。';
 
   @override
   String get rulesBuiltIn => '内置';
@@ -1669,16 +1674,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ruleTargetLabel => '目标分（可选）';
 
   @override
-  String get ruleTimeLimitLabel => '时限分钟（可选）';
+  String get ruleTimeLimitLabel => '时限（分钟，可选）';
 
   @override
   String get ruleFoulLimitLabel => '犯规上限（可选）';
 
   @override
-  String get ruleScoreButtonsLabel => '计分按钮（逗号分隔）';
+  String get ruleScoreButtonsLabel => '每次记几分（用逗号分隔）';
 
   @override
-  String get ruleCustomLabelsLabel => '自定义事件类型（逗号分隔）';
+  String get ruleCustomLabelsLabel => '自定义事件名称（用逗号分隔）';
 
   @override
   String get ruleWinByTwoTitle => '领先 2 分获胜';
@@ -1687,13 +1692,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get rulePossessionHintTitle => '得分后提示球权';
 
   @override
-  String get rulePossessionHintSubtitle => '仅提示，不阻断手动计分';
+  String get rulePossessionHintSubtitle => '只作提示，仍可手动记分';
 
   @override
-  String get rulePossessionPolicyLabel => '得分后球权策略';
+  String get rulePossessionPolicyLabel => '得分后球权归谁';
 
   @override
-  String get rulePossessionPolicyHelper => '仅在启用球权提示时可选择自动建议。';
+  String get rulePossessionPolicyHelper => '先打开球权提示，再选择提示方式。';
 
   @override
   String get ruleSaveAction => '保存规则';
@@ -1707,13 +1712,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get ruleAtLeastOneInteger => '至少填写一个正整数';
 
   @override
-  String get rulePolicyManual => '手动纠正';
+  String get rulePolicyManual => '手动设置';
 
   @override
-  String get rulePolicySwitchAfterMade => '命中后交换';
+  String get rulePolicySwitchAfterMade => '命中后交换球权';
 
   @override
-  String get rulePolicyKeepAfterMade => '命中后保持';
+  String get rulePolicyKeepAfterMade => '命中后保留球权';
 
   @override
   String get pregameTitle => '赛前设置';
@@ -1790,7 +1795,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pregameTimerEnabled => '已开启：请选择计时方式';
 
   @override
-  String get pregameTimerDisabled => '关闭时不记录比赛计时';
+  String get pregameTimerDisabled => '关闭后不记录比赛时间';
 
   @override
   String get pregameCountUp => '正计时';
@@ -1799,7 +1804,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pregameCountDown => '倒计时';
 
   @override
-  String get pregameCountdownLabel => '倒计时分钟（1–180）';
+  String get pregameCountdownLabel => '倒计时（1–180 分钟）';
 
   @override
   String get pregameCountdownHelper => '倒计时必须设置在 1 到 180 分钟之间。';
@@ -1808,10 +1813,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pregameMinutes => '分钟';
 
   @override
-  String get pregameProfileConflict => '该球员档案已用于另一方，请选择其他档案。';
+  String get pregameProfileConflict => '另一方已经选了这名球员，请换一个档案。';
 
   @override
-  String get pregameCountdownInvalid => '请输入 1 到 180 之间的整数分钟。';
+  String get pregameCountdownInvalid => '请输入 1 到 180 的整数分钟。';
 
   @override
   String get pregameTrackingNone => '不追踪出手与失误';
@@ -1832,7 +1837,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pregameDeletedPlayer => '已删除的球员档案';
 
   @override
-  String get pregameParticipationMode => '参赛方式';
+  String get pregameParticipationMode => '选择球员';
 
   @override
   String pregameTemporaryName(Object side) {
@@ -1848,7 +1853,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pregameTemporaryHint => '可输入临时姓名；双方临时同名也可以。';
 
   @override
-  String get pregameSnapshotHint => '修改本场姓名不会更改球员档案。';
+  String get pregameSnapshotHint => '只改这场比赛的姓名，球员档案保持原样。';
 
   @override
   String get pregameRed => '红方';
@@ -1863,22 +1868,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pregameValidationBlueRequired => '请输入蓝方姓名。';
 
   @override
-  String get pregameValidationDuplicateProfile => '同一球员档案不能同时用于红方和蓝方。';
+  String get pregameValidationDuplicateProfile => '双方不能选同一个球员档案。';
 
   @override
-  String get pregameValidationRedMissing => '红方所选球员档案已不存在，请重新选择或改用临时姓名。';
+  String get pregameValidationRedMissing => '找不到红方选择的球员档案，请重选或输入临时姓名。';
 
   @override
-  String get pregameValidationBlueMissing => '蓝方所选球员档案已不存在，请重新选择或改用临时姓名。';
+  String get pregameValidationBlueMissing => '找不到蓝方选择的球员档案，请重选或输入临时姓名。';
 
   @override
   String get pregameValidationModeRequired => '请选择记录模式后再开始比赛。';
 
   @override
-  String get pregameValidationCountdownRequired => '倒计时必须先打开计时开关。';
+  String get pregameValidationCountdownRequired => '请先开启计时，再选择倒计时。';
 
   @override
-  String get pregameValidationCountdownDuration => '倒计时分钟数必须是 1 到 180 分钟。';
+  String get pregameValidationCountdownDuration => '倒计时请设为 1 到 180 分钟。';
 
   @override
   String get scoringSimpleRedShot => '红方出手';
@@ -1919,7 +1924,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringMatchControlsTitle => '结束或暂停比赛？';
 
   @override
-  String get scoringMatchControlsBody => '你可以暂时离开比赛，也可以确认当前比分并结束比赛。';
+  String get scoringMatchControlsBody => '暂时离开可以先暂停；打完了就确认比分并结束比赛。';
 
   @override
   String get scoringReturnToScoring => '返回计分';
@@ -1931,16 +1936,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringMatchPausedTitle => '比赛已暂停';
 
   @override
-  String get scoringMatchPausedBody => '计分操作已锁定。继续比赛后可接着记录。';
+  String get scoringMatchPausedBody => '比赛暂停中，继续后就能接着记分。';
 
   @override
   String get scoringReturnHome => '返回主页';
 
   @override
-  String get scoringPendingPauseExitBody => '当前球场上还有未完成的灰色落点。返回主页或结束比赛会丢弃这次草稿。';
+  String get scoringPendingPauseExitBody =>
+      '球场上还有灰色投篮点未确认。返回主页或结束比赛会丢弃这次未完成的记录。';
 
   @override
-  String get scoringDiscardDraft => '丢弃草稿';
+  String get scoringDiscardDraft => '丢弃未完成记录';
 
   @override
   String get scoringResume => '恢复';
@@ -1978,13 +1984,13 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get scoringPendingLocationTitle => '当前有待定位投篮';
+  String get scoringPendingLocationTitle => '这次投篮还没记完';
 
   @override
   String get scoringPendingDraftTitle => '当前有未提交投篮';
 
   @override
-  String get scoringPendingLocationBody => '离开前请取消定位、确认落点或撤销这次记录。';
+  String get scoringPendingLocationBody => '可以继续把这次投篮记完，也可以取消未完成的操作后离开。';
 
   @override
   String get scoringPendingDraftBody => '离开前请取消或提交当前投篮草稿。';
@@ -1993,7 +1999,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringStay => '留在本场';
 
   @override
-  String get scoringCancelLocationLeave => '取消定位并离开';
+  String get scoringCancelLocationLeave => '取消并离开';
 
   @override
   String get scoringCancelDraftLeave => '取消草稿并离开';
@@ -2005,10 +2011,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringDraftCreateFailed => '当前无法创建投篮草稿';
 
   @override
-  String get scoringMissTrackingDisabled => '当前跟踪设置不记录未中投篮';
+  String get scoringMissTrackingDisabled => '当前设置不记录未命中投篮';
 
   @override
-  String get scoringActionRejected => '当前操作被拒绝，请先完成落点或草稿';
+  String get scoringActionRejected => '请先完成当前落点或未记完的投篮';
 
   @override
   String get scoringFreeThrowTrackingDisabled => '当前跟踪设置不记录该罚球';
@@ -2023,7 +2029,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringLocationCancelFailed => '当前落点无法取消';
 
   @override
-  String get scoringUndoFailed => '撤销未提交';
+  String get scoringUndoFailed => '没能撤销';
 
   @override
   String get scoringPauseFailed => '当前无法暂停计时';
@@ -2041,16 +2047,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringAddNote => '添加备注';
 
   @override
-  String get scoringNoteHint => '例如：暂停、战术或现场情况';
+  String get scoringNoteHint => '例如：暂停、战术安排或场上情况';
 
   @override
-  String get scoringRecordNote => '记录备注';
+  String get scoringRecordNote => '保存备注';
 
   @override
   String get scoringRecordCustom => '记录自定义事件';
 
   @override
-  String get scoringEventLabel => '事件标签';
+  String get scoringEventLabel => '事件名称';
 
   @override
   String get scoringRecordEvent => '记录事件';
@@ -2059,7 +2065,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringNoTimer => '无计时';
 
   @override
-  String get scoringTimerNotConfigured => '计时未配置';
+  String get scoringTimerNotConfigured => '未开启计时';
 
   @override
   String get scoringOvertime => '加时赛';
@@ -2071,7 +2077,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringClockPaused => '计时已暂停';
 
   @override
-  String get scoringBackToScoringList => '返回计分列表';
+  String get scoringBackToScoringList => '返回计分';
 
   @override
   String scoringMatchTime(Object time) {
@@ -2094,7 +2100,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringMark => '标记';
 
   @override
-  String get scoringResolvePending => '请先确认、跳过或撤销当前落点';
+  String get scoringResolvePending => '请先确认或取消落点，也可以撤销这次投篮';
 
   @override
   String get scoringReplay => '复盘';
@@ -2103,7 +2109,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get courtReplayLabel => '复盘球场';
 
   @override
-  String get courtEditLabel => '篮球场落点编辑区';
+  String get courtEditLabel => '篮球场投篮位置编辑区';
 
   @override
   String get courtReplayHint => '查看已记录的投篮';
@@ -2118,25 +2124,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routeHomeLoadError => '无法读取进行中的比赛';
 
   @override
-  String get routeActiveMatchCheckError => '无法确认进行中的比赛';
+  String get routeActiveMatchCheckError => '暂时查不到比赛状态';
 
   @override
-  String get routeActiveMatchCheckBody => '请返回主页后重试，避免在状态未确认时创建新比赛。';
+  String get routeActiveMatchCheckBody => '请返回主页重试，先确认是否有比赛正在进行。';
 
   @override
   String get routeMatchLoadError => '无法读取比赛';
 
   @override
-  String get routeMatchNotActive => '比赛未在进行中';
+  String get routeMatchNotActive => '这场比赛不在进行中';
 
   @override
-  String get routeMatchNotActiveBody => '请从主页继续一场活动比赛。';
+  String get routeMatchNotActiveBody => '请从主页继续进行中的比赛。';
 
   @override
   String get routeMatchRestoring => '正在恢复比赛';
 
   @override
-  String get routeMatchRestoringBody => '已读取比赛，但计分状态还在恢复，请稍候。';
+  String get routeMatchRestoringBody => '正在恢复计分记录，请稍候。';
 
   @override
   String get routeReplayOpenError => '无法打开复盘';
@@ -2160,7 +2166,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routeAbandonMatch => '放弃比赛';
 
   @override
-  String get routeActiveCheckLoading => '正在确认是否已有进行中的比赛，请稍后再试。';
+  String get routeActiveCheckLoading => '正在查找进行中的比赛，请稍后再试。';
 
   @override
   String get routeStartMatchConflict => '已有进行中的比赛，请先继续或放弃它。';
@@ -2181,13 +2187,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routeLeaveStay => '留在比赛';
 
   @override
-  String get routeLeaveKeepRunning => '继续运行';
+  String get routeLeaveKeepRunning => '继续计时';
 
   @override
   String get routeLeavePauseAndLeave => '暂停并离开';
 
   @override
-  String get routeClockCheckError => '无法确认计时状态，请留在比赛中重试。';
+  String get routeClockCheckError => '暂时无法确认计时状态，请留在本场重试。';
 
   @override
   String get routeProjectLinkError => '无法打开链接，请稍后重试。';
@@ -2196,34 +2202,34 @@ class AppLocalizationsZh extends AppLocalizations {
   String get projectTitle => '项目详情';
 
   @override
-  String get projectTagline => '为一对一篮球而做的本地计分与复盘工具。';
+  String get projectTagline => '一对一篮球的本地计分与复盘工具。';
 
   @override
   String get projectFreeForever => '永久免费';
 
   @override
-  String get projectFreeForeverDetail => '核心计分与复盘功能不会转为付费功能。';
+  String get projectFreeForeverDetail => '核心计分和复盘功能永久免费。';
 
   @override
   String get projectOpenSource => '永久开源';
 
   @override
-  String get projectOpenSourceDetail => '源代码持续公开，任何人都可以审阅与参与。';
+  String get projectOpenSourceDetail => '源代码始终公开，欢迎查看和参与。';
 
   @override
   String get projectOffline => '本地离线';
 
   @override
-  String get projectOfflineDetail => '无需账号或网络即可记录比赛。';
+  String get projectOfflineDetail => '不用注册，没网络也能记比赛。';
 
   @override
   String get projectPrivacy => '不会上传个人数据';
 
   @override
-  String get projectPrivacyDetail => '球员与比赛数据只保存在你的设备上。';
+  String get projectPrivacyDetail => '球员和比赛数据保存在本机，球豆不会上传。';
 
   @override
-  String get projectOpen => '开放项目';
+  String get projectOpen => '查看与参与';
 
   @override
   String get projectContribute => '贡献指南';
@@ -2259,38 +2265,38 @@ class AppLocalizationsZh extends AppLocalizations {
   String get projectLicense => '许可证';
 
   @override
-  String get historyImportedIncompleteTitle => '导入的未完成比赛';
+  String get historyImportedIncompleteTitle => '从备份导入的未完成比赛';
 
   @override
-  String get historyImportedIncompleteBody => '这场比赛来自备份，尚未完成；恢复后可以继续计分。';
+  String get historyImportedIncompleteBody => '这场比赛从备份导入，还没结束，可以继续记分。';
 
   @override
-  String get historyResumeImportedIncomplete => '恢复未完成导入';
+  String get historyResumeImportedIncomplete => '继续这场比赛';
 
   @override
   String get historyResumeImportedIncompleteFailed =>
-      '无法恢复导入的未完成比赛，请确认没有其他活动比赛。';
+      '没能继续这场比赛，请先确认没有其他比赛正在进行。';
 
   @override
-  String get historyImportedIncompleteLoadError => '无法查询导入的未完成比赛。';
+  String get historyImportedIncompleteLoadError => '暂时读不到从备份导入的未完成比赛。';
 
   @override
   String get historyImportedIncompleteRetry => '重试';
 
   @override
-  String get pregameTemplatesFallbackLoading => '规则模板暂时无法读取，已使用内置规则；正在加载球员档案。';
+  String get pregameTemplatesFallbackLoading => '暂时读不到规则模板，先用内置规则。球员档案还在加载中。';
 
   @override
-  String get pregamePlayersLoading => '正在加载球员档案；也可以先输入临时姓名。';
+  String get pregamePlayersLoading => '球员档案还在加载中，也可以先输入临时姓名。';
 
   @override
-  String get pregameTemplatesPlayersError => '规则模板和球员档案暂时无法读取；可以使用临时姓名后重试。';
+  String get pregameTemplatesPlayersError => '暂时读不到规则模板和球员档案，可以先用临时姓名开赛。';
 
   @override
-  String get pregamePlayersError => '球员档案暂时无法读取；可以使用临时姓名后重试。';
+  String get pregamePlayersError => '暂时读不到球员档案，可以先用临时姓名开赛。';
 
   @override
-  String get pregameTemplatesFallbackNotice => '规则模板暂时无法读取，已使用内置规则。';
+  String get pregameTemplatesFallbackNotice => '暂时读不到规则模板，先用内置规则。';
 
   @override
   String get scoringConfirmLocation => '确认落点';
@@ -2336,7 +2342,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scoringRecordsGroup => '记录';
 
   @override
-  String get scoringNotesCustomRecordsGroup => '备注/自定义记录';
+  String get scoringNotesCustomRecordsGroup => '备注与自定义记录';
 
   @override
   String get scoringMatchGroup => '比赛';
@@ -2346,16 +2352,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String scoringSupplementPrompt(Object points, Object seconds, Object side) {
-    return '补充$side +$points 落点 · $seconds秒';
+    return '补充$side +$points 落点 · 剩余 $seconds秒';
   }
 
   @override
   String scoringMissSupplementPrompt(Object seconds, Object side) {
-    return '补充$side未命中落点 · $seconds秒';
+    return '补充$side未命中落点 · 剩余 $seconds秒';
   }
 
   @override
-  String get scoringSupplementExpired => '落点补充已过期';
+  String get scoringSupplementExpired => '补落点的时间已过';
 
   @override
   String scoringScoreSemantics(Object points, Object side) {
@@ -2368,7 +2374,7 @@ class AppLocalizationsZh extends AppLocalizations {
     Object seconds,
     Object side,
   ) {
-    return '$side +$points，待补落点 $seconds 秒';
+    return '$side +$points，还有 $seconds 秒可补落点';
   }
 
   @override
@@ -2378,6 +2384,167 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String scoringMissLocationPendingSemantics(Object seconds, Object side) {
-    return '$side未命中，待补落点 $seconds 秒';
+    return '$side未命中，还有 $seconds 秒可补落点';
+  }
+
+  @override
+  String get updateTitle => '软件更新';
+
+  @override
+  String get updateSubtitle => '检查、下载并安装新版本';
+
+  @override
+  String updateCurrentVersion(Object version) {
+    return '当前版本：$version';
+  }
+
+  @override
+  String get updateAutoCheck => '启动时检查更新';
+
+  @override
+  String get updateAutoCheckDetail => '启动后会联网检查新版本，不上传比赛或球员记录。关闭后仍可手动检查。';
+
+  @override
+  String get updateCheck => '检查更新';
+
+  @override
+  String get updateChecking => '正在检查更新…';
+
+  @override
+  String get updateUpToDate => '已是最新版本';
+
+  @override
+  String updateAvailable(Object version) {
+    return '发现新版本 $version';
+  }
+
+  @override
+  String updateDownloadSize(Object size) {
+    return '下载大小：$size';
+  }
+
+  @override
+  String get updateNow => '立即更新';
+
+  @override
+  String get updateLater => '稍后';
+
+  @override
+  String get updateDownload => '下载更新';
+
+  @override
+  String get updateDownloadQueued => '等待系统开始下载';
+
+  @override
+  String updateDownloading(Object received, Object total) {
+    return '正在下载 $received / $total';
+  }
+
+  @override
+  String get updateDownloadPaused => '下载已暂停，系统会在条件允许时继续';
+
+  @override
+  String get updateVerifying => '正在校验安装包…';
+
+  @override
+  String get updateReady => '安装包已就绪';
+
+  @override
+  String get updateInstall => '安装更新';
+
+  @override
+  String get updateCancelDownload => '取消下载';
+
+  @override
+  String get updateRetryDownload => '重新下载';
+
+  @override
+  String get updateCheckFailed => '暂时无法检查更新，请确认网络后重试。';
+
+  @override
+  String get updateDownloadFailed => '下载未完成，请检查网络和存储空间后重试。';
+
+  @override
+  String get updateVerificationFailed => '安装包校验失败，请重新下载。';
+
+  @override
+  String get updateFileMissing => '安装包已被移除，请重新下载。';
+
+  @override
+  String get updateInstallBlocked => '请先完成或结束当前比赛，再安装更新。尚未确认比赛状态时，也无法安装。';
+
+  @override
+  String get updatePermissionTitle => '允许安装更新';
+
+  @override
+  String get updatePermissionBody => '请在系统设置中允许球豆安装应用，再返回这里。最后还需要你在系统安装界面确认。';
+
+  @override
+  String get updateOpenSettings => '打开系统设置';
+
+  @override
+  String get updateInstallFailed => '无法打开安装界面，请检查系统安装权限后重试。';
+
+  @override
+  String get updateInstallerOpened => '已打开系统安装界面，请在那里确认安装。取消后可以再次点击安装。';
+
+  @override
+  String get updateIncompatible => '新版本需要更新的 Android 系统，当前设备无法安装。';
+
+  @override
+  String get updateUnsupported => '当前平台暂不支持应用内更新。';
+
+  @override
+  String get updateSettingsFailed => '设置未保存，请重试。';
+
+  @override
+  String get updateFallback => '正在使用 GitHub 备用下载渠道';
+
+  @override
+  String get pregameGoalScoringMode => '计分方式';
+
+  @override
+  String get pregameGoalModeFree => '自由计分';
+
+  @override
+  String get pregameGoalModeTarget => '目标计分';
+
+  @override
+  String get ruleBuiltInDefault => '默认规则';
+
+  @override
+  String get scoringTargetReachedTitle => '已达到目标分';
+
+  @override
+  String scoringTargetPoints(int target) {
+    return '目标 $target 分';
+  }
+
+  @override
+  String scoringTargetReachedPlayer(String name) {
+    return '$name已达到目标分';
+  }
+
+  @override
+  String get scoringTargetReachedTie => '双方已达到目标分，当前平分';
+
+  @override
+  String get scoringTargetSupplement => '可先补上最后一球的落点';
+
+  @override
+  String get scoringTargetSkipLocation => '跳过落点';
+
+  @override
+  String get scoringTargetUndoScore => '撤销上一笔得分';
+
+  @override
+  String get scoringTargetContinueHelp => '继续后，本场不再提醒目标分';
+
+  @override
+  String get summaryGameFinished => '比赛结束';
+
+  @override
+  String summaryWinner(String name) {
+    return '$name获胜';
   }
 }

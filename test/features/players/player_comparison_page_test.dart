@@ -82,7 +82,7 @@ void main() {
       find.byKey(const Key('comparison-single-side-empty')),
       findsOneWidget,
     );
-    expect(find.text('基线时间窗没有比赛。'), findsOneWidget);
+    expect(find.text('参照时段没有比赛。'), findsOneWidget);
   });
 
   testWidgets('comparison remains usable in locale theme and size matrix', (
@@ -160,7 +160,7 @@ void main() {
     await _pumpPage(tester, controller: controller);
 
     expect(find.text('暂无可比较比赛'), findsOneWidget);
-    expect(find.text('请先使用该关联球员档案完成一场比赛。'), findsOneWidget);
+    expect(find.text('先用该球员档案完成一场比赛，再来比较。'), findsOneWidget);
   });
 
   testWidgets('comparison meets tap label and contrast guidelines', (

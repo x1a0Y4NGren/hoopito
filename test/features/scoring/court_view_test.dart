@@ -295,7 +295,7 @@ void main() {
           ),
         ),
       );
-      final editableCourt = find.semantics.byLabel('篮球场落点编辑区');
+      final editableCourt = find.semantics.byLabel('篮球场投篮位置编辑区');
       final semantics = tester.getSemantics(
         find.descendant(
           of: find.byKey(const Key('accessible-court')),
@@ -345,7 +345,7 @@ void main() {
         ),
       );
 
-      tester.semantics.tap(find.semantics.byLabel('篮球场落点编辑区'));
+      tester.semantics.tap(find.semantics.byLabel('篮球场投篮位置编辑区'));
       expect(updatedPoint, isNotNull);
       expect(updatedPoint!.x, closeTo(0.5, 0.01));
       expect(updatedPoint!.y, closeTo(0.5, 0.01));

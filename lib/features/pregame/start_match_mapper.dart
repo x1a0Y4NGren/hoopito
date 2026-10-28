@@ -40,11 +40,16 @@ StartMatchCommand buildStartMatchCommand(MatchSetup setup, {DateTime? now}) {
     timerEnabled: setup.timerEnabled,
     ruleTemplate: RuleTemplate(
       id: setup.ruleTemplateId,
-      name: setup.ruleTemplateName ?? setup.ruleTemplateId,
+      // New plain-target matches must not inherit the old built-in's win-by-two
+      // title. Stored snapshots, seed identity and user-written names stay intact.
+      name: setup.ruleTemplateId == 'eleven_win_by_two'
+          ? '11 分制'
+          : setup.ruleTemplateName ?? setup.ruleTemplateId,
       scoreButtons: List.unmodifiable(setup.scoreButtons),
       targetScore: setup.targetScore,
       timeLimitSeconds: regulationSeconds,
-      winByTwo: setup.winByTwo,
+      // Legacy snapshots remain readable; every app-created match uses a plain target.
+      winByTwo: false,
       foulLimit: setup.foulLimit,
       possessionHintEnabled: setup.possessionHintEnabled,
       possessionPolicy: setup.possessionPolicy,

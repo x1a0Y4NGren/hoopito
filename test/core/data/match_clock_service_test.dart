@@ -2280,7 +2280,7 @@ void main() {
   );
 
   test(
-    'undoing a later terminal score retains the earlier decision audit row',
+    'legacy win-by-two undo retains the earlier decision audit row',
     () async {
       final database = createTestDatabase();
       var now = _anchor;
@@ -2292,6 +2292,7 @@ void main() {
             name: 'Target',
             scoreButtons: [1, 2, 3],
             targetScore: 1,
+            winByTwo: true,
           ),
         ),
       );

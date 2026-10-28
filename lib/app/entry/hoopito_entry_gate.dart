@@ -61,6 +61,7 @@ class HoopitoEntryGate extends StatefulWidget {
     this.rendererReadyLoader,
     this.presentationReadyLoader,
     this.playbackSession,
+    this.onRevealed,
     super.key,
   });
 
@@ -72,6 +73,10 @@ class HoopitoEntryGate extends StatefulWidget {
   final EntryRendererReadyLoader? rendererReadyLoader;
   final EntryRendererReadyLoader? presentationReadyLoader;
   final EntryPlaybackSession? playbackSession;
+
+  /// Runs once after ready local content is visible, including hidden or
+  /// skipped playback. Auxiliary startup work must not delay this handoff.
+  final VoidCallback? onRevealed;
 
   @override
   State<HoopitoEntryGate> createState() => _HoopitoEntryGateState();
@@ -96,6 +101,8 @@ class _HoopitoEntryGateState extends State<HoopitoEntryGate>
   bool _skipRevealsContent = false;
   bool _showWaitingHint = false;
   bool _firstFrameDeferred = false;
+  bool _revealScheduled = false;
+  bool _revealNotified = false;
   double _skipFrom = 0;
   double _skipOpacity = 1;
 
@@ -477,6 +484,7 @@ class _HoopitoEntryGateState extends State<HoopitoEntryGate>
 
   @override
   Widget build(BuildContext context) {
+    _notifyRevealed();
     if (!_visible && !_childMounted) return widget.child;
     return Stack(
       fit: StackFit.expand,
@@ -521,6 +529,23 @@ class _HoopitoEntryGateState extends State<HoopitoEntryGate>
           ),
       ],
     );
+  }
+
+  void _notifyRevealed() {
+    if (_visible ||
+        !_ready ||
+        _revealNotified ||
+        _revealScheduled ||
+        widget.onRevealed == null) {
+      return;
+    }
+    _revealScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _revealScheduled = false;
+      if (!mounted || _visible || !_ready || _revealNotified) return;
+      _revealNotified = true;
+      widget.onRevealed?.call();
+    });
   }
 }
 

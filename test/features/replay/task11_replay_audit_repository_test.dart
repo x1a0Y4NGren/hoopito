@@ -67,7 +67,7 @@ void main() {
         ),
       );
 
-      expect(find.textContaining('定位'), findsOneWidget);
+      expect(find.textContaining('设置落点'), findsOneWidget);
       expect(find.textContaining('球权'), findsNWidgets(2));
       expect(find.textContaining('locate'), findsNothing);
       expect(find.textContaining('possession'), findsNothing);
@@ -84,7 +84,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('Located'), findsOneWidget);
+      expect(find.textContaining('Shot location set'), findsOneWidget);
       expect(find.textContaining('Possession updated'), findsOneWidget);
       expect(find.textContaining('Possession suggested'), findsOneWidget);
       expect(find.textContaining('locate'), findsNothing);

@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hoopito/app/app_theme.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/core/export/automatic_backup_service.dart';
 import 'package:hoopito/core/export/export_coordinator.dart';
@@ -13,75 +16,130 @@ import 'package:hoopito/features/settings/settings_controller.dart';
 
 import '../../test_helpers/test_database.dart';
 import '../../test_helpers/safety_backup_storage.dart';
+import '../../support/golden_fonts.dart';
 
 void main() {
-  testWidgets(
-    'English restore chooser fits narrow landscape at 200 percent text',
-    (tester) async {
-      await tester.binding.setSurfaceSize(const Size(600, 400));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      final database = createTestDatabase();
-      final codec = JsonBackupCodec(database, appVersion: '1.1.0+3');
-      final backup = AutomaticBackupService(
-        database,
-        codec,
-        storage: _Storage(),
-      );
-      final controller = SettingsController(
-        exports: ExportCoordinator(
+  setUpAll(loadHoopitoGoldenFonts);
+  for (final locale in ['en', 'zh']) {
+    testWidgets(
+      '$locale restore chooser and safety confirmation fit narrow landscape at 200 percent text',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(600, 400));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        final database = createTestDatabase();
+        final codec = JsonBackupCodec(database, appVersion: '1.1.0+3');
+        final backup = AutomaticBackupService(
           database,
           codec,
-          safetyBackups: createTestSafetyBackupStore(codec),
-          gateway: _Gateway(),
-          automaticBackup: backup,
-        ),
-        automaticBackup: backup,
-      );
-      addTearDown(() async {
-        await tester.pumpWidget(const SizedBox.shrink());
-        controller.dispose();
-        await database.close();
-      });
-
-      await tester.pumpWidget(
-        MaterialApp(
-          locale: const Locale('en'),
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: MediaQuery(
-            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
-            child: DataManagementPage(controller: controller),
+          storage: _Storage(),
+        );
+        final controller = SettingsController(
+          exports: ExportCoordinator(
+            database,
+            codec,
+            safetyBackups: createTestSafetyBackupStore(codec),
+            gateway: _Gateway(),
+            automaticBackup: backup,
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      await tester.ensureVisible(find.byKey(const Key('data-restore-row')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('data-restore-row')));
-      await tester.pumpAndSettle();
+          automaticBackup: backup,
+        );
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          controller.dispose();
+          await database.close();
+        });
+        final captureBoundary = GlobalKey();
 
-      expect(tester.takeException(), isNull);
-      expect(find.byKey(const Key('backup-mode-merge')), findsOneWidget);
-      expect(find.byKey(const Key('backup-mode-replace')), findsOneWidget);
-      final replace = find.byKey(const Key('backup-mode-replace'));
-      await tester.ensureVisible(replace);
-      await tester.pumpAndSettle();
-      expect(tester.getTopLeft(replace).dy, greaterThanOrEqualTo(0));
-      expect(tester.getBottomRight(replace).dy, lessThanOrEqualTo(400));
-      await tester.tap(replace);
-      await tester.pumpAndSettle();
-      expect(find.text('Replace all local data?'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-      await tester.tap(find.text('Cancel'));
-      await tester.pumpAndSettle();
-      expect(find.text('Replace all local data?'), findsNothing);
-    },
-  );
+        await tester.pumpWidget(
+          MaterialApp(
+            locale: Locale(locale),
+            theme: buildHoopitoTheme(),
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+            builder: (context, child) => RepaintBoundary(
+              key: captureBoundary,
+              child: MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: const TextScaler.linear(2)),
+                child: child!,
+              ),
+            ),
+            home: DataManagementPage(controller: controller),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final l10n = AppLocalizations.of(
+          tester.element(find.byType(DataManagementPage)),
+        )!;
+        await tester.ensureVisible(find.byKey(const Key('data-restore-row')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('data-restore-row')));
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(find.byKey(const Key('backup-mode-merge')), findsOneWidget);
+        expect(find.byKey(const Key('backup-mode-replace')), findsOneWidget);
+        final replace = find.byKey(const Key('backup-mode-replace'));
+        // At 200% the subtitle can exceed the viewport; the scrollable chooser
+        // must still expose its title as a reachable action.
+        final replaceTitle = find.descendant(
+          of: replace,
+          matching: find.text(l10n.settingsReplaceTitle),
+        );
+        await tester.ensureVisible(replaceTitle);
+        await tester.pumpAndSettle();
+        expect(replaceTitle.hitTestable(), findsOneWidget);
+        expect(tester.getTopLeft(replaceTitle).dy, greaterThanOrEqualTo(0));
+        expect(tester.getBottomRight(replaceTitle).dy, lessThanOrEqualTo(400));
+        await tester.tap(replaceTitle);
+        await tester.pumpAndSettle();
+        expect(find.text(l10n.settingsReplaceConfirmTitle), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        final safetyBody = find.text(l10n.settingsReplaceConfirmBody);
+        expect(safetyBody, findsOneWidget);
+        expect(MediaQuery.textScalerOf(tester.element(safetyBody)).scale(1), 2);
+        final confirmation = find.byType(AlertDialog);
+        final confirm = find.descendant(
+          of: confirmation,
+          matching: find.text(l10n.settingsReplaceConfirmAction),
+        );
+        final cancel = find.descendant(
+          of: confirmation,
+          matching: find.text(l10n.cancelAction),
+        );
+        expect(confirm.hitTestable(), findsOneWidget);
+        expect(cancel.hitTestable(), findsOneWidget);
+        await _captureCopyDialog(tester, captureBoundary, '$locale-top');
+        final contentScroll = find.descendant(
+          of: confirmation,
+          matching: find.byType(Scrollable),
+        );
+        expect(contentScroll, findsOneWidget);
+        final position = tester.state<ScrollableState>(contentScroll).position;
+        expect(position.maxScrollExtent, greaterThan(0));
+        await tester.drag(contentScroll, const Offset(0, -1600));
+        await tester.pumpAndSettle();
+        expect(position.pixels, closeTo(position.maxScrollExtent, 1));
+        expect(
+          tester.getBottomRight(safetyBody).dy,
+          lessThanOrEqualTo(tester.getBottomRight(contentScroll).dy + 1),
+        );
+        expect(confirm.hitTestable(), findsOneWidget);
+        expect(cancel.hitTestable(), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        await _captureCopyDialog(tester, captureBoundary, '$locale-bottom');
+        await tester.tap(cancel);
+        await tester.pumpAndSettle();
+        expect(find.text(l10n.settingsReplaceConfirmTitle), findsNothing);
+      },
+    );
+  }
 
   testWidgets(
     'data hub remains usable in compact landscape and at large text',
@@ -407,6 +465,27 @@ void main() {
     await tester.pumpAndSettle();
     expect(gateway.shared, hasLength(3));
     expect(gateway.shareAttempts, 4);
+  });
+}
+
+Future<void> _captureCopyDialog(
+  WidgetTester tester,
+  GlobalKey boundary,
+  String name,
+) async {
+  if (!const bool.fromEnvironment('CAPTURE_COPY_UI')) return;
+  await tester.runAsync(() async {
+    final image =
+        await (boundary.currentContext!.findRenderObject()!
+                as RenderRepaintBoundary)
+            .toImage();
+    final data = await image.toByteData(format: ui.ImageByteFormat.png);
+    final output = File(
+      '.superpowers/copy-polish/previews/replacement-$name.png',
+    );
+    await output.parent.create(recursive: true);
+    await output.writeAsBytes(data!.buffer.asUint8List());
+    image.dispose();
   });
 }
 

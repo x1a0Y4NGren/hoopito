@@ -26,9 +26,10 @@ void main() {
         final database = createTestDatabase();
         addTearDown(database.close);
         final now = DateTime.utc(2026, 10, 5);
-        final controller = PregameController(
-          matchIdFactory: () => 'target-$target',
-        )..setTargetScore(target);
+        final controller =
+            PregameController(matchIdFactory: () => 'target-$target')
+              ..setGoalScoringMode(GoalScoringMode.target)
+              ..setTargetScore(target);
         await MatchCommandService(database, now: () => now).start(
           buildStartMatchCommand(controller.createMatchSetup(), now: now),
         );
@@ -92,7 +93,7 @@ void main() {
     expect(setup.matchId, isNot(detail.match.id));
     expect(setup.scoreButtons, [1, 2]);
     expect(setup.targetScore, 15);
-    expect(setup.winByTwo, isTrue);
+    expect(setup.winByTwo, isFalse);
     expect(setup.possessionPolicy, PossessionPolicy.keepAfterMade);
     expect(setup.trackingCoverage, TrackingCoverage.scoresOnly);
   });
