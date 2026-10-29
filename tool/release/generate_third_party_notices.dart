@@ -162,9 +162,13 @@ Future<void> main() async {
     }
     output.writeln();
   }
-  await File(
-    '${repository.path}${Platform.pathSeparator}THIRD_PARTY_NOTICES.md',
-  ).writeAsString(output.toString());
+  final outputFile = File(
+    '${repository.path}${Platform.pathSeparator}docs'
+    '${Platform.pathSeparator}legal'
+    '${Platform.pathSeparator}THIRD_PARTY_NOTICES.md',
+  );
+  await outputFile.parent.create(recursive: true);
+  await outputFile.writeAsString(output.toString());
   stdout.writeln(
     'Wrote ${packages.length} package notices in ${groups.length} license groups.',
   );

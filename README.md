@@ -147,7 +147,8 @@ Hoopito · 球豆不计划同时分发两个签名不同的官方 Android 包。
 - `lib/features`：计分、复盘、历史、球员、规则和设置页面。
 - `test`：单元测试与 Widget 测试。
 - `integration_test`：Android 主流程端到端测试。
-- [docs](docs/README.md)：当前文档入口、设计记录和发布资料。
+- [docs](docs/README.md)：按当前开发、设计、发行和历史分类的文档入口。
+- [历史归档](docs/archive/README.md)：早期任务报告、截图和旧工作树脚本，仅供追溯。
 
 ## 欢迎上场
 
@@ -173,7 +174,7 @@ Hoopito · 球豆沿用 2.0 的“黑场编辑部”界面：近黑比赛顶栏�
 
 现有 Logo 的多尺寸图、组合字标及复现验证见[品牌素材入口](assets/brand/README.md)。[Issue #16](https://github.com/x1a0Y4NGren/hoopito/issues/16) 的整理与验证已通过审阅，不替换已有生产图标。
 
-`assets/animations/paint_ball.json` 与 `assets/animations/paint_splash.json` 是项目原创的、自包含 Lottie JSON 动效，不含外部资源，随应用本地打包并支持离线运行。运行时使用 `lottie 3.3.3`，其 MIT 许可文本记录在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+`assets/animations/paint_ball.json` 与 `assets/animations/paint_splash.json` 是项目原创的、自包含 Lottie JSON 动效，不含外部资源，随应用本地打包并支持离线运行。运行时使用 `lottie 3.3.3`，其 MIT 许可文本记录在 [THIRD_PARTY_NOTICES.md](docs/legal/THIRD_PARTY_NOTICES.md)。
 
 ## 许可证
 

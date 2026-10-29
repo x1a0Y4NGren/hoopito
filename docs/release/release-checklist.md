@@ -4,7 +4,7 @@
 
 仅在准备或执行正式发行时使用本清单；普通维护按 [贡献指南](../../CONTRIBUTING.md#测试要求) 选择验证范围。创建 tag、发布 Release 或提交 F-Droid 申请需要当前任务的对应授权，准备工作不自动授权对外发布。第 8 节仅在本次包含 F-Droid 渠道工作时执行，不阻塞单独的 GitHub Release。
 
-本文件是可复用的发行模板，不是 2.0 的完成状态表。当前候选与原始验收来源见 [HANDOFF.md](../../HANDOFF.md)。复用证据时保留其提交、工具链和设备范围；本地 Debug、未签名复现、文件重开和模拟器验收分别不能代替正式同证升级、远端 CI、进程重启或实体设备结果。
+本文件是可复用的发行模板，不是 2.0 的完成状态表。当前候选与原始验收来源见 [HANDOFF.md](../development/handoff.md)。复用证据时保留其提交、工具链和设备范围；本地 Debug、未签名复现、文件重开和模拟器验收分别不能代替正式同证升级、远端 CI、进程重启或实体设备结果。
 
 ## 1. 范围与版本
 
@@ -49,7 +49,7 @@ flutter analyze
 flutter test
 flutter test test/performance/task15_query_benchmarks_test.dart --reporter expanded
 dart --packages=.dart_tool/package_config.json tool/release/generate_third_party_notices.dart
-git diff --exit-code -- THIRD_PARTY_NOTICES.md
+git diff --exit-code -- docs/legal/THIRD_PARTY_NOTICES.md
 dart --packages=.dart_tool/package_config.json tool/release/validate_metadata.dart
 flutter test integration_test/main_loop_test.dart -d <android-device-id>
 flutter test integration_test/command_performance_test.dart -d <android-device-id>
@@ -67,7 +67,7 @@ flutter build apk --debug
 - [ ] CI 从两份全新源码快照在固定构建路径顺序重建，并逐字节核验完整的未签名
       Release APK；同时通过 macOS iOS
       `flutter build ios --release --no-codesign`。
-- [ ] `THIRD_PARTY_NOTICES.md` 可由当前锁定依赖确定性生成且无 diff。
+- [ ] `docs/legal/THIRD_PARTY_NOTICES.md` 可由当前锁定依赖确定性生成且无 diff。
 - [ ] CI 生成的 Debug APK artifact 可以下载并安装。
 - [ ] 工作树除预期版本和 Changelog 修改外保持干净。
 

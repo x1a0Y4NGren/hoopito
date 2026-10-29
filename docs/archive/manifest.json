@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "71a1f17c7c069b151faaa5eadf644d930d8a27fa",
+  "files": [
+    {
+      "originalPath": ".superpowers/sdd/2026-08-22-hooptrace-1-0/task-3-report.md",
+      "path": "docs/archive/reviews/2026-08-22-hooptrace-1-0/task-3-report.md",
+      "sha256": "a3abbb9e150d63dc5c4f220699af98b9b2caaf9d669de3c41d6ca891ab6cb8ef",
+      "sourceGitBlob": "345ccda853cb3d57ea8e2fdac59f9cacdc0f1529"
+    },
+    {
+      "originalPath": ".superpowers/sdd/2026-08-22-hooptrace-1-0/task-4-report.md",
+      "path": "docs/archive/reviews/2026-08-22-hooptrace-1-0/task-4-report.md",
+      "sha256": "0c616ed415ec66e5dbe16b4dd6126b9faf9b6b909e7ef5357fc9727bf335e284",
+      "sourceGitBlob": "bb025b506a801e27c7a514a05133a4dce1b28941"
+    },
+    {
+      "originalPath": ".superpowers/sdd/2026-08-26-editorial-ui-redesign/task-7-report.md",
+      "path": "docs/archive/reviews/2026-08-26-editorial-ui-redesign/task-7-report.md",
+      "sha256": "f1b7359e95f038b3fc667e29b0e1e78aec058ce201e6ee27d50b985ef96cc7ce",
+      "sourceGitBlob": "4a8a91a49ee912d87a964031908a00c93fb6eea8"
+    },
+    {
+      "originalPath": ".superpowers/sdd/hooptrace-black-court-app-icon/task-1-contact-sheet.png",
+      "path": "docs/archive/reviews/hooptrace-black-court-app-icon/task-1-contact-sheet.png",
+      "sha256": "1956abaaea095e2902c054c27c2d3e65e7228631d70ac24924d8fc0695e2f365",
+      "sourceGitBlob": "c67f0d63a8990378f9869a584de2d4f1e9c3feca"
+    },
+    {
+      "originalPath": ".superpowers/sdd/hooptrace-black-court-app-icon/task-1-emulator-launcher.png",
+      "path": "docs/archive/reviews/hooptrace-black-court-app-icon/task-1-emulator-launcher.png",
+      "sha256": "0b9df0e383cee6e26d0e6a416ba8f31447cd9346042ecfc9328ef40e0e130f0a",
+      "sourceGitBlob": "27f1463096af2bf6061c6699a532073651b441cb"
+    },
+    {
+      "originalPath": ".superpowers/sdd/hooptrace-black-court-app-icon/task-1-emulator-themed-launcher.png",
+      "path": "docs/archive/reviews/hooptrace-black-court-app-icon/task-1-emulator-themed-launcher.png",
+      "sha256": "deeaf42dd4a0e30f40eea28039419ffee6cfb8e92e9410c0dee900f6c229a6ed",
+      "sourceGitBlob": "66e0afd3c66d0fd39895b325c6d654665411c24f"
+    },
+    {
+      "originalPath": ".superpowers/sdd/hooptrace-black-court-app-icon/task-1-report.md",
+      "path": "docs/archive/reviews/hooptrace-black-court-app-icon/task-1-report.md",
+      "sha256": "1324393734b74b3967b69a604c00cc933f1122804802a24231f774935d86571c",
+      "sourceGitBlob": "9615ddc6d3c029d4d117b91d5fdbd4d6713bb6f0"
+    },
+    {
+      "originalPath": "scripts/setup-worktrees.ps1",
+      "path": "docs/archive/tools/worktrees/setup-worktrees.ps1",
+      "sha256": "0b8053ef5ebed9e52887ca3b03783c08980136fb41eadb9e5ac604b9de09356d",
+      "sourceGitBlob": "e8e4ec9a02c0733f03dd909414a436c0b08f6bea"
+    },
+    {
+      "originalPath": "scripts/test-setup-worktrees.ps1",
+      "path": "docs/archive/tools/worktrees/test-setup-worktrees.ps1",
+      "sha256": "124b0d75e0a2d457ec23c246358509095f4eb209a83e4eaec12430b4c099cb62",
+      "sourceGitBlob": "a28fc3492eee0c34867a1c86170b5730d345f8fe"
+    }
+  ]
+}

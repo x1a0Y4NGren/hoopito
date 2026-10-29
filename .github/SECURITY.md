@@ -9,7 +9,7 @@ local Debug packages and unsigned artifacts do not establish a production releas
 
 Hoopito · 球豆仅为最新正式版本提供安全修复，当前为 v2.0.1／Android 2.0.1+5。实际发行来源与验收范围见发行记录，
 本地 Debug 包和未签名复现产物不代表正式发行。发行状态与已知范围见
-[发行记录 / Release record](docs/release/v2.0.1-release-record.md)。
+[发行记录 / Release record](../docs/release/v2.0.1-release-record.md)。
 
 The signed v2.0.1 tag and APK retain application source commit
 `4ecd960e5af1f6b12124a43e330d67efb628281b`; later documentation and promotional
