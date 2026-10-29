@@ -4,7 +4,7 @@
 
 Complete the current request, relevant verification, and documentation needed to use or maintain the change. Ordinary task completion does not authorize project closeout. Reuse authorization already given for that task; ask only when an unresolved choice materially changes scope or consequences. Preserve unrelated user changes.
 
-Read only relevant guidance: [CONTRIBUTING.md](CONTRIBUTING.md) for development, [HANDOFF.md](HANDOFF.md) for prior status, and the [release checklist](docs/release/release-checklist.md) when preparing a release. Historical plans and branch prompts are reference material, not current assignments or standing approval gates. Apply skills to the workflow they actually support; current user instructions take precedence over skill recommendations.
+Read only relevant guidance: [CONTRIBUTING.md](CONTRIBUTING.md) for development, [HANDOFF.md](docs/development/handoff.md) for prior status, and the [release checklist](docs/release/release-checklist.md) when preparing a release. Historical plans and branch prompts are reference material, not current assignments or standing approval gates. Apply skills to the workflow they actually support; current user instructions take precedence over skill recommendations.
 
 The maintained checkout is `main`, currently the 2.0 codebase branded Hoopito · 球豆 (formerly HoopTrace). Read HANDOFF and check the actual branch before continuing. Use temporary worktrees only when isolation is needed. Integrate changes only within current authorization; worktree archival and project cleanup belong to explicitly requested closeout. Keep build and test evidence tied to its actual application source commit; later documentation commits do not change APK provenance.
 

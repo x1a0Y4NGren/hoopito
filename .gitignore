@@ -159,9 +159,6 @@ android/.kotlin/
 ios/Flutter/Generated.xcconfig
 ios/Flutter/flutter_export_environment.sh
 
-# Codex / planning scratch
-.superpowers/
-
 # AOCI agent host integration (machine-bound; do not commit)
 .codex/config.toml
 .codex/config.toml.backup.*

@@ -52,7 +52,7 @@ diff -u third_party/android_runtime/coordinates.txt \
   build/app/reports/release-runtime-coordinates.txt
 dart --packages=.dart_tool/package_config.json \
   tool/release/generate_third_party_notices.dart
-git diff --exit-code -- THIRD_PARTY_NOTICES.md
+git diff --exit-code -- docs/legal/THIRD_PARTY_NOTICES.md
 ```
 
 仓库不包含 keystore 或 `key.properties`。普通 Release 构建在没有正式签名配置时会失败，防止维护者误发未签名 APK；F-Droid 或可复现性验证必须通过上面的显式环境变量选择未签名构建。任何模式都不会回退到 debug key。
@@ -70,7 +70,7 @@ git diff --exit-code -- THIRD_PARTY_NOTICES.md
   F-Droid 当前对受信构建工具和二进制来源的规则检查。
 - `third_party/android_runtime/coordinates.txt` 是 Gradle release runtime
   graph 的排序清单；CI 会重新导出并逐字节比较。每个坐标及完整 Apache-2.0
-  文本会进入 `THIRD_PARTY_NOTICES.md`，不能用删节许可证替代。
+  文本会进入 `docs/legal/THIRD_PARTY_NOTICES.md`，不能用删节许可证替代。
 
 提交前应在 fdroidserver 环境执行依赖扫描，并确认所有 Maven 和 pub 包来源满足 Inclusion Policy。
 

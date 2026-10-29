@@ -17,6 +17,19 @@ class ClassificationTests(unittest.TestCase):
     def test_safe_docs_skip_runtime(self):
         self.assertEqual(classify_paths(["README.md", "docs/design/notes.md", "website/README.md"]), (False, False))
 
+    def test_moved_app_notices_do_not_become_docs_only(self):
+        for path in ["THIRD_PARTY_NOTICES.md", "docs/legal/THIRD_PARTY_NOTICES.md"]:
+            with self.subTest(path=path):
+                self.assertEqual(classify_paths([path]), (True, False))
+        self.assertEqual(classify_paths(["docs/legal/README.md"]), (False, False))
+        self.assertEqual(classify_paths(["website/THIRD_PARTY_NOTICES.md"]), (False, True))
+
+    def test_moved_security_policy_is_docs_without_exempting_github_inputs(self):
+        self.assertEqual(classify_paths([".github/SECURITY.md"]), (False, False))
+        for path in [".github/workflows/flutter-ci.yml", ".github/new-build-input.json"]:
+            with self.subTest(path=path):
+                self.assertEqual(classify_paths([path]), (True, True))
+
     def test_app_inputs(self):
         for path in ["lib/app.dart", "test/a_test.dart", "integration_test/a.dart", "android/app/build.gradle.kts", "ios/Runner/AppDelegate.swift", "pubspec.lock", "third_party/sqlite/sqlite3.c", "tool/release/tool.sh", "assets/audio/cue.wav"]:
             with self.subTest(path=path): self.assertEqual(classify_paths([path]), (True, False))

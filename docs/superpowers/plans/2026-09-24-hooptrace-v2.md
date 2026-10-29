@@ -1,6 +1,6 @@
 # HoopTrace v2.0.0 Implementation Plan
 
-> Implementation and the recorded local acceptance are complete; this is a historical execution plan, not a new assignment or release authorization. Consult [HANDOFF](../../../HANDOFF.md) and the [candidate record](../../release/v2.0.0-candidate.md) for current status.
+> Implementation and the recorded local acceptance are complete; this is a historical execution plan, not a new assignment or release authorization. Consult [HANDOFF](../../development/handoff.md) and the [candidate record](../../release/v2.0.0-candidate.md) for current status.
 
 > The steps below retain the original implementation breakdown. Current maintenance follows [AGENTS.md](../../../AGENTS.md) and [CONTRIBUTING.md](../../../CONTRIBUTING.md); recorded checkbox state does not establish current outstanding work.
 
