@@ -19,7 +19,7 @@
     "export:android-update": "node scripts/export-android-update.mjs"
   },
   "dependencies": {
-    "astro": "7.4.0",
+    "astro": "7.4.2",
     "gsap": "3.15.0",
     "three": "0.186.1"
   },
