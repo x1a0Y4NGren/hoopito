@@ -273,9 +273,57 @@ class PlayerAnalyticsSnapshots extends Table {
   ];
 }
 
+@DataClassName('MatchSeriesRow')
+class MatchSeries extends Table {
+  TextColumn get id => text()();
+  TextColumn get slotAName => text()();
+  TextColumn get slotBName => text()();
+  @ReferenceName('seriesSlotA')
+  TextColumn get slotAPlayerProfileId =>
+      text().nullable().references(Players, #id, onDelete: KeyAction.setNull)();
+  @ReferenceName('seriesSlotB')
+  TextColumn get slotBPlayerProfileId =>
+      text().nullable().references(Players, #id, onDelete: KeyAction.setNull)();
+  TextColumn get lifecycle => text().withDefault(const Constant('open'))();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get closedAt => dateTime().nullable()();
+  IntColumn get nextGameNumber => integer().withDefault(const Constant(1))();
+  IntColumn get revision => integer().withDefault(const Constant(0))();
+  TextColumn get defaultSetupJson => text()();
+  TextColumn get lifecycleIntentsJson =>
+      text().withDefault(const Constant('{}'))();
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+  @override
+  List<String> get customConstraints => [
+    "CHECK (lifecycle IN ('open', 'closed'))",
+    'CHECK (next_game_number > 0 AND revision >= 0)',
+    'CHECK (length(trim(slot_a_name)) > 0 AND length(trim(slot_b_name)) > 0)',
+  ];
+}
+
+class SeriesMatches extends Table {
+  TextColumn get matchId =>
+      text().references(Matches, #id, onDelete: KeyAction.cascade)();
+  TextColumn get seriesId =>
+      text().references(MatchSeries, #id, onDelete: KeyAction.cascade)();
+  IntColumn get gameNumber => integer()();
+  TextColumn get slotASide => text()();
+  @override
+  Set<Column<Object>> get primaryKey => {matchId};
+  @override
+  List<String> get customConstraints => [
+    'UNIQUE (series_id, game_number)',
+    'CHECK (game_number > 0)',
+    "CHECK (slot_a_side IN ('red', 'blue'))",
+  ];
+}
+
 @DriftDatabase(
   tables: [
     Matches,
+    MatchSeries,
+    SeriesMatches,
     MatchParticipants,
     MatchClocks,
     ActiveSessions,
@@ -325,7 +373,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -350,16 +398,24 @@ class AppDatabase extends _$AppDatabase {
       if (from < 2) {
         throw LegacySchemaDetectedException(from);
       }
+      if (from < 4) {
+        await m.createTable(matchSeries);
+        await m.createTable(seriesMatches);
+      }
       if (from < 3) {
         await m.createTable(playerAnalyticsSnapshots);
         await _createSchemaIndexes();
         _schemaIndexesEnsured = true;
         await _createSnapshotInvalidationTriggers();
       }
+      await _createSchemaIndexes();
     },
   );
 
   Future<void> _createSchemaIndexes() async {
+    await customStatement(
+      "CREATE UNIQUE INDEX IF NOT EXISTS match_series_one_open ON match_series(lifecycle) WHERE lifecycle = 'open'",
+    );
     await customStatement(
       'CREATE UNIQUE INDEX IF NOT EXISTS match_participants_match_side '
       'ON match_participants(match_id, side)',
@@ -512,6 +568,8 @@ class AppDatabase extends _$AppDatabase {
     if (_backupDirtyTriggersEnsured) return;
     const tables = <String>[
       'matches',
+      'match_series',
+      'series_matches',
       'match_participants',
       'match_clocks',
       'active_sessions',

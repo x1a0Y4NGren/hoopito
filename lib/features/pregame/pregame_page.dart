@@ -57,6 +57,8 @@ class PregamePage extends StatefulWidget {
     this.templates = RuleTemplateRepository.builtIns,
     this.onManageRules,
     this.initialPreset,
+    this.lockedPair = false,
+    this.onSwapSides,
     this.onCreatePlayer,
     this.onCancel,
     super.key,
@@ -68,6 +70,8 @@ class PregamePage extends StatefulWidget {
   final List<RuleTemplate> templates;
   final VoidCallback? onManageRules;
   final MatchSetupPreset? initialPreset;
+  final bool lockedPair;
+  final VoidCallback? onSwapSides;
   final Future<Player> Function(String nickname)? onCreatePlayer;
   final VoidCallback? onCancel;
 
@@ -85,6 +89,8 @@ class _PregamePageState extends State<PregamePage> {
   bool _redNameUsesLocalizedDefault = true;
   bool _blueNameUsesLocalizedDefault = true;
   bool _starting = false;
+  bool _continuous = false;
+  MatchSetup? _pendingSetup;
   bool _editingTargetScore = false;
   bool _creatingPlayer = false;
   final List<Player> _createdPlayers = [];
@@ -188,6 +194,36 @@ class _PregamePageState extends State<PregamePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    if (!widget.lockedPair) ...[
+                      Wrap(
+                        spacing: 8,
+                        children: [
+                          _SelectionButton(
+                            key: const Key('pregame-mode-single'),
+                            label: l10n.seriesSingle,
+                            selected: !_continuous,
+                            onPressed: () => setState(() {
+                              _continuous = false;
+                              _pendingSetup = null;
+                            }),
+                          ),
+                          _SelectionButton(
+                            key: const Key('pregame-mode-series'),
+                            label: l10n.seriesMode,
+                            selected: _continuous,
+                            onPressed: () => setState(() {
+                              _continuous = true;
+                              _pendingSetup = null;
+                            }),
+                          ),
+                        ],
+                      ),
+                      if (_continuous) Text(l10n.seriesModeHelp),
+                      const SizedBox(height: 12),
+                    ] else ...[
+                      Text(l10n.seriesLockedPair),
+                      const SizedBox(height: 12),
+                    ],
                     if (widget.initialPreset != null) ...[
                       Text(
                         l10n.v2PresetApplied,
@@ -204,66 +240,76 @@ class _PregamePageState extends State<PregamePage> {
                     const SizedBox(height: 12),
                     EditorialSectionRule(label: l10n.pregamePlayers),
                     const SizedBox(height: 12),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        final cards = [
-                          _participantCard(
-                            context,
-                            red: true,
-                            sideLabel: l10n.pregameRed,
-                            profileKey: const Key('pregame-red-profile'),
-                            nameKey: const Key('pregame-red-name'),
-                            nameController: _redNameController,
-                            selectedProfileId: state.redPlayerProfileId,
-                            onProfileChanged: (value) =>
-                                _selectProfile(true, value),
-                            onNameChanged: (value) {
-                              setState(() {
-                                _redNameUsesLocalizedDefault = false;
-                                _controller.setRedName(value);
-                                _clearValidation();
-                              });
-                            },
-                          ),
-                          _participantCard(
-                            context,
-                            red: false,
-                            sideLabel: l10n.pregameBlue,
-                            profileKey: const Key('pregame-blue-profile'),
-                            nameKey: const Key('pregame-blue-name'),
-                            nameController: _blueNameController,
-                            selectedProfileId: state.bluePlayerProfileId,
-                            onProfileChanged: (value) =>
-                                _selectProfile(false, value),
-                            onNameChanged: (value) {
-                              setState(() {
-                                _blueNameUsesLocalizedDefault = false;
-                                _controller.setBlueName(value);
-                                _clearValidation();
-                              });
-                            },
-                          ),
-                        ];
-                        if (constraints.maxWidth < 600) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                    if (widget.lockedPair)
+                      Wrap(
+                        spacing: 24,
+                        runSpacing: 8,
+                        children: [
+                          Text('${l10n.pregameBlue} · ${state.blueName}'),
+                          Text('${l10n.pregameRed} · ${state.redName}'),
+                        ],
+                      )
+                    else
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final cards = [
+                            _participantCard(
+                              context,
+                              red: true,
+                              sideLabel: l10n.pregameRed,
+                              profileKey: const Key('pregame-red-profile'),
+                              nameKey: const Key('pregame-red-name'),
+                              nameController: _redNameController,
+                              selectedProfileId: state.redPlayerProfileId,
+                              onProfileChanged: (value) =>
+                                  _selectProfile(true, value),
+                              onNameChanged: (value) {
+                                setState(() {
+                                  _redNameUsesLocalizedDefault = false;
+                                  _controller.setRedName(value);
+                                  _clearValidation();
+                                });
+                              },
+                            ),
+                            _participantCard(
+                              context,
+                              red: false,
+                              sideLabel: l10n.pregameBlue,
+                              profileKey: const Key('pregame-blue-profile'),
+                              nameKey: const Key('pregame-blue-name'),
+                              nameController: _blueNameController,
+                              selectedProfileId: state.bluePlayerProfileId,
+                              onProfileChanged: (value) =>
+                                  _selectProfile(false, value),
+                              onNameChanged: (value) {
+                                setState(() {
+                                  _blueNameUsesLocalizedDefault = false;
+                                  _controller.setBlueName(value);
+                                  _clearValidation();
+                                });
+                              },
+                            ),
+                          ];
+                          if (constraints.maxWidth < 600) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                cards[1],
+                                const SizedBox(height: 12),
+                                cards[0],
+                              ],
+                            );
+                          }
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              cards[1],
-                              const SizedBox(height: 12),
-                              cards[0],
+                              Expanded(child: cards[1]),
+                              const SizedBox(width: 12),
+                              Expanded(child: cards[0]),
                             ],
                           );
-                        }
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(child: cards[1]),
-                            const SizedBox(width: 12),
-                            Expanded(child: cards[0]),
-                          ],
-                        );
-                      },
-                    ),
+                        },
+                      ),
                     Align(
                       alignment: Alignment.center,
                       child: TextButton.icon(
@@ -650,6 +696,7 @@ class _PregamePageState extends State<PregamePage> {
   }
 
   void _swapSides() {
+    widget.onSwapSides?.call();
     setState(() {
       _controller.swapSides();
       _redNameUsesLocalizedDefault = false;
@@ -772,7 +819,11 @@ class _PregamePageState extends State<PregamePage> {
       _starting = true;
     });
     try {
-      await onStart(_controller.createMatchSetup());
+      await onStart(
+        (_pendingSetup ??= _controller.createMatchSetup(
+          continuous: _continuous,
+        )),
+      );
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -808,6 +859,7 @@ class _PregamePageState extends State<PregamePage> {
   }
 
   void _clearValidation() {
+    _pendingSetup = null;
     if (_validationErrors.isNotEmpty) _validationErrors = const [];
   }
 

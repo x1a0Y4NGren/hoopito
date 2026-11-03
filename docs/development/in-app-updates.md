@@ -1,6 +1,6 @@
 # Android 应用内更新
 
-当前开发源码提供此功能，已发布的 2.0.1 APK 不包含更新器。首次启用需要手动安装包含此功能的新正式版；本地开发不会自动发布 APK、更新旧 Release 或部署官网。
+从 2.1.0 开始提供此功能，2.0.1 APK 不包含更新器。2.0.1 用户需要先手动安装一次 2.1.0 或更高版本；本地开发不会自动发布 APK、更新旧 Release 或部署官网。
 
 ## 使用方式
 
@@ -14,7 +14,7 @@
 
 `lib/core/update/` 包含版本信息解析、有界 HTTPS 请求、设置存储、平台通道和状态控制器；`lib/app/app_update_host.dart` 负责启动检查、前台进度刷新及提醒，更新页面只负责展示和用户动作。版本按设备 PackageManager 返回的数值 versionCode 比较，字符串版本仅用于显示。
 
-启动开关存储在现有 app_settings 的 `updates.preferences.v1`，沿用完整备份对普通设置的处理。下载任务 ID、候选版本及临时状态存储在原生 `app_update_v1` 私有偏好中，下载文件属于 App 的专用目录；它们不进入比赛 JSON 备份。数据库仍为 schema 3，JSON 仍为格式 2。
+启动开关存储在现有 app_settings 的 `updates.preferences.v1`，沿用完整备份对普通设置的处理。下载任务 ID、候选版本及临时状态存储在原生 `app_update_v1` 私有偏好中，下载文件属于 App 的专用目录；它们不进入比赛 JSON 备份。更新器本身不增加数据库表；当前开发源码因[连续对局](continuous-matches.md)升级为 schema 4，JSON 仍为格式 2。
 
 原生通道 `io.github.x1a0y4ngren.hooptrace/app_update` 仅注册到前台 Activity 引擎，自动备份的无界面引擎不检查更新。后台线程处理文件复制、摘要及 APK 身份校验。只有私有 `files/updates/` 下的已验证 APK 能由非导出的 FileProvider 临时授权给系统安装器；外部暂存文件不作为安装入口。校验包括大小、SHA-256、包名、版本、最低 API 和已安装应用当前签名。
 

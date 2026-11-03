@@ -33,6 +33,7 @@ bool _usesPortraitScoringLayout(BoxConstraints constraints) =>
 class ScoringPage extends StatefulWidget {
   const ScoringPage({
     this.matchId,
+    this.seriesContextLabel,
     this.setup,
     this.controller,
     this.onOpenReplay,
@@ -56,6 +57,7 @@ class ScoringPage extends StatefulWidget {
   }) : assert(matchId != null || setup != null || controller != null);
 
   final String? matchId;
+  final String? seriesContextLabel;
   final bool showInitialGuide;
   final VoidCallback? onGuideDismissed;
   final MatchSetup? setup;
@@ -542,6 +544,7 @@ class _ScoringPageState extends State<ScoringPage>
                   child: Column(
                     children: [
                       _Scoreboard(
+                        seriesContextLabel: widget.seriesContextLabel,
                         state: state,
                         clock: clock,
                         portrait: portrait,
@@ -2806,6 +2809,7 @@ class _MoreActionFailure implements Exception {
 
 class _Scoreboard extends StatelessWidget {
   const _Scoreboard({
+    this.seriesContextLabel,
     required this.state,
     required this.clock,
     required this.portrait,
@@ -2818,6 +2822,7 @@ class _Scoreboard extends StatelessWidget {
     required this.labels,
   });
 
+  final String? seriesContextLabel;
   final MatchScoringState state;
   final ClockProjection? clock;
   final bool portrait;
@@ -2988,6 +2993,33 @@ class _Scoreboard extends StatelessWidget {
 
             return Stack(
               children: [
+                if (seriesContextLabel != null)
+                  Positioned(
+                    left: portrait ? 4 : sideWidth + 4,
+                    top: portrait ? 56 : 4,
+                    bottom: 4,
+                    width: portrait
+                        ? (width - 240) / 2 - 8
+                        : leaveLeft - sideWidth - 8,
+                    child: Semantics(
+                      label: seriesContextLabel,
+                      child: ExcludeSemantics(
+                        child: Center(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              seriesContextLabel!.replaceFirst(' #', '\n#'),
+                              key: const Key('scoring-series-context'),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(color: Colors.white70),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 Positioned(
                   left: teamLeft,
                   top: 4,

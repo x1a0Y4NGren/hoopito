@@ -1,1 +1,1 @@
-const hoopitoAppVersion = '2.0.1+5';
+const hoopitoAppVersion = '2.1.0+6';

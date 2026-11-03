@@ -5,7 +5,7 @@ import 'package:hoopito/core/data/app_database.dart';
 
 import '../../test_helpers/test_database.dart';
 import '../../generated_migrations/schema.dart';
-import '../../generated_migrations/schema_v3.dart' as v3;
+import '../../generated_migrations/schema_v4.dart' as v4;
 
 void main() {
   test(
@@ -13,7 +13,7 @@ void main() {
     () async {
       final database = createTestDatabase();
 
-      expect(database.schemaVersion, 3);
+      expect(database.schemaVersion, 4);
       final tables = await database
           .customSelect("SELECT name FROM sqlite_master WHERE type = 'table'")
           .get();
@@ -230,9 +230,9 @@ void main() {
       ''');
 
       final migrating = AppDatabase(schema.newConnection());
-      await verifier.migrateAndValidate(migrating, 3);
+      await verifier.migrateAndValidate(migrating, 4);
       await migrating.close();
-      final migrated = v3.DatabaseAtV3(schema.newConnection());
+      final migrated = v4.DatabaseAtV4(schema.newConnection());
       addTearDown(migrated.close);
       final match = await migrated
           .customSelect("SELECT id, note FROM matches WHERE id = 'match-v2'")

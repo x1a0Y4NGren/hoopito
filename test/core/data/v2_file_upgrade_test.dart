@@ -133,7 +133,13 @@ void main() {
       await legacy.customSelect('SELECT 1').get();
       final tableNames = source.allTables
           .map((table) => table.actualTableName)
-          .where((name) => name != 'player_analytics_snapshots')
+          .where(
+            (name) => !const {
+              'player_analytics_snapshots',
+              'match_series',
+              'series_matches',
+            }.contains(name),
+          )
           .toList();
       final before = <String, List<Map<String, Object?>>>{};
       await legacy.transaction(() async {
@@ -165,8 +171,10 @@ void main() {
       await upgraded.assertCompatible();
       expect(
         (await upgraded.customSelect('PRAGMA user_version').getSingle()).data,
-        {'user_version': 3},
+        {'user_version': 4},
       );
+      expect(await upgraded.select(upgraded.matchSeries).get(), isEmpty);
+      expect(await upgraded.select(upgraded.seriesMatches).get(), isEmpty);
       for (final name in tableNames) {
         expect(
           (await upgraded

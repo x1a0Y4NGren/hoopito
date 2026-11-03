@@ -33,6 +33,7 @@ class HomePage extends StatelessWidget {
     this.onRecentMatchTap,
     this.onRecentPreset,
     this.showDirectory = true,
+    this.seriesResume,
     super.key,
   });
 
@@ -42,6 +43,7 @@ class HomePage extends StatelessWidget {
   final ValueChanged<String>? onRecentMatchTap;
   final VoidCallback? onRecentPreset;
   final bool showDirectory;
+  final Widget? seriesResume;
   final VoidCallback onStartScoring;
   final VoidCallback onContinue;
   final Future<void> Function() onAbandon;
@@ -67,13 +69,18 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _HomeHero(
-              detail: activeMatch,
-              onStartScoring: onStartScoring,
-              onContinue: onContinue,
-              onAbandon: onAbandon,
-            ),
-            if (onRecentPreset != null && activeMatch == null)
+            if (activeMatch == null && seriesResume != null)
+              seriesResume!
+            else
+              _HomeHero(
+                detail: activeMatch,
+                onStartScoring: onStartScoring,
+                onContinue: onContinue,
+                onAbandon: onAbandon,
+              ),
+            if (onRecentPreset != null &&
+                activeMatch == null &&
+                seriesResume == null)
               Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: OutlinedButton.icon(

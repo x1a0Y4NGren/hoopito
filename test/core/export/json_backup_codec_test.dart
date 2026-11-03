@@ -30,7 +30,7 @@ void main() {
         'active',
       );
     });
-    test('round-trips all twelve persisted table groups', () async {
+    test('round-trips all fourteen persisted table groups', () async {
       final exported = await withTestDatabase((source) async {
         await _seedCompleteBackup(source);
         return JsonBackupCodec(
@@ -62,6 +62,8 @@ void main() {
         'auditLogs': 1,
         'appSettings': 1,
         'playerAnalyticsSnapshots': 1,
+        'matchSeries': 0,
+        'seriesMatches': 0,
       });
       expect(manifest['checksum'], matches(RegExp(r'^[a-f0-9]{64}$')));
 
@@ -100,6 +102,42 @@ void main() {
         'theme',
       );
     });
+
+    test(
+      'schema 3 imports empty series and schema 4 requires groups',
+      () async {
+        final database = createTestDatabase();
+        final codec = JsonBackupCodec(database, appVersion: 'test');
+        final original =
+            jsonDecode(await codec.export()) as Map<String, dynamic>;
+        final data = original['data'] as Map<String, dynamic>;
+        final manifest = original['manifest'] as Map<String, dynamic>;
+        data.remove('matchSeries');
+        data.remove('seriesMatches');
+        (manifest['recordCounts'] as Map).remove('matchSeries');
+        (manifest['recordCounts'] as Map).remove('seriesMatches');
+        String signed() {
+          final header = Map<String, dynamic>.from(manifest)
+            ..remove('checksum');
+          manifest['checksum'] = sha256
+              .convert(
+                utf8.encode(jsonEncode({'manifest': header, 'data': data})),
+              )
+              .toString();
+          return jsonEncode(original);
+        }
+
+        expect(
+          () => codec.decodeAndValidate(signed()),
+          throwsA(isA<BackupValidationException>()),
+        );
+        manifest['schemaVersion'] = 3;
+        final decoded = codec.decodeAndValidate(signed());
+        expect(decoded.data['matchSeries'], isEmpty);
+        expect(decoded.data['seriesMatches'], isEmpty);
+        await codec.restore(signed());
+      },
+    );
 
     test('uses deterministic payload ordering', () async {
       final database = createTestDatabase();

@@ -921,6 +921,8 @@ void main() {
       router.go('/history');
       await _pumpUntilFound(tester, find.byKey(Key('history-match-$matchId')));
       await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(Key('history-match-$matchId')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(Key('history-match-$matchId')));
       await _pumpUntilFound(tester, find.byType(MatchSummaryPage));
       await tester.pumpAndSettle();

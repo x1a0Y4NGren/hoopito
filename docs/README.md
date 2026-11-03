@@ -10,6 +10,7 @@
 - [交接、验收与剩余门槛](development/handoff.md)
 - [仓库设置与协作规则](repository-settings.md)
 - [应用内更新维护](development/in-app-updates.md)
+- [连续对局与 schema 4 兼容](development/continuous-matches.md)
 - [隐私说明](../PRIVACY.md)与[安全报告](../.github/SECURITY.md)
 - [变更记录](../CHANGELOG.md)与[第三方许可证](legal/THIRD_PARTY_NOTICES.md)
 

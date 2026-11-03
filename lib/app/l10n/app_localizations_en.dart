@@ -2680,4 +2680,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String summaryWinner(String name) {
     return '$name wins';
   }
+
+  @override
+  String get seriesTitle => 'Series';
+
+  @override
+  String get seriesSingle => 'Single match';
+
+  @override
+  String get seriesMode => 'Continuous matches';
+
+  @override
+  String get seriesModeHelp =>
+      'Keep the same pair and count wins across games. Close the series whenever you like.';
+
+  @override
+  String get seriesNext => 'Next game';
+
+  @override
+  String get seriesNextSettings => 'Next game settings';
+
+  @override
+  String get seriesClose => 'Close series';
+
+  @override
+  String get seriesCloseBody =>
+      'All games are kept. You can reopen this series later.';
+
+  @override
+  String get seriesReopen => 'Reopen series';
+
+  @override
+  String get seriesOpen => 'In progress';
+
+  @override
+  String get seriesClosed => 'Closed';
+
+  @override
+  String get seriesNoGames => 'No completed games yet';
+
+  @override
+  String get seriesWins => 'Wins';
+
+  @override
+  String get seriesDraws => 'Draws';
+
+  @override
+  String get seriesEmpty => 'No series yet';
+
+  @override
+  String get seriesResume => 'Resume series';
+
+  @override
+  String get seriesLockedPair => 'This pair is fixed. You can swap sides.';
+
+  @override
+  String get seriesGames => 'Matches';
+
+  @override
+  String get seriesLoadError => 'Could not load series';
+
+  @override
+  String get seriesActiveHelp =>
+      'Finish or abandon the current match before closing the series.';
 }

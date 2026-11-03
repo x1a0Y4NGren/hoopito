@@ -5,6 +5,8 @@ import 'dart:typed_data';
 import 'package:csv/csv.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hoopito/core/data/commands/match_command_service.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
 import 'package:hoopito/core/data/app_database.dart';
 import 'package:hoopito/core/domain/domain_enums.dart';
 import 'package:hoopito/core/export/automatic_backup_service.dart';
@@ -721,45 +723,17 @@ Future<void> _seed(AppDatabase database) async {
 }
 
 Future<void> _seedActiveSession(AppDatabase database) async {
-  final startedAt = DateTime.utc(2026, 8, 21, 10);
-  await database
-      .into(database.matches)
-      .insert(
-        Matche(
-          id: 'active-match',
-          lifecycle: 'active',
-          recordingMode: 'simple',
-          trackingCoverage: 'scoresOnly',
-          ruleTemplateJson: '{}',
-          createdAt: startedAt,
-          startedAt: startedAt,
-          endedAt: null,
-          timerEnabled: false,
-          note: null,
-        ),
-      );
-  await database.batch((batch) {
-    batch.insertAll(database.matchParticipants, const [
-      MatchParticipant(
-        id: 'active-red',
-        matchId: 'active-match',
-        side: 'red',
-        nameSnapshot: 'Red',
+  await MatchCommandService(database).start(
+    StartMatchCommand(
+      matchId: 'active-match',
+      redName: 'Red',
+      blueName: 'Blue',
+      recordingMode: RecordingMode.simple,
+      ruleTemplate: const RuleTemplate(
+        id: 'free',
+        name: 'Free',
+        scoreButtons: [1, 2, 3],
       ),
-      MatchParticipant(
-        id: 'active-blue',
-        matchId: 'active-match',
-        side: 'blue',
-        nameSnapshot: 'Blue',
-      ),
-    ]);
-    batch.insert(
-      database.activeSessions,
-      ActiveSession(
-        id: 'active',
-        matchId: 'active-match',
-        claimedAtUtc: startedAt,
-      ),
-    );
-  });
+    ),
+  );
 }

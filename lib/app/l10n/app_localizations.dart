@@ -4977,6 +4977,126 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'{name}获胜'**
   String summaryWinner(String name);
+
+  /// No description provided for @seriesTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'连续对局'**
+  String get seriesTitle;
+
+  /// No description provided for @seriesSingle.
+  ///
+  /// In zh, this message translates to:
+  /// **'单场比赛'**
+  String get seriesSingle;
+
+  /// No description provided for @seriesMode.
+  ///
+  /// In zh, this message translates to:
+  /// **'连续对局'**
+  String get seriesMode;
+
+  /// No description provided for @seriesModeHelp.
+  ///
+  /// In zh, this message translates to:
+  /// **'固定两人，累计胜场；可随时结束本次对局。'**
+  String get seriesModeHelp;
+
+  /// No description provided for @seriesNext.
+  ///
+  /// In zh, this message translates to:
+  /// **'下一场'**
+  String get seriesNext;
+
+  /// No description provided for @seriesNextSettings.
+  ///
+  /// In zh, this message translates to:
+  /// **'下一场设置'**
+  String get seriesNextSettings;
+
+  /// No description provided for @seriesClose.
+  ///
+  /// In zh, this message translates to:
+  /// **'结束本次对局'**
+  String get seriesClose;
+
+  /// No description provided for @seriesCloseBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'结束后保留全部比赛，也可以稍后继续这组对局。'**
+  String get seriesCloseBody;
+
+  /// No description provided for @seriesReopen.
+  ///
+  /// In zh, this message translates to:
+  /// **'继续这组对局'**
+  String get seriesReopen;
+
+  /// No description provided for @seriesOpen.
+  ///
+  /// In zh, this message translates to:
+  /// **'进行中'**
+  String get seriesOpen;
+
+  /// No description provided for @seriesClosed.
+  ///
+  /// In zh, this message translates to:
+  /// **'已结束'**
+  String get seriesClosed;
+
+  /// No description provided for @seriesNoGames.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂无完赛记录'**
+  String get seriesNoGames;
+
+  /// No description provided for @seriesWins.
+  ///
+  /// In zh, this message translates to:
+  /// **'胜场'**
+  String get seriesWins;
+
+  /// No description provided for @seriesDraws.
+  ///
+  /// In zh, this message translates to:
+  /// **'平局'**
+  String get seriesDraws;
+
+  /// No description provided for @seriesEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂无连续对局'**
+  String get seriesEmpty;
+
+  /// No description provided for @seriesResume.
+  ///
+  /// In zh, this message translates to:
+  /// **'继续这组对局'**
+  String get seriesResume;
+
+  /// No description provided for @seriesLockedPair.
+  ///
+  /// In zh, this message translates to:
+  /// **'本次对局的双方已固定，可交换红蓝方。'**
+  String get seriesLockedPair;
+
+  /// No description provided for @seriesGames.
+  ///
+  /// In zh, this message translates to:
+  /// **'单场'**
+  String get seriesGames;
+
+  /// No description provided for @seriesLoadError.
+  ///
+  /// In zh, this message translates to:
+  /// **'连续对局加载失败'**
+  String get seriesLoadError;
+
+  /// No description provided for @seriesActiveHelp.
+  ///
+  /// In zh, this message translates to:
+  /// **'请先完成或放弃当前比赛，再结束本次对局。'**
+  String get seriesActiveHelp;
 }
 
 class _AppLocalizationsDelegate

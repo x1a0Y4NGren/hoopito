@@ -124,7 +124,7 @@ void main() {
     () async {
       final database = createTestDatabase();
 
-      expect(database.schemaVersion, 3);
+      expect(database.schemaVersion, 4);
       final foreignKeys = await database
           .customSelect('PRAGMA foreign_keys')
           .getSingle();
@@ -321,15 +321,15 @@ void main() {
     },
   );
 
-  test('official generated schema verifies the runtime v3 database', () async {
+  test('official generated schema verifies the runtime v4 database', () async {
     final verifier = SchemaVerifier(GeneratedHelper());
-    final schema = await verifier.startAt(3);
+    final schema = await verifier.startAt(4);
     final database = AppDatabase(schema.executor);
     addTearDown(database.close);
 
     await verifier.migrateAndValidate(
       database,
-      3,
+      4,
       options: const ValidationOptions(validateDropped: true),
     );
   });
