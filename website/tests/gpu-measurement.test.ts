@@ -153,6 +153,67 @@ test('idle gaps are excluded while the final active draw interval is retained', 
   assert.equal(result.status, 'pass');
 });
 
+test('reading drift does not enter the active gate but retains its final active transition', () => {
+  const result = summarizeSubmissions(
+    [
+      { time: 0, count: 1, rendering: 'active' },
+      { time: 16, count: 2, rendering: 'ambient' },
+      { time: 5000, count: 3, rendering: 'ambient' },
+      { time: 5016, count: 4, rendering: 'active' },
+      { time: 5032, count: 5, rendering: 'idle' },
+    ],
+    { minimumIntervals: 2 },
+  );
+  assert.deepEqual(result.intervals, [16, 16]);
+  assert.equal(result.status, 'pass');
+});
+
+test('reading cadence records deliberate 24Hz separately from active acceptance', async () => {
+  const measurement = await import('../scripts/gpu-measurement.mjs');
+  assert.equal(typeof measurement.summarizeReadingDrift, 'function');
+  const result = measurement.summarizeReadingDrift(
+    Array.from({ length: 14 }, (_, index) => ({
+      time: index * (1000 / 24),
+      count: index + 1,
+      rendering: 'ambient',
+      chapter: 'hero',
+    })),
+  );
+  assert.equal(result.status, 'recorded');
+  assert.equal(result.thresholdApplied, false);
+  assert.equal(result.frames, 14);
+  assert.equal(result.skippedCounts, 0);
+  assert.ok(result.averageFps !== null);
+  assert.ok(Math.abs(result.averageFps - 24) < 0.0001);
+  assert.equal(result.intervals.length, 13);
+});
+
+test('reading cadence retains stalls and marks missed submissions or other motion unavailable', async () => {
+  const measurement = await import('../scripts/gpu-measurement.mjs');
+  assert.equal(typeof measurement.summarizeReadingDrift, 'function');
+  const events = [
+    0, 50, 100, 150, 200, 250, 650, 700, 750, 800, 850, 900, 950,
+  ].map((time, index) => ({ time, count: index + 1, rendering: 'ambient' }));
+  const stalled = measurement.summarizeReadingDrift(events);
+  assert.equal(stalled.status, 'recorded');
+  assert.equal(stalled.maxFrameMs, 400);
+  assert.equal(stalled.observedDurationMs, 950);
+  const missed = measurement.summarizeReadingDrift(
+    events.map((event, index) => ({
+      ...event,
+      count: event.count + (index > 5 ? 1 : 0),
+    })),
+  );
+  assert.equal(missed.status, 'unavailable');
+  assert.equal(missed.skippedCounts, 1);
+  const moving = measurement.summarizeReadingDrift([
+    ...events,
+    { time: 1000, count: 14, rendering: 'active' },
+  ]);
+  assert.equal(moving.status, 'unavailable');
+  assert.deepEqual(moving.unexpectedRenderStates, ['active']);
+});
+
 test('too few actual submissions are unavailable rather than a performance failure', () => {
   const result = summarizeSubmissions([
     { time: 0, count: 1, rendering: 'active' },

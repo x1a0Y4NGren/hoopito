@@ -1,0 +1,66 @@
+---
+import { content, type Locale } from '../data/content';
+
+interface Props {
+  locale: Locale;
+  id: 'summary' | 'history';
+  className: string;
+  index: string;
+  title: string;
+  note: string;
+  alt: string;
+  size: { width: number; height: number };
+  viewer: string;
+}
+const { locale, ...item } = Astro.props;
+const c = content[locale];
+const src = `/screenshots/${locale}/${item.id}.webp`;
+---
+
+<figure
+  class:list={['portrait-device', item.className]}
+  data-replay-device={item.id}
+  data-story-item="visual"
+  data-story-enter="right"
+  data-story-preset={`replay-${item.id}`}
+>
+  <div class="portrait-shell" data-replay-card>
+    <a
+      class="image-link"
+      href={src}
+      data-image-viewer
+      data-image-title={item.viewer}
+      aria-label={`${c.viewer.open} · ${item.viewer}`}
+    >
+      <img
+        src={src}
+        alt={item.alt}
+        width={item.size.width}
+        height={item.size.height}
+        loading="lazy"
+        decoding="async"
+      />
+    </a>
+  </div>
+  <figcaption class="reading-zone exposed-reading-zone">
+    <span class="replay-device-index display" aria-hidden="true">
+      {item.index}
+    </span>
+    <strong>{item.title}</strong>
+    <small class="capture-note">
+      <span class="capture-version">{item.note.split(' · ')[0]}</span>
+      <span class="capture-source">
+        {item.note.split(' · ').slice(1).join(' · ')}
+      </span>
+    </small>
+    <a
+      class="viewer-link"
+      href={src}
+      data-image-viewer
+      data-image-title={item.viewer}
+    >
+      {c.viewer.open}
+      <span aria-hidden="true">↗</span>
+    </a>
+  </figcaption>
+</figure>

@@ -46,10 +46,10 @@ test(
           poster.evaluate((image: HTMLImageElement) => image.currentSrc),
         )
         .toMatch(/\/art\/scene-poster-demo-standard\.webp$/);
-      // The standard capture keeps the 48vw background canvas at its native
-      // 1440×900 reference viewport, rather than the old 900px host capture.
-      await expect(poster).toHaveJSProperty('naturalWidth', 691);
-      await expect(poster).toHaveJSProperty('naturalHeight', 810);
+      // The standard capture uses the continuous full-width background at its
+      // actual 1440×900 reference viewport.
+      await expect(poster).toHaveJSProperty('naturalWidth', 1425);
+      await expect(poster).toHaveJSProperty('naturalHeight', 900);
       await expect(page.locator('[data-demo-court]')).toHaveCSS('opacity', '0');
       await expect(page.locator('[data-point-preset="center"]')).toBeEnabled();
     } finally {
@@ -75,13 +75,13 @@ for (const locale of ['/', '/en/']) {
         'download',
         'experience',
       ]) {
-        await page.locator(`.site-header a[href="#${chapter}"]`).click();
+        await page.locator(`.site-header nav > a[href="#${chapter}"]`).click();
         await expect(page).toHaveURL(new RegExp(`#${chapter}$`));
         await expect(
-          page.locator('.site-header nav a[aria-current="location"]'),
+          page.locator('.site-header nav > a[aria-current="location"]'),
         ).toHaveCount(1);
         await expect(
-          page.locator(`.site-header a[href="#${chapter}"]`),
+          page.locator(`.site-header nav > a[href="#${chapter}"]`),
         ).toHaveAttribute('aria-current', 'location');
         await expect
           .poll(async () =>
@@ -122,7 +122,7 @@ for (const locale of ['/', '/en/']) {
           ),
         );
     await expect.poll(() => headingGap('experience')).toBeLessThan(2);
-    await page.locator('.site-header a[href="#download"]').click();
+    await page.locator('.site-header nav > a[href="#download"]').click();
     await expect.poll(() => headingGap('download')).toBeLessThan(2);
     await page.goBack();
     await expect(page).toHaveURL(/#experience$/);
@@ -138,12 +138,12 @@ for (const locale of ['/', '/en/']) {
     ).toBe(false);
   });
 
-  test(`${locale}: completed replay absorption does not break gallery or subsequent navigation`, async ({
+  test(`${locale}: completed replay reading does not break gallery or subsequent navigation`, async ({
     page,
   }) => {
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
-    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.setViewportSize({ width: 1920, height: 1440 });
     await page.route(/court-(?:scene|engine)[^/]*\.js$/, (route) =>
       route.abort(),
     );
@@ -151,36 +151,25 @@ for (const locale of ['/', '/en/']) {
     await page.evaluate(() => document.fonts.ready);
     const stage = page.locator('[data-story-stage="replay"]');
     await expect(stage).toHaveAttribute('data-replay-start', /\d/);
-    // ScrollTrigger intentionally suppresses snaps for 500ms after startup.
-    // Font readiness and an initially unrendered tween's opacity are not clocks.
-    // A reader cannot traverse the entire page within this initialization window.
-    await page.waitForTimeout(600);
     await stage.evaluate((element) => {
       const { replayStart, replayEnd } = (element as HTMLElement).dataset;
-      const start = Number(replayStart),
-        end = Number(replayEnd);
-      scrollTo({ top: start + (end - start) * 0.93, behavior: 'instant' });
+      scrollTo({
+        top:
+          Number(replayStart) + (Number(replayEnd) - Number(replayStart)) * 0.4,
+        behavior: 'instant',
+      });
     });
     await expect
-      .poll(async () =>
-        Number(await stage.getAttribute('data-replay-progress')),
-      )
-      .toBeCloseTo(0.93, 2);
-    await page.mouse.wheel(0, 10);
-    await expect
-      .poll(async () =>
-        Number(await stage.getAttribute('data-replay-progress')),
-      )
-      .toBeCloseTo(1, 3);
-    // Let the finite snap reach onComplete, which stores its falsey 0 sentinel.
-    await page.waitForTimeout(500);
+      .poll(async () => Number(await stage.getAttribute('data-story-progress')))
+      .toBeCloseTo(0.4, 2);
+    await expect(stage).toHaveAttribute('data-replay-progress', '1.0000');
     await page.locator('[data-replay-device="summary"] .viewer-link').click();
     await expect(page.locator('[data-viewer-image]')).toHaveJSProperty(
       'naturalWidth',
       1080,
     );
     await page.keyboard.press('Escape');
-    await page.locator('.site-header a[href="#experience"]').click();
+    await page.locator('.site-header nav > a[href="#experience"]').click();
     await expect
       .poll(() =>
         page
@@ -207,7 +196,9 @@ for (const locale of ['/', '/en/']) {
     );
     await page.goto(`${locale}#download`);
     await page.evaluate(() => document.fonts.ready);
-    const current = page.locator('.site-header nav a[aria-current="location"]');
+    const current = page.locator(
+      '.site-header nav > a[aria-current="location"]',
+    );
     await expect(current).toHaveAttribute('href', '#download');
     await expect
       .poll(() =>
@@ -242,26 +233,27 @@ for (const locale of ['/', '/en/']) {
                 document.querySelectorAll<HTMLElement>('[data-story-stage]'),
                 (stage) => [stage.dataset.storyStart, stage.dataset.storyEnd],
               ),
-              measured: ['hero', 'experience', 'replay'].every((chapter) => {
-                const stage = document.querySelector<HTMLElement>(
-                  `[data-story-stage="${chapter}"]`,
-                )!;
-                const spacer = stage.closest('.pin-spacer');
-                if (!spacer) return false;
+              measured: [
+                ...document.querySelectorAll<HTMLElement>('[data-story-stage]'),
+              ].every((stage) => {
                 const start = Number(stage.dataset.storyStart),
                   end = Number(stage.dataset.storyEnd);
-                const inset = chapter === 'experience' ? 88 : innerHeight * 0.5;
+                const spacer = stage.closest('.pin-spacer');
+                const inset = Number(stage.dataset.storyRestTop);
                 const expectedStart = Math.round(
-                  scrollY + spacer.getBoundingClientRect().top - inset,
+                  scrollY +
+                    (spacer ?? stage).getBoundingClientRect().top -
+                    (spacer
+                      ? inset
+                      : stage.dataset.storyStage === 'hero'
+                        ? 0
+                        : innerHeight * 0.9),
                 );
                 return (
-                  (chapter === 'hero' ||
-                    Math.abs(start - expectedStart) <= 0.5) &&
-                  Math.abs(
-                    end -
-                      start -
-                      innerHeight * (chapter === 'experience' ? 0.32 : 0.75),
-                  ) <= 0.5
+                  Number.isFinite(start) &&
+                  end > start &&
+                  Math.abs(start - expectedStart) <= 0.5 &&
+                  (!spacer || Math.abs(end - start - innerHeight * 1.15) <= 0.5)
                 );
               }),
             };

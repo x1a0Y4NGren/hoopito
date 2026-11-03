@@ -1,11 +1,15 @@
 ---
 import '../styles/site.css';
-import '../styles/refinement.css';
+import '../styles/screenshot-viewer.css';
 import '../styles/demo-invitation.css';
-import '../styles/mobile-download-polish.css';
 import '../styles/download-chooser.css';
-import '../styles/community.css';
+import '../styles/immersive-glass.css';
+import '../styles/poster-layout.css';
+import '../styles/mobile-layout.css';
+import '../styles/mobile-motion.css';
+import '../styles/mobile-navigation.css';
 import { content, type Locale } from '../data/content';
+import { glassMaterialStyles } from '../data/glass-material';
 interface Props {
   locale: Locale;
   title?: string;
@@ -50,6 +54,15 @@ const origin = Astro.site ?? Astro.url.origin;
       <link
         rel="preload"
         href="/fonts/noto-sc.woff2"
+        as="font"
+        type="font/woff2"
+        crossorigin
+      />
+    )}
+    {locale === 'zh' && !privacy && (
+      <link
+        rel="preload"
+        href="/fonts/noto-poster-black.woff2"
         as="font"
         type="font/woff2"
         crossorigin
@@ -102,7 +115,10 @@ const origin = Astro.site ?? Astro.url.origin;
       </style>
     </noscript>
   </head>
-  <body class:list={[locale, privacy && 'privacy-page']}>
+  <body
+    class:list={[locale, privacy && 'privacy-page']}
+    style={privacy ? undefined : glassMaterialStyles}
+  >
     <a class="skip-link" href="#main">
       {c.skip}
     </a>

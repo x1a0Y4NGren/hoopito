@@ -4,11 +4,28 @@ export default defineConfig({
   testDir: './tests',
   testMatch: [
     '**/site.spec.ts',
+    '**/immersive-glass.spec.ts',
+    '**/thin-glass.spec.ts',
+    '**/scoring-polish.spec.ts',
+    '**/experience-polish.spec.ts',
+    '**/replay-polish.spec.ts',
+    '**/download-community-polish.spec.ts',
+    '**/chapter-rail.spec.ts',
+    '**/chapter-rail-recovery.spec.ts',
+    '**/chapter-liquid.spec.ts',
+    '**/chapter-snap.spec.ts',
+    '**/chapter-snap-recovery.spec.ts',
+    '**/poster-story.spec.ts',
     '**/loading-navigation.spec.ts',
     '**/site-audit.spec.ts',
     '**/viewer-resilience.spec.ts',
     '**/court-continuity.spec.ts',
     '**/chapter-polish.spec.ts',
+    '**/component-refinement.spec.ts',
+    '**/visual-polish.spec.ts',
+    '**/mobile-experience.spec.ts',
+    '**/mobile-snap.spec.ts',
+    '**/demo-court-art.spec.ts',
   ],
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
@@ -18,10 +35,18 @@ export default defineConfig({
   // website's eight-second initialization deadline is unchanged and still tested.
   timeout: process.env.CI ? 90_000 : 30_000,
   expect: { timeout: process.env.CI ? 20_000 : 10_000 },
-  outputDir: './output/playwright/results',
+  outputDir: process.env.PLAYWRIGHT_OUTPUT_DIR ?? './output/playwright/results',
   reporter: [
     ['list'],
-    ['html', { outputFolder: './output/playwright/report', open: 'never' }],
+    [
+      'html',
+      {
+        outputFolder:
+          process.env.PLAYWRIGHT_HTML_OUTPUT_DIR ??
+          './output/playwright/report',
+        open: 'never',
+      },
+    ],
     [
       'json',
       {

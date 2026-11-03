@@ -1,6 +1,6 @@
 import { chromium } from '@playwright/test';
 import { createServer } from 'node:http';
-import { readFile, mkdir, writeFile, readdir } from 'node:fs/promises';
+import { readFile, mkdir, writeFile, readdir, stat } from 'node:fs/promises';
 import { resolve, relative, extname, sep } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { createHash } from 'node:crypto';
@@ -12,6 +12,7 @@ import {
   assessPresentation,
   combineGates,
   summarizeSubmissions,
+  summarizeReadingDrift,
 } from './gpu-measurement.mjs';
 import {
   createWheelWorkload,
@@ -87,6 +88,8 @@ const manifest = [];
 for (const name of (await readdir(dist, { recursive: true }))
   .filter((name) => /\.[a-z0-9]+$/i.test(name))
   .sort()) {
+  // Release directories such as v2.0.1 also look like filename extensions.
+  if (!(await stat(resolve(dist, name))).isFile()) continue;
   const bytes = await readFile(resolve(dist, name));
   manifest.push({
     path: name.replaceAll('\\', '/'),
@@ -174,6 +177,7 @@ const viewports = process.env.HOOPITO_GPU_VIEWPORTS
     ];
 const phaseNames = [
   'intro',
+  'reading-drift',
   'experience-wheel-entry',
   'replay-wheel-entry',
   'reverse-wheel',
@@ -186,6 +190,7 @@ const selectedPhases = process.env.HOOPITO_GPU_PHASES
   ? process.env.HOOPITO_GPU_PHASES.split(',').map((name) => name.trim())
   : [
       'intro',
+      'reading-drift',
       'experience-wheel-entry',
       'replay-wheel-entry',
       'reverse-wheel',
@@ -220,6 +225,7 @@ const report = {
   ),
   workloadVersion: WHEEL_WORKLOAD_VERSION,
   inputMethods: {
+    'reading-drift': 'stationary hero; one 12000ms ambient drift cycle',
     'experience-wheel-entry': 'page.mouse.wheel',
     'replay-wheel-entry': 'page.mouse.wheel',
     'reverse-wheel': 'page.mouse.wheel',
@@ -253,6 +259,13 @@ const report = {
     : 'Each configuration once; 1920x1080 DPR2 and environmental/submission failures or unavailable submissions receive three total fresh-process runs. Missing presentation alone does not trigger repeats.',
   phases: selectedPhases,
   targets: { averageFps: 58, p95FrameMs: 20 },
+  readingDriftPolicy: {
+    nominalMaximumFps: 24,
+    durationMs: 12000,
+    thresholdApplied: false,
+    limitation:
+      'Ambient cadence is diagnostic and excluded from the active submission gate. Environment and presentation remain independently assessed.',
+  },
   traceOnly,
   passes: false,
   samples: [],
@@ -418,13 +431,17 @@ async function storyLayout(page) {
     const header = document.querySelector('.site-header');
     const inset = header.getBoundingClientRect().bottom + 20;
     const result = {};
-    for (const chapter of ['hero', 'experience', 'replay']) {
+    for (const chapter of ['hero', 'scoring', 'experience', 'replay']) {
       const section = document.getElementById(chapter);
-      const stage = section.querySelector('[data-story-stage]');
+      const stage = section.matches('[data-story-stage]')
+        ? section
+        : section.querySelector('[data-story-stage]');
       const heading = section.querySelector('.section-top');
       const start = Number(stage?.dataset.storyStart);
       const end = Number(stage?.dataset.storyEnd);
       const rest = Number(stage?.dataset.storyRestTop);
+      const readStart = Number(stage?.dataset.scrollReadStart);
+      const readEnd = Number(stage?.dataset.scrollReadEnd);
       const pinned = Boolean(stage?.closest('.pin-spacer'));
       let anchor =
         chapter === 'hero'
@@ -437,15 +454,18 @@ async function storyLayout(page) {
           heading.getBoundingClientRect().top -
           stage.getBoundingClientRect().top;
         const delta = rest + local - inset;
-        anchor =
-          chapter === 'replay'
-            ? end + Math.max(0, delta)
-            : start + Math.min(0, delta);
+        anchor = start + (end - start) * 0.4 + Math.max(0, delta);
       }
       result[chapter] = {
         start: Number.isFinite(start) ? start : null,
         end: Number.isFinite(end) ? end : null,
         rest: Number.isFinite(rest) ? rest : null,
+        ...(Number.isFinite(readStart) || Number.isFinite(readEnd)
+          ? {
+              readStart: Number.isFinite(readStart) ? readStart : null,
+              readEnd: Number.isFinite(readEnd) ? readEnd : null,
+            }
+          : {}),
         progress: Number(stage?.dataset.storyProgress),
         pinned,
         sectionTop: scrollY + section.getBoundingClientRect().top,
@@ -470,6 +490,12 @@ async function pendingState(page) {
       (stage) => ({
         ...stage.dataset,
         top: stage.getBoundingClientRect().top,
+        pinned: Boolean(stage.closest('.pin-spacer')),
+        cards: [...stage.querySelectorAll('[data-glass-card]')].map((card) => ({
+          id: card.dataset.glassId,
+          opacity: Number(getComputedStyle(card).opacity),
+          inert: card.inert,
+        })),
       }),
     ),
     animations: document.getAnimations().map((animation) => ({
@@ -515,7 +541,7 @@ async function settle(
             now - stableSince >= 160 &&
             matchingChapter &&
             matchingTarget &&
-            canvas?.dataset.rendering === 'idle'
+            ['idle', 'ambient'].includes(canvas?.dataset.rendering)
           )
             finish(true);
           else if (now - begin >= maximumMs) finish(false);
@@ -603,7 +629,16 @@ async function phaseCapture(
     rendererExpression: target.expression,
     headless,
   });
-  const submissionGate = summarizeSubmissions(raw.frames);
+  const readingCadence =
+    name === 'reading-drift' ? summarizeReadingDrift(raw.frames) : undefined;
+  const submissionGate = readingCadence
+    ? {
+        status: 'not-applicable',
+        passes: false,
+        reason:
+          'Deliberately capped reading motion is recorded separately, without the active 58Hz / 20ms acceptance threshold.',
+      }
+    : summarizeSubmissions(raw.frames);
   if (
     error ||
     completion?.settled === false ||
@@ -619,6 +654,7 @@ async function phaseCapture(
   return {
     environmental,
     submissionGate,
+    ...(readingCadence ? { readingCadence } : {}),
     presentationGate,
     status: combineGates(environmental, submissionGate, presentationGate),
     passes: false,
@@ -691,6 +727,36 @@ async function measureDocument(
         true,
       );
     else await settle(page, { maximumMs: 3200 });
+    if (selectedPhases.includes('reading-drift')) {
+      const preparation = await settle(page, {
+        maximumMs: 3200,
+        chapter: 'hero',
+        target: 0,
+      });
+      phases['reading-drift'] = await phaseCapture(
+        page,
+        'reading-drift',
+        target,
+        viewport,
+        async () => {
+          if (!preparation.settled)
+            throw new Error('Stationary reading preparation did not settle.');
+          const begin = await pendingState(page);
+          await page.waitForTimeout(12000);
+          const end = await pendingState(page);
+          return {
+            completed:
+              Math.abs(end.scrollY - begin.scrollY) < 0.5 &&
+              end.canvas.chapter === 'hero' &&
+              end.canvas.rendering === 'ambient',
+            elapsedMs: end.time - begin.time,
+            preparation,
+            startScrollY: begin.scrollY,
+            endScrollY: end.scrollY,
+          };
+        },
+      );
+    }
     for (const [name, chapter] of [
       ['experience-entry', 'experience'],
       ['replay-entry', 'replay'],
@@ -769,7 +835,13 @@ async function measureDocument(
             (workload.targetChapter === 'experience'
               ? final.canvas.inputEnabled === 'true'
               : workload.targetChapter === 'replay'
-                ? Number(stage?.storyProgress) >= 0.999
+                ? (!stage?.pinned ||
+                    (Number(stage.storyProgress) >= 0.22 &&
+                      Number(stage.storyProgress) <= 0.78)) &&
+                  stage?.cards.length > 0 &&
+                  stage.cards.every(
+                    (card) => card.opacity >= 0.999 && !card.inert,
+                  )
                 : Math.abs(final.scrollY - workload.targetY) < 4);
           return {
             ...input,
@@ -892,7 +964,9 @@ async function measureDocument(
     };
     const submissionGate = {
       status: combineGates(
-        ...Object.values(phases).map((phase) => phase.submissionGate),
+        ...Object.values(phases)
+          .map((phase) => phase.submissionGate)
+          .filter((gate) => gate.status !== 'not-applicable'),
       ),
     };
     if (errors.length) {
@@ -1204,7 +1278,7 @@ try {
           for (const [name, phase] of Object.entries(
             sample[temperature]?.phases ?? {},
           )) {
-            const gate = phase.submissionGate;
+            const gate = phase.readingCadence ?? phase.submissionGate;
             console.log(
               target.name +
                 ' ' +
@@ -1221,12 +1295,17 @@ try {
                 name +
                 ': ' +
                 (gate.averageFps?.toFixed(1) ?? '?') +
-                ' FPS / p95 ' +
+                (phase.readingCadence
+                  ? ' ambient submissions/s / p95 '
+                  : ' FPS / p95 ') +
                 (gate.p95FrameMs?.toFixed(2) ?? '?') +
                 'ms / environment ' +
                 phase.environmental.status +
                 ' / submission ' +
-                gate.status +
+                phase.submissionGate.status +
+                (phase.readingCadence
+                  ? ' / reading cadence ' + gate.status
+                  : '') +
                 ' / presentation ' +
                 phase.presentationGate.status,
             );

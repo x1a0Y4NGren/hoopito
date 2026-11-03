@@ -1,4 +1,6 @@
-/** Court paint reveals from the far baseline; never controls DOM visibility. */
+import { floorSurfaceGLSL, floorVarnishVertexGLSL } from '../court-lighting.ts';
+
+/** Generic plane vertex shader also used by the contact shadow. */
 export const courtVertex = /* glsl */ `
   varying vec2 vUv;
   void main() {
@@ -7,9 +9,32 @@ export const courtVertex = /* glsl */ `
   }
 `;
 
+/** Court paint carries the same world-space irradiance and finish as maple. */
+export const courtPaintVertex = /* glsl */ `
+  attribute vec3 aFloorDynamic;
+  attribute vec3 aFloorFixed;
+  attribute vec2 aFloorSpecular;
+  varying vec2 vUv;
+  varying vec3 vFloorDynamic;
+  varying vec3 vFloorFixed;
+  varying vec2 vFloorSpecular;
+  varying vec3 vFloorPosition;
+  ${floorVarnishVertexGLSL}
+  void main() {
+    vUv = uv;
+    vFloorDynamic = aFloorDynamic;
+    vFloorFixed = aFloorFixed;
+    vFloorSpecular = aFloorSpecular;
+    vFloorPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+    vFloorVertexVarnish = floorVertexVarnish(vFloorPosition, aFloorSpecular);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
 export const courtFragment = /* glsl */ `
   uniform float uReveal;
   varying vec2 vUv;
+  ${floorSurfaceGLSL}
 
   float segmentDistance(vec2 point, vec2 start, vec2 end) {
     vec2 direction = end - start;
@@ -71,8 +96,8 @@ export const courtFragment = /* glsl */ `
     vec3 color = mix(ivory, amber, orange / max(white + orange, 0.0001));
 
     float leadingEdge = 1.0 - smoothstep(uReveal - 0.05, uReveal + 0.05, 1.0 - vUv.y);
-    float trace = 1.0 - smoothstep(0.0, 0.028, abs(1.0 - vUv.y - uReveal));
-    gl_FragColor = vec4(color * (1.0 + trace * 1.8), coverage * leadingEdge);
+    vec3 surface = floorSurface(color);
+    gl_FragColor = vec4(surface, coverage * leadingEdge);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }

@@ -133,3 +133,101 @@ test('full paths and plot points share the final score coordinates and support c
     'M0 120 H10 V100 H20 H30 V80 H40 V60 H45',
   );
 });
+
+test('key-moment reveals begin at the scoring event and settle smoothly without changing the score clock', async () => {
+  const { getReplayMomentPresentation, getReplayState } = await replayModule();
+  const moments = [
+    { id: 'lead', at: 0.4, scores: [6, 2] },
+    { id: 'tie', at: 0.6, scores: [6, 6] },
+    { id: 'turnaround', at: 0.9, scores: [8, 9] },
+  ] as const;
+  for (const { id, at, scores } of moments) {
+    assert.deepEqual(getReplayMomentPresentation(at - 0.001, id), {
+      reveal: 0,
+      emphasis: 0,
+    });
+    assert.deepEqual(getReplayMomentPresentation(at, id), {
+      reveal: 0,
+      emphasis: 0,
+    });
+    const halfway = getReplayMomentPresentation(at + 0.03, id);
+    assert.ok(Math.abs(halfway.reveal - 0.5) < 1e-10);
+    assert.ok(Math.abs(halfway.emphasis - 0.5) < 1e-10);
+    const settled = getReplayMomentPresentation(at + 0.06, id);
+    assert.ok(Math.abs(settled.reveal - 1) < 1e-10);
+    assert.ok(
+      Math.abs(settled.emphasis - (id === 'turnaround' ? 20 / 27 : 1)) < 1e-10,
+      'The short final interval smoothly overlaps its reveal and handoff',
+    );
+    const state = getReplayState(at);
+    assert.deepEqual([state.leftScore, state.rightScore], scores);
+    assert.equal(state.stage, id);
+  }
+});
+
+test('previous moments retain their content while their emphasis hands off before the next event', async () => {
+  const { getReplayMomentPresentation } = await replayModule();
+  const handoffs = [
+    { id: 'lead', next: 0.6 },
+    { id: 'tie', next: 0.9 },
+    { id: 'turnaround', next: 1 },
+  ] as const;
+  for (const { id, next } of handoffs) {
+    const halfway = getReplayMomentPresentation(next - 0.03, id);
+    assert.equal(halfway.reveal, 1);
+    assert.ok(Math.abs(halfway.emphasis - 0.5) < 1e-10);
+    assert.deepEqual(getReplayMomentPresentation(next, id), {
+      reveal: 1,
+      emphasis: 0,
+    });
+  }
+});
+
+test('moment presentation reverses exactly, stays bounded and has no endpoint velocity jump', async () => {
+  const { getReplayMomentPresentation } = await replayModule();
+  for (const id of ['lead', 'tie', 'turnaround'] as const) {
+    const forward = Array.from({ length: 101 }, (_, index) =>
+      getReplayMomentPresentation(index / 100, id),
+    );
+    const reverse = Array.from({ length: 101 }, (_, index) =>
+      getReplayMomentPresentation((100 - index) / 100, id),
+    ).reverse();
+    assert.deepEqual(reverse, forward);
+    for (const { reveal, emphasis } of forward) {
+      assert.ok(reveal >= 0 && reveal <= 1);
+      assert.ok(emphasis >= 0 && emphasis <= reveal);
+    }
+    assert.deepEqual(getReplayMomentPresentation(1, id), {
+      reveal: 1,
+      emphasis: 0,
+    });
+  }
+  const start = 0.4;
+  const delta = 0.00001;
+  assert.ok(
+    getReplayMomentPresentation(start + delta, 'lead').reveal / delta < 0.01,
+    'The reveal starts with a vanishing derivative rather than a linear pop',
+  );
+  assert.ok(
+    (1 - getReplayMomentPresentation(start + 0.06 - delta, 'lead').reveal) /
+      delta <
+      0.01,
+    'The reveal settles with a vanishing derivative',
+  );
+});
+
+test('moment presentation normalizes invalid progress consistently with the score timeline', async () => {
+  const { getReplayMomentPresentation } = await replayModule();
+  for (const id of ['lead', 'tie', 'turnaround'] as const) {
+    for (const progress of [-1, NaN, Infinity, -Infinity]) {
+      assert.deepEqual(getReplayMomentPresentation(progress, id), {
+        reveal: 0,
+        emphasis: 0,
+      });
+    }
+    assert.deepEqual(getReplayMomentPresentation(2, id), {
+      reveal: 1,
+      emphasis: 0,
+    });
+  }
+});

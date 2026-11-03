@@ -45,8 +45,8 @@
   background: transparent;
   color: #c6bbb1;
   transition:
-    background 200ms,
-    color 200ms;
+    background 160ms,
+    color 160ms;
 }
 .download-chooser-header button:hover {
   background: #f1ece20d;
@@ -65,8 +65,8 @@
 }
 .download-chooser-description {
   margin-top: 12px;
-  color: #b7b3ac;
-  font-size: 0.9rem;
+  color: #d1d6ce;
+  font-size: 1rem;
   line-height: 1.8;
 }
 .download-chooser-version {
@@ -74,8 +74,8 @@
   flex-wrap: wrap;
   gap: 6px 16px;
   margin-top: 20px;
-  color: #b9a191;
-  font-size: 0.75rem;
+  color: #cdbba8;
+  font-size: 0.875rem;
   line-height: 1.6;
 }
 .download-channel-list {
@@ -94,14 +94,12 @@
   background: linear-gradient(115deg, #bc7f6b10, transparent);
   text-align: left;
   transition:
-    border-color 200ms,
-    background-color 200ms,
-    transform 200ms;
+    border-color 160ms,
+    background-color 160ms;
 }
 a.download-channel:hover {
   border-color: #e5b69a9c;
   background-color: #bc7f6b10;
-  transform: translateY(-2px);
 }
 a.download-channel:active {
   transform: translateY(0);
@@ -128,8 +126,8 @@ a.download-channel:active {
   line-height: 1.6;
 }
 .download-channel-description {
-  color: #aaa8a1;
-  font-size: 0.78rem;
+  color: #c4cbc3;
+  font-size: 0.875rem;
   line-height: 1.8;
 }
 .download-channel > .icon {
@@ -149,7 +147,7 @@ a.download-channel:active {
   gap: 8px;
   padding: 10px 20px 2px;
   color: #dec0a9;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   line-height: 1.8;
 }
 .download-channel-password code {
@@ -167,8 +165,8 @@ a.download-channel:active {
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid #f1ece212;
-  color: #9faaa6;
-  font-size: 0.75rem;
+  color: #bfc9c2;
+  font-size: 0.875rem;
   line-height: 1.9;
 }
 .download-chooser :is(a, button):focus-visible {

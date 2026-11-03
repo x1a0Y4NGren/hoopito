@@ -11,37 +11,86 @@ const c = content[locale].community;
 
 <section
   id="community"
-  class="community content-width"
+  class="community chapter content-width"
   aria-labelledby="community-title"
   data-community
+  data-story-stage="community"
 >
-  <div class="community-copy">
-    <p class="eyebrow">{c.eyebrow}</p>
+  <div
+    class="community-heading stage-heading"
+    data-story-item="heading"
+    data-story-enter="up"
+    data-story-preset="chapter-title"
+  >
+    <p class="chapter-kicker eyebrow">{c.eyebrow}</p>
     <h2 id="community-title">
       {c.title.map((line) => (
-        <span>{line}</span>
+        <span data-story-line data-story-reveal>
+          {line}
+        </span>
       ))}
     </h2>
-    <p class="community-description">{c.body}</p>
-    <div class="community-number">
+  </div>
+  <div
+    class="community-copy"
+    data-story-item="detail"
+    data-story-enter="left"
+    data-story-preset="community-copy"
+  >
+    <p
+      class="community-description reading-zone exposed-reading-zone"
+      data-mobile-item="detail"
+    >
+      {c.body}
+    </p>
+    <div
+      class="community-number reading-zone exposed-reading-zone"
+      data-mobile-item="visual"
+    >
       <span>{c.groupLabel}</span>
       <strong class="display" data-community-number>
         {community.groupNumber}
       </strong>
     </div>
-    <p class="community-instructions">{c.instructions}</p>
+    <p
+      class="community-instructions reading-zone exposed-reading-zone"
+      data-mobile-item="detail"
+    >
+      {c.instructions}
+    </p>
+  </div>
+  <div class="community-actions">
     <a
-      class="community-save text-link"
+      class="community-save community-save-action text-link"
       href={community.posterDownload}
       download="Hoopito-QQ-1129560287.png"
       data-community-save
+      data-glass-card
+      data-glass-id="community-save"
+      data-story-item="control"
+      data-story-enter="left"
+      data-story-preset="community-copy"
     >
-      {c.save}
-      <Icon name="download" />
+      <span class="control-content">
+        <span>{c.save}</span>
+        <Icon name="download" />
+      </span>
     </a>
-    <p class="community-note">{c.note}</p>
+    <p
+      class="community-note reading-zone exposed-reading-zone"
+      data-story-item="detail"
+      data-story-enter="left"
+      data-story-preset="community-copy"
+    >
+      {c.note}
+    </p>
   </div>
-  <figure class="community-artwork">
+  <figure
+    class="community-artwork"
+    data-story-item="visual"
+    data-story-enter="right"
+    data-story-preset="community-poster"
+  >
     <a
       class="community-poster-link"
       href={community.posterDownload}
@@ -58,9 +107,20 @@ const c = content[locale].community;
         alt={c.imageAlt}
       />
     </a>
-    <figcaption>
-      <span class="display">HOOPITO COMMUNITY</span>
+    <figcaption class="reading-zone exposed-reading-zone">
       <span>{c.caption}</span>
+      <a
+        class="community-open text-link"
+        href={community.posterDownload}
+        target="_blank"
+        rel="noopener"
+        aria-label={c.view}
+      >
+        <span class="control-content">
+          <span>{c.openLabel}</span>
+          <Icon name="arrow" />
+        </span>
+      </a>
     </figcaption>
   </figure>
 </section>

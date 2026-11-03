@@ -1,6 +1,13 @@
 import { chromium } from '@playwright/test';
 import { createServer } from 'node:http';
-import { readFile, mkdir, writeFile, readdir, access } from 'node:fs/promises';
+import {
+  readFile,
+  mkdir,
+  writeFile,
+  readdir,
+  access,
+  stat,
+} from 'node:fs/promises';
 import { resolve, relative, extname, sep } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { createHash } from 'node:crypto';
@@ -71,6 +78,7 @@ const buildManifest = [];
 for (const name of buildFiles
   .filter((name) => /\.[a-z0-9]+$/i.test(name))
   .sort()) {
+  if (!(await stat(resolve(dist, name))).isFile()) continue;
   const bytes = await readFile(resolve(dist, name));
   buildManifest.push({
     path: name.replaceAll('\\', '/'),
@@ -258,7 +266,9 @@ try {
         );
         const heroArtBytes = requests
           .filter((resource) =>
-            /\/art\/(?:arena-(?:tall|wide)-|basketball-)/.test(resource.path),
+            /\/art\/(?:scene-mobile\.|arena-(?:tall|wide)-|basketball-)/.test(
+              resource.path,
+            ),
           )
           .reduce((total, resource) => total + resource.transferred, 0);
         const desktopAssetsRequested = requests.filter((resource) =>

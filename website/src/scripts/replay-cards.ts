@@ -1,8 +1,10 @@
 import {
+  getReplayMomentPresentation,
   getReplayPlotPoint,
   getReplayState,
   replayExample,
   replayPlotBounds,
+  type ReplayKeyMomentId,
 } from '../data/replay-example';
 
 /** Prepare only the approaching desktop cards; never gate their scroll playhead. */
@@ -40,10 +42,7 @@ function prepareReplayImages(stage: HTMLElement) {
 }
 
 /** One shared approach-to-landing clock for the card faces and the score story. */
-export function addReplayCardChoreography(
-  story: gsap.core.Timeline,
-  stage: HTMLElement,
-) {
+export function createReplayPresentation(stage: HTMLElement) {
   const cancelImagePreparation = prepareReplayImages(stage);
   const clip = stage.querySelector<SVGRectElement>('[data-replay-clip]')!;
   const cursor = stage.querySelector<SVGGElement>('[data-replay-cursor]')!;
@@ -88,106 +87,36 @@ export function addReplayCardChoreography(
         element.dataset.current = String(state.stage === moment.id);
       }
     }
+    // Opacity and the short rule continue between events, including in reverse.
+    for (const element of moments) {
+      const presentation = getReplayMomentPresentation(
+        state.progress,
+        element.dataset.replayMoment as Exclude<ReplayKeyMomentId, 'final'>,
+      );
+      for (const [property, value] of [
+        ['--moment-reveal', presentation.reveal],
+        ['--moment-emphasis', presentation.emphasis],
+      ] as const) {
+        const next = value.toFixed(5);
+        if (element.style.getPropertyValue(property) !== next)
+          element.style.setProperty(property, next);
+      }
+    }
   }
 
-  // The page's arrival, both faces and the score use the SAME scrub playhead.
-  // Easing the page's travel must not slow down this scroll-driven clock.
-  const motion = story;
-  for (const [index, name] of ['summary', 'history'].entries()) {
-    const figure = stage.querySelector<HTMLElement>(
-      `[data-replay-device="${name}"]`,
-    )!;
-    const card = figure.querySelector<HTMLElement>('[data-replay-card]')!;
-    const shadow = figure.querySelector<HTMLElement>('[data-replay-shadow]')!;
-    const sheen = figure.querySelector<HTMLElement>('[data-replay-sheen]')!;
-    const caption = figure.querySelector('figcaption')!;
-    const at = index * 0.05;
-    // Y advances exactly 540 degrees. The initial X tilt presents the edge;
-    // unfolding X to zero brings the final 360-degree Y pose fully face-on.
-    motion
-      .fromTo(
-        card,
-        {
-          xPercent: index ? -20 : 18,
-          y: index ? -92 : -65,
-          z: -620,
-          rotationX: 82,
-          rotationY: -180,
-          rotation: index ? 13 : -12,
-          scale: 0.74,
-          transformPerspective: 1700,
-          transformOrigin: '50% 55%',
-          force3D: true,
-          willChange: 'transform',
-        },
-        {
-          xPercent: 0,
-          y: 0,
-          z: 0,
-          rotationX: 0,
-          rotationY: 360,
-          rotation: 0,
-          scale: 1,
-          duration: 0.95,
-          ease: 'sine.inOut',
-        },
-        at,
-      )
-      .set(card, { willChange: 'auto' }, at + 0.95)
-      .fromTo(
-        shadow,
-        { y: 42, scale: 0.72, opacity: 0.04 },
-        {
-          y: 14,
-          scale: 0.98,
-          opacity: 0.36,
-          duration: 0.95,
-          ease: 'sine.inOut',
-        },
-        at,
-      )
-      .fromTo(
-        caption,
-        { opacity: 0.32, y: 8 },
-        { opacity: 1, y: 0, duration: 0.28, ease: 'sine.inOut' },
-        at + 0.66,
-      )
-      .fromTo(
-        sheen,
-        { xPercent: -120, opacity: 0 },
-        { xPercent: 200, opacity: 0.4, duration: 0.16, ease: 'sine.inOut' },
-        at + 0.71,
-      )
-      .to(sheen, { opacity: 0, duration: 0.08, ease: 'sine.out' }, at + 0.87);
-  }
-  drawGraph(motion.progress());
-  stage.dataset.replayProgress = motion.progress().toFixed(4);
+  drawGraph(1);
   return {
-    update() {
-      const progress = motion.progress();
-      const trigger = motion.scrollTrigger;
-      const range = trigger ? trigger.end - trigger.start : 0;
-      // Scroll positions are quantized to CSS pixels, including on 2x displays.
-      // Resolve the final partial pixel on the shared playhead, so the cards,
-      // page and final score all arrive together rather than leaving 8:9 visible.
-      if (
-        range > 1 &&
-        progress > 0 &&
-        progress < 1 &&
-        (1 - progress) * range < 1
-      ) {
-        motion.progress(1);
-      }
-      stage.dataset.replayProgress = motion.progress().toFixed(4);
-      drawGraph(motion.progress());
+    update(progress = 1) {
+      // The graph reaches its final event as the glass cards finish entering.
+      // Reading states and direct anchors always show the complete example.
+      const value = Math.max(0, Math.min(1, progress / 0.22));
+      stage.dataset.replayProgress = value.toFixed(4);
+      drawGraph(value);
     },
     restore() {
       cancelImagePreparation();
-      previousPoint = -1;
       drawGraph(1);
       delete stage.dataset.replayProgress;
-      delete stage.dataset.replayStart;
-      delete stage.dataset.replayEnd;
     },
   };
 }

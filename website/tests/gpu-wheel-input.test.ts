@@ -4,12 +4,20 @@ import {
   createWheelWorkload,
   runWheelInput,
   serializeMeasurementFailure,
+  WHEEL_WORKLOAD_VERSION,
 } from '../scripts/gpu-wheel-input.mjs';
 
 const layout = {
   hero: { anchor: 0, stageTop: 0, start: 0, end: 675 },
   experience: { anchor: 2480, stageTop: 2568, start: 2480, end: 2768 },
   replay: { anchor: 4375, stageTop: 4150, start: 3700, end: 4375 },
+};
+
+const snapLayout = {
+  hero: { ...layout.hero, readStart: 0, readEnd: 0 },
+  scoring: { anchor: 1100, readStart: 1100, readEnd: 1490 },
+  experience: { ...layout.experience, readStart: 2480, readEnd: 2480 },
+  replay: { ...layout.replay, readStart: 4375, readEnd: 4375 },
 };
 
 function fixture() {
@@ -36,6 +44,88 @@ function fixture() {
     },
   };
 }
+
+test('snap entry fixtures start at the previous reading boundary and target exactly one adjacent chapter', () => {
+  for (const [phase, source, target] of [
+    ['experience-wheel-entry', 'scoring', 'experience'],
+    ['replay-wheel-entry', 'experience', 'replay'],
+  ] as const) {
+    const workload = createWheelWorkload(phase, snapLayout, 900);
+    assert.equal(workload.startY, snapLayout[source].readEnd);
+    assert.equal(workload.targetY, snapLayout[target].readStart);
+    assert.equal(workload.targetChapter, target);
+    assert.equal(workload.workloadVersion, 'native-wheel-snap-v2');
+    assert.equal(workload.workloadVersion, WHEEL_WORKLOAD_VERSION);
+    assert.equal(workload.durationMs, 360);
+    assert.deepEqual(
+      workload.inputSequence,
+      [20, 18, 14, 10, 8, 6, 4, 3, 2, 1].map((deltaY, index) => ({
+        atMs: index * 40,
+        deltaX: 0,
+        deltaY,
+      })),
+    );
+    const intent = workload.inputSequence.reduce(
+      (sum, input) => sum + input.deltaY,
+      0,
+    );
+    assert.equal(intent, 86);
+    assert.ok(intent < workload.targetY - workload.startY);
+  }
+});
+
+test('snap reverse uses scoring to hero instead of attempting to cross several chapters in one gesture', () => {
+  const workload = createWheelWorkload('reverse-wheel', snapLayout, 900);
+  assert.equal(workload.startY, snapLayout.scoring.readStart);
+  assert.equal(workload.targetY, snapLayout.hero.readEnd);
+  assert.equal(workload.targetChapter, 'hero');
+  assert.equal(workload.workloadVersion, 'native-wheel-snap-v2');
+  assert.deepEqual(
+    workload.inputSequence.map((input) => input.deltaY),
+    [-20, -18, -14, -10, -8, -6, -4, -3, -2, -1],
+  );
+  assert.notEqual(workload.startY, snapLayout.replay.anchor);
+});
+
+test('legacy layouts retain the v1 identity and continuous native-distance schedule', () => {
+  const workload = createWheelWorkload('experience-wheel-entry', layout, 900);
+  assert.equal(workload.workloadVersion, 'native-wheel-v1');
+  assert.equal(workload.inputSequence.length, 60);
+  assert.equal(workload.durationMs, 2360);
+});
+
+test('partial or reversed reading metadata fails without silently using a legacy multi-chapter gesture', () => {
+  assert.throws(
+    () =>
+      createWheelWorkload(
+        'experience-wheel-entry',
+        { ...snapLayout, scoring: undefined },
+        900,
+      ),
+    /geometry/i,
+  );
+  assert.throws(
+    () =>
+      createWheelWorkload(
+        'replay-wheel-entry',
+        {
+          ...snapLayout,
+          experience: { ...snapLayout.experience, readEnd: NaN },
+        },
+        900,
+      ),
+    /geometry/i,
+  );
+  assert.throws(
+    () =>
+      createWheelWorkload(
+        'experience-wheel-entry',
+        { ...snapLayout, scoring: { ...snapLayout.scoring, readEnd: 3000 } },
+        900,
+      ),
+    /direction/i,
+  );
+});
 
 test('entry inputs start before the 85% arrival line and end at actual chapter anchors', () => {
   for (const chapter of ['experience', 'replay'] as const) {
@@ -100,6 +190,38 @@ test('runner sends every planned input and records dispatch timings and measured
         event.completedAtMs >= event.dispatchedAtMs,
     ),
   );
+});
+
+test('snap input evidence records gesture intent and actual position without pretending the wheel delta equals auto travel', async () => {
+  const workload = createWheelWorkload(
+    'experience-wheel-entry',
+    snapLayout,
+    900,
+  );
+  const { driver, sent, setPosition } = fixture();
+  setPosition(workload.startY);
+  const evidence = await runWheelInput(workload, driver);
+  assert.equal(evidence.completed, true);
+  assert.equal(sent.length, 10);
+  // This driver models dispatched wheel deltas only. The later browser settle
+  // measures the application's automatic scroll independently of this schedule.
+  assert.ok(evidence.end);
+  assert.equal(evidence.end.scrollY, workload.startY + 86);
+  assert.notEqual(evidence.end.scrollY, workload.targetY);
+  const failure = Object.assign(new Error('Auto travel did not settle'), {
+    evidence,
+  });
+  const persisted = JSON.parse(
+    JSON.stringify(serializeMeasurementFailure(failure, workload)),
+  );
+  assert.equal(persisted.errorEvidence.workloadVersion, 'native-wheel-snap-v2');
+  assert.equal(persisted.errorEvidence.end.scrollY, evidence.end.scrollY);
+  assert.deepEqual(
+    persisted.errorEvidence.inputSequence,
+    workload.inputSequence,
+  );
+  assert.equal(persisted.errorEvidence.emitted.length, 10);
+  assert.equal(persisted.errorEvidence.completed, false);
 });
 
 test('an early snap to the endpoint never short-circuits the prescribed wheel sequence', async () => {

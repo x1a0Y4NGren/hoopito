@@ -1,0 +1,72 @@
+{
+  "version": 2,
+  "generated_at": "2026-11-03",
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "purpose": "True-overhead light-realistic shared SVG interactive court: independent honey maple surface, transparent edge-on backboard and circular rim, exact SVG geometry with separately animated overhead net.",
+  "previous_generation_record": "demo-court-generation-v1.json",
+  "supersedes_reason": "The user clarified that the interactive court is true overhead: the rim must be circular and the dynamic net must project inside it. The v1 foreshortened elliptical sprite and downward side-view net were rejected for this camera.",
+  "runtime_scope": "Phone and 2D fallback only; desktop real-time 3D materials remain unchanged.",
+  "assets": [
+    {
+      "id": "maple",
+      "source": "source/demo-maple-v2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless square material image for a lightweight interactive overhead basketball court on a mobile website. Generate a premium well-maintained indoor training-court hard-maple floor texture, flat orthographic scan with absolutely no perspective. Warm natural pale honey and champagne beige wood, elegant fine straight fibers, slender tightly fitted planks running vertically, about sixteen to twenty boards across the image, discreet staggered end joints with extremely thin light seams. Very restrained variations between boards, a few subtle believable marks, no rustic knots or heavy distress. Uniform neutral diffuse illumination across the full image; subtle satin-varnish surface appearance but no baked glare, directional lighting, cast shadows, vignette, depth, room or objects. Seamlessly tileable left/right and top/bottom. This is only a beautiful floor-color texture, not a scene. No court lines, circles, arcs, paint, basketballs, hoops, nets, logos, lettering, numbers, borders, frames or watermark. Avoid orange saturated wood, gray muddy tint, broad dark plank gaps and repetitive zebra-striping. Square image about1024px, high material detail, opaque background.",
+      "source_sha256": "3b38b373c8d2c8e5c62e8684eb64833649b42273fb7d187a0c8641eef0fbf7b9",
+      "source_dimensions_px": [1254, 1254],
+      "generation_output": "exec-ffb29ed9-8998-45ab-a02f-47497c823c6c.png",
+      "reviewed_at": "2026-11-03",
+      "transparent": false,
+      "conversion": {
+        "width": 384,
+        "height": 384,
+        "quality": 64,
+        "maximum_bytes": 12288
+      },
+      "registration_method": "Square uniformly lit maple color material. Original texture and plank arrangement retained; no court markings, text or illumination painted into conversion."
+    },
+    {
+      "id": "hoop",
+      "source": "source/demo-hoop-v2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: ONE isolated basketball rim and backboard fixture on genuine transparent RGBA, for a true overhead interactive court. CRITICAL CAMERA GEOMETRY: directly straight down, perfectly perpendicular to the court floor AND to the horizontal rim plane, zero pitch, zero perspective, zero foreshortening. The orange steel rim must be a mathematically ROUND CIRCLE, same horizontal and vertical diameter. Its open center is a perfectly round transparent hole. NOT an ellipse, NOT an oval, NOT a front or angled view. The upright transparent-glass backboard is seen exactly EDGE-ON from above, appearing as a very thin straight horizontal glass-and-graphite bar above the circular rim, not a rectangular front face. Board-bar width about2.4 times the circle outside diameter. Short dark mounting bracket from bar underside to the circle's topmost point at12o'clock. Symmetric about vertical axis. Whole assembly fits a landscape transparent canvas with comfortable transparent margin. Rich natural burnt-orange powder-coated rounded steel tube with a restrained warm highlight, realistic small graphite bolts and pale glass edge highlights; clean premium training-gym hardware. Gentle warm upper-left material lighting and subtle cool fill, no cast shadow on a background. There must be ABSOLUTELY NO NET, strings, mesh, hanging fabric, basketball, floor, court, background, checkerboard, pedestal, people, text, target-box markings, logo, watermark, duplicate views or additional objects. No shadows or orange speckles floating inside the ring. All space inside circle and outside hardware genuinely transparent. Round ring is the central important subject; deliver precisely TRUE TOP DOWN ROUND CIRCLE with open interior, board visible only as narrow top-edge bar.",
+      "source_sha256": "5d84205aee1c1d9637d9136261216ee529bfd88099574c70949bea548dbbfe75",
+      "source_dimensions_px": [1920, 819],
+      "generation_output": "exec-5e4e5c58-3ca2-4ac1-b8ae-892106894c90.png",
+      "reviewed_at": "2026-11-03",
+      "transparent": true,
+      "crop_px": {
+        "left": 88,
+        "top": 68,
+        "width": 1742,
+        "height": 704
+      },
+      "rim_shape": "circle",
+      "rim_anchor_px": {
+        "cx": 953,
+        "cy": 478,
+        "rx": 273,
+        "ry": 273
+      },
+      "registration_method": "Best-fit circular metal-tube centerline, observed orange outer bounding region [667,191,1236,765], stroke is ~26px wide. Circumference residual below2percent; preserve uniform scaling and the exact vector circle/net radius. Actual alpha bounds [92,72,1825,766]. Replaces rejected foreshortened v1 sprite after user correction. Uniform display scale targets center(300,82) and radius20 SVG units. No stretch or repaint.",
+      "generation_history": [
+        {
+          "generation_record": "demo-court-generation-v1.json",
+          "selected": false,
+          "reason": "The user clarified that the interactive court is true overhead: the rim must be circular and the dynamic net must project inside it. The v1 foreshortened elliptical sprite and downward side-view net were rejected for this camera."
+        },
+        {
+          "mode": "built-in generate",
+          "prompt": "Use case: photorealistic-natural. Asset type: ONE isolated basketball rim and backboard fixture on genuine transparent RGBA, for a true overhead interactive court. CRITICAL CAMERA GEOMETRY: directly straight down, perfectly perpendicular to the court floor AND to the horizontal rim plane, zero pitch, zero perspective, zero foreshortening. The orange steel rim must be a mathematically ROUND CIRCLE, same horizontal and vertical diameter. Its open center is a perfectly round transparent hole. NOT an ellipse, NOT an oval, NOT a front or angled view. The upright transparent-glass backboard is seen exactly EDGE-ON from above, appearing as a very thin straight horizontal glass-and-graphite bar above the circular rim, not a rectangular front face. Board-bar width about2.4 times the circle outside diameter. Short dark mounting bracket from bar underside to the circle's topmost point at12o'clock. Symmetric about vertical axis. Whole assembly fits a landscape transparent canvas with comfortable transparent margin. Rich natural burnt-orange powder-coated rounded steel tube with a restrained warm highlight, realistic small graphite bolts and pale glass edge highlights; clean premium training-gym hardware. Gentle warm upper-left material lighting and subtle cool fill, no cast shadow on a background. There must be ABSOLUTELY NO NET, strings, mesh, hanging fabric, basketball, floor, court, background, checkerboard, pedestal, people, text, target-box markings, logo, watermark, duplicate views or additional objects. No shadows or orange speckles floating inside the ring. All space inside circle and outside hardware genuinely transparent. Round ring is the central important subject; deliver precisely TRUE TOP DOWN ROUND CIRCLE with open interior, board visible only as narrow top-edge bar.",
+          "source_sha256": "5d84205aee1c1d9637d9136261216ee529bfd88099574c70949bea548dbbfe75",
+          "selected": true
+        }
+      ],
+      "conversion": {
+        "maximum_size": 512,
+        "quality": 82,
+        "alpha_quality": 100,
+        "maximum_bytes": 24576
+      }
+    }
+  ]
+}

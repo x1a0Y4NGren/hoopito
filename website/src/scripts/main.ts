@@ -6,12 +6,42 @@ import { createDownloadChooser } from './download-chooser';
 import { createShotFeedback } from './shot-feedback';
 import { createScoringFeedback } from './scoring-feedback';
 import { createDemoInvitation } from './demo-invitation';
-import { addReplayCardChoreography } from './replay-cards';
+import { createReplayPresentation } from './replay-cards';
+import { createChapterRail } from './chapter-rail';
+import { createMobileNavigation } from './mobile-navigation';
+import { createMobilePresentation } from './mobile-presentation';
+import { createMobileProgress } from './mobile-progress';
+import { createMobileTouch } from './mobile-touch';
+import { mobileContentBottom } from './mobile-reading';
+import { createDemoArt } from './demo-art';
+import {
+  storyItemPose,
+  storyStageState,
+  storyStageOffset,
+  storyOrnamentVisibility,
+  stageLayoutHeight,
+  type StoryRole,
+  type StoryEnter,
+} from './story-choreography';
+import { relayPose, type RelayAnchor, type RelayChapter } from './story-relay';
+import { createSceneCommitGuard } from './scene-commit';
+import {
+  cameraStateAtScroll,
+  isOverheadReadingFrame,
+  transitionReadingRegion,
+} from './camera-track';
+import {
+  createChapterScroll,
+  type ChapterStop,
+  type StopId,
+} from './chapter-scroll';
 import type {
   CourtPoint,
+  GlassSurface,
   CourtScene,
   StoryChapter,
   StoryFrame,
+  SceneRegion,
 } from './scene-contract';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -33,7 +63,23 @@ const chapterLinks = [
     '.site-header nav > a[href^="#"]',
   ),
 ];
+const chapterIds: StoryChapter[] = [
+  'hero',
+  'scoring',
+  'experience',
+  'replay',
+  'download',
+  'community',
+];
 let navigationChapter: StoryChapter | undefined;
+let readingStop: StopId = 'hero';
+let chapterScroll: ReturnType<typeof createChapterScroll> | undefined;
+let chapterRail: ReturnType<typeof createChapterRail> | undefined;
+let mobilePresentation: ReturnType<typeof createMobilePresentation> | undefined;
+let mobileProgress: ReturnType<typeof createMobileProgress> | undefined;
+let mobileTouch: ReturnType<typeof createMobileTouch> | undefined;
+let readingStops: ChapterStop[] = [];
+root.dataset.scrollStop = readingStop;
 function syncCurrentNavigation(chapter: StoryChapter) {
   if (navigationChapter === chapter) return;
   navigationChapter = chapter;
@@ -42,42 +88,72 @@ function syncCurrentNavigation(chapter: StoryChapter) {
       link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   }
-  syncLanguage(chapter);
+  syncLanguage(
+    phone.matches
+      ? readingStop
+      : readingStop === 'closing'
+        ? 'closing'
+        : chapter,
+  );
 }
 const select = <T extends Element>(selector: string) =>
   document.querySelector<T>(selector)!;
 const canvas = select<HTMLCanvasElement>('#court-canvas');
 const sceneBackground = select<HTMLElement>('.scene-background');
+const siteHeader = select<HTMLElement>('.site-header');
+let measuredHeaderHeight = 0;
+function measureHeaderInset() {
+  const height = siteHeader.getBoundingClientRect().height;
+  if (
+    !Number.isFinite(height) ||
+    height <= 0 ||
+    Math.abs(height - measuredHeaderHeight) < 0.5
+  )
+    return false;
+  // Keep the base --header untouched: it controls the header's own min-height.
+  // Only content safety spacing consumes this measured border-box height.
+  chapterScroll?.prepareRefresh();
+  measuredHeaderHeight = height;
+  root.style.setProperty('--measured-header', `${height}px`);
+  return true;
+}
+measureHeaderInset();
 const experienceSection = select<HTMLElement>('#experience');
 const traceBridge = select<HTMLElement>('.trace-bridge');
 const desktop = matchMedia('(min-width: 1024px) and (pointer: fine)');
+const phone = matchMedia('(max-width: 767px)');
 const systemMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let scene: CourtScene | undefined;
+let sceneGlassMode: 'webgl' | 'css' = 'css';
 let shotFeedback: ReturnType<typeof createShotFeedback> | undefined;
 let scoringFeedback: ReturnType<typeof createScoringFeedback> | undefined;
 let demoInvitation: ReturnType<typeof createDemoInvitation> | undefined;
 const suspension = new Set<string>(document.hidden ? ['hidden'] : []);
-function killReplaySnap() {
-  // ScrollTrigger uses 0 after a snap finishes; its declarations omit that
-  // sentinel. Optional chaining alone would still try to call 0.kill().
-  const tween = stages.get('replay')?.trigger.getTween(true);
-  if (tween) tween.kill();
-}
 function setSuspended(reason: string, paused: boolean) {
+  if (paused) mobileTouch?.cancel();
+  if (paused) chapterScroll?.cancel();
   if (paused) suspension.add(reason);
   else suspension.delete(reason);
+  chapterRail?.setPaused(suspension.size > 0);
+  mobilePresentation?.setPaused(suspension.size > 0);
   scene?.setPaused(suspension.size > 0);
   if (suspension.size) shotFeedback?.pause();
   else shotFeedback?.resume();
   if (suspension.size) scoringFeedback?.pause();
   else scoringFeedback?.resume();
+  // A pause can precede the first invitation, so resuming an absent timeline
+  // must also re-evaluate its current reading/visibility eligibility.
+  if (!suspension.size && scoringFeedback) queueMicrotask(queueStoryUpdate);
   if (suspension.size) demoInvitation?.pause();
   else demoInvitation?.resume();
-  if (suspension.size) killReplaySnap();
+  if (!suspension.size) mobileTouch?.recoverGap();
 }
 const viewer = createScreenshotViewer((open) => setSuspended('viewer', open));
 const downloadChooser = createDownloadChooser((open) =>
   setSuspended('download-dialog', open),
+);
+const mobileNavigation = createMobileNavigation((open) =>
+  setSuspended('mobile-menu', open),
 );
 const scoreDevice = select<HTMLElement>('[data-story-device]');
 const scoreStep = select<HTMLElement>('[data-score-step]');
@@ -105,20 +181,49 @@ scoreFeatures.forEach((button, index) => {
     scoringFeedback!.play(index, systemMotion.matches);
   });
 });
-const scoreInvitationObserver = new IntersectionObserver(
-  (entries) => {
-    if (
-      entries.some(
-        (entry) => entry.isIntersecting && entry.intersectionRatio >= 0.6,
-      )
-    ) {
-      scoringFeedback!.invite(systemMotion.matches);
-      scoreInvitationObserver.disconnect();
-    }
-  },
-  { threshold: 0.6 },
-);
-scoreInvitationObserver.observe(scoreFeatures[0]);
+let scoreInvitationFrame = 0;
+let scoringOnChapter = false;
+function syncScoringFeedback(
+  phase: ReturnType<typeof storyStageState>['phase'],
+) {
+  const stage = scoreDevice.closest<HTMLElement>('[data-story-stage]')!;
+  const bounds = stage.getBoundingClientRect();
+  const headerBottom = siteHeader.getBoundingClientRect().bottom;
+  const onChapter =
+    desktop.matches && !reduced()
+      ? phase === 'reading'
+      : bounds.bottom > headerBottom && bounds.top < innerHeight;
+  if (!onChapter) {
+    cancelAnimationFrame(scoreInvitationFrame);
+    scoreInvitationFrame = 0;
+    if (scoringOnChapter) scoringFeedback?.cancel();
+    scoringOnChapter = false;
+    return;
+  }
+  scoringOnChapter = true;
+  const first = scoreFeatures[0];
+  const rect = first.getBoundingClientRect();
+  const visible = Math.max(
+    0,
+    Math.min(rect.bottom, innerHeight) - Math.max(rect.top, headerBottom),
+  );
+  const ready =
+    visible >= rect.height * 0.6 &&
+    rect.height > 0 &&
+    !suspension.size &&
+    (!desktop.matches || reduced() || root.dataset.scrollState === 'idle');
+  if (!ready || first.dataset.scoreInvitation !== 'idle') {
+    cancelAnimationFrame(scoreInvitationFrame);
+    scoreInvitationFrame = 0;
+    return;
+  }
+  if (!scoreInvitationFrame)
+    scoreInvitationFrame = requestAnimationFrame(() => {
+      scoreInvitationFrame = 0;
+      if (!disposed && scoringOnChapter && !suspension.size)
+        scoringFeedback?.invite(reduced());
+    });
+}
 let abort: AbortController | undefined;
 let deadline: ReturnType<typeof setTimeout> | undefined;
 const choreography = gsap.matchMedia();
@@ -126,11 +231,49 @@ const stages = new Map<
   StoryChapter,
   { progress: number; trigger: ScrollTrigger }
 >();
+let experienceRestRegion: SceneRegion | undefined;
 let sceneFailed = false;
 let disposed = false;
 let state = initialDemoState();
 let storyFrame: StoryFrame = { chapter: 'hero', progress: 0, active: true };
+let storyUpdateQueued = false;
+let sceneFrameQueued = false;
+const sceneCommitChanged = createSceneCommitGuard();
+function queueStoryUpdate() {
+  if (storyUpdateQueued) return;
+  storyUpdateQueued = true;
+  queueMicrotask(() => {
+    storyUpdateQueued = false;
+    if (!disposed) updateStory();
+  });
+}
+function queueSceneFrame() {
+  if (sceneFrameQueued || root.dataset.scene !== '3d') return;
+  sceneFrameQueued = true;
+  queueMicrotask(() => {
+    sceneFrameQueued = false;
+    if (!disposed) scene?.flushFrame();
+  });
+}
 const reduced = () => systemMotion.matches;
+mobilePresentation = createMobilePresentation({
+  reduced,
+  requestUpdate: queueStoryUpdate,
+  layoutChanged() {
+    queueMicrotask(() => {
+      if (disposed) return;
+      chapterScroll?.prepareRefresh();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (disposed) return;
+        if (needsChoreographyRefresh()) refreshChoreography();
+        else ScrollTrigger.refresh();
+        updateStory();
+      }, 0);
+    });
+  },
+});
+if (suspension.size) mobilePresentation.setPaused(true);
 const blue = select<HTMLElement>('[data-blue-score]');
 const record = select<HTMLButtonElement>('[data-record]');
 const reset = select<HTMLButtonElement>('[data-reset]');
@@ -145,25 +288,21 @@ const net = select<SVGPathElement>('[data-net-weave]');
 const trail = select<SVGPathElement>('[data-demo-trail]');
 shotFeedback = createShotFeedback(ball, net, trail);
 if (suspension.size) shotFeedback.pause();
-const surface = select<SVGImageElement>('[data-demo-surface]');
-const surfaceObserver = new IntersectionObserver(
-  (entries) => {
-    if (entries.some((entry) => entry.isIntersecting)) {
-      surface.setAttribute('href', surface.dataset.src!);
-      surfaceObserver.disconnect();
-    }
-  },
-  { rootMargin: '200px' },
-);
-surfaceObserver.observe(court);
+const demoArt = createDemoArt(court, {
+  eligible: () => !desktop.matches || sceneFailed,
+});
 const presets = [
   ...document.querySelectorAll<HTMLButtonElement>('[data-point-preset]'),
 ];
+let demoHintReading = false;
+let demoHintEligible = false;
 demoInvitation = createDemoInvitation(
   courtHost,
   select<HTMLElement>('.point-presets'),
   record,
   {
+    isReading: () => demoHintReading,
+    canShowHint: () => demoHintEligible && !suspension.size,
     projectCourtHint() {
       const point = { x: 0.5, y: 0.65 };
       if (scene) return scene.projectPoint(point);
@@ -335,8 +474,8 @@ record.addEventListener('click', () => {
   });
   gsap.fromTo(
     blue,
-    { scale: 0.9 },
-    { scale: 1, duration: 0.22, ease: 'power2.out', clearProps: 'transform' },
+    { scale: 0.98 },
+    { scale: 1, duration: 0.18, ease: 'power2.out', clearProps: 'transform' },
   );
 });
 reset.addEventListener('click', () => {
@@ -353,7 +492,7 @@ reset.addEventListener('click', () => {
 render();
 
 function syncLanguage(
-  chapter = root.dataset.chapter as StoryChapter | undefined,
+  chapter: StopId | undefined = root.dataset.scrollStop as StopId | undefined,
 ) {
   const link = select<HTMLAnchorElement>('[data-language]');
   const fragment = chapter
@@ -372,8 +511,10 @@ function stopScene(reason?: string) {
   abort = undefined;
   scene?.dispose();
   scene = undefined;
+  sceneGlassMode = 'css';
   courtHost.dataset.renderer = '2d';
   root.dataset.scene = '2d';
+  root.dataset.glass = 'css';
   root.dataset.interactive = 'false';
   if (reason) {
     root.dataset.sceneFallback = reason;
@@ -400,6 +541,11 @@ async function startScene() {
     stopScene('webgl-unavailable');
     return;
   }
+  // Decode the first desktop poster image while the arena is preparing, before
+  // its large texture shares the first chapter transition with WebGL drawing.
+  const firstPreview = select<HTMLImageElement>('[data-desktop-preload]');
+  firstPreview.loading = 'eager';
+  void firstPreview.decode().catch(() => {});
   const controller = new AbortController();
   abort = controller;
   root.dataset.scene = 'loading';
@@ -415,8 +561,15 @@ async function startScene() {
       onFailure: (reason) => {
         if (abort === controller) stopScene(reason);
       },
+      onGlassChange: (mode) => {
+        sceneGlassMode = mode;
+        if (root.dataset.scene === '3d') root.dataset.glass = mode;
+      },
       onQualityChange: (quality) => {
         root.dataset.quality = quality;
+        // Restore optical rectangles before the first full-quality draw.
+        if (quality === 'full' && scene)
+          scene.setGlassSurfaces(readGlassSurfaces());
       },
     });
     if (controller.signal.aborted || disposed || abort !== controller) {
@@ -436,23 +589,38 @@ async function startScene() {
     updateStory();
     scene.presentFrame();
     root.dataset.scene = '3d';
+    root.dataset.glass = sceneGlassMode;
   } catch {
     if (!controller.signal.aborted && abort === controller)
       stopScene('initialization');
   }
 }
 function updateStory() {
-  const sections = ['hero', 'scoring', 'experience', 'replay', 'download'].map(
-    (id) => {
-      const element = document.getElementById(id)!;
-      return { element, bounds: element.getBoundingClientRect() };
-    },
-  );
+  const sections = chapterIds.map((id) => {
+    const element = document.getElementById(id)!;
+    return { element, bounds: element.getBoundingClientRect() };
+  });
   const focus = Math.min(window.innerHeight * 0.3, 260);
+  const pinned = sections.find(({ element }) => {
+    const trigger = stages.get(element.id as StoryChapter)?.trigger;
+    return trigger?.pin && scrollY >= trigger.start && scrollY <= trigger.end;
+  });
   const current =
+    pinned ??
     [...sections].reverse().find((section) => section.bounds.top <= focus) ??
     sections[0];
   const chapter = current.element.id as StoryChapter;
+  const closingBounds = select<HTMLElement>('#closing').getBoundingClientRect();
+  const closingActive =
+    closingBounds.top <=
+    select<HTMLElement>('.site-header').getBoundingClientRect().bottom + 26;
+  const nextReadingStop =
+    mobileProgress?.update() ?? (closingActive ? 'closing' : chapter);
+  if (nextReadingStop !== readingStop) {
+    readingStop = nextReadingStop;
+    root.dataset.scrollStop = readingStop;
+    syncLanguage(readingStop);
+  }
   const bounds = current.bounds;
   const stage = stages.get(chapter);
   // An unpinned visual can enter before its chapter becomes current. Its
@@ -465,63 +633,34 @@ function updateStory() {
     chapter === 'hero'
       ? window.scrollY / Math.max(1, nextTop + window.scrollY - focus)
       : (focus - bounds.top) / Math.max(1, nextTop - bounds.top);
-  // Replay cards enter before the chapter changes. Start the camera at that
-  // actual chapter boundary so neither scroll direction skips its shared pose.
-  const cameraStart = window.scrollY + bounds.top - focus;
-  const progress =
-    chapter === 'replay' && stage?.trigger.pin
-      ? Math.max(
-          0,
-          Math.min(
-            1,
-            (window.scrollY - cameraStart) /
-              Math.max(1, stage.trigger.end - cameraStart),
-          ),
-        )
-      : stage?.trigger.pin
-        ? stage.progress
-        : Math.max(0, Math.min(1, flowProgress));
-  storyFrame = {
-    chapter,
-    progress,
-    active: chapter !== 'download' && bounds.bottom > 90,
-  };
-  const stageBounds = experienceStage.getBoundingClientRect();
+  const progress = stage?.trigger.pin
+    ? stage.progress
+    : Math.max(0, Math.min(1, flowProgress));
+  const cameraState = cameraStateAtScroll(scrollY, readingStops, chapter);
+  storyFrame = { ...cameraState, progress, active: true };
+  mobilePresentation?.update();
+  demoArt.update();
+  updateStoryItems(sections);
+  updateStoryRelay();
+  chapterRail?.update();
   const hostBounds = courtHost.getBoundingClientRect();
-  // Natural flow shares the heading's actual navigation target, including an
-  // enlarged header. Pinned stages retain the fixed 88px resting line.
-  const arrivalEnd = stages.get('experience')?.trigger.pin
-    ? 88
-    : select<HTMLElement>('.site-header').getBoundingClientRect().bottom +
-      20 -
-      (sections[2].element
-        .querySelector('.section-top')!
-        .getBoundingClientRect().top -
-        stageBounds.top);
-  const arrival = Math.max(
-    0,
-    Math.min(
-      1,
-      (innerHeight * 0.85 - stageBounds.top) /
-        Math.max(1, innerHeight * 0.85 - arrivalEnd),
-    ),
-  );
   const smooth = (value: number) => value * value * (3 - 2 * value);
-  const rawBlend = reduced()
-    ? Number(chapter === 'experience')
-    : chapter === 'scoring' || chapter === 'experience'
-      ? smooth(arrival)
-      : chapter === 'replay'
-        ? 1 - smooth(progress)
+  const track = storyFrame.cameraTrack;
+  // Retain the DOM presentation signal; the camera itself has one world track.
+  const blend = isOverheadReadingFrame(storyFrame)
+    ? 1
+    : track?.to === 'experience'
+      ? smooth(track.progress)
+      : track?.from === 'experience'
+        ? 1 - smooth(track.progress)
         : 0;
-  // Native scroll positions are rounded while layout bounds can be fractional.
-  // Finish the last subpixel of arrival instead of leaving input almost ready.
-  const blend = rawBlend >= 0.99999 ? 1 : rawBlend;
   const demoBounds = sections[2].bounds;
   const interactive =
     !!scene &&
-    chapter === 'experience' &&
-    blend >= 0.99999 &&
+    isOverheadReadingFrame(storyFrame) &&
+    !layoutRefreshing &&
+    !mediaPosition &&
+    !refreshPosition &&
     hostBounds.bottom > 120 &&
     hostBounds.top < innerHeight - 48 &&
     demoBounds.bottom > innerHeight * 0.6;
@@ -541,28 +680,74 @@ function updateStory() {
         stage?.trigger.pin &&
         (stage.trigger.isActive || Math.abs(scrollY - stage.trigger.end) < 1)
           ? stage.progress
-          : undefined,
+          : (reduced() || choreographyReduced !== reduced()) &&
+              lastReplayPosition?.element === element
+            ? lastReplayPosition.progress
+            : undefined,
     };
   }
-  scene?.setCameraPlacement({
+  const placement = {
     region: {
       left: hostBounds.left,
       top: hostBounds.top,
       width: hostBounds.width,
       height: hostBounds.height,
     },
+    // A long natural-flow interval moves the live host while being read.
+    // Flights join the accepted reading interval, including native landing tolerance.
+    restRegion:
+      experienceRestRegion &&
+      transitionReadingRegion(
+        experienceRestRegion,
+        readingStops.find((stop) => stop.id === 'experience') ?? {
+          readStart: 0,
+          readEnd: 0,
+        },
+        track,
+        Boolean(stages.get('experience')?.trigger.pin),
+      ),
     blend,
     inputEnabled: interactive,
-  });
-  scene?.setStoryFrame(storyFrame);
+  };
+  const surfaces = readGlassSurfaces();
+  const sceneChanged =
+    scene &&
+    sceneCommitChanged(scene, {
+      frame: storyFrame,
+      placement,
+      surfaces,
+      viewport: {
+        width: innerWidth,
+        height: innerHeight,
+        dpr: devicePixelRatio,
+      },
+    });
+  if (sceneChanged) {
+    scene!.setCameraPlacement(placement);
+    scene!.setGlassSurfaces(surfaces);
+    scene!.setStoryFrame(storyFrame);
+  }
   // The hint needs the final camera projection, but must measure before this
   // update changes inherited lighting and section state.
+  const experienceReading = storyStageState(
+    'experience',
+    scrollY,
+    readingStops,
+    storyFrame.cameraTrack,
+  );
+  const experienceRect = experienceStage.getBoundingClientRect();
+  demoHintReading =
+    desktop.matches && !reduced()
+      ? experienceReading.phase === 'reading'
+      : experienceRect.bottom > siteHeader.getBoundingClientRect().bottom &&
+        experienceRect.top < innerHeight;
+  demoHintEligible =
+    demoHintReading &&
+    !layoutRefreshing &&
+    (!desktop.matches || reduced() || root.dataset.scrollState === 'idle') &&
+    (!desktop.matches || !!root.dataset.sceneFallback || interactive);
   demoInvitation?.refresh();
-  if (
-    chapter === 'experience' &&
-    (!desktop.matches || !!root.dataset.sceneFallback || interactive)
-  )
-    demoInvitation?.invite(reduced());
+  if (demoHintEligible) demoInvitation?.invite(reduced());
   const renderer = scene && desktop.matches ? '3d' : '2d';
   if (courtHost.dataset.renderer !== renderer)
     courtHost.dataset.renderer = renderer;
@@ -581,7 +766,7 @@ function updateStory() {
   // its own and reverses with the cards, including after a media refresh.
   const replayPhase =
     !desktop.matches || reduced()
-      ? Number(chapter === 'replay' || chapter === 'download')
+      ? Number(['replay', 'download', 'community'].includes(chapter))
       : (stages.get('replay')?.progress ?? 0);
   const focusPhase = Math.max(0, Math.min(1, (replayPhase - 0.18) / 0.6));
   const replayFocus = smooth(focusPhase).toFixed(4);
@@ -593,17 +778,17 @@ function updateStory() {
   const inputEnabled = String(interactive);
   if (root.dataset.interactive !== inputEnabled)
     root.dataset.interactive = inputEnabled;
+  if (sceneChanged) queueSceneFrame();
 }
 let scrollFrame = 0;
 let resizeTimer: ReturnType<typeof setTimeout> | undefined;
 let motionTimer: ReturnType<typeof setTimeout> | undefined;
 let choreographyReduced = reduced();
-let openingPlayed = false;
+
 const initialAnchor = document.getElementById(location.hash.slice(1));
 let recentAnchor: { element: HTMLElement } | undefined = initialAnchor
   ? { element: initialAnchor }
   : undefined;
-let replaySnapAllowed = false;
 let anchorFrame = 0;
 type StagePosition = { element: HTMLElement; top: number; progress?: number };
 let mediaPosition: StagePosition | undefined;
@@ -632,45 +817,14 @@ function restoreDemoPosition() {
   restoreStagePosition(saved);
 }
 function restoreStagePosition(saved: StagePosition) {
-  const replay =
-    saved.element.dataset.storyStage === 'replay'
-      ? stages.get('replay')?.trigger
-      : undefined;
-  if (replay?.pin) {
-    // Preserve the card/score phase across a size change. When returning from a
-    // natural layout, invert the page travel curve using its visible position.
-    if (
-      saved.progress === undefined &&
-      (saved.top < 87 || saved.top > innerHeight * 0.5)
-    ) {
-      const top =
-        saved.top < 88
-          ? replay.end + 88 - saved.top
-          : replay.start + innerHeight * 0.5 - saved.top;
-      window.scrollTo({ top, behavior: 'instant' });
-      ScrollTrigger.update();
-      updateStory();
-      return;
-    }
-    const progress =
-      saved.progress ??
-      (Math.abs(saved.top - 88) < 1
-        ? 1
-        : Math.asin(
-            gsap.utils.clamp(
-              0,
-              1,
-              (innerHeight * 0.5 - saved.top) /
-                Math.max(1, innerHeight * 0.5 - 88),
-            ),
-          ) /
-          (Math.PI * 0.5));
-    window.scrollTo({
-      top: replay.start + (replay.end - replay.start) * progress,
-      behavior: 'instant',
-    });
+  const trigger = stages.get(
+    saved.element.dataset.storyStage as StoryChapter,
+  )?.trigger;
+  if (trigger?.pin && saved.progress !== undefined) {
+    const top = trigger.start + (trigger.end - trigger.start) * saved.progress;
+    window.scrollTo({ top, behavior: 'instant' });
     ScrollTrigger.update();
-    replay.animation?.progress(progress);
+    trigger.animation?.progress(saved.progress);
     updateStory();
     return;
   }
@@ -687,6 +841,7 @@ function restoreStagePosition(saved: StagePosition) {
   updateStory();
 }
 function refreshChoreography() {
+  chapterScroll?.prepareRefresh();
   // Explicit refresh reverts before GSAP's media-init event. Capture first here;
   // the event handlers cover native media-query changes.
   rememberDemoPosition();
@@ -721,74 +876,68 @@ document.addEventListener('click', (event) => {
     // Chapter IDs include the breathing room BETWEEN chapters. Navigate to the
     // visible chapter label instead, retaining fragment history and native scroll.
     event.preventDefault();
+    chapterScroll?.cancel();
     if (location.hash !== link!.hash)
       history.pushState(history.state, '', link!.hash);
     syncLanguage();
     if (element.id === 'main') element.focus({ preventScroll: true });
+    if (phone.matches && readingStops.some((stop) => stop.id === element.id)) {
+      recentAnchor = undefined;
+      cancelAnimationFrame(anchorFrame);
+      anchorFrame = 0;
+      chapterScroll?.navigateTo(element.id as StopId, { instant: reduced() });
+      return;
+    }
     recentAnchor = { element };
-    replaySnapAllowed = false;
-    killReplaySnap();
     resumeAnchorNavigation();
   }
 });
 for (const input of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
   window.addEventListener(
     input,
-    (event) => {
+    () => {
       recentAnchor = undefined;
-      replaySnapAllowed =
-        event instanceof WheelEvent
-          ? !event.ctrlKey && Math.abs(event.deltaY) > Math.abs(event.deltaX)
-          : event instanceof KeyboardEvent &&
-            ['ArrowDown', 'PageDown', ' '].includes(event.key) &&
-            !(
-              event.target instanceof Element &&
-              event.target.closest(
-                'button, input, select, textarea, [contenteditable]',
-              )
-            );
-      if (!replaySnapAllowed) killReplaySnap();
+      if (reduced() && lastReplayPosition)
+        lastReplayPosition.progress = undefined;
     },
     {
       passive: true,
     },
   );
 }
-function scrollToChapter(element: HTMLElement, behavior: ScrollBehavior) {
+function chapterScrollTop(element: HTMLElement) {
   if (element.id === 'hero' || element.id === 'main') {
-    window.scrollTo({ top: 0, behavior });
-    return;
+    return 0;
   }
   const heading = element.querySelector<HTMLElement>('.section-top');
-  if (!heading) {
-    element.scrollIntoView({ behavior, block: 'start' });
-    return;
-  }
   const inset =
     select<HTMLElement>('.site-header').getBoundingClientRect().bottom + 20;
-  const stage = element.querySelector<HTMLElement>('[data-story-stage]');
+  const stage = element.matches('[data-story-stage]')
+    ? element
+    : element.querySelector<HTMLElement>('[data-story-stage]');
   const trigger = stages.get(element.id as StoryChapter)?.trigger;
-  let top = scrollY + heading.getBoundingClientRect().top - inset;
+  let top = scrollY + (heading ?? element).getBoundingClientRect().top - inset;
   if (stage && trigger?.pin) {
-    const localOffset =
-      heading.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+    const localOffset = heading
+      ? heading.getBoundingClientRect().top - stage.getBoundingClientRect().top
+      : 0;
     const rest = Number(stage.dataset.storyRestTop);
     const delta = rest + localOffset - inset;
-    // Approach and resting states have different scroll offsets. Replay lands
-    // at its END; the static input court starts at its START. Positive replay
-    // offsets leave the pin naturally; negative experience offsets approach it.
+    // Navigate into a settled reading/interaction state of the shared story.
     top =
-      element.id === 'replay'
-        ? trigger.end + Math.max(0, delta)
-        : trigger.start + Math.min(0, delta);
+      trigger.start + (trigger.end - trigger.start) * 0.4 + Math.max(0, delta);
   }
-  window.scrollTo({ top: Math.max(0, top), behavior });
+  return Math.max(0, top);
+}
+function scrollToChapter(element: HTMLElement, behavior: ScrollBehavior) {
+  chapterScroll?.cancel();
+  window.scrollTo({ top: chapterScrollTop(element), behavior });
 }
 window.addEventListener('hashchange', () => {
+  chapterScroll?.cancel();
   const element = document.getElementById(location.hash.slice(1));
   if (!element || disposed) return;
   recentAnchor = { element };
-  replaySnapAllowed = false;
   resumeAnchorNavigation();
 });
 function resumeAnchorNavigation() {
@@ -805,7 +954,10 @@ function resumeAnchorNavigation() {
         recentAnchor &&
         location.hash === `#${recentAnchor.element.id}`
       )
-        scrollToChapter(recentAnchor.element, reduced() ? 'instant' : 'smooth');
+        scrollToChapter(
+          recentAnchor.element,
+          phone.matches || reduced() ? 'instant' : 'smooth',
+        );
     });
   });
 }
@@ -813,33 +965,47 @@ function resumeAnchorNavigation() {
 // restores scroll behavior on the next frame, so resume after that restoration.
 ScrollTrigger.addEventListener('refresh', resumeAnchorNavigation);
 function rememberReplayRefresh() {
+  chapterScroll?.prepareRefresh();
   layoutRefreshing = true;
-  if (!recentAnchor && !mediaPosition && storyFrame.chapter === 'replay')
-    refreshPosition = lastReplayPosition;
+  // Block native input before temporary pin/ROI geometry is exposed.
+  courtPress = undefined;
+  root.dataset.interactive = 'false';
+  if (!recentAnchor && !mediaPosition && storyFrame.chapter === 'replay') {
+    // Native input may have arrived before the next story RAF. Regular refresh
+    // starts before pins are reverted, so capture today's scroll and geometry
+    // instead of restoring the previous rendered playhead over that input.
+    const element = select<HTMLElement>('[data-story-stage="replay"]');
+    const trigger = stages.get('replay')?.trigger;
+    refreshPosition = {
+      element,
+      top: element.getBoundingClientRect().top,
+      progress:
+        trigger?.pin && scrollY >= trigger.start && scrollY <= trigger.end
+          ? (scrollY - trigger.start) / Math.max(1, trigger.end - trigger.start)
+          : undefined,
+    };
+  }
 }
 function restoreReplayRefresh() {
   layoutRefreshing = false;
   const saved = refreshPosition;
   refreshPosition = undefined;
   if (saved && !disposed && !recentAnchor) restoreStagePosition(saved);
+  refreshReadingStops();
 }
 ScrollTrigger.addEventListener('refreshInit', rememberReplayRefresh);
 ScrollTrigger.addEventListener('refresh', restoreReplayRefresh);
 function needsChoreographyRefresh() {
   if (choreographyReduced !== reduced()) return true;
   if (reduced()) return stages.size > 0;
-  return (['hero', 'experience', 'replay'] as const).some((chapter) => {
-    const stage = document.querySelector<HTMLElement>(
+  return chapterIds.some((chapter) => {
+    const element = document.querySelector<HTMLElement>(
       `[data-story-stage="${chapter}"]`,
     );
     const trigger = stages.get(chapter)?.trigger;
-    const shouldPin =
-      desktop.matches &&
-      !!stage &&
-      stage.scrollHeight <=
-        window.innerHeight -
-          (chapter === 'experience' ? 104 : chapter === 'replay' ? 88 : 50);
-    return !trigger || Boolean(trigger.pin) !== shouldPin;
+    return (
+      !!element && (!trigger || Boolean(trigger.pin) !== canPinStage(element))
+    );
   });
 }
 function onScroll() {
@@ -853,6 +1019,7 @@ window.addEventListener('scroll', onScroll, { passive: true });
 window.addEventListener(
   'resize',
   () => {
+    chapterScroll?.prepareRefresh();
     onScroll();
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
@@ -868,6 +1035,7 @@ window.addEventListener(
   { passive: true },
 );
 function applyMotion() {
+  chapterScroll?.cancel();
   if (reduced()) scoringFeedback?.cancel();
   if (reduced()) demoInvitation?.cancel();
   scene?.setMotionEnabled(!reduced());
@@ -882,182 +1050,540 @@ function applyMotion() {
   void startScene();
   updateStory();
 }
+function stageRestTop(stage: HTMLElement) {
+  if (stage.dataset.storyStage === 'hero') return 0;
+  const heading = stage.querySelector<HTMLElement>('.section-top');
+  const offset = heading
+    ? heading.getBoundingClientRect().top - stage.getBoundingClientRect().top
+    : 0;
+  return (
+    select<HTMLElement>('.site-header').getBoundingClientRect().bottom +
+    20 -
+    offset
+  );
+}
+function canPinStage(stage: HTMLElement) {
+  const available =
+    stage.dataset.storyStage === 'hero'
+      ? innerHeight + 1
+      : innerHeight - stageRestTop(stage) - 16;
+  // Child transforms can enlarge scrollHeight during an entrance. The border
+  // box is the static grid's real layout footprint and does not include them.
+  const footprint = stageLayoutHeight(
+    stage.offsetHeight,
+    [...stage.children]
+      .filter((child): child is HTMLElement => child instanceof HTMLElement)
+      .map((child) => child.offsetTop + child.offsetHeight),
+    parseFloat(getComputedStyle(stage).paddingBottom) || 0,
+  );
+  return desktop.matches && !reduced() && footprint <= available;
+}
+const replayPresentation = createReplayPresentation(
+  select<HTMLElement>('[data-story-stage="replay"]'),
+);
+const glassCards = [
+  ...document.querySelectorAll<HTMLElement>('[data-glass-card]'),
+];
+const storyItems = [
+  ...document.querySelectorAll<HTMLElement>('[data-story-item]'),
+];
+const storyOrnaments = [
+  ...document.querySelectorAll<HTMLElement>(
+    '.section-top, .hero-topline, .hero-floor',
+  ),
+];
+const lastItemPose = new WeakMap<HTMLElement, string>();
+const stageBottomInsets = new WeakMap<HTMLElement, number>();
+const relayChapters: readonly RelayChapter[] = [
+  'hero',
+  'scoring',
+  'experience',
+  'replay',
+  'download',
+  'community',
+];
+let relayAnchors: Partial<Record<RelayChapter, RelayAnchor>> = {};
+const relay = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+relay.classList.add('story-relay');
+relay.setAttribute('aria-hidden', 'true');
+relay.setAttribute('focusable', 'false');
+relay.setAttribute('viewBox', '0 0 1 4');
+relay.setAttribute('preserveAspectRatio', 'none');
+relay.style.pointerEvents = 'none';
+const relayLine = document.createElementNS(
+  'http://www.w3.org/2000/svg',
+  'path',
+);
+relayLine.setAttribute('fill', 'none');
+relayLine.setAttribute('stroke', 'currentColor');
+relayLine.setAttribute('stroke-width', '2');
+relayLine.setAttribute('stroke-linecap', 'round');
+relayLine.setAttribute('d', 'M0 2h1');
+relayLine.setAttribute('vector-effect', 'non-scaling-stroke');
+relay.append(relayLine);
+document.body.append(relay);
+let lastRelay = '';
+
+function measureRelayAnchors() {
+  const anchors: Partial<Record<RelayChapter, RelayAnchor>> = {};
+  for (const id of relayChapters) {
+    const stage = select<HTMLElement>(`[data-story-stage="${id}"]`);
+    const stop = readingStops.find((candidate) => candidate.id === id);
+    if (!stage || !stop) continue;
+    const anchor =
+      document.querySelector<HTMLElement>(`[data-relay-anchor="${id}"]`) ??
+      stage.querySelector<HTMLElement>('.section-top') ??
+      stage;
+    // These slots are never transformed. Store their reading-stop viewport
+    // position, not the current position of an approaching optical surface.
+    const rect = anchor.getBoundingClientRect();
+    const stageRect = stage.getBoundingClientRect();
+    const rest = stages.get(id)?.trigger.pin
+      ? stageRestTop(stage)
+      : scrollY + stageRect.top - stop.readStart;
+    anchors[id] = {
+      x: rect.left + Math.min(24, rect.width * 0.08),
+      y: rest + rect.bottom - stageRect.top + 8,
+      length: Math.min(112, Math.max(64, rect.width * 0.25)),
+    };
+  }
+  relayAnchors = anchors;
+}
+
+function updateStoryRelay() {
+  const stops = relayChapters.flatMap((id) => {
+    const stop = readingStops.find((candidate) => candidate.id === id);
+    return stop ? [{ ...stop, id }] : [];
+  });
+  const pose = relayPose(scrollY, stops, relayAnchors, storyFrame.cameraTrack);
+  const visible = desktop.matches && !reduced() && pose.opacity > 0;
+  const key = [pose.x, pose.y, pose.length, visible ? pose.opacity : 0].join(
+    ',',
+  );
+  if (key !== lastRelay) {
+    // A tiny compositor layer moves the accent. Rewriting a full-viewport SVG
+    // path would repaint millions of pixels for this single 112px line.
+    const width = `${pose.length}px`;
+    if (relay.style.width !== width) relay.style.width = width;
+    relay.style.transform = `translate3d(${pose.x}px, ${pose.y - 2}px, 0)`;
+    const opacity = String(visible ? pose.opacity : 0);
+    if (relay.style.opacity !== opacity) relay.style.opacity = opacity;
+    lastRelay = key;
+  }
+  const chapter = visible ? (pose.chapter ?? '') : '';
+  if (root.dataset.relayChapter !== chapter)
+    root.dataset.relayChapter = chapter;
+}
+
+function updateStoryItems(
+  sections: { element: HTMLElement; bounds: DOMRect }[],
+) {
+  // Read every static stage position before applying any component transform.
+  // The resulting optical rectangles are then measured by updateStory once.
+  const layouts: {
+    chapter: StoryChapter | 'closing';
+    stage: HTMLElement;
+    state: ReturnType<typeof storyStageState>;
+    offset: number;
+  }[] = [];
+  for (const chapter of [...chapterIds, 'closing'] as const) {
+    const stage = select<HTMLElement>(
+      chapter === 'closing' ? '#closing' : `[data-story-stage="${chapter}"]`,
+    );
+    if (!stage) continue;
+    const entry = chapter === 'closing' ? undefined : stages.get(chapter);
+    const bounds =
+      sections.find(({ element }) => element === stage)?.bounds ??
+      stage.getBoundingClientRect();
+    const state = storyStageState(
+      chapter,
+      scrollY,
+      readingStops,
+      storyFrame.cameraTrack,
+    );
+    // Community flows naturally into FAQ: both share the final camera endpoint.
+    if (
+      chapter === 'community' &&
+      !storyFrame.cameraTrack &&
+      state.progress === 1
+    )
+      state.phase = 'reading';
+    const offset =
+      desktop.matches && !reduced() && chapter !== 'closing'
+        ? storyStageOffset(state, {
+            scroll: scrollY,
+            top: bounds.top,
+            pinned: Boolean(entry?.trigger.pin),
+            restTop: entry?.trigger.pin ? stageRestTop(stage) : undefined,
+          })
+        : 0;
+    layouts.push({ chapter, stage, state, offset });
+  }
+  for (const { chapter, stage, state, offset } of layouts) {
+    for (const ornament of stage.querySelectorAll<HTMLElement>(
+      '.section-top, .hero-topline, .hero-floor',
+    )) {
+      const visibility = storyOrnamentVisibility(state, {
+        secondary: ornament.classList.contains('hero-floor'),
+        reduced: reduced(),
+        mobile: !desktop.matches || chapter === 'closing',
+        focused: ornament.contains(document.activeElement),
+      });
+      const opacity = String(visibility.opacity);
+      if (ornament.style.opacity !== opacity) ornament.style.opacity = opacity;
+      ornament.inert = visibility.inert;
+    }
+    if (chapter === 'replay')
+      replayPresentation.update(
+        reduced() ||
+          !desktop.matches ||
+          state.phase === 'reading' ||
+          state.phase === 'outgoing'
+          ? 1
+          : state.phase === 'incoming'
+            ? storyItemPose(state.progress, 'visual', 'left', 0, {
+                phase: 'incoming',
+                preset: 'replay-analysis',
+              }).reveal * 0.22
+            : state.progress,
+      );
+    for (const item of stage.querySelectorAll<HTMLElement>(
+      '[data-story-item]',
+    )) {
+      const role = (item.dataset.storyItem || 'visual') as StoryRole;
+      const direction = (item.dataset.storyEnter || 'left') as StoryEnter;
+      const pose =
+        mobilePresentation?.itemPose(item, role, chapter) ??
+        storyItemPose(state.progress, role, direction, innerWidth, {
+          hero: chapter === 'hero',
+          chapter,
+          phase: state.phase,
+          preset: item.dataset.storyPreset,
+          reduced: reduced(),
+          focused: item.contains(document.activeElement),
+          mobile: !desktop.matches || chapter === 'closing',
+        });
+      const y = pose.y + (pose.opacity > 0 ? offset : 0);
+      const key = [pose.x, y, pose.scale, pose.opacity, pose.reveal].join(',');
+      if (lastItemPose.get(item) !== key) {
+        gsap.set(item, {
+          x: pose.x,
+          y,
+          scale: pose.scale,
+          opacity: pose.opacity,
+          force3D: pose.opacity > 0 && pose.opacity < 1,
+        });
+        for (const wrapper of item.querySelectorAll<HTMLElement>(
+          '[data-story-reveal]',
+        )) {
+          // Only inner content reveals; the glass outline/ROI stays rectangular.
+          if (!wrapper.hasAttribute('data-glass-card'))
+            wrapper.style.setProperty('--story-reveal', String(pose.reveal));
+        }
+        lastItemPose.set(item, key);
+      }
+      // Keep hidden controls out of both pointer and keyboard navigation.
+      // Unlike inline styles, inert cannot be restored by GSAP context cleanup.
+      item.inert = pose.opacity < 0.05;
+    }
+    if (chapter === 'scoring') syncScoringFeedback(state.phase);
+  }
+}
+function readGlassSurfaces(): GlassSurface[] {
+  // CSS fallback needs no screen-space optical measurements while scrolling.
+  if (root.dataset.quality && root.dataset.quality !== 'full') return [];
+  return glassCards
+    .flatMap((card) => {
+      const bounds = card.getBoundingClientRect();
+      const style = getComputedStyle(card);
+      const opacity = Number(style.opacity);
+      if (
+        opacity <= 0.001 ||
+        bounds.bottom < 0 ||
+        bounds.top > innerHeight ||
+        bounds.right < 0 ||
+        bounds.left > innerWidth
+      )
+        return [];
+      return [
+        {
+          id: card.dataset.glassId!,
+          region: {
+            left: bounds.left,
+            top: bounds.top,
+            width: bounds.width,
+            height: bounds.height,
+          },
+          radius:
+            (parseFloat(style.borderTopLeftRadius) || 24) *
+            (bounds.width / Math.max(1, card.offsetWidth)),
+          opacity,
+        },
+      ];
+    })
+    .slice(0, 6);
+}
 choreography.add(
   {
     desktop: '(min-width: 1024px) and (pointer: fine)',
     reduce: '(prefers-reduced-motion: reduce)',
-    mobile: '(max-width: 1023px)',
   },
-  (context) => {
-    const { desktop: isDesktop, reduce } = context.conditions!;
-    let replayPresentation:
-      ReturnType<typeof addReplayCardChoreography> | undefined;
-    choreographyReduced = Boolean(reduce);
+  () => {
+    choreographyReduced = reduced();
     stages.clear();
-    if (reduce) return;
-    if (!openingPlayed) {
-      openingPlayed = true;
-      gsap.from('[data-hero-line]', {
-        y: isDesktop ? 28 : 12,
-        opacity: 0,
-        duration: isDesktop ? 1.3 : 0.45,
-        stagger: isDesktop ? 0.14 : 0.04,
-        ease: 'power3.out',
-        clearProps: 'all',
-      });
-      gsap.from('.hero-ball', {
-        rotation: -14,
-        scale: 0.88,
-        duration: isDesktop ? 1.8 : 0.5,
-        ease: 'power2.out',
-        clearProps: 'all',
-      });
-    }
-    for (const [chapter, extra] of [
-      ['hero', 0.75],
-      ['experience', 0.32],
-      ['replay', 0.75],
-    ] as const) {
-      const stage = document.querySelector<HTMLElement>(
-        `[data-story-stage="${chapter}"]`,
-      );
-      if (!stage) continue;
-      const value = { progress: 0 };
-      // Expanded text is allowed to flow naturally instead of being clipped by a pinned viewport.
-      const canPin =
-        isDesktop &&
-        stage.scrollHeight <=
-          window.innerHeight -
-            (chapter === 'experience' ? 104 : chapter === 'replay' ? 88 : 50);
-      const replayShell =
-        chapter === 'replay' && canPin ? stage.parentElement! : undefined;
-      const replayTravel = () => Math.max(0, innerHeight * 0.5 - 88);
-      const sizeReplayShell = () => {
-        if (replayShell)
-          replayShell.style.height = `${stage.offsetHeight - replayTravel()}px`;
-      };
-      sizeReplayShell();
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          id: `story-${chapter}`,
-          trigger: replayShell ?? stage,
-          start: canPin
-            ? chapter === 'hero'
-              ? 'top top'
-              : chapter === 'replay'
-                ? 'top 50%'
-                : 'top 88px'
-            : chapter === 'replay' && isDesktop
-              ? 'top 85%'
-              : 'top 75%',
-          end: () =>
-            canPin
-              ? `+=${window.innerHeight * extra}`
-              : chapter === 'replay' && isDesktop
-                ? 'top 88px'
-                : 'bottom 25%',
-          pin: replayShell ?? canPin,
-          pinSpacing: true,
-          scrub: chapter === 'replay' ? 0.18 : 0.55,
-          invalidateOnRefresh: true,
-          onRefreshInit: sizeReplayShell,
-          snap: replayShell
-            ? {
-                snapTo: (progress, trigger) =>
-                  replaySnapAllowed &&
-                  !recentAnchor &&
-                  !suspension.size &&
-                  (trigger?.direction ?? 0) > 0 &&
-                  progress >= 0.84 &&
-                  progress < 1
-                    ? 1
-                    : progress,
-                inertia: false,
-                delay: 0.12,
-                duration: { min: 0.24, max: 0.42 },
-                ease: 'power2.out',
-              }
-            : undefined,
-          onRefresh: (trigger) => {
-            stage.dataset.storyRestTop = chapter === 'hero' ? '0' : '88';
-            stage.dataset.storyStart = String(trigger.start);
-            stage.dataset.storyEnd = String(trigger.end);
-            stage.dataset.storyProgress = value.progress.toFixed(4);
-            const entry = stages.get(chapter);
-            if (entry) entry.progress = value.progress;
-            if (chapter === 'replay') {
-              stage.dataset.replayStart = String(trigger.start);
-              stage.dataset.replayEnd = String(trigger.end);
-              replayPresentation?.update();
-            }
-            updateStory();
-          },
-        },
-        onUpdate: () => {
-          const entry = stages.get(chapter);
-          if (entry) entry.progress = value.progress;
-          stage.dataset.storyProgress = value.progress.toFixed(4);
-          if (chapter === 'replay') replayPresentation?.update();
-          updateStory();
-        },
-      });
-      stages.set(chapter, { progress: 0, trigger: timeline.scrollTrigger! });
-      timeline.to(value, { progress: 1, duration: 1, ease: 'none' }, 0);
-      if (chapter === 'hero') {
-        timeline.to(
-          '.hero-art',
-          {
-            scale: isDesktop ? 0.94 : 1,
-            y: isDesktop ? 0 : 12,
-            duration: 1,
-            ease: 'none',
-          },
-          0,
-        );
-      } else if (chapter === 'replay' && isDesktop) {
-        replayPresentation = addReplayCardChoreography(timeline, stage);
-        if (replayShell)
-          timeline.to(
-            stage,
-            {
-              y: () => -replayTravel(),
-              duration: 1,
-              ease: 'sine.out',
-              force3D: true,
-            },
-            0,
-          );
-      }
-    }
-    if (!isDesktop) {
-      for (const element of document.querySelectorAll<HTMLElement>(
-        '.demo-map, .replay-editorial > *, .download-package',
-      )) {
-        gsap.from(element, {
-          opacity: 0,
-          y: 12,
-          duration: 0.42,
-          ease: 'power2.out',
-          clearProps: 'transform,opacity',
-          scrollTrigger: {
-            trigger: element,
-            start: 'top 88%',
-            toggleActions: 'play none none none',
-          },
-        });
-      }
-    }
-    return () => {
-      replayPresentation?.restore();
-      document
-        .querySelector<HTMLElement>('[data-replay-scroll-shell]')
-        ?.style.removeProperty('height');
-      stages.clear();
+    if (reduced()) {
       updateStory();
+      return;
+    }
+    for (const chapter of chapterIds) {
+      const stage = select<HTMLElement>(`[data-story-stage="${chapter}"]`);
+      if (!stage) continue;
+      const pin = canPinStage(stage);
+      const trigger = ScrollTrigger.create({
+        id: `story-${chapter}`,
+        trigger: stage,
+        start: () =>
+          chapter === 'hero'
+            ? 'top top'
+            : pin
+              ? `top ${stageRestTop(stage)}px`
+              : 'top 90%',
+        end: pin ? () => `+=${innerHeight * 1.15}` : 'bottom 112px',
+        pin,
+        pinSpacing: true,
+        invalidateOnRefresh: true,
+        onRefresh(trigger) {
+          stage.dataset.storyRestTop = String(stageRestTop(stage));
+          stage.dataset.storyStart = String(trigger.start);
+          stage.dataset.storyEnd = String(trigger.end);
+          stage.dataset.storyProgress = trigger.progress.toFixed(4);
+          const entry = stages.get(chapter);
+          if (entry) entry.progress = trigger.progress;
+          if (chapter === 'replay') {
+            stage.dataset.replayStart = String(trigger.start);
+            stage.dataset.replayEnd = String(trigger.end);
+          }
+        },
+        onUpdate(trigger) {
+          const entry = stages.get(chapter);
+          if (entry) entry.progress = trigger.progress;
+          stage.dataset.storyProgress = trigger.progress.toFixed(4);
+          queueStoryUpdate();
+        },
+      });
+      stages.set(chapter, { progress: trigger.progress, trigger });
+    }
+    updateStory();
+    return () => {
+      stages.clear();
+      storyOrnaments.forEach((ornament) => {
+        ornament.style.removeProperty('opacity');
+        ornament.inert = false;
+      });
+      lastItemPose &&
+        storyItems.forEach((item) => {
+          gsap.set(item, { clearProps: 'transform,opacity' });
+          item.style.removeProperty('--story-reveal');
+          for (const wrapper of item.querySelectorAll<HTMLElement>(
+            '[data-story-reveal]',
+          ))
+            wrapper.style.removeProperty('--story-reveal');
+          item.inert = false;
+          lastItemPose.delete(item);
+        });
     };
   },
 );
+// Optical rectangles also follow content changes (details, fonts, focus), not
+// just scrolling. Transforms do not resize the observed content boxes.
+const observedCardSizes = new WeakMap<
+  Element,
+  { width: number; height: number }
+>();
+const cardResizeObserver = new ResizeObserver((entries) => {
+  if (disposed) return;
+  let changed = false;
+  for (const entry of entries) {
+    if (entry.target === siteHeader && measureHeaderInset()) changed = true;
+    const previous = observedCardSizes.get(entry.target);
+    const { width, height } = entry.contentRect;
+    observedCardSizes.set(entry.target, { width, height });
+    if (
+      previous &&
+      (Math.abs(previous.width - width) > 1 ||
+        Math.abs(previous.height - height) > 1)
+    )
+      changed = true;
+  }
+  // Initial observation and subpixel pin rounding do not change document layout.
+  // Rebuilding pins for those samples could interrupt the first wheel transition.
+  if (!changed) return;
+  // Preserve a committed destination before the debounce can outlive its tween.
+  chapterScroll?.prepareRefresh();
+  onScroll();
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (disposed) return;
+    if (needsChoreographyRefresh()) refreshChoreography();
+    else ScrollTrigger.refresh();
+    updateStory();
+  }, 120);
+});
+for (const element of new Set<Element>([
+  siteHeader,
+  ...glassCards,
+  ...storyItems,
+  ...document.querySelectorAll('[data-story-stage]'),
+]))
+  cardResizeObserver.observe(element);
+cardResizeObserver.observe(select<HTMLElement>('#closing'));
+
+function refreshReadingStops() {
+  mobilePresentation?.invalidate();
+  const maxScroll = Math.max(
+    0,
+    document.documentElement.scrollHeight - innerHeight,
+  );
+  const clamp = (value: number) => Math.max(0, Math.min(maxScroll, value));
+  const readingLine =
+    select<HTMLElement>('.site-header').getBoundingClientRect().bottom + 24;
+  readingStops = ([...chapterIds, 'closing'] as const).map((id) => {
+    const element = select<HTMLElement>(`#${id}`);
+    const stage =
+      id === 'closing'
+        ? element
+        : select<HTMLElement>(`[data-story-stage="${id}"]`);
+    const trigger = id === 'closing' ? undefined : stages.get(id)?.trigger;
+    const pin = trigger?.pin;
+    const readStart = clamp(chapterScrollTop(element));
+    const bottom = scrollY + stage.getBoundingClientRect().bottom;
+    const top = scrollY + stage.getBoundingClientRect().top;
+    const bottomInset =
+      id === 'closing'
+        ? 0
+        : parseFloat(getComputedStyle(stage).paddingBottom) || 0;
+    stageBottomInsets.set(stage, bottomInset);
+    const contentBottom = phone.matches
+      ? mobileContentBottom(element)
+      : bottom - bottomInset;
+    const readEnd =
+      phone.matches && id === 'closing'
+        ? maxScroll
+        : pin
+          ? readStart
+          : Math.max(readStart, clamp(contentBottom - innerHeight + 16));
+    stage.dataset.scrollReadStart = readStart.toFixed(3);
+    stage.dataset.scrollReadEnd = readEnd.toFixed(3);
+    return {
+      id,
+      readStart,
+      readEnd,
+      entryStart: clamp(pin ? trigger!.start : top - innerHeight * 0.92),
+      entryEnd: clamp(
+        pin
+          ? trigger!.start + (trigger!.end - trigger!.start) * 0.22
+          : top - readingLine,
+      ),
+      exitStart: clamp(
+        pin
+          ? trigger!.start + (trigger!.end - trigger!.start) * 0.78
+          : contentBottom - innerHeight + 16,
+      ),
+      exitEnd: clamp(pin ? trigger!.end : contentBottom - readingLine),
+    };
+  });
+  // The map/host have no story-item transforms; subtracting their shared stage
+  // translation removes pin motion while preserving fractional grid geometry.
+  // Cache once per layout refresh, never from the moving host during flight.
+  const stageBounds = experienceStage.getBoundingClientRect();
+  const hostBounds = courtHost.getBoundingClientRect();
+  experienceRestRegion = {
+    left: hostBounds.left,
+    top: stageRestTop(experienceStage) + hostBounds.top - stageBounds.top,
+    width: hostBounds.width,
+    height: hostBounds.height,
+  };
+  measureRelayAnchors();
+  updateStoryRelay();
+  chapterScroll?.refresh();
+  mobileTouch?.refresh();
+  chapterRail?.refresh();
+}
+chapterScroll = createChapterScroll({
+  getStops: () => readingStops,
+  enabled: () => desktop.matches && !reduced() && !disposed && !suspension.size,
+  canNavigate: () => !disposed && !suspension.size,
+  write: (top) => {
+    recentAnchor = undefined;
+    cancelAnimationFrame(anchorFrame);
+    anchorFrame = 0;
+    window.scrollTo({ top, behavior: 'instant' });
+    ScrollTrigger.update();
+    queueStoryUpdate();
+  },
+  onState: (phase, targetStop) => {
+    if (root.dataset.scrollState !== phase) root.dataset.scrollState = phase;
+    queueStoryUpdate();
+    if (phase !== 'settling' || !targetStop) return;
+    const focused = document.activeElement;
+    if (!(focused instanceof HTMLElement)) return;
+    const focusedStage = focused.closest<HTMLElement>(
+      '[data-story-stage], #closing',
+    );
+    const focusedStop = focusedStage?.dataset.storyStage ?? focusedStage?.id;
+    if (focusedStop && focusedStop !== targetStop) {
+      // A committed wheel departure releases its old control, so focus safety
+      // cannot keep that entire card visible over the arriving chapter.
+      // Same-stop tiny returns and focus outside the story remain untouched.
+      focused.blur();
+      queueStoryUpdate();
+    }
+  },
+});
+mobileProgress = createMobileProgress({ getStops: () => readingStops });
+mobileTouch = createMobileTouch({
+  getStops: () => readingStops,
+  controller: () => chapterScroll,
+  enabled: () =>
+    phone.matches &&
+    (navigator.maxTouchPoints > 0 ||
+      ('ontouchstart' in window && matchMedia('(pointer: coarse)').matches)) &&
+    !reduced() &&
+    !disposed &&
+    !suspension.size,
+  requestUpdate: queueStoryUpdate,
+});
+chapterRail = createChapterRail({
+  getStops: () => readingStops,
+  reduced,
+  canUse: () => !disposed && !suspension.size,
+  controller: () => chapterScroll,
+  requestUpdate: queueStoryUpdate,
+  layoutChanged: () => {
+    if (disposed) return;
+    chapterScroll?.prepareRefresh();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (disposed) return;
+      if (needsChoreographyRefresh()) refreshChoreography();
+      else ScrollTrigger.refresh();
+      updateStory();
+    }, 0);
+  },
+  onNavigate: (id) => {
+    recentAnchor = undefined;
+    cancelAnimationFrame(anchorFrame);
+    anchorFrame = 0;
+    if (location.hash !== `#${id}`)
+      history.pushState(history.state, '', `#${id}`);
+    syncLanguage(id);
+  },
+});
+refreshReadingStops();
+document.addEventListener('focusin', onScroll);
+document.addEventListener('focusin', () => chapterScroll?.cancel());
 systemMotion.addEventListener('change', () => {
+  mobileTouch?.cancel();
   applyMotion();
   clearTimeout(motionTimer);
   // GSAP can coalesce media events within one clock tick. Reconcile a missed
@@ -1094,15 +1620,25 @@ window.addEventListener('pagehide', (event) => {
     return;
   }
   disposed = true;
-  surfaceObserver.disconnect();
-  scoreInvitationObserver.disconnect();
+  chapterRail?.dispose();
+  chapterScroll?.dispose();
+  demoArt.dispose();
+  cancelAnimationFrame(scoreInvitationFrame);
   viewer.dispose();
   downloadChooser.dispose();
+  mobileNavigation.dispose();
+  mobilePresentation?.dispose();
+  mobileProgress?.dispose();
+  mobileTouch?.dispose();
   scoringFeedback?.cancel();
   demoInvitation?.cancel();
   stopFlight();
   stopScene();
+  cardResizeObserver.disconnect();
+  relay.remove();
+  document.removeEventListener('focusin', onScroll);
   choreography.revert();
+  replayPresentation.restore();
   cancelAnimationFrame(scrollFrame);
   cancelAnimationFrame(anchorFrame);
   ScrollTrigger.removeEventListener('refresh', resumeAnchorNavigation);

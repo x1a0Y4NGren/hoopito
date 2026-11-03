@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
-import { SHOT_TIMING, netResponse } from './shot-timing';
+import { SHOT_TIMING } from './shot-timing';
+import { sampleShotPose, shotFlightPoint } from './shot-motion';
+import { COURT_LIGHTING } from './court-lighting';
+import { isOverheadReadingFrame } from './camera-track';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -8,7 +11,6 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
 import { CopyShader } from 'three/addons/shaders/CopyShader.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createCourtHardware } from './court-hardware';
 import { createCourtFloor } from './court-floor';
 import { loadCourtTextures } from './court-textures';
@@ -20,11 +22,15 @@ import {
 } from './camera-placement';
 import { preparedDrawCost } from './gpu-calibration';
 import { ShotContinuation } from './scene-contract';
+import { LiquidGlassPass } from './liquid-glass-pass';
 import {
   ActiveFrameMonitor,
   renderDensity,
   sceneRenderRoute,
+  sceneMsaaSamples,
   shouldRenderContinuously,
+  shouldAnimateAmbient,
+  AmbientDrift,
 } from './scene-performance';
 import type {
   CourtPoint,
@@ -33,9 +39,11 @@ import type {
   StoryFrame,
   SceneQuality,
   CameraPlacement,
+  GlassSurface,
 } from './scene-contract';
 import {
   courtVertex,
+  courtPaintVertex,
   courtFragment,
   trailVertex,
   trailFragment,
@@ -53,6 +61,36 @@ const worldPoint = (point: CourtPoint) =>
     (clamp(point.y) - 0.5) * LENGTH,
   );
 
+/** Tube centres and Frenet tangents share the flight's time parameter. */
+class ShotArc extends THREE.Curve<THREE.Vector3> {
+  constructor(private readonly point: CourtPoint) {
+    super();
+  }
+  getPoint(progress: number, target = new THREE.Vector3()) {
+    return target.fromArray(shotFlightPoint(this.point, progress));
+  }
+  getPointAt(progress: number, target = new THREE.Vector3()) {
+    return this.getPoint(progress, target);
+  }
+  getTangentAt(progress: number, target = new THREE.Vector3()) {
+    return this.getTangent(progress, target);
+  }
+}
+
+function createShotTrail(point: CourtPoint) {
+  return new THREE.Mesh(
+    new THREE.TubeGeometry(new ShotArc(point), 64, 0.022, 6, false),
+    new THREE.ShaderMaterial({
+      uniforms: { uHead: { value: 0 }, uOpacity: { value: 0.86 } },
+      vertexShader: trailVertex,
+      fragmentShader: trailFragment,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    }),
+  );
+}
+
 /** No imported models or remote assets. The page owns input eligibility and score. */
 export async function createCourtScene(
   canvas: HTMLCanvasElement,
@@ -69,6 +107,10 @@ export async function createCourtScene(
   let renderer: THREE.WebGLRenderer | undefined;
   let composer: EffectComposer | undefined;
   let animationFrame = 0;
+  let ambientTimer: ReturnType<typeof setTimeout> | undefined;
+  const ambient = new AmbientDrift();
+  let glassSurfaces: readonly GlassSurface[] = [];
+  let glassMode: 'webgl' | 'css' = 'css';
   let disposed = false;
   let paused = false;
   let failed = false;
@@ -138,6 +180,8 @@ export async function createCourtScene(
     if (disposed) return;
     disposed = true;
     cancelAnimationFrame(animationFrame);
+    clearTimeout(ambientTimer);
+    setGlassMode('css');
     introduction?.kill();
     shotContinuation.cancel();
     removeTrail();
@@ -160,6 +204,7 @@ export async function createCourtScene(
   let bloom: UnrealBloomPass | undefined;
   let fallbackAA: ShaderPass | undefined;
   let scenePass: AntialiasedScenePass | undefined;
+  let glass: LiquidGlassPass | undefined;
   let supportedSamples: number[] = [];
   let nativeSamples = 0;
   let resolutionQuery: MediaQueryList | undefined;
@@ -168,8 +213,15 @@ export async function createCourtScene(
   let madeMarker: THREE.Group | undefined;
   let ball: THREE.Group | undefined;
   let idleBall: THREE.Group | undefined;
+  const ballMeshes: THREE.Mesh<
+    THREE.SphereGeometry,
+    THREE.MeshStandardMaterial
+  >[] = [];
+  let ballGeometries: THREE.SphereGeometry[] = [];
   let keyLight: THREE.SpotLight | undefined;
   let macroLight: THREE.SpotLight | undefined;
+  let movingShadow:
+    THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial> | undefined;
   let orangeRimLight: THREE.SpotLight | undefined;
   let hardware: ReturnType<typeof createCourtHardware> | undefined;
   let courtFloor: ReturnType<typeof createCourtFloor> | undefined;
@@ -183,14 +235,7 @@ export async function createCourtScene(
   let viewportHeight = 0;
 
   function requestRender() {
-    if (
-      !disposed &&
-      !paused &&
-      ready &&
-      frame.active &&
-      frame.chapter !== 'download' &&
-      !animationFrame
-    )
+    if (!disposed && !paused && ready && frame.active && !animationFrame)
       animationFrame = requestAnimationFrame(render);
   }
 
@@ -225,11 +270,7 @@ export async function createCourtScene(
     );
     // Retina already supplies four physical pixels per CSS pixel. Select the
     // supported sample count again when zoom or a move between displays changes density.
-    const sampleLimit = pixelRatio >= 1.5 ? 2 : 4;
-    const samples = Math.max(
-      0,
-      ...supportedSamples.filter((value) => value >= 2 && value <= sampleLimit),
-    );
+    const samples = sceneMsaaSamples(quality, pixelRatio, supportedSamples);
     if (scenePass && scenePass.target.samples !== samples) {
       scenePass.target.dispose();
       scenePass.target.samples = samples;
@@ -269,6 +310,11 @@ export async function createCourtScene(
   }
 
   function updateCamera() {
+    if (
+      (frame.chapter === 'experience' || !motionEnabled) &&
+      camera.view?.enabled
+    )
+      camera.clearViewOffset();
     const inputEnabled = String(canReceiveInput());
     if (canvas.dataset.inputEnabled !== inputEnabled)
       canvas.dataset.inputEnabled = inputEnabled;
@@ -302,25 +348,34 @@ export async function createCourtScene(
     // the camera rises. A constant 15mm near plane makes overhead paint fight
     // the wood despite their physical separation.
     const near = THREE.MathUtils.clamp(camera.position.y * 0.01, 0.015, 0.2);
-    if (camera.fov !== pose.fov || aspectChanged || camera.near !== near) {
+    const filmOffset = pose.filmOffset ?? 0;
+    if (
+      camera.fov !== pose.fov ||
+      aspectChanged ||
+      camera.near !== near ||
+      camera.filmOffset !== filmOffset
+    ) {
       camera.fov = pose.fov;
       camera.near = near;
+      camera.filmOffset = filmOffset;
       if (aspectChanged) camera.aspect = aspect;
       camera.updateProjectionMatrix();
     }
     camera.updateMatrixWorld();
-    canvas.dataset.cameraView =
-      frame.chapter === 'experience' &&
-      (!cameraPlacement || cameraPlacement.blend === 1 || !motionEnabled)
-        ? 'overhead'
-        : 'story';
+    canvas.dataset.cameraView = isOverheadReadingFrame(frame)
+      ? 'overhead'
+      : 'story';
     canvas.dataset.placementBlend = (cameraPlacement?.blend ?? 0).toFixed(4);
     if (paint) paint.uniforms.uReveal!.value = pose.reveal;
-    if (keyLight) keyLight.intensity = 130 * pose.light;
-    if (orangeRimLight) orangeRimLight.intensity = 125 * pose.light;
+    if (keyLight)
+      keyLight.intensity = COURT_LIGHTING.key.intensity * pose.light;
+    if (orangeRimLight)
+      orangeRimLight.intensity = COURT_LIGHTING.amber.intensity * pose.light;
     if (macroLight)
-      macroLight.intensity = 1.45 * (0.82 + intro.progress * 0.18);
-    scene.environmentIntensity = 0.1 * pose.light;
+      macroLight.intensity =
+        COURT_LIGHTING.macro.intensity * (0.82 + intro.progress * 0.18);
+    scene.environmentIntensity =
+      COURT_LIGHTING.environmentIntensity * pose.light;
     courtFloor?.setLight(pose.light);
     // A cinematic cutaway lets the overhead camera read the floor without roof hardware crossing it.
     hardware?.setCeilingVisibility(
@@ -331,6 +386,11 @@ export async function createCourtScene(
     // Height is continuous across all chapters, including reverse travel.
     const cutaway = THREE.MathUtils.smoothstep(camera.position.y, 8, 18);
     applyViewCutaway(cutaway);
+    if (
+      hardware?.setDetailForCamera(camera, bounds.height, quality) &&
+      renderer
+    )
+      renderer.shadowMap.needsUpdate = true;
     appliedCameraPose = pose;
     appliedIntroProgress = intro.progress;
   }
@@ -367,16 +427,21 @@ export async function createCourtScene(
       ready &&
       !paused &&
       frame.active &&
-      frame.chapter === 'experience' &&
+      isOverheadReadingFrame(frame) &&
       Boolean(cameraPlacement?.inputEnabled)
     );
   }
 
   function applyQuality(nextQuality: SceneQuality) {
     if (quality === nextQuality || disposed) return;
+    // A quality change also changes hardware LOD even at a stationary rest.
+    appliedCameraPose = undefined;
     quality = nextQuality;
+    courtFloor?.setQuality(quality);
     if (bloom) bloom.enabled = quality === 'full';
     if (trail) trail.visible = quality === 'full';
+    if (glass) glass.enabled = quality === 'full' && !glass.failed;
+    if (quality !== 'full') setGlassMode('css');
     canvas.dataset.quality = quality;
     options.onQualityChange?.(quality);
     resize();
@@ -384,20 +449,75 @@ export async function createCourtScene(
 
   function drawFrame() {
     if (!renderer || !composer) return;
+    for (const mesh of ballMeshes) {
+      if (!mesh.parent?.visible) continue;
+      const distance = camera.position.distanceTo(mesh.parent.position);
+      const radius =
+        (0.12 * viewportHeight) /
+        (2 *
+          Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) *
+          Math.max(0.13, distance));
+      const current = ballGeometries.indexOf(mesh.geometry);
+      const next =
+        radius > (current === 0 ? 80 : 110)
+          ? 0
+          : radius > (current === 1 ? 14 : 22)
+            ? 1
+            : 2;
+      if (ballGeometries[next] && current !== next) {
+        mesh.geometry = ballGeometries[next]!;
+        if (mesh.castShadow) renderer.shadowMap.needsUpdate = true;
+      }
+    }
+    const drifting = shouldAnimateAmbient({ ...frame, paused, motionEnabled });
+    const offset = ambient.sample(performance.now(), drifting);
+    if (drifting)
+      camera.setViewOffset(
+        viewportWidth,
+        viewportHeight,
+        offset.x,
+        offset.y,
+        viewportWidth,
+        viewportHeight,
+      );
+    if (glass?.enabled) {
+      const count = glass.setSurfaces(
+        glassSurfaces,
+        canvas.getBoundingClientRect(),
+      );
+      canvas.dataset.glassSurfaces = String(count);
+    } else {
+      canvas.dataset.glassSurfaces = '0';
+    }
     if (sceneRenderRoute(quality, nativeSamples) === 'direct') {
+      setGlassMode('css');
       // Default RGBA8 framebuffer applies ACES and sRGB in the material shaders.
       // Native MSAA retains sharp silhouettes without HDR resolves or fullscreen copies.
       renderer.setRenderTarget(null);
       renderer.render(scene, camera);
     } else {
-      composer.render();
+      try {
+        composer.render();
+      } catch (error) {
+        if (!glass?.failed) throw error;
+        // Optical failure is decorative: retry the court with the failed pass disabled.
+        setGlassMode('css');
+        composer.render();
+      }
     }
+  }
+
+  function setGlassMode(mode: 'webgl' | 'css') {
+    canvas.dataset.glass = mode;
+    if (mode === glassMode) return;
+    glassMode = mode;
+    options.onGlassChange?.(mode);
   }
 
   function render(now: number) {
     animationFrame = 0;
     if (disposed || paused || !ready || !renderer || !composer) return;
-    if (!frame.active || frame.chapter === 'download') {
+    if (!frame.active) {
       canvas.dataset.rendering = 'off';
       monitor.reset();
       return;
@@ -428,14 +548,27 @@ export async function createCourtScene(
       moving,
     });
     canvas.dataset.rendering = continuous ? 'active' : 'idle';
-    const sample = monitor.observe(now, continuous);
+    // A scroll flush and a scheduled RAF can share one displayed frame. The
+    // document timeline gives both the same token, so extra draws cannot create
+    // sub-millisecond performance samples or bypass active-frame monitoring.
+    const timelineTime = document.timeline.currentTime;
+    const sample = monitor.observe(
+      typeof timelineTime === 'number' ? timelineTime : now,
+      continuous,
+    );
     if (sample) {
       canvas.dataset.frameMs = sample.average.toFixed(2);
       canvas.dataset.frameP95 = sample.p95.toFixed(2);
       canvas.dataset.fps = (1000 / sample.average).toFixed(1);
       if (sample.changed) applyQuality(sample.quality);
     }
+    clearTimeout(ambientTimer);
     if (continuous) requestRender();
+    else if (shouldAnimateAmbient({ ...frame, paused, motionEnabled })) {
+      canvas.dataset.rendering = 'ambient';
+      // Deliberate reading cadence never enters the active-frame performance monitor.
+      ambientTimer = setTimeout(requestRender, 1000 / 24);
+    }
   }
 
   options.signal.addEventListener('abort', onAbort, { once: true });
@@ -461,7 +594,14 @@ export async function createCourtScene(
     renderer.shadowMap.needsUpdate = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.setClearColor('#0B0D0F', 1);
-    renderer.debug.onShaderError = () => fail('initialization');
+    renderer.debug.onShaderError = () => {
+      if (glass?.rendering) {
+        glass.failed = true;
+        glass.enabled = false;
+        throw new Error('Court glass shader failed');
+      }
+      fail('initialization');
+    };
     renderer.info.autoReset = false;
     // Three r186 creates a WebGL2 context; the installed declarations also retain the legacy union.
     const gl = renderer.getContext() as WebGL2RenderingContext;
@@ -486,11 +626,46 @@ export async function createCourtScene(
     }
 
     const pmrem = new THREE.PMREMGenerator(renderer);
-    const room = new RoomEnvironment();
+    // A single static environment capture follows the actual training-hall
+    // light directions; no reflector camera or per-frame environment capture.
+    const room = new THREE.Scene();
+    room.background = new THREE.Color('#1B2229');
+    const roomGeometry = new THREE.BoxGeometry(27, 9, 36);
+    const roomSurface = new THREE.MeshBasicMaterial({
+      color: '#65717A',
+      side: THREE.BackSide,
+    });
+    const roomShell = new THREE.Mesh(roomGeometry, roomSurface);
+    roomShell.position.set(0, 4.5, 2);
+    room.add(roomShell);
+    const emitters: THREE.Mesh[] = [];
+    for (const [lamp, brightness] of [
+      [COURT_LIGHTING.key, 3.5],
+      [COURT_LIGHTING.amber, 2.0],
+      [COURT_LIGHTING.macro, 0.6],
+    ] as const) {
+      const patch = new THREE.Mesh(
+        new THREE.PlaneGeometry(3.5, 1.2),
+        new THREE.MeshBasicMaterial({
+          color: new THREE.Color(lamp.color).multiplyScalar(brightness),
+          side: THREE.DoubleSide,
+        }),
+      );
+      patch.position.fromArray(lamp.position);
+      patch.lookAt(new THREE.Vector3(...lamp.target));
+      room.add(patch);
+      emitters.push(patch);
+    }
     const environment = own(pmrem.fromScene(room, 0.04));
     scene.environment = environment.texture;
-    scene.environmentIntensity = 0.1;
-    room.dispose();
+    scene.environmentIntensity = COURT_LIGHTING.environmentIntensity;
+    roomGeometry.dispose();
+    roomSurface.dispose();
+    for (const patch of emitters) {
+      patch.geometry.dispose();
+      (patch.material as THREE.Material).dispose();
+    }
+    room.clear();
     pmrem.dispose();
 
     const emissiveAmber = material({
@@ -510,11 +685,33 @@ export async function createCourtScene(
       emissiveIntensity: 0.28,
     });
 
-    add(new THREE.HemisphereLight('#BDCCD7', '#060504', 0.14));
-    keyLight = add(new THREE.SpotLight('#FFF0DF', 130, 48, 0.45, 0.78, 1.8));
-    keyLight.position.set(4, 10, 1);
-    keyLight.target.position.set(0, 0, -2);
-    add(keyLight.target);
+    const lighting = COURT_LIGHTING;
+    add(
+      new THREE.HemisphereLight(
+        lighting.hemisphere.skyColor,
+        lighting.hemisphere.groundColor,
+        lighting.hemisphere.intensity,
+      ),
+    );
+    const spot = (
+      spec: typeof lighting.key | typeof lighting.amber | typeof lighting.macro,
+    ) => {
+      const light = add(
+        new THREE.SpotLight(
+          spec.color,
+          spec.intensity,
+          spec.distance,
+          spec.angle,
+          spec.penumbra,
+          spec.decay,
+        ),
+      );
+      light.position.fromArray(spec.position);
+      light.target.position.fromArray(spec.target);
+      add(light.target);
+      return light;
+    };
+    keyLight = spot(lighting.key);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.set(1024, 1024);
     keyLight.shadow.bias = -0.00035;
@@ -522,28 +719,34 @@ export async function createCourtScene(
     keyLight.shadow.camera.near = 1;
     keyLight.shadow.camera.far = 29;
     own(keyLight.shadow);
-    orangeRimLight = add(
-      new THREE.SpotLight('#DE783F', 125, 40, 0.68, 0.85, 1.8),
+    orangeRimLight = spot(lighting.amber);
+    const coolLight = add(
+      new THREE.PointLight(
+        lighting.cool.color,
+        lighting.cool.intensity,
+        lighting.cool.distance,
+        lighting.cool.decay,
+      ),
     );
-    orangeRimLight.position.set(-5, 7.9, -7);
-    orangeRimLight.target.position.set(0, 2, -3);
-    add(orangeRimLight.target);
-    const coolLight = add(new THREE.PointLight('#A7BBC7', 38, 20, 2));
-    coolLight.position.set(7, 5, 5);
-    // The macro ball is lit by the same warm sideline direction as the arena.
-    macroLight = add(new THREE.SpotLight('#FFE4BE', 1.45, 3.6, 0.72, 0.7, 2));
-    macroLight.position.set(3.5, 0.72, 3.6);
-    macroLight.target.position.set(2.6, 0.13, 4.1);
-    add(macroLight.target);
-    const ballRim = add(new THREE.PointLight('#CE692D', 1.1, 2.2, 2));
-    ballRim.position.set(2.05, 0.2, 3.76);
+    coolLight.position.set(...lighting.cool.position);
+    macroLight = spot(lighting.macro);
+    const ballRim = add(
+      new THREE.PointLight(
+        lighting.ballRim.color,
+        lighting.ballRim.intensity,
+        lighting.ballRim.distance,
+        lighting.ballRim.decay,
+      ),
+    );
+    ballRim.position.set(...lighting.ballRim.position);
 
     // Continuous flooring, acoustic walls and ceiling luminaires establish an indoor court.
     // The floor has no exposed miniature-model edge in the pullback or overhead shots.
     // Matte acoustic walls carry the ambient base finish; no view-dependent BRDF
     // is visible here. Their contour lights remain separate emissive geometry.
-    const wall = own(new THREE.MeshBasicMaterial({ color: '#090E11' }));
+    const wall = own(new THREE.MeshBasicMaterial({ color: '#18232C' }));
     const shellLight = own(emissiveAmber.clone());
+    shellLight.emissiveIntensity = 0.65;
     shellSurfaces.push(wall, shellLight);
     arenaShell.name = 'arena-cutaway-shell';
     add(arenaShell);
@@ -555,7 +758,12 @@ export async function createCourtScene(
       if (part instanceof THREE.Mesh) part.castShadow = false;
     });
 
-    courtFloor = createCourtFloor({ own, mapleMap: textures.maple, rim: RIM });
+    courtFloor = createCourtFloor({
+      own,
+      mapleMap: textures.maple,
+      detailMap: textures.mapleDetail,
+      rim: RIM,
+    });
     add(courtFloor.mesh);
     const contactShadow = own(
       new THREE.ShaderMaterial({
@@ -580,10 +788,16 @@ export async function createCourtScene(
     );
     ballContact.rotation.x = -Math.PI / 2;
     ballContact.position.set(2.6, 0.008, 4.1);
+    const shotShadowMaterial = own(contactShadow.clone());
+    movingShadow = add(
+      new THREE.Mesh(own(new THREE.PlaneGeometry(1, 1)), shotShadowMaterial),
+    );
+    movingShadow.rotation.x = -Math.PI / 2;
+    movingShadow.visible = false;
     paint = own(
       new THREE.ShaderMaterial({
-        uniforms: { uReveal: { value: 0 } },
-        vertexShader: courtVertex,
+        uniforms: { ...courtFloor.paintUniforms, uReveal: { value: 0 } },
+        vertexShader: courtPaintVertex,
         fragmentShader: courtFragment,
         transparent: true,
         depthWrite: false,
@@ -593,9 +807,7 @@ export async function createCourtScene(
         toneMapped: true,
       }),
     );
-    const lines = add(
-      new THREE.Mesh(own(new THREE.PlaneGeometry(WIDTH, LENGTH)), paint),
-    );
+    const lines = add(new THREE.Mesh(courtFloor.paintGeometry, paint));
     lines.rotation.x = -Math.PI / 2;
     lines.position.y = 0.012;
     const keyWash = add(
@@ -635,21 +847,21 @@ export async function createCourtScene(
     leather.colorSpace = THREE.SRGBColorSpace;
     // Mirrored sampling joins the generated grain without a hard tile boundary.
     leather.wrapS = leather.wrapT = THREE.MirroredRepeatWrapping;
-    leather.repeat.set(6, 3);
+    leather.repeat.set(8, 4);
     leatherDetail.colorSpace = THREE.NoColorSpace;
     leatherDetail.wrapS = leatherDetail.wrapT = THREE.MirroredRepeatWrapping;
-    leatherDetail.repeat.set(6, 3);
+    leatherDetail.repeat.set(8, 4);
     const ballSurface = material({
       color: '#FFFFFF',
       map: leather,
       bumpMap: leatherDetail,
-      bumpScale: 0.00022,
-      roughness: 0.79,
+      bumpScale: 0.00015,
+      roughness: 0.74,
       metalness: 0,
     });
     // Surface channels, antialiased in screen space, keep the ball silhouette round.
     // Modelling these as exposed tubes made close-ups look like cables wrapped round a ball.
-    ballSurface.customProgramCacheKey = () => 'hoopito-eight-panel-leather-v3';
+    ballSurface.customProgramCacheKey = () => 'hoopito-eight-panel-leather-v4';
     ballSurface.onBeforeCompile = (shader) => {
       shader.vertexShader = shader.vertexShader
         .replace(
@@ -679,7 +891,7 @@ export async function createCourtScene(
           float channel = min(straightChannel, curvedChannel);
           float channelAA = max(fwidth(channel), 0.0001);
           float rubber = 1.0 - smoothstep(0.0135 - channelAA * 0.5, 0.0135 + channelAA * 0.5, channel);
-          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.004, 0.003, 0.0025), rubber);
+          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.012, 0.009, 0.007), rubber);
         `,
         )
         .replace(
@@ -688,18 +900,33 @@ export async function createCourtScene(
           THREE.ShaderChunk.normal_fragment_maps.replace(
             'dHdxy_fwd()',
             'dHdxy_fwd() * (1.0 - rubber)',
-          ),
+          ) +
+            `\nfloat channelRecess = -0.00085 * rubber;
+          normal = perturbNormalArb(-vViewPosition, normal, vec2(dFdx(channelRecess), dFdy(channelRecess)), faceDirection);`,
         );
+      shader.fragmentShader = shader.fragmentShader.replace(
+        '#include <roughnessmap_fragment>',
+        '#include <roughnessmap_fragment>\nroughnessFactor = mix(roughnessFactor, 0.62, rubber);',
+      );
     };
-    const sphereGeometry = own(new THREE.SphereGeometry(0.12, 96, 64));
+    ballGeometries = [
+      [96, 64],
+      [48, 32],
+      [24, 16],
+    ].map(([width, height]) =>
+      own(new THREE.SphereGeometry(0.12, width, height)),
+    );
     const createBall = () => {
       const group = add(new THREE.Group());
-      const body = add(new THREE.Mesh(sphereGeometry, ballSurface), group);
+      const body = add(new THREE.Mesh(ballGeometries[0]!, ballSurface), group);
+      ballMeshes.push(body);
       body.castShadow = true;
       body.receiveShadow = true;
       return group;
     };
     idleBall = createBall();
+    // Fill the macro foreground depth first instead of shading wood behind it.
+    idleBall.renderOrder = -1;
     idleBall.position.set(2.6, 0.123, 4.1);
     idleBall.rotation.set(0.22, -0.38, 0.14);
     ball = createBall();
@@ -798,11 +1025,27 @@ export async function createCourtScene(
     // Three r186's bloom dispose omits this material.
     own(bloom.materialHighPassFilter);
     composer.addPass(bloom);
+    try {
+      glass = own(
+        new LiquidGlassPass(() => {
+          if (quality === 'full' && !glass?.failed && !disposed)
+            setGlassMode('webgl');
+        }),
+      );
+      composer.addPass(glass);
+    } catch {
+      setGlassMode('css');
+    }
     composer.addPass(own(new OutputPass()));
     fallbackAA = own(new ShaderPass(FXAAShader));
     composer.addPass(fallbackAA);
     resize();
     // Compile upfront before main reveals the canvas; no frame-blocking asset fetch.
+    const preparationTrail = add(createShotTrail({ x: 0.72, y: 0.65 }));
+    own(preparationTrail.geometry);
+    own(preparationTrail.material);
+    preparationTrail.material.uniforms.uOpacity!.value = 0;
+    preparationTrail.frustumCulled = false;
     const previousTarget = renderer.getRenderTarget();
     try {
       // Warm both opaque and partially cutaway finishes before the first
@@ -842,23 +1085,83 @@ export async function createCourtScene(
       }[] = [];
       const openingFrame = frame;
       const openingIntro = intro.progress;
+      const openingSurfaces = glassSurfaces;
+      // The page registers real rectangles after creation. Prepare the optical
+      // branch now with six realistic, non-overlapping cards, rather than timing
+      // an empty pass and discovering its shaders during the first scroll.
+      const bounds = canvas.getBoundingClientRect();
+      glassSurfaces = Array.from({ length: 6 }, (_, index) => ({
+        id: `optics-preparation-${index}`,
+        region: {
+          left: bounds.left + bounds.width * (0.06 + (index % 3) * 0.3),
+          top:
+            bounds.top + bounds.height * (0.14 + Math.floor(index / 3) * 0.4),
+          width: bounds.width * 0.26,
+          height: bounds.height * 0.32,
+        },
+        radius: 24,
+        opacity: 1,
+      }));
       const probeFrames: StoryFrame[] = [
         { chapter: 'hero', progress: 0, active: true },
         { chapter: 'scoring', progress: 0.5, active: true },
         { chapter: 'experience', progress: 0.25, active: true },
         { chapter: 'replay', progress: 0.5, active: true },
+        { chapter: 'download', progress: 0.5, active: true },
+        { chapter: 'community', progress: 0.5, active: true },
+        {
+          chapter: 'scoring',
+          progress: 0.5,
+          active: true,
+          cameraTrack: { from: 'hero', to: 'scoring', progress: 0.5 },
+        },
+        {
+          chapter: 'community',
+          progress: 0.5,
+          active: true,
+          cameraTrack: { from: 'download', to: 'community', progress: 0.5 },
+        },
       ];
+      const calibrationDeadline = performance.now() + 2200;
+      let measured = false;
       try {
         intro.progress = 1;
-        for (const candidate of ['full', 'effects', 'density'] as const) {
+        qualityProbe: for (const candidate of [
+          'full',
+          'effects',
+          'density',
+        ] as const) {
           if (candidate !== quality) applyQuality(candidate);
           const views: (typeof calibration)[number]['views'] = [];
           for (const probeFrame of probeFrames) {
+            if (performance.now() >= calibrationDeadline) break qualityProbe;
             frame = probeFrame;
             updateCamera();
+            const shotProbe = probeFrame.chapter === 'download';
+            hardware?.setNetImpact(shotProbe ? 0.8 : 0);
+            preparationTrail.visible = shotProbe && candidate === 'full';
+            preparationTrail.material.uniforms.uHead!.value = 0.9;
+            preparationTrail.material.uniforms.uOpacity!.value = 0.7;
+            if (ball) {
+              ball.visible = shotProbe;
+              ball.position.fromArray(
+                sampleShotPose({ x: 0.72, y: 0.65 }, 1.3).position,
+              );
+            }
             // Warm the view before measuring: a macro shot cannot establish the
             // cost of a lit floor filling the buffer later in the story.
             drawFrame();
+            if (candidate === 'full' && probeFrame.chapter === 'hero') {
+              // Driver optimization can complete after link/first draw. Retain
+              // this cold sample separately; grade only the prepared pipeline.
+              const warmup = await preparedDrawCost(
+                gl,
+                drawFrame,
+                options.signal,
+              );
+              canvas.dataset.opticsWarmupMs =
+                warmup === null ? 'unavailable' : warmup.toFixed(3);
+            }
             const milliseconds = await preparedDrawCost(
               gl,
               drawFrame,
@@ -872,13 +1175,39 @@ export async function createCourtScene(
             ...views.map((view) => view.milliseconds),
           );
           calibration.push({ quality: candidate, milliseconds, views });
-          if (milliseconds <= 8) break;
+          if (milliseconds <= 8 || candidate === 'density') {
+            measured = true;
+            break;
+          }
         }
       } finally {
         frame = openingFrame;
         intro.progress = openingIntro;
+        glassSurfaces = openingSurfaces;
+        hardware?.setNetImpact(0);
+        if (ball) ball.visible = false;
         if (!disposed) updateCamera();
       }
+      // An unavailable or expired timer cannot certify a faster tier.
+      if (!measured && !disposed) {
+        applyQuality('density');
+        // The timer budget may expire before reaching the final tier. Prepare
+        // its real views too; these draws are warmup, never measured evidence.
+        try {
+          intro.progress = 1;
+          for (const probeFrame of probeFrames) {
+            if (disposed || options.signal.aborted) break;
+            frame = probeFrame;
+            updateCamera();
+            drawFrame();
+          }
+        } finally {
+          frame = openingFrame;
+          intro.progress = openingIntro;
+          if (!disposed) updateCamera();
+        }
+      }
+      canvas.dataset.calibrationStatus = measured ? 'measured' : 'unavailable';
       canvas.dataset.calibration = JSON.stringify(calibration);
       monitor.quality = quality;
       // A faster low-tier frame does not prove a more expensive tier fits.
@@ -886,6 +1215,15 @@ export async function createCourtScene(
       monitor.qualityCeiling = quality;
       monitor.reset();
     }
+    scene.remove(preparationTrail);
+    for (const resource of [
+      preparationTrail.geometry,
+      preparationTrail.material,
+    ]) {
+      if (disposables.delete(resource)) resource.dispose();
+    }
+    // Warm the selected material branch before the matching poster is removed.
+    if (!disposed && !failed) drawFrame();
     if (disposed || failed || options.signal.aborted)
       throw new DOMException('Scene aborted', 'AbortError');
     ready = true;
@@ -894,6 +1232,7 @@ export async function createCourtScene(
     canvas.dataset.storyProgress = frame.progress.toFixed(4);
     canvas.dataset.renderCount = '0';
     options.onQualityChange?.(quality);
+    options.onGlassChange?.(glassMode);
     window.addEventListener('resize', resize, { passive: true });
     resizeObserver = new ResizeObserver(() => resize());
     resizeObserver.observe(canvas);
@@ -927,12 +1266,21 @@ export async function createCourtScene(
     if (selection) selection.visible = false;
     if (madeMarker) madeMarker.visible = false;
     if (ball) ball.visible = false;
+    if (movingShadow) movingShadow.visible = false;
     hardware?.setNetImpact(0);
     if (renderer) renderer.shadowMap.needsUpdate = true;
     requestRender();
   }
 
   return {
+    setGlassSurfaces(surfaces) {
+      if (disposed) return;
+      glassSurfaces = surfaces.map((surface) => ({
+        ...surface,
+        region: { ...surface.region },
+      }));
+      requestRender();
+    },
     setCameraPlacement(nextPlacement) {
       if (disposed) return;
       let next = normalizeCameraPlacement(nextPlacement);
@@ -942,7 +1290,7 @@ export async function createCourtScene(
       const previous = cameraPlacement;
       const sameGeometry =
         previous === next ||
-        Boolean(
+        (Boolean(
           previous &&
           next &&
           previous.blend === next.blend &&
@@ -950,10 +1298,14 @@ export async function createCourtScene(
           previous.region.top === next.region.top &&
           previous.region.width === next.region.width &&
           previous.region.height === next.region.height,
-        );
+        ) &&
+          JSON.stringify(previous?.restRegion) ===
+            JSON.stringify(next?.restRegion));
       if (sameGeometry && previous?.inputEnabled === next?.inputEnabled) return;
       cameraPlacement = next;
-      updateCamera();
+      // Placement and story arrive in one DOM commit. Apply the final pair at
+      // setStoryFrame/render, while projection queries still synchronize on demand.
+      canvas.dataset.inputEnabled = String(canReceiveInput());
       if (!sameGeometry) {
         changingUntil = performance.now() + 160;
         requestRender();
@@ -998,10 +1350,19 @@ export async function createCourtScene(
         !viewportChanged &&
         frame.chapter === nextFrame.chapter &&
         frame.progress === progress &&
-        frame.active === nextFrame.active
+        frame.active === nextFrame.active &&
+        frame.cameraTrack?.from === nextFrame.cameraTrack?.from &&
+        frame.cameraTrack?.to === nextFrame.cameraTrack?.to &&
+        frame.cameraTrack?.progress === nextFrame.cameraTrack?.progress
       )
         return;
-      frame = { ...nextFrame, progress };
+      frame = {
+        ...nextFrame,
+        progress,
+        ...(nextFrame.cameraTrack
+          ? { cameraTrack: { ...nextFrame.cameraTrack } }
+          : {}),
+      };
       canvas.dataset.chapter = frame.chapter;
       canvas.dataset.storyProgress = progress.toFixed(4);
       canvas.dataset.inputEnabled = String(canReceiveInput());
@@ -1010,8 +1371,10 @@ export async function createCourtScene(
         intro.progress = 1;
       }
       changingUntil = performance.now() + 160;
-      if (!frame.active || frame.chapter === 'download') {
+      if (!frame.active) {
         cancelAnimationFrame(animationFrame);
+        clearTimeout(ambientTimer);
+        ambient.suspend();
         animationFrame = 0;
         monitor.reset();
         canvas.dataset.rendering = 'off';
@@ -1023,10 +1386,24 @@ export async function createCourtScene(
     },
     presentFrame() {
       if (disposed || !renderer || !composer) return;
-      resize();
+      if (
+        canvas.clientWidth !== viewportWidth ||
+        canvas.clientHeight !== viewportHeight
+      )
+        resize();
       updateCamera();
       drawFrame();
       canvas.dataset.presentedChapter = frame.chapter;
+    },
+    flushFrame() {
+      if (disposed || paused || !ready || !frame.active) return;
+      cancelAnimationFrame(animationFrame);
+      clearTimeout(ambientTimer);
+      animationFrame = 0;
+      const timelineTime = document.timeline.currentTime;
+      render(
+        typeof timelineTime === 'number' ? timelineTime : performance.now(),
+      );
     },
     exportFrame() {
       if (disposed || !renderer || !composer)
@@ -1062,100 +1439,59 @@ export async function createCourtScene(
         requestRender();
         return;
       }
-      const launch = worldPoint(point);
-      launch.y = 1.2;
-      const apex = launch.clone().lerp(RIM, 0.5);
-      apex.y = Math.max(5.2, 4.4 + launch.distanceTo(RIM) * 0.12);
-      const arc = new THREE.QuadraticBezierCurve3(launch, apex, RIM);
-      const trailSurface = new THREE.ShaderMaterial({
-        uniforms: { uHead: { value: 0 }, uOpacity: { value: 0.86 } },
-        vertexShader: trailVertex,
-        fragmentShader: trailFragment,
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
-      });
-      trail = add(
-        new THREE.Mesh(
-          new THREE.TubeGeometry(arc, 64, 0.035, 8, false),
-          trailSurface,
-        ),
-      );
+      trail = add(createShotTrail(point));
       trail.visible = quality === 'full';
       const flyingBall = ball;
       const marker = madeMarker;
       const flightTrail = trail;
-      flyingBall.position.copy(launch);
-      flyingBall.visible = true;
-      const motion = { progress: 0, fall: 0, rebound: 0 };
+      const motion = { elapsed: 0 };
       flight = gsap.timeline();
       const currentFlight = flight;
       const shotGeneration = shotContinuation.begin(point, () => {
         currentFlight.kill();
         if (flight === currentFlight) flight = undefined;
       });
-      flight
-        .to(motion, {
-          progress: 1,
-          duration: SHOT_TIMING.flight,
-          ease: 'none',
-          onUpdate() {
-            if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
-            arc.getPoint(motion.progress, flyingBall.position);
-            flyingBall.rotation.set(
-              motion.progress * Math.PI * 3.4,
-              motion.progress * Math.PI * 1.8,
-              0.15,
-            );
-            flightTrail.material.uniforms.uHead!.value = motion.progress;
-            requestRender();
-          },
-        })
-        .to(motion, {
-          fall: 1,
-          duration: SHOT_TIMING.swish,
-          ease: 'power2.in',
-          onUpdate() {
-            if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
-            flyingBall.position.y = RIM.y - motion.fall * 0.95;
-            hardware?.setNetImpact(Math.sin(motion.fall * Math.PI));
-            flightTrail.material.uniforms.uOpacity!.value =
-              (1 - motion.fall) * 0.86;
-            requestRender();
-          },
-          onComplete() {
-            if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
-            flyingBall.visible = false;
-            hardware?.setNetImpact(0);
-            if (renderer) renderer.shadowMap.needsUpdate = true;
-            marker.position.copy(worldPoint(point));
-            marker.scale.set(1, 1, 1);
-            marker.visible = true;
-            removeTrail();
-            requestRender();
-          },
-        })
-        .to(motion, {
-          rebound: 1,
-          duration: SHOT_TIMING.rebound,
-          ease: 'none',
-          onUpdate() {
-            if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
-            hardware?.setNetImpact(
-              netResponse(
-                SHOT_TIMING.mark + motion.rebound * SHOT_TIMING.rebound,
-              ),
-            );
-            requestRender();
-          },
-          onComplete() {
-            if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
-            hardware?.setNetImpact(0);
-            shotContinuation.complete(shotGeneration);
-            flight = undefined;
-            requestRender();
-          },
-        });
+      const applyShot = () => {
+        if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
+        const pose = sampleShotPose(point, motion.elapsed);
+        flyingBall.position.fromArray(pose.position);
+        flyingBall.rotation.set(...pose.rotation);
+        flyingBall.visible = pose.visible;
+        hardware?.setNetImpact(pose.netImpact);
+        if (movingShadow) {
+          movingShadow.visible = pose.visible;
+          movingShadow.position.fromArray(pose.shadow.center);
+          movingShadow.scale.set(pose.shadow.scale[0], pose.shadow.scale[1], 1);
+          movingShadow.material.uniforms.uOpacity!.value = pose.shadow.opacity;
+        }
+        if (trail === flightTrail) {
+          flightTrail.material.uniforms.uHead!.value = pose.trailProgress;
+          flightTrail.material.uniforms.uOpacity!.value = pose.trailOpacity;
+          if (pose.recorded) removeTrail();
+        }
+        if (pose.recorded && !marker.visible) {
+          marker.position.copy(worldPoint(point));
+          marker.scale.set(1, 1, 1);
+          marker.visible = true;
+        }
+        requestRender();
+      };
+      currentFlight.to(motion, {
+        elapsed: SHOT_TIMING.total,
+        duration: SHOT_TIMING.total,
+        ease: 'none',
+        onUpdate: applyShot,
+        onComplete() {
+          if (disposed || !shotContinuation.isCurrent(shotGeneration)) return;
+          applyShot();
+          hardware?.setNetImpact(0);
+          if (movingShadow) movingShadow.visible = false;
+          shotContinuation.complete(shotGeneration);
+          flight = undefined;
+          requestRender();
+        },
+      });
+      applyShot();
       // Render the same instant before the canvas is revealed. Suppressed
       // callbacks would skip the marker/net transitions when adopting rebound.
       if (time > 0) currentFlight.seek(time, false);
@@ -1166,6 +1502,7 @@ export async function createCourtScene(
     setMotionEnabled(enabled) {
       if (disposed || motionEnabled === enabled) return;
       motionEnabled = enabled;
+      ambient.suspend();
       monitor.reset();
       if (!enabled) {
         introduction?.kill();
@@ -1174,6 +1511,7 @@ export async function createCourtScene(
         flight = undefined;
         removeTrail();
         if (ball) ball.visible = false;
+        if (movingShadow) movingShadow.visible = false;
         hardware?.setNetImpact(0);
         if (renderer) renderer.shadowMap.needsUpdate = true;
         selection?.scale.set(1, 1, 1);
@@ -1183,9 +1521,11 @@ export async function createCourtScene(
     setPaused(nextPaused) {
       if (disposed || paused === nextPaused) return;
       paused = nextPaused;
+      ambient.suspend();
       updateCamera();
       if (paused) {
         cancelAnimationFrame(animationFrame);
+        clearTimeout(ambientTimer);
         animationFrame = 0;
         flight?.pause();
         introduction?.pause();

@@ -82,6 +82,23 @@ function normalizeProgress(progress: number): number {
   return Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0;
 }
 
+/** Pure scroll-driven emphasis; scoring events keep their discrete boundaries. */
+export function getReplayMomentPresentation(
+  progress: number,
+  id: Exclude<ReplayKeyMomentId, 'final'>,
+): { reveal: number; emphasis: number } {
+  const position = normalizeProgress(progress);
+  const index = keyMoments.findIndex((moment) => moment.id === id);
+  const moment = keyMoments[index];
+  const next = keyMoments[index + 1];
+  const ease = (distance: number) => {
+    const value = Math.min(1, Math.max(0, distance / 0.06));
+    return value * value * (3 - 2 * value);
+  };
+  const reveal = ease(position - moment.progress);
+  return { reveal, emphasis: reveal * ease(next.progress - position) };
+}
+
 function coordinate(value: number): number {
   return Number(value.toFixed(3));
 }

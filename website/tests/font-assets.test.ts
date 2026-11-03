@@ -4,6 +4,9 @@ import { readFile, readdir } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { test } from 'node:test';
 import { pathToFileURL } from 'node:url';
+import { gzipSync } from 'node:zlib';
+import { content } from '../src/data/content.ts';
+import { posterFontFields, posterTitleText } from '../scripts/poster-font.mjs';
 
 const fontTools = createRequire(
   createRequire(import.meta.url).resolve('subset-font'),
@@ -149,4 +152,84 @@ test('font provenance describes the actual generated WOFF2 and unchanged source'
       new URL('../../assets/fonts/OFL-NotoSansSC.txt', import.meta.url),
     ),
   );
+});
+
+test('generated poster font retains the current title glyphs, Black outlines and source-bound provenance', async () => {
+  const blackSource = await readFile(
+    new URL('../assets/fonts/NotoSansSC-Black.otf', import.meta.url),
+  );
+  const posterBytes = await readFile(
+    new URL('../public/fonts/noto-poster-black.woff2', import.meta.url),
+  );
+  const blackFace = new hb.Face(new hb.Blob(blackSource));
+  const posterFace = new hb.Face(
+    new hb.Blob(await fontverter.convert(posterBytes, 'sfnt')),
+  );
+  const originalFont = new hb.Font(blackFace);
+  const posterFont = new hb.Font(posterFace);
+  const expected = [...posterTitleText(content.zh)].map((character) =>
+    character.codePointAt(0)!,
+  );
+  assert.equal(
+    Buffer.from(posterFace.referenceTable('OS/2')).readUInt16BE(4),
+    900,
+  );
+  assert.deepEqual(
+    [...posterFace.collectUnicodes()].sort((left, right) => left - right),
+    expected,
+    'a changed chapter title requires regenerating the deployed font',
+  );
+  assert.ok(gzipSync(posterBytes, { level: 9 }).length < 35 * 1024);
+  for (const codePoint of expected) {
+    const original = originalFont.nominalGlyph(codePoint);
+    const generated = posterFont.nominalGlyph(codePoint);
+    assert.ok(original && generated);
+    assert.deepEqual(
+      posterFont.glyphToJson(generated),
+      originalFont.glyphToJson(original),
+    );
+    assert.equal(
+      posterFont.glyphHAdvance(generated),
+      originalFont.glyphHAdvance(original),
+    );
+  }
+  const manifest = JSON.parse(
+    await readFile(new URL('../ASSET_SOURCES.json', import.meta.url), 'utf8'),
+  );
+  const record = manifest.assets.find(
+    (asset: { output: string }) =>
+      asset.output === 'public/fonts/noto-poster-black.woff2',
+  );
+  assert.ok(record, 'Generated Black font must have provenance');
+  const digest = (bytes: Buffer) =>
+    createHash('sha256').update(bytes).digest('hex');
+  assert.equal(record.bytes, posterBytes.length);
+  assert.equal(record.sha256, digest(posterBytes));
+  assert.equal(record.source_sha256, digest(blackSource));
+  assert.equal(record.font_family, 'NotoPoster');
+  assert.equal(record.font_weight, 900);
+  assert.equal(record.source_font_weight, 900);
+  assert.equal(record.gzip_bytes, gzipSync(posterBytes, { level: 9 }).length);
+  assert.deepEqual(record.subset_code_points, expected);
+  assert.deepEqual(
+    record.text_sources[0].fields,
+    posterFontFields.map((field) => `zh.${field}`),
+  );
+  assert.equal(
+    record.text_sources[0].sha256,
+    digest(await readFile(new URL('../src/data/content.ts', import.meta.url))),
+  );
+  assert.equal(
+    record.subset_generator_sha256,
+    digest(
+      await readFile(new URL('../scripts/poster-font.mjs', import.meta.url)),
+    ),
+  );
+  assert.equal(
+    record.source_record_sha256,
+    digest(
+      await readFile(new URL('../assets/fonts/sources.json', import.meta.url)),
+    ),
+  );
+  assert.equal(record.license, 'SIL-OFL-1.1');
 });

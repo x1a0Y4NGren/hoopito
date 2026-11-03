@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "upstream": "https://github.com/notofonts/noto-cjk",
+  "license": "SIL-OFL-1.1",
+  "license_source_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/LICENSE",
+  "license_file": "website/assets/fonts/OFL-NotoSansSC.txt",
+  "license_sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+  "fonts": [
+    {
+      "source": "assets/fonts/NotoSansSC-Regular.otf",
+      "source_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/SC/NotoSansSC-Regular.otf",
+      "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+      "source_bytes": 8331336,
+      "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
+      "font_name": "NotoSansSC-Regular",
+      "weight": 400,
+      "variable": false,
+      "license": "SIL-OFL-1.1",
+      "copyright": "© 2014-2021 Adobe (http://www.adobe.com/).",
+      "role": "Existing app/body source retained unchanged; website-wide glyph subset"
+    },
+    {
+      "source": "website/assets/fonts/NotoSansSC-Black.otf",
+      "source_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/SC/NotoSansSC-Black.otf",
+      "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+      "source_bytes": 8855916,
+      "source_sha256": "ccb496022356b7dd14d117538a472ae40feff8f6e8f3fe8bffc5616785d2f3f9",
+      "font_name": "NotoSansSC-Black",
+      "weight": 900,
+      "variable": false,
+      "license": "SIL-OFL-1.1",
+      "copyright": "© 2014-2021 Adobe (http://www.adobe.com/).",
+      "role": "Website-only Chinese poster heading source; seven approved content fields"
+    }
+  ]
+}

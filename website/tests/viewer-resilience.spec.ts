@@ -79,6 +79,17 @@ test('gallery resets stale zoom while a replacement image loads and ignores a la
     );
     await expect(page.locator('[data-viewer-in]')).toBeDisabled();
     await page.keyboard.press('Escape');
+    // Navigate to the next readable stage before opening its image. Automatic
+    // element centring can stop inside an offscreen poster entrance.
+    await page.locator('.site-header nav > a[href="#replay"]').click();
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-scroll-stop',
+      'replay',
+    );
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-scroll-state',
+      'idle',
+    );
     await page.locator('[data-replay-device="summary"] .viewer-link').click();
     await expect(page.locator('[data-viewer-image]')).toHaveJSProperty(
       'naturalWidth',

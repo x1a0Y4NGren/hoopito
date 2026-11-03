@@ -5,7 +5,7 @@ const apk = '/downloads/v2.0.1/Hoopito-v2.0.1-android.apk';
 const apkFilename = 'Hoopito-v2.0.1-android.apk';
 const upstreamApk =
   'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk';
-const lanzouShare = 'https://wwbdc.lanzoub.com/ixNAU4d7x6kj';
+const lanzouShare = 'https://xiaoyangren.lanzoub.com/b01i5z85wb';
 const githubAttachment = '/__download-fixture__/github.apk';
 
 const test = base.extend<{
@@ -192,13 +192,13 @@ for (const locale of ['/', '/en/']) {
                   await expect(lanzou).toHaveAttribute('href', lanzouShare);
                   await expect(lanzou).toContainText(
                     locale === '/'
-                      ? '蓝奏云下载渠道（国内）'
+                      ? '蓝奏云下载（国内）'
                       : 'Lanzou download (China)',
                   );
                   await expect(
                     page.locator('[data-download-password]'),
                   ).toHaveText(
-                    locale === '/' ? /密码：\s*gkyz/ : /Password:\s*gkyz/,
+                    locale === '/' ? /密码：\s*ayj6/ : /Password:\s*ayj6/,
                   );
                   await expect(
                     page.locator('[data-download-channel="baidu"]'),
@@ -284,11 +284,11 @@ for (const locale of ['/', '/en/']) {
       'github',
     );
     await expect(channels.nth(0)).toContainText(
-      locale === '/' ? '蓝奏云下载渠道（国内）' : 'Lanzou download (China)',
+      locale === '/' ? '蓝奏云下载（国内）' : 'Lanzou download (China)',
     );
     await expect(channels.nth(1)).toContainText(
       locale === '/'
-        ? 'GitHub下载渠道（国外）'
+        ? 'GitHub 下载（国外）'
         : 'GitHub download (international)',
     );
     await expect(channels.nth(0)).toHaveAttribute('href', lanzouShare);
@@ -299,9 +299,9 @@ for (const locale of ['/', '/en/']) {
     const password = page.locator('p[data-download-password]');
     await expect(password).toHaveAttribute('id', 'download-lanzou-password');
     await expect(password).toHaveText(
-      locale === '/' ? /密码：\s*gkyz/ : /Password:\s*gkyz/,
+      locale === '/' ? /密码：\s*ayj6/ : /Password:\s*ayj6/,
     );
-    await expect(password.locator('code')).toHaveText('gkyz');
+    await expect(password.locator('code')).toHaveText('ayj6');
     await expect(page.locator('[data-download-channel="baidu"]')).toHaveCount(
       0,
     );
@@ -596,7 +596,7 @@ test('replay refresh preserves its plot without rewriting unchanged SVG geometry
   });
   expect(result.after).toEqual(result.before);
   expect(result.writes).toEqual([]);
-  await page.locator('.site-header a[href="#replay"]').click();
+  await page.locator('.site-header nav > a[href="#replay"]').click();
   await expect(stage).toHaveAttribute('data-replay-progress', '1.0000');
   await expect(page.locator('[data-replay-blue]')).toHaveText('8');
   await expect(page.locator('[data-replay-red]')).toHaveText('11');
@@ -644,7 +644,7 @@ test('scroll batching: one stationary scroll notification reads each chapter bou
   expect(reads.experience).toBe(1);
   for (const count of Object.values(reads)) expect(count).toBe(1);
   await expect(
-    page.locator('.site-header a[href="#experience"]'),
+    page.locator('.site-header nav > a[href="#experience"]'),
   ).toHaveAttribute('aria-current', 'location');
 });
 
@@ -655,6 +655,9 @@ test('scroll batching: a stationary court invitation does not rewrite its placem
   await page.goto('/en/#experience');
   await page.evaluate(() => document.fonts.ready);
   const host = page.locator('[data-demo-court-host]');
+  // Native reading input releases the direct-link intent before scrolling to
+  // the court below the now self-contained controls card.
+  await page.keyboard.press('Escape');
   await host.scrollIntoViewIfNeeded();
   await expect(host).toHaveAttribute('data-demo-invitation', 'playing');
   const placement = await page.evaluate(async () => {
@@ -720,11 +723,14 @@ async function enlargeChapterText(page: Page) {
   try {
     await page.evaluate(() => {
       const pending = new Set(
-        ['hero', 'experience', 'replay'].map((chapter) =>
-          document.querySelector(`[data-story-stage="${chapter}"]`)!,
-        ),
+        ['hero', 'experience', 'replay']
+          .map((chapter) =>
+            document.querySelector(`[data-story-stage="${chapter}"]`)!,
+          )
+          // Mobile natural flow has no fixed-stage ScrollTriggers to publish.
+          .filter((stage) => stage.hasAttribute('data-story-start')),
       );
-      const probe = { done: false, stop: () => {} };
+      const probe = { done: pending.size === 0, stop: () => {} };
       const observer = new MutationObserver((records) => {
         for (const record of records) pending.delete(record.target as Element);
         probe.done = pending.size === 0;
@@ -966,7 +972,7 @@ test('chapter polish: enabled actions share pressed and keyboard feedback while 
       getComputedStyle(element).transitionDuration.split(',').map(parseFloat),
     );
     expect(
-      durations.every((duration) => Math.abs(duration - 0.2) < 0.001),
+      durations.every((duration) => duration >= 0.12 && duration <= 0.18),
     ).toBe(true);
     if (selector === '.download-package [data-download]') {
       // Release on the link: Firefox retains native :active on a cancelled
@@ -1129,8 +1135,9 @@ for (const locale of ['/', '/en/']) {
       'data-chapter',
       'download',
     );
-    // A real scroll gesture cancels a still-pending fragment navigation.
-    await page.mouse.wheel(0, -1);
+    // Pointer input cancels the fragment owner before a scrollbar-like seek.
+    // A tiny wheel now intentionally schedules a return to its reading stop.
+    await page.mouse.click(12, 450);
     await page.locator('#experience').evaluate((el) =>
       scrollTo({
         top: scrollY + el.getBoundingClientRect().top - 140,
@@ -1203,7 +1210,7 @@ for (const locale of ['/', '/en/']) {
     );
   });
 
-  test(`${locale}: fallback background leaves product screenshots clear beyond the hero`, async ({
+  test(`${locale}: fallback court stays behind clear product screenshots beyond the hero`, async ({
     page,
   }) => {
     await page.route(/court-(?:scene|engine)[^/]*\.js$/, (route) =>
@@ -1220,7 +1227,10 @@ for (const locale of ['/', '/en/']) {
           .locator('.scene-background > .scene-poster')
           .evaluate((el) => getComputedStyle(el).opacity),
       )
-      .toBe('0');
+      .toBe('1');
+    const screenshot = page.locator('[data-replay-device="summary"] img');
+    await expect(screenshot).toBeVisible();
+    await expect(screenshot).toHaveCSS('filter', 'none');
   });
 
   test(`${locale}: mobile header and privacy links retain 48px touch targets`, async ({

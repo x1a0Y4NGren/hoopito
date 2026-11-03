@@ -1,0 +1,62 @@
+---
+import Icon from './Icon.astro';
+import { content, type Locale } from '../data/content';
+import { release } from '../data/release';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale];
+const privacyPath = locale === 'zh' ? '/privacy/' : '/en/privacy/';
+---
+
+<div id="closing" class="closing" data-scroll-stop="closing">
+  <section class="closing-faq content-width" aria-labelledby="closing-title">
+    <div class="faq">
+      <div class="faq-heading">
+        <h3 id="closing-title">{c.faqTitle}</h3>
+      </div>
+      <div class="faq-list">
+        {c.faq.map(([question, answer], i) => (
+          <details>
+            <summary>
+              <span class="faq-index display">0{i + 1}</span>
+              {question}
+              <Icon name="plus" />
+            </summary>
+            <div class="faq-answer">
+              <p>{answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+  <footer class="site-footer content-width">
+    <div class="footer-heading">
+      <span class="display">
+        HOOPITO<span>.</span>
+      </span>
+      <p>{c.footer.line}</p>
+      <a class="footer-back" href="#hero" aria-label={c.footer.back}>
+        <span>{c.footer.back}</span>
+        <Icon name="arrow" />
+      </a>
+    </div>
+    <div class="footer-bottom">
+      <p>
+        <span>{c.footer.credit}</span>
+        <a href={release.authorUrl}>
+          x1a0Y4NGren
+          <Icon name="arrow" />
+        </a>
+      </p>
+      <div>
+        <a href={privacyPath}>{c.footer.privacy}</a>
+        <a href={release.privacyUrl}>{c.footer.appPrivacy}</a>
+        <a href={release.licenseUrl}>{c.footer.license}</a>
+      </div>
+      <small>© 2026 · {c.footer.rights}</small>
+    </div>
+  </footer>
+</div>

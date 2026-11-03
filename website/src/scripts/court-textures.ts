@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { courtTextures } from '../data/court-materials';
+import { courtTextures, courtTextureUsage } from '../data/court-materials';
 
 type Owner = <T extends { dispose(): void }>(resource: T) => T;
 
@@ -22,7 +22,7 @@ export async function loadCourtTextures(signal: AbortSignal, own: Owner) {
       const texture = own(new THREE.Texture(bitmap));
       texture.flipY = false;
       texture.colorSpace =
-        name === 'glass' || name === 'leatherDetail'
+        courtTextureUsage[name as keyof typeof courtTextures] === 'data'
           ? THREE.NoColorSpace
           : THREE.SRGBColorSpace;
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;

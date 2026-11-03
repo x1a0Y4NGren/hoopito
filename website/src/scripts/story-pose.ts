@@ -1,4 +1,4 @@
-import type { StoryChapter, StoryFrame } from './scene-contract';
+import type { StoryChapter, StoryFrame } from './scene-contract.ts';
 
 type Point3 = [number, number, number];
 
@@ -7,57 +7,12 @@ export interface StoryPose {
   target: Point3;
   /** Explicit screen-up avoids lookAt roll collapsing at the overhead pole. */
   up?: Point3;
+  /** Horizontal off-axis perspective shift in millimetres; unset means zero. */
+  filmOffset?: number;
   fov: number;
   light: number;
   reveal: number;
 }
-
-// These are shared edit points, rather than independently authored chapter cameras.
-// A chapter's final pose is exactly the next chapter's first pose in either scroll direction.
-const anchors: readonly StoryPose[] = [
-  {
-    position: [2.73, 0.195, 4.44],
-    target: [2.5, 0.2, 4.03],
-    fov: 48,
-    light: 1,
-    reveal: 1.1,
-  },
-  {
-    position: [12.5, 7.8, 15.5],
-    target: [-0.8, 1, -3],
-    fov: 42,
-    light: 0.88,
-    reveal: 1.1,
-  },
-  {
-    position: [0, 23.2, 0.01],
-    target: [0, 0.05, 0],
-    fov: 38,
-    light: 0.9,
-    reveal: 1.1,
-  },
-  {
-    position: [0, 23.2, 0.01],
-    target: [0, 0.05, 0],
-    fov: 38,
-    light: 0.9,
-    reveal: 1.1,
-  },
-  {
-    position: [0.3, 21, 1.6],
-    target: [0, 0, -1.1],
-    fov: 39,
-    light: 0.72,
-    reveal: 1.1,
-  },
-  {
-    position: [-4.5, 4.6, 3.2],
-    target: [0, 2.6, -5.3],
-    fov: 40,
-    light: 0.3,
-    reveal: 1.1,
-  },
-];
 
 const chapters: readonly StoryChapter[] = [
   'hero',
@@ -65,75 +20,165 @@ const chapters: readonly StoryChapter[] = [
   'experience',
   'replay',
   'download',
+  'community',
 ];
-const controls: readonly [Point3, Point3][] = [
-  [
-    [3.5, 0.7, 6.7],
-    [10, 5.3, 13.5],
-  ],
-  [
-    [12, 7.8, 12.5],
-    [3.2, 20, 6.2],
-  ],
-  [
-    [0, 23.2, 0.01],
-    [0, 23.2, 0.01],
-  ],
-  [
-    [0, 20.5, 6.1],
-    [0.3, 21, 3.9],
-  ],
-  [
-    [-1.8, 17.8, 2.3],
-    [-4.5, 8.8, 3.2],
-  ],
-];
+const reading: Record<StoryChapter, StoryPose> = {
+  hero: {
+    position: [2.73, 0.195, 4.44],
+    target: [2.5, 0.2, 4.03],
+    fov: 48,
+    light: 1,
+    reveal: 1.1,
+  },
+  scoring: {
+    position: [9.8, 4.7, 11.8],
+    target: [-1, 1, -3],
+    fov: 49,
+    light: 0.92,
+    reveal: 1.1,
+  },
+  experience: {
+    position: [0, 23.2, 0],
+    target: [0, 0, 0],
+    up: [0, 0, -1],
+    fov: 38,
+    light: 0.96,
+    reveal: 1.1,
+  },
+  replay: {
+    position: [-10.8, 4.9, 10.5],
+    target: [1, 1, -3.8],
+    fov: 47,
+    light: 0.88,
+    reveal: 1.1,
+  },
+  download: {
+    position: [-3.8, 4.7, -1.3],
+    target: [0, 3.1, -5.7],
+    fov: 43,
+    light: 0.95,
+    reveal: 1.1,
+  },
+  community: {
+    position: [10.8, 5.1, 15],
+    target: [0, 1, -2.4],
+    fov: 49,
+    light: 0.92,
+    reveal: 1.1,
+  },
+};
 
 const mix = (from: number, to: number, progress: number) =>
   from + (to - from) * progress;
+const radians = (degrees: number) => (degrees * Math.PI) / 180;
+const cubic = (from: number, a: number, b: number, to: number, t: number) =>
+  (1 - t) ** 3 * from +
+  3 * (1 - t) ** 2 * t * a +
+  3 * (1 - t) * t ** 2 * b +
+  t ** 3 * to;
+
+export function readingPose(chapter: StoryChapter): StoryPose {
+  const pose = reading[chapter];
+  return {
+    ...pose,
+    position: [...pose.position],
+    target: [...pose.target],
+    ...(pose.up ? { up: [...pose.up] as Point3 } : {}),
+  };
+}
+
+// Controls describe an orbit around a moving subject in world metres. They
+// retreat at floor level, climb to the pole, descend on the opposite sideline,
+// approach the basket, and pull back around the arena. No idle clock is used.
+const routes = [
+  { yaw: [70, 58], elevation: [0, 12], radius: [5.5, 15.5], bank: -4 },
+  { yaw: [40, 0], elevation: [72, 80], radius: [19, 30], bank: 5 },
+  { yaw: [-55, -32], elevation: [68, 34], radius: [22, 15], bank: -5 },
+  { yaw: [-48, -50], elevation: [24, 16], radius: [12, 7], bank: 3 },
+  { yaw: [-100, 37], elevation: [12, 28], radius: [15, 18], bank: 4 },
+] as const;
+
+/** A single world-space evaluation, with the fitted reading poses as endpoints. */
+export function evaluateCameraTrack(
+  track: NonNullable<StoryFrame['cameraTrack']>,
+  from: StoryPose,
+  to: StoryPose,
+): StoryPose {
+  const index = chapters.indexOf(track.from);
+  const route = routes[index];
+  if (
+    !route ||
+    chapters[index + 1] !== track.to ||
+    !Number.isFinite(track.progress)
+  )
+    return from;
+  const raw = Math.max(0, Math.min(1, track.progress));
+  if (raw === 0) return from;
+  if (raw === 1) return to;
+  const t = raw * raw * (3 - 2 * raw);
+  const spherical = (pose: StoryPose) => {
+    const x = pose.position[0] - pose.target[0];
+    const y = pose.position[1] - pose.target[1];
+    const z = pose.position[2] - pose.target[2];
+    return {
+      yaw: Math.atan2(x, z),
+      elevation: Math.atan2(y, Math.hypot(x, z)),
+      radius: Math.hypot(x, y, z),
+    };
+  };
+  const a = spherical(from);
+  const b = spherical(to);
+  const yaw = cubic(
+    a.yaw,
+    radians(route.yaw[0]),
+    radians(route.yaw[1]),
+    b.yaw,
+    t,
+  );
+  const elevation = cubic(
+    a.elevation,
+    radians(route.elevation[0]),
+    radians(route.elevation[1]),
+    b.elevation,
+    t,
+  );
+  const radius = cubic(a.radius, route.radius[0], route.radius[1], b.radius, t);
+  const target = from.target.map((value, axis) =>
+    mix(value, to.target[axis]!, t),
+  ) as Point3;
+  const horizontal = Math.cos(elevation) * radius;
+  const position: Point3 = [
+    target[0] + Math.sin(yaw) * horizontal,
+    target[1] + Math.sin(elevation) * radius,
+    target[2] + Math.cos(yaw) * horizontal,
+  ];
+  // Analytic screen-up stays well-defined at the overhead pole. Bank is a
+  // bounded accent (at most five degrees), returning to zero at both rests.
+  const bank = radians(route.bank) * Math.sin(Math.PI * t) ** 2;
+  const right: Point3 = [Math.cos(yaw), 0, -Math.sin(yaw)];
+  const up: Point3 = [
+    -Math.sin(yaw) * Math.sin(elevation),
+    Math.cos(elevation),
+    -Math.cos(yaw) * Math.sin(elevation),
+  ];
+  return {
+    position,
+    target,
+    up: up.map(
+      (value, axis) => value * Math.cos(bank) + right[axis]! * Math.sin(bank),
+    ) as Point3,
+    fov: mix(from.fov, to.fov, t),
+    filmOffset: mix(from.filmOffset ?? 0, to.filmOffset ?? 0, t),
+    light: mix(from.light, to.light, t),
+    reveal: mix(from.reveal, to.reveal, t),
+  };
+}
 
 export function storyPose(frame: StoryFrame, motionEnabled = true): StoryPose {
-  // The playing surface is an input coordinate system. Keep it stationary,
-  // including accessibility mode, while the surrounding chapters keep their story poses.
-  if (frame.chapter === 'experience') {
-    const pose = anchors[2]!;
-    return { ...pose, position: [...pose.position], target: [...pose.target] };
-  }
-  // Accessibility keeps the same hero artwork while the caller retains current chapter state.
-  const index = motionEnabled
-    ? Math.max(0, chapters.indexOf(frame.chapter))
-    : 0;
-  const from = anchors[index]!;
-  const to = anchors[index + 1]!;
-  const raw =
-    motionEnabled && Number.isFinite(frame.progress)
-      ? Math.max(0, Math.min(1, frame.progress))
-      : 0;
-  if (raw === 0 || raw === 1) {
-    const anchor = raw === 0 ? from : to;
-    return {
-      ...anchor,
-      position: [...anchor.position],
-      target: [...anchor.target],
-    };
-  }
-  // Zero derivatives at chapter boundaries make reverse and fast scroll joins calm.
-  const progress = raw * raw * (3 - 2 * raw);
-  const inverse = 1 - progress;
-  const control = controls[index]!;
-  return {
-    position: from.position.map(
-      (value, axis) =>
-        inverse ** 3 * value +
-        3 * inverse ** 2 * progress * control[0][axis]! +
-        3 * inverse * progress ** 2 * control[1][axis]! +
-        progress ** 3 * to.position[axis]!,
-    ) as Point3,
-    target: from.target.map((value, axis) =>
-      mix(value, to.target[axis]!, progress),
-    ) as Point3,
-    fov: mix(from.fov, to.fov, progress),
-    light: mix(from.light, to.light, progress),
-    reveal: mix(from.reveal, to.reveal, progress),
-  };
+  if (!motionEnabled || !frame.cameraTrack) return readingPose(frame.chapter);
+  return evaluateCameraTrack(
+    frame.cameraTrack,
+    readingPose(frame.cameraTrack.from),
+    readingPose(frame.cameraTrack.to),
+  );
 }

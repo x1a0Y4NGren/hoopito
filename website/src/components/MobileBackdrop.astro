@@ -1,0 +1,16 @@
+---
+import { mobileScenes } from '../data/mobile-scenes';
+---
+
+<div data-mobile-background aria-hidden="true">
+  {mobileScenes.map((scene) => (
+    <img
+      data-mobile-scene={scene.id}
+      data-src={scene.src}
+      width="720"
+      height="1280"
+      alt=""
+      decoding="async"
+    />
+  ))}
+</div>

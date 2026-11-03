@@ -6,7 +6,7 @@ test('scrolling within a chapter does not repeatedly invalidate unchanged page-w
   await page.route(/court-(?:scene|engine)[^/]*\.js$/, (route) =>
     route.abort(),
   );
-  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto('/#replay');
   await expect(page.locator('[data-replay-red]')).toHaveText('11');
   const result = await page.evaluate(async () => {
@@ -60,35 +60,36 @@ for (const locale of ['/', '/en/']) {
     await page.route(/court-(?:scene|engine)[^/]*\.js$/, (route) =>
       route.abort(),
     );
-    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto(locale);
     await page.evaluate(() => document.fonts.ready);
     await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
     const stage = page.locator('[data-story-stage="replay"]');
-    const range = await stage.evaluate((element) => ({
-      start: Number((element as HTMLElement).dataset.storyStart),
-      end: Number((element as HTMLElement).dataset.storyEnd),
-    }));
     const seek = async (progress: number) => {
-      const targetProgress = await page.evaluate(
-        ({ start, end, progress }) => {
-          scrollTo({
-            top: start + (end - start) * progress,
-            behavior: 'instant',
-          });
-          return Math.max(0, Math.min(1, (scrollY - start) / (end - start)));
-        },
-        { ...range, progress },
-      );
-      // Wait for the scrub to reach the actual pixel-quantized target. A loose
-      // phase tolerance reads opposite sides of the easing curve on reversal;
-      // the reading light amplifies that transient difference by up to 2.5x.
+      await stage.evaluate((element, progress) => {
+        const stage = element as HTMLElement;
+        const start = Number(stage.dataset.storyStart),
+          end = Number(stage.dataset.storyEnd);
+        scrollTo({
+          top: start + (end - start) * progress,
+          behavior: 'instant',
+        });
+      }, progress);
+      // Fonts and the new independent title can refresh the measured range.
+      // Compare the rendered phase with current native geometry, never a range
+      // captured before the asynchronous layout refresh.
       await expect
-        .poll(async () =>
-          Math.abs(
-            Number(await stage.getAttribute('data-replay-progress')) -
-              targetProgress,
-          ),
+        .poll(() =>
+          stage.evaluate((element) => {
+            const stage = element as HTMLElement;
+            const start = Number(stage.dataset.storyStart),
+              end = Number(stage.dataset.storyEnd);
+            const native = Math.max(
+              0,
+              Math.min(1, (scrollY - start) / (end - start)),
+            );
+            return Math.abs(Number(stage.dataset.storyProgress) - native);
+          }),
         )
         .toBeLessThan(0.0001);
       return page
@@ -109,13 +110,13 @@ for (const locale of ['/', '/en/']) {
       .poll(() =>
         page
           .locator('.scene-background')
-          .evaluate((element) => getComputedStyle(element, '::before').opacity),
+          .evaluate((element) => getComputedStyle(element, '::before').display),
       )
-      .toBe('1');
+      .toBe('none');
     expect(await seek(0.48)).toBeCloseTo(middle, 2);
     expect(await seek(0)).toBe(0);
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.locator('.site-header a[href="#replay"]').click();
+    await page.locator('.site-header nav > a[href="#replay"]').click();
     await expect
       .poll(() =>
         page
@@ -255,7 +256,7 @@ test(
       'scoring',
     );
     await expect(canvas).toHaveAttribute('data-view-cutaway', '0.0000');
-    await page.locator('.site-header a[href="#experience"]').click();
+    await page.locator('.site-header nav > a[href="#experience"]').click();
     await expect(page.locator('html')).toHaveAttribute(
       'data-interactive',
       'true',

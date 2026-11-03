@@ -1,0 +1,36 @@
+/* The phone keeps its own light image stack; desktop never activates it. */
+.scene-background > [data-mobile-background] {
+  display: none;
+}
+@media (max-width: 767px) {
+  .scene-background > [data-mobile-background] {
+    position: absolute;
+    inset: -16px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  html[data-mobile-background='ready']
+    .scene-background
+    > [data-mobile-background] {
+    display: block;
+  }
+  html[data-mobile-background='ready'] .scene-background > .scene-poster {
+    visibility: hidden;
+  }
+  html[data-mobile-background='ready'][data-chapter='experience']:not(
+      [data-scene='3d']
+    )
+    .scene-background
+    > .demo-scene-poster {
+    display: none !important;
+  }
+  [data-mobile-scene] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    max-width: none;
+  }
+}

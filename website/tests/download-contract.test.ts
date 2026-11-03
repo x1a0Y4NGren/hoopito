@@ -7,8 +7,8 @@ const apkUrl = '/downloads/v2.0.1/Hoopito-v2.0.1-android.apk';
 const apkFilename = 'Hoopito-v2.0.1-android.apk';
 
 test('the domestic channel uses the maintainer Lanzou share and public password without a Baidu placeholder', () => {
-  assert.equal(release.lanzouUrl, 'https://wwbdc.lanzoub.com/ixNAU4d7x6kj');
-  assert.equal(release.lanzouPassword, 'gkyz');
+  assert.equal(release.lanzouUrl, 'https://xiaoyangren.lanzoub.com/b01i5z85wb');
+  assert.equal(release.lanzouPassword, 'ayj6');
   assert.equal('baiduPanUrl' in release, false);
 });
 

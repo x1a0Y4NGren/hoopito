@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { installContractClock } from './controlled-clock';
 import type { CourtPoint, CourtScene } from '../src/scripts/scene-contract';
+import type { PerspectiveCamera } from 'three';
 
 const sceneChunk = /court-scene[^/]*\.(?:js|ts)(?:\?|$)/;
 const webgl = { tag: '@webgl', lock: 'webgl-renderer' };
@@ -10,6 +11,7 @@ type CourtProbe = {
   canvas: HTMLCanvasElement;
   context: WebGL2RenderingContext;
   removals: number;
+  camera?: PerspectiveCamera;
 };
 
 async function allowSoftwareWebGL(page: Page) {
@@ -32,11 +34,27 @@ async function allowSoftwareWebGL(page: Page) {
 
 // Wrap the real dynamic-module factory at the network boundary. No scene,
 // camera, input handler or renderer is replaced, and production has no globals.
-async function exposeSceneInTest(page: Page, observeOpening = false) {
+async function exposeSceneInTest(
+  page: Page,
+  observeOpening = false,
+  observeCamera = false,
+) {
   await allowSoftwareWebGL(page);
   await page.route(sceneChunk, async (route) => {
     const response = await route.fetch();
     let body = await response.text();
+    if (observeCamera) {
+      let cameras = 0;
+      body = body.replace(
+        /new [\w$.]+\(\s*32\s*,\s*1\s*,\s*(?:0)?\.015\s*,\s*100\s*\)/g,
+        (constructor) => {
+          cameras++;
+          return `(Reflect.set(window, '__courtCamera', ${constructor}), Reflect.get(window, '__courtCamera'))`;
+        },
+      );
+      if (cameras !== 1)
+        throw new Error('Observe exactly one real scene camera.');
+    }
     if (observeOpening) {
       // Observe only the existing tween target, without exposing its timeline,
       // changing GSAP, or adding a production hook. Fail if the contract moves.
@@ -79,6 +97,7 @@ async function exposeSceneInTest(page: Page, observeOpening = false) {
       const canvas = args[0];
       const probe = {
         scene, canvas, context: canvas.getContext('webgl2'),
+        camera: Reflect.get(window, '__courtCamera'),
         creations: (previous?.creations ?? 0) + 1, removals: 0,
       };
       new MutationObserver((records) => {
@@ -136,6 +155,118 @@ async function readyExperience(page: Page, path = '/#experience') {
   );
 }
 
+for (const density of [1, 1.5]) {
+  test.describe(`hoop centreline at DPR ${density}`, () => {
+    test.use({ deviceScaleFactor: density });
+    test(
+      'the actual overhead hoop and backboard stay on the floor centreline after resize and reverse travel',
+      webgl,
+      async ({ page }, testInfo) => {
+        test.skip(
+          testInfo.project.name !== 'chromium',
+          'Observe the real Chromium scene camera.',
+        );
+        await exposeSceneInTest(page, false, true);
+        await page.setViewportSize(
+          density === 1.5
+            ? { width: 1413, height: 871 }
+            : { width: 1440, height: 900 },
+        );
+        await readyExperience(page);
+        const rows: unknown[] = [];
+        const readAlignment = () =>
+          page.evaluate(() => {
+            const { scene, camera, canvas } = Reflect.get(
+              window,
+              '__courtTest',
+            ) as CourtProbe;
+            scene.projectPoint({ x: 0.5, y: 0.5 });
+            if (!camera)
+              throw new Error('Actual camera observation is missing.');
+            const bounds = canvas.getBoundingClientRect();
+            const screenX = (height: number, z: number) => {
+              const v = camera.position
+                .clone()
+                .set(0, height, z)
+                .project(camera);
+              return bounds.left + ((v.x + 1) * bounds.width) / 2;
+            };
+            const floor = screenX(0, -5.3);
+            const rim = screenX(3.05, -5.3);
+            const board = screenX(3.575, -5.77);
+            return {
+              width: innerWidth,
+              height: innerHeight,
+              dpr: devicePixelRatio,
+              floor,
+              rim,
+              board,
+              offset: camera.filmOffset,
+              error: Math.max(Math.abs(rim - floor), Math.abs(board - floor)),
+              canvasCount: document.querySelectorAll('#court-canvas').length,
+            };
+          });
+        const verify = async () => {
+          const row = await readAlignment();
+          rows.push(row);
+          await testInfo.attach('hoop-centreline', {
+            body: JSON.stringify(rows),
+            contentType: 'application/json',
+          });
+          expect(row.error).toBeLessThan(0.1);
+          expect(row.canvasCount).toBe(1);
+        };
+        await page.screenshot({
+          path: testInfo.outputPath('overhead-before-assertion.png'),
+        });
+        await verify();
+        await page.setViewportSize({ width: 1024, height: 768 });
+        await page.locator('.site-header nav > a[href="#experience"]').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-state',
+          'idle',
+        );
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-interactive',
+          'true',
+        );
+        await verify();
+        await page.locator('.site-header nav > a[href="#replay"]').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-stop',
+          'replay',
+        );
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-state',
+          'idle',
+        );
+        await expect
+          .poll(() =>
+            page.evaluate(() => {
+              const { scene, camera } = Reflect.get(
+                window,
+                '__courtTest',
+              ) as CourtProbe;
+              scene.projectPoint({ x: 0.5, y: 0.5 });
+              return camera!.filmOffset;
+            }),
+          )
+          .toBe(0);
+        await page.locator('.site-header nav > a[href="#experience"]').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-state',
+          'idle',
+        );
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-interactive',
+          'true',
+        );
+        await verify();
+      },
+    );
+  });
+}
+
 async function project(page: Page, point: CourtPoint) {
   const client = await page.evaluate(
     (value) =>
@@ -167,15 +298,43 @@ async function enterNativeExperience(page: Page) {
     .locator('[data-story-stage="experience"]')
     .evaluate((element) => {
       const stage = element as HTMLElement;
-      return stage.parentElement!.classList.contains('pin-spacer')
-        ? Number(stage.dataset.storyStart)
-        : scrollY + stage.getBoundingClientRect().top - 88;
+      return Number(stage.dataset.scrollReadStart);
     });
   await scrollToPosition(page, top);
   await expect(page.locator('html')).toHaveAttribute(
     'data-interactive',
     'true',
   );
+  await expect(page.locator('#court-canvas')).toHaveAttribute(
+    'data-placement-blend',
+    '1.0000',
+  );
+  await expect(page.locator('#court-canvas')).toHaveAttribute(
+    'data-input-enabled',
+    'true',
+  );
+  // Native resize can deliver an early refresh before the old pin's explicit
+  // width is removed. A root input flag alone does not prove the host has
+  // reached the new viewport: wait for the actual input region to fit it.
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const canvas = document
+          .querySelector('#court-canvas')!
+          .getBoundingClientRect();
+        const host = document
+          .querySelector('[data-demo-court-host]')!
+          .getBoundingClientRect();
+        return (
+          host.left >= canvas.left &&
+          host.right <= canvas.right &&
+          Math.abs(canvas.width - document.body.clientWidth) < 1 &&
+          Math.abs(canvas.height - innerHeight) < 1
+        );
+      }),
+    )
+    .toBe(true);
+  await waitForNativeLayout(page);
 }
 
 async function assertBackgroundIdentity(page: Page) {
@@ -193,11 +352,13 @@ async function assertBackgroundIdentity(page: Page) {
       sameContext: canvas.getContext('webgl2') === probe.context,
       creations: probe.creations,
       removals: probe.removals,
-      // The root reserves a stable scrollbar gutter. Viewport CSS units use
-      // that layout width, excluding a classic headed-browser scrollbar.
-      widthError: Math.abs(
-        bounds.width - document.documentElement.clientWidth * 0.48,
-      ),
+      // The stable scrollbar gutter belongs to the root padding box. The
+      // arena fills the body's available layout width in every chapter.
+      widthError: Math.abs(bounds.width - document.body.clientWidth),
+      viewportGap: innerWidth - bounds.width,
+      x: bounds.x,
+      y: bounds.y,
+      heightError: Math.abs(bounds.height - innerHeight),
     };
   });
   expect(state).toMatchObject({
@@ -207,6 +368,11 @@ async function assertBackgroundIdentity(page: Page) {
     removals: 0,
   });
   expect(state.widthError).toBeLessThan(1);
+  expect(state.viewportGap).toBeGreaterThanOrEqual(0);
+  expect(state.viewportGap).toBeLessThanOrEqual(20);
+  expect(state.heightError).toBeLessThan(1);
+  expect(state.x).toBe(0);
+  expect(state.y).toBe(0);
 }
 
 async function waitForNativeLayout(page: Page) {
@@ -229,6 +395,8 @@ async function waitForNativeLayout(page: Page) {
                 height,
                 element.dataset.storyStart,
                 element.dataset.storyEnd,
+                element.dataset.scrollReadStart,
+                element.dataset.scrollReadEnd,
               ];
             },
           ),
@@ -243,46 +411,10 @@ async function waitForNativeLayout(page: Page) {
 }
 
 async function cancelAnchorIntent(page: Page) {
-  await page.evaluate(() => {
-    // Compositor scrolling can precede delivery of a passive wheel listener.
-    // Capture the origin before input rather than inside that listener.
-    const probe = { seen: false, ended: false, top: scrollY, stop: () => {} };
-    const onWheel = () => {
-      probe.seen = true;
-    };
-    const onScrollEnd = () => {
-      if (probe.seen) probe.ended = true;
-    };
-    window.addEventListener('wheel', onWheel, { once: true, passive: true });
-    document.addEventListener('scrollend', onScrollEnd);
-    probe.stop = () => {
-      window.removeEventListener('wheel', onWheel);
-      document.removeEventListener('scrollend', onScrollEnd);
-    };
-    Reflect.set(window, '__courtNativeInputProbe', probe);
-  });
-  try {
-    await page.mouse.wheel(0, -1);
-    // mouse.wheel() returns before native scrolling finishes. Starting a seek
-    // then lets the remaining wheel scroll overwrite it on a busy CI renderer.
-    await expect
-      .poll(() =>
-        page.evaluate(() => {
-          const probe = Reflect.get(window, '__courtNativeInputProbe');
-          return (
-            probe.seen &&
-            (probe.top === 0 || (probe.ended && scrollY < probe.top))
-          );
-        }),
-      )
-      .toBe(true);
-    await waitForNativeLayout(page);
-  } finally {
-    await page.evaluate(() => {
-      Reflect.get(window, '__courtNativeInputProbe')?.stop();
-      Reflect.deleteProperty(window, '__courtNativeInputProbe');
-    });
-  }
+  // Pointer input explicitly takes ownership. A sub-threshold wheel now
+  // correctly springs back, so it cannot prove a native one-pixel seek.
+  await page.mouse.click(8, 150);
+  await waitForNativeLayout(page);
 }
 
 async function resizeStoryViewport(page: Page, width: number, height: number) {
@@ -408,9 +540,13 @@ for (const viewport of [
         const stage = page.locator('[data-story-stage="experience"]');
         await expect
           .poll(() =>
-            stage.evaluate((element) =>
-              element.parentElement!.classList.contains('pin-spacer'),
-            ),
+            stage.evaluate((element) => {
+              const reading = (element as HTMLElement).dataset;
+              return (
+                Number.isFinite(Number(reading.scrollReadStart)) &&
+                Number(reading.scrollReadEnd) >= Number(reading.scrollReadStart)
+              );
+            }),
           )
           .toBe(true);
         const samples = await page.evaluate(async ({ first, last }) => {
@@ -419,7 +555,12 @@ for (const viewport of [
             '[data-story-stage="experience"]',
           )!;
           const host = document.querySelector('[data-demo-court-host]')!;
-          const rest = Number(stage.dataset.storyStart);
+          const rest = Number(stage.dataset.scrollReadStart);
+          const readEnd = Number(stage.dataset.scrollReadEnd);
+          const arrivalStart = Number(
+            document.querySelector<HTMLElement>('[data-story-stage="scoring"]')!
+              .dataset.scrollReadEnd,
+          );
           const floorPoints = [
             { x: 0, y: 0 },
             { x: 1, y: 0 },
@@ -433,12 +574,10 @@ for (const viewport of [
             const lineEnd = scene.projectPoint({ x: 0.75, y: 0.5 })!;
             const arrival = Math.max(
               0,
-              Math.min(
-                1,
-                (innerHeight * 0.85 - stage.getBoundingClientRect().top) /
-                  (innerHeight * 0.85 - 88),
-              ),
+              Math.min(1, (scrollY - arrivalStart) / (rest - arrivalStart)),
             );
+            const readingRest =
+              Math.max(rest - scrollY, scrollY - readEnd, 0) <= 2;
             return {
               scroll: scrollY,
               host: { x: bounds.left, y: bounds.top },
@@ -452,6 +591,10 @@ for (const viewport of [
                 lineEnd.y - lineStart.y,
               ),
               rawBlend: arrival * arrival * (3 - 2 * arrival),
+              expectedBlend: readingRest
+                ? 1
+                : arrival * arrival * (3 - 2 * arrival),
+              readingRest,
               blend:
                 document.querySelector<HTMLElement>('#court-canvas')!.dataset
                   .placementBlend,
@@ -473,16 +616,31 @@ for (const viewport of [
           const reverse = [];
           for (let offset = last; offset >= first; offset -= 1)
             reverse.push(await seek(offset));
-          return { forward, reverse };
+          return {
+            forward,
+            reverse,
+            arrivalStart,
+            rest,
+            readEnd,
+            pinned: stage.parentElement!.classList.contains('pin-spacer'),
+          };
         }, interval);
         await testInfo.attach('dense-overhead-arrival', {
           body: JSON.stringify({ interval, ...samples }),
           contentType: 'application/json',
         });
         for (const direction of ['forward', 'reverse'] as const) {
+          expect(
+            samples.rest - samples.arrivalStart,
+            'the scoring-to-experience flight uses a positive reading gap',
+          ).toBeGreaterThan(60);
           const values = samples[direction];
           for (const sample of values) {
             expect(sample.chapter).toBe('experience');
+            expect(
+              Number(sample.blend),
+              'presentation follows the same real reading-gap track',
+            ).toBeCloseTo(sample.expectedBlend, 4);
             expect(sample.lineLength).toBeGreaterThan(100);
             for (const point of sample.points) {
               expect(point).not.toBeNull();
@@ -508,7 +666,8 @@ for (const viewport of [
               const from = previous.points[pointIndex],
                 to = current.points[pointIndex];
               // Remove only measured host travel. The pin stops that travel at
-              // 88px, so subtracting scrollY itself would hide an endpoint jump.
+              // its measured resting line, so subtracting scrollY itself
+              // would hide an endpoint jump.
               const dx = to.x - from.x - (current.host.x - previous.host.x);
               const dy = to.y - from.y - (current.host.y - previous.host.y);
               expect(
@@ -521,13 +680,11 @@ for (const viewport of [
         if (interval.clamp) {
           const clampCrossing = samples.forward.findIndex(
             (sample, index, values) =>
-              index > 0 &&
-              values[index - 1].rawBlend < 0.99999 &&
-              sample.rawBlend >= 0.99999,
+              index > 0 && !values[index - 1].readingRest && sample.readingRest,
           );
           expect(
             clampCrossing,
-            'native samples must straddle both sides of the endpoint clamp',
+            'native samples must straddle the two-pixel reading landing tolerance',
           ).toBeGreaterThan(0);
         }
         for (const offset of interval.consistency) {
@@ -567,7 +724,7 @@ for (const path of ['/', '/en/']) {
       await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
       await page.evaluate(() => document.fonts.ready);
       await doubleTextSize(page);
-      await page.locator('.site-header a[href="#experience"]').click();
+      await page.locator('.site-header nav > a[href="#experience"]').click();
       await expect
         .poll(() =>
           page
@@ -642,26 +799,19 @@ for (const textScale of [1, 2]) {
         const stage = document.querySelector<HTMLElement>(
           '[data-story-stage="experience"]',
         )!;
-        const stageBounds = stage.getBoundingClientRect();
-        const heading = document
-          .querySelector('#experience .section-top')!
-          .getBoundingClientRect();
-        const arrivalEnd =
-          document.querySelector('.site-header')!.getBoundingClientRect()
-            .bottom +
-          20 -
-          (heading.top - stageBounds.top);
+        const replay = document.querySelector<HTMLElement>(
+          '[data-story-stage="replay"]',
+        )!;
         return {
-          rest: stage.parentElement!.classList.contains('pin-spacer')
-            ? Number(stage.dataset.storyStart) + innerHeight * 0.16
-            : scrollY + stageBounds.top - arrivalEnd,
-          boundary:
-            scrollY +
-            document.querySelector('#replay')!.getBoundingClientRect().top -
-            Math.min(innerHeight * 0.3, 260),
-          after: innerHeight * 0.2,
+          rest: Number(stage.dataset.scrollReadStart),
+          departure: Number(stage.dataset.scrollReadEnd),
+          arrival: Number(replay.dataset.scrollReadStart),
         };
       });
+      expect(
+        targets.arrival - targets.departure,
+        'the real experience-to-replay flight has a positive reading gap',
+      ).toBeGreaterThan(4);
       const snapshot = async () =>
         page.evaluate(() => {
           const { scene } = Reflect.get(window, '__courtTest') as CourtProbe;
@@ -671,6 +821,12 @@ for (const textScale of [1, 2]) {
               { x: 0.7, y: 0.7 },
             ].map((point) => scene.projectPoint(point)!),
             y: scrollY,
+            host: (() => {
+              const rect = document
+                .querySelector('[data-demo-court-host]')!
+                .getBoundingClientRect();
+              return { x: rect.left, y: rect.top };
+            })(),
             camera: {
               ...document.querySelector<HTMLElement>('#court-canvas')!.dataset,
             },
@@ -681,28 +837,41 @@ for (const textScale of [1, 2]) {
             },
           };
         });
-      for (const direction of [1, -1]) {
-        const pair = [];
-        for (const offset of [-2 * direction, 2 * direction]) {
-          await scrollToPosition(page, targets.boundary + offset);
-          await expect(page.locator('#court-canvas')).toHaveAttribute(
-            'data-chapter',
-            offset < 0 ? 'experience' : 'replay',
-          );
-          pair.push(await snapshot());
-        }
-        await testInfo.attach(`boundary-${direction}`, {
-          body: JSON.stringify(pair),
-          contentType: 'application/json',
-        });
-        for (let index = 0; index < pair[0].points.length; index += 1) {
-          const a = pair[0].points[index],
-            b = pair[1].points[index];
-          // Remove the known four CSS pixels of native page travel; the camera
-          // composition itself must join within the same 2px projection budget.
-          expect(
-            Math.hypot(a.x - b.x, a.y + pair[0].y - b.y - pair[1].y),
-          ).toBeLessThanOrEqual(2);
+      // Check the actual flight departure and arrival separately. The DOM's
+      // focus-line chapter switch is inside this flight, not a camera endpoint.
+      for (const boundary of [
+        { top: targets.departure, chapter: 'experience', followsHost: true },
+        { top: targets.arrival, chapter: 'replay', followsHost: false },
+      ]) {
+        for (const direction of [1, -1]) {
+          const pair = [];
+          for (const offset of [-2 * direction, 2 * direction]) {
+            await scrollToPosition(page, boundary.top + offset);
+            await expect(page.locator('#court-canvas')).toHaveAttribute(
+              'data-chapter',
+              boundary.chapter,
+            );
+            pair.push(await snapshot());
+          }
+          await testInfo.attach(`${boundary.chapter}-boundary-${direction}`, {
+            body: JSON.stringify(pair),
+            contentType: 'application/json',
+          });
+          for (let index = 0; index < pair[0].points.length; index += 1) {
+            const a = pair[0].points[index],
+              b = pair[1].points[index];
+            // Only overhead reading follows its live host. Replay is a fixed
+            // world reading pose, so native page travel must not be subtracted.
+            const hostX = boundary.followsHost
+              ? pair[0].host.x - pair[1].host.x
+              : 0;
+            const hostY = boundary.followsHost
+              ? pair[0].host.y - pair[1].host.y
+              : 0;
+            expect(
+              Math.hypot(a.x - b.x - hostX, a.y - b.y - hostY),
+            ).toBeLessThanOrEqual(2);
+          }
         }
       }
       const references = new Map<
@@ -711,11 +880,11 @@ for (const textScale of [1, 2]) {
       >();
       for (const top of [
         targets.rest,
-        targets.boundary + targets.after,
+        targets.departure + (targets.arrival - targets.departure) * 0.7,
         targets.rest,
-        targets.boundary - 2,
-        targets.boundary + targets.after,
-        targets.boundary - 2,
+        targets.arrival - 2,
+        targets.departure + (targets.arrival - targets.departure) * 0.7,
+        targets.arrival - 2,
         targets.rest,
       ]) {
         await scrollToPosition(page, top);
@@ -784,7 +953,7 @@ test(
 );
 
 test(
-  'the camera blends through native entry, holds overhead for 0.32 viewport and reverses continuously',
+  'the camera blends through native entry, holds overhead through the shared reading stage and reverses continuously',
   webgl,
   async ({ page }, testInfo) => {
     test.skip(
@@ -794,18 +963,27 @@ test(
     await page.setViewportSize({ width: 1440, height: 1000 });
     await exposeSceneInTest(page);
     await readyExperience(page);
+    await cancelAnchorIntent(page);
     const range = await page
       .locator('[data-story-stage="experience"]')
       .evaluate((element) => {
         const stage = element as HTMLElement;
         return {
-          start: Number(stage.dataset.storyStart),
-          end: Number(stage.dataset.storyEnd),
-          height: innerHeight,
+          start: Number(stage.dataset.scrollReadStart),
+          end: Number(stage.dataset.scrollReadEnd),
+          entry: Number(
+            document.querySelector<HTMLElement>('[data-story-stage="scoring"]')!
+              .dataset.scrollReadEnd,
+          ),
+          pinned: stage.parentElement!.classList.contains('pin-spacer'),
         };
       });
-    expect(range.end - range.start).toBeCloseTo(range.height * 0.32, 0);
-    const entryStart = range.start + 88 - range.height * 0.85;
+    expect(
+      range.start - range.entry,
+      'the flight occupies only the positive gap between reading intervals',
+    ).toBeGreaterThan(4);
+    expect(range.end).toBeGreaterThanOrEqual(range.start);
+    const entryStart = range.entry;
     const samples: { blend: number; client: { x: number; y: number } }[] = [];
     for (const progress of [0, 0.25, 0.5, 0.75, 1]) {
       await scrollToPosition(
@@ -848,15 +1026,24 @@ test(
       ),
     ).toBeGreaterThan(30);
     const held = await project(page, { x: 0.4, y: 0.65 });
+    const hostBefore = await page
+      .locator('[data-demo-court-host]')
+      .boundingBox();
     await scrollToPosition(page, (range.start + range.end) / 2);
     await expect(page.locator('html')).toHaveAttribute(
       'data-interactive',
       'true',
     );
     const still = await project(page, { x: 0.4, y: 0.65 });
-    expect(Math.hypot(held.x - still.x, held.y - still.y)).toBeLessThanOrEqual(
-      2,
-    );
+    const hostAfter = await page
+      .locator('[data-demo-court-host]')
+      .boundingBox();
+    expect(
+      Math.hypot(
+        held.x - still.x - (hostBefore!.x - hostAfter!.x),
+        held.y - still.y - (hostBefore!.y - hostAfter!.y),
+      ),
+    ).toBeLessThanOrEqual(2);
     for (const direction of [1, -1]) {
       const boundary = range.start;
       const clients = [];
@@ -871,11 +1058,21 @@ test(
             ),
           )
           .toBeGreaterThan(0.99);
-        clients.push(await project(page, { x: 0.4, y: 0.65 }));
+        clients.push({
+          point: await project(page, { x: 0.4, y: 0.65 }),
+          host: (await page.locator('[data-demo-court-host]').boundingBox())!,
+        });
       }
       expect(
-        Math.hypot(clients[0].x - clients[1].x, clients[0].y - clients[1].y),
-      ).toBeLessThanOrEqual(5);
+        Math.hypot(
+          clients[0].point.x -
+            clients[1].point.x -
+            (clients[0].host.x - clients[1].host.x),
+          clients[0].point.y -
+            clients[1].point.y -
+            (clients[0].host.y - clients[1].host.y),
+        ),
+      ).toBeLessThanOrEqual(2);
     }
     await scrollToPosition(page, entryStart);
     await expect(page.locator('#court-canvas')).toHaveAttribute(
@@ -924,6 +1121,9 @@ for (const dpr of [1, 2]) {
           await enterNativeExperience(page);
           const result = await page.evaluate(() => {
             const { scene } = Reflect.get(window, '__courtTest') as CourtProbe;
+            const canvas = document
+              .querySelector('#court-canvas')!
+              .getBoundingClientRect();
             const host = document
               .querySelector('[data-demo-court-host]')!
               .getBoundingClientRect();
@@ -936,6 +1136,22 @@ for (const dpr of [1, 2]) {
               { x: 0.76, y: 0.43 },
             ];
             return {
+              viewport: {
+                width: innerWidth,
+                height: innerHeight,
+                dpr: devicePixelRatio,
+              },
+              scroll: { x: scrollX, y: scrollY },
+              canvas: {
+                left: canvas.left,
+                top: canvas.top,
+                right: canvas.right,
+                bottom: canvas.bottom,
+              },
+              state: {
+                ...document.querySelector<HTMLElement>('#court-canvas')!
+                  .dataset,
+              },
               host: {
                 left: host.left,
                 top: host.top,
@@ -950,6 +1166,13 @@ for (const dpr of [1, 2]) {
               }),
             };
           });
+          await testInfo.attach(
+            `court-projection-${width}x${height}-dpr${dpr}`,
+            {
+              body: JSON.stringify(result),
+              contentType: 'application/json',
+            },
+          );
           for (const sample of result.samples) {
             expect(sample.client).not.toBeNull();
             expect(sample.client!.x).toBeGreaterThanOrEqual(
@@ -1122,21 +1345,28 @@ test(
     expect(poses.at(-1)!.intro).toBe(1);
     expect(await draws()).toBeGreaterThan(initialDraws);
     const finalPose = poses.at(-1)!;
-    // Flush the existing 160ms final-frame settling period, then prove that
-    // the completed camera and actual native draw count stay quiet.
+    // The introduction ends independently of the continuous, tiny reading drift.
+    // Native draws must continue while the opening tween stays complete.
     await page.clock.runFor(300);
-    await expect(canvas).toHaveAttribute('data-rendering', 'idle');
-    expect(await read()).toEqual(finalPose);
+    await expect(canvas).toHaveAttribute('data-rendering', 'ambient');
+    expect((await read()).intro).toBe(1);
     const settledDraws = await draws();
     await page.clock.runFor(500);
-    expect(await draws()).toBe(settledDraws);
-    expect(await read()).toEqual(finalPose);
+    expect(await draws()).toBeGreaterThan(settledDraws);
+    const readingPose = await read();
+    expect(readingPose.intro).toBe(1);
+    expect(
+      Math.hypot(
+        readingPose.point!.x - finalPose.point!.x,
+        readingPose.point!.y - finalPose.point!.y,
+      ),
+    ).toBeLessThanOrEqual(2);
     await assertBackgroundIdentity(page);
   },
 );
 
 test(
-  'settled full-motion reading and download stop actual WebGL draws until chapter navigation resumes them',
+  'reading, download and community keep drawing the continuous court while interactive reading holds it still',
   webgl,
   async ({ page }, testInfo) => {
     test.skip(
@@ -1155,39 +1385,46 @@ test(
     await page.evaluate(() => document.fonts.ready);
     const canvas = page.locator('#court-canvas');
     await expect.poll(draws).toBeGreaterThan(0);
-    await expect(canvas).toHaveAttribute('data-rendering', 'idle');
-    // Font measurements and the final chapter frame may still settle.
-    // A real quiet interval must follow them while full motion remains enabled.
-    await expect
-      .poll(
-        async () => {
-          const before = await draws();
-          await page.waitForTimeout(500);
-          return {
-            draws: (await draws()) - before,
-            rendering: await canvas.getAttribute('data-rendering'),
-          };
-        },
-        { timeout: 5000, intervals: [100] },
-      )
-      .toEqual({ draws: 0, rendering: 'idle' });
+    await expect(canvas).toHaveAttribute('data-rendering', 'ambient');
+    const reading = await draws();
+    const readingPoint = await project(page, { x: 0.4, y: 0.65 });
+    await page.waitForTimeout(500);
+    expect(await draws()).toBeGreaterThan(reading);
+    const drifted = await project(page, { x: 0.4, y: 0.65 });
+    expect(
+      Math.hypot(drifted.x - readingPoint.x, drifted.y - readingPoint.y),
+    ).toBeLessThanOrEqual(2);
+    await expect(canvas).toHaveAttribute('data-rendering', 'ambient');
     await page.locator('.nav-download').click();
     await expect(page.locator('#download .button')).toBeInViewport();
     await expect(page.locator('html')).toHaveAttribute(
       'data-chapter',
       'download',
     );
-    await expect(canvas).toHaveAttribute('data-rendering', 'off');
+    await expect(canvas).toHaveAttribute('data-rendering', 'ambient');
     const download = await draws();
     await page.waitForTimeout(700);
-    expect(await draws()).toBe(download);
-    await expect(canvas).toHaveAttribute('data-rendering', 'off');
-    await page.locator('.site-header a[href="#experience"]').click();
+    expect(await draws()).toBeGreaterThan(download);
+    await expect(canvas).toHaveAttribute('data-rendering', 'ambient');
+    await page
+      .locator('#community')
+      .evaluate((element) =>
+        element.scrollIntoView({ behavior: 'instant', block: 'start' }),
+      );
+    await expect(canvas).toHaveAttribute('data-chapter', 'community');
+    await expect(canvas).toHaveAttribute('data-rendering', 'ambient');
+    const community = await draws();
+    await page.waitForTimeout(500);
+    expect(await draws()).toBeGreaterThan(community);
+    await page.locator('.site-header nav > a[href="#experience"]').click();
     await expect(page.locator('html')).toHaveAttribute(
       'data-interactive',
       'true',
     );
-    await expect.poll(draws).toBeGreaterThan(download);
+    await expect(canvas).toHaveAttribute('data-rendering', 'idle');
+    const stationary = await draws();
+    await page.waitForTimeout(500);
+    expect(await draws()).toBe(stationary);
     const point = await project(page, { x: 0.37, y: 0.64 });
     await page.mouse.click(point.x, point.y);
     await expect(page.locator('[data-record]')).toBeEnabled();
@@ -1391,7 +1628,7 @@ test(
   },
 );
 
-test('desktop replay prepares screenshot decoding before its flip enters the viewport', async ({
+test('desktop replay prepares screenshot decoding before its glass cards enter the viewport', async ({
   page,
 }) => {
   await page.route(/court-(?:scene|engine)[^/]*\.js$/, (route) =>
@@ -1439,7 +1676,7 @@ test('desktop replay prepares screenshot decoding before its flip enters the vie
     expect.stringMatching(/summary\.webp$/),
   ]);
   for (const call of calls)
-    expect(call.top).toBeGreaterThan(call.viewport * 0.85);
+    expect(call.top).toBeGreaterThan(call.viewport * 0.92);
 });
 
 test(

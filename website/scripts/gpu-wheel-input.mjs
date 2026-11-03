@@ -1,4 +1,4 @@
-export const WHEEL_WORKLOAD_VERSION = 'native-wheel-v1';
+export const WHEEL_WORKLOAD_VERSION = 'native-wheel-snap-v2';
 
 function plainEvidence(value, ancestors = new Set()) {
   if (value === null || typeof value === 'string' || typeof value === 'boolean')
@@ -69,6 +69,54 @@ export function createWheelWorkload(phase, layout, viewportHeight) {
           : null;
   if (!chapter) throw new Error(`Unknown wheel workload: ${phase}`);
   const reverse = phase === 'reverse-wheel';
+  const hasReadingMetadata = Object.values(layout ?? {}).some(
+    (geometry) =>
+      geometry?.readStart !== undefined || geometry?.readEnd !== undefined,
+  );
+  if (hasReadingMetadata) {
+    // A gesture now commits one adjacent stop. Its intent deltas are deliberately
+    // independent of physical travel; the production controller supplies the rest.
+    const sourceChapter =
+      phase === 'replay-wheel-entry' ? 'experience' : 'scoring';
+    const source = layout[sourceChapter];
+    const target = layout[chapter];
+    if (
+      ![
+        source?.readStart,
+        source?.readEnd,
+        target?.readStart,
+        target?.readEnd,
+        viewportHeight,
+      ].every(Number.isFinite) ||
+      viewportHeight <= 0 ||
+      source.readStart < 0 ||
+      target.readStart < 0 ||
+      source.readEnd < source.readStart ||
+      target.readEnd < target.readStart
+    )
+      throw new Error('Wheel workload requires finite reading geometry.');
+    const startY = reverse ? source.readStart : source.readEnd;
+    const targetY = reverse ? target.readEnd : target.readStart;
+    if ((reverse && targetY >= startY) || (!reverse && targetY <= startY))
+      throw new Error('Wheel workload has an invalid travel direction.');
+    const inputSequence = [20, 18, 14, 10, 8, 6, 4, 3, 2, 1].map(
+      (delta, index) => ({
+        atMs: index * 40,
+        deltaX: 0,
+        deltaY: reverse ? -delta : delta,
+      }),
+    );
+    return {
+      workloadVersion: WHEEL_WORKLOAD_VERSION,
+      phase,
+      inputMethod: 'page.mouse.wheel',
+      startY,
+      targetY,
+      targetChapter: chapter,
+      durationMs: inputSequence.at(-1).atMs,
+      inputSequence,
+    };
+  }
   const geometry = reverse
     ? [layout.replay?.anchor, layout.hero?.anchor, viewportHeight]
     : [layout[chapter]?.stageTop, layout[chapter]?.anchor, viewportHeight];
@@ -91,7 +139,7 @@ export function createWheelWorkload(phase, layout, viewportHeight) {
     deltaY: distance * (ease((index + 1) / count) - ease(index / count)),
   }));
   return {
-    workloadVersion: WHEEL_WORKLOAD_VERSION,
+    workloadVersion: 'native-wheel-v1',
     phase,
     inputMethod: 'page.mouse.wheel',
     startY,
