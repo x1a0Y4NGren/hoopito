@@ -6,7 +6,7 @@ Complete the current request, relevant verification, and documentation needed to
 
 Read only relevant guidance: [CONTRIBUTING.md](CONTRIBUTING.md) for development, [HANDOFF.md](docs/development/handoff.md) for prior status, and the [release checklist](docs/release/release-checklist.md) when preparing a release. Historical plans and branch prompts are reference material, not current assignments or standing approval gates. Apply skills to the workflow they actually support; current user instructions take precedence over skill recommendations.
 
-The maintained checkout is `main`, currently the 2.0 codebase branded Hoopito · 球豆 (formerly HoopTrace). Read HANDOFF and check the actual branch before continuing. Use temporary worktrees only when isolation is needed. Integrate changes only within current authorization; worktree archival and project cleanup belong to explicitly requested closeout. Keep build and test evidence tied to its actual application source commit; later documentation commits do not change APK provenance.
+The maintained checkout is `main`, currently the 2.1 codebase branded Hoopito · 球豆 (formerly HoopTrace). Read HANDOFF and check the actual branch before continuing. Use temporary worktrees only when isolation is needed. Integrate changes only within current authorization; worktree archival and project cleanup belong to explicitly requested closeout. Keep build and test evidence tied to its actual application source commit; later documentation commits do not change APK provenance.
 
 ## Branch and PR Conventions
 
@@ -42,13 +42,13 @@ Use Dart formatting, two-space indentation, and `analysis_options.yaml`. Name fi
 
 Scoring mutations go through the controller and `MatchCommandService`, preserving receipts, audit order, idempotency, transactions, and undo. Presentation-only filters must not alter stored events, replay, or statistics. Keep primary scoring targets at least 48dp.
 
-For Hoopito 2.0, coverage changes use `FinishMatchCommand` or `SetTrackingCoverageCommand`; misses and locations never imply complete recording. Keep FG and FT denominators separate, and count location coverage as confirmed field-goal locations / recorded field-goal attempts. `MatchSetupPreset` reuses participants and rules only. Keep schema 3 and JSON format 2 unless the current task explicitly changes the compatibility contract.
+For Hoopito 2.1, coverage changes use `FinishMatchCommand` or `SetTrackingCoverageCommand`; misses and locations never imply complete recording. Keep FG and FT denominators separate, and count location coverage as confirmed field-goal locations / recorded field-goal attempts. `MatchSetupPreset` reuses participants and rules only. Keep schema 4 and JSON format 2 unless the current task explicitly changes the compatibility contract.
 
 Replacement and safety-copy rollback must protect the current data before mutation, retain the write reservation through backup and replacement, and block while a match is active. Preserve the shared import/export capacity limits and fail before reporting a successful backup or share.
 
 For Drift schema/query changes, run `dart run build_runner build --delete-conflicting-outputs` and include generated changes. Update both ARB files and run `flutter gen-l10n` when changing localized text.
 
-For startup changes in Hoopito 2.0, retain the approved C logo and native/Flutter geometry, keep startup silent, and preserve bounded loading, smooth skip, reduced/disabled motion, terminal states, and one playback per process. The gate owns decoded images; scoring feedback remains independent.
+For startup changes in Hoopito 2.1, retain the approved C logo and native/Flutter geometry, keep startup silent, and preserve bounded loading, smooth skip, reduced/disabled motion, terminal states, and one playback per process. The gate owns decoded images; scoring feedback remains independent.
 
 Keep core features offline-capable. Review privacy and architecture for new network behavior. Never commit signing keys, `key.properties`, device databases, build output, or real player data.
 
