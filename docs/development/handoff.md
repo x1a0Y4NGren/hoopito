@@ -1,5 +1,21 @@
 # Hoopito · 球豆交接记录
 
+## 连续对局与 v2.1.0 发行交接（2026-11-03）
+
+连续对局已通过 [PR #41](https://github.com/x1a0Y4NGren/hoopito/pull/41) 手动 squash 合入 `main`，正式应用源码为 `9bbd3b87e99d71f5d9117cd2c5a763a7f8b95d1f`；下载、截图与发行记录通过 [PR #42](https://github.com/x1a0Y4NGren/hoopito/pull/42) 合入，本次收尾起点为 `main@ca184120ed1de16fc99c3693a473749f44f0021c`。当前维护版本为 `2.1.0+6`，数据库 schema 4、JSON 格式 2；下文旧版本、待验和未发布描述保留各自历史时点，不作为当前状态。
+
+固定两人的连续对局支持逐场设置、交换红蓝、继续、收局、重新打开、胜场与平局汇总及逐场复盘；普通单场继续独立使用，旧比赛不自动归组，每场只计入生涯一次。schema 2／3 可迁移至 4，JSON 支持 `1/2`、`2/3`、`2/4` 格式/schema 组合；升级后的数据库及 schema 4 备份不能由旧 App 读取。此前合入的应用内更新与自由／目标计分确认已包含在本次版本。练习与新手引导仍在独立的 `C:/Users/48029/.codex/worktrees/in-app-updates/hoopito`、`feat/practice-onboarding` 未提交工作区中，完整保留，不属于本次应用源码、发行或收尾整合范围。
+
+正式 [v2.1.0 Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0) 已于 2026-11-03 02:53:09 UTC 公开且 `immutable=true`。ED25519 签名 tag 本地验证及远端对象核对通过，固定指向上述应用源码；APK `Hoopito-v2.1.0-android.apk` 为 77,976,935 字节，SHA-256 `c408707fbb1298f845e059c1a7eeada7d5474ca987ba04e46dfd9d2dbee7fb1a`，沿用正式证书 `2820ba06e898be1152d38536492282127e9fb0734a0863bb42db63f8a75611dd`。全部 8 个附件完成草稿及匿名公开回读，校验和通过；公开 APK 已实际覆盖安装、冷启动并确认既有记录保留。后续文档与 AOCI 提交不改变 APK 来源，也不替换 tag 或公开附件。
+
+本地正式源码格式、分析和 1,386 项 Flutter 测试通过；PR 与应用合入后的全部适用 CI 通过，包含 API24／36 集成、未签名 Release 两份重建一致和 macOS iOS 无签名编译。[应用 main CI 41561595390](https://github.com/x1a0Y4NGren/hoopito/actions/runs/41561595390) 第一次 API36 未能启动 Dart Development Service，0 项测试通过；attempt 2 的五个 API36 流程与必需门禁成功，保留首次失败日志。发行文档合入 `ca184120` 后的 App、Website、Repository policy 与 CodeQL 亦全部成功，回执保存在外部 `delivery-result.json`，不把文档门禁改标为正式包重新构建。
+
+正式签名包在专用 API24 完成离线连续对局、撤销、落点、复盘及冷进程保留；API36 从公开 v2.0.1 同证覆盖、迁移至 schema 4，完成离线三场对局、整组结果和冷进程保留。首启内置规则 `eleven_win_by_two.win_by_two` 按初始化逻辑由 `1` 更新为 `0`，既有比赛快照不重写，不能声称首次启动前后所有旧表完全不变。完整 JSON 已由 App 生成并核对内容，分享面板已打开，但接收目标实际保存到 App 外、本次正式包升级旅程的替换导入／恢复及战报图片接收没有完成回执。自然 24 小时备份、实体设备、iOS 正式安装与发行、商店及 F-Droid 仍未验或未发布；既有启动帧预算失败样本保留，不由本轮功能验收代替。
+
+本轮未部署官网或更新 `preview/website`，网站源码发行元数据仍为 v2.0.1；2026-11-03 02:57:50 UTC 实测 `/updates/android/stable.json` 为 HTTP 404，不能称有效旧版 feed 或官网已同步。v2.0.1 用户需从 GitHub Release 手动安装一次新版；后续官网同步需要新的部署授权。README 的 4 张中英文真实画面已按实际系统边界裁剪，原图与历史网站 v2.0.1 画面保留各自来源，详细摘要、裁剪和限制见 [v2.1.0 发行验收记录](../release/v2.1.0-release-record.md)。
+
+发行与验收证据保存在 `D:/DevCache/HoopitoArtifacts/release-2.1.0-20261103/`，其中 `delivery-result.json` 是此前功能合并和公开发行的最终回执，不代表本次项目收尾已经完成。专用测试模拟器已停止、临时 adbd root 已恢复、本轮 Gradle daemon 已停止；模拟器数据和失败样本保留。本次用户明确要求收尾，沿用 `chore/continuous-series-closeout` 完成必要交接与 AOCI 维护，再通过最新 main 保护检查、手动 squash 合并并安全归档本轮自有工作树。AOCI 对齐、收尾 PR、最终合并 SHA、合并后 CI 与工作树回执以 `D:/DevCache/HoopitoArtifacts/continuous-series-closeout-20261103/` 的实际结果和最终汇报为准，不预写成功，也不为回填自身合并记录再开启一轮提交。其他任务工作树、练习／引导未提交内容、共享缓存和原始证据继续保留；本次收尾不创建新发行或部署网站。
+
 ## 收尾默认整合 main（2026-10-27）
 
 用户本轮明确要求：每次明确项目收尾完成既有验证、交接、证据保存、资源处理、AOCI 对齐和本地提交后，默认推送本轮分支，通过 PR 和当前 main 保护检查后手动 squash 合并，无需再询问同一推送或合并授权。[贡献指南](../../CONTRIBUTING.md#项目收尾流程) 与 [AGENTS](../../AGENTS.md#项目收尾仅由用户明确触发) 同步该默认范围；普通完成或单独修改规则不触发收尾，用户暂停、仅本地等限制优先。tag、正式发行、网站部署、长期预览更新与无关资源删除继续单独授权，main 的 strict 三门禁、CodeQL、0 必需批准和关闭 auto-merge 均保留。

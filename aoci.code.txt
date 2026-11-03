@@ -1,21 +1,19 @@
 #AOCI-CODE-VOLUME: 1
 
 ===D:/GitHub/hooptrace/===
-.gitattributes[FV6T]: F:固定脚本与来源清单行尾并保护图像及生成物字节 | R:code:tool/brand/export_logo_kit.mjs | A:网站文本及截图裁剪配置LF；网站public与Logo套件禁转换 | S:文本来源摘要按导出器规范LF计算，不能通过空白例外掩盖来源差异
-.gitignore[FV6S]: F:界定构建缓存、设备数据、签名秘密及本机配置的Git忽略范围 | R:code:.aoci/.gitignore,code:android/.gitignore | A:Git ignore patterns；忽略Python缓存及Codex本机配置 | S:正式AOCI卷与共享治理配置可追踪，运行资产及本机绝对路径配置不能提交
+.gitattributes[FV6T]: F:固定跨平台行尾和来源资产字节策略 | R:code:docs/archive/manifest.json,code:tool/brand/export_logo_kit.mjs | A:脚本及AOCI卷LF；网站public与归档快照禁转换 | S:归档脚本与报告按原始字节验摘要；许可证空白例外不允许其他源码绕过差异检查
+.gitignore[FV6S]: F:排除构建缓存、设备数据、签名秘密和本机工具状态 | R:code:.aoci/.gitignore,code:android/.gitignore | A:Flutter与Node缓存；.superpowers及.worktrees；机器绑定配置 | S:正式AOCI卷和共享配置保留可追踪，运行日志与本机绝对路径配置不提交
 .metadata[FV4T]: F:保存Flutter项目类型、创建版本和迁移基准 | R:code:.github/workflows/flutter-ci.yml | A:Flutter migrate metadata | S:由Flutter工具维护；main.dart和iOS工程排除迁移
-AGENTS.md[SG9S]: F:约束源码兼容、展示证据、语义分支及明确收尾后默认PR整合与AOCI操作 | R:code:CONTRIBUTING.md,code:HANDOFF.md | A:目的分支覆盖工具默认；preview及deps保留；命令事务与schema3及JSON2；收尾后最新基线squash | S:普通完成不触发治理或清理；明确收尾含本轮提交推送PR及main合并，用户更窄限制优先；发行部署和长期预览另授权；已在main不重复，合并回执不引发第二轮PR；原签名及持久身份保持
-CHANGELOG.md[SV6T]: F:按版本记录Hoopito品牌同步及既有功能兼容和修复 | R:code:pubspec.yaml,code:docs/release/v2.0.1-release-notes.md | A:2.0.1品牌与备份回调修复；Unreleased与历史版本比较 | S:v2.0.0更换v1证书而v2.0.1沿用v2；旧App不能导入新名称JSON，签名与数据兼容分别判断
-CONTRIBUTING.md[SQ7M]: F:统一问题确认、目的分支、按影响验证及明确收尾后默认合入main的维护流程 | R:code:AGENTS.md,code:docs/repository-settings.md,code:docs/release/release-checklist.md | A:十种类型；PR及squash标题；strict三门禁及零批准；八步收尾至核验归档 | S:收尾含本轮推送PR和检查后main合并，不复问；用户限制优先；发行部署另授权；已合入不造空PR；合并回执存外部避免循环；变更输入须重验索引
-HANDOFF.md[SW7M]: F:交接仓库治理、预览迁移与收尾默认整合规则并保留来源及失败证据 | R:code:CONTRIBUTING.md,code:docs/repository-settings.md,code:website/README.md | A:20及26设置；28规范；29入口；68c4f13本地收尾；3179916后默认整合；证据目录 | S:旧待授权状态保留当时事实；最终合并结果以外部回执为准，不预写成功；其他任务源码不归本轮；历史告警非当前数量；APK与生产来源不改
+AGENTS.md[SG9S]: F:规定Hoopito维护、兼容、证据、授权及项目收尾流程 | R:code:CONTRIBUTING.md,code:docs/development/handoff.md | A:2.1及schema4/JSON2；命令事务；目的分支；明确收尾后检查并squash | S:普通完成不授权治理或清理；收尾覆盖本轮提交推送PR与合并，用户限制优先；发行部署另授权；保留应用身份、签名与无关改动，合并回执存外部避免循环PR
+CHANGELOG.md[SV6S]: F:按版本记录连续对局、目标确认、应用内更新及品牌和兼容变更 | R:code:docs/release/v2.1.0-release-notes.md,code:pubspec.yaml | A:2.1.0 schema4；2.0.1品牌；保留历史版本 | S:v2同证覆盖与schema备份兼容分别判断，旧App不能读取新数据库或schema4备份
+CONTRIBUTING.md[SQ8M]: F:统一分支规范、影响验证和明确授权后的八步收尾与main整合 | R:code:AGENTS.md,code:docs/repository-settings.md | A:2.1 schema4/JSON2；三保护门禁；0必需批准；手动squash | S:收尾不等于发布或部署；已在main不建空PR；合并结果存外部，保持产物应用来源；其他工作区与证据不得为干净状态而丢弃
 LICENSE[SG6T]: F:以MIT许可授予项目软件及文档的使用、复制、修改、分发和再许可权，并规定声明保留与免责 | R:code:README.md,code:CONTRIBUTING.md | A:MIT License；版权归2026 x1a0Y4NGren；副本及实质部分须保留版权和许可声明；软件按原样提供且无担保 | S:-
-PRIVACY.md[SS8T]: F:说明Hoopito离线数据、权限、备份、内部副本及删除与分享边界 | R:code:android/app/src/main/AndroidManifest.xml,code:lib/core/export/safety_backup_store.dart | A:无账号云同步追踪广告；自动备份默认关闭；SAF用户授权 | S:私有副本随卸载清数据丢失；替换回退先保护当前且禁止活动比赛；网页与GitHub访问日志不属于App上传
-README.md[SG7M]: F:介绍离线单挑应用并导航正式下载、官网社区及已审阅品牌套件 | R:code:website/README.md,code:assets/brand/README.md | A:2.0.1+5；双语展示截图；QQ1129560287；GitHub发行源及同包渠道 | S:正式APK来源固定4ecd960；v2同证覆盖保数据，v1先外部JSON备份；Logo整理不替换生产图标
-SECURITY.md[SS8T]: F:规定最新正式版的安全支持、私密报告和发行可信来源核验 | R:code:PRIVACY.md,code:docs/release/release-checklist.md,code:android/app/src/main/AndroidManifest.xml | A:最新正式版获修复；私密GitHub报告；7日确认、14日分级为尽力目标 | S:危及数据、SAF边界或代码执行的问题不公开报告；禁含真实球员数据和密钥；正式APK必须对应签名tag、校验和和维护者证书，Debug与未签名产物不算发行
+PRIVACY.md[SS8T]: F:说明本地数据、备份、应用内更新和用户授权网络行为 | R:code:android/app/src/main/AndroidManifest.xml,code:lib/core/update/update_service.dart | A:无追踪或账号；自动备份默认关闭；启动检查默认开启可关闭 | S:更新仅请求公开信息，托管方可见连接信息；点击后下载并由系统确认安装，比赛中禁安装；私有安全副本不替代设备外备份
+README.md[SG7S]: F:介绍离线单挑与连续对局并导航v2.1.0下载、真实展示和维护文档 | R:code:docs/release/v2.1.0-release-record.md,code:website/README.md | A:2.1.0+6；schema4/JSON2；公开Release干净截图 | S:APK来源9bbd3b8；官网未同步且feed404，2.0.1须先手装更新器；旧App不能读取schema4，截图不能回退系统栏原图
 analysis_options.yaml[FQ5T]: F:继承Flutter lint并配置格式习惯及旧源码夹具分析边界 | R:code:pubspec.yaml,code:tool/release/generate_v1_upgrade_fixture.dart | A:单引号尾逗号避免print优先final；flutter analyze | S:历史v1夹具有意导入package:hooptrace并排除当前包分析，不能因此改写归档源码依赖
 l10n.yaml[FL6T]: F:指定Flutter中文ARB模板与本地化代码输出位置和类名 | R:code:lib/app/l10n/app_zh.arb,code:lib/app/l10n/app_localizations.dart | A:arb-dir=lib/app/l10n；AppLocalizations；app_localizations.dart | S:-
 pubspec.lock[FV7L]: F:锁定Dart与Flutter依赖的版本、来源和hosted校验和 | R:code:pubspec.yaml,code:.github/workflows/flutter-ci.yml | A:direct与transitive；Dart3.11及Flutter3.38.4下界；移除未用音频和Cupertino依赖链 | S:构建用enforce-lockfile拒绝隐式升级；删除插件不改变系统计分反馈；此锁文件不能替代Android运行时Maven清单
-pubspec.yaml[FV8T]: F:声明hoopito应用版本、SDK依赖、字体资源及本地SQLite源码hook | R:code:pubspec.lock,code:lib/app/app_metadata.dart,code:third_party/sqlite/README.md | A:2.0.1+5禁pub发布；Drift2.34；gen-l10n；Barlow及Noto；SQLite source/path | S:SQLite用仓库amalgamation编译，不下载二进制；启动音频不入包且无播放器插件，计分保留系统反馈；原生版本及双ARB保持同步
+pubspec.yaml[FV8T]: F:声明应用2.1.0+6、固定依赖、字体与本地SQLite构建输入 | R:code:pubspec.lock,code:lib/app/app_metadata.dart,code:third_party/sqlite/README.md | A:禁止pub发布；Drift2.34；gen-l10n；Barlow/Noto；SQLite source hook | S:SQLite从仓库amalgamation编译不下载二进制；启动音频不入包无播放器，原生版本与备份版本同步
 
 ===D:/GitHub/hooptrace/.github/ISSUE_TEMPLATE/===
 bug_report.yml[SQ4T]: F:收集双语缺陷的版本设备、复现步骤和诊断证据 | R:code:SECURITY.md | A:GitHub表单标bug与needs-triage；2.0.1版本示例 | S:安全漏洞走私密报告，不上传真实球员数据或签名秘密
@@ -25,22 +23,13 @@ feature_request.yml[SW4T]: F:收集球场场景、目标行为及权限和数据
 ===D:/GitHub/hooptrace/.github/===
 dependabot.yml[FV6T]: F:配置Actions与npm周更、pub与Gradle月更及依赖分组 | R:code:docs/repository-settings.md | A:deps分支；chore依赖scope；限额与普通更新冷静期；Drift运行库及生成器成组 | S:安全更新不等待普通冷静期；Gradle单项升级不证明整体工具链兼容
 pull_request_template.md[SQ6T]: F:引导按目的命名PR并说明结果、决策、验证和发布风险 | R:code:CONTRIBUTING.md | A:相关Issue可选；CI与依赖附加审查；记录源码环境和限制 | S:不为填写模板另建Issue；证据复用不免除当前基线门禁
-CODEOWNERS[FC5T]: F:为关键源码、CI、治理文档和发行工具标记维护责任人 | R:code:CONTRIBUTING.md | A:GitHub审阅路由至维护者 | S:当前不要求所有者批准，责任标记不替代CI或人工审阅
+CODEOWNERS[FC5T]: F:为核心源码、发行工具和治理文档标记维护责任人 | R:code:CONTRIBUTING.md | A:GitHub审阅路由；覆盖迁移后的安全说明与许可证 | S:责任标记不要求额外批准，不能代替必需CI
+SECURITY.md[SS8T]: F:规定v2.1.0安全支持、私密报告及正式发行可信边界 | R:code:docs/release/v2.1.0-release-record.md,code:PRIVACY.md | A:最新正式版获修复；GitHub私密报告；7日确认与14日分级为尽力目标 | S:正式tag及APK应用来源固定9bbd3b8，后续文档不改来源；数据破坏或SAF越界不得公开含敏感数据的复现
 
 ===D:/GitHub/hooptrace/.github/workflows/===
-flutter-ci.yml[OV8M]: F:按变更路径运行应用质量、双API集成、未签名复现和iOS编译并汇总门禁 | R:code:tool/release/prepare_android_toolchain.sh,code:tool/release/run_android_integration_ci.sh,code:tool/release/verify_unsigned_reproducible_android.sh | A:分类后quality；API24及36、双源码复现、iOS并行；always汇总 | S:未知输入运行全套；不适用须全部跳过，适用须全部成功；无签名产物不代表正式APK或iOS安装
+flutter-ci.yml[OV8M]: F:按路径选择应用质量、双API集成、未签名复现及iOS编译并汇总保护门禁 | R:code:tool/release/run_android_integration_ci.sh,code:tool/ci/required_gate.py | A:完整Flutter回归；schema校验；迁移后许可证复现；API24及36；always门禁 | S:未知输入运行全套；不适用全部跳过、适用全部成功；未签名复现不等于正式签名发行或iOS设备验收
 website-ci.yml[OV8M]: F:按路径构建来源绑定网站并验证三浏览器及双分片软件WebGL后汇总门禁 | R:code:website/scripts/build-artifact.mjs,code:website/playwright.webgl.config.ts | A:main及preview分支触发；分类validate与矩阵；always保留14天证据及汇总 | S:只下载本run同SHA产物且先验逐文件摘要；失败取消不可被不适用掩盖；软件渲染不证明硬件帧率；本流程不部署
 repository-policy.yml[OQ7T]: F:提供统一命名、工作流来源与提交空白的必需策略门禁 | R:code:CONTRIBUTING.md,code:.github/pull_request_template.md | A:main推送及手动运行；PR创建同步重开与编辑；stdlib测试及只读token | S:仅明确关闭的PR跳过job，避免删除head后的无效比较；缺失状态不跳过既有元数据校验；标题分支只作为数据读取
-
-===D:/GitHub/hooptrace/.superpowers/sdd/2026-08-22-hooptrace-1-0/===
-task-3-report.md[SQ4S]: F:记录1.0任务3的领域模型、Drift schema v2、原生旧库拒绝、备份图校验及两轮复审的提交和RED/GREEN证据 | R:code:lib/core/data/app_database.dart,code:lib/core/data/schema_v2.dart | A:- | S:schema v2历史验收；现行数据库版本为3
-task-4-report.md[SQ5M]: F:记录1.0任务4事务命令内核、持久回执幂等、生产计分桥接和UI收尾的实现、评审修复与验证证据 | R:code:lib/core/data/commands/match_command_service.dart,code:lib/features/scoring/scoring_controller.dart | A:- | S:报告将计时算法与进程恢复留给后续任务；所列验证属于对应历史提交
-
-===D:/GitHub/hooptrace/.superpowers/sdd/2026-08-26-editorial-ui-redesign/===
-task-7-report.md[SQ4T]: F:记录编辑部UI最终修复波的真实字体Golden、计分静态强调与补点计时、旧调用兼容和紧凑更多面板验收 | R:code:lib/features/scoring/scoring_page.dart,code:test/app/editorial_golden_font_pipeline_test.dart | A:- | S:语义包装清理明确延期；930项测试属于当轮验收
-
-===D:/GitHub/hooptrace/.superpowers/sdd/hooptrace-black-court-app-icon/===
-task-1-report.md[SV5M]: F:记录篮筐轨迹启动器图标的ImageGen来源、安全区、Android/iOS资源派生，以及旧版圆图和主题图的修复验收 | R:code:tool/release/generate_launcher_icons.py,code:assets/icons/README.md | A:- | S:这是旧品牌证据；末尾追加修复已补齐主题图验收与完整alpha一致性
 
 ===D:/GitHub/hooptrace/android/===
 .gitignore[FS6T]: F:排除Android本地缓存、自动注册文件、SDK路径与签名秘密的Git跟踪 | R:code:tool/release/setup_android_signing.ps1 | A:Android子树的Git忽略规则 | S:签名脚本把明文口令写入key.properties，须保留该文件与密钥扩展名的忽略规则
@@ -58,7 +47,7 @@ build.gradle.kts[FV8S]: F:配置Android应用身份、Java17／SDK36工具链、
 AndroidManifest.xml[FN4T]: F:为debug变体声明Flutter调试通信所需的互联网权限 | R:code:android/app/src/main/AndroidManifest.xml | A:android.permission.INTERNET | S:-
 
 ===D:/GitHub/hooptrace/android/app/src/main/===
-AndroidManifest.xml[FC8T]: F:声明Android本地化启动标签、Flutter入口主题、返回及文本查询 | R:code:android/app/src/main/res/values/strings.xml,code:android/app/src/main/res/values-zh/strings.xml,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/MainActivity.kt | A:@string/app_name；exported singleTop；embedding2；PROCESS_TEXT | S:allowBackup=false只关闭系统备份，用户SAF与WorkManager离线备份继续可用
+AndroidManifest.xml[FC8T]: F:声明Flutter入口、网络及安装权限与更新文件共享边界 | R:code:android/app/src/main/res/xml/update_file_paths.xml,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/MainActivity.kt | A:INTERNET；REQUEST_INSTALL_PACKAGES；私有FileProvider | S:仅更新目录可经临时URI读授权共享；不申请广泛存储或通知权限；allowBackup=false不禁用户授权备份
 
 ===D:/GitHub/hooptrace/android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/===
 AndroidWindowPolicy.kt[IU6T]: F:配置Android启动交接时延伸至系统栏的布局与透明栏，并集中可测试的API能力判断 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/MainActivity.kt,code:android/app/src/test/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupFilePolicyTest.kt | A:apply(window,sdkInt)；预测返回判定API≥33；平台edge-to-edge判定API≥30 | S:透明栏仅API≥29、decorFits仅API≥30；Flutter引擎接手后负责系统栏外观
@@ -69,8 +58,12 @@ AutomaticBackupStorageDelegate.kt[IR8M]: F:以持久授权SAF tree执行目录�
 AutomaticBackupWorkManager.kt[AR7T]: F:向Android WorkManager注册、保留或取消唯一的持久自动备份周期任务 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupWorkPolicy.kt,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupWorker.kt | A:schedule(context)/cancel(context)；任务hooptrace.automatic-backup；周期24h、指数退避30min、无网络要求 | S:重复schedule使用KEEP保留原任务；修改请求参数不会替换已注册的周期任务
 AutomaticBackupWorkPolicy.kt[CR7T]: F:集中持久备份任务身份、周期、通道与结果协议，并决定Worker成功或重试映射 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupWorker.kt,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupWorkManager.kt,code:lib/core/export/automatic_backup_scheduler.dart | A:uniqueWorkName=hooptrace.automatic-backup；通道automatic_backup/automatic_backup_background；周期24h、退避30min、无网络要求；AutomaticBackupWorkerOutcome.fromWire接受success/missing_authorization/retry | S:缺少授权映射为成功完成的安全跳过；未知或空outcome一律重试，不能把协议漂移当作成功
 AutomaticBackupWorker.kt[IR8S]: F:在WorkManager中启动短生命周期无界面Flutter引擎，复用Dart自动备份服务并把完成协议转为成功或重试 | R:code:lib/main.dart,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupChannelDelegate.kt,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupWorkPolicy.kt | A:doWork返回Result.success/retry；Dart入口automaticBackupBackgroundMain；completed(outcome)完成协议；数据库位于私有flutter目录中的hooptrace.sqlite | S:关闭自动插件注册，手工注册存储与完成通道，存储桥接无picker；引擎创建与销毁在主线程，等待在Worker；启动超过30秒、完成超过8分钟或未知结果重试；结束时关闭通道执行器并投递引擎销毁
-MainActivity.kt[EU8S]: F:装配Android Flutter入口、备份桥接、动效偏好及真实Surface和原生启动图交接信号 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/EntrySurfaceReadiness.kt,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupChannelDelegate.kt,code:lib/core/settings/motion_preference_cache.dart,code:lib/app/entry/entry_renderer_ready.dart | A:entry_renderer waitUntilReady/waitUntilPresented；entry_motion_preference read/write；automatic_backup | S:Surface有效且尺寸为正才就绪；API31原生启动图退出后才呈现，旧平台等Flutter UI显示；资格按进程同步领取，Activity重建不重播；destroy完成等待false并释放通道；缓存不替代Drift设置
+MainActivity.kt[EU8M]: F:装配前台更新与备份通道及原生启动呈现和动效偏好 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdateDelegate.kt,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/EntrySurfaceReadiness.kt | A:引擎注册；resume/pause转发；Surface与原生启动图交接 | S:Surface尺寸有效与原生启动图退出分别决定就绪；进程同步领取避免Activity重播；destroy释放等待与更新回调，偏好缓存不代替Drift
 EntrySurfaceReadiness.kt[IU7T]: F:在Android主线程保存启动绘制面的就绪状态并完成等待回调 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/MainActivity.kt,code:lib/app/entry/entry_renderer_ready.dart | A:waitUntilReady、surfaceReady、surfaceLost、dispose | S:销毁终止全部待回调且返回false；surfaceLost仅清就绪并保留等待，避免旧Surface身份被当作新可绘制面
+AppUpdateDelegate.kt[IV9L]: F:桥接前台更新通道并协调可恢复下载、私有校验和系统安装 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdateFiles.kt,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdatePolicy.kt | A:进程一次启动领取；串行worker与SharedPreferences；DownloadManager及一次备用源 | S:后台备份引擎不注册；外部暂存拷入私有目录后验包身份及同签名；安装重新校验并消费单次封印，暂停使其失效；installerLaunched只表示打开系统安装器
+AppUpdateFiles.kt[IS8T]: F:有界复制更新包并校验私有副本的大小与SHA256 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdateDelegate.kt | A:64KiB流读；fd.sync；完整字节计数及摘要 | S:预读长度检查不能代替复制时上限与最终私有副本复验，外部源可在读取过程中改变
+AppUpdatePolicy.kt[DS8T]: F:定义更新下载地址、包身份、签名和专属文件的纯策略边界 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdateDelegate.kt | A:官方精确HTTPS路径；版本递增；签名集合相等；摘要文件名 | S:拒绝端口、用户信息、查询及路径编码绕过；网络等待不触发备用源，只有未使用备用源的重试暂停可切换
+AppUpdatePreparedFile.kt[IS7T]: F:为已验证私有安装文件建立短期身份封印 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdateDelegate.kt | A:代次、canonicalPath、长度和修改时间比对 | S:封印不持久化且不替代重新计算摘要，生命周期或下载代次变更必须失效
 
 ===D:/GitHub/hooptrace/android/app/src/main/res/drawable-v21/===
 launch_background.xml[FU5T]: F:为API21及以上将C独眼球怪启动位图居中置于品牌近黑背景 | R:code:tool/release/generate_entry_assets.py,code:android/app/src/main/res/values/styles.xml | A:@drawable/launch_background引用@drawable/launch_mark | S:基础画布与缩放由生成器写入位图，XML仅居中，与Flutter静止帧保持相同几何
@@ -107,6 +100,9 @@ AndroidManifest.xml[FN4T]: F:为profile变体声明Flutter工具通信所需的�
 AutomaticBackupFilePolicyTest.kt[TS6T]: F:回归新旧自动备份归属、路径与MIME边界及窗口API策略 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupFilePolicy.kt,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AndroidWindowPolicy.kt | A:Hoopito及HoopTrace auto可清；手动和越界名拒绝；API33预测返回与API30布局 | S:纯策略断言不证明真实SAF删除或设备窗口行为
 AutomaticBackupWorkPolicyTest.kt[TW6T]: F:锁定离线自动备份的唯一后台任务名与24小时间隔，验证SAF授权缺失及未知结果的重试决策 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupWorkPolicy.kt | A:JUnit策略回归；任务名hooptrace.automatic-backup；24小时间隔且不需网络；missing_authorization不重试，未知结果重试 | S:断言配置与结果映射，不证明真实24小时调度或后台Worker执行
 EntrySurfaceReadinessTest.kt[TH6T]: F:验证原生启动就绪等待的单次响应、Surface丢失与销毁释放 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/EntrySurfaceReadiness.kt | A:JUnit三项；重复ready不重复回复，lost后需新ready，dispose返回false | S:纯状态机回归不证明真实Surface或原生启动图交接
+AppUpdateFilesTest.kt[TS7T]: F:验证私有更新副本独立性及大小和摘要损坏拒绝 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdateFiles.kt | A:外部源修改；私有文件替换；长短及摘要不符 | S:文件校验测试不证明真实APK签名或系统安装成功
+AppUpdatePolicyTest.kt[TS7T]: F:验证官方更新地址、单次回退、同签名及版本和路径边界 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdatePolicy.kt | A:HTTPS来源；非空相等签名集合；递增code；摘要文件名 | S:等待网络不能误切备用源，签名轮换集合不能仅凭包含旧签名放行
+AppUpdatePreparedFileTest.kt[TS7T]: F:验证私有安装封印随代次、文件存在性和替换失效 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdatePreparedFile.kt | A:同代通过；长度变化、删除与等长改时间拒绝 | S:封印检查不能代替准备安装时重新验摘要
 
 ===D:/GitHub/hooptrace/android/gradle/wrapper/===
 gradle-wrapper.properties[FV7T]: F:固定Gradle8.14完整发行包、下载校验和及用户级缓存位置 | R:code:android/gradlew,code:android/gradlew.bat | A:distributionUrl=gradle-8.14-all.zip；distributionSha256Sum校验下载包；缓存GRADLE_USER_HOME | S:-
@@ -122,9 +118,9 @@ README.md[SU4T]: F:说明历史原创180ms启动音效的固定种子合成与MI
 README.md[SV5T]: F:说明已审核C独眼球怪的三色生产图、平台派生和静音启动资源流程 | R:code:tool/release/generate_launcher_icons.py,code:tool/release/generate_entry_assets.py,code:docs/design/brand/source.json | A:1024透明前景、620安全区、平台图标与商店图、单色负空间 | S:黑色瞳孔、嘴和篮球纹路必须保留；旧音频仍可确定性生成但启动不加载播放
 
 ===D:/GitHub/hooptrace/docs/===
-README.md[SG6T]: F:导航Hoopito当前v2.0.1发行、品牌兼容和历史设计验收文档 | R:code:HANDOFF.md,code:docs/release/v2.0.1-release-record.md,code:docs/design/brand/naming-and-compatibility.md | A:4ecd960正式应用；八张正式包截图；历史v2分区 | S:后续文档网站提交不改APK来源，历史计划不授权重建工作区或任务
-branch-execution-order.md[SW3S]: F:保留首发九条分支的依赖波次、worktree准备、合并检查和安全清理流程，供追溯当时的职责划分与执行顺序 | R:code:scripts/setup-worktrees.ps1,code:docs/branch-prompts/README.md | A:历史Wave 1、2、3、4、5A、5B、5C、6及all的分支映射 | S:旧流程不要求重建worktree或等待历史波次
-repository-settings.md[SC7T]: F:记录仓库分支保护、固定CI契约、依赖安全、发行及恢复策略 | R:code:CONTRIBUTING.md,code:.github/dependabot.yml | A:strict三检查及零批准；语义命名；preview迁移；最小Actions权限；不可变发行 | S:文档目标不证明远端生效；嵌套cache阻止全局SHA强制，顶层另验；扫描成功不等于清零；不配置日常bypass
+README.md[SG6T]: F:按开发、设计、发行和历史用途导航当前文档 | R:code:docs/development/handoff.md,code:docs/release/v2.1.0-release-record.md | A:2.1.0源码9bbd3b8；schema4/JSON2；GitHub下载 | S:官网feed404且未部署；历史计划和旧验收不授予当前执行权限，文档提交不改APK来源
+branch-execution-order.md[SW3S]: F:保留首发分支依赖、波次和工作树操作的历史流程 | R:code:docs/archive/tools/worktrees/README.md | A:Wave1至6；旧命令与分支映射 | S:旧命令不作为当前执行入口
+repository-settings.md[SC7T]: F:记录仓库保护、CI契约、命名、依赖及发行恢复政策 | R:code:CONTRIBUTING.md,code:.github/dependabot.yml | A:strict三门禁；0批准；手动squash；不可变发行 | S:文档目标不证明远端生效，不设日常bypass；网站合并不自动授权部署，账号级秘密不属规则调整
 
 ===D:/GitHub/hooptrace/docs/branch-prompts/===
 01-flutter-scaffold.md[SW3T]: F:保存首发项目地基分支的Task1-2提示，限定Flutter依赖、主题、路由、本地化和首页脚手架，并列当轮验证及交付要求 | R:code:docs/branch-prompts/README.md,code:docs/superpowers/plans/2026-05-12-hooptrace-first-release.md | A:历史分支codex/flutter-scaffold与.worktrees/flutter-scaffold；限Task1-2 | S:历史提示不构成当前待办或分支授权
@@ -136,19 +132,19 @@ repository-settings.md[SC7T]: F:记录仓库分支保护、固定CI契约、依�
 07-analytics.md[SA4T]: F:保存首发Task14的统计支线提示，追溯比分流、领先变化、最大分差、命中率和关键回合的纯领域分析范围 | R:code:docs/branch-prompts/README.md,code:docs/superpowers/plans/2026-05-12-hooptrace-first-release.md | A:历史交付为领域计算与复盘摘要；统计从MatchEvent和ShotLocation派生且不改变事件语义；排除导出备份 | S:长期统计待UI深化是历史范围，不是当前实现结论
 08-export-backup.md[SR4T]: F:保存首发Task15-16的导出备份支线提示，追溯完整JSON恢复、CSV、复盘图片及自动本地备份的职责与验收范围 | R:code:docs/branch-prompts/README.md,code:docs/superpowers/plans/2026-05-12-hooptrace-first-release.md | A:历史要求自动备份默认关闭并显式授权目录；导入校验schema且拒绝未来版本；排除云同步和PDF；验收关注JSON往返与CSV字段 | S:当年验收要求不是已执行证据；当前导入兼容边界须核对源码
 09-release-ci.md[SV4T]: F:留存首发发布与质量支线Task17-18的范围、限制和验收交付提示 | R:code:docs/branch-prompts/README.md,code:docs/superpowers/plans/2026-05-12-hooptrace-first-release.md | A:历史codex/release-ci分支；集成测试、发行资料、F-Droid准备与CI工作范围；历史验证和交付要求 | S:首发历史提示不是当前待办，也不授权重新创建分支或worktree
-README.md[SW6T]: F:界定首发分支提示目录的历史用途、当前维护依据与复用边界 | R:code:AGENTS.md,code:CONTRIBUTING.md,code:HANDOFF.md,code:docs/branch-execution-order.md | A:当前维护入口AGENTS/CONTRIBUTING；最近状态HANDOFF；历史职责与执行顺序资料 | S:历史波次、分支、worktree和技能要求仅适用于当时任务，不能据此重建环境、等待合并或推定今天的实施与发布授权
+README.md[SW6T]: F:界定首发分支提示的追溯用途和当前维护依据 | R:code:AGENTS.md,code:CONTRIBUTING.md,code:docs/development/handoff.md | A:首发职责；历史顺序；按需复用背景 | S:历史波次和技能不授予今天的创建、合并或发布权限
 
 ===D:/GitHub/hooptrace/docs/release/===
-fdroid-notes.md[SV7S]: F:记录Hoopito上游v2.0.1发行、固定工具链元数据与待执行F-Droid渠道准备 | R:code:docs/release/release-checklist.md,code:docs/release/reproducible-builds.md,code:docs/release/v2.0.1-release-record.md | A:versionCode5；Hoopito正式APK与八图；固定安装身份；recipe/lint/server build仍待执行 | S:尚未收录；项目要求同证上游验签与可复现不等于F-Droid通用条件；源码tag与后续元数据分开核对，不改已发版本
+fdroid-notes.md[SV7S]: F:记录v2.1.0上游发行、固定工具链及F-Droid渠道准备限制 | R:code:docs/release/release-checklist.md,code:docs/release/v2.1.0-release-record.md | A:code6与9bbd3b8源码；上游元数据；更新器网络和权限评审 | S:F-Droid尚未收录，旧Fastlane八图保留2.0.1来源；上游同证与可复现为项目门槛，recipe/lint/server及渠道策略需另行验证
 performance.md[SP6S]: F:定义有界历史与复盘查询及真实文件命令性能门槛，保留历轮实测与环境敏感性证据 | R:code:test/performance/task15_query_benchmarks_test.dart,code:integration_test/command_performance_test.dart | A:1000场10000事件；查询500ms；预热5后100命令p95小于100ms | S:同源码host GPU失败和SwiftShader通过均保留，不能推断唯一根因、跨设备保证或放宽门槛
-release-checklist.md[SV8S]: F:规范正式发行的版本、构建、签名、升级与公开附件验收 | R:code:CONTRIBUTING.md,code:tool/release/build_android_release.ps1,code:docs/release/reproducible-builds.md | A:最新main三门禁；签名tag；draft上传并回读全资产后publish；按需F-Droid | S:不可变Release发布后不能补传替换，修复须递增版本；准备不授权发布；Debug及无签名复现不替代正式同证验证
+release-checklist.md[SV8S]: F:规范正式发行版本、可信构建、签名、设备和公开附件验收 | R:code:tool/release/build_android_release.ps1,code:docs/development/handoff.md | A:最新main门禁；草稿全附件回读后publish；APK与更新元数据同源 | S:准备不授权发布；不可变Release不能补传替换；先公开可下载包再同步官网，不把Debug或分享打开冒称正式升级或外部保存
 reproducible-builds.md[SV8S]: F:规定Linux和Windows同runner固定路径两份fresh源码完整未签名APK复现与诊断 | R:code:tool/release/verify_unsigned_reproducible_android.sh,code:tool/release/verify_unsigned_reproducible_android.ps1,code:tool/release/prepare_android_toolchain.sh | A:固定源码/锁/工具链/epoch；完整字节相等；runner与工具链证据 | S:不证明跨OS或正式签名包复现；Windows清理限本次拥有路径且拒重解析点；实际Flutter选中JDK须核对；失败保留两包，不降级为部分文件比较
 screenshots-checklist.md[SQ6S]: F:记录v2.0.1正式包八图及v2.0.0历史截图矩阵、合成数据和逐图来源 | R:code:docs/release/v2.0.1-screenshots.json,code:docs/release/v2.0.0-screenshots.json | A:4ecd960正式APK；API36；中文浅色与英文深色；首页计分赛果历史 | S:当前仅100%选图；历史200%矩阵不改标新包；保原像素、采集状态和摘要，不证明全排列、真机或自然调度
 source-build-1.0.md[SV7T]: F:说明v1.0公开源码的固定工具链、未签名Android构建、旧数据库阻断及完整APK复现核验 | R:code:pubspec.yaml,code:tool/release/prepare_android_toolchain.sh,code:tool/release/verify_unsigned_reproducible_android.sh | A:v1.0.0源码；锁文件强制；SQLite源码hook；显式HOOPTRACE_ALLOW_UNSIGNED_RELEASE | S:未签名构建不执行发布；缺维护者签名不会回退debug；v0.1数据和备份不迁移，应用不静默删除
 v0.1.0-release-notes.md[SV4T]: F:介绍首个Android发行的离线计分、落点、复盘、审计和本地备份能力及安装限制 | R:code:docs/release/v0.1.0-release-record.md,code:PRIVACY.md | A:APK及SHA256SUMS下载核验；API24起；无iOS发行；永久发布证书 | S:F-Droid申请在当时仍待后续完成
 v0.1.0-release-record.md[SV6T]: F:保存首个公开版本的实际发布、测试、签名tag与公网APK复验来源证据 | R:code:docs/release/release-checklist.md,code:docs/release/v0.1.0-release-notes.md | A:0.1.0+1；a904208发布tag；APK校验和、证书、SDK和API36设备验收记录 | S:所列119测试、备份与冷启动结果仅属于2026-08-21对应源码和APK；不授予当前发行权限
 v1.0.0-release-notes.md[SV5T]: F:提供1.0双语发行说明，介绍统一计分、可恢复比赛、真实分析、安全备份和界面适配 | R:code:PRIVACY.md,code:CHANGELOG.md | A:离线、自动备份默认关闭；Android优先发行；中英文说明 | S:v0.1到1.0明确不迁移旧库或备份；不得把此清数据要求扩展到后续兼容升级
-v2.0.0-backup-device-verification.md[SR7S]: F:记录受控后台备份、授权撤销与实际恢复证据及已取消的自然观察 | R:code:tool/release/observe_automatic_backup.py,code:docs/release/v2.0.0-clock-device-verification.md | A:独立合成用户；只读snapshot/verify；实际文件哈希绑定生产恢复证明 | S:自然24h未完成且用户改为非阻断，监控已删除；强制Worker、到期夹具、前台终场不能算自然成功；中断区间不能累计或重标
+v2.0.0-backup-device-verification.md[SR7S]: F:保存受控备份、授权失效和真实恢复的历史证据与自然观察限制 | R:code:tool/release/observe_automatic_backup.py,code:docs/release/v2.0.0-clock-device-verification.md | A:独立合成用户；24h观察方法；精确文件恢复证明 | S:自然调度未完成且监控已取消；强制Worker或到期夹具不能算自然成功，中断区间不能累计
 v2.0.0-candidate.md[SV7S]: F:汇总v2产品功能、最终发行状态与历史候选逐项验收来源 | R:code:docs/release/v2.0.0-release-record.md,code:docs/release/v2.0.0-formal-package-verification.md | A:2.0.0+4/schema3/JSON2；dd1a315应用与96bb6d发行检查点；公开APK | S:旧候选证据保持当时源码；新证书免同证升级不算通过；自然调度未测非阻断，实体设备和Vulkan根因仍有限制
 v2.0.0-clock-device-verification.md[SQ7T]: F:记录运行计时重复投影修复、当前Debug真实冷进程和实际JSON恢复回退验收 | R:code:lib/app/app_providers.dart,code:docs/release/v2.0.0-final-ci-verification.md | A:480984f；12组175行生产codec字节往返；API36独立合成设备 | S:正常时钟使用persisted.state，需持久化才normalizedState；旧包证据不改正式来源，冷进程与文件重开分开
 v2.0.0-final-ci-verification.md[SQ7T]: F:保存最终发行检查点的五项CI结果、日志与产物来源并保留之前候选CI | R:code:.github/workflows/flutter-ci.yml,code:docs/release/v2.0.0-release-record.md | A:37810025006/96bb6d；1185 Flutter、63工具、16schema；API24/36、复现、iOS | S:API24首轮安装超时保留且同SHA重跑一次；其余作业保留原attempt，未下载包不能称本机回读；远端文件重开不证明进程恢复
@@ -158,17 +154,19 @@ v2.0.0-release-notes.md[SV7T]: F:提供v2公开发行的双语产品变化、安
 v2.0.0-release-record.md[SV8T]: F:保存正式v2签名tag、CI、公开产物和实际安装核验及环境收尾证据 | R:code:docs/release/v2.0.0-formal-package-verification.md,code:docs/release/v2.0.0-signing-upgrade-verification.md | A:96bb6d发行检查点、dd1a315应用；APK/证书SHA；五项CI与公开回读 | S:文档不改APK来源；同证升级免验不算通过；自然调度非阻断且未测；本机加一USB恢复包不称两份离线；旧main保留说明属于当时收尾状态
 v2.0.0-remaining-acceptance.md[SW6T]: F:记录取消长期监控后的恢复和设备续验、签名策略及D盘清理范围 | R:code:docs/release/v2.0.0-clock-device-verification.md,code:docs/release/v2.0.0-formal-package-verification.md | A:按源码与时间分离清理、Debug、正式包证据 | S:自然24h未测非阻断且监控删除；旧待办不复活已豁免原证升级，历史包不改标最终APK
 v2.0.0-screenshots.json[FV6L]: F:绑定八张原始发行截图的实际源码、Debug包、设备、视口、主题及合成比赛夹具 | R:code:docs/release/screenshots-checklist.md,code:fastlane/metadata/android/zh-CN/full_description.txt | A:每图SHA、尺寸、时间、路由与fixture；采集方法为未改绘adb截图 | S:保留3a0166c原来源，不证明正式签名、实体折叠屏或自然调度；后续未变绘图输入复用不得重标
-v2.0.0-signing-upgrade-verification.md[SS8S]: F:记录原证不可用情况下的新正式签名、可移植加密恢复及实际发行核验 | R:code:docs/release/v2.0.0-release-record.md,code:docs/release/v2.0.0-upgrade.md | A:新RSA4096证书；恢复包转换同证签名探针；本机及USB回读；口令本机保存 | S:原v1同证覆盖免验，不能称升级通过；DPAPI本机副本不可跨账户；恢复包/密钥/口令不进Git或公开附件，用户接受一USB加本机不等于两离线
+v2.0.0-signing-upgrade-verification.md[SS8S]: F:记录v2新签名、可移植加密恢复及公开包历史核验 | R:code:docs/release/v2.0.0-release-record.md,code:docs/release/v2.0.0-upgrade.md | A:新RSA4096证书；恢复签名探针；本机及USB回读 | S:v1同证升级是豁免而非通过；秘密不入Git或附件；一USB加本机不等于两离线备份，后续文档不改历史APK来源
 v2.0.0-startup-lab.md[SP7S]: F:记录独立硬件GPU环境四组40次标准冷启动和连续录屏验收及可复建条件 | R:code:tool/release/compare_entry_startup_runs.py,code:docs/release/v2.0.0-startup-performance.md | A:996146f Profile；Impeller GLES；各组build/raster p95小于16.7ms；冷重启复建 | S:保留原环境失败与单帧范围，不保证每帧或真实手机；模拟器环境通过不证明旧ANR根因修复
 v2.0.0-startup-performance.md[SP7S]: F:保存v2启动交接诊断性能实验与失败样本并链接历史稳定环境通过证据 | R:code:lib/app/entry/hoopito_entry_gate.dart,code:tool/release/measure_entry_startup.py,code:docs/release/v2.0.0-startup-lab.md | A:presented包含原生退出准备，visual独立；冷PID包hash | S:撤回无收益预挂载和绘制隔离；不丢超预算或初始化帧，降级非标准；通过绑定996146f，不重标当前包
-v2.0.0-target-score.md[SQ6T]: F:记录1至999可点击手输目标分的边界、取消、持久化与双语布局验收 | R:code:lib/features/pregame/pregame_page.dart,code:test/features/pregame/pregame_target_score_test.dart | A:6d1b6cc功能检查点；20专项、1151全量；实际Debug图与包来源 | S:模板历史兼容不截断；重复关闭不弹下层页；原轮通过不证明当前正式发布全部门槛
+v2.0.0-target-score.md[SQ6T]: F:记录历史目标分1至999输入、取消、持久化及双语大字体验收 | R:code:test/features/pregame/pregame_target_score_test.dart | A:6d1b6cc来源；20专项与1151全量；Debug证据 | S:当时的非阻断达标行为不代表现行目标确认，历史通过不替代新版本验收
 v2.0.0-upgrade.md[SR8S]: F:定义新签名安装路径、旧库和JSON读取契约、安全恢复容量及13列CSV口径 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/export/safety_backup_store.dart,code:lib/core/export/csv_exporter.dart | A:schema3/format2兼容1/2；32MiB、每表10万、总20万；内部最近两副本 | S:APK签名不兼容独立于数据兼容；先外部JSON再卸载；替换和回退持写预约保护当前且无活动比赛；内部副本不能防卸载，CSV/PNG不可恢复
 v2.0.1-release-notes.md[SV7T]: F:提供Hoopito2.0.1品牌同步与备份回调修复的双语发行说明 | R:code:CHANGELOG.md,code:docs/release/v2.0.1-release-record.md | A:2.0.1+5/schema3/JSON2；v2覆盖升级；新旧名称JSON | S:旧App不能导入新名称备份；v1须先外部JSON后卸载；生产商店F-Droid与iOS安装未发布
-v2.0.1-release-record.md[SV8S]: F:绑定正式HoopitoAPK、CI、同证升级与全新安装、公开回读、Preview和迁移的实际证据 | R:code:docs/release/v2.0.1-screenshots.json,code:HANDOFF.md | A:4ecd960签名tag/APK；14f8e3c交付；207项保护Preview；API24/36 | S:文档不改APK来源；首启仅三项backup运行字段变化，不能称全库一致；7840546崩溃未发且保失败；自然24h真机iOS安装未验；AOCI原样迁移属于此前issue范围
+v2.0.1-release-record.md[SV8S]: F:绑定v2.0.1正式包、同证升级、公开回读和预览迁移的历史事实 | R:code:docs/release/v2.0.1-screenshots.json,code:docs/development/handoff.md | A:4ecd960应用tag；API24及36；207项预览资产 | S:首启backup运行字段变化不等于全库字节相等；保留未发崩溃样本与自然24h等未验项，不把后续版本回填到旧APK
 v2.0.1-screenshots.json[FV6L]: F:绑定八张正式签名包双语原图与实际采集状态、摘要及合成夹具 | R:code:docs/release/screenshots-checklist.md,code:docs/release/v2.0.1-release-record.md | A:4ecd960/2.0.1+5；API36；中文浅色英文深色；PNG/XML/采集记录SHA | S:英文在旧JSON合并前而中文在合并后，计分图为活动状态，不用最终数据库改写采集时状态；原像素无裁绘；不证明真机全矩阵或自然调度
+v2.1.0-release-notes.md[SV7T]: F:面向中英文用户说明连续对局、目标确认、更新器和升级备份限制 | R:code:CHANGELOG.md,code:docs/development/continuous-matches.md | A:固定双方连打；实际达标分；2.1.0+6与schema4 | S:v2同证覆盖先备份；v1不能覆盖；旧App不能读取新库或备份，2.0.1须先手装更新器
+v2.1.0-release-record.md[SV8S]: F:绑定2.1.0正式来源、CI、真实升级冷启动、附件回读及截图裁剪证据 | R:code:docs/development/continuous-matches.md,code:docs/release/v2.1.0-release-notes.md | A:9bbd3b8；八附件immutable；API24及36；1386测试 | S:首启内置规则更新与旧比赛快照保留分别记录；保留DDS失败和在线更新未验，官网404未部署；打开分享不等于已外部保存，文档提交不改包来源
 
 ===D:/GitHub/hooptrace/docs/superpowers/===
-README.md[SW5T]: F:定义设计与执行记录目录的历史用途及按需追溯入口 | R:code:AGENTS.md,code:CONTRIBUTING.md,code:HANDOFF.md | A:plans/specs保存历史背景；当前规范及状态以项目入口为准 | S:未勾选项不自动是待办；旧技能、波次和权限仅描述当时任务，复用先核对当前实现
+README.md[SW5T]: F:界定设计与执行记录的历史用途及按需追溯入口 | R:code:AGENTS.md,code:docs/development/handoff.md | A:plans及specs；维护规则入口 | S:未勾选项不是现行待办，旧波次和权限不构成当前授权
 
 ===D:/GitHub/hooptrace/docs/superpowers/plans/===
 2026-05-12-hooptrace-first-release.md[SW5L]: F:保存离线Android首发的18项历史实施方案，从Flutter地基、事件领域与Drift到计分复盘、审计统计、备份导出和发行准备，附示例代码及测试先行步骤 | R:code:docs/superpowers/README.md,code:docs/branch-execution-order.md,code:CONTRIBUTING.md | A:当时目标：SQLite保存事件事实，得分与统计由事件派生；编辑与审计同事务，事件删除使用软删 | S:旧依赖、示例schema与发布命令属于首发上下文；勾选状态不代表当前源提交已验证，也不授予本次发布权限
@@ -176,7 +174,7 @@ README.md[SW5T]: F:定义设计与执行记录目录的历史用途及按需追�
 2026-08-25-unified-scoring-route-fix.md[SW6S]: F:安排统一计分与终局导航的五项历史修复，覆盖球场先草稿、十秒后补点、持久审计顺序撤回、取消赛前模式选择、分组更多面板和回放返回链 | R:code:docs/superpowers/README.md,code:lib/core/data/commands/match_command_service.dart,code:lib/features/scoring/scoring_controller.dart | A:当时契约：仅最新得分拥有10秒补点窗；最终回放使用go并返回主页，历史push回放返回历史；交互目标至少48dp | S:模式/覆盖保留兼容且不再门控能力，不为统一UI新增迁移；球场先得分落点一次撤回，后补落点与得分两次；计时和结束不入撤回栈
 2026-08-26-editorial-ui-redesign.md[SU6S]: F:保存黑场编辑部全界面改版的历史方案，定义语义设计系统、分批页面迁移、业务行为保护及视觉验收范围 | R:code:docs/superpowers/README.md,code:lib/app/app_theme.dart,code:pubspec.yaml,code:lib/app/l10n/app_zh.arb,code:lib/app/l10n/app_en.arb | A:历史配色字体及共享组件约定；触控至少48dp；中英、明暗、200%字体验收；减少动画120ms且禁动画立即终态 | S:当年要求保留命令回执与FIFO，队列超3加速但不丢事件；侧栏和字体等旧设计须按当前代码复核
 2026-08-28-hooptrace-1-1-player-comparison.md[SA6S]: F:保存1.1球员比较的历史实施方案，覆盖schema3派生快照、JSON格式2兼容、比较领域、双语页面及发行前验证范围 | R:code:docs/superpowers/README.md,code:lib/core/data/app_database.dart,code:lib/core/data/repositories/player_analytics_snapshot_repository.dart,code:lib/core/domain/analytics/player_comparison.dart,code:lib/core/export/json_backup_codec.dart | A:历史schema3与格式2升级兼容格式1/schema2；profileId作为比较身份；支持两场及相邻7/30/90日UTC窗口；证据仅表达变化且百分比差用百分点 | S:方案以原始比赛为权威，快照可重建；派生行过期可重算，原始数据或校验失败仍拒绝；历史门槛非验收结论
-2026-09-24-hooptrace-v2.md[SW6T]: F:保存已完成v2五阶段实施分解、架构复用和评审关注点 | R:code:docs/superpowers/specs/2026-09-24-hooptrace-v2-design.md,code:HANDOFF.md | A:覆盖契约、安全恢复、导航开赛、赛果成长、候选验证五任务 | S:历史计划不是当前分配或发布授权；勾选不代替源码绑定验收，schema3/JSON2保持
+2026-09-24-hooptrace-v2.md[SW6T]: F:保留v2五阶段实现、架构复用和评审关注点的历史计划 | R:code:docs/superpowers/specs/2026-09-24-hooptrace-v2-design.md,code:docs/development/handoff.md | A:覆盖声明；安全恢复；开赛旅程；赛果成长；候选验证 | S:历史schema3/JSON2约束不覆盖当前schema4，计划不授予新实施或发布权限
 2026-10-05-v2-pre-release-verification.md[SW6T]: F:存档T1性能、T2CI、T3签名准备、T4设备四组发布前计划 | R:code:docs/release/v2.0.0-pre-release-verification.md,code:HANDOFF.md | A:固定6d1b6cc基线；独立设备；标准动作与16.7ms预算；失败证据留存 | S:只表达当时授权范围，旧24h观察和签名阻断以最新交接为准，不恢复取消任务
 2026-10-06-hooptrace-v2-final-ci.md[SW6T]: F:存档含计时修复候选的正常推送与五作业CI验收计划和执行状态 | R:code:docs/release/v2.0.0-final-ci-verification.md,code:.github/workflows/flutter-ci.yml | A:2ef56aa候选/480984f应用；同SHA避免重复dispatch；失败有界复验 | S:不构成后续常驻推送或发布授权；未下载包不声称本机回读，文档提交不改实际CI SHA
 2026-10-15-website-chapter-polish.md[SW5T]: F:保存体验建筑剖切、复盘阅读光线与手机下载层级的历史实施及验收计划 | R:code:website/README.md,code:HANDOFF.md | A:单一场景；相机高度驱动剖切；复盘共享时间轴；保留既有视觉 | S:旧本地范围与勾选状态不授予当前推送发布，不恢复后续停止的性能任务
@@ -186,11 +184,12 @@ README.md[SW5T]: F:定义设计与执行记录目录的历史用途及按需追�
 
 ===D:/GitHub/hooptrace/docs/superpowers/specs/===
 2026-05-12-hooptrace-design.md[SG6L]: F:保存首发产品设计的范围、页面、事件流、审计、统计、离线备份及分层架构，列明Android优先与后续开放决策 | R:code:docs/superpowers/README.md,code:docs/superpowers/plans/2026-05-12-hooptrace-first-release.md,code:docs/superpowers/plans/2026-08-26-editorial-ui-redesign.md,code:CONTRIBUTING.md | A:首发永久免费开源离线且无账号云同步；规则提示允许手动纠正；JSON完整恢复及CSV图片导出；自动备份默认关闭并授权；坐标规范化为0至1 | S:方案要求比分缓存可重算且编辑保存前后审计；暖纸视觉和待落点阻塞须按当前代码复核
-2026-09-24-hooptrace-v2-design.md[SG7T]: F:定义离线单挑完整旅程、真实覆盖统计、事务结束与安全恢复的v2设计边界 | R:code:docs/superpowers/plans/2026-09-24-hooptrace-v2.md,code:lib/core/data/commands/match_command_service.dart | A:三主入口、独立赛果、显式完整度、再赛仅双方规则；schema3/JSON2 | S:Finish可选覆盖缺省省略payload键保护旧指纹；未中位置不证明完整；内部副本保护不依赖分享回调，设计不是已验收证据
+2026-09-24-hooptrace-v2-design.md[SG7T]: F:保存v2完整单挑旅程、覆盖统计和安全恢复的历史设计契约 | R:code:docs/superpowers/plans/2026-09-24-hooptrace-v2.md,code:lib/core/data/commands/match_command_service.dart | A:三入口；显式完整度；两份安全副本；schema3/JSON2 | S:Finish空覆盖省略payload保旧指纹；未中与位置不证明完整，设计不是实际验收证据
 
 ===D:/GitHub/hooptrace/drift_schemas/===
 drift_schema_v2.json[FD8L]: F:保存Drift schema2的11张核心表、列元数据与SQLite建表SQL，作为旧库结构和迁移校验基线 | R:code:lib/core/data/app_database.dart,code:test/core/data/schema_v2_fix_round1_test.dart,code:drift_schemas/drift_schema_v3.json | A:Drift序列化格式1.3.0；entities/fixed_sql；主外键、默认值和CHECK；日期时间存为INTEGER | S:_meta.version是导出格式版本而非数据库版本；此历史基线没有schema3衍生快照，也不列出运行时自建索引和触发器，不能据此降当前数据库版本为2
 drift_schema_v3.json[FD8L]: F:保存Drift schema3的12张表及SQLite建表SQL，新增可重建球员分析快照结构供迁移校验 | R:code:lib/core/data/app_database.dart,code:drift_schemas/drift_schema_v2.json,code:test/core/data/player_analytics_snapshot_schema_test.dart | A:快照主键match_id/player_id；独立FG/FT计数、覆盖、位置数量、calculator_version/source_sha256；比赛与主体球员级联删除，对手删除置空 | S:2→3新增衍生快照表，迁移保留原始记录且不立即计算快照；自建索引和快照失效触发器由AppDatabase安装，JSON不是完整运行时结构清单
+drift_schema_v4.json[PD8L]: F:保存Drift schema4表、索引和触发器的生成快照 | R:code:lib/core/data/app_database.dart,code:test/generated_migrations/schema_v4.dart | A:match_series及series_matches；档案SET NULL；比赛关联CASCADE | S:场次主键禁止一场归多组、组内编号唯一，历史schema快照保留且不能手工改生成契约
 
 ===D:/GitHub/hooptrace/fastlane/metadata/android/en-US/changelogs/===
 1.txt[SV3T]: F:提供首版英文商店更新说明，概括离线计分、复盘、审计和本地导出备份 | R:code:docs/release/v0.1.0-release-notes.md | A:Android versionCode1英文更新文案 | S:-
@@ -198,9 +197,10 @@ drift_schema_v3.json[FD8L]: F:保存Drift schema3的12张表及SQLite建表SQL�
 3.txt[SV4T]: F:提供1.1英文商店更新说明，介绍球员对局及相邻时段比较和派生分析快照 | R:code:CHANGELOG.md,code:pubspec.yaml | A:versionCode3；schema3；JSON备份格式2兼容1.0备份 | S:-
 4.txt[SV4T]: F:提供versionCode4英文商店变更说明 | R:code:CHANGELOG.md,code:docs/release/v2.0.0-release-notes.md | A:999目标、计时修复、C动画、赛果成长、独立FG/FT与JSON兼容 | S:明确新证书需先保存JSON再卸载旧v1
 5.txt[SV4T]: F:提供英文versionCode5品牌改名与升级兼容商店更新文案 | R:code:docs/release/v2.0.1-release-notes.md | A:Hoopito球豆；保v2身份数据；兼容旧JSON | S:旧App拒新名称JSON；v1先外部备份再卸载恢复
+6.txt[SV5T]: F:提供versionCode6的英文连续对局和升级变更摘要 | R:code:docs/release/v2.1.0-release-notes.md | A:连续对局；目标确认；Android更新；schema4 | S:强调先备份及2.0.1先手装一次更新器
 
 ===D:/GitHub/hooptrace/fastlane/metadata/android/en-US/===
-full_description.txt[SV5T]: F:提供英文v2商店完整介绍与隐私、恢复容量及新签名安装说明 | R:code:PRIVACY.md,code:tool/release/validate_metadata.dart | A:离线1v1、三入口、可信统计、静音C动画、免费MIT | S:私有安全副本不能替代外部JSON；旧v1不能覆盖安装
+full_description.txt[SV6T]: F:提供英文商店完整功能、隐私和数据兼容介绍 | R:code:PRIVACY.md,code:tool/release/validate_metadata.dart | A:连续对局；可信统计；系统更新；安全备份 | S:无追踪不等于无更新网络；schema4不能降级读取，私有副本与图片不代替外部JSON
 short_description.txt[SV3T]: F:提供英文商店短描述，概括离线单挑记分、赛果与球员成长 | R:code:tool/release/validate_metadata.dart | A:英文短描述 | S:-
 
 ===D:/GitHub/hooptrace/fastlane/metadata/android/zh-CN/changelogs/===
@@ -209,16 +209,20 @@ short_description.txt[SV3T]: F:提供英文商店短描述，概括离线单挑�
 3.txt[SV4T]: F:提供1.1中文商店更新说明，介绍球员对局及相邻时段比较和派生分析快照 | R:code:CHANGELOG.md,code:pubspec.yaml | A:versionCode3；schema3；JSON备份格式2兼容1.0备份 | S:-
 4.txt[SV4T]: F:提供versionCode4中文商店变更说明 | R:code:CHANGELOG.md,code:docs/release/v2.0.0-release-notes.md | A:999目标、计时修复、C动画、赛果成长、独立FG/FT与备份兼容 | S:新签名需先确认外部JSON再卸载旧v1
 5.txt[SV4T]: F:提供中文versionCode5品牌改名与升级兼容商店更新文案 | R:code:docs/release/v2.0.1-release-notes.md | A:球豆Hoopito；保v2身份数据；兼容旧JSON | S:旧App拒新名称JSON；v1先外部备份再卸载恢复
+6.txt[SV5T]: F:提供versionCode6的中文连续对局和升级变更摘要 | R:code:docs/release/v2.1.0-release-notes.md | A:换色累计；下一场设置；目标确认；应用内更新 | S:需先备份，2.0.1手装一次且schema4备份需新版
 
 ===D:/GitHub/hooptrace/fastlane/metadata/android/zh-CN/===
-full_description.txt[SV5T]: F:提供中文v2商店完整介绍及离线隐私、数据保护和安装契约 | R:code:PRIVACY.md,code:tool/release/validate_metadata.dart | A:三入口、1至999目标、赛果成长、32MiB限制、静音C动画 | S:内部副本不能代替外部备份；新证书不能覆盖历史v1
+full_description.txt[SV6T]: F:提供中文商店功能、隐私、备份及升级兼容说明 | R:code:PRIVACY.md,code:tool/release/validate_metadata.dart | A:连续对局；自由目标计分；更新器；离线统计及恢复 | S:私有副本不能代替设备外JSON；2.0.1先手装、schema4不可降级读取，与旧v1签名边界分开说明
 short_description.txt[SV3T]: F:提供中文商店短描述，概括离线单挑、赛果与成长 | R:code:tool/release/validate_metadata.dart | A:中文短描述 | S:-
 
 ===D:/GitHub/hooptrace/integration_test/===
 command_performance_test.dart[TP7T]: F:在Android集成测试进程中测量真实命令提交的p95，约束100ms写入回归门槛 | R:code:lib/core/data/commands/match_command_service.dart,code:lib/core/data/app_database_provider.dart,code:docs/release/performance.md | A:临时文件SQLite；5次预热后100次record提交；排序第95个样本须低于100ms；TASK15_COMMAND_BENCHMARK日志 | S:通过生产后台executor打开文件库并等待每条命令完成；关闭数据库后才清理目录；定义不构成此次或跨设备性能通过证据
-main_loop_test.dart[TU8L]: F:在Android页面贯通开赛、计分、暂停终场、再赛取消、档案关联、战报和成长 | R:code:lib/app/hoopito_app.dart,code:lib/features/summary/match_summary_page.dart,code:lib/core/export/replay_image_exporter.dart | A:有限等待与真实命中；显式完整声明；PNG签名；生涯2分1场 | S:内存数据库不证明落盘或冷进程，图片捕获不等于系统分享保存；测试定义不是本轮运行结果
+main_loop_test.dart[TU8L]: F:在Android界面贯通开赛计分、暂停终场、赛果、档案关联与成长 | R:code:lib/app/hoopito_app.dart,code:lib/features/summary/match_summary_page.dart | A:真实点击及有限等待；显式完整记录；战报PNG；生涯统计 | S:内存库不证明落盘或冷启动；PNG捕获不等于系统目标已保存
 player_comparison_flow_test.dart[TU7M]: F:经三主入口和球员成长页面验证关联两场比赛及相邻七日比较报告 | R:code:lib/app/player_routes.dart,code:lib/features/players/player_comparison_page.dart | A:主体2/4分；两场选择器；两分析快照；窗口双侧均有数据 | S:首场日期直接移到八天前；内存库不证明重启或持久化；有限等待与命中点击不等于本次执行证据
 v2_file_recovery_test.dart[TR8M]: F:以生产文件executor验证开赛计分回执、审计顺序、活动恢复及完赛关联档案的关闭重开 | R:code:lib/core/data/app_database_provider.dart,code:lib/core/data/commands/match_command_service.dart | A:首次投影幂等、异payload冲突、按提交序撤回、完赛覆盖与成长2分1场 | S:事件时间故意逆序，撤回仍按审计；实际文件与Widget重建不是Android冷进程重启
+continuous_series_test.dart[TB8T]: F:在Android真实文件库运行完整三场连续对局旅程 | R:code:test/test_helpers/continuous_series_journey.dart,code:lib/core/data/app_database.dart | A:独立临时sqlite；完整UI旅程；卸载widget后关库删临时文件 | S:此进程内文件集成不证明冷进程恢复，测试必须用专用设备或隔离用户
+target_scoring_device_fixture.dart[TB7M]: F:为外部冷启动验收提供目标确认及继续状态的独立文件夹具入口 | R:code:lib/core/data/commands/match_command_service.dart,code:lib/core/data/app_database_provider.dart | A:读取显式action和runId；独立fixture.sqlite；写PID及决策回执 | S:仅显式target构建，不随正式App发布；force-stop由进程外执行，不能用夹具自身调用代替
+update_device_fixture.dart[TV7S]: F:通过真实原生通道手动驱动更新及升级数据库标记验收 | R:code:lib/core/update/update_platform.dart | A:设备版本；下载查询取消；两阶段安装；marker及日志 | S:仅显式target测试入口，正式包不得包含；标记只允许旧版本首次创建，避免升级后丢数据被重新播种掩盖
 
 ===D:/GitHub/hooptrace/ios/===
 .gitignore[FV5T]: F:排除iOS构建、CocoaPods、Flutter生成文件及IDE个人状态 | R:code:ios/Podfile | A:Pods/DerivedData/Generated.xcconfig及PluginRegistrant不追踪 | S:-
@@ -270,7 +274,7 @@ Main.storyboard[EU4T]: F:声明初始FlutterViewController及可伸缩根视图 
 RunnerTests.swift[TQ2T]: F:保留Runner原生XCTest测试入口的空示例 | R:code:ios/Runner.xcodeproj/project.pbxproj | A:testExample无断言 | S:空测试不能证明原生行为正确
 
 ===D:/GitHub/hooptrace/lib/app/===
-app_metadata.dart[FC5T]: F:提供前后台备份的应用来源版本常量 | R:code:pubspec.yaml,code:lib/main.dart | A:hoopitoAppVersion=2.0.1+5 | S:须与pubspec同步，不替代schema及JSON格式版本
+app_metadata.dart[FC5T]: F:提供前后台备份写入的应用版本来源常量 | R:code:pubspec.yaml | A:hoopitoAppVersion=2.1.0+6 | S:与pubspec同步且不替代数据库schema或JSON格式版本
 app_providers.dart[AG8M]: F:装配数据库启动、偏好和备份服务、实时比赛及有界首页投影和稳定计分控制器 | R:code:lib/core/data/app_database_provider.dart,code:lib/core/data/commands/match_command_service.dart,code:lib/features/scoring/scoring_controller.dart | A:先兼容探测、dirty触发器和内置规则，再辅助备份；最近三场摘要；首用提示偏好 | S:规则播种前修复UPSERT触发器；仅备份失败可吞；live流listen不重建计分草稿；加载或错误旧空值不得放行恢复；注入数据库由调用方关闭
 app_router.dart[EU5T]: F:保留旧路由工厂入口并导出Provider生产路由 | R:code:lib/app/provider_router.dart | A:appRouterProvider/buildProviderAppRouter；弃用buildAppRouter兼容5个旧参数 | S:旧参数全部忽略，不能替换Riverpod生产数据来源
 app_theme.dart[CU7S]: F:构建明暗Material3主题并组合编辑部颜色字体和动效扩展 | R:code:lib/app/design_system/editorial_theme.dart,code:lib/app/design_system/editorial_motion.dart | A:buildHoopitoTheme；Noto Sans SC回退；48dp控件及焦点边框 | S:比分局部选择Barlow，中文正文不能全局换窄体展示字体
@@ -278,10 +282,13 @@ match_session_coordinator.dart[AB7M]: F:缓存计分会话并支持持久命令�
 match_view_data_mapper.dart[AU7S]: F:把持久比赛与历史映射到展示数据和领域统计 | R:code:lib/core/domain/analytics/match_analytics_calculator.dart,code:test/app/match_view_data_mapper_test.dart | A:replayDataFromDetail/historySummaryFromEntry；日期本地化 | S:保留软删供审查，仅附确认位置；缺失或倒序球权端点排除；负相对时间钳零；不改持久记录
 orientation_shell.dart[IU6T]: F:按设备尺寸选择计分方向并应用系统栏延伸布局 | R:code:lib/app/provider_router.dart,code:test/app/orientation_shell_test.dart | A:portraitFriendly/landscapeRequired；600逻辑像素阈值 | S:优先物理显示最短边避免分屏误锁；方向去重；edgeToEdge一次；销毁恢复所有方向
 player_routes.dart[AU6S]: F:装配球员主列表、编辑、成长和比较深链及最新档案解析 | R:code:lib/app/app_providers.dart,code:lib/app/provider_router.dart | A:成长可编辑、比较、打开比赛summary；返回原栈或/players | S:先按ID在实时档案中解析，不按名称；缺失/error显式状态，对手排除主体
-provider_router.dart[AU9L]: F:连接保浏览状态的三主入口与独立开赛计分赛果复盘并编排事务和导航 | R:code:lib/app/app_providers.dart,code:lib/app/player_routes.dart,code:lib/app/summary_route.dart,code:lib/core/data/commands/match_command_service.dart | A:StatefulShellRoute.indexedStack；summary深链；MatchSetupPreset；稳定终场意图 | S:重复终场重试复用含比分和coverage的命令；未知活动或时钟状态禁止新赛/离开；历史表变化刷新已浏览范围；终场提交才导航，旧代次不得抢路由；备份失败不撤销完赛
+provider_router.dart[AU9L]: F:装配三主入口及开赛、计分、整组、赛果和复盘路由并协调命令 | R:code:lib/app/series_routes.dart,code:lib/app/summary_route.dart,code:lib/core/data/commands/match_command_service.dart | A:保分支状态；活动与未结束组门禁；稳定开赛终场意图；弹窗观察 | S:终场保存后才导航，失败保留同一命令重试；未知状态拒绝开赛或离开；新比赛不带领先两分条件，旧快照保留；备份失败不撤销已提交完赛
 route_status.dart[CU5T]: F:提供路由加载、错误缺失说明与返回/复盘/重试统一状态页 | R:code:lib/app/l10n/app_localizations.dart,code:lib/app/summary_route.dart | A:RouteLoading/RouteMessage；可选回调和标签 | S:仅展示状态，不读取或更改比赛；加载liveRegion语义
-summary_route.dart[AU8M]: F:以最新比赛投影装配赛果、再赛、战报、完整度纠正和明确档案关联 | R:code:lib/app/app_providers.dart,code:lib/features/summary/match_summary_page.dart,code:lib/core/data/commands/match_command_service.dart | A:结束/归档summary；活动转计分、弃赛转复盘；回原栈或/history | S:新档案保存与参与者关联同事务，保赛时姓名且排除已用ID；失败重试复用命令；完整度显式确认；等DialogRoute完成才释放文本控制器；再赛只传预填配置
-hoopito_app.dart[AG8M]: F:组合Provider、数据库启动状态、双语主题、生产路由与稳定启动宿主 | R:code:lib/app/app_providers.dart,code:lib/app/provider_router.dart,code:lib/app/entry/hoopito_entry_gate.dart | A:HoopitoApp；可注入database/playback；默认中文；旧库保护和失败页；本地化标题 | S:数据库与语言就绪才建Router；bootstrap到Router共用Gate键及进程播放资格；旧库失败页不迁移清空；测试数据库由调用方拥有
+summary_route.dart[AU8M]: F:从最新投影装配赛果、整组操作、再赛及档案关联与完整度修正 | R:code:lib/features/summary/match_summary_page.dart,code:lib/app/series_routes.dart | A:活动转计分；结束归档赛果；保栈返回；显式关联 | S:关联和新档案同事务且保赛时姓名，不按同名合并；再赛只预填配置，DialogRoute结束后才释放输入控制器
+hoopito_app.dart[AG8M]: F:组合数据库启动、语言主题、路由与稳定启动及更新宿主 | R:code:lib/app/provider_router.dart,code:lib/app/app_update_host.dart,code:lib/app/entry/hoopito_entry_gate.dart | A:ProviderScope；默认中文；注入数据库；entryRevealed信号 | S:数据库与语言就绪才建Router；bootstrap和Router保留Gate身份，旧库失败不迁移清空；测试注入数据库由调用者拥有
+app_update_host.dart[AU8M]: F:编排本地就绪后的一次启动检查、延后提醒和前台下载轮询 | R:code:lib/app/update_providers.dart,code:lib/core/update/update_controller.dart | A:ready及entryRevealed；进程领取；导航观察；每秒查询进行中下载 | S:检查不加入初始化等待；自动失败静默，活动比赛或弹窗延后提醒；后台恢复只查任务不重复自动检查
+series_routes.dart[AU8L]: F:装配整组详情、下一场配置及赛果中的整组操作 | R:code:lib/core/data/repositories/match_series_repository.dart,code:lib/features/series/series_detail_page.dart | A:版本及场次绑定意图；固定双方换色；close/reopen及错误重试 | S:赛果收局成功后go整组清旧栈，根返回历史；逐场push保留复盘返回链；活动或加载异常禁止开下一场及收局，重复操作复用意图
+update_providers.dart[AG7T]: F:注入更新服务、平台、控制器及导航弹窗观察器 | R:code:lib/core/update/update_controller.dart,code:lib/app/app_update_host.dart | A:ChangeNotifierProvider；PopupRoute集合及监听释放 | S:根与转发分支弹窗都延后自动更新提醒，普通页面栈不由观察器改变
 
 ===D:/GitHub/hooptrace/lib/app/design_system/===
 design_system.dart[LU5T]: F:统一导出编辑部绘制、标题、动效、容器、列表、分数与状态组件 | R:code:lib/app/design_system/editorial_primitives.dart,code:lib/app/design_system/editorial_tokens.dart | A:公共设计系统barrel入口 | S:-
@@ -306,31 +313,31 @@ entry_diagnostic_binding.dart[IO5T]: F:为可选Profile启动诊断包围框架d
 entry_frame_probe.dart[IO7S]: F:采集显式Profile启动阶段、准备结果与完整FrameTiming并输出逐行JSON | R:code:lib/core/diagnostics/startup_diagnostics.dart,code:tool/release/measure_entry_startup.py | A:HOOPITO_ENTRY_PROFILE；HOOPITO_ENTRY_PROFILE_JSON；frame/preparation_span/summary schema1 | S:结束延迟1200ms等引擎批量回调；未结束销毁不输出部分成功，已finish继续flush；不访问文件数据库网络
 entry_motion_pose.dart[KU7S]: F:以连续平滑插值定义C标识一秒身体跳跃、水波和向右局部余波姿态 | R:code:lib/app/entry/entry_creature.dart | A:288画布/0.78；12dp跃起、3dp波、2dp余波；motionStrength支持平滑归零 | S:0至60ms及760ms后严格rest；波与余波起止零，表情保护由网格权重执行
 entry_renderer_ready.dart[IH7T]: F:通过Android通道等待初始Surface可绘制和原生启动图实际交接 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/MainActivity.kt,code:lib/app/entry/hoopito_entry_gate.dart | A:waitForEntryRenderer/waitForEntryPresentation；其他平台无桥接 | S:展示调用必须在匹配静止首帧提交后，false抛错；Gate负责2s等待上限，不能硬取消阻塞原生线程
-hoopito_entry_gate.dart[AU8L]: F:编排静音C启动准备、原生交接、标准或降级动画与页面放行 | R:code:lib/app/entry/entry_creature.dart,code:lib/app/entry/entry_renderer_ready.dart,code:lib/app/hoopito_app.dart | A:HoopitoEntryGate/Timeline/Frame/StartupPlaceholder；EntryPlaybackSession；1000ms动作与120ms跳过 | S:Surface后才准备，匹配静止首帧提交并收到原生退出再播放；图像100ms单调deadline拒迟到且释放，偏好80ms；启动未ready不得跳到业务；终态及时放行；进程只播一次，失焦不重播；纹理归Gate且渲染离树后释放
+hoopito_entry_gate.dart[AU8L]: F:编排静音球怪启动、原生呈现、动画降级及一次可见内容交接 | R:code:lib/app/entry/entry_renderer_ready.dart,code:lib/app/hoopito_app.dart | A:1000ms动作；120ms跳过；进程播放资格；onRevealed | S:图像与偏好有界等待且迟到资源释放；只有ready内容真正显示后发交接，跳过及抑制也覆盖，辅助网络任务不阻塞放行
 
 ===D:/GitHub/hooptrace/lib/app/l10n/===
-app_en.arb[FL7L]: F:提供英文v2导航、保存反馈、覆盖确认、赛果成长、安全恢复及既有全应用文案源 | R:code:lib/app/l10n/app_zh.arb,code:lib/app/l10n/app_localizations_en.dart | A:locale=en；v2消息和容量/图表范围占位符 | S:记录完整是明确声明，不是未中推断；键与参数同步中文再gen-l10n
-app_localizations.dart[CL7L]: F:提供生成的全应用双语本地化接口、委托与v2消息签名 | R:code:l10n.yaml,code:lib/app/l10n/app_zh.arb | A:of/delegates；en/zh；增长范围、容量、目标分和启动等待文案 | S:手改会被生成覆盖；参数顺序按签名，未知语言抛错
-app_localizations_en.dart[CL6L]: F:实现由英文ARB生成的全应用及v2提示插值 | R:code:lib/app/l10n/app_en.arb,code:lib/app/l10n/app_localizations.dart | A:AppLocalizationsEn；getter与类型化占位符 | S:源翻译改ARB重生成；Object直接插值不自动数字格式化或选复数
-app_localizations_zh.dart[CL6L]: F:实现由中文模板生成的全应用及v2文案和语义标签 | R:code:lib/app/l10n/app_zh.arb,code:lib/app/l10n/app_localizations.dart | A:AppLocalizationsZh；getter与占位符插值 | S:生成签名参数顺序不同于中文文本顺序；不手改生成文件
-app_zh.arb[FL7L]: F:作为中文模板定义v2完整旅程与既有计分复盘的消息和无障碍语义 | R:code:l10n.yaml,code:lib/app/l10n/app_localizations.dart,code:lib/app/l10n/app_en.arb | A:locale=zh；明确覆盖、最近两场差值、容量、安全副本、引导和999目标 | S:Unicode转义仍是中文；键与类型变更须同步英文重生成，不把最近差值称场均变化
-rule_template_localizations.dart[CL6T]: F:以稳定规则ID或历史中英名称解析本地化显示名 | R:code:lib/app/l10n/app_localizations.dart,code:lib/core/domain/entities/rule_template.dart | A:localizedRuleTemplateName/localizedStoredRuleTemplateName | S:旧名trim匹配，未知值原样保留；11分与领先2分模板分开，不改数据库
+app_en.arb[FL7L]: F:提供英文计分、备份、目标确认、连续对局和更新流程的文案源 | R:code:lib/app/l10n/app_zh.arb,code:lib/app/l10n/app_localizations_en.dart | A:英文消息；类型化占位符；自然动作说明 | S:键和参数须与中文一致再生成，不把打开安装器或分享面板表述为已完成安装或保存
+app_localizations.dart[CL7L]: F:提供全应用中英文生成接口、委托和类型化消息签名 | R:code:l10n.yaml,code:lib/app/l10n/app_zh.arb | A:of及delegates；en/zh；更新与连续对局消息 | S:由ARB生成，禁止手改生成接口，调用参数按签名而非文本顺序
+app_localizations_en.dart[CL6L]: F:实现英文ARB生成的界面消息与参数插值 | R:code:lib/app/l10n/app_en.arb,code:lib/app/l10n/app_localizations.dart | A:AppLocalizationsEn；更新、目标和整组消息 | S:改文案应改ARB再生成，普通Object插值不自动决定复数或数字格式
+app_localizations_zh.dart[CL6L]: F:实现中文ARB生成的界面消息和语义标签 | R:code:lib/app/l10n/app_zh.arb,code:lib/app/l10n/app_localizations.dart | A:AppLocalizationsZh；getter与占位符插值 | S:生成参数顺序不保证等于中文出现顺序，不能手改此文件
+app_zh.arb[FL7L]: F:定义中文模板及计分、恢复、目标、连续对局和更新消息 | R:code:lib/app/l10n/app_en.arb,code:l10n.yaml | A:locale zh；共享键与参数元数据；清晰风险提示 | S:完整记录须用户明确声明；保留删除不可恢复与替换失败保护含义，不能用文案保证系统外部保存或安装成功
+rule_template_localizations.dart[CL6T]: F:按稳定模板ID及历史名称解析当前显示名 | R:code:lib/core/domain/entities/rule_template.dart,code:lib/app/l10n/app_localizations.dart | A:forNewMatch默认规则及11分名；历史win-by-two映射 | S:新比赛显示去掉领先条件不改旧记录名称映射，未知自定义名称原样返回
 
 ===D:/GitHub/hooptrace/lib/core/audit/===
 audit_diff.dart[DO5T]: F:封装审计变更的前后对象快照 | R:code:lib/core/audit/audit_log_entry.dart | A:AuditDiff(before,after)；Map<String,Object?> | S:-
 audit_log_entry.dart[DO7T]: F:定义持久审计动作及带前后快照的类型化记录 | R:code:lib/core/audit/audit_diff.dart,code:lib/core/data/commands/match_command_service.dart | A:AuditAction.fromStorage；AuditLogEntry身份/目标/时间/原因 | S:possession_suggestion保留snake_case持久拼写；未知动作映射unknown，不使整页审计失败
 
 ===D:/GitHub/hooptrace/lib/core/data/===
-app_database.dart[PD9L]: F:定义schema3十二表、兼容迁移、活动/落点约束与分析失效和自动备份dirty触发器 | R:code:lib/core/data/app_database.g.dart,code:lib/core/data/app_database_provider.dart,code:lib/core/data/repositories/player_analytics_snapshot_repository.dart | A:schemaVersion3；assertCompatible；惰性索引与ensureBackupDirtyTriggers | S:旧schema1保护不清空，2升3不立即算快照；同局FG落点与单活动槽受约束；触发器以无冲突条件插入避免外层UPSERT破坏dirty元数据；dirtySince只初设，快照/lease不递归dirty；运行索引非迁移基线
-app_database.g.dart[PD7L]: F:生成Drift表映射、行/Companion、关系查询与数据库Manager实现 | R:code:lib/core/data/app_database.dart,code:pubspec.yaml | A:12表映射及类型化过滤/排序/引用管理 | S:由Drift生成，不手改；schema变更运行build_runner并提交此文件；运行时自建触发器仍由原始数据库实现提供
+app_database.dart[PD9L]: F:定义schema4十四表、2/3迁移、整组约束及分析和备份失效机制 | R:code:lib/core/data/app_database.g.dart,code:lib/core/data/app_database_provider.dart | A:新增整组与关联；唯一开放组；参与者及落点约束；dirty触发器 | S:拒旧schema1且不清空；2升4同时补schema3快照，旧比赛不归组；档案删除SET NULL保姓名，关联随比赛删；dirty初设与UPSERT冲突规避保留，运行索引不混入历史快照
+app_database.g.dart[PD7L]: F:生成十四表Drift映射、Companion、查询和关系Manager | R:code:lib/core/data/app_database.dart | A:MatchSeriesRow及SeriesMatche；类型化列与引用 | S:必须从原数据库定义经build_runner生成，不手改；自建索引及触发器仍由原始实现提供
 app_database_provider.dart[PR8T]: F:一次解析私有文件路径并先原生旧版本探测，再后台isolate打开Drift | R:code:lib/core/data/app_database.dart,code:lib/core/diagnostics/startup_diagnostics.dart | A:openAppDatabase/openAppDatabaseAt/openNativeAppDatabaseAt；hooptrace.sqlite | S:探测先于迁移且旧v1不删；sqlite临时目录设在沙盒；兼容失败关库重抛；Profile探测耗时无业务副作用
 match_clock_service.dart[PR5T]: F:为时钟调用方保留命令内核兼容导出 | R:code:lib/core/data/commands/match_command_service.dart | A:导出服务、时钟投影及命令 | S:MatchClockService即命令服务别名，时钟/事件/回执共用事务
 match_command_service.dart[LB3T]: F:导出事务命令服务的兼容导入入口 | R:code:lib/core/data/commands/match_command_service.dart | A:全部命令服务符号再导出 | S:-
 migrations.dart[FD4T]: F:声明首发数据库schema的历史版本常量 | R:code:lib/core/data/app_database.dart | A:firstReleaseSchemaVersion=1 | S:该值不是当前schemaVersion
-schema_v2.dart[LD6T]: F:导出schema2公共表契约与旧版表名集合，供兼容验证使用 | R:code:lib/core/data/app_database.dart,code:lib/core/export/json_backup_codec.dart | A:schemaVersion=2；11表名；AppDatabase和旧核心表导出 | S:常量及文件名是旧备份契约；实际AppDatabase为schema3且有额外衍生快照表
+schema_v2.dart[LD6T]: F:导出公共数据库类型及schema2历史表名常量 | R:code:lib/core/data/app_database.dart,code:lib/core/export/json_backup_codec.dart | A:schemaVersion=2；11旧表名；兼容类型导出 | S:文件名及常量是旧备份契约，不能误当实际AppDatabase版本，当前数据库为4
 
 ===D:/GitHub/hooptrace/lib/core/data/commands/===
-match_command_service.dart[PB9L]: F:事务提交比赛、计分位置球权时钟和显式覆盖修正并保存审计与幂等回执 | R:code:lib/core/data/app_database.dart,code:lib/core/data/repositories/match_repository.dart | A:FinishMatchCommand可选coverage；SetTrackingCoverageCommand；类型化失败和重试 | S:Finish缺省coverage不进payload保护旧指纹，声明与终场同事务；强历史覆盖完整时不降级，显式scoresOnly可降；纠正限活动/结束/归档且需原因，不入现场撤回；重复返回首次投影，异指纹拒绝；撤回按审计rowid，UTC回拨暂停审计去重
+match_command_service.dart[PB9L]: F:原子提交比赛、整组开赛、计分纠错、计时、目标决策及审计回执 | R:code:lib/core/data/repositories/match_series_repository.dart,code:lib/core/data/repositories/match_repository.dart | A:可选SeriesStartContext；幂等fingerprint；事务故障点；持久决策 | S:普通开赛及空coverage省略新payload键保旧指纹；整组创建关联占用与回执同事务；继续目标标记冷启保留且后续撤回不清除，旧领先两分快照仍判；发布投影仅在提交后
 
 ===D:/GitHub/hooptrace/lib/core/data/repositories/===
 match_lifecycle_repository.dart[PB8T]: F:事务管理完赛归档、取消归档和确认后永久删除 | R:code:lib/core/data/app_database.dart,code:test/core/data/task10_history_query_test.dart | A:archive/unarchive/permanentlyDelete；非法状态抛错 | S:先校验再写；永久删除只允许finished/archived，外键级联整图，活动比赛禁止
@@ -339,7 +346,8 @@ player_analytics_snapshot_repository.dart[PA7M]: F:从规范事实联合查询�
 player_career_repository.dart[PA7M]: F:按档案ID读取监听完赛/归档的生涯、独立投篮效率与逐场趋势 | R:code:lib/core/domain/analytics/player_career_aggregate.dart,code:lib/core/data/app_database.dart | A:getByPlayerId/watchByPlayerId；UTC7/30/90天/全部与对手ID | S:趋势仅FG命中/FG出手，FT单列；不完整或零出手率null；区域仅确认落点，昵称不作为身份，UTC边界双端含
 player_comparison_repository.dart[PA7M]: F:一致事务补齐快照并构造同球员两场或相邻窗口比较 | R:code:lib/core/data/repositories/player_analytics_snapshot_repository.dart,code:lib/core/domain/analytics/player_comparison.dart | A:listEligibleMatches/compare；稳定时间与ID排序；非法身份/同场抛错 | S:相邻UTC窗口左闭右开；重建读取同事务避免混合快照；对手按档案ID匹配
 player_repository.dart[PB6T]: F:按ID持久化球员档案并读取删除及创建时间升序监听 | R:code:lib/core/data/app_database.dart,code:lib/core/domain/entities/player.dart | A:save/getById/delete/watchAll；偏好队枚举名存储 | S:不按昵称合并；删除外键置空但保留比赛姓名快照和事实
-rule_template_repository.dart[PB6S]: F:持久化规则JSON并事务播种四种内置模板，提供查询和自定义删除 | R:code:lib/core/data/app_database.dart,code:lib/core/domain/entities/rule_template.dart | A:ensureBuiltIns/save/watchAll/listAll/getById/deleteCustom | S:播种upsert重写内置；不可删内置；兼容旧事件列表，缺球权策略回退manual/提示关
+rule_template_repository.dart[PB6S]: F:事务播种内置模板并保存和查询自定义规则JSON | R:code:lib/core/data/app_database.dart,code:lib/core/domain/entities/rule_template.dart | A:四内置ID；save/list/watch；自定义删除 | S:播种覆盖内置且11分模板保旧ID名称但winByTwo=false；不改旧比赛快照，不允许删除内置规则
+match_series_repository.dart[PB8M]: F:事务读取和维护固定双方整组、逐场关联、下一场及结束重开 | R:code:lib/core/domain/entities/match_series.dart,code:lib/core/data/commands/match_command_service.dart | A:watch派生比赛结果；revision与编号校验；持久lifecycle意图 | S:同名不合并，身份按固定slot和颜色映射；默认配置仅成功开赛更新；生命周期复用指纹，旧请求不能跨结束重开；活动比赛阻断收局或重开，删除档案保姓名
 
 ===D:/GitHub/hooptrace/lib/core/domain/analytics/===
 match_analytics.dart[DA7M]: F:定义比分走势、关键回合、得分串、独立FG/FT可信率和记录落点覆盖结果 | R:code:lib/core/domain/analytics/match_analytics_calculator.dart,code:lib/core/domain/domain_enums.dart | A:MatchAnalytics与scoringFlow/keyPossessions/ShotZone；可靠FT getter | S:旧非空shootingPercentage的0不是真实0%；显示必须用可信且非零分母的可空FG/FT值
@@ -369,6 +377,7 @@ possession_segment.dart[DB6T]: F:表示以事件端点界定的手动或建议�
 rule_template.dart[DB6T]: F:描述分值按钮、目标、计时、犯规与球权提示的规则快照 | R:code:lib/core/domain/domain_enums.dart,code:lib/core/domain/rules/rule_engine.dart | A:RuleTemplate；逐项及列表内容相等/hash | S:球权提示与策略分离且默认关闭/manual；不是强制计分权限
 shot_location.dart[DB6T]: F:关联比赛事件与标准化落点及确认状态 | R:code:lib/core/domain/value_objects/court_point.dart,code:lib/core/data/app_database.dart | A:ShotLocation(id,matchId,eventId,point,isConfirmed) | S:临时落点与已确认统计分开；数据库约束同比赛投篮身份
 match_setup_preset.dart[DB7T]: F:封装上场双方身份快照与规则计时配置供最近预填和再赛交换 | R:code:lib/core/domain/entities/match_detail.dart,code:lib/features/pregame/pregame_controller.dart | A:SetupParticipantPreset/MatchSetupPreset.fromMatchDetail/swapped | S:不携带比赛/参与者ID、比分事件、活动状态、球权或时钟累计；完整度必须重新选择；规则列表不可变
+match_series.dart[DB7T]: F:定义整组上下文、固定双方模型和从各场派生的胜负汇总 | R:code:lib/core/domain/entities/match_detail.dart | A:SeriesStartContext；SeriesGame颜色映射；MatchSeries胜场与平局 | S:仅完赛和归档计成绩，放弃不算；颜色变化不改变slot身份，成绩不另存也不重复计球员统计
 
 ===D:/GitHub/hooptrace/lib/core/domain/rules/===
 rule_engine.dart[DB7S]: F:根据加分前状态预演得分，产生赛点、目标、领先两分和球权建议 | R:code:lib/core/domain/entities/rule_template.dart,code:lib/core/domain/scoring/score_state.dart | A:evaluate；RuleHint.localizedMessage；中英非阻断提示 | S:传加分后比分会重复计算；manual不建议球权；提示不结束比赛或强制切换
@@ -385,13 +394,13 @@ team_side.dart[DB5T]: F:定义红蓝双方及对手映射 | R:code:lib/core/doma
 automatic_backup_scheduler.dart[IR6T]: F:提供可选持久备份调度接口、空实现及Android通道适配 | R:code:lib/core/export/automatic_backup_service.dart,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupWorkManager.kt | A:ensureScheduled/cancel；前后台通道 | S:非Android不调通道；原生KEEP周期24h、退避30min、无需网络
 automatic_backup_service.dart[PR8L]: F:管理备份设置、dirty、目录写入、后台调度及跨品牌留存 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/export/automatic_backup_scheduler.dart | A:启停/到期/完赛；新文件hoopito-auto或hoopito-backup；留存1–50默认10 | S:同引擎共享Future，跨引擎租约CAS按token释放；写成功且revision未变才清dirty；24h自首次dirty算，完赛立即；基线失败关闭保dirty；新旧auto去品牌前缀按时间排序清旧，手动文件不清，清理失败不推翻备份
 backup_manifest.dart[DD6T]: F:承载备份应用、格式、schema、UTC时间、行数和校验和并序列化 | R:code:lib/core/export/json_backup_codec.dart | A:toJson/fromJson/checksumSourceJson | S:格式与schema独立；摘要源排除checksum自身，codec将清单与全部data共同散列
-backup_merge_service.dart[PR9L]: F:确定性合并验证后备份并保留本地图、返回ID映射及结果 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/data/app_database.dart | A:merge；插入/跳过/changed、快照重建数；类型化异常 | S:本地读取规划写入重建同事务；冲突ID由checksum/表/旧ID派生且重复复用；唯一性冲突提升比赛/事件重映射；审计只递归改引用字段；保留本地设置/active，导入未完成标记且暂停
+backup_merge_service.dart[PR9L]: F:在一致事务中规划并合并备份完整关联图及回执引用 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/data/app_database.dart | A:确定性checksum重映射；整组成员冲突闭包；重复复用；派生重建 | S:保留本地设置与活动占用，导入未结束组关闭；冲突整图不能错接成员，新增回执payload及fingerprint随引用重写；审计文字不做UUID全局替换
 backup_retention.dart[CR4T]: F:定义存储可选的文件列举和删除接口以支持保留清理 | R:code:lib/core/export/automatic_backup_service.dart,code:lib/core/export/device_automatic_backup_storage.dart | A:BackupRetentionStorage.listFiles/deleteFile | S:归属由实现筛选；清理失败不推翻备份
 csv_exporter.dart[ID6S]: F:编码稳定CRLF比赛事件CSV及13列档案/临时参与者统计CSV | R:code:lib/core/export/export_coordinator.dart,code:test/core/export/csv_exporter_test.dart | A:matchList/eventList/playerStatistics；独立FG/FT、match_id/participant_id | S:统计率须attemptsComplete且各分母非零，否则空；编码本身不筛软删/样本，事件保is_deleted，上游负责范围
 device_automatic_backup_storage.dart[IR7S]: F:适配Android授权SAF与其他平台IO的备份读写和留存 | R:code:lib/core/export/automatic_backup_service.dart,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AutomaticBackupStorageDelegate.kt | A:pickDirectory/write/listFiles/deleteFile；后台库路径；新旧品牌安全basename | S:Android拒普通旧路径；只删两种品牌auto且拒分隔符；原生另验持久写授权和JSON MIME；通道身份保持hooptrace
 device_export_gateway.dart[IU6T]: F:选择JSON与备份目录并把临时产物交给系统分享 | R:code:lib/core/export/export_coordinator.dart,code:lib/core/export/device_automatic_backup_storage.dart | A:pickBackup/pickDirectory/share；取消null；MIME与文件名 | S:main整份读文件无容量预限；忽略分享结果，返回不证明已保存；文件名由调用方保证
-export_coordinator.dart[AD9M]: F:编排JSON、CSV、PNG分享及合并、保护替换与内部副本回退 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/export/safety_backup_store.dart,code:lib/core/export/automatic_backup_service.dart | A:新导出hoopito-前缀；listSafetyBackups/restoreSafetyBackup/restorePickedBackup；取消false | S:零行UPDATE取得写预约，贯穿保护副本flush回读发布与替换；活动禁替换；成功清授权和留存失败不报恢复失败；统计仅完赛归档按ID，临时同名单场分行；容量失败在分享前
-json_backup_codec.dart[PR9L]: F:一致编码十二表与SHA清单，校验容量引用顺序和新旧品牌后原子恢复 | R:code:lib/core/data/app_database.dart,code:lib/core/data/repositories/player_analytics_snapshot_repository.dart | A:export/validate/decodeAndValidate/restore；导出Hoopito且接受HoopTrace；format1/schema2及2/3 | S:32MiB、每表10万、总20万，补快照前后计数；lease不导出，事件审计按rowid；恢复拒active；运行钟累计至导出再暂停；不可信派生重建；旧App不支持新名称，名称兼容不改变schema或格式
+export_coordinator.dart[AD9M]: F:编排JSON、CSV、PNG分享及合并、保护替换与内部副本回退 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/export/safety_backup_store.dart,code:lib/core/export/automatic_backup_service.dart | A:hoopito导出前缀；listSafetyBackups/restoreSafetyBackup/restorePickedBackup；取消false | S:零行UPDATE写预约贯穿安全副本flush回读发布及替换；活动禁替换；替换同事务重置备份配置而非撤销系统SAF授权，提交后留存清理失败不改报恢复失败；统计仅完赛归档按ID，临时同名单场分行；容量失败在分享前
+json_backup_codec.dart[PR9L]: F:一致导出与验证十四表及校验清单并原子恢复兼容备份 | R:code:lib/core/data/app_database.dart,code:lib/core/data/repositories/player_analytics_snapshot_repository.dart | A:格式/schema 1/2、2/3、2/4；图校验；派生重建；容量限制 | S:32MiB/单表10万/总20万在补派生前后校验；旧备份不归组；lease不导出，事件审计保rowid顺序；导出保运行钟，恢复时累计至导出时刻再暂停；替换拒活动且安全副本由外层保护
 replay_image_exporter.dart[IU5T]: F:截取已就绪RepaintBoundary并编码PNG | R:code:lib/features/replay/replay_page.dart | A:capture(GlobalKey,pixelRatio=3)返回Uint8List | S:未就绪或编码空值抛错；finally释放ui.Image，避免图像资源泄漏
 safety_backup_store.dart[PR9M]: F:在SQLite之外保存并列举已完整验证的私有安全JSON副本 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/export/export_coordinator.dart | A:save/read/list/retainLatest；新名hoopito-safety-backup；新旧名称均可读；保2 | S:私有hooptrace-safety-backups位置保留；安全basename；临时flush限容回读校验checksum再同目录rename；坏临时不列可恢复，选中再验，替换提交后清旧；卸载丢失非外部备份
 
@@ -404,10 +413,10 @@ scoring_guide_preferences.dart[PU5T]: F:在现有设置表保存v2首次计分�
 
 ===D:/GitHub/hooptrace/lib/features/history/===
 history_controller.dart[AU8L]: F:管理历史分页筛选、生命周期操作与保持已浏览范围的原子可见刷新 | R:code:lib/core/data/repositories/match_repository.dart,code:lib/features/history/history_page.dart | A:refreshVisible/retryLoad；默认20条；请求代次与游标 | S:重读有界页全部成功后才替换原列表，失败保旧数据并重试同范围；合并并发刷新、拒不前进cursor；generation挡旧结果；过滤不改事实，永久删需confirmed
-history_page.dart[FU7L]: F:呈现日期分组历史、保留搜索筛选与分页、归档删除和导入恢复入口 | R:code:lib/features/history/history_controller.dart,code:lib/app/l10n/rule_template_localizations.dart | A:注入详情和生命周期回调；空态加载错误与retryLoad | S:已无更多页但刷新失败仍保留重试入口；永久删除确认才调用，筛选仅展示
+history_page.dart[FU7L]: F:显示比赛或整组历史、搜索筛选分页及单场所属整组入口 | R:code:lib/features/history/history_controller.dart,code:lib/app/series_routes.dart | A:默认比赛列表；seriesContent及链接；加载错误重试；归档删除 | S:永久删除确认才调用；筛选与页签不改事件统计，刷新失败即使无更多页也保留重试
 
 ===D:/GitHub/hooptrace/lib/features/home/===
-home_page.dart[EU7L]: F:呈现开赛或活动恢复、最近三场赛果与最近配置预填入口 | R:code:lib/app/provider_router.dart,code:lib/core/domain/entities/match_history_entry.dart | A:recentMatches/onRecentMatchTap/onRecentPreset；PageStorage滚动；兼容旧目录 | S:活动存在只继续或确认放弃；最多三摘要，不读完整事件；未启用时钟不显示时钟状态；项目回调仅兼容
+home_page.dart[EU7L]: F:呈现活动比赛恢复、场间整组继续和普通开赛及最近赛果 | R:code:lib/app/provider_router.dart | A:seriesResume；最近三场；预填入口；PageStorage | S:已有活动比赛或开放整组不再另开普通比赛；不读取完整事件来展示最近摘要
 
 ===D:/GitHub/hooptrace/lib/features/players/===
 player_career_controller.dart[AU6S]: F:管理档案球员生涯查询与响应流加载错误 | R:code:lib/core/domain/analytics/player_career_aggregate.dart,code:lib/features/players/player_career_page.dart | A:注入loader；setWindow/setOpponent/reload | S:改查询清旧结果并换订阅；generation屏蔽取消延迟回调，销毁不再通知
@@ -418,9 +427,9 @@ player_editor_page.dart[EU6M]: F:加载新建编辑昵称备注，保存反馈�
 player_list_page.dart[EU5S]: F:订阅本地档案并以成长为主入口、编辑为次级操作呈现列表 | R:code:lib/core/data/repositories/player_repository.dart,code:lib/app/player_routes.dart | A:watchAll/onCreate/onViewAnalytics/onEdit；加载及重试 | S:无成长回调时兼容编辑；身份按ID不按昵称；重试换订阅键
 
 ===D:/GitHub/hooptrace/lib/features/pregame/===
-pregame_controller.dart[AB7L]: F:维护赛前双方身份、规则计时和记录范围草稿，支持预填交换及1至999目标分 | R:code:lib/core/domain/entities/match_setup_preset.dart,code:lib/features/pregame/start_match_mapper.dart | A:minTargetScore1/maxTargetScore999；applyPreset/swapSides/createMatchSetup；可注入ID工厂 | S:预填保规则快照但重新选完整度；只在创建Setup时取新ID，不写库；修改名称清关联，临时同名可用，同档案双边拒绝；模板切换重置沿旧行为
-pregame_page.dart[FU8L]: F:组织紧凑双方卡、就地档案创建、规则摘要、显式记录范围及可手输目标分的赛前流程 | R:code:lib/features/pregame/pregame_controller.dart,code:lib/app/l10n/rule_template_localizations.dart | A:initialPreset/onCreatePlayer/onCancel/异步onStartMatch；折叠计时与高级规则；48dp编辑数字 | S:重复开赛/创建/输入弹窗各守在途；开始才创建Setup，取消无比赛；目标整数1至999非法保输入不截断，提交只关闭当前弹窗一次；流更新不覆草稿，预填姓名不当默认翻译
-start_match_mapper.dart[AB7T]: F:验证设置并构造含档案关联和规则快照的开赛命令 | R:code:lib/features/pregame/pregame_controller.dart,code:lib/core/data/commands/match_command_service.dart | A:buildStartMatchCommand/validateMatchSetup；分钟转秒、UTC时间 | S:只构造不写库；缺模式回退simple，显式模式覆盖照传；档案存在另由事务入口检查
+pregame_controller.dart[AB7L]: F:维护双方身份、自由目标模式、规则计时及记录范围草稿 | R:code:lib/core/domain/entities/match_setup_preset.dart,code:lib/features/pregame/start_match_mapper.dart | A:目标1至999默认11；模板切换；applyPreset；swapSides；continuous | S:自由模式输出target=null且保留输入；目标模板进入目标模式；新比赛一律winByTwo=false，预填不继承完整声明；创建Setup才分配ID且不写库
+pregame_page.dart[FU8L]: F:呈现单场或连续对局赛前设置、固定双方、记录范围和高级计时目标配置 | R:code:lib/features/pregame/pregame_controller.dart,code:lib/features/pregame/start_match_mapper.dart | A:lockedPair换色；模式选择；高级设置；48dp目标编辑 | S:固定双方禁换人改名但允许换色；取消不留空组，重复开始复用Setup；计时置高级不额外挤布局，目标非法输入保留并只关闭自有弹窗一次
+start_match_mapper.dart[AB7T]: F:校验赛前草稿并构造含可选整组上下文的开赛命令 | R:code:lib/features/pregame/pregame_controller.dart,code:lib/core/data/commands/match_command_service.dart | A:UTC时间；分钟转秒；档案关联；规则快照 | S:不写库；所有新开赛winByTwo=false，11分旧内置ID只换新快照显示名；档案存在仍由事务校验
 
 ===D:/GitHub/hooptrace/lib/features/project/===
 external_link_launcher.dart[IN4T]: F:把URI委托系统外部应用打开 | R:code:lib/features/project/project_details_page.dart,code:pubspec.yaml | A:open返回Future<bool>；externalApplication | S:未限协议或捕获异常，调用方负责
@@ -438,8 +447,8 @@ replay_event_editor.dart[EU7L]: F:编辑事件语义、时间、备注位置并�
 replay_timeline.dart[EU7L]: F:显示可选事件列表与响应式组合筛选 | R:code:lib/features/replay/replay_controller.dart | A:Panel/Filters/Event；embedded；48dp控件 | S:筛选只显示；窄屏大字用滚动弹层；结果分值再点清空；得分类含score/FG/FT
 
 ===D:/GitHub/hooptrace/lib/features/rules/===
-rule_template_editor_page.dart[EU6L]: F:创建编辑规则模板，校验名称与正整数，配置计分、目标分、时限、犯规、净胜两分、球权及自定义事件 | R:code:lib/core/data/repositories/rule_template_repository.dart | A:repository/template；校验通过保存后返回 | S:分钟转换秒；计分值去重排序；关闭球权提示强制manual；编辑保留id
-rule_template_list_page.dart[EU5S]: F:确保内置模板存在并订阅列表，提供自定义模板创建编辑及加载重试状态 | R:code:lib/core/data/repositories/rule_template_repository.dart | A:repository；watchAll；模板规则摘要 | S:固定id决定内置身份及禁止编辑；重试重建订阅并确保内置模板
+rule_template_editor_page.dart[EU6L]: F:编辑计分、目标、时限、犯规、球权及自定义事件规则 | R:code:lib/core/data/repositories/rule_template_repository.dart | A:名称和正整数校验；分钟转秒；排序去重；保存返回 | S:移除领先两分界面，新规则默认false，编辑旧模板保兼容字段；关球权提示强制manual
+rule_template_list_page.dart[EU5S]: F:列出内置与自定义规则并提供创建编辑和加载重试 | R:code:lib/core/data/repositories/rule_template_repository.dart | A:ensureBuiltIns；watchAll；规则摘要 | S:稳定ID决定内置禁编辑；新摘要不展示领先两分条件，旧比赛快照仍按历史规则
 
 ===D:/GitHub/hooptrace/lib/features/scoring/motion/===
 scoring_motion.dart[AU7L]: F:以提交收据驱动离线飞球路径、FIFO动效、落点揭示与Lottie绘制 | R:code:lib/features/scoring/scoring_controller.dart,code:lib/app/design_system/editorial_motion.dart | A:Event/Path/Coordinator/Overlay；standard/reduced/disabled；submit/advance/fail/cancel | S:eventId去重；积压>3加速已排队项不丢事件；回调重入保FIFO；缺几何资源立即降级不影响提交；Lottie时长由主题覆盖，不用素材时长
@@ -449,8 +458,8 @@ scoring_motion_geometry.dart[LU3T]: F:导出飞行曲线、采样和拖尾几何
 scoring_motion_overlay.dart[LU3T]: F:导出计分Lottie与画布覆盖组件 | R:code:lib/features/scoring/motion/scoring_motion.dart | A:AssetBuilder/LottieAsset/Overlay/Painter | S:-
 
 ===D:/GitHub/hooptrace/lib/features/scoring/===
-scoring_controller.dart[AU9L]: F:编排持久现场命令和投影、补点草稿及撤回，并追踪保存中和失败状态 | R:code:lib/core/data/commands/match_command_service.dart | A:isSaving/hasSaveFailure/retryCommand；得分犯规球权及位置提交收据 | S:快速命令FIFO，独占动作互斥；失败按commandId保留，原命令成功才清；草稿未提交不写库；十秒半开补点窗由内核复核；dispose后无收据；补录先撤位置，球场首录整体撤回
-scoring_page.dart[EU8L]: F:保持横屏球场与四项操作，编排保存反馈、可跳过提示、暂停退出及显式完整度终场 | R:code:lib/features/scoring/scoring_controller.dart,code:lib/features/scoring/widgets/scoring_guide.dart,code:lib/app/design_system/recording_confirmation.dart | A:showInitialGuide/onGuideDismissed/onFinishWithCoverage；更多重看提示；最后操作和保存liveRegion | S:提示不遮两侧计分；仅提交收据反馈且去重；controller代次拒迟到动作；销毁仅移除自有暂停DialogRoute；退出和终场草稿明确确认，ticker只显示；失败保重试原意图
+scoring_controller.dart[AU9L]: F:协调持久计分命令、待补落点、目标撤回及保存失败重试 | R:code:lib/core/data/commands/match_command_service.dart | A:FIFO计分快命令；独占动作；投影与反馈；undoTargetScoreCommitted | S:目标撤回通过命令同时撤得分及补点，普通撤回仍按审计顺序；十秒半开窗口内核复核；失败保原commandId，dispose后不发布迟到收据
+scoring_page.dart[EU8L]: F:保持横屏球场比例并展示计分、整组场次、目标确认和终场流程 | R:code:lib/features/scoring/scoring_controller.dart,code:lib/app/design_system/recording_confirmation.dart | A:两侧48dp动作；达标通知与决策弹层；手动计分说明 | S:最后一球补点时立即提示达标且保补点机会，结束跳过超时后才放确认；达标暂停新增计分，保存成功才进赛果；忙与失败守卫保原意图
 
 ===D:/GitHub/hooptrace/lib/features/scoring/widgets/===
 court_painter.dart[EU7L]: F:绘制半场线条与已提交、待确认、草稿及瞬时落点标记，统一计分回放几何 | R:code:lib/core/domain/value_objects/court_point.dart | A:HalfCourtGeometry坐标米制转换；CourtPainter；TransientShotMarker/EraserShotMarker | S:15×14半场居中适配；坐标相对球场非整个组件；反算夹0–1，空尺寸回中心；隐藏临时标记仅绘制
@@ -460,18 +469,15 @@ score_side_panel.dart[EU7L]: F:呈现单队计分未中动作、犯规及补录�
 scoring_guide.dart[CU5T]: F:显示可立即跳过的三步现场提示：记分、补点未中、撤回结束 | R:code:lib/features/scoring/scoring_page.dart,code:lib/app/l10n/app_localizations.dart | A:onDismiss；下一步/完成/跳过48dp；正文可滚动 | S:只维护本地步骤，不提交数据或占用两侧计分入口
 
 ===D:/GitHub/hooptrace/lib/features/settings/===
-data_management_page.dart[EU7L]: F:提供备份导出、合并替换、内部安全副本回退及自动备份目录和留存控制 | R:code:lib/features/settings/settings_controller.dart,code:lib/features/settings/settings_error_message.dart | A:安全副本列表/加载重试/确认恢复；onDataRestored | S:活动只禁替换和回退不禁合并；恢复成功才通知，忙时禁操作；内部副本帮助说明卸载边界
+data_management_page.dart[EU7L]: F:组织完整备份导出、合并替换、安全副本及自动备份目录留存管理 | R:code:lib/features/settings/settings_controller.dart,code:lib/features/settings/settings_error_message.dart | A:副本加载重试与确认恢复；onDataRestored；忙状态 | S:活动只阻断替换和回退、不阻断合并；恢复成功才通知；说明私有备份随卸载丢失，分享打开不承诺已保存
 settings_action_tile.dart[CU5T]: F:显示64dp设置操作行与可见可朗读的禁用状态 | R:code:lib/app/design_system/design_system.dart | A:icon/title/subtitle；enabled/onTap | S:有操作时替换子树语义为单一点击入口，禁用不响应语义点击
 settings_controller.dart[AU7M]: F:协调导出恢复、安全副本列举回退及自动备份和反馈设置状态 | R:code:lib/core/export/export_coordinator.dart,code:lib/core/export/automatic_backup_service.dart | A:safetyBackups/safetyBackupError/refreshSafetyBackups/restoreSafetyBackup；load/restore | S:拒并发且finally解忙；失败也重载安全副本，列表错误独立不吞恢复错误；恢复后重载授权和反馈；首次启用目录取消无开启
 settings_error_message.dart[AU5T]: F:将容量、内部副本、校验合并和授权写入失败转为双语用户提示 | R:code:lib/core/export/json_backup_codec.dart,code:lib/app/l10n/app_localizations.dart | A:settingsFriendlyError；实际大小和上限按本地化B/MiB或行数显示 | S:容量子类先于通用验证异常；未知错误通用提示，不展示备份正文
-settings_page.dart[EU6L]: F:呈现主题动效反馈及语言设置，提供数据管理与项目信息入口 | R:code:lib/features/settings/settings_controller.dart,code:lib/core/settings/theme_preferences.dart | A:controller/themeController/languageController；onOpenData/onOpenProject | S:预览优先遵守disableAnimations；无障碍或reduced禁位移缩放；忙时禁反馈偏好操作
+settings_page.dart[EU6L]: F:展示主题、语言、动效和反馈偏好及数据、软件更新和项目入口 | R:code:lib/features/settings/settings_controller.dart,code:lib/core/settings/theme_preferences.dart | A:onOpenUpdate；主题与反馈预览；数据管理导航 | S:预览优先遵守系统禁动画和减少动画；忙时不能重复保存偏好
+software_update_page.dart[EU8M]: F:展示实际版本、手动检查、开关、下载进度及可恢复的系统安装入口 | R:code:lib/core/update/update_controller.dart | A:检查结果；取消重试；权限引导；返回设置后安装 | S:安装前后重查当前路由、前台及实时比赛状态，未知即阻断；仅打开安装器不报告成功，设置打开失败清返回标记；重复状态文案不占位
 
 ===D:/GitHub/hooptrace/lib/===
 main.dart[EG8T]: F:启动前台和可选Profile诊断，并提供无界面WorkManager备份入口 | R:code:lib/app/hoopito_app.dart,code:lib/app/entry/entry_diagnostic_binding.dart,code:lib/core/export/automatic_backup_service.dart | A:main(arguments)；automaticBackupBackgroundMain；completed(outcome) | S:诊断仅Profile显式开关且动画启用；后台只开同文件无picker，无授权安全跳过、其他失败retry；finally先关库再回完成
-
-===D:/GitHub/hooptrace/scripts/===
-setup-worktrees.ps1[XW5S]: F:按历史九分支与波次表预览创建Git工作树并输出分支提示路径 | R:code:scripts/test-setup-worktrees.ps1 | A:Create/DryRun互斥；Wave筛选；Root顶层；WorktreeRoot；BaseBranch默认main | S:只有Create写入；自定目录仍检查.worktrees忽略；已有目录跳过不验分支
-test-setup-worktrees.ps1[TW5T]: F:调用工作树脚本DryRun，验证九分支预览且临时根未创建 | R:code:scripts/setup-worktrees.ps1 | A:预期分支和DRY RUN输出；根不存在；失败抛错 | S:仅验预览；不验Create、分支复用、波次筛选或真实创建
 
 ===D:/GitHub/hooptrace/test/app/===
 app_shell_test.dart[TU7S]: F:验证三主入口、独立赛前横屏计分和复盘终场后赛果入口 | R:code:lib/app/hoopito_app.dart,code:lib/app/orientation_shell.dart | A:三导航及右上设置；完赛进入summary再打开完整复盘 | S:内存库关闭启动动画；方向壳断言不证明原生锁定或重启恢复
@@ -479,7 +485,7 @@ app_theme_test.dart[TU6T]: F:约束亮暗主题配色尺寸及指定文字球队
 command_backed_scoring_test.dart[TB7S]: F:沿正式路由计分验证命令审计、提交事件与反馈先后 | R:code:lib/app/app_providers.dart,code:lib/core/settings/scoring_feedback.dart | A:至少两条审计；唯一两分事件；触感时可读事件；无标记弹窗 | S:直接调onPressed，内存库及反馈替身；不验命中区、原生触感或落盘
 courtside_playbook_visual_test.dart[TU6M]: F:验证主题动效扩展、编辑式组件与离线Lottie层命名契约 | R:code:lib/app/design_system/design_system.dart,code:lib/app/app_theme.dart | A:48dp触感语义；按压缩放；禁用/空回调；资源解析和teamFill/inkFill | S:解析素材不证明最终视觉帧；禁用语义与点击均不触发
 editorial_design_system_test.dart[TU7L]: F:校验编辑式对比、焦点语义、字体布局和启动及计分动效参数 | R:code:lib/app/design_system/design_system.dart | A:正文4.5/边界3；48dp；entry1000ms/reduced140ms/skip120ms | S:绘制调用不等于设备像素证明；恢复全局view设置
-editorial_feature_goldens_test.dart[TU7M]: F:以真实字体校验赛果、赛前、非法目标输入、计分及复盘的双语明暗图像 | R:code:test/support/golden_fonts.dart,code:lib/features/summary/match_summary_page.dart | A:五页面场景×双语×明暗；390×844或731×411；目标输入1000错误 | S:静态夹具不证明端到端或设备性能；平台分别选Golden，恢复view
+editorial_feature_goldens_test.dart[TU7M]: F:以生产字体核验赛前、目标输入、计分、赛果和复盘的双语明暗Golden | R:code:test/support/golden_fonts.dart,code:lib/features/summary/match_summary_page.dart | A:390×844及731×411；非法目标1000；真实fallback字体 | S:平台分别选择Golden，静态夹具不证明端到端功能或设备性能
 editorial_golden_font_pipeline_test.dart[TU6M]: F:用实际栅格检测Golden字体是否为Roboto/Noto/MaterialIcons而非Ahem或缺字 | R:code:test/support/golden_fonts.dart,code:lib/app/app_theme.dart | A:字体职责；tune图标非缺字；拉丁中文墨内白比例阈值 | S:比例阈值容纳平台抗锯齿，不固定图像hash；捕获后释放ui.Image
 entry_animation_golden_test.dart[TU6S]: F:用实际C纹理对七个标准姿态及中英窄屏大字等待提示作Golden回归 | R:code:lib/app/entry/entry_creature.dart,code:test/support/golden_fonts.dart | A:0/150/330/480/690/860/930ms；390×844；320×240/200% | S:直接姿态采样不证明播放时序或帧率；图像codec和纹理明确释放
 entry_animation_test.dart[TU8L]: F:以可控时钟图像及原生回调回归静音启动、平滑跳过与失败终态 | R:code:lib/app/entry/hoopito_entry_gate.dart,code:lib/app/entry/entry_renderer_ready.dart | A:静音平台调用；慢初始化及原生交接；终止与后台；减弱关闭动效；图像释放 | S:UI阻塞拒绝迟到图像并释放；首静帧提交及原生退出先于跳动；取消不能点透；偏好及资源迟到不能重启；Widget与mock不证明实机帧率或引擎实际交接
@@ -495,20 +501,20 @@ settings_data_router_test.dart[TU6S]: F:验证数据管理深链、设置入口�
 task10_history_route_test.dart[TW6T]: F:验证历史归档路由生命周期与高级筛选弹层关闭后的可用列表 | R:code:lib/features/history/history_controller.dart | A:归档移出默认列表、归档类重现；筛选关闭无异常 | S:夹具先结束比赛；系统返回关闭筛选但保留历史页
 task11_replay_route_test.dart[TW7S]: F:验证回放路由编辑备注经命令适配持久化并产生原因审计 | R:code:lib/app/provider_router.dart | A:事件备注匹配；单条edit审计与输入reason匹配 | S:1600×900及直接调用部分回调，不证明触摸命中或窄屏操作
 task12_player_career_route_test.dart[TA6T]: F:验证球员主行进入成长页及无完赛样本空态 | R:code:lib/app/player_routes.dart | A:点击档案名称；球员分析和周期无比赛提示 | S:内存单档案不证明同名区分或统计计算；卸载Widget后关库
-task14_imported_recovery_route_test.dart[TR7S]: F:验证历史导入未完成恢复计分和活动冲突提示 | R:code:lib/app/provider_router.dart | A:有限等待并点可命中恢复入口；占用活动槽或保留冲突横幅 | S:直接abandoned夹具不经备份codec；冲突未断言整库回滚
+task14_imported_recovery_route_test.dart[TR7S]: F:验证历史导入未完成比赛可恢复及活动冲突保持可见 | R:code:lib/app/provider_router.dart | A:真实命中恢复入口；活动槽占用；冲突横幅 | S:直接abandoned夹具不经过备份codec，不能据此证明导入整图回滚
 task14_visual_accessibility_test.dart[TU7M]: F:校验英文赛前默认名及双语大字首页无障碍与视觉基线 | R:code:lib/features/home/home_page.dart,code:lib/features/pregame/pregame_page.dart | A:200%字体、主题尺寸、目标标签对比；首页隐藏旧目录 | S:加载真实字体和平台基线；settle后的默认名不证明首帧
 task15_background_database_test.dart[TD6T]: F:用独立临时SQLite走生产后台执行器验证打开查询 | R:code:lib/core/data/app_database_provider.dart | A:显式文件openAppDatabaseAt；SELECT 1；finally关闭清理 | S:避开用户应用目录；不覆盖重开、迁移或冷进程恢复
 task5_unified_scoring_integration_test.dart[TB7L]: F:贯通球场先和分数先补点、撤回、更多事件及目标分确认赛果 | R:code:lib/features/scoring/scoring_page.dart,code:lib/core/data/commands/match_command_service.dart | A:15:14球场内归一位置；分步或整体撤回；21分终场进入summary | S:撤回保软删事件；大视口按钮边界不证明48dp；内存库非冷启动证据
 task6_about_router_test.dart[TU6S]: F:验证关于兼容路由、设置入口和最近摘要错误时首页仍可开赛 | R:code:lib/app/provider_router.dart,code:lib/app/app_providers.dart | A:/about与/project；recentMatchSummariesProvider失败降级；内存副本 | S:活动流稳定为空，不能据此解除活动加载错误门禁
-task6_editorial_localization_test.dart[TL6T]: F:约束双语指定文案、ARB键对齐及未知语言自定规则名处理 | R:code:lib/app/l10n/rule_template_localizations.dart | A:中英键集合相同；fr lookup抛错；未知规则名保留 | S:排除@元数据的键对齐不校验占位符类型或翻译质量
+task6_editorial_localization_test.dart[TL6T]: F:校验指定双语文案、ARB键一致与自定义规则名称保留 | R:code:lib/app/l10n/rule_template_localizations.dart | A:中英键集合；未知语言拒绝；未知规则原名 | S:排除@元数据后的键一致不证明占位符类型或翻译质量
 task6_leave_recovery_test.dart[TW7M]: F:验证计分离开暂停、继续恢复、无计时直退、失败留页及系统返回对话 | R:code:lib/app/provider_router.dart,code:lib/core/data/commands/match_command_service.dart | A:持久投影时钟状态；暂停不重试；beforeCommit失败Snackbar | S:内存库与Widget交互，不建立冷进程重启恢复证据
 task6_leave_safety_test.dart[TW7M]: F:验证离开时钟决策对未知投影关闭及已确定状态的命令映射 | R:code:lib/app/provider_router.dart | A:loading/error含旧值仍unknown；终态缺时钟拒绝；pause/resume/noCommand；失败留页提示 | S:动作时投影provider强制loading；旧AsyncData不能解除安全阻断
 task6_legacy_file_bootstrap_test.dart[TD8T]: F:以真实v1文件验证生产启动显示旧库保留页且文件不迁移覆盖 | R:code:lib/core/data/app_database_provider.dart | A:user_version1；sentinel untouched；无matches/events/active新表 | S:走实际版本探测非Provider替身；文件重开不等于冷进程恢复
 task6_provider_recovery_test.dart[TD7M]: F:验证实时活动和最近完赛投影、比分重建及暂停离开后自有弹窗清理 | R:code:lib/app/app_providers.dart,code:lib/features/scoring/scoring_page.dart | A:活动禁新赛/弃赛开放；keep/pause/stay；离开后无暂停Dialog | S:同内存库应用重建不是冷进程；旧库提示和状态门禁按实际投影验证
 task6_resume_control_test.dart[TW7L]: F:验证暂停恢复的提交顺序、阻塞面板、失败重试去重及反馈 | R:code:lib/features/scoring/scoring_page.dart | A:得分先暂停；恢复单次；失败面板可重试；运行无计时控件 | S:恢复在途禁离开结束；外部恢复不关闭终场确认；失败无反馈成功提交后反馈
-task6_review_regression_test.dart[TW8L]: F:回归初始投影、控制器身份、补点与终态异步竞争及历史赛果复盘返回链 | R:code:lib/app/provider_router.dart | A:首快照一次；最新请求优先；历史→summary→replay→summary→history | S:旧完成可提交备份但不抢导航，销毁后不刷新；Widget重建非进程恢复
+task6_review_regression_test.dart[TW8L]: F:回归计分投影与控制器身份、补点和异步竞态及赛果复盘返回 | R:code:lib/app/provider_router.dart | A:首快照一次；最新请求优先；历史至赛果至复盘返回 | S:旧终场可提交和备份但不可抢新路由；销毁后不刷新，Widget重挂不等于进程恢复
 task6_startup_restore_test.dart[TD7S]: F:验证一次启动任务、辅助备份失败容忍及替换恢复许可门禁 | R:code:lib/app/app_providers.dart | A:规则与备份各一次；规则失败通用错；备份失败仍首页；稳定null授权 | S:loading/error含旧null也禁替换；必要初始化失败不可吞，辅助备份失败可容忍
-task7_active_match_gate_test.dart[TU6S]: F:验证活动门禁采用编辑式结构与蓝左红右比分队色 | R:code:lib/app/provider_router.dart | A:731×411；Scaffold/Masthead/SectionRule无Card/AppBar；蓝7红11 | S:-
+task7_active_match_gate_test.dart[TU6S]: F:验证活动比赛门禁的平面布局及蓝左红右比分颜色 | R:code:lib/app/provider_router.dart | A:731×411；EditorialScaffold；无Card/AppBar；蓝7红11 | S:-
 task7_editorial_ownership_test.dart[TU6S]: F:验证明暗首页反色队色标识对比与中文字体回退 | R:code:lib/features/home/home_page.dart | A:inverseBlue/Red；对比>=3；正文标签标题含Noto Sans SC | S:反色区用inverse队色；3:1是标识标准不是正文对比要求
 task7_pregame_provider_test.dart[TI6T]: F:验证球员Provider订阅保存后档案投影 | R:code:lib/app/app_providers.dart | A:playerProfilesProvider；单条id/nickname匹配 | S:先监听再写，等待首非空异步投影
 task7_pregame_route_test.dart[TW6T]: F:验证首页到赛前档案选择器的Provider联通 | R:code:lib/app/provider_router.dart | A:home-start-scoring；红方选择器出现Route Player | S:-
@@ -521,33 +527,42 @@ entry_renderer_ready_test.dart[TH6T]: F:验证Android Surface和原生启动退�
 entry_startup_host_test.dart[TW8M]: F:回归稳定启动宿主跨数据库和语言就绪、慢加载、失败旧库及深链放行 | R:code:lib/app/hoopito_app.dart,code:lib/app/app_providers.dart | A:保持同一Gate state；2s提示无spinner；已消费与关闭动画静态等待；/history深链 | S:初始化兼容→内置规则→辅助备份先后由Completer验证；内存库和Widget会话不构成冷进程证明
 recording_confirmation_test.dart[TU6T]: F:验证Android与iOS确认面板保留locations/full覆盖或显式降为scoresOnly | R:code:lib/app/design_system/recording_confirmation.dart | A:平台及原覆盖双循环；保存不改初值；取消完整勾选后保存；无Widget异常 | S:只覆盖确认投影，不证明日常完整记录或持久化
 v2_history_refresh_test.dart[TW8M]: F:验证保留历史页的有界变更刷新、筛选滚动保持及替换恢复列表更新 | R:code:lib/core/data/repositories/match_repository.dart,code:lib/app/provider_router.dart | A:45场载40条，跨导航终场修分后仍40；续页46唯一；恢复结束及导入列表 | S:变更通知不读详情且设置不触发；每页≤20、全部重读才替换；内存库不是设备重启
-v2_navigation_summary_test.dart[TU7S]: F:验证三导航保历史搜索、赛果返回原列表与冷路由显式关联档案刷新 | R:code:lib/app/summary_route.dart,code:lib/app/provider_router.dart | A:Visitor搜索保留；Canonical关联Temporary；保存入口消失 | S:关联保当场姓名不按同名合并；cold指冷路由，不是冷进程
+v2_navigation_summary_test.dart[TU7S]: F:验证主导航保历史搜索及赛果显式关联档案后刷新 | R:code:lib/app/summary_route.dart,code:lib/app/provider_router.dart | A:搜索保留；Temporary关联Canonical；保存入口消失 | S:关联保当场姓名且不按同名合并；cold只指路由重建
+app_update_host_test.dart[TU7M]: F:验证启动交接后检查一次、静默失败和弹窗比赛门禁 | R:code:lib/app/app_update_host.dart | A:加载后提醒；稍后不重弹；前后台及重挂不重复；嵌套sheet延后 | S:模拟平台计数验证调度，不证明真实设备网络或安装
+continuous_series_journey_test.dart[TB8T]: F:运行三场连续对局、整组收局、逐场复盘及重开的Widget旅程 | R:code:test/test_helpers/continuous_series_journey.dart | A:1000×700；内存库；共享真实操作助手 | S:重开不自动新建比赛，此内存旅程不等于文件冷进程恢复
+entry_update_readiness_test.dart[TU7S]: F:验证启动正常、跳过、减少关闭动画及进程抑制均只发一次内容交接 | R:code:lib/app/entry/hoopito_entry_gate.dart | A:注入图像与就绪loader；loading到ready；回调计数 | S:隐藏动画仍须等待本地ready，播放结束不应阻塞更新任务
+recording_copy_layout_test.dart[TU7M]: F:验证双语明暗窄屏及横屏200%字体下记录范围说明和确认可读 | R:code:lib/app/design_system/recording_confirmation.dart,code:lib/features/pregame/pregame_page.dart | A:48dp按钮；RenderParagraph完整高度；滚动终点；取消与确认 | S:文本无maxLines不等于未裁切，实际内在高度及按钮命中均检查，完整记录必须主动选择
+series_close_navigation_test.dart[TU8L]: F:回归赛果收局保存后进入整组、失败取消重试与系统返回导航 | R:code:lib/app/series_routes.dart | A:六场景；临时SQL失败与持有事务；重复点击；根及push返回 | S:保存前不跳页、失败不改整组及单场，成功只写一次意图；根整组返回历史，push整组可退原页
+target_scoring_goldens_test.dart[TU7S]: F:核验目标达标补点与确认态的双语明暗和大字体画面 | R:code:lib/features/scoring/scoring_page.dart,code:test/support/golden_fonts.dart | A:目标11实际12:8；补点未超时/已超时；200%横屏 | S:保留实际跨目标比分而非截断；注入时钟的Golden不是设备超时证据
 
 ===D:/GitHub/hooptrace/test/core/audit/===
 audit_log_test.dart[TD4T]: F:验证审计Entry保留编辑前后值与action | R:code:lib/core/audit/audit_log_entry.dart | A:points2→3；AuditAction.edit | S:-
 
 ===D:/GitHub/hooptrace/test/core/data/===
 audit_repository_test.dart[TD7S]: F:验证坐标移动、备注软删除的审计快照与未改写的墙钟时间 | R:code:lib/core/data/repositories/match_repository.dart | A:坐标原子更新及reason；软删保事件但比分归零；日志delete先edit后 | S:快速审计时间不得为排序而推到未来；此测试不注入事务失败
-match_clock_service_test.dart[TD9L]: F:以固定UTC验证时钟决策补点与撤回的持久命令协作 | R:code:lib/core/data/commands/match_command_service.dart | A:重建及旧新回执时钟；回拨一次pause/resume；加时；9.999秒接受10秒拒绝；审计保序撤回 | S:到期规范化先提交再拒输入；歧义旧审计不得部分撤回；补点分步、球场首录原子撤回；内存库重建非冷进程恢复
+match_clock_service_test.dart[TD9L]: F:以固定UTC回归计时决策、补点、撤回及持久回执协作 | R:code:lib/core/data/commands/match_command_service.dart | A:回拨去重；加时；9.999秒接受与10秒拒绝；审计顺序 | S:到期规范化先提交再拒新输入；歧义旧审计不能部分撤回；内存服务重建不证明冷进程
 match_command_review_test.dart[TB8L]: F:补验首次命令投影稳定、状态前置及失败订阅隔离 | R:code:lib/core/data/commands/match_command_service.dart | A:后续写/备份恢复不漂移首次投影；终场活动态；位置仅FG；规则嵌套冻结；故障监测 | S:首次投影不能变最新比分；失败不得留下事件、回执或非空事件订阅批次
 match_command_service_test.dart[TB9L]: F:验证命令内核原子写入、跨服务幂等与单活动竞争 | R:code:lib/core/data/commands/match_command_service.dart | A:开赛比赛双方时钟活动同行；重复一次；修正软删审计；终态清活动；故障重试；竞争开赛 | S:同命令ID异载荷冲突不可重试；失败重试复用原命令；撤回保事件身份和历史；事务故障不能暴露未提交投影
 match_repository_test.dart[TD8L]: F:验证比赛领域往返、事件位置保存与历史统计投影 | R:code:lib/core/data/repositories/match_repository.dart | A:规则快照；事件位置不重复；联合关联；替换移除撤回；软删排除统计；历史排序 | S:替换快照为旧兼容路径；坏得分由SQL及映射器拒；软删留明细但不计比分犯规
 player_analytics_snapshot_repository_test.dart[TA7S]: F:验证档案派生快照重建、canonical写失效及并发更正最终一致 | R:code:lib/core/data/repositories/player_analytics_snapshot_repository.dart | A:双profile重建；比分FG/FT；插事件清缓存；再重建新分数 | S:并发后另次显式重建，不证明首轮含更正；失效靠触发器非读时hash
-player_analytics_snapshot_schema_test.dart[TD8L]: F:验证schema3派生统计表索引、12失效触发器及2→3保留迁移 | R:code:lib/core/data/app_database.dart | A:增改删仅失效所在比赛；迁移保canonical无立即快照；旧新matchId均失效 | S:跨比赛移动清除两方派生行；快照写入不得触发自动备份dirty，避免缓存计算循环污染备份
+player_analytics_snapshot_schema_test.dart[TD8L]: F:验证统计快照约束、失效触发器及旧库升级保留 | R:code:lib/core/data/app_database.dart | A:仅相关比赛失效；事件跨比赛移动；2到当前迁移；索引 | S:快照写入不标备份dirty，防止缓存计算污染备份；跨局移动同时失效两方
 player_career_repository_test.dart[TA7L]: F:验证档案生涯的生命周期筛选、独立FG与FT趋势和响应式统计 | R:code:lib/core/data/repositories/player_career_repository.dart | A:linked finished/archived；UTC闭区间/对手ID；关联删赛更新 | S:未知coverage降scoresOnly；确认位置计区域；内存查询不证明设备重启
 player_comparison_repository_test.dart[TA7M]: F:验证档案两场周期比较资格、排序、可信度和事务派生更新 | R:code:lib/core/data/repositories/player_comparison_repository.dart | A:新到旧/历史对手名；拒同场空白对手；半开UTC窗；更正重建删赛 | S:快照byName严解析，无非法枚举测试；不能套用生涯未知coverage容错
 player_repository_test.dart[TI5T]: F:验证球员创建更新查询删除及watchAll发射 | R:code:lib/core/data/repositories/player_repository.dart | A:昵称偏好队伍更新；按id查询；删除null；流最后为空 | S:-
-rule_template_repository_test.dart[TB6T]: F:验证四内置规则播种及自定义全字段Drift往返 | R:code:lib/core/data/repositories/rule_template_repository.dart | A:free/eleven_win_by_two/twenty_one/timed_ten；11净胜2；600秒；自定按钮事件 | S:-
-schema_v2_fix_round1_test.dart[TD8L]: F:回归参与者身份、事件位置约束、扩展审计与旧库拒绝和备份组完整性 | R:code:lib/core/data/app_database.dart,code:lib/core/export/json_backup_codec.dart | A:外键孤儿拒绝/删除置空；跨局位置拒绝；词表/罚球约束；原生v1不改文件 | S:历史v2导出仍验但当前库schema3；名称与canonical参与者矛盾拒绝；位置存在时不能把对应FG改罚球；v1探针保sentinel
-schema_v2_test.dart[TD8M]: F:校验领域词表和当前schema3继承的v2关系完整性及生成迁移验证 | R:code:lib/core/data/app_database.dart,code:test/generated_migrations/schema.dart | A:外键开启；唯一FG位置；删比赛级联不删profile；v1拒绝；3→3验证 | S:文件名v2不是当前库版本；事件位置不允许罚球；active固定身份唯一；参与者快照名保留原空白而customLabel修剪
+rule_template_repository_test.dart[TB6S]: F:验证四内置规则播种及自定义规则全字段往返 | R:code:lib/core/data/repositories/rule_template_repository.dart | A:稳定内置ID；11分winByTwo=false；600秒；自定按钮事件 | S:保留旧ID名称不代表新比赛仍需领先两分
+schema_v2_fix_round1_test.dart[TD8L]: F:回归旧schema继承的参与者、事件、位置、备份完整性和旧库保护 | R:code:lib/core/data/app_database.dart,code:lib/core/export/json_backup_codec.dart | A:外键与SET NULL；跨局位置拒绝；罚球词表；原生schema1拒绝 | S:文件名不代表当前版本，现行schema4；原生不兼容探针保原sentinel，位置存在不能改对应投篮为罚球
+schema_v2_test.dart[TD8M]: F:验证领域词表及schema4继承的关系、外键和生成结构契约 | R:code:lib/core/data/app_database.dart,code:test/generated_migrations/schema.dart | A:唯一FG位置；比赛级联；profile保留；当前schema验证 | S:保旧schema2名称是兼容契约；罚球不允许球场落点，active身份固定唯一，姓名快照不擅自修剪
 task10_history_query_test.dart[TD7L]: F:验证稳定有界历史分页筛选、聚合性能及归档删除生命周期 | R:code:lib/core/data/repositories/match_repository.dart | A:20条首屏/1000场<500ms且零detail调用；profile日期规则筛选；索引重建；删除级联 | S:历史即便显式过滤也排除draft/active/abandoned；永久删除须确认；文件重开不等于冷进程恢复
 task11_replay_commands_test.dart[TB8L]: F:验证回放修正软删恢复及确认位置移动的事务审计 | R:code:lib/core/data/commands/match_command_service.dart | A:终态修分重算；跨赛已删未确认拒；重复无新审计；故障重试 | S:终态修正不重开；已删事件先恢复；改罚球须清除并审计旧投篮位置
 task7_link_participant_test.dart[TI8L]: F:验证赛后临时参与者绑定档案的身份快照与回执 | R:code:lib/core/data/commands/match_command_service.dart | A:终态edit/receipt；幂等异载荷冲突；活动放弃跨赛已绑拒；故障重试 | S:绑定仅改profile关联不改赛时名称；同profile禁双边；参与者审计回执一起回滚
 task7_start_match_test.dart[TB8M]: F:验证开赛命令身份规则覆盖时钟完整保存与倒计时边界 | R:code:lib/core/data/commands/match_command_service.dart | A:档案快照/活动回执；countUp可无时长；countdown60–10800整分钟 | S:不存在或重复profile及非法倒计时拒绝；比赛双方时钟活动审计不得留部分写入
 task9_rules_completion_test.dart[TB9L]: F:回归规则提示、持久球权重算及比分确认终场 | R:code:lib/core/data/commands/match_command_service.dart | A:策略双语键；手动审计；修正撤回重算；终场关钟球权；事务比分比较 | S:未中罚球不推球权；重算依持久提交序非时间戳；同侧指定不切段；过期比分保活动；终场失败不得部分关闭；最终得分需显式确认
-backup_dirty_upsert_test.dart[TD8M]: F:回归领域和设置UPSERT不破坏备份dirty元数据及旧文件触发器启动修复 | R:code:lib/core/data/app_database.dart,code:lib/app/app_providers.dart | A:三InsertMode/revision/dirtySince；事务失败回滚；真实文件旧触发器再打开 | S:旧冲突敏感触发器必须在规则UPSERT前替换；保授权首次dirty时间；完整性ok/schema3不等于Android冷进程
+backup_dirty_upsert_test.dart[TD8M]: F:回归业务和设置UPSERT保备份dirty元数据及旧触发器启动修复 | R:code:lib/core/data/app_database.dart,code:lib/app/app_providers.dart | A:三InsertMode；revision与首次dirtySince；文件重开；回滚 | S:冲突触发器必须在内置规则UPSERT前修复，保原授权和首次时间；文件重开及schema4检查不等于Android冷进程
 tracking_coverage_command_test.dart[TB8M]: F:验证终场同事务覆盖声明及活动和终态完整度纠正的幂等审计与回滚 | R:code:lib/core/data/commands/match_command_service.dart | A:缺省Finish payload省略coverage；跨服务重复一次；失败同命令重试 | S:历史locations/full保持强声明；纠正不占计分撤回；故障不得留下生命周期、覆盖或回执部分写入
-v2_file_upgrade_test.dart[TR8M]: F:用真实schema2文件验证升3保留事实、姓名规则、审计回执和按提交序撤回 | R:code:lib/core/data/app_database_provider.dart,code:test/generated_migrations/schema_v2.dart | A:十一核心表原行相等；FK检查；重复回执和重开后撤回幂等 | S:夹具由生产命令生成再写冻结schema2，不把schema3改版本；文件重开不等于冷进程或正式同证升级
+v2_file_upgrade_test.dart[TR8M]: F:以冻结schema2真实文件验证升4保canonical事实及审计幂等撤回 | R:code:lib/core/data/app_database_provider.dart,code:test/generated_migrations/schema_v2.dart | A:旧表原行；规则姓名；FK；重开后撤回回执 | S:真实旧schema文件不是改user_version冒充；派生与整组新表不纳旧行对比，文件重开不等于正式同证升级
+match_series_repository_test.dart[TB8L]: F:验证schema2/3升级、原子开赛、固定身份、汇总和整组生命周期 | R:code:lib/core/data/repositories/match_series_repository.dart,code:lib/core/data/commands/match_command_service.dart | A:竞争下一场；旧请求拒绝；意图幂等；SQL唯一开放组；文件重开 | S:故障必须连整组比赛回执全回滚；普通单场payload不含seriesContext；删除档案保姓名，文件重开不等于设备重启
+series_device_fixture_test.dart[TR7S]: F:生成并重开真实文件夹具验证旧schema和场间或活动整组状态 | R:code:lib/core/data/repositories/match_series_repository.dart,code:test/generated_migrations/schema_v3.dart | A:SERIES_FIXTURE_DIR；legacy及between/active文件；比分与活动槽 | S:导出目录仅显式指定才保留；这些文件用于设备冷启准备，单元测试本身不证明进程重启
+target_continue_test.dart[TB8L]: F:验证达标实际比分、持久继续标记及目标专用撤回原子性 | R:code:lib/core/data/commands/match_command_service.dart | A:恰好及跨目标；罚球；文件与备份恢复；故障回滚；计时到期 | S:继续后后续得分撤回不得清确认，旧领先两分规则仍重判；目标撤回只能针对当前达标得分，不越过后续备注
 
 ===D:/GitHub/hooptrace/test/core/domain/===
 domain_entities_test.dart[TB7M]: F:验证归一化球场边界及得分投篮事件组合的构造约束 | R:code:lib/core/domain/entities/match_event.dart | A:队伍正分；FG/FT未中合法；矛盾points/outcome/无队伍拒绝；custom不适用 | S:未中FT可0分但命中FT不可0；得分事件基础构造器也必须验证
@@ -565,9 +580,9 @@ automatic_backup_scheduler_test.dart[TW6S]: F:验证Android持久备份任务注
 automatic_backup_service_test.dart[TD8L]: F:验证自动备份授权启停、到期即时写入、dirty持久化、并发与保留清理 | R:code:lib/core/export/automatic_backup_service.dart | A:默认关；目录先配；24h/终场立即；保留1–50；记录路径时间 | S:间隔从首次dirtySince算；写时变更保dirty；多实例共享写；终场等旧写后导出新快照；仅清自有auto且拒越界路径
 csv_exporter_test.dart[TD6S]: F:验证稳定CSV表头、文本转义及13列独立FG/FT统计 | R:code:lib/core/export/csv_exporter.dart | A:60.00/80.00；UTC；逗号双引号换行 | S:不完整或零出手率留空；文本转义不证明防公式注入
 device_automatic_backup_storage_test.dart[TR7M]: F:验证SAF目录写入留存桥接、安全文件名及后台库路径解析 | R:code:lib/core/export/device_automatic_backup_storage.dart | A:pick/exists/write/list/delete；原生背景路径；非SAF回退 | S:拒旧Android路径；删除非auto及遍历名不触通道；不安全写名预先抛错；mock非真实授权证据
-export_coordinator_test.dart[TW8L]: F:验证JSON、三类CSV和PNG分享及内部安全副本恢复、替换与合并门禁 | R:code:lib/core/export/export_coordinator.dart | A:UTC名称MIME/原PNG；取消false；独立FG/FT；内部副本回退 | S:保护副本不依赖分享；活动在picker前后禁替换，合并保本机活动；统计只完赛归档，临时同名按单场身份分行，混合不完整率留空；真实写预约由专项验证
-json_backup_codec_test.dart[TD8L]: F:验证十二组备份往返确定性、旧审计顺序、时钟恢复及校验原子回滚 | R:code:lib/core/export/json_backup_codec.dart | A:计数SHA256；类型异常；坏输入保本地；写失败全回滚 | S:运行钟累计到exportedAt后暂停；活动与会话一一对应；同profile禁双边；一事件一位置；图错误夹具重算checksum单独验证关系
-player_analytics_snapshot_backup_test.dart[TA8M]: F:验证format2/schema3补齐快照、旧1/2恢复重建及合并重映射回滚 | R:code:lib/core/export/json_backup_codec.dart | A:十二组/连续一致；错误格式schema组合拒绝；合并关联新id | S:缺失或版本摘要错误重复快照从canonical重建；派生快照不进idMap；重建失败回滚合并；补齐不能产生dirty元数据
+export_coordinator_test.dart[TW8L]: F:验证JSON/CSV/PNG分享及安全副本和替换合并门禁 | R:code:lib/core/export/export_coordinator.dart | A:文件名MIME；FG/FT；两副本；picker取消；同名身份分离 | S:安全保护不依赖分享回调；活动在picker前后禁替换但合并保本机活动；分享被调用不保证外部目标已保存
+json_backup_codec_test.dart[TD8L]: F:验证十四表备份确定性、校验、时钟恢复和原子回滚 | R:code:lib/core/export/json_backup_codec.dart | A:计数SHA；坏输入保本地；插入失败回滚；审计顺序 | S:恢复时运行钟累计至导出时刻后暂停；关系错误夹具重新计算checksum以单独测图校验，同档案禁双边且一事件一位置
+player_analytics_snapshot_backup_test.dart[TA8M]: F:验证当前格式十四表快照补齐、旧1/2兼容与合并重建 | R:code:lib/core/export/json_backup_codec.dart | A:format2/schema4；旧schema3兼容；非法组合；重映射与回滚 | S:不可信或重复派生快照从canonical重建；派生不进入ID映射，重建失败回滚且不产生dirty元数据
 replay_image_exporter_test.dart[TU5T]: F:验证RepaintBoundary导出可解码PNG及像素倍率 | R:code:lib/core/export/replay_image_exporter.dart | A:120×80乘2得240×160；PNG八字节签名 | S:runAsync栅格捕获后释放codec/image；不覆盖分享渠道
 task13_backup_format_test.dart[TD7S]: F:验证备份格式/schema独立及导入导出共同容量早拒 | R:code:lib/core/export/json_backup_codec.dart | A:format2；未来版本拒绝；字节、单表、总行数限额 | S:appVersion不决定格式；限额在校验和前处理，导出超限也不得成功
 task13_backup_merge_test.dart[TD8L]: F:验证合并去重、确定id引用重映射、审计兼容、导入恢复及失败回滚 | R:code:lib/core/export/backup_merge_service.dart | A:相同行跳过；只读map；重复幂等；坏输入无变；全表回滚 | S:同名异id保独立；本机设置活动槽不覆盖；导入active/draft转标记abandoned；只重写结构化审计且保撤回顺序；恢复生命周期活动槽原子
@@ -575,6 +590,7 @@ safety_backup_restore_test.dart[TR9M]: F:以文件库和外部连接验证替换
 safety_backup_store_test.dart[TR8M]: F:验证内部副本临时写flush、限容量回读校验、原子发布和可恢复留存 | R:code:lib/core/export/safety_backup_store.dart | A:新实例读回；写/发布故障；替换有效内容checksum拒绝；显式保2 | S:save不立即清旧，留存需替换提交后触发；损坏临时和超限文件不列为可恢复，失败不得发布部分副本
 v2_command_backup_test.dart[TR8L]: F:以135条生产命令的长比赛验证事件审计回执往返、容量边界及覆盖纠正合并 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/export/backup_merge_service.dart | A:120事件12软删；120:32；精确边界字节一致；降一即拒；重复命令无新审计 | S:合并重映射结构化引用但保原指纹；恢复后新纠正可幂等；恢复活动继续按审计撤回，内存库不能称冷进程证明
 rebrand_compatibility_test.dart[TR8S]: F:回归新品牌导出、旧清单恢复、混合名称副本留存及启动参数兼容 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/export/automatic_backup_service.dart,code:lib/core/export/safety_backup_store.dart,code:lib/core/settings/motion_preference_cache.dart | A:Hoopito清单；独立重算旧名checksum恢复球员；无关名拒绝；混合auto清最旧保手动；新旧disabled/reduced | S:私有副本与留存走真实临时目录，但数据库内存且SAF关闭，不证明Android授权、冷进程或正式覆盖升级；旧名清单仍必须验摘要
+continuous_series_backup_test.dart[TR8L]: F:验证整组备份替换合并、冲突整图重映射与容量和事务失败保护 | R:code:lib/core/export/json_backup_codec.dart,code:lib/core/export/backup_merge_service.dart | A:活动时钟暂停；换色与删档案；成员冲突；回执fingerprint；重复导入 | S:合并关闭导入开放组且不抢活动槽；修正成员会分叉整组，坏默认配置及关联在替换前拒绝；插入失败不得残留半图
 
 ===D:/GitHub/hooptrace/test/core/settings/===
 motion_preference_cache_test.dart[TH6S]: F:验证原生动效缓存枚举与入口参数兼容及活动重建禁播 | R:code:lib/core/settings/motion_preference_cache.dart | A:read/write稳定名；未知null；缺插件及时抛；entry-animation=disabled | S:未知缓存视缺失；禁播参数与动效偏好分别解析；通道mock非原生恢复证据
@@ -584,7 +600,7 @@ theme_preferences_test.dart[TU6T]: F:验证主题默认system、控制器重建�
 ===D:/GitHub/hooptrace/test/features/history/===
 editorial_history_page_test.dart[TU6S]: F:验证历史按本地日分组的紧凑行、语义筛选空态及200%布局 | R:code:lib/features/history/history_page.dart | A:蓝左红右；无Card堆叠；紧凑<120/大字>=104；恢复按钮>=48 | S:日期夹具用本地日历；测试恢复提示布局不验证恢复事务
 history_controller_test.dart[TW7L]: F:验证历史排序筛选、cursor分页、刷新竞争及生命周期后重载 | R:code:lib/features/history/history_controller.dart | A:胜者完整率；首cursor重置；失败重试；delete确认；dispose不通知 | S:source结果信任SQL的profile日期过滤不能本地再筛掉；rapid search丢旧页；归档重填首屏
-history_page_test.dart[TU6L]: F:验证历史详情列表、搜索筛选、删除确认及分页导入恢复失败入口 | R:code:lib/features/history/history_page.dart | A:胜者时间70%；>=48dp；高级筛选；首屏/页脚重试；英文200%；恢复id | S:系统返回只关筛选不dispose页面；永久删除二次确认且取消无调用
+history_page_test.dart[TU6L]: F:验证历史浏览搜索筛选、删除确认及分页和导入恢复失败入口 | R:code:lib/features/history/history_page.dart | A:双向布局；48dp；200%英文；筛选返回；分页重试 | S:永久删除取消不调用删除；系统返回仅关筛选不能销毁历史页
 history_visible_refresh_test.dart[TW8M]: F:回归已浏览历史的有界原子刷新、失败保留及串行竞争处理 | R:code:lib/features/history/history_controller.dart,code:lib/features/history/history_page.dart | A:全范围成功才替换；筛选/游标保持；请求合并；末页失败可重试 | S:过滤或手动刷新使旧结果过期；dispose完成等待而不重载通知；受控source不证明真实数据库查询性能
 
 ===D:/GitHub/hooptrace/test/features/home/===
@@ -592,66 +608,74 @@ home_page_test.dart[TU7L]: F:验证首页开赛、活动继续放弃、最近赛
 
 ===D:/GitHub/hooptrace/test/features/players/===
 player_career_controller_test.dart[TA7T]: F:验证切窗口后已取消旧流迟到不覆盖新查询 | R:code:lib/features/players/player_career_controller.dart | A:sevenDays保持；最新聚合胜旧回调 | S:取消替身仍投递，generation门禁必要；聚合id仅作新旧标记不验身份
-player_career_page_test.dart[TU7L]: F:验证生涯独立FG/FT、样本日期、最近差值和双语可用布局 | R:code:lib/features/players/player_career_page.dart | A:FG50%；独立delta；空态重试；48dp/头像对比 | S:最近两场差值不称场均；固定loader不证明真实筛选或数据刷新
+player_career_page_test.dart[TU7L]: F:验证生涯FG/FT、成长差值、落点空态及双语视觉矩阵 | R:code:lib/features/players/player_career_page.dart | A:过滤；独立delta；200%窄屏；重试与对比度 | S:固定loader不证明真实数据库筛选；最近两场差值不能称场均变化
 player_comparison_controller_test.dart[TA7M]: F:验证默认配对交换、固定周期基准与重试异步隔离 | R:code:lib/features/players/player_comparison_controller.dart | A:最新两场；重合选择协调；asOfUTC/对手ID；失败重试 | S:依loader排序不自排；对手ID去重取首次历史名；generation拒迟到旧模式结果
-player_comparison_page_test.dart[TU7M]: F:验证比较选择周期对手、空态错误重试及双语无障碍矩阵 | R:code:lib/features/players/player_comparison_page.dart | A:交换/换场；不足两场/单侧空；三尺寸明暗48dp；标签对比准则 | S:固定报告不验DB资格coverage；无障碍准则只中文亮390×844场景
-player_pages_test.dart[TU7L]: F:验证档案增改删、成长主入口与编辑次级入口及双语布局 | R:code:lib/features/players/player_list_page.dart,code:lib/features/players/player_editor_page.dart | A:独立回调各一次；昵称必填；确认删除；48dp/200% | S:编辑保ID但清preferredSide；同名不归并；内存库非落盘证据
+player_comparison_page_test.dart[TU7M]: F:验证比较选择交换、时间周期对手和空错重试及可用布局 | R:code:lib/features/players/player_comparison_page.dart | A:双语明暗三尺寸；48dp；标签与对比度 | S:固定报告不验证数据库完整度资格，准则断言只覆盖指定场景
+player_pages_test.dart[TU7L]: F:验证档案增改删、成长入口、单语义动作及双语大字体布局 | R:code:lib/features/players/player_list_page.dart,code:lib/features/players/player_editor_page.dart | A:昵称必填；确认删除；错误重试；48dp；preferredSide不再持久化 | S:同名不合并；编辑保ID清旧偏好，内存库不能证明设备落盘
 player_career_v2_test.dart[TU7M]: F:验证成长趋势可信缺口、最近30场限制和单场编辑返回入口 | R:code:lib/features/players/player_career_page.dart | A:实际像素曲线断开；35取末30；样本日期；360×760/200%/48dp | S:不完整率显示暂无数据而不画零；冷路由回调非冷进程；图像资源明确释放
 
 ===D:/GitHub/hooptrace/test/features/pregame/===
-pregame_controller_test.dart[TB7M]: F:验证赛前规则计时、档案快照身份与输入校验 | R:code:lib/features/pregame/pregame_controller.dart | A:默认simple/scoresOnly；同profile禁双边；分钟范围/原文本；模板覆盖清理 | S:同名临时双方合法；改临时名清id，profile改名不追随快照；关计时规范countUp
-pregame_page_test.dart[TU7L]: F:验证统一赛前配置、自然记录范围选择、折叠规则计时与双语响应布局 | R:code:lib/features/pregame/pregame_page.dart | A:蓝左红右；倒计时1–180；48dp/200%/对比4.5；键盘可达 | S:仅移除旧模式分叉，scores/shots仍可选；非法文本不复用旧值；默认名在首个有意义绘制前本地化
-pregame_phase_d_test.dart[TI7M]: F:验证档案选择拒复用、临时姓名和折叠计时兼容 | R:code:lib/features/pregame/pregame_page.dart | A:拒双边profile恢复dropdown；15分倒计时；simple/scoresOnly；流更新保编辑 | S:同名临时合法，改档案名清关联；被拒选择恢复实际下拉状态
-start_match_mapper_test.dart[TB7M]: F:验证赛前身份规则计时与覆盖转换开赛命令 | R:code:lib/features/pregame/start_match_mapper.dart | A:分钟→秒；统一UTC开始创建；缺mode兼容；目标覆盖；持久球权策略 | S:countUp无regulation时长；非法倒计时先抛可读校验；缺mode不是新录制配置
+pregame_controller_test.dart[TB7M]: F:验证双方身份、自由目标状态及规则计时和输入校验 | R:code:lib/features/pregame/pregame_controller.dart | A:目标模板与手选；simple/scoresOnly；倒计时范围；同档案拒双边 | S:临时同名合法，改名清档案关联；关闭计时规范countUp，模板重载不应丢用户模式
+pregame_page_test.dart[TU7L]: F:验证赛前记录选择、目标和高级计时及双语响应无障碍 | R:code:lib/features/pregame/pregame_page.dart | A:蓝左红右；1至180分钟；48dp；200%；键盘可达 | S:非法文本不能悄悄沿用旧值；默认名称在首个有效绘制前本地化，记录范围不能因位置推断
+pregame_phase_d_test.dart[TI7M]: F:验证档案选择、临时姓名、记录默认及高级计时兼容 | R:code:lib/features/pregame/pregame_page.dart | A:重复profile恢复下拉；15分倒计时；流更新保编辑 | S:同名临时可用；改档案姓名清关联，拒绝选择须同步真实下拉状态
+start_match_mapper_test.dart[TB7M]: F:验证赛前身份规则、记录范围和计时映射至开赛命令 | R:code:lib/features/pregame/start_match_mapper.dart | A:分钟转秒；UTC；目标覆盖；球权策略；旧内置名规范 | S:新命令去领先两分且自定义姓名不改；countUp无regulation时长，缺mode只作兼容默认
 template_removal_test.dart[TU5T]: F:验证选中自定模板移除后赛前重建不抛异常 | R:code:lib/features/pregame/pregame_page.dart | A:先选custom-15再只提供内置模板；无异常 | S:未断言回退模板id或规则内容，不能据此证明回退值
-match_setup_preset_test.dart[TB7M]: F:验证最近预填和再赛复用双方规则、交换及100至999目标持久化 | R:code:lib/core/domain/entities/match_setup_preset.dart,code:lib/features/pregame/pregame_controller.dart | A:预填不取新ID；创建Setup才生成；交换档案与姓名；新场零事件时钟 | S:模板变更删除仍保赛时规则，快照名不跟档案改名；不复制旧完整度、比分、ID或累计时间
+match_setup_preset_test.dart[TB7M]: F:验证最近配置与再赛复用双方规则、换色和三位目标值 | R:code:lib/core/domain/entities/match_setup_preset.dart,code:lib/features/pregame/pregame_controller.dart | A:开始才分ID；100至999；新场零得分事件和计时 | S:保赛时规则和姓名快照，不随模板或档案变化；不复制完整记录声明、旧ID和累计时间
 pregame_summary_visibility_test.dart[TU7S]: F:验证选双方档案后首屏规则与开赛按钮可见并随模板更新 | R:code:lib/features/pregame/pregame_page.dart | A:393/413×734；100/200%字体；24/28安全区；11切21摘要 | S:检查真实视口和命中边界；固定档案预填不证明数据保存
-pregame_target_score_layout_test.dart[TU7M]: F:以真实字体验证双语明暗目标输入的完整范围提示、浮动标签与键盘布局 | R:code:lib/features/pregame/pregame_page.dart,code:test/support/golden_fonts.dart | A:360×640；200%线性/Android非线性；255/312dp键盘；非法1000 Golden | S:文字需实际未截断并在滚动视口内，操作48dp且在键盘上；模拟曲线不替代设备实测
-pregame_target_score_test.dart[TU7M]: F:验证1至999目标编辑、可朗读数字入口和弹窗确认取消及重复提交 | R:code:lib/features/pregame/pregame_controller.dart,code:lib/features/pregame/pregame_page.dart | A:1/99/100/999透传；99增到100；预填全选；键盘完成；双语明暗200% | S:非法空/0/负/小数/字母/超限保输入；取消返回外点不变；重复提交只关闭输入弹窗不弹下层路由
+pregame_target_score_layout_test.dart[TU7M]: F:以真实字体核验双语目标输入在大字体和键盘下完整可读 | R:code:lib/features/pregame/pregame_page.dart,code:test/support/golden_fonts.dart | A:360×640；200%线性及Android非线性；255/312dp键盘 | S:实际文字不得截断且确认48dp可达；模拟曲线不能替代设备验收
+pregame_target_score_test.dart[TU7L]: F:验证模式模板重载、目标1至999输入和无障碍及弹窗退出 | R:code:lib/features/pregame/pregame_controller.dart,code:lib/features/pregame/pregame_page.dart | A:自由保输入；真实模板加载；重复确认取消；双语明暗200% | S:显示与开赛目标一致；非法保原输入，取消不改目标，重复提交只关闭当前弹窗
 pregame_v2_test.dart[TU7M]: F:验证预填交换、记录范围、取消及就地建档的异步开赛流程 | R:code:lib/features/pregame/pregame_page.dart | A:在途开始一次；档案姓名快照；建档trim/去重/失败重试 | S:取消不调用开始或创建；建档只关联不自动开赛；记录模式仍统一simple，范围重新选择
+continuous_pregame_test.dart[TU7T]: F:验证赛前默认单场、连续模式透传及固定双方换色 | R:code:lib/features/pregame/pregame_page.dart | A:模式选择；continuous字段；lockedPair隐藏改名及模式按钮 | S:交换只移动原有双方，Widget回调不证明事务创建整组
+pregame_advanced_timer_test.dart[TU7S]: F:验证计时仅在高级设置展示且折叠重开保配置 | R:code:lib/features/pregame/pregame_page.dart | A:双语明暗；360/640；200%字体；15分钟倒计时透传 | S:隐藏不等于重置计时，开始命令必须与显示设置一致
 
 ===D:/GitHub/hooptrace/test/features/project/===
 project_details_page_test.dart[TU6M]: F:验证关于页编辑式布局双语明暗尺寸、外链语义失败及隐私开源内容 | R:code:lib/features/project/project_details_page.dart | A:四尺寸200%；>=48dp；单一语义tap；GitHub URL；失败Snackbar | S:外链用替身不启动真实浏览器；每链接仅父节点拥有点击动作
 
 ===D:/GitHub/hooptrace/test/features/replay/===
-edit_mode_test.dart[TU7S]: F:验证回放显式编辑开关及保存弹层控制器生命周期 | R:code:lib/features/replay/replay_page.dart | A:默认只读→editable；备注原因传回调；replaceData后退出无异常 | S:保存立即replaceData时文本控制器仍须活到弹层退出；替身不证持久化
+edit_mode_test.dart[TU7S]: F:验证复盘默认只读与显式编辑及弹层控制器生命周期 | R:code:lib/features/replay/replay_page.dart | A:开启编辑；备注原因回调；移动落点保存 | S:保存回调立即替换投影时输入控制器仍须活至弹层退出，替身不证明持久化
 editorial_replay_page_test.dart[TU7M]: F:验证球场事件联动、200%响应及编辑入口命中几何 | R:code:lib/features/replay/replay_page.dart | A:标记selected；48dp边缘；拖动草稿；时间语义；EditorialSheet | S:允许仅浮点舍入误差，目标仍完整在球场；编辑移除只读覆盖，拖动不提交
-replay_analytics_test.dart[TA7S]: F:验证时间线稳定排序、比分关键回合与明确FG分子的可信率展示 | R:code:lib/features/replay/replay_page.dart | A:同刻保序；67%·2/3；无Chip；紧凑横屏零出手 | S:可信度由固定夹具声明，非完整覆盖证明；零出手不显示0%·0/0
+replay_analytics_test.dart[TA7S]: F:验证时间线稳定排序与可信投篮分子分母和零出手展示 | R:code:lib/features/replay/replay_page.dart | A:同刻保序；关键回合；67%及2/3；紧凑横屏 | S:可信率依赖夹具显式声明；零出手不能显示0%误导
 replay_contrast_test.dart[TU6S]: F:核验明暗回放队名比分及时间线球队色与对比度 | R:code:lib/features/replay/replay_page.dart | A:teamColorForScheme；指定文本对surface>=4.5 | S:列举文字断言不覆盖球场标记或全截图对比
 replay_controller_test.dart[TU7S]: F:验证回放选择权限、标记投影与组合展示过滤 | R:code:lib/features/replay/replay_controller.dart | A:只读选事件不选位置；锁定标记；队伍类型结果分值软删；替换保过滤 | S:只改visibleEvents原集合不变；显示软删不恢复数据也不改统计事实
-replay_page_test.dart[TU7M]: F:验证回放比分球场时间线、球权边界、终场失败重试及分享布局 | R:code:lib/features/replay/replay_page.dart | A:确认传双比分；取消无提交；在途去重；图片字节/matchId；>=48dp | S:只读球场无补点回调；分享注入PNG不证明真实捕获
-task11_replay_audit_repository_test.dart[TD6T]: F:验证定位球权建议及未知审计操作映射与双语标签 | R:code:lib/core/data/repositories/match_repository.dart | A:locate/possession/possession_suggestion；未知unknown | S:持久possession_suggestion拼写不变；未来值降未知不阻整段审计
-task11_replay_ui_test.dart[TU7M]: F:验证组合筛选标记、修正恢复回调及失败重试审计本地化 | R:code:lib/features/replay/replay_controller.dart | A:修正类型队伍分结果备注原因；恢复入口；2→3；大字 | S:软删事件有坐标也不绘标记；回调参数不证明命令持久化
-task12_analytics_ui_test.dart[TA7S]: F:验证复盘独立FG/FT率、确认FG覆盖及记录区域说明 | R:code:lib/features/replay/widgets/replay_analytics_summary.dart | A:FG50%·2/4；FT50%·1/2；落点3/4；200% | S:scoresOnly保记录出手但无可信效率；固定统计不证明计算器
-task12_replay_responsive_test.dart[TU6T]: F:验证窄屏分栏200%回放菜单时间线无渲染异常 | R:code:lib/features/replay/replay_page.dart | A:360×760菜单；800×600Event timeline；异常空 | S:-
+replay_page_test.dart[TU7M]: F:验证复盘比分、只读球场、时间线、球权及终场重试和分享布局 | R:code:lib/features/replay/replay_page.dart | A:取消无提交；在途去重；双比分；图片matchId；48dp | S:注入PNG不证明真实捕获或分享目标保存，只读球场不得触发补点
+task11_replay_audit_repository_test.dart[TD6T]: F:验证命令审计类型映射及双语修改记录标签 | R:code:lib/core/data/repositories/match_repository.dart | A:locate/possession/possession_suggestion；未知类型 | S:持久拼写保持兼容，未来类型降unknown不阻断整段记录
+task11_replay_ui_test.dart[TU7M]: F:验证组合筛选、软删恢复与纠错回调和审计本地化 | R:code:lib/features/replay/replay_controller.dart | A:队伍结果类型备注；恢复重试；200%布局 | S:已删事件即使有坐标也不画标记，回调参数不等于真实命令持久化
+task12_analytics_ui_test.dart[TA7S]: F:验证复盘FG/FT各自分母与已记录投篮的落点覆盖说明 | R:code:lib/features/replay/widgets/replay_analytics_summary.dart | A:FG2/4；FT1/2；落点3/4；200%字体 | S:scoresOnly仅显示已记出手不显示可信率，固定统计夹具不证明计算器
+task12_replay_responsive_test.dart[TU6T]: F:验证窄屏与大字体下复盘菜单及分栏时间线不溢出 | R:code:lib/features/replay/replay_page.dart | A:360×760；800×600；200% | S:-
 task12_timeline_filter_test.dart[TU7M]: F:验证紧凑回放时间线可见边界、双语筛选语义及切换过滤 | R:code:lib/features/replay/widgets/replay_timeline.dart | A:首事件在真实viewport；安全区48dp；outcome/points重复清空；other六事件 | S:过滤控件名不是All；safeInsets真实边界；此夹具筛选不写事件或统计
 task6_replay_history_test.dart[TU6S]: F:验证时间线选中高亮位置、紧凑回放筛选及历史编辑式行动入口 | R:code:lib/features/replay/replay_page.dart | A:稳定locationId高亮/selected；731×411筛选>=48；日期行归档入口 | S:-
 replay_export_visibility_test.dart[TU8L]: F:检查真实战报PNG像素中的全部指标、长姓名和双语明暗布局 | R:code:lib/features/replay/replay_page.dart,code:lib/core/export/replay_image_exporter.dart | A:900逻辑宽/3倍PNG；FG80% FT50%；覆盖3/5；零出手；横屏200%分享取消 | S:存在Widget不足，逐文字检墨迹与裁切；固定analytics优先于标记计数；不完整无效率值；可选外部证据目录，回调非系统分享实测
 replay_location_coverage_test.dart[TA8M]: F:验证复盘全场确认FG落点覆盖的一致统计、兼容回退及大字展示 | R:code:lib/features/replay/replay_controller.dart,code:lib/app/match_view_data_mapper.dart | A:1/8约13%；canonical优先；旧score/miss；过滤不变；双语200%走势可达 | S:排FT、软删、未确认及reward；零FG暂无数据，记录FG但零确认可显示0/1；展示过滤不能改分母
 
 ===D:/GitHub/hooptrace/test/features/rules/===
-rule_template_page_test.dart[TU7L]: F:验证模板列表编辑双语明暗布局、单语义入口及全规则保存校验 | R:code:lib/features/rules/rule_template_editor_page.dart | A:四尺寸200%/48dp；内置名称；目标时限犯规按钮事件往返；非法不保存 | S:禁球权提示立即回manual并禁policy；7分钟存420秒；链接保存仅父拥有语义tap
+rule_template_page_test.dart[TU7L]: F:验证模板列表编辑、目标1至999校验及双语响应和单语义入口 | R:code:lib/features/rules/rule_template_editor_page.dart | A:四尺寸200%；内置名；字段往返；错误重试 | S:无球权提示强制manual且禁policy；非法不保存，7分钟存420秒；父级独有tap语义
 
 ===D:/GitHub/hooptrace/test/features/scoring/===
-court_view_test.dart[TU7L]: F:验证半场输入、标记命中绘制及归一几何无障碍 | R:code:lib/features/scoring/widgets/court_view.dart | A:隐藏不拦；实心命中/白彩叉未中；15:14；钳制；窄提示；中心语义点击 | S:隐标记须同时排绘制和命中；归一坐标基于可见球场矩形
+court_view_test.dart[TU7L]: F:验证球场输入、标记绘制命中和归一坐标及无障碍 | R:code:lib/features/scoring/widgets/court_view.dart | A:白底队色叉未中；15:14；钳制；中心语义点击 | S:隐藏标记须同时退出绘制和命中测试，坐标按实际可见球场矩形计算
 score_side_panel_visual_test.dart[TU6S]: F:验证计分侧栏明暗色、对比与等距操作几何 | R:code:lib/features/scoring/widgets/score_side_panel.dart | A:1px零阴影斜角；对比4.5；队线犯规；200%四按钮>=48 | S:不重复队名比分；放大字体不压主操作高度
 scoring_controller_test.dart[TB8L]: F:验证本地及命令适配收据、补点失败重试与撤回 | R:code:lib/features/scoring/scoring_controller.dart | A:持久ID；失败保草稿；原命令重试；互斥；先位置后事件 | S:收据只取未删和确认位置；保存中可通知，dispose后不得新增通知或回收据，不回滚已提交事务
 scoring_motion_test.dart[TU7L]: F:验证收据动效队列降级、回调重入与取消生命周期 | R:code:lib/features/scoring/motion/scoring_motion.dart | A:FIFO积压480→320ms；id去重；抛错继续；reduced120/禁用即时；落点隔离 | S:去重先于禁用缺资源快捷路径；重入抛错不破FIFO；取消动画不替代撤回
-scoring_page_test.dart[TU8L]: F:验证计分提交反馈、补点退出和终场布局及计时与动效切换回归 | R:code:lib/features/scoring/scoring_page.dart | A:撤回擦除；10秒；48dp/200%；更多提示；countUp/countdown只计一次 | S:终场确认必须跨无障碍/减少/关闭动画变化存活；普通投影不把累计重复落库；旧控制器收据不作用新实例，失败退出不静默丢草稿
+scoring_page_test.dart[TU8L]: F:回归现场提交反馈、补点、暂停退出、目标终场及计时动效与布局 | R:code:lib/features/scoring/scoring_page.dart | A:10秒补点；48dp与200%；动态动画；在途重试；旧领先规则 | S:终场确认须跨动效变化保留；补点不能缩球场；普通投影不重复累计时钟，旧控制器迟到收据不得影响新实例，失败退出保草稿
 task8_scoring_controller_test.dart[TB8L]: F:验证持久计分投影、补点所有权草稿和FIFO命令故障处理 | R:code:lib/features/scoring/scoring_controller.dart | A:当前UTC窗口；首失败后续继续；草稿零写；暂停分步撤回 | S:所有权按提交序非时间戳；dispose后不新增通知但已提交事件保留；取消草稿不能写库
 scoring_guide_test.dart[TU7S]: F:验证可跳过三步提示不阻计分、更多重看及离开时自有暂停弹窗清理 | R:code:lib/features/scoring/scoring_page.dart | A:600×400/双语明暗200%/48dp；跳过一次回调；红2分仍提交 | S:提示下一步和跳过不改事件；暂停返回或完赛导航后只移除自有面板
+series_clock_test.dart[TU7S]: F:验证整组场次提示不改变计时文字、比分栏和球场矩形 | R:code:lib/features/scoring/scoring_page.dart | A:双语明暗横竖200%；前后矩形及文字样式相同；语义标签 | S:组内信息不能合入计时数字或缩小计时，布局等同性由实际渲染矩形判断
+target_finish_flow_test.dart[TU8M]: F:验证达标终场保存前不报胜、失败可重试及双语胜者平局 | R:code:lib/features/scoring/scoring_page.dart,code:lib/features/summary/match_summary_page.dart | A:实际12:3；显式完整记录；首失败次成功；各方赢及平局 | S:失败仍active和暂停决策，保存成功才展示比赛结束，完整记录不得由得分自动勾选
+target_goal_ui_test.dart[TU8M]: F:验证达标立即提示、补点结束确认、专用撤回与继续后的界面 | R:code:lib/features/scoring/scoring_page.dart,code:lib/features/scoring/scoring_controller.dart | A:兼容缺目标值；重复finish取消；200%；跳过补点；撤回去位置 | S:不泄露decision等内部标签；待确认不宣称结束，继续后不再显示旧目标提示且后续撤回不清确认
 
 ===D:/GitHub/hooptrace/test/features/settings/===
-data_management_page_test.dart[TU7L]: F:验证恢复选择、备份授权、禁用语义和单格式导出分享重试布局 | R:code:lib/features/settings/data_management_page.dart,code:test/test_helpers/safety_backup_storage.dart | A:替换二次确认；JSON1/CSV3；目录启用基线；双语48dp | S:只禁替换仍可合并；取消不分享；内部副本用内存替身，不证明真实磁盘或SAF
+data_management_page_test.dart[TU7L]: F:验证恢复选择、安全确认、自动备份和导出重试的布局语义 | R:code:lib/features/settings/data_management_page.dart | A:双语窄横200%；禁用状态；JSON1/CSV3；授权与留存 | S:活动只禁替换仍可合并；取消不分享；内存安全副本替身不能证明真实磁盘或SAF
 settings_controller_test.dart[TD7M]: F:验证设置共享加载、反馈偏好、目录启用与留存和恢复门禁 | R:code:lib/features/settings/settings_controller.dart,code:test/test_helpers/safety_backup_storage.dart | A:触感开声音备份关；缓存库一致；启用基线；1–50 | S:并行load共享在途，无授权禁启用；内存副本替身不证明真实磁盘
-settings_page_test.dart[TU7L]: F:验证设置分组、反馈动效预览和双语语义响应矩阵 | R:code:lib/features/settings/settings_page.dart,code:test/test_helpers/safety_backup_storage.dart | A:外观反馈语言数据关于序；180/120ms预览；48dp；标题随语言 | S:禁动画优先归零，动作仅根语义；无语言控制器省语言组；副本用内存替身
+settings_page_test.dart[TU7L]: F:验证设置分组、动作语义、偏好持久化及双语动效响应矩阵 | R:code:lib/features/settings/settings_page.dart | A:五组顺序；180/120ms预览；48dp；语言与picker同步 | S:系统禁动画优先归零，动作只留单个tap语义；内存副本替身不证明磁盘
 task14_theme_locale_test.dart[TU6S]: F:以英文页面与真实主题控制器验证Dark选择更新 | R:code:lib/features/settings/settings_page.dart,code:test/test_helpers/safety_backup_storage.dart | A:英文Appearance且无中文外观；选择后preference=dark | S:仅验Dark更新，非三主题或重建持久恢复
 safety_backup_settings_test.dart[TU8M]: F:验证内部副本确认回退、活动禁用、保存列表故障与容量双语提示 | R:code:lib/features/settings/data_management_page.dart,code:lib/features/settings/settings_error_message.dart | A:600×400/200%；取消保当前；成功保2并通知一次；失败可重试 | S:安全保存失败保业务数据和旧副本；列表错不禁其他设置；内存存储不能证明flush原子发布或Android重启
+software_update_page_test.dart[TU8M]: F:验证更新页面布局、手动反馈及权限返回和异步安装门禁 | R:code:lib/features/settings/software_update_page.dart | A:双语明暗横竖200%；活动变化；离页/遮盖/后台；设置失败 | S:准备结束后必须再次检查当前路由和比赛，权限页返回不自动绕门禁；模拟通道不证明系统真正安装
+update_copy_test.dart[TL6T]: F:验证检查和版本文案不重复且保留有效读屏状态播报 | R:code:lib/features/settings/software_update_page.dart | A:检查文字一次；页面标题一次；两种liveRegion | S:删冗余展示不能同时删有效语义播报
 
 ===D:/GitHub/hooptrace/test/generated_migrations/===
-schema.dart[XQ6T]: F:按版本为Drift迁移验证器实例化冻结schema2/3数据库 | R:code:test/generated_migrations/schema_v2.dart,code:test/generated_migrations/schema_v3.dart | A:GeneratedHelper.databaseForVersion；versions=[2,3] | S:未提供v1，其他版本MissingSchemaException；生成文件不手改
+schema.dart[XQ6T]: F:为Drift迁移验证实例化冻结schema2、3和4 | R:code:test/generated_migrations/schema_v2.dart,code:test/generated_migrations/schema_v3.dart,code:test/generated_migrations/schema_v4.dart | A:GeneratedHelper；versions=[2,3,4]；MissingSchemaException | S:生成文件不手改，未提供schema1不能据此验证旧库兼容
 schema_v2.dart[XQ7L]: F:提供schema2的11表冻结结构与级联流更新传播供迁移验证 | R:code:drift_schemas/drift_schema_v2.json | A:DatabaseAtV2；TableInfo列约束；schemaVersion2 | S:只供schema验证非生产行映射；TableInfo.map抛UnsupportedError；生成快照不手改
 schema_v3.dart[XQ7L]: F:提供schema3含派生统计的12表冻结结构与外键更新传播 | R:code:drift_schemas/drift_schema_v3.json | A:DatabaseAtV3；matchId/playerId复合主键；计数coverage/hash约束 | S:验证TableInfo不映射业务行；生成快照不手改；不替代生产启动安装的失效触发器
+schema_v4.dart[PD7L]: F:冻结schema4十四表供迁移与文件夹具生成 | R:code:drift_schemas/drift_schema_v4.json,code:test/generated_migrations/schema.dart | A:DatabaseAtV4；整组和场次类型及约束 | S:生成结构不包含运行期自建触发器证明，不能手改此历史快照
 
 ===D:/GitHub/hooptrace/test/performance/===
 player_analytics_snapshot_benchmark_test.dart[TP6S]: F:约束1000场10000事件首次统计快照重建少于2秒 | R:code:lib/core/data/repositories/player_analytics_snapshot_repository.dart | A:ensureSnapshots单profile；1000快照；打印cold_build_ms；2分钟测试超时 | S:内存DB固定score事件夹具，不是设备或真实库性能证明
@@ -671,6 +695,8 @@ golden_fonts.dart[XQ6T]: F:为Golden加载生产中文显示与SDK正文字体�
 test_database.dart[XQ5T]: F:提供独立内存测试库与保证关闭的作用域助手 | R:code:lib/core/data/app_database.dart | A:createTestDatabase注册tearDown；withTestDatabase泛型异步finally关闭 | S:每次新executor；内存助手不支持冷进程恢复证据
 test_database_test.dart[TQ5T]: F:验证助手连续打开独立数据库不共享executor | R:code:test/test_helpers/test_database.dart | A:两库matches空；executor不同 | S:-
 safety_backup_storage.dart[XQ6T]: F:为Widget测试提供复制字节的内存安全副本存储和生产Store工厂 | R:code:lib/core/export/safety_backup_store.dart | A:list/read/delete/writeAndFlush/publish；read超限typed异常 | S:模拟存储避免假时间等待宿主磁盘，Store校验仍执行；不证明实际flush或原子rename
+continuous_series_journey.dart[TB8M]: F:共享真实路由三场连打、换色收局、逐场复盘和重开的验收旅程 | R:code:lib/app/series_routes.dart,code:lib/features/replay/replay_page.dart | A:2:0与0:3及平局；独立落点；历史重开；有界命中等待 | S:收局后须直接见全三场，逐场核对matchId事件比分落点并逐级返回；由调用方注入库，内存与Android文件验收来源分开
+fake_update_platform.dart[TV5T]: F:提供可控更新设备通道替身及官方格式元数据夹具 | R:code:lib/core/update/update_platform.dart | A:进程领取计数；下载就绪；延迟prepare；设置失败 | S:夹具版本不改变正式发布，返回installerLaunched不证明真实系统安装
 
 ===D:/GitHub/hooptrace/third_party/android_runtime/===
 README.md[SV6T]: F:说明Android运行时坐标清单的生成、许可核验与完整通知再现 | R:code:third_party/android_runtime/coordinates.txt,code:tool/release/generate_third_party_notices.dart | A:Gradle导出并字节核对；Apache2全文；SDK和Dart插件分别采集 | S:插件移除后按真实运行图删无用JDK7兼容件，不保留历史依赖特判；新增坐标仍须审POM许可
@@ -684,7 +710,7 @@ sqlite3.h[LD7L]: F:声明固定SQLite3.53.4的公共C类型常量与数据库语
 build_android_release.ps1[OV8M]: F:构建Hoopito签名APK并导出版本证书权限摘要和原生ABI证据 | R:code:android/app/build.gradle.kts,code:tool/release/release_helpers.ps1 | A:Hoopito-v版本-android.apk；构建前后Git净；锁工具链SQLite；可选format/analyze/test | S:新旧ALLOW_UNSIGNED_RELEASE任一启用均拒正式发行；SkipChecks只跳格式分析测试；registrant排integration_test；验签不自动比指定证书，权限仅导出；同版本资产覆盖且失败可留部分
 generate_entry_assets.py[XU7T]: F:从批准C前景图生成静音启动所需的Android与iOS原生位图 | R:code:assets/icons/hoopito-app-icon-foreground.png,code:ios/Runner/Base.lproj/LaunchScreen.storyboard | A:Pillow透明居中缩放0.78；288点画布；Android五密度及iOS三倍率 | S:仅写启动图像，音频生成已移除；历史WAV保留不代表入包或播放；前景几何与黑色细节不得重绘
 generate_launcher_icons.py[XV7M]: F:规范三色C标识并生成校验平台图标、单色负空间和裁切预览 | R:code:ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json,code:docs/design/brand/source.json | A:透明导入；1024/620安全区；五密度；双语商店512；iOS；contact-sheet | S:黑眼嘴纹路保留；单色挖空黑细节，alpha对对应单色源而非彩前景；先覆盖后assert，python -O不可作验证
-generate_third_party_notices.dart[XV7M]: F:从解析Flutter包图和固定Maven清单按许可正文分组生成通知 | R:code:third_party/android_runtime/coordinates.txt,code:THIRD_PARTY_NOTICES.md | A:repo cwd/pub get；SDK含开发包排自身；稳定排序唯一坐标；覆盖输出 | S:Maven归找到的Apache正文非逐件许可审核；SQLite许可缺失静默省略
+generate_third_party_notices.dart[XV7M]: F:从Flutter解析包图和固定Maven坐标生成完整许可证通知 | R:code:third_party/android_runtime/coordinates.txt,code:docs/legal/THIRD_PARTY_NOTICES.md | A:包排序分组；完整Apache文本；自动建父目录；固定输出新路径 | S:命令不变且不能截断许可证；Maven归Apache不代替逐件审核，SQLite许可缺失仍需外部核验
 prepare_android_toolchain.sh[OV7T]: F:安装固定SDK组件并检查Flutter Temurin Gradle版本摘要 | R:code:android/gradle/wrapper/gradle-wrapper.properties | A:平台36/tools36.1.0/NDK28.2；Flutter3.41.9固定修订；Java17.0.20+8；Gradle8.14 | S:只安装三SDK组件；FlutterJava须已有；覆盖值仍须匹配；依赖latest/sdkmanager
 release_helpers.ps1[CV5T]: F:提供兼容PowerShell环境的流式文件SHA256 | R:code:tool/release/build_android_release.ps1,code:tool/release/setup_android_signing.ps1 | A:Get-CompatibleSha256(LiteralPath)；缺文件抛；小写hex；cmdlet失败.NET回退 | S:限定官方模块cmdlet防同名覆盖；finally释放文件流与算法
 setup_android_signing.ps1[OS8S]: F:在仓库外创建复用发布签名库并写本机配置与hash旁车 | R:code:android/app/build.gradle.kts,code:tool/release/release_helpers.ps1 | A:KeystorePath/Alias/DN；JKS/RSA4096/10000天；拒库内路径；key.properties | S:口令>=12字库钥共用；list仅验库口令alias；明文配置须忽略；临时口令env finally清；已有库不替换
@@ -694,9 +720,9 @@ verify_unsigned_reproducible_android.sh[XV8M]: F:以HEAD归档固定工具链同
 compare_entry_startup_runs.py[XP7S]: F:离线从完整原始记录重算同源码冷启动批次预算与重复波动 | R:code:tool/release/measure_entry_startup.py | A:至少两不同目录；新输出；独立PID/包/设备身份一致；可选预算和波动限 | S:拒部分或降级样本，预算失败与波动独立；波动阈值仅诊断非发行门槛，GPU/boot连续性须外部证据
 generate_v1_upgrade_fixture.dart[XR8M]: F:经正式v1源码命令生成schema2合成历史活动库及顺序基线 | R:code:tool/release/prepare_v1_upgrade_fixture.py | A:两历史一倒计时活动；FG/FT/软删/位置；规则档案改名后快照；rowid与指纹 | S:必须在抽取v1 lib树执行且schema为2；活动第二事件时间更早但先撤第二再第一；生成夹具不证明签名覆盖或升级通过
 measure_entry_startup.py[XP8M]: F:采集Profile冷PID完整启动帧与准备记录并评估标准动作及预算 | R:code:lib/app/entry/entry_frame_probe.dart | A:默认十次；API36合成user10；包hash前后核；16.7ms p95；解析HOOPITO及历史HOOPTRACE日志前缀 | S:仅force-stop启动保数据不录屏；新旧合成用户名均识别；不丢失败预热；presented涵原生退出准备，旧probe才用visual；降级跳过非标准，部分采集留失败
-observe_automatic_backup.py[XR8L]: F:只读采集合成Android备份状态并离线分类自然或撤销授权证据 | R:code:lib/core/export/automatic_backup_service.dart,code:docs/release/v2.0.0-backup-device-verification.md | A:snapshot/verify；新旧品牌清单文件和合成目录；APK/UID/boot/WorkSpec/表hash/Worker | S:不启动App或Worker不注入到期；输出限checkout之外；自然需实际epoch/uptime24h无强制、dirty清除及精确文件生产codec恢复；checksum外壳校验不能替恢复
+observe_automatic_backup.py[XR8L]: F:只读采集并分类合成Android备份的自然或授权撤销证据 | R:code:lib/core/export/automatic_backup_service.dart,code:docs/release/v2.0.0-backup-device-verification.md | A:snapshot/verify；schema3及4；整组表摘要；APK/UID/boot/WorkSpec | S:不启动App/Worker不改到期时钟；自然须同boot实际24h及精确文件生产恢复证明；输出限所有checkout外，checksum外壳校验不替代codec恢复
 prepare_v1_upgrade_fixture.py[XR8S]: F:隔离抽取固定v1源码生成真实schema2库并只读核验升级后的原行顺序 | R:code:tool/release/generate_v1_upgrade_fixture.dart | A:prepare或verify；schema2/3；十一表完整性与FK；记录源码和库hash | S:输出须仓库外新目录；不运行pub/hooks/设备或访问签名；复用已编译SQLite，Kernel编译绑native assets；播种可增规则偏好但不得改原行
-run_android_integration_ci.sh[OV7T]: F:在单Bash调用串行运行API24/36集成主旅程与文件恢复及36专项 | R:code:.github/workflows/flutter-ci.yml,code:integration_test/v2_file_recovery_test.dart | A:仅24或36；ANDROID_SERIAL可覆；36加比较和命令性能 | S:set -e传播真实失败；单shell避免emulator-runner逐行开shell破坏分支状态
+run_android_integration_ci.sh[OV7T]: F:在单Bash调用串行运行API24三流程及API36五流程 | R:code:.github/workflows/flutter-ci.yml,code:integration_test/continuous_series_test.dart | A:主流程；文件恢复；连续对局；36加球员比较和命令性能 | S:set-e传播失败并停止后续，未知API先拒绝；单shell避免emulator action逐行执行破坏分支
 verify_unsigned_reproducible_android.ps1[XV8M]: F:在Windows固定路径两份fresh源码构建并逐字节比较完整未签名APK | R:code:tool/release/release_helpers.ps1,code:docs/release/reproducible-builds.md | A:干净HEAD/锁；固定Flutter/JDK/SDK/epoch；同runner工具链前后核；保两包日志 | S:清理只认本次标记的D盘精确路径且拒重解析点；Flutter实际JDK须匹配；Gradle单次JVM防占用；配置或签名异常失败关闭，失败包保留；不证明跨机或正式签名复现
 
 ===D:/GitHub/hooptrace/docs/design/brand/===
@@ -710,26 +736,26 @@ naming-and-compatibility.md[SG8T]: F:规定Hoopito球豆名称、issue6完成范
 startup_diagnostics.dart[IO6T]: F:为显式Profile启动诊断保存内存准备阶段和同步框架耗时跨度 | R:code:lib/app/entry/entry_frame_probe.dart,code:lib/app/entry/entry_diagnostic_binding.dart | A:start/end/measureSync/takeSpans/stop；Timeline单调时间 | S:正常构建不读钟不收集；takeSpans或stop结束一次采集，无磁盘/网络/数据库输出
 
 ===D:/GitHub/hooptrace/lib/features/summary/===
-match_summary_page.dart[EU7S]: F:显示轻量最终比分、走势、最多两个关键时刻、记录范围和临时球员保存入口 | R:code:lib/app/summary_route.dart,code:lib/app/design_system/score_flow_chart.dart,code:lib/core/domain/analytics/match_analytics.dart | A:detail/analytics；onRematch/onShare/onReplay/onCorrectCoverage/onSavePlayer；busy | S:只消费最新投影不写事实；FG/FT可信率独立，无可信值暂无数据；只为未关联参与者提供保存，关联由宿主显式完成
+match_summary_page.dart[EU7S]: F:展示终场比分、胜者或平局、记录范围、走势及整组操作 | R:code:lib/app/summary_route.dart,code:lib/core/domain/analytics/match_analytics.dart | A:已完赛与归档显示结束；最多两关键时刻；seriesPanel；未关联档案入口 | S:有整组面板时隐藏普通再赛；只读最新投影不写事实，FG/FT可信率分开判断，待确认不冒称已终场
 
 ===D:/GitHub/hooptrace/test/features/summary/===
-match_summary_page_test.dart[TU7S]: F:验证赛果在双语明暗窄横屏200%字体下的关键时刻与主操作 | R:code:lib/features/summary/match_summary_page.dart | A:620×360；最多两时刻；再赛分享复盘顺序回调 | S:固定detail和analytics不证明查询刷新或系统分享
+match_summary_page_test.dart[TU7S]: F:验证赛果双语明暗窄横屏大字体布局与主操作 | R:code:lib/features/summary/match_summary_page.dart | A:620×360；200%；最多两时刻；再赛分享复盘回调 | S:固定投影不证明查询刷新或系统分享完成
 
 ===D:/GitHub/hooptrace/website/===
 .gitattributes[FV4T]: F:允许网页上游许可副本保留原始空白而不触发Git空白检查 | R:code:website/scripts/prepare-assets.mjs | A:public/licenses/*.txt -whitespace | S:-
 .gitignore[FV5T]: F:排除网站依赖、构建、下载缓存、验证报告与本地认证环境 | R:code:website/package.json | A:dist及output及APK摘要缓存；保留env示例 | S:正式素材来源可跟踪，凭据与完整安装包不进Git
 .prettierignore[FQ4T]: F:限定格式检查跳过构建缓存、锁文件及生成素材和通知 | R:code:website/package.json | A:public、ASSET_SOURCES、THIRD_PARTY_NOTICES及工具输出 | S:-
 .prettierrc.json[FQ4T]: F:统一网页源码的两空格、单引号、尾逗号与Astro格式解析 | R:code:website/package.json | A:prettier-plugin-astro；*.astro解析器 | S:-
-ASSET_SOURCES.json[FV7L]: F:绑定网站生成素材、原始来源、转换方式与逐文件完整性摘要 | R:code:website/scripts/prepare-assets.mjs,code:docs/release/v2.0.1-screenshots.json,code:docs/design/screenshot-presentation.json | A:字体字形与许可；干净展示截图；六场景捕获；材质群码和生成器来源 | S:截图APK来源固定4ecd960且原证据不改；当前展示副本使用校准裁剪；生成摘要不替代实机或扫码，旧证据不重标新来源
-README.md[SV7L]: F:说明双语产品网站、本地开发、素材生成、来源验证与受保护预览维护 | R:code:website/package.json,code:website/VERIFICATION.md,code:docs/repository-settings.md | A:真实场景及降级；干净截图；字体群码；preview/website实际入口；锁文件变更需重捕获 | S:预览认证及禁止索引独立验证；生产需正式SITE_URL且main自动部署关闭；网站来源不改变APK身份；历史性能记录不冒称验证新来源
+ASSET_SOURCES.json[FV7L]: F:绑定网站资产原始来源、派生转换和逐文件完整性摘要 | R:code:website/scripts/prepare-assets.mjs,code:docs/design/screenshot-presentation.json | A:字体子集；许可；干净截图；材质群码；文本源摘要 | S:网站截图仍固定2.0.1来源4ecd960，不能改标2.1.0；生成摘要不代替实机或扫码验收
+README.md[SV7L]: F:说明网站开发、本地验证、素材来源及预览与发行维护 | R:code:website/package.json,code:website/VERIFICATION.md | A:干净截图；字体；preview/website；APK校验；统一更新元数据导出 | S:网站稳定元数据独立于开发App；先发布可下载APK和附件再同步官网；main合并不授权部署，历史性能不改标新来源
 THIRD_PARTY_NOTICES.md[SV5T]: F:说明网站运行库、字体、素材与构建工具的来源和许可义务 | R:code:website/package.json,code:website/ASSET_SOURCES.json | A:Astro及Three的MIT；GSAP标准许可；字体OFL；subset-font及HarfBuzz构建依赖 | S:GSAP不能改标MIT；构建字体工具不作为网页脚本分发；历史截图拍摄来源与当前展示处理以各来源清单区分
 VERIFICATION.md[SQ7L]: F:按实际源码与构建记录官网、Logo及CI交互验证和历史限制 | R:code:HANDOFF.md,code:assets/brand/VALIDATION.md | A:Logo已审阅；测试cbb534d三浏览器定点；云端六组；发布f001703及APK回读 | S:同输出摘要不改变线上来源；App首轮SDK失败与重试分开；移动视口非真机，软件WebGL不证明硬件帧率
 astro.config.mjs[FV7T]: F:配置静态Astro双语路由、公开origin及独立动态Three引擎分块 | R:code:website/src/components/Layout.astro,code:website/src/pages/robots.txt.ts | A:中文无前缀、英文/en/；尾斜线；SITE_URL或预览origin | S:生产缺SITE_URL直接失败；manualChunks为函数兼容Rolldown；分块不能让手机预加载Three
 package-lock.json[FV7L]: F:锁定独立网站npm依赖图的精确版本、来源与完整性摘要 | R:code:website/package.json,code:.github/workflows/website-ci.yml | A:lockfileVersion3；运行库及生成工具；HarfBuzz的ESM类API；可选平台包 | S:npm ci按锁安装，定向更新须校验真实父依赖及兼容；锁文件还是场景和Logo来源输入；不代表Flutter依赖或App发行来源
-package.json[FV7T]: F:声明独立静态网站的Node24环境、运行依赖及开发验证命令 | R:code:website/package-lock.json,code:website/scripts/prepare-assets.mjs,code:website/scripts/check-budget.mjs | A:Astro7.4、Three和GSAP；本机dev及preview；构建下载与预算；素材、类型和测试命令 | S:素材生成独立于普通构建且需仓库原图；网站包版本不是App发行版本；依赖升级同时验证生成器与来源
+package.json[FV7T]: F:声明独立Node24静态网站依赖及开发验证和更新附件导出命令 | R:code:website/package-lock.json,code:website/scripts/export-android-update.mjs | A:Astro/Three/GSAP；check/build/test/e2e；素材与预算 | S:网站包版本不代表App版，普通构建不重新生成素材，发行APK只校验和复制不重新签名
 playwright.config.ts[TQ7T]: F:配置六套网站规格、三浏览器、失败取证与本地生产预览 | R:code:website/playwright.webgl.config.ts,code:website/tests/site.spec.ts | A:CI一retry及两worker；本地三worker；完整Chromium与Firefox及WebKit；4321预览 | S:CI测试90秒及断言20秒不改变产品八秒降级；历史output不在testMatch，能力跳过不算已验
 tsconfig.json[FQ5T]: F:对Astro及网页TypeScript启用严格检查并排除生成和验证输出 | R:code:website/package.json | A:astro/tsconfigs/strict；Node类型；允许TS扩展导入 | S:-
-vercel.json[FV7T]: F:配置Vercel静态构建输出与正式APK附件及全站安全响应头 | R:code:website/package.json,code:website/src/data/release.ts | A:npm ci及build；dist；APK MIME及attachment文件名及版本路径immutable缓存 | S:main自动Git生产部署保持关闭，推送不自动上线；附件身份来自正式release，不经运行时代理
+vercel.json[FV7T]: F:配置网站构建、更新元数据重新验证及版本APK安全响应头 | R:code:website/package.json,code:website/src/data/release.ts | A:dist；npm ci/build；APK attachment与immutable；安全响应头 | S:main自动Git生产部署保持关闭；feed不使用immutable，既有版本APK地址不变，推送和合并不能冒称上线
 playwright.webgl.config.ts[TQ7T]: F:复用基础规格并单worker执行带WebGL标签的Chromium生命周期检查 | R:code:website/playwright.config.ts,code:.github/workflows/website-ci.yml | A:CI有窗口配合Xvfb；swiftshader-webgl仅用于WebGL | S:不把整个浏览器合成切到SwiftShader；本地沿用原选项，软件结果不证明硬件FPS
 
 ===D:/GitHub/hooptrace/website/public/brand/===
@@ -760,8 +786,9 @@ gpu-measurement.mjs[XO7M]: F:分别判定硬件环境、活跃提交节奏及呈
 gpu-wheel-input.mjs[XQ6S]: F:从实际章节几何生成可重放原生滚轮序列并保留限时输入和失败归属 | R:code:website/scripts/measure-gpu.mjs | A:native-wheel-v1；三段；六十输入每四十毫秒；createWheelWorkload及runWheelInput | S:测量驱动不以DOM滚动替代wheel；起点错位拒绝；总deadline及逐输入证据，错误仅序列化纯数据
 install-ci-browser.sh[XV6T]: F:为一次性Linux Actions runner安装指定完整浏览器及依赖并恢复临时网络配置 | R:code:.github/workflows/website-ci.yml | A:只允许chromium或firefox或webkit；playwright install带no-shell | S:仅GitHub Linux运行；不覆盖既有自有配置；仅替换已知Ubuntu镜像且trap恢复，不改签名或放宽下载验证
 prepare-community.mjs[XV6S]: F:组合社区邀请背景、品牌路径字标与原生QQ码并验证全尺寸码像素 | R:code:website/assets/community/generation.json,code:website/ASSET_SOURCES.json | A:校准原图及生成背景摘要；1536无损PNG和WebP；768预览；动态导入HarfBuzz类API | S:QR仅裁原图不重采样重绘，全尺寸回读逐像素比对；缩略预览不作同像素证明；扫码仍依赖真实人工记录
-prepare-download.mjs[XV8L]: F:构建时从本地或摘要缓存及固定Release流式准备校验后的正式APK | R:code:website/src/data/release.ts,code:website/tests/prepare-download.test.ts | A:prepareDownload；HOOPITO_APK_PATH；验证后原子写入版本化dist | S:逐次复用核对大小SHA；仅网络失败可重试一次；120秒覆盖头及传输；完整性或错误页面立即失败；拒越界及symlink，失败保旧包清自有临时文件
+prepare-download.mjs[XV8M]: F:在构建时从本地、摘要缓存或固定Release校验并准备APK | R:code:website/src/data/release.ts,code:website/scripts/export-android-update.mjs | A:verifyApkFile共享流式验证；120秒；网络失败一次重试；原子目标写入 | S:每次复用均核大小SHA；长度摘要或HTTP错误不能重试掩盖；拒输出symlink，失败保旧包且只清自有临时文件
 screenshot-presentation.mjs[XV6T]: F:解析已校准正式截图的内容裁剪矩形供展示副本和尺寸元数据共用 | R:code:docs/design/screenshot-presentation.json,code:website/scripts/prepare-assets.mjs | A:presentationForCapture按去编号basename和原图尺寸匹配 | S:未知图或尺寸不符失败关闭；矩形整数且在原画布内；新拍摄须重新校准，原发行证据不改
+export-android-update.mjs[XV7T]: F:以官网共用序列化器导出字节一致的GitHub更新附件 | R:code:website/src/data/android-update.ts,code:website/scripts/prepare-download.mjs | A:exportAndroidUpdate；--output及--apk；自动父目录 | S:提供APK时先验大小摘要再写输出，metadata-only明确不代表已验APK；不自动提升稳定版本
 
 ===D:/GitHub/hooptrace/website/src/components/===
 CourtDiagram.astro[EU6S]: F:提供手机与异常降级的可访问SVG半场及选点投篮篮网图层 | R:code:website/src/scripts/shot-timing.ts,code:website/src/scripts/main.ts | A:viewBox600乘560；可玩范围28至572及28至532；木面临近加载 | S:装饰区域不映射选点；光环及命中初始隐藏；桌面就绪后透明host操作真实模型
@@ -777,10 +804,11 @@ ScreenshotViewer.astro[EU5T]: F:提供双语截图大图的原生dialog与加载
 
 ===D:/GitHub/hooptrace/website/src/data/===
 content.ts[FL7L]: F:集中官网五章、计分演示、图库下载社区与隐私的中英文字典 | R:code:website/src/components/Landing.astro,code:website/src/components/Privacy.astro | A:Locale为zh及en；功能状态与ARIA标签；渠道和QQ自愿参与说明 | S:示例数据与真实截图分开，记录完整明确声明；下载点击不代表完成，App离线承诺与托管访问日志分开
-release.ts[FV8T]: F:固定官网与两个下载渠道共用的正式版本、附件身份、摘要及发行来源 | R:code:website/scripts/prepare-download.mjs,code:website/src/components/DownloadChooser.astro | A:2.0.1加5；API24；76441047字节；官网路径及GitHub附件；蓝奏公开分享与密码 | S:APK来源4ecd960不随网站提交改变；下载QR指官网章节；渠道分发同一签名包，不生成新发行
+release.ts[FV8T]: F:固定网站已发布APK、双下载渠道和稳定更新元数据来源 | R:code:website/src/data/android-update.ts,code:website/scripts/prepare-download.mjs | A:2.0.1+5；API24；76441047字节；正式摘要；蓝奏公开分享 | S:网站仍保4ecd960产物来源，App已发2.1.0不自动提升官网；蓝奏仅浏览器备用，不作为原生更新下载源
 court-materials.ts[FU6T]: F:统一桌面3D场景和构建预算使用的五张本地贴图地址 | R:code:website/src/scripts/court-textures.ts,code:website/scripts/check-budget.mjs,code:website/scripts/prepare-assets.mjs | A:maple/metal/glass/leather/leatherDetail；courtTextures | S:只由合资格桌面场景加载，手机不因共享预算注册表请求贴图
 community.ts[FC5T]: F:集中QQ群号及本地预览和完整邀请图的公开路径与尺寸 | R:code:website/src/components/Community.astro,code:website/scripts/prepare-community.mjs | A:1129560287；768预览；完整PNG下载 | S:仅公开邀请信息，不含用户登录或追踪数据
 replay-example.ts[DA5S]: F:定义独立虚构比赛的阶梯比分序列、关键回合与可测试图表投影 | R:code:website/src/scripts/replay-cards.ts,code:website/src/components/ReplayShowcase.astro | A:0比0至6比2领先及6平再反超终场8比11；getReplayState及Paths | S:不是截图实际逐球重建，也不是交互演示延续；非有限进度归零且比分在事件处跳变
+android-update.ts[DV8T]: F:将已发布版本数据严格校验并序列化为统一Android更新协议 | R:code:website/src/data/release.ts,code:website/scripts/export-android-update.mjs | A:协议1；包名code及API；双语说明；大小SHA；两官方APK地址 | S:版本与appVersion须一致、元数据不超64KiB；只接受同版本精确官方地址，稳定版本独立于开发App
 
 ===D:/GitHub/hooptrace/website/src/pages/en/===
 index.astro[EL5T]: F:把英文根路由绑定到共享网站介绍组件 | R:code:website/src/components/Landing.astro | A:/en/；locale=en | S:-
@@ -884,6 +912,57 @@ generation.json[FV6T]: F:绑定夜场邀请背景的完整ImageGen提示、原�
 check_pr_conventions.py[XQ7S]: F:从事件JSON验证main目标PR的目的分支与约定标题 | R:code:tool/ci/pr_conventions.json,code:.github/workflows/repository-policy.yml | A:十种类型及可选scope与破坏标记；中文英文说明；元数据类型与编号一致性 | S:机器人例外须Bot身份、准确login及同源仓库ID与全名；旧名还绑定PR及head；缺失元数据失败，push与手动不检查PR
 check_whitespace.py[XQ5T]: F:检查提交范围的真实空白错误并传递Git退出码 | R:code:tool/ci/classify_changes.py,code:.github/workflows/repository-policy.yml | A:PR三点范围；push两点范围；无有效范围检查HEAD提交 | S:不能以干净工作区的空diff代替提交检查；真实范围历史缺失不会被吞掉
 check_workflows.py[XQ7T]: F:用标准库扫描工作流动作来源与不可删减的必需矩阵 | R:code:.github/workflows/flutter-ci.yml,code:.github/workflows/website-ci.yml | A:顶层动作全40位SHA及批准来源；API24和36；三浏览器及双WebGL分片；禁止忽略失败 | S:只支持明文块映射及标量列表，拒绝易藏键的语法；跳过脚本块；不是完整YAML解析器，仍需actionlint
-classify_changes.py[XQ7T]: F:保守地将Git变更分类为App与网站验证输入 | R:code:.github/workflows/flutter-ci.yml,code:.github/workflows/website-ci.yml,code:tool/ci/required_gate.py | A:有效SHA范围及NUL路径；禁重命名折叠；共享品牌截图与CI影响双域；字符串布尔输出 | S:未知路径、缺失历史或手动运行均跑双域；仅明确文档跳过，网站内容Markdown仍触发网站
+classify_changes.py[XQ7T]: F:将Git变更保守路由到App和网站验证 | R:code:.github/workflows/flutter-ci.yml,code:.github/workflows/website-ci.yml | A:PR merge-base及push直接差异；NUL路径；禁rename折叠 | S:迁移许可证优先于Markdown跳过，安全文档单独豁免；未知输入或历史缺失跑双域，网站内容Markdown仍触发网站
 pr_conventions.json[FC6T]: F:集中定义分支类型、预览保留名与九个旧Dependabot过渡配对 | R:code:tool/ci/check_pr_conventions.py,code:CONTRIBUTING.md | A:十种普通类型；preview/website；准确PR编号至head名称映射 | S:名单本身不证明身份；旧名前缀没有永久豁免，校验器仍核对机器人与来源仓库
 required_gate.py[XQ8T]: F:将分类结果和适用任务状态汇总为稳定必需合并门禁 | R:code:.github/workflows/flutter-ci.yml,code:.github/workflows/website-ci.yml,code:tool/ci/classify_changes.py | A:App四组及网站三组；NEEDS_JSON；摘要与非零失败 | S:分类先成功且布尔输出完整；适用任务须全success，不适用须全skipped；缺失失败取消不能放行；逐矩阵成员覆盖由工作流策略另验
+
+===D:/GitHub/hooptrace/android/app/src/main/res/xml/===
+update_file_paths.xml[FS8T]: F:限定系统安装器可获取的更新文件子目录 | R:code:android/app/src/main/AndroidManifest.xml | A:FileProvider files-path updates/ | S:不开放整个files、外部暂存目录或广泛存储，URI授权只面向已验证私有安装副本
+
+===D:/GitHub/hooptrace/docs/archive/===
+README.md[SG5T]: F:索引历史报告、原始截图和旧工作树工具的归档位置 | R:code:docs/archive/manifest.json,code:docs/archive/tools/worktrees/README.md | A:旧新路径对照；九文件迁移；当前开发入口 | S:历史正文和命令保持原意，不将旧验证冒称当前状态
+manifest.json[FV6T]: F:记录九个历史文件迁移的原路径、目标、提交、blob和字节摘要 | R:code:docs/archive/README.md | A:sourceCommit；files路径及SHA256 | S:字节摘要对应迁移时原文，不因归档调整历史命令
+
+===D:/GitHub/hooptrace/docs/archive/reviews/2026-08-22-hooptrace-1-0/===
+task-3-report.md[SQ4S]: F:记录首发领域实体、schema2及备份图校验的实现与复审证据 | R:code:lib/core/data/app_database.dart,code:lib/core/data/schema_v2.dart | A:RED/GREEN；生成与官方schema验证 | S:历史验收不能替代当前schema4验证
+task-4-report.md[SQ5M]: F:记录事务命令内核、持久回执及计分桥接的历史实现和测试 | R:code:lib/core/data/commands/match_command_service.dart,code:lib/features/scoring/scoring_controller.dart | A:幂等事务；投影提交后发布；UI失败重试 | S:当时延期的计时与恢复不代表当前缺失；测试数量只属历史提交
+
+===D:/GitHub/hooptrace/docs/archive/reviews/2026-08-26-editorial-ui-redesign/===
+task-7-report.md[SQ4T]: F:记录编辑部界面修复、真实字体Golden和静态计分强调的历史验收 | R:code:lib/features/scoring/scoring_page.dart,code:test/app/editorial_golden_font_pipeline_test.dart | A:真实字形；补点兼容；紧凑更多面板 | S:930项测试及延期事项仅属当轮
+
+===D:/GitHub/hooptrace/docs/archive/reviews/hooptrace-black-court-app-icon/===
+task-1-report.md[SV5M]: F:记录旧篮筐轨迹图标生成来源、平台派生与主题图修复证据 | R:code:tool/release/generate_launcher_icons.py,code:assets/icons/README.md | A:ImageGen原图；安全区；Android及iOS资源 | S:这是旧品牌历史，不能替代当前球怪标识或宣传图
+
+===D:/GitHub/hooptrace/docs/archive/tools/worktrees/===
+README.md[SW4T]: F:说明旧工作树脚本的历史快照用途和不可直接运行边界 | R:code:docs/archive/tools/worktrees/setup-worktrees.ps1 | A:旧位置与背景；来源清单 | S:归档后根路径推断已不适用，不能当现行工具
+setup-worktrees.ps1[XW4S]: F:保留按首发波次预览或创建九个工作树的历史脚本 | R:code:docs/archive/tools/worktrees/test-setup-worktrees.ps1 | A:Create/DryRun；Wave；BaseBranch；Root | S:归档位置不兼容原路径推断，历史工具不能用于现行创建
+test-setup-worktrees.ps1[TW4T]: F:保留旧工作树脚本的九分支DryRun验证 | R:code:docs/archive/tools/worktrees/setup-worktrees.ps1 | A:预览分支与DRY RUN输出；目录未创建 | S:仅历史预览测试，不证明真实创建或归档后可运行
+
+===D:/GitHub/hooptrace/docs/development/===
+continuous-matches.md[SD8T]: F:说明连续对局身份、生命周期、原子命令及schema4备份维护契约 | R:code:lib/core/data/repositories/match_series_repository.dart,code:lib/core/export/backup_merge_service.dart | A:固定双方；换色；整组逐场复盘；格式/schema 1/2、2/3、2/4 | S:普通单场fingerprint不变；导入未结束组转关闭且不抢活动状态；历史编号不复用、球员统计不重复，文件重开不等于进程恢复
+handoff.md[SW7M]: F:交接连续对局与v2.1.0来源、验证、授权边界及历史维护记录 | R:code:CONTRIBUTING.md,code:docs/release/v2.1.0-release-record.md | A:PR41/42；9bbd3b8应用来源；1386测试；外部收尾回执 | S:新手引导未提交工作区不属本轮发行；官网未部署，未测项和失败证据保留；收尾合并与AOCI状态按实际回执，不预写或循环回填
+in-app-updates.md[SV8T]: F:说明Android更新器架构、可信安装协议、数据隔离及发布验证 | R:code:lib/core/update/update_controller.dart,code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdateDelegate.kt | A:每源8秒及64KiB；官网优先GitHub备用；两阶段安装 | S:默认启动请求可关闭，任务不进比赛备份；2.0.1需手装更新器；安装前实时比赛门禁失效即拒绝，打开安装器不等于更新完成
+
+===D:/GitHub/hooptrace/lib/core/update/===
+app_update.dart[LG5T]: F:聚合更新控制器、模型、平台、偏好和服务的公共导出 | R:code:lib/core/update/update_controller.dart,code:lib/core/update/update_models.dart | A:五模块export | S:-
+update_controller.dart[AU8M]: F:管理共享更新查询、串行下载取消恢复和两阶段安装的界面状态 | R:code:lib/core/update/update_service.dart,code:lib/core/update/update_platform.dart | A:合并进行中Future；偏好写队列；platform队列；设备code判兼容 | S:不自动下载或改比赛；准备后须实时canInstallNow明确true才启动，无回调即拒；打开安装器不代表成功，丢文件复查状态提供重试
+update_models.dart[DN8S]: F:定义设备版本、更新协议校验和查询下载安装状态模型 | R:code:lib/core/update/update_service.dart,code:lib/core/update/update_platform.dart | A:协议1；官方包名；正整数code/API/大小；双语说明及摘要 | S:展示版本不能用于升级比较；只接受官方HTTPS APK来源，拒用户信息和查询片段；安装器已打开与已安装严格区分
+update_platform.dart[IU7T]: F:抽象并实现Android更新原生通道调用 | R:code:android/app/src/main/kotlin/io/github/x1a0y4ngren/hooptrace/AppUpdateDelegate.kt | A:实际设备版本；进程检查领取；下载；prepare及request安装；权限设置 | S:默认仅Android支持；未知原生安装返回视为unavailable，installerLaunched不等于安装成功
+update_preferences.dart[PD6T]: F:在现有设置表读写默认开启的启动更新检查偏好 | R:code:lib/core/data/app_database.dart | A:updates.preferences.v1；version1 JSON；UPSERT | S:不缓存以兼容替换恢复，缺失或非法值回默认开启；任务编号及临时状态不存此表
+update_service.dart[IN8S]: F:有界请求官方更新元数据并按设备code和API判断可用性 | R:code:lib/core/update/update_models.dart | A:官网优先；失败或无效才GitHub；每源8秒/64KiB；逐跳HTTPS校验 | S:有效官网即权威、不为比版本再请求备源；超时关闭实际连接；重定向仅官方限定主机，拒不可信跳转且不上传业务数据
+
+===D:/GitHub/hooptrace/lib/features/series/===
+series_detail_page.dart[EU7S]: F:展示整组当前胜场或结束结果以及可进入的全部逐场赛果 | R:code:lib/core/domain/entities/match_series.dart,code:lib/app/series_routes.dart | A:下一场/设置/收局/重开；场次倒序；状态和比分 | S:未结束组不宣称整组胜者，无完赛不宣称平局；活动场存在禁收局，颜色比分与固定身份汇总分别呈现
+
+===D:/GitHub/hooptrace/test/core/update/===
+app_update_test.dart[TN7M]: F:验证更新协议、官网权威、备用源、API兼容及控制器合并查询 | R:code:lib/core/update/update_service.dart,code:lib/core/update/update_controller.dart | A:非法元数据；数字code；偏好持久化；失败重试；通道解码 | S:检查不能隐式下载；有效主源即使旧于备源也不额外比较，测试版本是夹具不提升正式稳定版
+update_http_source_test.dart[TN8S]: F:验证更新请求逐跳来源校验、UTF8字节上限及超时释放连接 | R:code:lib/core/update/update_service.dart | A:GitHub CDN；跨域拒绝；无content-length；64KiB；8秒挂起 | S:危险跳转在请求目标之前拒绝，超时必须关实际client而非仅结束Future
+update_install_guard_test.dart[TS8S]: F:验证异步准备安装后的实时比赛门禁和失效候选重试 | R:code:lib/core/update/update_controller.dart | A:缺失/禁止/允许回调；准备中变化；设置失败；丢失损坏候选 | S:缺实时回调即拒绝，原ready候选校验失败须刷新failed状态，设置错误传播且不误当授权成功
+update_recovery_test.dart[TR7T]: F:验证原生恢复任务可重试、查询失败替换ready及偏好写失败恢复 | R:code:lib/core/update/update_controller.dart | A:无需网络重试；missing状态；失败后再写设置 | S:模拟原生状态恢复不证明系统下载进程重建，偏好失败不得先更新开关
+
+===D:/GitHub/hooptrace/test/features/series/===
+series_detail_page_test.dart[TU7S]: F:验证整组空态、关闭结果、活动门禁及双语大字体Golden | R:code:lib/features/series/series_detail_page.dart | A:关闭与胜者分开；无完赛；活动恢复；200% | S:开放组不宣称获胜，空组不宣称平局；活动存在不能收局或下一场
+series_next_intent_test.dart[TB8T]: F:验证旧渲染整组不能跨关闭重开准备下一场 | R:code:lib/app/series_routes.dart,code:lib/core/data/repositories/match_series_repository.dart | A:旧revision拒绝；无额外活动槽；新revision和编号透传 | S:界面已过期也必须由意图检查拒绝，不能只依赖按钮禁用
+
+===D:/GitHub/hooptrace/website/src/pages/updates/android/===
+stable.json.ts[EV7T]: F:以共享序列化器输出官网Android稳定版本JSON | R:code:website/src/data/android-update.ts,code:website/src/data/release.ts | A:GET Response；application/json UTF8；max-age0 must-revalidate | S:源码路由存在不证明线上已部署，不能据此声称实际feed可访问
