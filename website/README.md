@@ -97,9 +97,9 @@ CSS玻璃的最低画质降级独立于减少透明度偏好；维护背景滤�
 当前品牌中文为「球豆」、英文为「Hoopito」，共享名称为「Hoopito · 球豆」，
 大写字标为 `HOOPITO`；npm 包名为 `hoopito-website`。已批准的 C 独眼球怪
 保持原图与几何。官网下载入口提供蓝奏云与 GitHub 两种渠道，使用已公开发行的
-`Hoopito-v2.0.1-android.apk`，安装名称为 Hoopito／球豆。GitHub 仓库已更名为
+`Hoopito-v2.1.0-android.apk`，安装名称为 Hoopito／球豆。GitHub 仓库已更名为
 `x1a0Y4NGren/hoopito`，原仓库地址保留跳转。
-当前八张双语截图来自同一正式签名包。网站与 GitHub README 使用裁掉系统状态栏、
+当前八张双语截图仍来自同一 v2.0.1 正式签名包，不因下载版本升级而改写来源。网站与 GitHub README 使用裁掉系统状态栏、
 导航栏和横屏系统留白的展示副本，保留 App 内容的真实像素与比例；原图及旧截图
 保持拍摄来源并按版本留存。原始 ImageGen 提示词、来源图与历史验收记录保留当时名称。
 
@@ -642,7 +642,7 @@ Esc、键盘与触摸均可操作。
 发布或更换分享前，应实际下载蓝奏云中的 APK，核对其大小和 SHA-256 与同版本正式发行包
 一致；只凭文件名、上传成功提示或页面标注大小不能替代完整性验证。当前只提供上述两个渠道。
 
-既有官网静态路径 `/downloads/v2.0.1/Hoopito-v2.0.1-android.apk` 和构建时校验流程继续保留，
+当前官网静态路径为 `/downloads/v2.1.0/Hoopito-v2.1.0-android.apk`，沿用构建时校验流程，
 可用于直接访问和完整性验证，但不再作为主按钮或渠道选项的默认下载路线。
 
 `npm run build` 依次执行 Astro 构建、APK 准备与校验、资源预算检查。
@@ -659,7 +659,10 @@ schemaVersion 1 只包含应用 ID、versionName、整数 versionCode、minimumA
 更新说明，以及 APK 字节数、SHA-256、官网 HTTPS URL 和同版本 GitHub 附件 URL。
 序列化会拒绝版本与 `appVersion` 不一致、无效类型、非官方地址和超过 64 KiB 的元数据。
 该配置描述最后公开稳定版，独立于开发中的 `pubspec.yaml`；开发 App 提前升级版本时不改 feed。
-当前仍指向原 v2.0.1+5 APK 和原摘要，不宣称该历史发行包已包含应用内更新器。
+当前指向已公开的 v2.1.0+6 正式 APK，应用源码为 `9bbd3b87e99d71f5d9117cd2c5a763a7f8b95d1f`，
+77,976,935 字节，SHA-256 为 `c408707fbb1298f845e059c1a7eeada7d5474ca987ba04e46dfd9d2dbee7fb1a`。
+双语更新说明与该不可变 Release 的 `android-update.json` 保持一致，不改写旧发行附件。
+v2.0.1 不含更新器，需先手动安装一次 v2.1.0 或更高版本。
 
 在 `website/` 中导出发布附件：
 
@@ -667,7 +670,7 @@ schemaVersion 1 只包含应用 ID、versionName、整数 versionCode、minimumA
 # 仅元数据导出（不代表已验证 APK）
 npm run export:android-update
 # 正式发行时必须核验选定签名 APK，使用与网站构建相同的流式大小/SHA-256 校验
-npm run export:android-update -- --apk "D:/release/Hoopito-v2.0.1-android.apk" --output "D:/release/android-update.json"
+npm run export:android-update -- --apk "D:/release/Hoopito-v2.1.0-android.apk" --output "D:/release/android-update.json"
 ```
 
 默认输出在忽略的 `output/releases/android-update.json`；不下载、不重建、不重新签名 APK。
@@ -694,11 +697,15 @@ Vercel 的附件响应头、文件类型与版本缓存规则在
 APK 路径与附件文件名、蓝奏云分享及密码、双语相关文案，并运行 `npm run assets`，让二维码和页面
 保持一致。页面组件或文案变更涉及场景占位来源绑定时，按上面的素材流程重新导出。
 
-当前下载为正式 v2.0.1，支持 Android 7.0／API 24 及以上，同证覆盖升级 v2.0.0。
+当前下载为正式 v2.1.0，支持 Android 7.0／API 24 及以上，同证覆盖升级 v2.0.0／v2.0.1。
+升级前须将完整 JSON 保存并确认收到 App 外。数据库 schema 2／3 自动迁移至 schema 4，
+JSON 外层格式仍为 2，支持完整 JSON 的格式／schema 组合 1／2、2／3 和 2／4。
+旧 App 不能导入 schema 4 备份，也不能读取升级后的数据库，请勿降级后继续使用该数据库。
 旧 v1 到 v2 使用不同签名，不能覆盖安装；须先把完整 JSON 保存到 App 外，
 确认文件已保存，再卸载旧版、安装并恢复。CSV 和图片不能完整恢复。
-新 App 可导入旧 HoopTrace 与新 Hoopito JSON；旧 App 不能导入新名称备份。
-这些提示与当前 [发行记录](../docs/release/v2.0.1-release-record.md) 保持一致。
+新 App 继续识别旧 HoopTrace 与新 Hoopito JSON 及自动备份前缀；旧 App 不能导入新名称备份。
+这些提示与当前 [发行记录](../docs/release/v2.1.0-release-record.md) 和
+[双语发行说明](../docs/release/v2.1.0-release-notes.md) 保持一致。
 
 ## Vercel 预览与正式域名
 

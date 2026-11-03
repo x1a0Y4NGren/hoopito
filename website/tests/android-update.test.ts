@@ -14,17 +14,17 @@ test('stable metadata describes the published APK independently of development a
   assert.deepEqual(metadata, {
     schemaVersion: 1,
     applicationId: 'io.github.x1a0y4ngren.hooptrace',
-    versionName: '2.0.1',
-    versionCode: 5,
+    versionName: '2.1.0',
+    versionCode: 6,
     minimumApi: 24,
     releaseNotes: release.releaseNotes,
     apk: {
-      bytes: 76441047,
+      bytes: 77976935,
       sha256:
-        'c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9',
-      url: 'https://hoopito.com/downloads/v2.0.1/Hoopito-v2.0.1-android.apk',
+        'c408707fbb1298f845e059c1a7eeada7d5474ca987ba04e46dfd9d2dbee7fb1a',
+      url: 'https://hoopito.com/downloads/v2.1.0/Hoopito-v2.1.0-android.apk',
       fallbackUrl:
-        'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk',
+        'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/Hoopito-v2.1.0-android.apk',
     },
   });
   assert.ok(metadata.releaseNotes.zh.trim());
@@ -39,10 +39,10 @@ test('stable metadata describes the published APK independently of development a
 
 test('rejects inconsistent versions, invalid types and unofficial APK URLs', () => {
   for (const invalid of [
-    { versionCode: 6 },
-    { versionCode: '5' },
-    { version: '2.0.2' },
-    { appVersion: '2.0.1+05' },
+    { versionCode: 7 },
+    { versionCode: '6' },
+    { version: '2.1.1' },
+    { appVersion: '2.1.0+06' },
     { minimumApi: 0 },
     { apkBytes: 1.5 },
     { sha256: 'not-a-hash' },
@@ -50,7 +50,7 @@ test('rejects inconsistent versions, invalid types and unofficial APK URLs', () 
     { releaseNotes: { zh: 'Notes', en: false } },
     { releaseNotes: { zh: 'x'.repeat(65536), en: 'Notes' } },
     { apkUrl: '//evil.example/update.apk' },
-    { apkUrl: '/downloads/v2.0.2/Hoopito-v2.0.1-android.apk' },
+    { apkUrl: '/downloads/v2.1.1/Hoopito-v2.1.0-android.apk' },
     {
       upstreamApkUrl: release.upstreamApkUrl.replace(
         'github.com',

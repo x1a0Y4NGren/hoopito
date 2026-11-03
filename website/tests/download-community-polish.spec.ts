@@ -479,21 +479,29 @@ for (const path of ['/', '/en/']) {
     const backup = page.locator('.upgrade > p');
     for (const fact of path === '/'
       ? [
-          /新.*签名/,
-          /不能覆盖.*v1/,
-          /JSON.*App.*之外/,
+          /v2\.0\.0.*v2\.0\.1.*覆盖安装/,
+          /schema 4/,
+          /JSON 格式仍为 2/,
+          /旧 App 不能读取.*数据库.*schema 4 备份/,
+          /请勿降级/,
+          /v1 与 v2 签名不同.*不能直接覆盖安装/,
+          /完整 JSON 保存到 App 外/,
           /确认.*保存/,
           /卸载旧版/,
           /恢复/,
           /CSV.*图片.*不能.*完整恢复/,
         ]
       : [
-          /new signing certificate/i,
-          /cannot install over.*v1/i,
+          /Install over v2\.0\.0 or v2\.0\.1/i,
+          /database migrates to schema 4/i,
+          /JSON format stays 2/i,
+          /Older apps cannot read.*database or import schema 4 backups/i,
+          /Do not downgrade/i,
+          /v1 uses a different certificate and cannot update in place/i,
           /JSON.*outside the app/i,
-          /confirm.*saved/i,
+          /saving and verifying a complete JSON backup/i,
           /uninstalling v1/i,
-          /restore your JSON/i,
+          /install v2\.1\.0 and restore/i,
           /CSV and images cannot restore your full data/i,
         ])
       await expect(backup).toContainText(fact);

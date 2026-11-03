@@ -1,10 +1,10 @@
 import { createServer, request as proxyRequest } from 'node:http';
 import { expect, test as base, type Page } from '@playwright/test';
 
-const apk = '/downloads/v2.0.1/Hoopito-v2.0.1-android.apk';
-const apkFilename = 'Hoopito-v2.0.1-android.apk';
+const apk = '/downloads/v2.1.0/Hoopito-v2.1.0-android.apk';
+const apkFilename = 'Hoopito-v2.1.0-android.apk';
 const upstreamApk =
-  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk';
+  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/Hoopito-v2.1.0-android.apk';
 const lanzouShare = 'https://xiaoyangren.lanzoub.com/b01i5z85wb';
 const githubAttachment = '/__download-fixture__/github.apk';
 
@@ -310,7 +310,7 @@ for (const locale of ['/', '/en/']) {
       page.locator('.download-links .release-link:not(.download-fallback)'),
     ).toHaveAttribute(
       'href',
-      'https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1',
+      'https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0',
     );
   });
 
@@ -817,7 +817,7 @@ for (const locale of ['/', '/en/']) {
       await page.setViewportSize(viewport);
       await page.goto(`${locale}#download`);
       await page.evaluate(() => document.fonts.ready);
-      await expect(page.locator('.version-line > b')).toHaveText('2.0.1');
+      await expect(page.locator('.version-line > b')).toHaveText('2.1.0');
       await expect(page.locator('.release-tag')).toHaveText(
         locale === '/' ? '正式版' : 'Stable',
       );
@@ -825,7 +825,7 @@ for (const locale of ['/', '/en/']) {
         page.locator('.download-package [data-download]'),
       ).toHaveAttribute('href', upstreamApk);
       await expect(page.locator('.checksum code')).toHaveText(
-        'c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9',
+        'c408707fbb1298f845e059c1a7eeada7d5474ca987ba04e46dfd9d2dbee7fb1a',
       );
       await enlargeChapterText(page);
       for (const selector of [

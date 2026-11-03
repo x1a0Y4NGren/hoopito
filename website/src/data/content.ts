@@ -127,12 +127,12 @@ export const content = {
       size: '约 {size} MiB',
       system: 'Android {version} 及以上',
       install:
-        '当前下载为 Hoopito · 球豆 v2.0.1\n下载后 在系统提示中允许此来源安装\n已安装 v2.0.0 可直接覆盖升级 保留数据和设置',
+        '当前下载为 Hoopito · 球豆 v2.1.0\n下载后 在系统提示中允许此来源安装\nv2.0.0／v2.0.1 可覆盖升级 保留数据和设置\n升级前 请在 App 外保存并确认完整 JSON 备份',
       qr: '手机扫码，打开官网下载页',
       verify: '核对 SHA-256',
-      upgrade: '旧 v1 升级前，先保存 JSON 备份',
+      upgrade: '升级与完整 JSON 备份',
       upgradeBody:
-        '2.0 使用新的正式签名，不能覆盖安装历史 v1。请先把完整 JSON 导出到 App 之外，确认文件已保存，再卸载旧版、安装 2.0 并恢复。CSV 和图片不能用于完整恢复。',
+        'v2.0.0／v2.0.1 可直接覆盖安装，升级前先把完整 JSON 保存到 App 外并确认文件已保存。新版会将数据库迁移至 schema 4，JSON 格式仍为 2。旧 App 不能读取升级后的数据库或导入 schema 4 备份，请勿降级。\n历史 v1 与 v2 签名不同，不能直接覆盖安装。请先导出并确认完整 JSON 已保存到 App 外，再卸载旧版、安装 v2.1.0 并恢复。CSV 和图片不能用于完整恢复。',
       source: '查看源码',
       feedback: '提交反馈',
     },
@@ -165,7 +165,7 @@ export const content = {
     faq: [
       [
         '需要联网或注册吗',
-        'App 的计分、复盘、历史和导出均可离线使用，无需账号，也没有云同步。通过蓝奏云或 GitHub 下载需要网络；下载平台的使用要求以页面提示为准。',
+        '计分、复盘、历史和导出可离线使用，无需账号，也没有云同步。下载和检查更新需要联网。v2.1.0 默认在启动时检查更新，可在设置中关闭；没有新版或检查失败不会打扰计分。下载平台的使用要求以页面提示为准。',
       ],
       [
         '比赛记录会上传吗',
@@ -177,7 +177,7 @@ export const content = {
       ],
       [
         '更名前的备份还能导入吗',
-        '球豆可以导入旧 HoopTrace 与新 Hoopito JSON，自动备份同时保留新旧文件前缀。旧 App 不能导入新名称的备份，请先升级再恢复。',
+        '可以导入旧 HoopTrace 与新 Hoopito 的完整 JSON，支持格式／schema 组合 1／2、2／3 和 2／4。自动备份保留新旧文件前缀。旧 App 不能导入新名称或 schema 4 备份，也不能读取升级后的数据库，请勿降级。',
       ],
       [
         '可以在 iPhone 上安装吗',
@@ -371,12 +371,12 @@ export const content = {
       size: 'About {size} MiB',
       system: 'Android {version} and later',
       install:
-        'The current download is Hoopito v2.0.1.\nDownload the APK and allow installation from this source when Android asks.\nInstall over v2.0.0 to keep your data and settings.',
+        'The current download is Hoopito v2.1.0.\nDownload the APK and allow installation from this source when Android asks.\nInstall over v2.0.0 or v2.0.1 to keep your data and settings.\nFirst save and verify a complete JSON backup outside the app.',
       qr: 'Scan to open the official download page',
       verify: 'Verify SHA-256',
-      upgrade: 'Save a JSON backup before upgrading from v1',
+      upgrade: 'Upgrading and complete JSON backups',
       upgradeBody:
-        'Version 2.0 uses a new signing certificate and cannot install over the old v1 app. Export a complete JSON backup outside the app and confirm it is saved before uninstalling v1. Install 2.0, then restore your JSON. CSV and images cannot restore your full data.',
+        'Install over v2.0.0 or v2.0.1 after saving and verifying a complete JSON backup outside the app. The database migrates to schema 4 and the JSON format stays 2. Older apps cannot read the upgraded database or import schema 4 backups. Do not downgrade.\nHistorical v1 uses a different certificate and cannot update in place. Export and verify a complete JSON backup outside the app before uninstalling v1, then install v2.1.0 and restore. CSV and images cannot restore your full data.',
       source: 'View source',
       feedback: 'Send feedback',
     },
@@ -409,7 +409,7 @@ export const content = {
     faq: [
       [
         'Do I need an account or an internet connection',
-        'Scoring, review, history, and export work offline in the app. No account or cloud sync. Lanzou and GitHub downloads need an internet connection; each platform sets its own download requirements.',
+        'Scoring, review, history, and export work offline, with no account or cloud sync. Downloads and update checks need an internet connection. In v2.1.0, startup update checks are on by default and can be turned off in Settings. Automatic checks stay quiet when no update is found or a check fails. Each download platform sets its own requirements.',
       ],
       [
         'Are my game records uploaded',
@@ -421,7 +421,7 @@ export const content = {
       ],
       [
         'Can I import backups from before the rename',
-        'Hoopito accepts old HoopTrace and new Hoopito JSON. Automatic retention recognizes both file prefixes. Older apps cannot import newly branded backups; upgrade before restoring them.',
+        'Complete HoopTrace and Hoopito JSON backups are supported in format/schema combinations 1/2, 2/3 and 2/4. Automatic retention recognizes both file prefixes. Older apps cannot import newly branded or schema 4 backups or read the upgraded database. Do not downgrade.',
       ],
       [
         'Can I install it on an iPhone',
