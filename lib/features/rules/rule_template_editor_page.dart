@@ -27,7 +27,6 @@ class _RuleTemplateEditorPageState extends State<RuleTemplateEditorPage> {
   late final TextEditingController _foulLimit;
   late final TextEditingController _scoreButtons;
   late final TextEditingController _eventTypes;
-  late bool _winByTwo;
   late bool _possessionHint;
   late PossessionPolicy _possessionPolicy;
 
@@ -53,7 +52,6 @@ class _RuleTemplateEditorPageState extends State<RuleTemplateEditorPage> {
     _eventTypes = TextEditingController(
       text: template?.customEventTypes.join(',') ?? '',
     );
-    _winByTwo = template?.winByTwo ?? false;
     _possessionHint = template?.possessionHintEnabled ?? false;
     _possessionPolicy = _possessionHint
         ? template?.possessionPolicy ?? PossessionPolicy.manual
@@ -117,6 +115,7 @@ class _RuleTemplateEditorPageState extends State<RuleTemplateEditorPage> {
                 controller: _target,
                 label: l10n.ruleTargetLabel,
                 numeric: true,
+                validator: (value) => _validateTarget(value, l10n),
               ),
               _field(
                 key: const Key('rule-time-limit'),
@@ -129,12 +128,6 @@ class _RuleTemplateEditorPageState extends State<RuleTemplateEditorPage> {
                 controller: _foulLimit,
                 label: l10n.ruleFoulLimitLabel,
                 numeric: true,
-              ),
-              _SpecToggle(
-                key: const Key('rule-win-by-two'),
-                value: _winByTwo,
-                title: l10n.ruleWinByTwoTitle,
-                onChanged: (value) => setState(() => _winByTwo = value),
               ),
               const SizedBox(height: 12),
               _FormSectionHeading(label: l10n.ruleScoreButtonsLabel),
@@ -248,6 +241,15 @@ class _RuleTemplateEditorPageState extends State<RuleTemplateEditorPage> {
         : null;
   }
 
+  String? _validateTarget(String? value, AppLocalizations l10n) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return null;
+    final parsed = int.tryParse(text);
+    return parsed == null || parsed < 1 || parsed > 999
+        ? l10n.pregameTargetScoreRange(1, 999)
+        : null;
+  }
+
   String? _validateScoreButtons(String? value) {
     final values = _parseNumbers(value ?? '');
     return values.isEmpty || values.any((item) => item <= 0)
@@ -269,7 +271,8 @@ class _RuleTemplateEditorPageState extends State<RuleTemplateEditorPage> {
         timeLimitSeconds: _optionalInt(_timeLimit.text) == null
             ? null
             : _optionalInt(_timeLimit.text)! * 60,
-        winByTwo: _winByTwo,
+        // Preserve existing custom fields while removing this option for new rules.
+        winByTwo: current?.winByTwo ?? false,
         foulLimit: _optionalInt(_foulLimit.text),
         possessionHintEnabled: _possessionHint,
         possessionPolicy: _possessionHint

@@ -70,7 +70,7 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('Event timeline'), findsOneWidget);
+      expect(find.text('Game timeline'), findsOneWidget);
       expect(tester.takeException(), isNull);
     },
   );

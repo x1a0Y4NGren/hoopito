@@ -990,6 +990,1083 @@ class PlayersCompanion extends UpdateCompanion<PlayerRow> {
   }
 }
 
+class $MatchSeriesTable extends MatchSeries
+    with TableInfo<$MatchSeriesTable, MatchSeriesRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MatchSeriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _slotANameMeta = const VerificationMeta(
+    'slotAName',
+  );
+  @override
+  late final GeneratedColumn<String> slotAName = GeneratedColumn<String>(
+    'slot_a_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _slotBNameMeta = const VerificationMeta(
+    'slotBName',
+  );
+  @override
+  late final GeneratedColumn<String> slotBName = GeneratedColumn<String>(
+    'slot_b_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _slotAPlayerProfileIdMeta =
+      const VerificationMeta('slotAPlayerProfileId');
+  @override
+  late final GeneratedColumn<String> slotAPlayerProfileId =
+      GeneratedColumn<String>(
+        'slot_a_player_profile_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES players (id) ON DELETE SET NULL',
+        ),
+      );
+  static const VerificationMeta _slotBPlayerProfileIdMeta =
+      const VerificationMeta('slotBPlayerProfileId');
+  @override
+  late final GeneratedColumn<String> slotBPlayerProfileId =
+      GeneratedColumn<String>(
+        'slot_b_player_profile_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES players (id) ON DELETE SET NULL',
+        ),
+      );
+  static const VerificationMeta _lifecycleMeta = const VerificationMeta(
+    'lifecycle',
+  );
+  @override
+  late final GeneratedColumn<String> lifecycle = GeneratedColumn<String>(
+    'lifecycle',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('open'),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _closedAtMeta = const VerificationMeta(
+    'closedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> closedAt = GeneratedColumn<DateTime>(
+    'closed_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nextGameNumberMeta = const VerificationMeta(
+    'nextGameNumber',
+  );
+  @override
+  late final GeneratedColumn<int> nextGameNumber = GeneratedColumn<int>(
+    'next_game_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _revisionMeta = const VerificationMeta(
+    'revision',
+  );
+  @override
+  late final GeneratedColumn<int> revision = GeneratedColumn<int>(
+    'revision',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _defaultSetupJsonMeta = const VerificationMeta(
+    'defaultSetupJson',
+  );
+  @override
+  late final GeneratedColumn<String> defaultSetupJson = GeneratedColumn<String>(
+    'default_setup_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lifecycleIntentsJsonMeta =
+      const VerificationMeta('lifecycleIntentsJson');
+  @override
+  late final GeneratedColumn<String> lifecycleIntentsJson =
+      GeneratedColumn<String>(
+        'lifecycle_intents_json',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('{}'),
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    slotAName,
+    slotBName,
+    slotAPlayerProfileId,
+    slotBPlayerProfileId,
+    lifecycle,
+    createdAt,
+    closedAt,
+    nextGameNumber,
+    revision,
+    defaultSetupJson,
+    lifecycleIntentsJson,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'match_series';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MatchSeriesRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('slot_a_name')) {
+      context.handle(
+        _slotANameMeta,
+        slotAName.isAcceptableOrUnknown(data['slot_a_name']!, _slotANameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_slotANameMeta);
+    }
+    if (data.containsKey('slot_b_name')) {
+      context.handle(
+        _slotBNameMeta,
+        slotBName.isAcceptableOrUnknown(data['slot_b_name']!, _slotBNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_slotBNameMeta);
+    }
+    if (data.containsKey('slot_a_player_profile_id')) {
+      context.handle(
+        _slotAPlayerProfileIdMeta,
+        slotAPlayerProfileId.isAcceptableOrUnknown(
+          data['slot_a_player_profile_id']!,
+          _slotAPlayerProfileIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('slot_b_player_profile_id')) {
+      context.handle(
+        _slotBPlayerProfileIdMeta,
+        slotBPlayerProfileId.isAcceptableOrUnknown(
+          data['slot_b_player_profile_id']!,
+          _slotBPlayerProfileIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('lifecycle')) {
+      context.handle(
+        _lifecycleMeta,
+        lifecycle.isAcceptableOrUnknown(data['lifecycle']!, _lifecycleMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('closed_at')) {
+      context.handle(
+        _closedAtMeta,
+        closedAt.isAcceptableOrUnknown(data['closed_at']!, _closedAtMeta),
+      );
+    }
+    if (data.containsKey('next_game_number')) {
+      context.handle(
+        _nextGameNumberMeta,
+        nextGameNumber.isAcceptableOrUnknown(
+          data['next_game_number']!,
+          _nextGameNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('revision')) {
+      context.handle(
+        _revisionMeta,
+        revision.isAcceptableOrUnknown(data['revision']!, _revisionMeta),
+      );
+    }
+    if (data.containsKey('default_setup_json')) {
+      context.handle(
+        _defaultSetupJsonMeta,
+        defaultSetupJson.isAcceptableOrUnknown(
+          data['default_setup_json']!,
+          _defaultSetupJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_defaultSetupJsonMeta);
+    }
+    if (data.containsKey('lifecycle_intents_json')) {
+      context.handle(
+        _lifecycleIntentsJsonMeta,
+        lifecycleIntentsJson.isAcceptableOrUnknown(
+          data['lifecycle_intents_json']!,
+          _lifecycleIntentsJsonMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MatchSeriesRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MatchSeriesRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      slotAName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}slot_a_name'],
+      )!,
+      slotBName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}slot_b_name'],
+      )!,
+      slotAPlayerProfileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}slot_a_player_profile_id'],
+      ),
+      slotBPlayerProfileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}slot_b_player_profile_id'],
+      ),
+      lifecycle: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}lifecycle'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      closedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}closed_at'],
+      ),
+      nextGameNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}next_game_number'],
+      )!,
+      revision: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}revision'],
+      )!,
+      defaultSetupJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}default_setup_json'],
+      )!,
+      lifecycleIntentsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}lifecycle_intents_json'],
+      )!,
+    );
+  }
+
+  @override
+  $MatchSeriesTable createAlias(String alias) {
+    return $MatchSeriesTable(attachedDatabase, alias);
+  }
+}
+
+class MatchSeriesRow extends DataClass implements Insertable<MatchSeriesRow> {
+  final String id;
+  final String slotAName;
+  final String slotBName;
+  final String? slotAPlayerProfileId;
+  final String? slotBPlayerProfileId;
+  final String lifecycle;
+  final DateTime createdAt;
+  final DateTime? closedAt;
+  final int nextGameNumber;
+  final int revision;
+  final String defaultSetupJson;
+  final String lifecycleIntentsJson;
+  const MatchSeriesRow({
+    required this.id,
+    required this.slotAName,
+    required this.slotBName,
+    this.slotAPlayerProfileId,
+    this.slotBPlayerProfileId,
+    required this.lifecycle,
+    required this.createdAt,
+    this.closedAt,
+    required this.nextGameNumber,
+    required this.revision,
+    required this.defaultSetupJson,
+    required this.lifecycleIntentsJson,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['slot_a_name'] = Variable<String>(slotAName);
+    map['slot_b_name'] = Variable<String>(slotBName);
+    if (!nullToAbsent || slotAPlayerProfileId != null) {
+      map['slot_a_player_profile_id'] = Variable<String>(slotAPlayerProfileId);
+    }
+    if (!nullToAbsent || slotBPlayerProfileId != null) {
+      map['slot_b_player_profile_id'] = Variable<String>(slotBPlayerProfileId);
+    }
+    map['lifecycle'] = Variable<String>(lifecycle);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || closedAt != null) {
+      map['closed_at'] = Variable<DateTime>(closedAt);
+    }
+    map['next_game_number'] = Variable<int>(nextGameNumber);
+    map['revision'] = Variable<int>(revision);
+    map['default_setup_json'] = Variable<String>(defaultSetupJson);
+    map['lifecycle_intents_json'] = Variable<String>(lifecycleIntentsJson);
+    return map;
+  }
+
+  MatchSeriesCompanion toCompanion(bool nullToAbsent) {
+    return MatchSeriesCompanion(
+      id: Value(id),
+      slotAName: Value(slotAName),
+      slotBName: Value(slotBName),
+      slotAPlayerProfileId: slotAPlayerProfileId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(slotAPlayerProfileId),
+      slotBPlayerProfileId: slotBPlayerProfileId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(slotBPlayerProfileId),
+      lifecycle: Value(lifecycle),
+      createdAt: Value(createdAt),
+      closedAt: closedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(closedAt),
+      nextGameNumber: Value(nextGameNumber),
+      revision: Value(revision),
+      defaultSetupJson: Value(defaultSetupJson),
+      lifecycleIntentsJson: Value(lifecycleIntentsJson),
+    );
+  }
+
+  factory MatchSeriesRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MatchSeriesRow(
+      id: serializer.fromJson<String>(json['id']),
+      slotAName: serializer.fromJson<String>(json['slotAName']),
+      slotBName: serializer.fromJson<String>(json['slotBName']),
+      slotAPlayerProfileId: serializer.fromJson<String?>(
+        json['slotAPlayerProfileId'],
+      ),
+      slotBPlayerProfileId: serializer.fromJson<String?>(
+        json['slotBPlayerProfileId'],
+      ),
+      lifecycle: serializer.fromJson<String>(json['lifecycle']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      closedAt: serializer.fromJson<DateTime?>(json['closedAt']),
+      nextGameNumber: serializer.fromJson<int>(json['nextGameNumber']),
+      revision: serializer.fromJson<int>(json['revision']),
+      defaultSetupJson: serializer.fromJson<String>(json['defaultSetupJson']),
+      lifecycleIntentsJson: serializer.fromJson<String>(
+        json['lifecycleIntentsJson'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'slotAName': serializer.toJson<String>(slotAName),
+      'slotBName': serializer.toJson<String>(slotBName),
+      'slotAPlayerProfileId': serializer.toJson<String?>(slotAPlayerProfileId),
+      'slotBPlayerProfileId': serializer.toJson<String?>(slotBPlayerProfileId),
+      'lifecycle': serializer.toJson<String>(lifecycle),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'closedAt': serializer.toJson<DateTime?>(closedAt),
+      'nextGameNumber': serializer.toJson<int>(nextGameNumber),
+      'revision': serializer.toJson<int>(revision),
+      'defaultSetupJson': serializer.toJson<String>(defaultSetupJson),
+      'lifecycleIntentsJson': serializer.toJson<String>(lifecycleIntentsJson),
+    };
+  }
+
+  MatchSeriesRow copyWith({
+    String? id,
+    String? slotAName,
+    String? slotBName,
+    Value<String?> slotAPlayerProfileId = const Value.absent(),
+    Value<String?> slotBPlayerProfileId = const Value.absent(),
+    String? lifecycle,
+    DateTime? createdAt,
+    Value<DateTime?> closedAt = const Value.absent(),
+    int? nextGameNumber,
+    int? revision,
+    String? defaultSetupJson,
+    String? lifecycleIntentsJson,
+  }) => MatchSeriesRow(
+    id: id ?? this.id,
+    slotAName: slotAName ?? this.slotAName,
+    slotBName: slotBName ?? this.slotBName,
+    slotAPlayerProfileId: slotAPlayerProfileId.present
+        ? slotAPlayerProfileId.value
+        : this.slotAPlayerProfileId,
+    slotBPlayerProfileId: slotBPlayerProfileId.present
+        ? slotBPlayerProfileId.value
+        : this.slotBPlayerProfileId,
+    lifecycle: lifecycle ?? this.lifecycle,
+    createdAt: createdAt ?? this.createdAt,
+    closedAt: closedAt.present ? closedAt.value : this.closedAt,
+    nextGameNumber: nextGameNumber ?? this.nextGameNumber,
+    revision: revision ?? this.revision,
+    defaultSetupJson: defaultSetupJson ?? this.defaultSetupJson,
+    lifecycleIntentsJson: lifecycleIntentsJson ?? this.lifecycleIntentsJson,
+  );
+  MatchSeriesRow copyWithCompanion(MatchSeriesCompanion data) {
+    return MatchSeriesRow(
+      id: data.id.present ? data.id.value : this.id,
+      slotAName: data.slotAName.present ? data.slotAName.value : this.slotAName,
+      slotBName: data.slotBName.present ? data.slotBName.value : this.slotBName,
+      slotAPlayerProfileId: data.slotAPlayerProfileId.present
+          ? data.slotAPlayerProfileId.value
+          : this.slotAPlayerProfileId,
+      slotBPlayerProfileId: data.slotBPlayerProfileId.present
+          ? data.slotBPlayerProfileId.value
+          : this.slotBPlayerProfileId,
+      lifecycle: data.lifecycle.present ? data.lifecycle.value : this.lifecycle,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      closedAt: data.closedAt.present ? data.closedAt.value : this.closedAt,
+      nextGameNumber: data.nextGameNumber.present
+          ? data.nextGameNumber.value
+          : this.nextGameNumber,
+      revision: data.revision.present ? data.revision.value : this.revision,
+      defaultSetupJson: data.defaultSetupJson.present
+          ? data.defaultSetupJson.value
+          : this.defaultSetupJson,
+      lifecycleIntentsJson: data.lifecycleIntentsJson.present
+          ? data.lifecycleIntentsJson.value
+          : this.lifecycleIntentsJson,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MatchSeriesRow(')
+          ..write('id: $id, ')
+          ..write('slotAName: $slotAName, ')
+          ..write('slotBName: $slotBName, ')
+          ..write('slotAPlayerProfileId: $slotAPlayerProfileId, ')
+          ..write('slotBPlayerProfileId: $slotBPlayerProfileId, ')
+          ..write('lifecycle: $lifecycle, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('closedAt: $closedAt, ')
+          ..write('nextGameNumber: $nextGameNumber, ')
+          ..write('revision: $revision, ')
+          ..write('defaultSetupJson: $defaultSetupJson, ')
+          ..write('lifecycleIntentsJson: $lifecycleIntentsJson')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    slotAName,
+    slotBName,
+    slotAPlayerProfileId,
+    slotBPlayerProfileId,
+    lifecycle,
+    createdAt,
+    closedAt,
+    nextGameNumber,
+    revision,
+    defaultSetupJson,
+    lifecycleIntentsJson,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MatchSeriesRow &&
+          other.id == this.id &&
+          other.slotAName == this.slotAName &&
+          other.slotBName == this.slotBName &&
+          other.slotAPlayerProfileId == this.slotAPlayerProfileId &&
+          other.slotBPlayerProfileId == this.slotBPlayerProfileId &&
+          other.lifecycle == this.lifecycle &&
+          other.createdAt == this.createdAt &&
+          other.closedAt == this.closedAt &&
+          other.nextGameNumber == this.nextGameNumber &&
+          other.revision == this.revision &&
+          other.defaultSetupJson == this.defaultSetupJson &&
+          other.lifecycleIntentsJson == this.lifecycleIntentsJson);
+}
+
+class MatchSeriesCompanion extends UpdateCompanion<MatchSeriesRow> {
+  final Value<String> id;
+  final Value<String> slotAName;
+  final Value<String> slotBName;
+  final Value<String?> slotAPlayerProfileId;
+  final Value<String?> slotBPlayerProfileId;
+  final Value<String> lifecycle;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> closedAt;
+  final Value<int> nextGameNumber;
+  final Value<int> revision;
+  final Value<String> defaultSetupJson;
+  final Value<String> lifecycleIntentsJson;
+  final Value<int> rowid;
+  const MatchSeriesCompanion({
+    this.id = const Value.absent(),
+    this.slotAName = const Value.absent(),
+    this.slotBName = const Value.absent(),
+    this.slotAPlayerProfileId = const Value.absent(),
+    this.slotBPlayerProfileId = const Value.absent(),
+    this.lifecycle = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.closedAt = const Value.absent(),
+    this.nextGameNumber = const Value.absent(),
+    this.revision = const Value.absent(),
+    this.defaultSetupJson = const Value.absent(),
+    this.lifecycleIntentsJson = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MatchSeriesCompanion.insert({
+    required String id,
+    required String slotAName,
+    required String slotBName,
+    this.slotAPlayerProfileId = const Value.absent(),
+    this.slotBPlayerProfileId = const Value.absent(),
+    this.lifecycle = const Value.absent(),
+    required DateTime createdAt,
+    this.closedAt = const Value.absent(),
+    this.nextGameNumber = const Value.absent(),
+    this.revision = const Value.absent(),
+    required String defaultSetupJson,
+    this.lifecycleIntentsJson = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       slotAName = Value(slotAName),
+       slotBName = Value(slotBName),
+       createdAt = Value(createdAt),
+       defaultSetupJson = Value(defaultSetupJson);
+  static Insertable<MatchSeriesRow> custom({
+    Expression<String>? id,
+    Expression<String>? slotAName,
+    Expression<String>? slotBName,
+    Expression<String>? slotAPlayerProfileId,
+    Expression<String>? slotBPlayerProfileId,
+    Expression<String>? lifecycle,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? closedAt,
+    Expression<int>? nextGameNumber,
+    Expression<int>? revision,
+    Expression<String>? defaultSetupJson,
+    Expression<String>? lifecycleIntentsJson,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (slotAName != null) 'slot_a_name': slotAName,
+      if (slotBName != null) 'slot_b_name': slotBName,
+      if (slotAPlayerProfileId != null)
+        'slot_a_player_profile_id': slotAPlayerProfileId,
+      if (slotBPlayerProfileId != null)
+        'slot_b_player_profile_id': slotBPlayerProfileId,
+      if (lifecycle != null) 'lifecycle': lifecycle,
+      if (createdAt != null) 'created_at': createdAt,
+      if (closedAt != null) 'closed_at': closedAt,
+      if (nextGameNumber != null) 'next_game_number': nextGameNumber,
+      if (revision != null) 'revision': revision,
+      if (defaultSetupJson != null) 'default_setup_json': defaultSetupJson,
+      if (lifecycleIntentsJson != null)
+        'lifecycle_intents_json': lifecycleIntentsJson,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MatchSeriesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? slotAName,
+    Value<String>? slotBName,
+    Value<String?>? slotAPlayerProfileId,
+    Value<String?>? slotBPlayerProfileId,
+    Value<String>? lifecycle,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? closedAt,
+    Value<int>? nextGameNumber,
+    Value<int>? revision,
+    Value<String>? defaultSetupJson,
+    Value<String>? lifecycleIntentsJson,
+    Value<int>? rowid,
+  }) {
+    return MatchSeriesCompanion(
+      id: id ?? this.id,
+      slotAName: slotAName ?? this.slotAName,
+      slotBName: slotBName ?? this.slotBName,
+      slotAPlayerProfileId: slotAPlayerProfileId ?? this.slotAPlayerProfileId,
+      slotBPlayerProfileId: slotBPlayerProfileId ?? this.slotBPlayerProfileId,
+      lifecycle: lifecycle ?? this.lifecycle,
+      createdAt: createdAt ?? this.createdAt,
+      closedAt: closedAt ?? this.closedAt,
+      nextGameNumber: nextGameNumber ?? this.nextGameNumber,
+      revision: revision ?? this.revision,
+      defaultSetupJson: defaultSetupJson ?? this.defaultSetupJson,
+      lifecycleIntentsJson: lifecycleIntentsJson ?? this.lifecycleIntentsJson,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (slotAName.present) {
+      map['slot_a_name'] = Variable<String>(slotAName.value);
+    }
+    if (slotBName.present) {
+      map['slot_b_name'] = Variable<String>(slotBName.value);
+    }
+    if (slotAPlayerProfileId.present) {
+      map['slot_a_player_profile_id'] = Variable<String>(
+        slotAPlayerProfileId.value,
+      );
+    }
+    if (slotBPlayerProfileId.present) {
+      map['slot_b_player_profile_id'] = Variable<String>(
+        slotBPlayerProfileId.value,
+      );
+    }
+    if (lifecycle.present) {
+      map['lifecycle'] = Variable<String>(lifecycle.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (closedAt.present) {
+      map['closed_at'] = Variable<DateTime>(closedAt.value);
+    }
+    if (nextGameNumber.present) {
+      map['next_game_number'] = Variable<int>(nextGameNumber.value);
+    }
+    if (revision.present) {
+      map['revision'] = Variable<int>(revision.value);
+    }
+    if (defaultSetupJson.present) {
+      map['default_setup_json'] = Variable<String>(defaultSetupJson.value);
+    }
+    if (lifecycleIntentsJson.present) {
+      map['lifecycle_intents_json'] = Variable<String>(
+        lifecycleIntentsJson.value,
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MatchSeriesCompanion(')
+          ..write('id: $id, ')
+          ..write('slotAName: $slotAName, ')
+          ..write('slotBName: $slotBName, ')
+          ..write('slotAPlayerProfileId: $slotAPlayerProfileId, ')
+          ..write('slotBPlayerProfileId: $slotBPlayerProfileId, ')
+          ..write('lifecycle: $lifecycle, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('closedAt: $closedAt, ')
+          ..write('nextGameNumber: $nextGameNumber, ')
+          ..write('revision: $revision, ')
+          ..write('defaultSetupJson: $defaultSetupJson, ')
+          ..write('lifecycleIntentsJson: $lifecycleIntentsJson, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SeriesMatchesTable extends SeriesMatches
+    with TableInfo<$SeriesMatchesTable, SeriesMatche> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SeriesMatchesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _matchIdMeta = const VerificationMeta(
+    'matchId',
+  );
+  @override
+  late final GeneratedColumn<String> matchId = GeneratedColumn<String>(
+    'match_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES matches (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _seriesIdMeta = const VerificationMeta(
+    'seriesId',
+  );
+  @override
+  late final GeneratedColumn<String> seriesId = GeneratedColumn<String>(
+    'series_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES match_series (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _gameNumberMeta = const VerificationMeta(
+    'gameNumber',
+  );
+  @override
+  late final GeneratedColumn<int> gameNumber = GeneratedColumn<int>(
+    'game_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _slotASideMeta = const VerificationMeta(
+    'slotASide',
+  );
+  @override
+  late final GeneratedColumn<String> slotASide = GeneratedColumn<String>(
+    'slot_a_side',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    matchId,
+    seriesId,
+    gameNumber,
+    slotASide,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'series_matches';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SeriesMatche> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('match_id')) {
+      context.handle(
+        _matchIdMeta,
+        matchId.isAcceptableOrUnknown(data['match_id']!, _matchIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_matchIdMeta);
+    }
+    if (data.containsKey('series_id')) {
+      context.handle(
+        _seriesIdMeta,
+        seriesId.isAcceptableOrUnknown(data['series_id']!, _seriesIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_seriesIdMeta);
+    }
+    if (data.containsKey('game_number')) {
+      context.handle(
+        _gameNumberMeta,
+        gameNumber.isAcceptableOrUnknown(data['game_number']!, _gameNumberMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_gameNumberMeta);
+    }
+    if (data.containsKey('slot_a_side')) {
+      context.handle(
+        _slotASideMeta,
+        slotASide.isAcceptableOrUnknown(data['slot_a_side']!, _slotASideMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_slotASideMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {matchId};
+  @override
+  SeriesMatche map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SeriesMatche(
+      matchId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}match_id'],
+      )!,
+      seriesId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}series_id'],
+      )!,
+      gameNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}game_number'],
+      )!,
+      slotASide: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}slot_a_side'],
+      )!,
+    );
+  }
+
+  @override
+  $SeriesMatchesTable createAlias(String alias) {
+    return $SeriesMatchesTable(attachedDatabase, alias);
+  }
+}
+
+class SeriesMatche extends DataClass implements Insertable<SeriesMatche> {
+  final String matchId;
+  final String seriesId;
+  final int gameNumber;
+  final String slotASide;
+  const SeriesMatche({
+    required this.matchId,
+    required this.seriesId,
+    required this.gameNumber,
+    required this.slotASide,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['match_id'] = Variable<String>(matchId);
+    map['series_id'] = Variable<String>(seriesId);
+    map['game_number'] = Variable<int>(gameNumber);
+    map['slot_a_side'] = Variable<String>(slotASide);
+    return map;
+  }
+
+  SeriesMatchesCompanion toCompanion(bool nullToAbsent) {
+    return SeriesMatchesCompanion(
+      matchId: Value(matchId),
+      seriesId: Value(seriesId),
+      gameNumber: Value(gameNumber),
+      slotASide: Value(slotASide),
+    );
+  }
+
+  factory SeriesMatche.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SeriesMatche(
+      matchId: serializer.fromJson<String>(json['matchId']),
+      seriesId: serializer.fromJson<String>(json['seriesId']),
+      gameNumber: serializer.fromJson<int>(json['gameNumber']),
+      slotASide: serializer.fromJson<String>(json['slotASide']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'matchId': serializer.toJson<String>(matchId),
+      'seriesId': serializer.toJson<String>(seriesId),
+      'gameNumber': serializer.toJson<int>(gameNumber),
+      'slotASide': serializer.toJson<String>(slotASide),
+    };
+  }
+
+  SeriesMatche copyWith({
+    String? matchId,
+    String? seriesId,
+    int? gameNumber,
+    String? slotASide,
+  }) => SeriesMatche(
+    matchId: matchId ?? this.matchId,
+    seriesId: seriesId ?? this.seriesId,
+    gameNumber: gameNumber ?? this.gameNumber,
+    slotASide: slotASide ?? this.slotASide,
+  );
+  SeriesMatche copyWithCompanion(SeriesMatchesCompanion data) {
+    return SeriesMatche(
+      matchId: data.matchId.present ? data.matchId.value : this.matchId,
+      seriesId: data.seriesId.present ? data.seriesId.value : this.seriesId,
+      gameNumber: data.gameNumber.present
+          ? data.gameNumber.value
+          : this.gameNumber,
+      slotASide: data.slotASide.present ? data.slotASide.value : this.slotASide,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SeriesMatche(')
+          ..write('matchId: $matchId, ')
+          ..write('seriesId: $seriesId, ')
+          ..write('gameNumber: $gameNumber, ')
+          ..write('slotASide: $slotASide')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(matchId, seriesId, gameNumber, slotASide);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SeriesMatche &&
+          other.matchId == this.matchId &&
+          other.seriesId == this.seriesId &&
+          other.gameNumber == this.gameNumber &&
+          other.slotASide == this.slotASide);
+}
+
+class SeriesMatchesCompanion extends UpdateCompanion<SeriesMatche> {
+  final Value<String> matchId;
+  final Value<String> seriesId;
+  final Value<int> gameNumber;
+  final Value<String> slotASide;
+  final Value<int> rowid;
+  const SeriesMatchesCompanion({
+    this.matchId = const Value.absent(),
+    this.seriesId = const Value.absent(),
+    this.gameNumber = const Value.absent(),
+    this.slotASide = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SeriesMatchesCompanion.insert({
+    required String matchId,
+    required String seriesId,
+    required int gameNumber,
+    required String slotASide,
+    this.rowid = const Value.absent(),
+  }) : matchId = Value(matchId),
+       seriesId = Value(seriesId),
+       gameNumber = Value(gameNumber),
+       slotASide = Value(slotASide);
+  static Insertable<SeriesMatche> custom({
+    Expression<String>? matchId,
+    Expression<String>? seriesId,
+    Expression<int>? gameNumber,
+    Expression<String>? slotASide,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (matchId != null) 'match_id': matchId,
+      if (seriesId != null) 'series_id': seriesId,
+      if (gameNumber != null) 'game_number': gameNumber,
+      if (slotASide != null) 'slot_a_side': slotASide,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SeriesMatchesCompanion copyWith({
+    Value<String>? matchId,
+    Value<String>? seriesId,
+    Value<int>? gameNumber,
+    Value<String>? slotASide,
+    Value<int>? rowid,
+  }) {
+    return SeriesMatchesCompanion(
+      matchId: matchId ?? this.matchId,
+      seriesId: seriesId ?? this.seriesId,
+      gameNumber: gameNumber ?? this.gameNumber,
+      slotASide: slotASide ?? this.slotASide,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (matchId.present) {
+      map['match_id'] = Variable<String>(matchId.value);
+    }
+    if (seriesId.present) {
+      map['series_id'] = Variable<String>(seriesId.value);
+    }
+    if (gameNumber.present) {
+      map['game_number'] = Variable<int>(gameNumber.value);
+    }
+    if (slotASide.present) {
+      map['slot_a_side'] = Variable<String>(slotASide.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SeriesMatchesCompanion(')
+          ..write('matchId: $matchId, ')
+          ..write('seriesId: $seriesId, ')
+          ..write('gameNumber: $gameNumber, ')
+          ..write('slotASide: $slotASide, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $MatchParticipantsTable extends MatchParticipants
     with TableInfo<$MatchParticipantsTable, MatchParticipant> {
   @override
@@ -6062,6 +7139,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $MatchesTable matches = $MatchesTable(this);
   late final $PlayersTable players = $PlayersTable(this);
+  late final $MatchSeriesTable matchSeries = $MatchSeriesTable(this);
+  late final $SeriesMatchesTable seriesMatches = $SeriesMatchesTable(this);
   late final $MatchParticipantsTable matchParticipants =
       $MatchParticipantsTable(this);
   late final $MatchClocksTable matchClocks = $MatchClocksTable(this);
@@ -6082,6 +7161,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     matches,
     players,
+    matchSeries,
+    seriesMatches,
     matchParticipants,
     matchClocks,
     activeSessions,
@@ -6095,6 +7176,34 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'players',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('match_series', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'players',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('match_series', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'matches',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('series_matches', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'match_series',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('series_matches', kind: UpdateKind.delete)],
+    ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'matches',
@@ -6234,6 +7343,24 @@ typedef $$MatchesTableUpdateCompanionBuilder =
 final class $$MatchesTableReferences
     extends BaseReferences<_$AppDatabase, $MatchesTable, Matche> {
   $$MatchesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$SeriesMatchesTable, List<SeriesMatche>>
+  _seriesMatchesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.seriesMatches,
+    aliasName: 'matches__id__series_matches__match_id',
+  );
+
+  $$SeriesMatchesTableProcessedTableManager get seriesMatchesRefs {
+    final manager = $$SeriesMatchesTableTableManager(
+      $_db,
+      $_db.seriesMatches,
+    ).filter((f) => f.matchId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_seriesMatchesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 
   static MultiTypedResultKey<$MatchParticipantsTable, List<MatchParticipant>>
   _matchParticipantsRefsTable(_$AppDatabase db) =>
@@ -6451,6 +7578,31 @@ class $$MatchesTableFilterComposer
     column: $table.note,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> seriesMatchesRefs(
+    Expression<bool> Function($$SeriesMatchesTableFilterComposer f) f,
+  ) {
+    final $$SeriesMatchesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.seriesMatches,
+      getReferencedColumn: (t) => t.matchId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SeriesMatchesTableFilterComposer(
+            $db: $db,
+            $table: $db.seriesMatches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 
   Expression<bool> matchParticipantsRefs(
     Expression<bool> Function($$MatchParticipantsTableFilterComposer f) f,
@@ -6762,6 +7914,31 @@ class $$MatchesTableAnnotationComposer
   GeneratedColumn<String> get note =>
       $composableBuilder(column: $table.note, builder: (column) => column);
 
+  Expression<T> seriesMatchesRefs<T extends Object>(
+    Expression<T> Function($$SeriesMatchesTableAnnotationComposer a) f,
+  ) {
+    final $$SeriesMatchesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.seriesMatches,
+      getReferencedColumn: (t) => t.matchId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SeriesMatchesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.seriesMatches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> matchParticipantsRefs<T extends Object>(
     Expression<T> Function($$MatchParticipantsTableAnnotationComposer a) f,
   ) {
@@ -6981,6 +8158,7 @@ class $$MatchesTableTableManager
           (Matche, $$MatchesTableReferences),
           Matche,
           PrefetchHooks Function({
+            bool seriesMatchesRefs,
             bool matchParticipantsRefs,
             bool matchClocksRefs,
             bool activeSessionsRefs,
@@ -7064,6 +8242,7 @@ class $$MatchesTableTableManager
               .toList(),
           prefetchHooksCallback:
               ({
+                seriesMatchesRefs = false,
                 matchParticipantsRefs = false,
                 matchClocksRefs = false,
                 activeSessionsRefs = false,
@@ -7076,6 +8255,7 @@ class $$MatchesTableTableManager
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
+                    if (seriesMatchesRefs) db.seriesMatches,
                     if (matchParticipantsRefs) db.matchParticipants,
                     if (matchClocksRefs) db.matchClocks,
                     if (activeSessionsRefs) db.activeSessions,
@@ -7089,6 +8269,27 @@ class $$MatchesTableTableManager
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
+                      if (seriesMatchesRefs)
+                        await $_getPrefetchedData<
+                          Matche,
+                          $MatchesTable,
+                          SeriesMatche
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MatchesTableReferences
+                              ._seriesMatchesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MatchesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).seriesMatchesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.matchId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (matchParticipantsRefs)
                         await $_getPrefetchedData<
                           Matche,
@@ -7278,6 +8479,7 @@ typedef $$MatchesTableProcessedTableManager =
       (Matche, $$MatchesTableReferences),
       Matche,
       PrefetchHooks Function({
+        bool seriesMatchesRefs,
         bool matchParticipantsRefs,
         bool matchClocksRefs,
         bool activeSessionsRefs,
@@ -7310,6 +8512,44 @@ typedef $$PlayersTableUpdateCompanionBuilder =
 final class $$PlayersTableReferences
     extends BaseReferences<_$AppDatabase, $PlayersTable, PlayerRow> {
   $$PlayersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$MatchSeriesTable, List<MatchSeriesRow>>
+  _seriesSlotATable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.matchSeries,
+    aliasName: 'players__id__match_series__slot_a_player_profile_id',
+  );
+
+  $$MatchSeriesTableProcessedTableManager get seriesSlotA {
+    final manager = $$MatchSeriesTableTableManager($_db, $_db.matchSeries)
+        .filter(
+          (f) =>
+              f.slotAPlayerProfileId.id.sqlEquals($_itemColumn<String>('id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(_seriesSlotATable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$MatchSeriesTable, List<MatchSeriesRow>>
+  _seriesSlotBTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.matchSeries,
+    aliasName: 'players__id__match_series__slot_b_player_profile_id',
+  );
+
+  $$MatchSeriesTableProcessedTableManager get seriesSlotB {
+    final manager = $$MatchSeriesTableTableManager($_db, $_db.matchSeries)
+        .filter(
+          (f) =>
+              f.slotBPlayerProfileId.id.sqlEquals($_itemColumn<String>('id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(_seriesSlotBTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 
   static MultiTypedResultKey<$MatchParticipantsTable, List<MatchParticipant>>
   _matchParticipantsRefsTable(_$AppDatabase db) =>
@@ -7423,6 +8663,56 @@ class $$PlayersTableFilterComposer
     column: $table.note,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> seriesSlotA(
+    Expression<bool> Function($$MatchSeriesTableFilterComposer f) f,
+  ) {
+    final $$MatchSeriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.matchSeries,
+      getReferencedColumn: (t) => t.slotAPlayerProfileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchSeriesTableFilterComposer(
+            $db: $db,
+            $table: $db.matchSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> seriesSlotB(
+    Expression<bool> Function($$MatchSeriesTableFilterComposer f) f,
+  ) {
+    final $$MatchSeriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.matchSeries,
+      getReferencedColumn: (t) => t.slotBPlayerProfileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchSeriesTableFilterComposer(
+            $db: $db,
+            $table: $db.matchSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 
   Expression<bool> matchParticipantsRefs(
     Expression<bool> Function($$MatchParticipantsTableFilterComposer f) f,
@@ -7565,6 +8855,56 @@ class $$PlayersTableAnnotationComposer
   GeneratedColumn<String> get note =>
       $composableBuilder(column: $table.note, builder: (column) => column);
 
+  Expression<T> seriesSlotA<T extends Object>(
+    Expression<T> Function($$MatchSeriesTableAnnotationComposer a) f,
+  ) {
+    final $$MatchSeriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.matchSeries,
+      getReferencedColumn: (t) => t.slotAPlayerProfileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchSeriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.matchSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> seriesSlotB<T extends Object>(
+    Expression<T> Function($$MatchSeriesTableAnnotationComposer a) f,
+  ) {
+    final $$MatchSeriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.matchSeries,
+      getReferencedColumn: (t) => t.slotBPlayerProfileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchSeriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.matchSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> matchParticipantsRefs<T extends Object>(
     Expression<T> Function($$MatchParticipantsTableAnnotationComposer a) f,
   ) {
@@ -7660,6 +9000,8 @@ class $$PlayersTableTableManager
           (PlayerRow, $$PlayersTableReferences),
           PlayerRow,
           PrefetchHooks Function({
+            bool seriesSlotA,
+            bool seriesSlotB,
             bool matchParticipantsRefs,
             bool playerAnalyticsSnapshotPlayers,
             bool playerAnalyticsSnapshotOpponents,
@@ -7718,6 +9060,8 @@ class $$PlayersTableTableManager
               .toList(),
           prefetchHooksCallback:
               ({
+                seriesSlotA = false,
+                seriesSlotB = false,
                 matchParticipantsRefs = false,
                 playerAnalyticsSnapshotPlayers = false,
                 playerAnalyticsSnapshotOpponents = false,
@@ -7725,6 +9069,8 @@ class $$PlayersTableTableManager
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
+                    if (seriesSlotA) db.matchSeries,
+                    if (seriesSlotB) db.matchSeries,
                     if (matchParticipantsRefs) db.matchParticipants,
                     if (playerAnalyticsSnapshotPlayers)
                       db.playerAnalyticsSnapshots,
@@ -7734,6 +9080,48 @@ class $$PlayersTableTableManager
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
+                      if (seriesSlotA)
+                        await $_getPrefetchedData<
+                          PlayerRow,
+                          $PlayersTable,
+                          MatchSeriesRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PlayersTableReferences
+                              ._seriesSlotATable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PlayersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).seriesSlotA,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.slotAPlayerProfileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (seriesSlotB)
+                        await $_getPrefetchedData<
+                          PlayerRow,
+                          $PlayersTable,
+                          MatchSeriesRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PlayersTableReferences
+                              ._seriesSlotBTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PlayersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).seriesSlotB,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.slotBPlayerProfileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (matchParticipantsRefs)
                         await $_getPrefetchedData<
                           PlayerRow,
@@ -7818,10 +9206,1059 @@ typedef $$PlayersTableProcessedTableManager =
       (PlayerRow, $$PlayersTableReferences),
       PlayerRow,
       PrefetchHooks Function({
+        bool seriesSlotA,
+        bool seriesSlotB,
         bool matchParticipantsRefs,
         bool playerAnalyticsSnapshotPlayers,
         bool playerAnalyticsSnapshotOpponents,
       })
+    >;
+typedef $$MatchSeriesTableCreateCompanionBuilder =
+    MatchSeriesCompanion Function({
+      required String id,
+      required String slotAName,
+      required String slotBName,
+      Value<String?> slotAPlayerProfileId,
+      Value<String?> slotBPlayerProfileId,
+      Value<String> lifecycle,
+      required DateTime createdAt,
+      Value<DateTime?> closedAt,
+      Value<int> nextGameNumber,
+      Value<int> revision,
+      required String defaultSetupJson,
+      Value<String> lifecycleIntentsJson,
+      Value<int> rowid,
+    });
+typedef $$MatchSeriesTableUpdateCompanionBuilder =
+    MatchSeriesCompanion Function({
+      Value<String> id,
+      Value<String> slotAName,
+      Value<String> slotBName,
+      Value<String?> slotAPlayerProfileId,
+      Value<String?> slotBPlayerProfileId,
+      Value<String> lifecycle,
+      Value<DateTime> createdAt,
+      Value<DateTime?> closedAt,
+      Value<int> nextGameNumber,
+      Value<int> revision,
+      Value<String> defaultSetupJson,
+      Value<String> lifecycleIntentsJson,
+      Value<int> rowid,
+    });
+
+final class $$MatchSeriesTableReferences
+    extends BaseReferences<_$AppDatabase, $MatchSeriesTable, MatchSeriesRow> {
+  $$MatchSeriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $PlayersTable _slotAPlayerProfileIdTable(_$AppDatabase db) => db
+      .players
+      .createAlias('match_series__slot_a_player_profile_id__players__id');
+
+  $$PlayersTableProcessedTableManager? get slotAPlayerProfileId {
+    final $_column = $_itemColumn<String>('slot_a_player_profile_id');
+    if ($_column == null) return null;
+    final manager = $$PlayersTableTableManager(
+      $_db,
+      $_db.players,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(
+      _slotAPlayerProfileIdTable($_db),
+    );
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $PlayersTable _slotBPlayerProfileIdTable(_$AppDatabase db) => db
+      .players
+      .createAlias('match_series__slot_b_player_profile_id__players__id');
+
+  $$PlayersTableProcessedTableManager? get slotBPlayerProfileId {
+    final $_column = $_itemColumn<String>('slot_b_player_profile_id');
+    if ($_column == null) return null;
+    final manager = $$PlayersTableTableManager(
+      $_db,
+      $_db.players,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(
+      _slotBPlayerProfileIdTable($_db),
+    );
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$SeriesMatchesTable, List<SeriesMatche>>
+  _seriesMatchesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.seriesMatches,
+    aliasName: 'match_series__id__series_matches__series_id',
+  );
+
+  $$SeriesMatchesTableProcessedTableManager get seriesMatchesRefs {
+    final manager = $$SeriesMatchesTableTableManager(
+      $_db,
+      $_db.seriesMatches,
+    ).filter((f) => f.seriesId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_seriesMatchesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$MatchSeriesTableFilterComposer
+    extends Composer<_$AppDatabase, $MatchSeriesTable> {
+  $$MatchSeriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get slotAName => $composableBuilder(
+    column: $table.slotAName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get slotBName => $composableBuilder(
+    column: $table.slotBName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lifecycle => $composableBuilder(
+    column: $table.lifecycle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get closedAt => $composableBuilder(
+    column: $table.closedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get nextGameNumber => $composableBuilder(
+    column: $table.nextGameNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get defaultSetupJson => $composableBuilder(
+    column: $table.defaultSetupJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lifecycleIntentsJson => $composableBuilder(
+    column: $table.lifecycleIntentsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PlayersTableFilterComposer get slotAPlayerProfileId {
+    final $$PlayersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.slotAPlayerProfileId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableFilterComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$PlayersTableFilterComposer get slotBPlayerProfileId {
+    final $$PlayersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.slotBPlayerProfileId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableFilterComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> seriesMatchesRefs(
+    Expression<bool> Function($$SeriesMatchesTableFilterComposer f) f,
+  ) {
+    final $$SeriesMatchesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.seriesMatches,
+      getReferencedColumn: (t) => t.seriesId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SeriesMatchesTableFilterComposer(
+            $db: $db,
+            $table: $db.seriesMatches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$MatchSeriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $MatchSeriesTable> {
+  $$MatchSeriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get slotAName => $composableBuilder(
+    column: $table.slotAName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get slotBName => $composableBuilder(
+    column: $table.slotBName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lifecycle => $composableBuilder(
+    column: $table.lifecycle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get closedAt => $composableBuilder(
+    column: $table.closedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get nextGameNumber => $composableBuilder(
+    column: $table.nextGameNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get defaultSetupJson => $composableBuilder(
+    column: $table.defaultSetupJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lifecycleIntentsJson => $composableBuilder(
+    column: $table.lifecycleIntentsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PlayersTableOrderingComposer get slotAPlayerProfileId {
+    final $$PlayersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.slotAPlayerProfileId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableOrderingComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$PlayersTableOrderingComposer get slotBPlayerProfileId {
+    final $$PlayersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.slotBPlayerProfileId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableOrderingComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MatchSeriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MatchSeriesTable> {
+  $$MatchSeriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get slotAName =>
+      $composableBuilder(column: $table.slotAName, builder: (column) => column);
+
+  GeneratedColumn<String> get slotBName =>
+      $composableBuilder(column: $table.slotBName, builder: (column) => column);
+
+  GeneratedColumn<String> get lifecycle =>
+      $composableBuilder(column: $table.lifecycle, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get closedAt =>
+      $composableBuilder(column: $table.closedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get nextGameNumber => $composableBuilder(
+    column: $table.nextGameNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get revision =>
+      $composableBuilder(column: $table.revision, builder: (column) => column);
+
+  GeneratedColumn<String> get defaultSetupJson => $composableBuilder(
+    column: $table.defaultSetupJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lifecycleIntentsJson => $composableBuilder(
+    column: $table.lifecycleIntentsJson,
+    builder: (column) => column,
+  );
+
+  $$PlayersTableAnnotationComposer get slotAPlayerProfileId {
+    final $$PlayersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.slotAPlayerProfileId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$PlayersTableAnnotationComposer get slotBPlayerProfileId {
+    final $$PlayersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.slotBPlayerProfileId,
+      referencedTable: $db.players,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlayersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.players,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> seriesMatchesRefs<T extends Object>(
+    Expression<T> Function($$SeriesMatchesTableAnnotationComposer a) f,
+  ) {
+    final $$SeriesMatchesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.seriesMatches,
+      getReferencedColumn: (t) => t.seriesId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SeriesMatchesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.seriesMatches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$MatchSeriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MatchSeriesTable,
+          MatchSeriesRow,
+          $$MatchSeriesTableFilterComposer,
+          $$MatchSeriesTableOrderingComposer,
+          $$MatchSeriesTableAnnotationComposer,
+          $$MatchSeriesTableCreateCompanionBuilder,
+          $$MatchSeriesTableUpdateCompanionBuilder,
+          (MatchSeriesRow, $$MatchSeriesTableReferences),
+          MatchSeriesRow,
+          PrefetchHooks Function({
+            bool slotAPlayerProfileId,
+            bool slotBPlayerProfileId,
+            bool seriesMatchesRefs,
+          })
+        > {
+  $$MatchSeriesTableTableManager(_$AppDatabase db, $MatchSeriesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MatchSeriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MatchSeriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MatchSeriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> slotAName = const Value.absent(),
+                Value<String> slotBName = const Value.absent(),
+                Value<String?> slotAPlayerProfileId = const Value.absent(),
+                Value<String?> slotBPlayerProfileId = const Value.absent(),
+                Value<String> lifecycle = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> closedAt = const Value.absent(),
+                Value<int> nextGameNumber = const Value.absent(),
+                Value<int> revision = const Value.absent(),
+                Value<String> defaultSetupJson = const Value.absent(),
+                Value<String> lifecycleIntentsJson = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MatchSeriesCompanion(
+                id: id,
+                slotAName: slotAName,
+                slotBName: slotBName,
+                slotAPlayerProfileId: slotAPlayerProfileId,
+                slotBPlayerProfileId: slotBPlayerProfileId,
+                lifecycle: lifecycle,
+                createdAt: createdAt,
+                closedAt: closedAt,
+                nextGameNumber: nextGameNumber,
+                revision: revision,
+                defaultSetupJson: defaultSetupJson,
+                lifecycleIntentsJson: lifecycleIntentsJson,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String slotAName,
+                required String slotBName,
+                Value<String?> slotAPlayerProfileId = const Value.absent(),
+                Value<String?> slotBPlayerProfileId = const Value.absent(),
+                Value<String> lifecycle = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> closedAt = const Value.absent(),
+                Value<int> nextGameNumber = const Value.absent(),
+                Value<int> revision = const Value.absent(),
+                required String defaultSetupJson,
+                Value<String> lifecycleIntentsJson = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MatchSeriesCompanion.insert(
+                id: id,
+                slotAName: slotAName,
+                slotBName: slotBName,
+                slotAPlayerProfileId: slotAPlayerProfileId,
+                slotBPlayerProfileId: slotBPlayerProfileId,
+                lifecycle: lifecycle,
+                createdAt: createdAt,
+                closedAt: closedAt,
+                nextGameNumber: nextGameNumber,
+                revision: revision,
+                defaultSetupJson: defaultSetupJson,
+                lifecycleIntentsJson: lifecycleIntentsJson,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$MatchSeriesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                slotAPlayerProfileId = false,
+                slotBPlayerProfileId = false,
+                seriesMatchesRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (seriesMatchesRefs) db.seriesMatches,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (slotAPlayerProfileId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.slotAPlayerProfileId,
+                                    referencedTable:
+                                        $$MatchSeriesTableReferences
+                                            ._slotAPlayerProfileIdTable(db),
+                                    referencedColumn:
+                                        $$MatchSeriesTableReferences
+                                            ._slotAPlayerProfileIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (slotBPlayerProfileId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.slotBPlayerProfileId,
+                                    referencedTable:
+                                        $$MatchSeriesTableReferences
+                                            ._slotBPlayerProfileIdTable(db),
+                                    referencedColumn:
+                                        $$MatchSeriesTableReferences
+                                            ._slotBPlayerProfileIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (seriesMatchesRefs)
+                        await $_getPrefetchedData<
+                          MatchSeriesRow,
+                          $MatchSeriesTable,
+                          SeriesMatche
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MatchSeriesTableReferences
+                              ._seriesMatchesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MatchSeriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).seriesMatchesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.seriesId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$MatchSeriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MatchSeriesTable,
+      MatchSeriesRow,
+      $$MatchSeriesTableFilterComposer,
+      $$MatchSeriesTableOrderingComposer,
+      $$MatchSeriesTableAnnotationComposer,
+      $$MatchSeriesTableCreateCompanionBuilder,
+      $$MatchSeriesTableUpdateCompanionBuilder,
+      (MatchSeriesRow, $$MatchSeriesTableReferences),
+      MatchSeriesRow,
+      PrefetchHooks Function({
+        bool slotAPlayerProfileId,
+        bool slotBPlayerProfileId,
+        bool seriesMatchesRefs,
+      })
+    >;
+typedef $$SeriesMatchesTableCreateCompanionBuilder =
+    SeriesMatchesCompanion Function({
+      required String matchId,
+      required String seriesId,
+      required int gameNumber,
+      required String slotASide,
+      Value<int> rowid,
+    });
+typedef $$SeriesMatchesTableUpdateCompanionBuilder =
+    SeriesMatchesCompanion Function({
+      Value<String> matchId,
+      Value<String> seriesId,
+      Value<int> gameNumber,
+      Value<String> slotASide,
+      Value<int> rowid,
+    });
+
+final class $$SeriesMatchesTableReferences
+    extends BaseReferences<_$AppDatabase, $SeriesMatchesTable, SeriesMatche> {
+  $$SeriesMatchesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $MatchesTable _matchIdTable(_$AppDatabase db) =>
+      db.matches.createAlias('series_matches__match_id__matches__id');
+
+  $$MatchesTableProcessedTableManager get matchId {
+    final $_column = $_itemColumn<String>('match_id')!;
+
+    final manager = $$MatchesTableTableManager(
+      $_db,
+      $_db.matches,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_matchIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $MatchSeriesTable _seriesIdTable(_$AppDatabase db) =>
+      db.matchSeries.createAlias('series_matches__series_id__match_series__id');
+
+  $$MatchSeriesTableProcessedTableManager get seriesId {
+    final $_column = $_itemColumn<String>('series_id')!;
+
+    final manager = $$MatchSeriesTableTableManager(
+      $_db,
+      $_db.matchSeries,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_seriesIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SeriesMatchesTableFilterComposer
+    extends Composer<_$AppDatabase, $SeriesMatchesTable> {
+  $$SeriesMatchesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get gameNumber => $composableBuilder(
+    column: $table.gameNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get slotASide => $composableBuilder(
+    column: $table.slotASide,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$MatchesTableFilterComposer get matchId {
+    final $$MatchesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.matchId,
+      referencedTable: $db.matches,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchesTableFilterComposer(
+            $db: $db,
+            $table: $db.matches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$MatchSeriesTableFilterComposer get seriesId {
+    final $$MatchSeriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.seriesId,
+      referencedTable: $db.matchSeries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchSeriesTableFilterComposer(
+            $db: $db,
+            $table: $db.matchSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SeriesMatchesTableOrderingComposer
+    extends Composer<_$AppDatabase, $SeriesMatchesTable> {
+  $$SeriesMatchesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get gameNumber => $composableBuilder(
+    column: $table.gameNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get slotASide => $composableBuilder(
+    column: $table.slotASide,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$MatchesTableOrderingComposer get matchId {
+    final $$MatchesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.matchId,
+      referencedTable: $db.matches,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchesTableOrderingComposer(
+            $db: $db,
+            $table: $db.matches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$MatchSeriesTableOrderingComposer get seriesId {
+    final $$MatchSeriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.seriesId,
+      referencedTable: $db.matchSeries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchSeriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.matchSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SeriesMatchesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SeriesMatchesTable> {
+  $$SeriesMatchesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get gameNumber => $composableBuilder(
+    column: $table.gameNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get slotASide =>
+      $composableBuilder(column: $table.slotASide, builder: (column) => column);
+
+  $$MatchesTableAnnotationComposer get matchId {
+    final $$MatchesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.matchId,
+      referencedTable: $db.matches,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.matches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$MatchSeriesTableAnnotationComposer get seriesId {
+    final $$MatchSeriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.seriesId,
+      referencedTable: $db.matchSeries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MatchSeriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.matchSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SeriesMatchesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SeriesMatchesTable,
+          SeriesMatche,
+          $$SeriesMatchesTableFilterComposer,
+          $$SeriesMatchesTableOrderingComposer,
+          $$SeriesMatchesTableAnnotationComposer,
+          $$SeriesMatchesTableCreateCompanionBuilder,
+          $$SeriesMatchesTableUpdateCompanionBuilder,
+          (SeriesMatche, $$SeriesMatchesTableReferences),
+          SeriesMatche,
+          PrefetchHooks Function({bool matchId, bool seriesId})
+        > {
+  $$SeriesMatchesTableTableManager(_$AppDatabase db, $SeriesMatchesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SeriesMatchesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SeriesMatchesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SeriesMatchesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> matchId = const Value.absent(),
+                Value<String> seriesId = const Value.absent(),
+                Value<int> gameNumber = const Value.absent(),
+                Value<String> slotASide = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SeriesMatchesCompanion(
+                matchId: matchId,
+                seriesId: seriesId,
+                gameNumber: gameNumber,
+                slotASide: slotASide,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String matchId,
+                required String seriesId,
+                required int gameNumber,
+                required String slotASide,
+                Value<int> rowid = const Value.absent(),
+              }) => SeriesMatchesCompanion.insert(
+                matchId: matchId,
+                seriesId: seriesId,
+                gameNumber: gameNumber,
+                slotASide: slotASide,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SeriesMatchesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({matchId = false, seriesId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (matchId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.matchId,
+                                referencedTable: $$SeriesMatchesTableReferences
+                                    ._matchIdTable(db),
+                                referencedColumn: $$SeriesMatchesTableReferences
+                                    ._matchIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+                    if (seriesId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.seriesId,
+                                referencedTable: $$SeriesMatchesTableReferences
+                                    ._seriesIdTable(db),
+                                referencedColumn: $$SeriesMatchesTableReferences
+                                    ._seriesIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SeriesMatchesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SeriesMatchesTable,
+      SeriesMatche,
+      $$SeriesMatchesTableFilterComposer,
+      $$SeriesMatchesTableOrderingComposer,
+      $$SeriesMatchesTableAnnotationComposer,
+      $$SeriesMatchesTableCreateCompanionBuilder,
+      $$SeriesMatchesTableUpdateCompanionBuilder,
+      (SeriesMatche, $$SeriesMatchesTableReferences),
+      SeriesMatche,
+      PrefetchHooks Function({bool matchId, bool seriesId})
     >;
 typedef $$MatchParticipantsTableCreateCompanionBuilder =
     MatchParticipantsCompanion Function({
@@ -12218,6 +14655,10 @@ class $AppDatabaseManager {
       $$MatchesTableTableManager(_db, _db.matches);
   $$PlayersTableTableManager get players =>
       $$PlayersTableTableManager(_db, _db.players);
+  $$MatchSeriesTableTableManager get matchSeries =>
+      $$MatchSeriesTableTableManager(_db, _db.matchSeries);
+  $$SeriesMatchesTableTableManager get seriesMatches =>
+      $$SeriesMatchesTableTableManager(_db, _db.seriesMatches);
   $$MatchParticipantsTableTableManager get matchParticipants =>
       $$MatchParticipantsTableTableManager(_db, _db.matchParticipants);
   $$MatchClocksTableTableManager get matchClocks =>

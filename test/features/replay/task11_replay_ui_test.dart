@@ -174,7 +174,7 @@ void main() {
       );
 
       expect(find.textContaining('编辑'), findsWidgets);
-      expect(find.textContaining('事件'), findsWidgets);
+      expect(find.textContaining('记录'), findsWidgets);
       expect(find.textContaining('分数'), findsWidgets);
       expect(find.textContaining('2 → 3'), findsOneWidget);
       expect(find.textContaining('edit'), findsNothing);

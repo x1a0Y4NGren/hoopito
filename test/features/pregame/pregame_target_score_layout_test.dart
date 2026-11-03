@@ -118,6 +118,9 @@ Future<void> _openDialog(
   await tester.ensureVisible(find.byKey(const Key('pregame-advanced')));
   await tester.tap(find.byKey(const Key('pregame-advanced')));
   await tester.pumpAndSettle();
+  await tester.ensureVisible(find.byKey(const Key('pregame-goal-mode-target')));
+  await tester.tap(find.byKey(const Key('pregame-goal-mode-target')));
+  await tester.pumpAndSettle();
   await tester.ensureVisible(find.byKey(_edit));
   await tester.tap(find.byKey(_edit));
   await tester.pumpAndSettle();

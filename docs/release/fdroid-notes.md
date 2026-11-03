@@ -9,14 +9,14 @@
 - License：MIT
 - Source：`https://github.com/x1a0Y4NGren/hoopito`
 - Issue tracker：`https://github.com/x1a0Y4NGren/hoopito/issues`
-- Published Android release：Hoopito · 球豆 `2.0.1`，versionCode `5`，Git tag `v2.0.1`；历史 HoopTrace `2.0.0` 为 versionCode `4`，`1.0.0` 为 versionCode `2`
+- Published Android release：Hoopito · 球豆 `2.1.0+6`，versionCode `6`，Git tag `v2.1.0`；历史 Hoopito `2.0.1` 为 versionCode `5`，HoopTrace `2.0.0` 为 versionCode `4`，`1.0.0` 为 versionCode `2`
 - Platform：Flutter，Android 优先
 
 Application ID 已脱离 Flutter 模板的 `com.example` 命名，并与 GitHub Pages 命名空间对应。v1.0.0 已正式发布后不可再更改。
 
 ## 当前发布状态
 
-Hoopito · 球豆 v2.0.1 Android 正式 APK 已通过 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1) 发布，公开文件为 `Hoopito-v2.0.1-android.apk`，来源见[发行记录](v2.0.1-release-record.md)。原 HoopTrace v2.0.0 文件和验收记录保留历史名称。本文仍是 F-Droid 准备记录，**尚未在官方 F-Droid 仓库发布**；后续渠道工作需单独完成，不改变已发布版本。
+Hoopito · 球豆 v2.1.0 Android `2.1.0+6` 正式 APK 已通过 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0) 发布，公开文件为 `Hoopito-v2.1.0-android.apk`，来源见[发行记录](v2.1.0-release-record.md)。原 HoopTrace v2.0.0 文件和验收记录保留历史名称。本文仍是 F-Droid 准备记录，**尚未在官方 F-Droid 仓库发布**；后续渠道工作需单独完成，不改变已发布版本。
 
 ## 构建工具链
 
@@ -52,7 +52,7 @@ diff -u third_party/android_runtime/coordinates.txt \
   build/app/reports/release-runtime-coordinates.txt
 dart --packages=.dart_tool/package_config.json \
   tool/release/generate_third_party_notices.dart
-git diff --exit-code -- THIRD_PARTY_NOTICES.md
+git diff --exit-code -- docs/legal/THIRD_PARTY_NOTICES.md
 ```
 
 仓库不包含 keystore 或 `key.properties`。普通 Release 构建在没有正式签名配置时会失败，防止维护者误发未签名 APK；F-Droid 或可复现性验证必须通过上面的显式环境变量选择未签名构建。任何模式都不会回退到 debug key。
@@ -70,7 +70,7 @@ git diff --exit-code -- THIRD_PARTY_NOTICES.md
   F-Droid 当前对受信构建工具和二进制来源的规则检查。
 - `third_party/android_runtime/coordinates.txt` 是 Gradle release runtime
   graph 的排序清单；CI 会重新导出并逐字节比较。每个坐标及完整 Apache-2.0
-  文本会进入 `THIRD_PARTY_NOTICES.md`，不能用删节许可证替代。
+  文本会进入 `docs/legal/THIRD_PARTY_NOTICES.md`，不能用删节许可证替代。
 
 提交前应在 fdroidserver 环境执行依赖扫描，并确认所有 Maven 和 pub 包来源满足 Inclusion Policy。
 
@@ -81,10 +81,12 @@ git diff --exit-code -- THIRD_PARTY_NOTICES.md
 - 无账号、云同步、广告、分析、追踪或崩溃遥测。
 - 无应用运营后端，不上传球员、比赛、落点或设置。
 - Android 应用级系统备份关闭。
-- 只有用户主动点击外部链接时才把 URL 交给浏览器。
+- 包含应用内更新功能的 Android 源码使用网络权限和 `REQUEST_INSTALL_PACKAGES`。默认每进程启动检查一次公开更新元数据，可在设置中关闭；也可手动检查。先请求官网 stable feed，失败或无效时请求 GitHub latest 的 `android-update.json`。不上传比赛、球员、设置或设备标识，连接信息仍会由分发服务处理。
+- 安装包仅在用户点击下载后由 Android DownloadManager 获取，官网失败时最多回退一次同版本 GitHub 附件；下载后校验大小、SHA-256、应用身份、版本和签名。安装需要用户和系统确认，活动比赛期间不发起安装，无后台静默安装，不申请广泛存储或通知权限。
+- 其他外部链接仍只在用户点击后交给浏览器。
 - 导出和自动备份由系统分享面板或用户授权目录驱动。
 
-预计不需要 F-Droid Anti-Features。最终结论以 fdroidserver 扫描和人工审核为准。完整声明见 [`PRIVACY.md`](../../PRIVACY.md)。
+F-Droid recipe 和审核必须单独评估应用内更新器、网络端点、安装权限及可能适用的 Anti-Features，不再根据核心功能离线推定无需标注。若渠道要求禁用上游更新器，应明确维护构建差异并验证入口、网络请求与权限一致；不能仅隐藏界面。不同签名渠道不能使用上游 APK 覆盖安装。已发布 v2.1.0 APK 的网络与权限行为以该正式包为准，不因后续源码文档改变；历史 v2.0.1 APK 不含更新器。完整声明见 [`PRIVACY.md`](../../PRIVACY.md)。
 
 ## 上游元数据
 
@@ -92,18 +94,20 @@ git diff --exit-code -- THIRD_PARTY_NOTICES.md
 
 - `fastlane/metadata/android/en-US/short_description.txt`
 - `fastlane/metadata/android/en-US/full_description.txt`
-- `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`（当前 v2.0.1 为 `5.txt`，历史 v2.0.0 为 `4.txt`）
+- `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`（当前 v2.1.0 为 `6.txt`，历史 v2.0.1 为 `5.txt`、v2.0.0 为 `4.txt`）
 - 对应的 `zh-CN` 文件
 - 两个 locale 的 `images/icon.png`
 - 两个 locale 的 4 张手机截图：主页、计分、复盘和历史
 
-当前双语八张截图直接来自正式签名 v2.0.1 APK 在专用 API36 模拟器上的实际画面，全部使用合成球员与对局，逐张按原始分辨率检查后原样复制。版本、摘要、拍摄状态及原始证据见[截图来源](v2.0.1-screenshots.json)与[维护清单](screenshots-checklist.md)；旧八张 PNG 与[历史来源](v2.0.0-screenshots.json)保留在版本化目录。
+Fastlane 现有双语八张截图仍直接来自正式签名 v2.0.1 APK（应用源码 `4ecd960e5af1f6b12124a43e330d67efb628281b`）在专用 API36 模拟器上的实际画面，全部使用合成球员与对局，逐张按原始分辨率检查后原样复制，保留系统状态栏与导航栏。版本、摘要、拍摄状态及原始证据见[截图来源](v2.0.1-screenshots.json)与[维护清单](screenshots-checklist.md)；旧八张 PNG 与[历史来源](v2.0.0-screenshots.json)保留在版本化目录。这些文件没有改标为 v2.1.0，也未在本轮替换。对外或后续 F-Droid 商店展示须使用按实际系统边界裁剪的干净副本，原始证据保留，不直接展示带系统栏的原图。
 
-正式 APK 与签名 tag 的应用提交固定为 `4ecd960e5af1f6b12124a43e330d67efb628281b`。新截图与宣传文档在正式包验收后更新，其提交独立于 APK 来源；不能为了更新宣传素材移动签名 tag。后续 F-Droid recipe 应分别核对构建源码与元数据来源。
+v2.1.0 Release 与 README 使用另外 4 张来自本次正式签名 APK 的中英文计分和整组总结展示副本，已移除系统区域；完整来源、裁剪矩形和摘要见 [v2.1.0 发行记录](v2.1.0-release-record.md#官网截图与限制)。这 4 张不等同于上述 Fastlane 八张，网站既有 v2.0.1 素材也未随本次发行替换。
+
+当前 v2.1.0 正式 APK 与签名 tag 的应用提交固定为 `9bbd3b87e99d71f5d9117cd2c5a763a7f8b95d1f`。新截图与宣传文档在正式包验收后更新，其提交独立于 APK 来源；不能为了更新宣传素材移动签名 tag。后续 F-Droid recipe 应分别核对构建源码与元数据来源。
 
 ## 源码与 tag 要求
 
-- 每个公开 `versionName` 必须有唯一 tag；当前已发布版本为 Hoopito · 球豆 `v2.0.1`。
+- 每个公开 `versionName` 必须有唯一 tag；当前已发布版本为 Hoopito · 球豆 `v2.1.0`。
 - tag 必须指向用于构建发布 APK 的干净提交。
 - GitHub source archive 应能在无私有文件、无预下载构建产物的环境中完成构建。
 - `pubspec.lock` 必须提交，避免解析到不同依赖版本。

@@ -19,7 +19,7 @@ void main() {
       findsNothing,
     );
     expect(find.byKey(const Key('pregame-rules-section')), findsOneWidget);
-    expect(find.byKey(const Key('pregame-clock-section')), findsOneWidget);
+    expect(find.byKey(const Key('pregame-clock-section')), findsNothing);
     expect(find.byKey(const Key('pregame-advanced-section')), findsOneWidget);
   });
 
@@ -33,9 +33,9 @@ void main() {
     expect(find.text('红方'), findsWidgets);
     expect(find.text('蓝方'), findsWidgets);
     expect(find.text('规则模板'), findsWidgets);
-    expect(find.text('自由计分'), findsOneWidget);
+    expect(find.text('默认规则'), findsOneWidget);
     expect(find.text('高级设置'), findsWidgets);
-    expect(find.text('计时'), findsWidgets);
+    expect(find.text('计时'), findsNothing);
     expect(find.text('开始比赛'), findsOneWidget);
 
     await tester.scrollUntilVisible(
@@ -46,8 +46,18 @@ void main() {
     await tester.tap(find.byKey(const Key('pregame-advanced')));
     await tester.pumpAndSettle();
 
-    expect(find.text('目标分'), findsOneWidget);
+    expect(find.text('计时'), findsOneWidget);
+    expect(find.byKey(const Key('pregame-goal-mode-free')), findsOneWidget);
+    expect(find.byKey(const Key('pregame-goal-mode-target')), findsOneWidget);
+    expect(find.text('目标分'), findsNothing);
     expect(find.text('时间限制'), findsNothing);
+    expect(find.text('11分'), findsNothing);
+    await tester.ensureVisible(
+      find.byKey(const Key('pregame-goal-mode-target')),
+    );
+    await tester.tap(find.byKey(const Key('pregame-goal-mode-target')));
+    await tester.pumpAndSettle();
+    expect(find.text('目标分'), findsOneWidget);
     expect(find.text('11分'), findsOneWidget);
     expect(find.text('10分钟'), findsNothing);
   });
@@ -106,7 +116,7 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: PregamePage()));
 
     await tester.ensureVisible(find.byKey(const Key('pregame-rule-template')));
-    await tester.tap(find.text('自由计分'));
+    await tester.tap(find.text('默认规则'));
     await tester.pumpAndSettle();
 
     expect(find.text('11 分制'), findsOneWidget);
@@ -150,10 +160,16 @@ void main() {
     );
     await tester.tap(find.byKey(const Key('pregame-timer')));
     await tester.pump();
+    await tester.ensureVisible(
+      find.byKey(const Key('pregame-clock-countdown')),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('pregame-clock-countdown')));
     await tester.pump();
 
     final field = find.byKey(const Key('pregame-countdown-minutes'));
+    await tester.ensureVisible(field);
+    await tester.pumpAndSettle();
     for (final value in ['', '0', '181', 'abc']) {
       await tester.enterText(field, value);
       await tester.pump();
@@ -171,7 +187,7 @@ void main() {
     await tester.pump();
 
     expect(started, isFalse);
-    expect(find.text('请输入 1 到 180 之间的整数分钟。'), findsOneWidget);
+    expect(find.text('请输入 1 到 180 的整数分钟。'), findsOneWidget);
   });
 
   testWidgets('clock selection buttons expose selected semantics', (
@@ -264,20 +280,31 @@ void main() {
   );
 
   testWidgets(
-    'pre-game groups rule, clock, and advanced controls into playbook sections',
+    'pre-game groups clock controls inside the advanced playbook section',
     (tester) async {
       await tester.pumpWidget(const MaterialApp(home: PregamePage()));
 
       expect(find.byKey(const Key('pregame-rules-section')), findsOneWidget);
-      expect(find.byKey(const Key('pregame-clock-section')), findsOneWidget);
+      expect(find.byKey(const Key('pregame-clock-section')), findsNothing);
       expect(find.byKey(const Key('pregame-advanced-section')), findsOneWidget);
       expect(find.byKey(const Key('pregame-rule-template')), findsOneWidget);
       await _openClockSettings(tester);
-      await tester.ensureVisible(find.byKey(const Key('pregame-advanced')));
-      await tester.tap(find.byKey(const Key('pregame-advanced')));
-      await tester.pumpAndSettle();
-      expect(find.byKey(const Key('pregame-timer')), findsOneWidget);
-      expect(find.byKey(const Key('pregame-win-by-two')), findsOneWidget);
+      final advanced = find.byKey(const Key('pregame-advanced'));
+      expect(
+        find.descendant(
+          of: advanced,
+          matching: find.byKey(const Key('pregame-clock-section')),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: advanced,
+          matching: find.byKey(const Key('pregame-timer')),
+        ),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('pregame-win-by-two')), findsNothing);
     },
   );
 
@@ -363,7 +390,7 @@ void main() {
         expect(find.byKey(const Key('pregame-red-card')), findsOneWidget);
         expect(find.byKey(const Key('pregame-blue-card')), findsOneWidget);
         expect(find.byKey(const Key('pregame-rules-section')), findsOneWidget);
-        expect(find.byKey(const Key('pregame-clock-section')), findsOneWidget);
+        expect(find.byKey(const Key('pregame-clock-section')), findsNothing);
         expect(
           find.byKey(const Key('pregame-advanced-section')),
           findsOneWidget,
@@ -456,7 +483,6 @@ void main() {
         const Key('pregame-red-card'),
         const Key('pregame-blue-card'),
         const Key('pregame-rules-section'),
-        const Key('pregame-clock-section'),
         const Key('pregame-advanced-section'),
       ]) {
         expect(tester.getSemantics(find.byKey(key)).label, isNotEmpty);
@@ -477,6 +503,16 @@ void main() {
       expect(
         tester.getSize(find.byKey(const Key('pregame-blue-profile'))).height,
         greaterThanOrEqualTo(48),
+      );
+      await _openClockSettings(tester);
+      await tester.ensureVisible(
+        find.byKey(const Key('pregame-clock-section')),
+      );
+      expect(
+        tester
+            .getSemantics(find.byKey(const Key('pregame-clock-section')))
+            .label,
+        isNotEmpty,
       );
     },
   );
@@ -525,8 +561,8 @@ void main() {
 }
 
 Future<void> _openClockSettings(WidgetTester tester) async {
-  final clock = find.byKey(const Key('pregame-clock-settings'));
-  await tester.ensureVisible(clock);
-  await tester.tap(clock);
+  final advanced = find.byKey(const Key('pregame-advanced'));
+  await tester.ensureVisible(advanced);
+  await tester.tap(advanced);
   await tester.pumpAndSettle();
 }

@@ -76,7 +76,7 @@ CodeQL 的 ruleset merge protection 与三项 status check 门禁不同；GitHub
 
 查看依赖迁移说明、许可、锁文件与代码生成变化；Drift 变更执行生成和数据库验证，网站/原生工具链按影响运行相应 CI。分组只减少 PR 数，不免除测试或允许自动跟进 major。security updates 不受 cooldown 延迟，且有独立的开放 PR 限额；安全修复仍经过同一人工审阅与 CI。[Dependabot 配置参考](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference)
 
-启用 dependency graph、Dependabot alerts 和 security updates；保留 secret scanning 与 push protection。启用 private vulnerability reporting，并确认维护者订阅 Security alerts 通知；[SECURITY.md](../SECURITY.md) 与 GitHub 私密报告入口应一致。默认不要求报告者先填写 CWE，以免妨碍有效报告。[私密漏洞报告](https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository)
+启用 dependency graph、Dependabot alerts 和 security updates；保留 secret scanning 与 push protection。启用 private vulnerability reporting，并确认维护者订阅 Security alerts 通知；[SECURITY.md](../.github/SECURITY.md) 与 GitHub 私密报告入口应一致。默认不要求报告者先填写 CWE，以免妨碍有效报告。[私密漏洞报告](https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository)
 
 2026-10-25 启用安全功能后发现 8 条既有 npm Dependabot 告警（2 high、4 medium、2 low）。这是实际待处理清单，不代表本轮配置引入了 8 个漏洞，也不能称仓库已无漏洞。本轮设置任务不包含依赖修复或合并；后续逐项核对影响、修复版本并经 PR/CI 处理。
 

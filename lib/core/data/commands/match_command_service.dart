@@ -1,3 +1,5 @@
+import 'package:hoopito/core/domain/entities/match_series.dart';
+import 'package:hoopito/core/data/repositories/match_series_repository.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -92,6 +94,7 @@ class StartMatchCommand extends MatchCommand {
     String? redPlayerProfileId,
     String? bluePlayerProfileId,
     String? clockId,
+    SeriesStartContext? seriesContext,
   }) {
     final created = (createdAt ?? DateTime.now()).toUtc();
     return StartMatchCommand._(
@@ -113,6 +116,7 @@ class StartMatchCommand extends MatchCommand {
       redPlayerProfileId: redPlayerProfileId,
       bluePlayerProfileId: bluePlayerProfileId,
       clockId: clockId,
+      seriesContext: seriesContext,
     );
   }
 
@@ -135,6 +139,7 @@ class StartMatchCommand extends MatchCommand {
     this.redPlayerProfileId,
     this.bluePlayerProfileId,
     String? clockId,
+    this.seriesContext,
   }) : matchId = matchId ?? _newUuid(),
        redParticipantId = redParticipantId ?? _newUuid(),
        blueParticipantId = blueParticipantId ?? _newUuid(),
@@ -158,6 +163,7 @@ class StartMatchCommand extends MatchCommand {
   final String? redPlayerProfileId;
   final String? bluePlayerProfileId;
   final String clockId;
+  final SeriesStartContext? seriesContext;
 
   @override
   String get commandType => 'start';
@@ -182,6 +188,7 @@ class StartMatchCommand extends MatchCommand {
     'redPlayerProfileId': redPlayerProfileId,
     'bluePlayerProfileId': bluePlayerProfileId,
     'clockId': clockId,
+    if (seriesContext != null) 'seriesContext': seriesContext!.toJson(),
   };
 }
 
@@ -308,12 +315,17 @@ class UndoLastScoringActionCommand extends MatchCommand {
     super.commandId,
     required this.matchId,
     this.reason,
+    this.undoTargetScore = false,
     String? auditId,
   }) : auditId = auditId ?? _newUuid();
 
   @override
   final String matchId;
   final String? reason;
+
+  /// The target-confirmation action undoes the score and its optional location
+  /// together. Ordinary toolbar undo retains the original action chronology.
+  final bool undoTargetScore;
   final String auditId;
 
   @override
@@ -324,6 +336,7 @@ class UndoLastScoringActionCommand extends MatchCommand {
     'commandId': commandId,
     'matchId': matchId,
     'reason': reason,
+    if (undoTargetScore) 'undoTargetScore': true,
     'auditId': auditId,
   };
 }
@@ -1024,6 +1037,7 @@ class MatchCommandService {
           );
         }
         _validateStart(command);
+        await MatchSeriesRepository(_database).validateStart(command);
         if (command.redPlayerProfileId != null &&
             await _playerRow(command.redPlayerProfileId!) == null) {
           throw CommandValidationFailure(
@@ -1114,6 +1128,7 @@ class MatchCommandService {
                 claimedAtUtc: Value(command.startedAt),
               ),
             );
+        await MatchSeriesRepository(_database).attachStart(command);
         await _inject(MatchCommandFailurePoint.afterMatchWritten);
         final result = await _writeReceipt(command);
         await _inject(MatchCommandFailurePoint.afterAuditWritten);
@@ -1333,7 +1348,8 @@ class MatchCommandService {
   /// `create` action and is undone atomically. Timer, finish, semantic, and
   /// replay-only edits never enter the candidate set. Fouls, possession,
   /// notes, and custom events do participate and cannot be skipped in favor
-  /// of an older score.
+  /// of an older score. Target confirmation may combine the latest score and
+  /// its location into one undo, while retaining the latest-event guard.
   Future<MatchDetail> undoLastScoringAction(
     UndoLastScoringActionCommand command,
   ) {
@@ -1345,13 +1361,37 @@ class MatchCommandService {
         // finished/archived projection is durable history and cannot be
         // reopened through this command.
         await _requireActiveMatch(command);
-        final selected = await _latestLiveUndoAction(command.matchId);
+        final selected = await _latestLiveUndoAction(
+          command.matchId,
+          includeLocations: !command.undoTargetScore,
+        );
         if (selected == null) {
           throw CommandValidationFailure(
             command: command,
             message: 'There is no committed match action to undo.',
             projectionMatchId: command.matchId,
           );
+        }
+
+        if (command.undoTargetScore) {
+          final detail = await _projectionInTransaction(command.matchId);
+          final event = selected.event!;
+          final madeScore =
+              event.points > 0 &&
+              event.side != null &&
+              (event.type == EventKind.score.name ||
+                  ((event.type == EventKind.fieldGoal.name ||
+                          event.type == EventKind.freeThrow.name) &&
+                      event.outcome == ShotOutcome.made.name));
+          if (detail?.decision?.reason != MatchDecisionReason.targetReached ||
+              !madeScore) {
+            throw CommandValidationFailure(
+              command: command,
+              message:
+                  'Only the latest score for a pending target decision can be undone together with its location.',
+              projectionMatchId: command.matchId,
+            );
+          }
         }
 
         if (selected.kind == _LiveUndoKind.location) {
@@ -2041,6 +2081,25 @@ class MatchCommandService {
           );
         }
 
+        final member =
+            await (_database.select(_database.seriesMatches)
+                  ..where((member) => member.matchId.equals(command.matchId)))
+                .getSingleOrNull();
+        final openSeries =
+            await (_database.select(_database.matchSeries)
+                  ..where((series) => series.lifecycle.equals('open')))
+                .getSingleOrNull();
+        // Imported members require their own series to be explicitly reopened.
+        // An ordinary imported match may resume only outside any open series.
+        if ((member != null && member.seriesId != openSeries?.id) ||
+            (member == null && openSeries != null)) {
+          throw CommandValidationFailure(
+            command: command,
+            message: 'Imported match is not eligible for the current series.',
+            projectionMatchId: command.matchId,
+          );
+        }
+
         final before = <String, Object?>{
           'id': row.id,
           'lifecycle': row.lifecycle,
@@ -2683,6 +2742,8 @@ class MatchCommandService {
   ) async {
     try {
       return await operation();
+    } on SeriesFailure {
+      rethrow;
     } on MatchCommandFailure catch (failure) {
       failure.lastCommittedProjection = await _projection(
         failure.projectionMatchId ?? command.matchId,
@@ -2769,6 +2830,8 @@ class MatchCommandService {
               'commandId': command.commandId,
               'matchId': command.matchId,
               'fingerprint': command.fingerprint,
+              if (command is StartMatchCommand && command.seriesContext != null)
+                'payload': command.payload,
             }),
             afterJson: jsonEncode(<String, Object?>{
               'committed': true,
@@ -2985,7 +3048,10 @@ class MatchCommandService {
     return rows.isEmpty ? null : rows.first;
   }
 
-  Future<_UndoableLiveAction?> _latestLiveUndoAction(String matchId) async {
+  Future<_UndoableLiveAction?> _latestLiveUndoAction(
+    String matchId, {
+    bool includeLocations = true,
+  }) async {
     final events =
         await (_database.select(_database.matchEvents)
               ..where(
@@ -3032,6 +3098,7 @@ class MatchCommandService {
       final event = eventById[audit.targetId];
       if (event == null) continue;
       if (audit.action == 'locate') {
+        if (!includeLocations) continue;
         final location = locationByEvent[event.id];
         if (location == null) continue;
         latest = _UndoableLiveAction.location(event: event, location: location);
@@ -3323,7 +3390,17 @@ class MatchCommandService {
               ]))
             .get();
     AuditLog? decisionClockAudit;
-    for (final audit in decisionClockAudits) {
+    // The explicit target action must own the active derived pause. An older
+    // target decision for the same score cannot justify deleting a newer one
+    // caused by correcting another event. Ordinary undo keeps its historical
+    // recovery behavior for existing matches.
+    final activeDecisionClockAuditId = decisionClockAudits.isEmpty
+        ? null
+        : decisionClockAudits.first.id;
+    final candidateAudits = command.undoTargetScore
+        ? decisionClockAudits.take(1)
+        : decisionClockAudits;
+    for (final audit in candidateAudits) {
       final after = _decodeObject(audit.afterJson);
       if (after['scoringEventId'] == selectedEvent.id) {
         decisionClockAudit = audit;
@@ -3362,7 +3439,9 @@ class MatchCommandService {
         }
         if (audit.targetId != clockRow.id ||
             audit.action != 'edit' ||
-            audit.reason != 'decision-clock') {
+            audit.reason != 'decision-clock' ||
+            (command.undoTargetScore &&
+                audit.id != activeDecisionClockAuditId)) {
           continue;
         }
         final after = _decodeObject(audit.afterJson);
@@ -3919,7 +3998,18 @@ class MatchCommandService {
     } else if (scoreChanged) {
       final template = detail.match.ruleTemplateSnapshot;
       final target = template.targetScore;
-      if (target != null) {
+      // Acknowledgement belongs to this match, rather than its latest semantic
+      // pause. Later pause/resume, overtime and score undo must retain it. Old
+      // win-by-two snapshots still re-evaluate their original target rule.
+      final continuedTarget =
+          !template.winByTwo &&
+          detail.events.any(
+            (event) =>
+                !event.isDeleted &&
+                event.type == EventKind.pause &&
+                event.customLabel == 'continueTarget',
+          );
+      if (target != null && !continuedTarget) {
         final leading = detail.redScore >= detail.blueScore
             ? detail.redScore
             : detail.blueScore;

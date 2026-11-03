@@ -72,6 +72,8 @@ void main() {
       'Visitor',
     );
     await tester.ensureVisible(find.byKey(const Key('history-match-v2-match')));
+    // Scrolling schedules layout before the row's tap position is updated.
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('history-match-v2-match')));
     await until(tester, find.byType(MatchSummaryPage));
     await tester.tap(find.byIcon(Icons.arrow_back).first);

@@ -93,7 +93,11 @@ class _RuleTemplateListPageState extends State<RuleTemplateListPage> {
               final builtIn = RuleTemplateRepository.builtIns.any(
                 (item) => item.id == template.id,
               );
-              final name = localizedRuleTemplateName(template, l10n);
+              final name = localizedRuleTemplateName(
+                template,
+                l10n,
+                forNewMatch: true,
+              );
               final status = builtIn ? l10n.rulesBuiltIn : l10n.rulesCustom;
               final summary = _summary(template, l10n);
               return EditorialIndexRow(
@@ -136,7 +140,6 @@ class _RuleTemplateListPageState extends State<RuleTemplateListPage> {
     if (template.timeLimitSeconds != null) {
       values.add(l10n.rulesMinutes(template.timeLimitSeconds! ~/ 60));
     }
-    if (template.winByTwo) values.add(l10n.rulesWinByTwo);
     if (template.possessionHintEnabled) {
       values.add(l10n.rulePossessionHintTitle);
     }

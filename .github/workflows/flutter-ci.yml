@@ -119,7 +119,9 @@ jobs:
       - name: Verify third-party notices are reproducible
         run: |
           dart --packages=.dart_tool/package_config.json tool/release/generate_third_party_notices.dart
-          git diff --exit-code -- THIRD_PARTY_NOTICES.md
+          test -s docs/legal/THIRD_PARTY_NOTICES.md
+          test ! -e THIRD_PARTY_NOTICES.md
+          git diff --exit-code -- docs/legal/THIRD_PARTY_NOTICES.md
 
       - name: Verify Drift schema and migration contract
         run: >-

@@ -1,6 +1,6 @@
 # HoopTrace v2.0.0 Design
 
-> This design records the approved 2.0 scope. Implementation and local acceptance are recorded in [HANDOFF](../../../HANDOFF.md) and the [candidate record](../../release/v2.0.0-candidate.md); remaining release gates are not completed by this design document.
+> This design records the approved 2.0 scope. Implementation and local acceptance are recorded in [HANDOFF](../../development/handoff.md) and the [candidate record](../../release/v2.0.0-candidate.md); remaining release gates are not completed by this design document.
 
 HoopTrace v2.0.0 turns the existing offline 1v1 scorer into a complete match journey: start quickly, record confidently, understand the result, and build a trustworthy player history. Android is the release-candidate platform. The release remains offline-first, free, open source, account-free, and tracker-free.
 

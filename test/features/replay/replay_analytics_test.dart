@@ -123,7 +123,7 @@ void main() {
     expect(find.text('2 次'), findsOneWidget);
     expect(find.text('赤焰 +4'), findsOneWidget);
     expect(find.text('67% · 2/3'), findsOneWidget);
-    expect(find.text('比分流'), findsOneWidget);
+    expect(find.text('比分走势'), findsOneWidget);
     expect(find.text('2 : 2'), findsOneWidget);
     expect(find.text('关键回合'), findsOneWidget);
     expect(find.textContaining('反超'), findsOneWidget);

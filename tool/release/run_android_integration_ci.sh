@@ -16,6 +16,7 @@ device="${ANDROID_SERIAL:-emulator-5554}"
 
 flutter test integration_test/main_loop_test.dart -d "$device"
 flutter test integration_test/v2_file_recovery_test.dart -d "$device"
+flutter test integration_test/continuous_series_test.dart -d "$device"
 if [[ "$api_level" == 36 ]]; then
   flutter test integration_test/player_comparison_flow_test.dart -d "$device"
   flutter test integration_test/command_performance_test.dart -d "$device"

@@ -9,6 +9,16 @@
   "outputDirectory": "dist",
   "headers": [
     {
+      "source": "/updates/android/stable.json",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json; charset=utf-8" },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
       "source": "/downloads/v2.0.1/Hoopito-v2.0.1-android.apk",
       "headers": [
         {

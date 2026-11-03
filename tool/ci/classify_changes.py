@@ -19,6 +19,10 @@ def classify_paths(paths):
         # Executable/configuration paths take precedence over documentation skips.
         if path.startswith((".github/workflows/", "tool/ci/")):
             app = website = True
+        elif path == "docs/legal/THIRD_PARTY_NOTICES.md":
+            # Generated release input, not ordinary documentation. Keep this
+            # before the general Markdown exemption after moving the notices.
+            app = True
         elif path.startswith(SHARED_PREFIXES) and not path.endswith(".md"):
             app = website = True
         elif path == "docs/design/screenshot-presentation.json" or (path.startswith("docs/release/") and path.endswith("-screenshots.json")):
@@ -27,7 +31,7 @@ def classify_paths(paths):
             app = website = True
         elif path in ROOT_DOCS or path in {"website/README.md", "website/VERIFICATION.md"} or (path.startswith(("docs/", "assets/brand/")) and path.endswith(".md")):
             continue
-        elif path in {".github/pull_request_template.md", ".github/CODEOWNERS"} or path.startswith(".github/ISSUE_TEMPLATE/"):
+        elif path in {".github/pull_request_template.md", ".github/CODEOWNERS", ".github/SECURITY.md"} or path.startswith(".github/ISSUE_TEMPLATE/"):
             continue
         elif path.startswith("website/"):
             website = True

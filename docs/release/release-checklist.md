@@ -4,7 +4,7 @@
 
 仅在准备或执行正式发行时使用本清单；普通维护按 [贡献指南](../../CONTRIBUTING.md#测试要求) 选择验证范围。创建 tag、发布 Release 或提交 F-Droid 申请需要当前任务的对应授权，准备工作不自动授权对外发布。第 8 节仅在本次包含 F-Droid 渠道工作时执行，不阻塞单独的 GitHub Release。
 
-本文件是可复用的发行模板，不是 2.0 的完成状态表。当前候选与原始验收来源见 [HANDOFF.md](../../HANDOFF.md)。复用证据时保留其提交、工具链和设备范围；本地 Debug、未签名复现、文件重开和模拟器验收分别不能代替正式同证升级、远端 CI、进程重启或实体设备结果。
+本文件是可复用的发行模板，不是 2.0 的完成状态表。当前候选与原始验收来源见 [HANDOFF.md](../development/handoff.md)。复用证据时保留其提交、工具链和设备范围；本地 Debug、未签名复现、文件重开和模拟器验收分别不能代替正式同证升级、远端 CI、进程重启或实体设备结果。
 
 ## 1. 范围与版本
 
@@ -26,9 +26,11 @@
 - [ ] 记录所有直接依赖的许可证和来源，确认不存在专有 SDK。
 - [ ] 确认没有广告、追踪、分析、崩溃遥测或账号依赖。
 - [ ] 确认 `PRIVACY.md` 与真实数据流一致。
+- [ ] 检查应用内更新默认开关、官网/GitHub 元数据请求、用户触发下载和系统安装确认；披露分发服务接收连接信息，确认无比赛、球员、设置或设备标识上传。关闭启动检查后不得自动请求，后台自动备份不得触发检查。
 - [ ] 确认自动备份默认关闭，只使用用户授权目录。
 - [ ] 用 `aapt dump permissions <apk>` 检查最终 APK 权限；不应出现广泛存储、位置、相机、麦克风或联系人权限。
 - [ ] 检查合并后的 Manifest，确认 `android:allowBackup="false"` 仍生效。
+- [ ] 包含更新器的 APK 仅为更新功能使用网络与 `REQUEST_INSTALL_PACKAGES` 权限，不增加广泛存储或通知权限；核验 FileProvider 只暴露更新安装包子目录。
 
 ## 3. 干净构建与自动化验证
 
@@ -47,7 +49,7 @@ flutter analyze
 flutter test
 flutter test test/performance/task15_query_benchmarks_test.dart --reporter expanded
 dart --packages=.dart_tool/package_config.json tool/release/generate_third_party_notices.dart
-git diff --exit-code -- THIRD_PARTY_NOTICES.md
+git diff --exit-code -- docs/legal/THIRD_PARTY_NOTICES.md
 dart --packages=.dart_tool/package_config.json tool/release/validate_metadata.dart
 flutter test integration_test/main_loop_test.dart -d <android-device-id>
 flutter test integration_test/command_performance_test.dart -d <android-device-id>
@@ -65,7 +67,7 @@ flutter build apk --debug
 - [ ] CI 从两份全新源码快照在固定构建路径顺序重建，并逐字节核验完整的未签名
       Release APK；同时通过 macOS iOS
       `flutter build ios --release --no-codesign`。
-- [ ] `THIRD_PARTY_NOTICES.md` 可由当前锁定依赖确定性生成且无 diff。
+- [ ] `docs/legal/THIRD_PARTY_NOTICES.md` 可由当前锁定依赖确定性生成且无 diff。
 - [ ] CI 生成的 Debug APK artifact 可以下载并安装。
 - [ ] 工作树除预期版本和 Changelog 修改外保持干净。
 
@@ -92,6 +94,7 @@ flutter build apk --debug
 - [ ] 验证自动备份关闭、授权目录、立即备份、重启备份和目录失效错误。
 - [ ] 分别测试全新安装和从上一个正式版本覆盖升级，确认本地数据保留。
 - [ ] 检查离线模式下所有核心流程。
+- [ ] 验证启动检查一次性、开关持久化、手动检查、主源有效时优先、元数据失效与下载失败回退、取消与恢复、损坏/错误签名/错误版本拒绝、未知来源授权返回，以及活动比赛期间禁止安装；断网自动检查失败不得打扰核心流程。
 - [ ] 涉及启动动效修改时，验收原生衔接、慢初始化、错误/旧数据库、跳过、减少/关闭动画和返回前台；保存从标准动作直至首页的连续设备录屏。
 - [ ] 涉及启动动效修改时，完成约定次数的 Profile 冷启动，分别记录标准动作与降级，按批准帧预算检查构建/绘制耗时；保留失败样本，核对 APK 来源并恢复测试设置。
 
@@ -110,11 +113,14 @@ flutter build apk --debug
 - [ ] 使用已经验证的版本 tag 创建 **draft Release**；命令行创建时使用 `--draft --verify-tag`，避免意外创建 tag 或提前发布。
 - [ ] 发布说明包含主要变化、升级说明、隐私声明链接和已知限制。
 - [ ] 向草稿上传全部正式资产，包括签名 APK 和 `SHA256SUMS`；新发行 APK 命名为 `Hoopito-v<version>-android.apk`，既有 `HoopTrace-v2.0.0-android.apk` 保留原名。
+- [ ] 在 `website/src/data/release.ts` 固定本次已验证签名 APK 的版本、versionCode、minimumApi、双语说明、大小和 SHA-256；用 `npm run export:android-update -- --apk <signed.apk> --output <release-dir>/android-update.json` 校验实际文件并生成附件（在 `website/` 运行）。该命令必须成功，元数据仅导出模式不能替代 APK 校验。`SHA256SUMS` 同时覆盖 `android-update.json`。
 - [ ] 从草稿重新下载全部待发布资产，核验文件集合、大小、SHA-256、APK 签名与源码/tag 对应关系；`SHA256SUMS` 覆盖所有需要校验的发布附件，禁止包含密钥或设备数据。
 - [ ] 保留 GitHub 自动生成的 source code archives。
 - [ ] 明确 Android 优先状态以及 iOS 尚未正式发布。
 - [ ] 全部资产与校验和确认后，再在本次发布授权内发布草稿；不可变 Release 发布后不能补传、替换或删除附件，也不能移动关联 tag，修复使用新版本。
+- [ ] 发布顺序为签名 APK、`android-update.json` 等附件在草稿中齐备并校验后发布 Release，再在单独的网站部署授权内构建和部署官网；不得向旧 Release 补传更新附件。网站 feed 和附件由同一序列化器生成，必须逐字节相同。网站发布元数据可落后于开发 App 版本，不得提前宣告尚未公开的 APK。
 - [ ] 从公开 Release 页面重新下载 APK，核验 SHA-256 和签名后安装冒烟测试。
+- [ ] 网站获准部署后验证 `/updates/android/stable.json` 的 JSON、双语说明、可重新验证缓存头和对应 APK 的实际大小/摘要；固定版本 APK 仍使用 immutable 缓存。官网有效旧 feed 优先于备源，因此尚未部署新版官网时不保证即时提示 GitHub 新版。
 
 ## 8. F-Droid 准备
 

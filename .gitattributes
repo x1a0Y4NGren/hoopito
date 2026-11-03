@@ -5,10 +5,14 @@
 /website/public/** -text
 /docs/release/*-screenshots.json text eol=lf
 /docs/design/screenshot-presentation.json text eol=lf
+# Archive snapshots retain the exact bytes recorded in their migration manifest.
+/docs/archive/reviews/** -text
+/docs/archive/reviews/**/*.md whitespace=cr-at-eol
+/docs/archive/tools/worktrees/*.ps1 -text whitespace=cr-at-eol
 /assets/fonts/OFL*.txt text eol=lf
 /assets/brand/hoopito-logo-kit/** -text
 /tool/brand/*.mjs text eol=lf
 /aoci*.txt text eol=lf
-/THIRD_PARTY_NOTICES.md whitespace=-trailing-space,-space-before-tab
+/docs/legal/THIRD_PARTY_NOTICES.md whitespace=-trailing-space,-space-before-tab
 /third_party/sqlite/sqlite3.c text eol=lf whitespace=-trailing-space
 /third_party/sqlite/sqlite3.h text eol=lf whitespace=-trailing-space

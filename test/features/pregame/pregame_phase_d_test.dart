@@ -34,7 +34,7 @@ void main() {
     expect(find.text('林红'), findsWidgets);
 
     await _selectProfile(tester, 'pregame-blue-profile', redProfile.nickname);
-    expect(find.text('该球员档案已用于另一方，请选择其他档案。'), findsOneWidget);
+    expect(find.text('另一方已经选了这名球员，请换一个档案。'), findsOneWidget);
 
     await _scrollTo(tester, find.byKey(const Key('pregame-start-match')));
     await tester.tap(find.byKey(const Key('pregame-start-match')));
@@ -156,8 +156,8 @@ void main() {
       MaterialApp(home: PregamePage(onStartMatch: (value) => setup = value)),
     );
 
-    await _scrollTo(tester, find.byKey(const Key('pregame-clock-settings')));
-    await tester.tap(find.byKey(const Key('pregame-clock-settings')));
+    await _scrollTo(tester, find.byKey(const Key('pregame-advanced')));
+    await tester.tap(find.byKey(const Key('pregame-advanced')));
     await tester.pumpAndSettle();
     await _scrollTo(tester, find.byKey(const Key('pregame-timer')));
     await tester.tap(find.byKey(const Key('pregame-timer')));

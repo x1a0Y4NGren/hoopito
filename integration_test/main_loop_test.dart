@@ -71,19 +71,25 @@ void main() {
     );
     await SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
     await tester.pump(const Duration(milliseconds: 300));
-    await tester.ensureVisible(find.byKey(const Key('pregame-clock-settings')));
     await _tapWhenHitTestable(
       tester,
-      find.byKey(const Key('pregame-clock-settings')),
-      description: 'the collapsed Pregame clock settings',
+      find.byKey(const Key('pregame-advanced')),
+      description: 'the collapsed Pregame advanced settings',
     );
-    await _pumpUntilFound(tester, find.byKey(const Key('pregame-timer')));
+    final timer = find.byKey(const Key('pregame-timer'));
+    await _pumpUntilFound(tester, timer);
     expect(
-      tester
-          .widget<SwitchListTile>(find.byKey(const Key('pregame-timer')))
-          .value,
-      isFalse,
+      find.descendant(
+        of: find.byKey(const Key('pregame-advanced')),
+        matching: timer,
+      ),
+      findsOneWidget,
     );
+    expect(tester.widget<SwitchListTile>(timer).value, isFalse);
+    await _tapWhenHitTestable(tester, timer, description: 'enable the timer');
+    expect(tester.widget<SwitchListTile>(timer).value, isTrue);
+    await _tapWhenHitTestable(tester, timer, description: 'disable the timer');
+    expect(tester.widget<SwitchListTile>(timer).value, isFalse);
     await _tapWhenHitTestable(
       tester,
       find.byKey(const Key('pregame-coverage-shots')),

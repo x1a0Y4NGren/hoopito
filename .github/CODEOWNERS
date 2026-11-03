@@ -2,7 +2,7 @@
 # and does not require CODEOWNER approval, so a solo maintainer can merge own PRs.
 /.github/ @x1a0Y4NGren
 /CONTRIBUTING.md @x1a0Y4NGren
-/SECURITY.md @x1a0Y4NGren
+/.github/SECURITY.md @x1a0Y4NGren
 /PRIVACY.md @x1a0Y4NGren
 /docs/repository-settings.md @x1a0Y4NGren
 /docs/release/ @x1a0Y4NGren
@@ -14,4 +14,4 @@
 /pubspec.yaml @x1a0Y4NGren
 /pubspec.lock @x1a0Y4NGren
 /third_party/ @x1a0Y4NGren
-/THIRD_PARTY_NOTICES.md @x1a0Y4NGren
+/docs/legal/THIRD_PARTY_NOTICES.md @x1a0Y4NGren

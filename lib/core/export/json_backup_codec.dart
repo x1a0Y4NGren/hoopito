@@ -165,7 +165,7 @@ class JsonBackupCodec {
 
   Future<String> export() {
     // A headless WorkManager engine may run beside the foreground engine. A
-    // single transaction keeps the twelve table snapshots at one SQLite
+    // single transaction keeps the fourteen table snapshots at one SQLite
     // point in time, so graph validation can never observe a half-committed
     // domain mutation.
     return database.transaction(() async {
@@ -174,6 +174,8 @@ class JsonBackupCodec {
       _validateRecordCounts(await _exportRecordCounts());
       final tables = <String, List<Map<String, dynamic>>>{
         'matches': await _rows(database.matches),
+        'matchSeries': await _rows(database.matchSeries),
+        'seriesMatches': await _rows(database.seriesMatches, key: 'matchId'),
         'matchParticipants': await _rows(database.matchParticipants),
         'matchClocks': await _rows(database.matchClocks),
         'activeSessions': await _rows(database.activeSessions),
@@ -223,6 +225,7 @@ class JsonBackupCodec {
         'data': tables,
       });
       _validatePayloadBytes(utf8.encode(payload).length);
+      decodeAndValidate(payload);
       return payload;
     });
   }
@@ -262,6 +265,8 @@ class JsonBackupCodec {
         await database.delete(database.matchEvents).go();
         await database.delete(database.matchParticipants).go();
         await database.delete(database.matchClocks).go();
+        await database.delete(database.seriesMatches).go();
+        await database.delete(database.matchSeries).go();
         await database.delete(database.matches).go();
         await database.delete(database.players).go();
         await database.delete(database.ruleTemplates).go();
@@ -271,6 +276,14 @@ class JsonBackupCodec {
         await _insertAll(database.ruleTemplates, templates);
         await _insertAll(database.appSettings, settings);
         await _insertAll(database.matches, matches);
+        await _insertAll(
+          database.matchSeries,
+          document.data['matchSeries']!.map(MatchSeriesRow.fromJson),
+        );
+        await _insertAll(
+          database.seriesMatches,
+          document.data['seriesMatches']!.map(SeriesMatche.fromJson),
+        );
         await _insertAll(database.matchParticipants, participants);
         await _insertAll(database.matchClocks, clocks);
         await _insertAll(database.matchEvents, events);
@@ -335,7 +348,7 @@ class JsonBackupCodec {
         manifest.formatVersion == 1 && manifest.schemaVersion == 2;
     final isCurrent =
         manifest.formatVersion == currentFormatVersion &&
-        manifest.schemaVersion == database.schemaVersion;
+        const {3, 4}.contains(manifest.schemaVersion);
     if (!isLegacyV1 && !isCurrent) {
       throw BackupValidationException(
         'Backup format ${manifest.formatVersion} and schema '
@@ -417,6 +430,7 @@ class JsonBackupCodec {
       audits: audits,
       settings: settings,
     );
+    _validateSeries(data, matches, participants, players, audits);
     final expectedSnapshots = _calculateExpectedSnapshots(
       matches: matches,
       participants: participants,
@@ -454,7 +468,11 @@ class JsonBackupCodec {
         : data;
     return JsonBackupDocument(
       manifest: manifest,
-      data: normalizedData,
+      data: {
+        ...normalizedData,
+        'matchSeries': data['matchSeries'] ?? [],
+        'seriesMatches': data['seriesMatches'] ?? [],
+      },
       matches: matches,
       participants: participants,
       clocks: clocks,
@@ -546,6 +564,8 @@ class JsonBackupCodec {
   Future<Map<String, int>> _exportRecordCounts() async {
     final tables = {
       'matches': database.matches.actualTableName,
+      'matchSeries': database.matchSeries.actualTableName,
+      'seriesMatches': database.seriesMatches.actualTableName,
       'matchParticipants': database.matchParticipants.actualTableName,
       'matchClocks': database.matchClocks.actualTableName,
       'activeSessions': database.activeSessions.actualTableName,
@@ -600,15 +620,17 @@ class JsonBackupCodec {
       'auditLogs',
       'appSettings',
     };
-    const currentExpected = {...legacyExpected, 'playerAnalyticsSnapshots'};
+    const v3Expected = {...legacyExpected, 'playerAnalyticsSnapshots'};
+    const currentExpected = {...v3Expected, 'matchSeries', 'seriesMatches'};
     final expected = manifest.formatVersion == 1
         ? legacyExpected
+        : manifest.schemaVersion == 3
+        ? v3Expected
         : currentExpected;
     if (data.keys.toSet().difference(expected).isNotEmpty ||
         expected.difference(data.keys.toSet()).isNotEmpty) {
       throw BackupValidationException(
-        'Backup must contain exactly ${manifest.formatVersion == 1 ? 'the '
-                  'eleven legacy' : 'the twelve current'} persisted table groups.',
+        'Backup must contain the exact table groups for its source schema.',
       );
     }
     if (manifest.recordCounts.keys.toSet().difference(expected).isNotEmpty ||
@@ -621,6 +643,187 @@ class JsonBackupCodec {
           'Manifest count for $table does not match its rows.',
         );
       }
+    }
+  }
+
+  void _validateSeries(
+    Map<String, List<Map<String, dynamic>>> data,
+    List<Matche> matches,
+    List<MatchParticipant> participants,
+    List<PlayerRow> players,
+    List<AuditLog> audits,
+  ) {
+    try {
+      final series = (data['matchSeries'] ?? [])
+          .map(MatchSeriesRow.fromJson)
+          .toList();
+      final members = (data['seriesMatches'] ?? [])
+          .map(SeriesMatche.fromJson)
+          .toList();
+      _uniqueIds('matchSeries', series.map((row) => row.id));
+      _uniqueIds('seriesMatches', members.map((row) => row.matchId));
+      final byId = {for (final row in series) row.id: row};
+      final matchesById = {for (final row in matches) row.id: row};
+      final profiles = players.map((row) => row.id).toSet();
+      final numbers = <String>{};
+      if (series.where((row) => row.lifecycle == 'open').length > 1) {
+        throw const BackupValidationException('Only one series may be open.');
+      }
+      for (final row in series) {
+        if (!{'open', 'closed'}.contains(row.lifecycle) ||
+            row.slotAName.trim().isEmpty ||
+            row.slotBName.trim().isEmpty ||
+            row.revision < 0 ||
+            row.nextGameNumber < 1 ||
+            (row.lifecycle == 'open' && row.closedAt != null) ||
+            (row.lifecycle == 'closed' && row.closedAt == null) ||
+            (row.closedAt != null && row.closedAt!.isBefore(row.createdAt)) ||
+            (row.slotAPlayerProfileId != null &&
+                !profiles.contains(row.slotAPlayerProfileId)) ||
+            (row.slotBPlayerProfileId != null &&
+                !profiles.contains(row.slotBPlayerProfileId)) ||
+            (row.slotAPlayerProfileId != null &&
+                row.slotAPlayerProfileId == row.slotBPlayerProfileId)) {
+          throw BackupValidationException(
+            'Series ${row.id} has invalid values.',
+          );
+        }
+        final setup = _decodeJsonObject(
+          'Series defaults',
+          row.defaultSetupJson,
+        );
+        if (setup['ruleTemplate'] is! Map<String, dynamic> ||
+            !{'red', 'blue'}.contains(setup['slotASide']) ||
+            !{'countUp', 'countdown'}.contains(setup['clockMode']) ||
+            setup['timerEnabled'] is! bool ||
+            (setup['regulationSeconds'] != null &&
+                (setup['regulationSeconds'] is! int ||
+                    (setup['regulationSeconds'] as int) < 0))) {
+          throw const BackupValidationException('Invalid series defaults.');
+        }
+        _validateRuleJson(
+          'Series default rules',
+          setup['ruleTemplate'] as Map<String, dynamic>,
+        );
+        final regulationSeconds = setup['regulationSeconds'] as int?;
+        if (setup['clockMode'] == 'countdown' &&
+            (setup['timerEnabled'] != true ||
+                regulationSeconds == null ||
+                regulationSeconds < 60 ||
+                regulationSeconds > 180 * 60 ||
+                regulationSeconds % 60 != 0)) {
+          throw const BackupValidationException(
+            'Series countdown defaults require an enabled timer and 1–180 whole minutes.',
+          );
+        }
+        if (setup.keys.toSet().difference(const {
+          'ruleTemplate',
+          'clockMode',
+          'regulationSeconds',
+          'timerEnabled',
+          'slotASide',
+        }).isNotEmpty) {
+          throw const BackupValidationException(
+            'Series defaults contain unsupported state.',
+          );
+        }
+        final intents = _decodeJsonObject(
+          'Series lifecycle intents',
+          row.lifecycleIntentsJson,
+        );
+        for (final entry in intents.entries) {
+          final intent = entry.value;
+          if (entry.key.isEmpty ||
+              intent is! Map ||
+              intent['fingerprint'] is! String ||
+              intent['revision'] is! int ||
+              (intent['revision'] as int) < 0 ||
+              (intent['revision'] as int) > row.revision) {
+            throw const BackupValidationException(
+              'Invalid series lifecycle intent.',
+            );
+          }
+        }
+      }
+      final openSeries = series
+          .where((row) => row.lifecycle == 'open')
+          .firstOrNull;
+      for (final match in matches.where((row) => row.lifecycle == 'active')) {
+        if (openSeries != null &&
+            !members.any(
+              (row) => row.matchId == match.id && row.seriesId == openSeries.id,
+            )) {
+          throw const BackupValidationException(
+            'An active match must belong to the open series.',
+          );
+        }
+      }
+      for (final audit in audits.where((row) => row.action == 'command')) {
+        final before = jsonDecode(audit.beforeJson) as Map<String, dynamic>;
+        final payload = before['payload'];
+        if (payload is! Map<String, dynamic> ||
+            payload['seriesContext'] == null) {
+          continue;
+        }
+        final context = payload['seriesContext'];
+        final membership = members
+            .where((row) => row.matchId == audit.matchId)
+            .firstOrNull;
+        if (context is! Map ||
+            membership == null ||
+            context['seriesId'] != membership.seriesId ||
+            context['gameNumber'] != membership.gameNumber ||
+            context['slotASide'] != membership.slotASide ||
+            payload['matchId'] != audit.matchId ||
+            payload['commandId'] != audit.id ||
+            before['fingerprint'] !=
+                sha256
+                    .convert(
+                      utf8.encode(
+                        jsonEncode({
+                          'commandType': before['commandType'],
+                          ...payload,
+                        }),
+                      ),
+                    )
+                    .toString()) {
+          throw const BackupValidationException(
+            'Invalid series command receipt.',
+          );
+        }
+      }
+      for (final member in members) {
+        final group = byId[member.seriesId];
+        final match = matchesById[member.matchId];
+        if (group == null ||
+            match == null ||
+            member.gameNumber < 1 ||
+            member.gameNumber >= group.nextGameNumber ||
+            !{'red', 'blue'}.contains(member.slotASide) ||
+            !numbers.add('${member.seriesId}:${member.gameNumber}') ||
+            (match.lifecycle == 'active' && group.lifecycle != 'open')) {
+          throw const BackupValidationException(
+            'Invalid series membership graph.',
+          );
+        }
+        for (final participant in participants.where(
+          (row) => row.matchId == member.matchId,
+        )) {
+          final isA = participant.side == member.slotASide;
+          // Linking a finished game's participant does not change the fixed
+          // series slot. Both profile references are validated independently.
+          if (participant.nameSnapshot !=
+              (isA ? group.slotAName : group.slotBName)) {
+            throw const BackupValidationException(
+              'Series fixed identity mismatch.',
+            );
+          }
+        }
+      }
+    } on BackupException {
+      rethrow;
+    } on Object catch (error) {
+      throw BackupValidationException('Invalid series graph: $error');
     }
   }
 
@@ -1074,6 +1277,10 @@ class JsonBackupCodec {
         rule['winByTwo'] is! bool ||
         (foulLimit != null && (foulLimit is! int || foulLimit <= 0)) ||
         rule['possessionHintEnabled'] is! bool ||
+        (rule['possessionPolicy'] != null &&
+            !PossessionPolicy.values.any(
+              (policy) => policy.name == rule['possessionPolicy'],
+            )) ||
         customEvents is! List<dynamic> ||
         customEvents.any((value) => value is! String || value.trim().isEmpty)) {
       throw BackupValidationException('$label is invalid.');

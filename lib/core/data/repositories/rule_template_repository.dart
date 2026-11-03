@@ -16,7 +16,7 @@ class RuleTemplateRepository {
       name: '11 分制（领先 2 分）',
       scoreButtons: [1, 2, 3],
       targetScore: 11,
-      winByTwo: true,
+      winByTwo: false,
     ),
     RuleTemplate(
       id: 'twenty_one',

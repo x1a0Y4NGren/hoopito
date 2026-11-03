@@ -2,7 +2,7 @@
 
 本目录保留首发开发时使用的分支提示，供追溯职责划分；不是当前任务清单，也不要求重新创建这些分支或 worktree。
 
-当前维护按 [AGENTS.md](../../AGENTS.md) 和 [CONTRIBUTING.md](../../CONTRIBUTING.md) 执行；最近状态见 [HANDOFF.md](../../HANDOFF.md)。无需为了小改启动多波代理、建立工作树或等待历史分支合并。
+当前维护按 [AGENTS.md](../../AGENTS.md) 和 [CONTRIBUTING.md](../../CONTRIBUTING.md) 执行；最近状态见 [HANDOFF.md](../development/handoff.md)。无需为了小改启动多波代理、建立工作树或等待历史分支合并。
 
 历史任务顺序记录在 [分支执行顺序](../branch-execution-order.md)。其中的初始搭建命令、目录、波次和技能要求仅适用于当时任务，不能直接作为今天的实施或发布授权。
 

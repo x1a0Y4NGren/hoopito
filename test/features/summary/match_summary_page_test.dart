@@ -78,6 +78,14 @@ void main() {
           );
           await tester.pumpAndSettle();
           expect(
+            find.text(language == 'zh' ? '比赛结束' : 'Game finished'),
+            findsOneWidget,
+          );
+          expect(
+            find.text(language == 'zh' ? 'Blue获胜' : 'Blue wins'),
+            findsOneWidget,
+          );
+          expect(
             find.byWidgetPredicate(
               (w) =>
                   w.key is ValueKey<String> &&

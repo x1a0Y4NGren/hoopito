@@ -15,7 +15,8 @@
     "test:e2e": "playwright test",
     "measure:perf": "node scripts/measure-performance.mjs",
     "format:check": "prettier --check src scripts tests *.json *.mjs *.ts *.md",
-    "assets": "node scripts/prepare-assets.mjs"
+    "assets": "node scripts/prepare-assets.mjs",
+    "export:android-update": "node scripts/export-android-update.mjs"
   },
   "dependencies": {
     "astro": "7.4.0",

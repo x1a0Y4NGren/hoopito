@@ -18,6 +18,18 @@ class MainActivity : FlutterActivity() {
     }
     private lateinit var backupChannel: AutomaticBackupChannelDelegate
     private lateinit var directoryPicker: AutomaticBackupDirectoryPickerDelegate
+    private var appUpdateDelegate: AppUpdateDelegate? = null
+    private var appUpdateChannel: MethodChannel? = null
+
+    override fun onResume() {
+        super.onResume()
+        appUpdateDelegate?.onResume()
+    }
+
+    override fun onPause() {
+        appUpdateDelegate?.onPause()
+        super.onPause()
+    }
     private var entryMotionChannel: MethodChannel? = null
     private var entryRendererChannel: MethodChannel? = null
     private val entrySurfaceReadiness = EntrySurfaceReadiness()
@@ -82,6 +94,10 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        appUpdateDelegate = AppUpdateDelegate(this)
+        appUpdateChannel = MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger, AppUpdateDelegate.channelName,
+        ).also { channel -> channel.setMethodCallHandler(appUpdateDelegate!!::handle) }
         val storage = AutomaticBackupStorageDelegate(contentResolver)
         directoryPicker = AutomaticBackupDirectoryPickerDelegate(
             activity = this,
@@ -158,6 +174,10 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun onDestroy() {
+        appUpdateChannel?.setMethodCallHandler(null)
+        appUpdateChannel = null
+        appUpdateDelegate?.dispose()
+        appUpdateDelegate = null
         entrySurfaceHolder?.removeCallback(entrySurfaceCallback)
         entrySurfaceHolder = null
         entrySurfaceReadiness.dispose()

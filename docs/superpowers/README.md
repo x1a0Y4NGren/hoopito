@@ -6,10 +6,10 @@
 
 - 当前工作边界与实现约束：[AGENTS.md](../../AGENTS.md)。
 - 开发、验证与交付：[CONTRIBUTING.md](../../CONTRIBUTING.md)。
-- 最近已完成内容与已知问题：[HANDOFF.md](../../HANDOFF.md)。
-- 只有追溯具体决策时，才阅读对应历史方案或 `.superpowers/` 审查记录，无需预读全部文档。
+- 最近已完成内容与已知问题：[HANDOFF.md](../development/handoff.md)。
+- 只有追溯具体决策时，才阅读对应历史方案或[归档审查记录](../archive/README.md)，无需预读全部文档。
 
-2.0 候选的设计和实施记录位于 `codex/hooptrace-v2` 分支；该分支已完成实现与所列本地验收，发行门槛仍未完成。当前 checkout 是否包含这些文件，以 Git 分支和 [HANDOFF.md](../../HANDOFF.md) 为准。不要把 main 的 1.1 历史基线或候选实施账本中早期的“待执行”条目当作最新状态。
+2.0 候选的设计和实施记录位于 `codex/hooptrace-v2` 分支；该分支已完成实现与所列本地验收，发行门槛仍未完成。当前 checkout 是否包含这些文件，以 Git 分支和 [HANDOFF.md](../development/handoff.md) 为准。不要把 main 的 1.1 历史基线或候选实施账本中早期的“待执行”条目当作最新状态。
 
 ## 历史指令的边界
 

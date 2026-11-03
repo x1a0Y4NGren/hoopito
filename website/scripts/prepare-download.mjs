@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { createReadStream, createWriteStream } from 'node:fs';
 import { lstat, mkdir, rename, rm } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { Readable, Transform } from 'node:stream';
+import { Readable, Transform, Writable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -99,6 +99,20 @@ function verifier(release) {
       } else done();
     },
   });
+}
+
+// The release attachment exporter uses the same streaming byte/hash check.
+export async function verifyApkFile(source, release) {
+  validateRelease(release);
+  await pipeline(
+    createReadStream(source),
+    verifier(release),
+    new Writable({
+      write(_chunk, _encoding, done) {
+        done();
+      },
+    }),
+  );
 }
 
 function temporary(file) {

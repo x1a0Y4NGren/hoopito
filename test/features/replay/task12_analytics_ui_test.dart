@@ -60,8 +60,8 @@ void main() {
     expect(find.text('罚球'), findsOneWidget);
     expect(find.text('犯规'), findsOneWidget);
     expect(find.text('球权'), findsOneWidget);
-    expect(find.text('记录完整度'), findsOneWidget);
-    expect(find.text('已确认落点 / 已记录运动战出手'), findsOneWidget);
+    expect(find.text('记录范围'), findsOneWidget);
+    expect(find.text('已确认运动战落点 / 已记录运动战出手'), findsOneWidget);
     expect(find.text('出手区域'), findsOneWidget);
     expect(find.textContaining('油漆区'), findsOneWidget);
     expect(find.text('50% · 2/4'), findsOneWidget);

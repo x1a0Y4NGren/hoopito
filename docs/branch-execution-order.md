@@ -2,6 +2,8 @@
 
 > 本文保留首发阶段的执行记录，不是后续任务的默认流程。不要据此重建全部 worktree 或等待旧波次；当前工作以 [AGENTS.md](../AGENTS.md)、[CONTRIBUTING.md](../CONTRIBUTING.md) 和本次需求为准。
 
+> 文中的 `scripts/` 文件已作为[历史工作树脚本](archive/tools/worktrees/README.md)归档。下方命令保留当时的路径，仅用于追溯，不作为当前可执行入口。
+
 ## 基本工作流
 
 1. `main` 只保存已经确认的规划和已合并成果。

@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hoopito/app/app_theme.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
+import 'package:hoopito/core/domain/entities/rule_template.dart';
 import 'package:hoopito/features/pregame/pregame_controller.dart';
 import 'package:hoopito/features/pregame/pregame_page.dart';
+import 'package:hoopito/features/pregame/start_match_mapper.dart';
+
+import '../../test_helpers/test_database.dart';
 
 const _edit = Key('pregame-target-edit');
 const _input = Key('pregame-target-input');
@@ -13,15 +18,122 @@ const _confirm = Key('pregame-target-confirm');
 const _cancel = Key('pregame-target-cancel');
 
 void main() {
+  testWidgets(
+    'real template reload preserves displayed mode and start command',
+    (tester) async {
+      final repository = RuleTemplateRepository(createTestDatabase());
+      final starts = <MatchSetup>[];
+      Future<void> render(List<RuleTemplate> templates) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: PregamePage(templates: templates, onStartMatch: starts.add),
+          ),
+        );
+        await tester.pumpAndSettle();
+      }
+
+      await render(const []);
+      await tester.tap(find.byKey(const Key('pregame-start-match')));
+      await tester.pumpAndSettle();
+      expect(
+        buildStartMatchCommand(starts.last).ruleTemplate.targetScore,
+        isNull,
+      );
+      await tester.ensureVisible(find.byKey(const Key('pregame-advanced')));
+      await tester.tap(find.byKey(const Key('pregame-advanced')));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(
+        find.byKey(const Key('pregame-goal-mode-target')),
+      );
+      await tester.tap(find.byKey(const Key('pregame-goal-mode-target')));
+      await tester.pumpAndSettle();
+
+      await repository.ensureBuiltIns();
+      await render(await repository.listAll());
+      expect(find.text('11分'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('pregame-start-match')));
+      await tester.pumpAndSettle();
+      expect(buildStartMatchCommand(starts.last).ruleTemplate.targetScore, 11);
+      expect(
+        buildStartMatchCommand(starts.last).ruleTemplate.winByTwo,
+        isFalse,
+      );
+
+      final dropdown = find.byKey(const Key('pregame-rule-template'));
+      await tester.ensureVisible(dropdown);
+      await tester.tap(dropdown);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('21 分制').last);
+      await tester.pumpAndSettle();
+      expect(find.text('21分'), findsOneWidget);
+      await tester.ensureVisible(
+        find.byKey(const Key('pregame-goal-mode-free')),
+      );
+      await tester.tap(find.byKey(const Key('pregame-goal-mode-free')));
+      await tester.pumpAndSettle();
+      await render(await repository.listAll());
+      expect(find.byKey(_edit), findsNothing);
+      await tester.tap(find.byKey(const Key('pregame-start-match')));
+      await tester.pumpAndSettle();
+      expect(
+        buildStartMatchCommand(starts.last).ruleTemplate.targetScore,
+        isNull,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('free mode hides target and mode toggling retains last target', (
+    tester,
+  ) async {
+    MatchSetup? started;
+    await tester.pumpWidget(
+      MaterialApp(home: PregamePage(onStartMatch: (setup) => started = setup)),
+    );
+    await tester.ensureVisible(find.byKey(const Key('pregame-advanced')));
+    await tester.tap(find.byKey(const Key('pregame-advanced')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(_edit), findsNothing);
+    expect(find.byKey(const Key('pregame-win-by-two')), findsNothing);
+    await tester.tap(find.byKey(const Key('pregame-start-match')));
+    expect(started!.targetScore, isNull);
+    final targetMode = find.byKey(const Key('pregame-goal-mode-target'));
+    await tester.ensureVisible(targetMode);
+    await tester.tap(targetMode);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(_edit));
+    await tester.tap(find.byKey(_edit));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(_input), '37');
+    await tester.tap(find.byKey(_confirm));
+    await tester.pumpAndSettle();
+    final freeMode = find.byKey(const Key('pregame-goal-mode-free'));
+    await tester.ensureVisible(freeMode);
+    await tester.tap(freeMode);
+    await tester.pumpAndSettle();
+    expect(find.byKey(_edit), findsNothing);
+    await tester.tap(find.byKey(const Key('pregame-start-match')));
+    expect(started!.targetScore, isNull);
+    await tester.ensureVisible(targetMode);
+    await tester.tap(targetMode);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('pregame-start-match')));
+    expect(started!.targetScore, 37);
+  });
+
   for (final score in [1, 99, 100, 999]) {
     test('target $score reaches the start configuration unchanged', () {
-      final controller = PregameController()..setTargetScore(score);
+      final controller = PregameController()
+        ..setGoalScoringMode(GoalScoringMode.target)
+        ..setTargetScore(score);
       expect(controller.createMatchSetup().targetScore, score);
     });
   }
 
   test('controller bounds target score edits to 1 through 999', () {
-    final controller = PregameController()..setTargetScore(1000);
+    final controller = PregameController()
+      ..setGoalScoringMode(GoalScoringMode.target)
+      ..setTargetScore(1000);
     expect(controller.createMatchSetup().targetScore, 999);
     controller.setTargetScore(0);
     expect(controller.createMatchSetup().targetScore, 1);
@@ -162,6 +274,11 @@ void main() {
       await tester.ensureVisible(find.byKey(const Key('pregame-advanced')));
       await tester.tap(find.byKey(const Key('pregame-advanced')));
       await tester.pumpAndSettle();
+      await tester.ensureVisible(
+        find.byKey(const Key('pregame-goal-mode-target')),
+      );
+      await tester.tap(find.byKey(const Key('pregame-goal-mode-target')));
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.byKey(_edit));
       await tester.tap(find.byKey(_edit));
       await tester.pumpAndSettle();
@@ -287,6 +404,9 @@ Future<void> _openSettings(
   final advanced = find.byKey(const Key('pregame-advanced'));
   await tester.ensureVisible(advanced);
   await tester.tap(advanced);
+  await tester.pumpAndSettle();
+  await tester.ensureVisible(find.byKey(const Key('pregame-goal-mode-target')));
+  await tester.tap(find.byKey(const Key('pregame-goal-mode-target')));
   await tester.pumpAndSettle();
   await tester.ensureVisible(find.text(language == 'zh' ? '11分' : '11points'));
   await tester.pumpAndSettle();

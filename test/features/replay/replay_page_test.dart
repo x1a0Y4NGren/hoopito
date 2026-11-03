@@ -54,7 +54,7 @@ void main() {
     expect(find.text('海浪'), findsOneWidget);
     expect(find.text('9'), findsOneWidget);
     expect(find.text('总览'), findsOneWidget);
-    expect(find.text('事件时间线'), findsOneWidget);
+    expect(find.text('比赛记录'), findsOneWidget);
     expect(find.byKey(const Key('replay-event-event-1')), findsOneWidget);
     expect(find.byKey(const Key('replay-event-event-2')), findsOneWidget);
 
@@ -133,11 +133,11 @@ void main() {
         find.byKey(const Key('replay-possession-segments')),
         findsOneWidget,
       );
-      expect(find.text('球权分段'), findsOneWidget);
+      expect(find.text('球权记录'), findsOneWidget);
       expect(find.textContaining('· 人工'), findsOneWidget);
       expect(find.textContaining('· 建议'), findsOneWidget);
       expect(find.textContaining('结束 00:12'), findsOneWidget);
-      expect(find.textContaining('当前进行中'), findsOneWidget);
+      expect(find.textContaining('未记录结束时间'), findsOneWidget);
     },
   );
 
@@ -172,9 +172,9 @@ void main() {
       MaterialApp(home: ReplayPage(controller: controller)),
     );
 
-    expect(find.text('终场边界'), findsOneWidget);
+    expect(find.text('比赛已结束'), findsOneWidget);
     expect(find.textContaining('结束 00:20'), findsOneWidget);
-    expect(find.textContaining('当前进行中'), findsNothing);
+    expect(find.textContaining('未记录结束时间'), findsNothing);
   });
 
   testWidgets('shows finish action only when callback is provided', (
@@ -287,7 +287,7 @@ void main() {
 
     expect(find.byKey(const Key('replay-export-summary')), findsOneWidget);
     expect(find.text('复盘分享图'), findsOneWidget);
-    expect(find.text('落点与分析会生成一张本地图片'), findsOneWidget);
+    expect(find.text('将落点图和比赛分析合成一张本地图片'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('replay-export-confirm')));
     await tester.pumpAndSettle();
