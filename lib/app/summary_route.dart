@@ -1,3 +1,4 @@
+import 'package:hoopito/app/series_routes.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,6 +75,15 @@ class SummaryRouteState extends ConsumerState<SummaryRoute> {
             final data = replayDataFromDetail(detail);
             return MatchSummaryPage(
               detail: detail,
+              seriesPanel:
+                  ref.watch(matchSeriesProvider(widget.matchId)).valueOrNull ==
+                      null
+                  ? null
+                  : SeriesSummaryPanel(
+                      series: ref
+                          .watch(matchSeriesProvider(widget.matchId))
+                          .valueOrNull!,
+                    ),
               analytics: data.analytics!,
               busy: _busy || _choosingPlayer,
               onBack: _back,

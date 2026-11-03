@@ -834,5 +834,25 @@
         "type": "String"
       }
     }
-  }
+  },
+  "seriesTitle": "Series",
+  "seriesSingle": "Single match",
+  "seriesMode": "Continuous matches",
+  "seriesModeHelp": "Keep the same pair and count wins across games. Close the series whenever you like.",
+  "seriesNext": "Next game",
+  "seriesNextSettings": "Next game settings",
+  "seriesClose": "Close series",
+  "seriesCloseBody": "All games are kept. You can reopen this series later.",
+  "seriesReopen": "Reopen series",
+  "seriesOpen": "In progress",
+  "seriesClosed": "Closed",
+  "seriesNoGames": "No completed games yet",
+  "seriesWins": "Wins",
+  "seriesDraws": "Draws",
+  "seriesEmpty": "No series yet",
+  "seriesResume": "Resume series",
+  "seriesLockedPair": "This pair is fixed. You can swap sides.",
+  "seriesGames": "Matches",
+  "seriesLoadError": "Could not load series",
+  "seriesActiveHelp": "Finish or abandon the current match before closing the series."
 }

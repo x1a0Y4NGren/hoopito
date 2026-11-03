@@ -46,6 +46,7 @@ class PregameValidationResult {
 class MatchSetup {
   const MatchSetup({
     required this.matchId,
+    this.continuous = false,
     required this.redName,
     required this.blueName,
     required this.ruleTemplateId,
@@ -67,6 +68,7 @@ class MatchSetup {
   });
 
   final String matchId;
+  final bool continuous;
   final String redName;
   final String blueName;
   final String? redPlayerProfileId;
@@ -420,10 +422,11 @@ class PregameController {
     return PregameValidationResult(List.unmodifiable(errors));
   }
 
-  MatchSetup createMatchSetup() {
+  MatchSetup createMatchSetup({bool continuous = false}) {
     final selected = selectedRules;
     return MatchSetup(
       matchId: _matchIdFactory(),
+      continuous: continuous,
       redName: _state.redName,
       blueName: _state.blueName,
       redPlayerProfileId: _state.redPlayerProfileId,

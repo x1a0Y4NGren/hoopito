@@ -1,5 +1,6 @@
 import 'package:hoopito/core/data/commands/match_command_service.dart';
 import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/entities/match_series.dart';
 import 'package:hoopito/core/domain/entities/rule_template.dart';
 import 'package:hoopito/features/pregame/pregame_controller.dart';
 
@@ -18,7 +19,11 @@ class PregameSetupValidationException implements Exception {
 /// handed to the transactional kernel. Recording metadata is retained for
 /// compatibility, but new matches use the historical simple score-only
 /// defaults without exposing those implementation details in the start UI.
-StartMatchCommand buildStartMatchCommand(MatchSetup setup, {DateTime? now}) {
+StartMatchCommand buildStartMatchCommand(
+  MatchSetup setup, {
+  DateTime? now,
+  SeriesStartContext? seriesContext,
+}) {
   final result = validateMatchSetup(setup);
   if (!result.isValid) {
     throw PregameSetupValidationException(result);
@@ -29,6 +34,7 @@ StartMatchCommand buildStartMatchCommand(MatchSetup setup, {DateTime? now}) {
   final regulationSeconds = countdown ? setup.timeLimitMinutes * 60 : null;
   return StartMatchCommand(
     matchId: setup.matchId,
+    seriesContext: seriesContext,
     redName: setup.redName.trim(),
     blueName: setup.blueName.trim(),
     redPlayerProfileId: setup.redPlayerProfileId,

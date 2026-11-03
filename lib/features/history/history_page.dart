@@ -20,9 +20,13 @@ class HistoryPage extends StatefulWidget {
     this.onArchive,
     this.onUnarchive,
     this.onDelete,
+    this.seriesContent,
+    this.seriesLinkBuilder,
     super.key,
   });
 
+  final Widget? seriesContent;
+  final Widget? Function(String)? seriesLinkBuilder;
   final HistoryController controller;
   final ValueChanged<String> onMatchTap;
   final VoidCallback? onHome;
@@ -42,6 +46,7 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   late final TextEditingController _searchController;
+  bool _showSeries = false;
 
   HistoryController get controller => widget.controller;
 
@@ -216,95 +221,149 @@ class _HistoryPageState extends State<HistoryPage> {
                 icon: const Icon(Icons.home_outlined),
               ),
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final wide =
-              constraints.maxWidth >= 720 &&
-              MediaQuery.textScalerOf(context).scale(1) < 1.5;
-          return CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: _HistoryToolbar(
-                  searchController: _searchController,
-                  filter: controller.filters.lifecycle,
-                  onSearchChanged: controller.updateSearch,
-                  onReset: () {
-                    controller.resetFilters();
-                    _searchController.clear();
-                  },
-                  onAdvanced: () => _showAdvancedFilters(context),
-                  onFilterChanged: (filter) => controller.updateFilters(
-                    controller.filters.copyWith(lifecycle: filter),
-                  ),
-                ),
-              ),
-              if (widget.activeMatch != null && widget.onResumeActive != null)
-                SliverToBoxAdapter(
-                  child: _RecoveryBanner(
-                    match: widget.activeMatch!,
-                    onResume: widget.onResumeActive!,
-                  ),
-                ),
-              if (widget.importedIncompleteLoadError)
-                SliverToBoxAdapter(
-                  child: _ImportedIncompleteLoadError(
-                    onRetry: widget.onRetryImportedIncomplete,
-                  ),
-                ),
-              for (final imported in widget.importedIncompleteMatches)
-                if (widget.onResumeImportedIncomplete != null)
-                  SliverToBoxAdapter(
-                    child: _ImportedIncompleteBanner(
-                      match: imported,
-                      onResume: () =>
-                          widget.onResumeImportedIncomplete!(imported.matchId),
+      body: Column(
+        children: [
+          if (widget.seriesContent != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: SegmentedButton<bool>(
+                segments: [
+                  ButtonSegment(
+                    value: false,
+                    label: Text(
+                      l10n.seriesGames,
+                      key: const Key('history-mode-matches'),
                     ),
                   ),
-              if (matches.isEmpty && controller.isLoadingPage)
-                const SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              else if (matches.isEmpty && controller.loadError != null)
-                SliverToBoxAdapter(
-                  child: _HistoryLoadError(onRetry: controller.refresh),
-                )
-              else if (matches.isEmpty)
-                const SliverToBoxAdapter(child: _EmptyHistory())
-              else
-                SliverPadding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 24),
-                  sliver: SliverList.list(
-                    children: [
-                      for (final group in groups) ...[
-                        _HistoryDateHeader(date: group.date),
-                        for (final match in group.matches)
-                          _HistoryMatchRow(
-                            match: match,
-                            wide: wide,
-                            onTap: () => widget.onMatchTap(match.matchId),
-                            onArchive: widget.onArchive,
-                            onUnarchive: widget.onUnarchive,
-                            onDelete: widget.onDelete,
-                          ),
-                      ],
-                      if (controller.dataSource != null &&
-                          (controller.hasMore || controller.loadError != null))
-                        _LoadMoreButton(
-                          loading: controller.isLoadingPage,
-                          error: controller.loadError,
-                          onPressed: controller.isLoadingPage
-                              ? null
-                              : controller.loadError != null
-                              ? controller.retryLoad
-                              : controller.loadNextPage,
-                        ),
-                    ],
+                  ButtonSegment(
+                    value: true,
+                    label: Text(
+                      l10n.seriesTitle,
+                      key: const Key('history-mode-series'),
+                    ),
                   ),
-                ),
-            ],
-          );
-        },
+                ],
+                selected: {_showSeries},
+                onSelectionChanged: (v) =>
+                    setState(() => _showSeries = v.single),
+              ),
+            ),
+          Expanded(
+            child: _showSeries
+                ? widget.seriesContent!
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      final wide =
+                          constraints.maxWidth >= 720 &&
+                          MediaQuery.textScalerOf(context).scale(1) < 1.5;
+                      return CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: _HistoryToolbar(
+                              searchController: _searchController,
+                              filter: controller.filters.lifecycle,
+                              onSearchChanged: controller.updateSearch,
+                              onReset: () {
+                                controller.resetFilters();
+                                _searchController.clear();
+                              },
+                              onAdvanced: () => _showAdvancedFilters(context),
+                              onFilterChanged: (filter) =>
+                                  controller.updateFilters(
+                                    controller.filters.copyWith(
+                                      lifecycle: filter,
+                                    ),
+                                  ),
+                            ),
+                          ),
+                          if (widget.activeMatch != null &&
+                              widget.onResumeActive != null)
+                            SliverToBoxAdapter(
+                              child: _RecoveryBanner(
+                                match: widget.activeMatch!,
+                                onResume: widget.onResumeActive!,
+                              ),
+                            ),
+                          if (widget.importedIncompleteLoadError)
+                            SliverToBoxAdapter(
+                              child: _ImportedIncompleteLoadError(
+                                onRetry: widget.onRetryImportedIncomplete,
+                              ),
+                            ),
+                          for (final imported
+                              in widget.importedIncompleteMatches)
+                            if (widget.onResumeImportedIncomplete != null)
+                              SliverToBoxAdapter(
+                                child: _ImportedIncompleteBanner(
+                                  match: imported,
+                                  onResume: () =>
+                                      widget.onResumeImportedIncomplete!(
+                                        imported.matchId,
+                                      ),
+                                ),
+                              ),
+                          if (matches.isEmpty && controller.isLoadingPage)
+                            const SliverFillRemaining(
+                              hasScrollBody: false,
+                              child: Center(child: CircularProgressIndicator()),
+                            )
+                          else if (matches.isEmpty &&
+                              controller.loadError != null)
+                            SliverToBoxAdapter(
+                              child: _HistoryLoadError(
+                                onRetry: controller.refresh,
+                              ),
+                            )
+                          else if (matches.isEmpty)
+                            const SliverToBoxAdapter(child: _EmptyHistory())
+                          else
+                            SliverPadding(
+                              padding: const EdgeInsets.only(
+                                top: 12,
+                                bottom: 24,
+                              ),
+                              sliver: SliverList.list(
+                                children: [
+                                  for (final group in groups) ...[
+                                    _HistoryDateHeader(date: group.date),
+                                    for (final match in group.matches) ...[
+                                      _HistoryMatchRow(
+                                        match: match,
+                                        wide: wide,
+                                        onTap: () =>
+                                            widget.onMatchTap(match.matchId),
+                                        onArchive: widget.onArchive,
+                                        onUnarchive: widget.onUnarchive,
+                                        onDelete: widget.onDelete,
+                                      ),
+                                      if (widget.seriesLinkBuilder?.call(
+                                            match.matchId,
+                                          )
+                                          case final Widget link)
+                                        link,
+                                    ],
+                                  ],
+                                  if (controller.dataSource != null &&
+                                      (controller.hasMore ||
+                                          controller.loadError != null))
+                                    _LoadMoreButton(
+                                      loading: controller.isLoadingPage,
+                                      error: controller.loadError,
+                                      onPressed: controller.isLoadingPage
+                                          ? null
+                                          : controller.loadError != null
+                                          ? controller.retryLoad
+                                          : controller.loadNextPage,
+                                    ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }

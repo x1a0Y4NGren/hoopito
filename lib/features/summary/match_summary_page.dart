@@ -18,6 +18,7 @@ class MatchSummaryPage extends StatelessWidget {
     required this.onCorrectCoverage,
     required this.onSavePlayer,
     this.busy = false,
+    this.seriesPanel,
     super.key,
   });
   final MatchDetail detail;
@@ -25,6 +26,7 @@ class MatchSummaryPage extends StatelessWidget {
   final VoidCallback onBack, onRematch, onReplay, onShare, onCorrectCoverage;
   final ValueChanged<String> onSavePlayer;
   final bool busy;
+  final Widget? seriesPanel;
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -80,16 +82,18 @@ class MatchSummaryPage extends StatelessWidget {
               redScore: detail.redScore,
             ),
             const SizedBox(height: 20),
+            ?seriesPanel,
             Wrap(
               spacing: 12,
               runSpacing: 12,
               children: [
-                FilledButton.icon(
-                  key: const Key('summary-rematch'),
-                  onPressed: busy ? null : onRematch,
-                  icon: const Icon(Icons.refresh),
-                  label: Text(l10n.v2Rematch),
-                ),
+                if (seriesPanel == null)
+                  FilledButton.icon(
+                    key: const Key('summary-rematch'),
+                    onPressed: busy ? null : onRematch,
+                    icon: const Icon(Icons.refresh),
+                    label: Text(l10n.v2Rematch),
+                  ),
                 OutlinedButton.icon(
                   key: const Key('summary-share'),
                   onPressed: busy ? null : onShare,

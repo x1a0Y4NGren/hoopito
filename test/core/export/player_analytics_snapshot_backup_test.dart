@@ -9,53 +9,56 @@ import 'package:hoopito/core/export/json_backup_codec.dart';
 import '../../test_helpers/test_database.dart';
 
 void main() {
-  test('format 2 exports twelve groups and fills missing snapshots', () async {
-    final database = createTestDatabase();
-    await _seedFinishedMatch(database);
-    await database.ensureBackupDirtyTriggers();
-    await database
-        .into(database.appSettings)
-        .insert(
-          AppSetting(
-            key: 'backup.automatic.enabled',
-            valueJson: 'true',
-            updatedAt: DateTime.utc(2026, 8, 28, 11),
-          ),
-        );
-    final codec = JsonBackupCodec(
-      database,
-      appVersion: '1.1.0+3',
-      now: () => DateTime.utc(2026, 8, 28, 12),
-    );
+  test(
+    'format 2 exports fourteen groups and fills missing snapshots',
+    () async {
+      final database = createTestDatabase();
+      await _seedFinishedMatch(database);
+      await database.ensureBackupDirtyTriggers();
+      await database
+          .into(database.appSettings)
+          .insert(
+            AppSetting(
+              key: 'backup.automatic.enabled',
+              valueJson: 'true',
+              updatedAt: DateTime.utc(2026, 8, 28, 11),
+            ),
+          );
+      final codec = JsonBackupCodec(
+        database,
+        appVersion: '1.1.0+3',
+        now: () => DateTime.utc(2026, 8, 28, 12),
+      );
 
-    final first = await codec.export();
-    final second = await codec.export();
-    final json = jsonDecode(first) as Map<String, dynamic>;
-    final manifest = json['manifest'] as Map<String, dynamic>;
-    final data = json['data'] as Map<String, dynamic>;
+      final first = await codec.export();
+      final second = await codec.export();
+      final json = jsonDecode(first) as Map<String, dynamic>;
+      final manifest = json['manifest'] as Map<String, dynamic>;
+      final data = json['data'] as Map<String, dynamic>;
 
-    expect(first, second);
-    expect(manifest['formatVersion'], 2);
-    expect(manifest['schemaVersion'], 3);
-    expect(data, hasLength(12));
-    expect(data['playerAnalyticsSnapshots'], hasLength(1));
-    expect(codec.decodeAndValidate(first).snapshots, hasLength(1));
-    expect(
-      (await database.select(database.playerAnalyticsSnapshots).get()),
-      hasLength(1),
-    );
-    expect(
-      await (database.select(database.appSettings)..where(
-            (row) => row.key.isIn(const [
-              'backup.automatic.dirty',
-              'backup.automatic.dirtySince',
-              'backup.automatic.dirtyRevision',
-            ]),
-          ))
-          .get(),
-      isEmpty,
-    );
-  });
+      expect(first, second);
+      expect(manifest['formatVersion'], 2);
+      expect(manifest['schemaVersion'], 4);
+      expect(data, hasLength(14));
+      expect(data['playerAnalyticsSnapshots'], hasLength(1));
+      expect(codec.decodeAndValidate(first).snapshots, hasLength(1));
+      expect(
+        (await database.select(database.playerAnalyticsSnapshots).get()),
+        hasLength(1),
+      );
+      expect(
+        await (database.select(database.appSettings)..where(
+              (row) => row.key.isIn(const [
+                'backup.automatic.dirty',
+                'backup.automatic.dirtySince',
+                'backup.automatic.dirtyRevision',
+              ]),
+            ))
+            .get(),
+        isEmpty,
+      );
+    },
+  );
 
   test('schema 1 and mismatched format/schema pairs stay blocked', () async {
     final database = createTestDatabase();
@@ -301,6 +304,10 @@ String _asLegacyFormatOne(String source) {
   final data = document['data'] as Map<String, dynamic>;
   manifest['formatVersion'] = 1;
   manifest['schemaVersion'] = 2;
+  counts.remove('matchSeries');
+  counts.remove('seriesMatches');
+  data.remove('matchSeries');
+  data.remove('seriesMatches');
   counts.remove('playerAnalyticsSnapshots');
   data.remove('playerAnalyticsSnapshots');
   _refreshChecksum(document);

@@ -62,14 +62,16 @@ class AndroidIntegrationCiTest(unittest.TestCase):
         self.assertEqual(calls, [
             'test integration_test/main_loop_test.dart -d emulator-5554',
             'test integration_test/v2_file_recovery_test.dart -d emulator-5554',
+            'test integration_test/continuous_series_test.dart -d emulator-5554',
         ])
 
-    def test_api36_runs_all_four_flows_in_order(self):
+    def test_api36_runs_all_five_flows_in_order(self):
         result, calls = self.run_action(36)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(calls, [
             'test integration_test/main_loop_test.dart -d emulator-5554',
             'test integration_test/v2_file_recovery_test.dart -d emulator-5554',
+            'test integration_test/continuous_series_test.dart -d emulator-5554',
             'test integration_test/player_comparison_flow_test.dart -d emulator-5554',
             'test integration_test/command_performance_test.dart -d emulator-5554',
         ])
@@ -82,7 +84,20 @@ class AndroidIntegrationCiTest(unittest.TestCase):
     def test_api36_flow_failure_preserves_failure_and_stops_benchmark(self):
         result, calls = self.run_action(36, 'integration_test/player_comparison_flow_test.dart')
         self.assertEqual(result.returncode, 42)
-        self.assertEqual(len(calls), 3)
+        self.assertEqual(len(calls), 4)
+
+    def test_series_failure_stops_later_flows_on_both_supported_apis(self):
+        for api_level in (24, 36):
+            with self.subTest(api_level=api_level):
+                result, calls = self.run_action(
+                    api_level, 'integration_test/continuous_series_test.dart'
+                )
+                self.assertEqual(result.returncode, 42)
+                self.assertEqual(calls, [
+                    'test integration_test/main_loop_test.dart -d emulator-5554',
+                    'test integration_test/v2_file_recovery_test.dart -d emulator-5554',
+                    'test integration_test/continuous_series_test.dart -d emulator-5554',
+                ])
 
     def test_unknown_api_fails_before_invoking_flutter(self):
         result, calls = self.run_action(35)

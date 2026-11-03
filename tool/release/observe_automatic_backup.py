@@ -74,8 +74,8 @@ def validate_json_envelope(payload):
     document = json.loads(payload)
     manifest, data = document['manifest'], document['data']
     if (manifest['appName'] not in ('Hoopito', 'HoopTrace')
-            or (manifest['formatVersion'], manifest['schemaVersion']) != (2, 3)):
-        raise ValueError('Expected Hoopito or legacy HoopTrace JSON format 2 / schema 3')
+            or (manifest['formatVersion'], manifest['schemaVersion']) not in ((2, 3), (2, 4))):
+        raise ValueError('Expected Hoopito or legacy HoopTrace JSON format 2 / schema 3 or 4')
     source_manifest = {key: manifest[key] for key in (
         'appName', 'appVersion', 'formatVersion', 'schemaVersion', 'exportedAt', 'recordCounts',
     )}
@@ -151,10 +151,12 @@ def stable_database(adb, device_path, output):
 def app_database_summary(path):
     with closing(sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)) as connection:
         connection.row_factory = sqlite3.Row
-        if connection.execute('PRAGMA user_version').fetchone()[0] != 3:
-            raise ValueError('Expected app database schema 3')
+        schema = connection.execute('PRAGMA user_version').fetchone()[0]
+        if schema not in (3, 4):
+            raise ValueError('Expected app database schema 3 or 4')
         tables = {}
-        for table in BUSINESS_TABLES:
+        business_tables = BUSINESS_TABLES + (('match_series', 'series_matches') if schema == 4 else ())
+        for table in business_tables:
             rows = [dict(row) for row in connection.execute(
                 f'SELECT rowid AS _rowid_, * FROM "{table}" ORDER BY rowid')]
             tables[table] = {'count': len(rows), 'sha256': sha256(encode(rows))}

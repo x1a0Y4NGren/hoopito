@@ -120,6 +120,8 @@ class BackupMergeService {
         final rebuiltCount = await PlayerAnalyticsSnapshotRepository(
           database,
         ).ensureSnapshotsForMatches(plan.snapshotMatchIds);
+        // Validate the combined graph and shared capacity inside the rollback boundary.
+        await codec.export();
         result = plan.result.withRebuiltAnalyticsSnapshotCount(rebuiltCount);
       });
       return result;
@@ -136,6 +138,8 @@ class BackupMergeService {
   Future<_LocalRows> _readLocalRows() async {
     return _LocalRows(
       matches: await database.select(database.matches).get(),
+      series: await database.select(database.matchSeries).get(),
+      members: await database.select(database.seriesMatches).get(),
       participants: await database.select(database.matchParticipants).get(),
       clocks: await database.select(database.matchClocks).get(),
       events: await database.select(database.matchEvents).get(),
@@ -148,6 +152,86 @@ class BackupMergeService {
   }
 
   _MergePlan _buildPlan(JsonBackupDocument document, _LocalRows local) {
+    final rejectedSeries = <String>{};
+    while (true) {
+      final plan = _planRows(document, local, rejectedSeries);
+      final conflicts = _conflictingSeries(document, local, plan);
+      if (conflicts.isEmpty) return plan;
+      // Every pass excludes at least one occupied target. A fresh series and
+      // its fresh matches can always be allocated without touching local data.
+      rejectedSeries.addAll(conflicts);
+    }
+  }
+
+  Set<String> _conflictingSeries(
+    JsonBackupDocument document,
+    _LocalRows local,
+    _MergePlan plan,
+  ) {
+    final maps = plan.result.idMap;
+    final incoming = <String, String>{};
+    final reusedGroups = plan.result.skippedIds['matchSeries']!
+        .map((id) => maps['matchSeries']![id]!)
+        .toSet();
+    if (reusedGroups.isEmpty) return {};
+    final localMembers = {
+      for (final member in local.members) member.matchId: member,
+    };
+    final conflicts = <String>{};
+    for (final member in document.data['seriesMatches']!) {
+      final targetGroup = maps['matchSeries']![member['seriesId']]!;
+      if (!reusedGroups.contains(targetGroup)) continue;
+      final targetMatch = maps['matches']![member['matchId']]!;
+      incoming[targetMatch] = targetGroup;
+      final existing = localMembers[targetMatch];
+      if (existing == null ||
+          existing.seriesId != targetGroup ||
+          existing.gameNumber != member['gameNumber'] ||
+          existing.slotASide != member['slotASide']) {
+        conflicts.add(targetGroup);
+      }
+    }
+    for (final member in local.members) {
+      if (reusedGroups.contains(member.seriesId) &&
+          incoming[member.matchId] != member.seriesId) {
+        conflicts.add(member.seriesId);
+      }
+    }
+    // Any new or changed descendant means this is a separate copy of the
+    // entire group. Local-only descendants must also be preserved separately.
+    void inspect(
+      String table,
+      Iterable<DataClass> localRows,
+      List<Map<String, dynamic>> inserts,
+    ) {
+      final expected = maps[table]!.values.toSet();
+      for (final row in inserts) {
+        final group = incoming[row['matchId']];
+        if (group != null) conflicts.add(group);
+      }
+      for (final row in localRows) {
+        final data = row.toJson();
+        final group = incoming[data['matchId']];
+        if (group != null && !expected.contains(data['id'])) {
+          conflicts.add(group);
+        }
+      }
+    }
+
+    inspect('matchParticipants', local.participants, plan.participants);
+    inspect('matchClocks', local.clocks, plan.clocks);
+    inspect('matchEvents', local.events, plan.events);
+    inspect('shotLocations', local.locations, plan.locations);
+    inspect('possessionSegments', local.possessions, plan.possessions);
+    inspect('auditLogs', local.audits, plan.audits);
+    return conflicts;
+  }
+
+  _MergePlan _planRows(
+    JsonBackupDocument document,
+    _LocalRows local,
+    Set<String> rejectedSeries,
+  ) {
     final sourceChecksum = document.manifest.checksum;
     final playerRows = _mapRows(
       table: 'players',
@@ -161,17 +245,59 @@ class BackupMergeService {
       localRows: _toJsonRows(local.templates),
       checksum: sourceChecksum,
     );
+    final seriesRows = _mapRows(
+      allowReuse: (_, candidate) => !rejectedSeries.contains(candidate),
+      table: 'matchSeries',
+      sourceRows: document.data['matchSeries']!,
+      localRows: _toJsonRows(local.series),
+      checksum: sourceChecksum,
+      transform: (row) {
+        for (final key in ['slotAPlayerProfileId', 'slotBPlayerProfileId']) {
+          row[key] = playerRows.idMap[row[key]] ?? row[key];
+        }
+        final setup =
+            jsonDecode(row['defaultSetupJson'] as String)
+                as Map<String, dynamic>;
+        final rule = setup['ruleTemplate'] as Map<String, dynamic>;
+        rule['id'] = templateRows.idMap[rule['id']] ?? rule['id'];
+        row['defaultSetupJson'] = jsonEncode(setup);
+        // Imported lifecycle retries must never replay a source-device intent.
+        row['lifecycleIntentsJson'] = '{}';
+        if (row['lifecycle'] == 'open') {
+          row['lifecycle'] = 'closed';
+          row['closedAt'] =
+              (document.manifest.exportedAt.millisecondsSinceEpoch ~/ 1000) *
+              1000;
+          row['revision'] = (row['revision'] as int) + 1;
+        }
+        return row;
+      },
+    );
     final forceMatchRemapIds = _matchIdsRequiringRemap(
       document,
       local,
       playerRows.idMap,
     );
+    final localMembers = {for (final row in local.members) row.matchId: row};
+    final sourceMembers = {
+      for (final row in document.data['seriesMatches']!)
+        row['matchId'] as String: row,
+    };
     final matchRows = _mapRows(
       table: 'matches',
       sourceRows: document.data['matches']!,
       localRows: _toJsonRows(local.matches),
       checksum: sourceChecksum,
       forceRemapIds: forceMatchRemapIds,
+      allowReuse: (sourceId, targetId) {
+        final source = sourceMembers[sourceId];
+        final target = localMembers[targetId];
+        if (source == null) return target == null;
+        return target != null &&
+            target.seriesId == seriesRows.idMap[source['seriesId']] &&
+            target.gameNumber == source['gameNumber'] &&
+            target.slotASide == source['slotASide'];
+      },
       transform: (row) {
         final result = Map<String, dynamic>.from(row);
         final rule = _decodeRuleSnapshot(result['ruleTemplateJson']);
@@ -190,6 +316,35 @@ class BackupMergeService {
         }
         return result;
       },
+    );
+    final membershipInserts = <Map<String, dynamic>>[];
+    final membershipSkipped = <String>[];
+    for (final row in sourceMembers.values) {
+      final targetMatchId = matchRows.idMap[row['matchId']]!;
+      final transformed = {
+        ...row,
+        'matchId': targetMatchId,
+        'seriesId': seriesRows.idMap[row['seriesId']]!,
+      };
+      final existing = localMembers[targetMatchId];
+      if (existing != null) {
+        if (!_sameRow(existing.toJson(), transformed)) {
+          throw const BackupMergeException(
+            'Conflicting series membership after remapping.',
+          );
+        }
+        membershipSkipped.add(row['matchId'] as String);
+      } else {
+        membershipInserts.add(transformed);
+      }
+    }
+    final memberRows = _MappedRows(
+      rows: membershipInserts,
+      idMap: {for (final id in sourceMembers.keys) id: matchRows.idMap[id]!},
+      skippedIds: membershipSkipped,
+      insertedIds: [
+        for (final row in membershipInserts) row['matchId'] as String,
+      ],
     );
     final importedUnfinishedMatchIds = {
       for (final match in document.matches)
@@ -306,6 +461,7 @@ class BackupMergeService {
             possessions: possessionRows.idMap,
             players: playerRows.idMap,
             templates: templateRows.idMap,
+            series: seriesRows.idMap,
           ),
         );
         result['afterJson'] = _remapAuditJson(
@@ -319,6 +475,7 @@ class BackupMergeService {
             possessions: possessionRows.idMap,
             players: playerRows.idMap,
             templates: templateRows.idMap,
+            series: seriesRows.idMap,
           ),
         );
         return result;
@@ -328,6 +485,8 @@ class BackupMergeService {
     final result = BackupMergeResult(
       sourceChecksum: sourceChecksum,
       idMap: {
+        'matchSeries': seriesRows.idMap,
+        'seriesMatches': memberRows.idMap,
         'matches': matchRows.idMap,
         'matchParticipants': participantRows.idMap,
         'matchClocks': clockRows.idMap,
@@ -341,6 +500,8 @@ class BackupMergeService {
         'appSettings': <String, String>{},
       },
       skippedIds: {
+        'matchSeries': seriesRows.skippedIds,
+        'seriesMatches': memberRows.skippedIds,
         'matches': matchRows.skippedIds,
         'matchParticipants': participantRows.skippedIds,
         'matchClocks': clockRows.skippedIds,
@@ -356,6 +517,8 @@ class BackupMergeService {
         ],
       },
       insertedIds: {
+        'matchSeries': seriesRows.insertedIds,
+        'seriesMatches': memberRows.insertedIds,
         'matches': matchRows.insertedIds,
         'matchParticipants': participantRows.insertedIds,
         'matchClocks': clockRows.insertedIds,
@@ -385,6 +548,8 @@ class BackupMergeService {
     };
     return _MergePlan(
       matches: matchRows.rows,
+      series: seriesRows.rows,
+      members: memberRows.rows,
       participants: participantRows.rows,
       clocks: clockRows.rows,
       events: eventRows.rows,
@@ -409,6 +574,16 @@ class BackupMergeService {
     }
     for (final row in plan.matches) {
       await database.into(database.matches).insert(Matche.fromJson(row));
+    }
+    for (final row in plan.series) {
+      await database
+          .into(database.matchSeries)
+          .insert(MatchSeriesRow.fromJson(row));
+    }
+    for (final row in plan.members) {
+      await database
+          .into(database.seriesMatches)
+          .insert(SeriesMatche.fromJson(row));
     }
     for (final row in plan.participants) {
       await database
@@ -480,11 +655,19 @@ class BackupMergeService {
       for (final row in _toJsonRows(local.clocks))
         row['matchId'] as String: row,
     };
+    final unfinishedMatchIds = {
+      for (final match in document.matches)
+        if (match.lifecycle == 'active' || match.lifecycle == 'draft') match.id,
+    };
     for (final source in document.data['matchClocks']!) {
       final matchId = source['matchId'];
       if (matchId is! String) continue;
+      final transformed = Map<String, dynamic>.from(source);
+      if (unfinishedMatchIds.contains(matchId)) {
+        _pauseImportedClock(transformed, document.manifest.exportedAt);
+      }
       final localClock = localClocksByMatch[matchId];
-      if (localClock != null && !_sameRow(localClock, source)) {
+      if (localClock != null && !_sameRow(localClock, transformed)) {
         // match_clocks.match_id is unique. A clock conflict is therefore a
         // conflict of the complete match graph, not a reason to allocate a
         // second clock under the same match.
@@ -534,6 +717,7 @@ class BackupMergeService {
     required List<Map<String, dynamic>> localRows,
     required String checksum,
     Set<String> forceRemapIds = const <String>{},
+    bool Function(String sourceId, String targetId)? allowReuse,
     Map<String, dynamic> Function(Map<String, dynamic> row)? transform,
   }) {
     final localById = <String, Map<String, dynamic>>{
@@ -556,6 +740,7 @@ class BackupMergeService {
       final localWithOldId = localById[oldId];
       final forceRemap = forceRemapIds.contains(oldId);
       if (!forceRemap &&
+          (allowReuse?.call(oldId, oldId) ?? true) &&
           localWithOldId != null &&
           _sameRow(localWithOldId, transformed)) {
         mapped[oldId] = oldId;
@@ -570,6 +755,7 @@ class BackupMergeService {
           oldId: oldId,
           checksum: checksum,
           transformed: transformed,
+          allowReuse: allowReuse,
           localById: localById,
           usedIds: usedIds,
         );
@@ -582,6 +768,7 @@ class BackupMergeService {
           oldId: oldId,
           checksum: checksum,
           transformed: transformed,
+          allowReuse: allowReuse,
           localById: localById,
         );
         if (candidate != null) {
@@ -591,7 +778,7 @@ class BackupMergeService {
           continue;
         }
       }
-      transformed['id'] = targetId;
+      transformed.addAll(_rowWithId(transformed, targetId));
       mapped[oldId] = targetId;
       final existingAtTarget = localById[targetId];
       if (existingAtTarget != null && _sameRow(existingAtTarget, transformed)) {
@@ -616,6 +803,7 @@ class BackupMergeService {
     required String oldId,
     required String checksum,
     required Map<String, dynamic> transformed,
+    required bool Function(String sourceId, String targetId)? allowReuse,
     required Map<String, Map<String, dynamic>> localById,
     required Set<String> usedIds,
   }) {
@@ -625,7 +813,8 @@ class BackupMergeService {
     while (true) {
       final existing = localById[candidate];
       if (existing != null &&
-          _sameRow(existing, {...transformed, 'id': candidate})) {
+          (allowReuse?.call(oldId, candidate) ?? true) &&
+          _sameRow(existing, _rowWithId(transformed, candidate))) {
         return candidate;
       }
       if (!usedIds.contains(candidate) && existing == null) {
@@ -641,6 +830,7 @@ class BackupMergeService {
     required String oldId,
     required String checksum,
     required Map<String, dynamic> transformed,
+    required bool Function(String sourceId, String targetId)? allowReuse,
     required Map<String, Map<String, dynamic>> localById,
   }) {
     final base = _baseRemappedId(table, oldId, checksum);
@@ -651,11 +841,35 @@ class BackupMergeService {
         if (sequence > 1) return null;
         continue;
       }
-      if (_sameRow(existing, {...transformed, 'id': candidate})) {
+      if ((allowReuse?.call(oldId, candidate) ?? true) &&
+          _sameRow(existing, _rowWithId(transformed, candidate))) {
         return candidate;
       }
     }
     return null;
+  }
+
+  static Map<String, dynamic> _rowWithId(Map<String, dynamic> row, String id) {
+    final result = {...row, 'id': id};
+    if (row['action'] == 'command') {
+      final before =
+          jsonDecode(row['beforeJson'] as String) as Map<String, dynamic>;
+      before['commandId'] = id;
+      final payload = before['payload'];
+      if (payload is Map<String, dynamic>) {
+        payload['commandId'] = id;
+        before['fingerprint'] = sha256
+            .convert(
+              utf8.encode(
+                jsonEncode({'commandType': before['commandType'], ...payload}),
+              ),
+            )
+            .toString();
+      }
+      result['beforeJson'] = jsonEncode(before);
+      result['targetId'] = id;
+    }
+    return result;
   }
 
   static String _baseRemappedId(String table, String oldId, String checksum) {
@@ -696,7 +910,23 @@ class BackupMergeService {
     if (raw is! String) return raw?.toString() ?? '';
     try {
       final decoded = jsonDecode(raw);
-      return jsonEncode(mappings.remapValue(decoded));
+      final remapped = mappings.remapValue(decoded);
+      if (remapped is Map &&
+          remapped['payload'] is Map &&
+          remapped['commandType'] is String &&
+          remapped.containsKey('fingerprint')) {
+        remapped['fingerprint'] = sha256
+            .convert(
+              utf8.encode(
+                jsonEncode({
+                  'commandType': remapped['commandType'],
+                  ...Map<String, dynamic>.from(remapped['payload'] as Map),
+                }),
+              ),
+            )
+            .toString();
+      }
+      return jsonEncode(remapped);
     } on Object {
       // JsonBackupCodec already rejects malformed audit JSON. Keep this
       // defensive fallback lossless for rows produced by older callers.
@@ -729,8 +959,14 @@ class BackupMergeService {
     DateTime exportedAt,
   ) {
     final rawRunningSince = row['runningSinceUtc'];
-    if (rawRunningSince is! String) return;
-    final runningSince = DateTime.tryParse(rawRunningSince)?.toUtc();
+    final runningSince = switch (rawRunningSince) {
+      final int milliseconds => DateTime.fromMillisecondsSinceEpoch(
+        milliseconds,
+        isUtc: true,
+      ),
+      final String timestamp => DateTime.tryParse(timestamp)?.toUtc(),
+      _ => null,
+    };
     if (runningSince == null) return;
     final elapsed = exportedAt.toUtc().difference(runningSince);
     final accumulated = row['accumulatedSeconds'];
@@ -775,6 +1011,8 @@ class BackupMergeService {
       'beforeJson',
       'afterJson',
       'valueJson',
+      'defaultSetupJson',
+      'lifecycleIntentsJson',
     };
     if (value is String && jsonTextColumns.contains(key)) {
       try {
@@ -791,6 +1029,8 @@ class BackupMergeService {
 class _LocalRows {
   const _LocalRows({
     required this.matches,
+    required this.series,
+    required this.members,
     required this.participants,
     required this.clocks,
     required this.events,
@@ -802,6 +1042,8 @@ class _LocalRows {
   });
 
   final List<Matche> matches;
+  final List<MatchSeriesRow> series;
+  final List<SeriesMatche> members;
   final List<MatchParticipant> participants;
   final List<MatchClock> clocks;
   final List<MatchEventRow> events;
@@ -829,6 +1071,7 @@ class _MappedRows {
 class _AuditMappings {
   const _AuditMappings({
     required this.matches,
+    required this.series,
     required this.events,
     required this.locations,
     required this.participants,
@@ -839,6 +1082,7 @@ class _AuditMappings {
   });
 
   final Map<String, String> matches;
+  final Map<String, String> series;
   final Map<String, String> events;
   final Map<String, String> locations;
   final Map<String, String> participants;
@@ -870,15 +1114,24 @@ class _AuditMappings {
     if (value is String) {
       final map = switch (key) {
         'matchId' => matches,
+        'seriesId' => series,
         'eventId' ||
         'scoringEventId' ||
         'startedAtEventId' ||
         'endedAtEventId' => events,
         'locationId' || 'shotLocationId' => locations,
-        'participantId' || 'matchParticipantId' => participants,
+        'participantId' ||
+        'matchParticipantId' ||
+        'redParticipantId' ||
+        'blueParticipantId' => participants,
         'clockId' || 'matchClockId' => clocks,
         'possessionId' || 'segmentId' => possessions,
-        'playerId' || 'playerProfileId' => players,
+        'playerId' ||
+        'playerProfileId' ||
+        'slotAPlayerProfileId' ||
+        'slotBPlayerProfileId' ||
+        'redPlayerProfileId' ||
+        'bluePlayerProfileId' => players,
         'ruleId' || 'ruleTemplateId' => templates,
         'id' => inferredIdMap,
         _ => null,
@@ -922,6 +1175,8 @@ class _AuditMappings {
 class _MergePlan {
   const _MergePlan({
     required this.matches,
+    required this.series,
+    required this.members,
     required this.participants,
     required this.clocks,
     required this.events,
@@ -935,6 +1190,8 @@ class _MergePlan {
   });
 
   final List<Map<String, dynamic>> matches;
+  final List<Map<String, dynamic>> series;
+  final List<Map<String, dynamic>> members;
   final List<Map<String, dynamic>> participants;
   final List<Map<String, dynamic>> clocks;
   final List<Map<String, dynamic>> events;

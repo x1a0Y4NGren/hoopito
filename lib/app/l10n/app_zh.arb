@@ -834,5 +834,25 @@
         "type": "String"
       }
     }
-  }
+  },
+  "seriesTitle": "连续对局",
+  "seriesSingle": "单场比赛",
+  "seriesMode": "连续对局",
+  "seriesModeHelp": "固定两人，累计胜场；可随时结束本次对局。",
+  "seriesNext": "下一场",
+  "seriesNextSettings": "下一场设置",
+  "seriesClose": "结束本次对局",
+  "seriesCloseBody": "结束后保留全部比赛，也可以稍后继续这组对局。",
+  "seriesReopen": "继续这组对局",
+  "seriesOpen": "进行中",
+  "seriesClosed": "已结束",
+  "seriesNoGames": "暂无完赛记录",
+  "seriesWins": "胜场",
+  "seriesDraws": "平局",
+  "seriesEmpty": "暂无连续对局",
+  "seriesResume": "继续这组对局",
+  "seriesLockedPair": "本次对局的双方已固定，可交换红蓝方。",
+  "seriesGames": "单场",
+  "seriesLoadError": "连续对局加载失败",
+  "seriesActiveHelp": "请先完成或放弃当前比赛，再结束本次对局。"
 }

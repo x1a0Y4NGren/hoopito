@@ -2547,4 +2547,64 @@ class AppLocalizationsZh extends AppLocalizations {
   String summaryWinner(String name) {
     return '$name获胜';
   }
+
+  @override
+  String get seriesTitle => '连续对局';
+
+  @override
+  String get seriesSingle => '单场比赛';
+
+  @override
+  String get seriesMode => '连续对局';
+
+  @override
+  String get seriesModeHelp => '固定两人，累计胜场；可随时结束本次对局。';
+
+  @override
+  String get seriesNext => '下一场';
+
+  @override
+  String get seriesNextSettings => '下一场设置';
+
+  @override
+  String get seriesClose => '结束本次对局';
+
+  @override
+  String get seriesCloseBody => '结束后保留全部比赛，也可以稍后继续这组对局。';
+
+  @override
+  String get seriesReopen => '继续这组对局';
+
+  @override
+  String get seriesOpen => '进行中';
+
+  @override
+  String get seriesClosed => '已结束';
+
+  @override
+  String get seriesNoGames => '暂无完赛记录';
+
+  @override
+  String get seriesWins => '胜场';
+
+  @override
+  String get seriesDraws => '平局';
+
+  @override
+  String get seriesEmpty => '暂无连续对局';
+
+  @override
+  String get seriesResume => '继续这组对局';
+
+  @override
+  String get seriesLockedPair => '本次对局的双方已固定，可交换红蓝方。';
+
+  @override
+  String get seriesGames => '单场';
+
+  @override
+  String get seriesLoadError => '连续对局加载失败';
+
+  @override
+  String get seriesActiveHelp => '请先完成或放弃当前比赛，再结束本次对局。';
 }

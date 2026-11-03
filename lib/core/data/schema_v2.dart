@@ -11,6 +11,8 @@ export 'app_database.dart'
         MatchEvents,
         MatchParticipants,
         Matches,
+        MatchSeries,
+        SeriesMatches,
         PossessionSegments,
         Players,
         RuleTemplates,

@@ -7,6 +7,7 @@ import 'package:hoopito/app/app_theme.dart';
 import 'package:hoopito/app/design_system/design_system.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/app/provider_router.dart';
+import 'package:hoopito/app/series_routes.dart';
 import 'package:hoopito/core/domain/entities/match.dart';
 import 'package:hoopito/core/domain/entities/match_detail.dart';
 import 'package:hoopito/core/domain/entities/rule_template.dart';
@@ -25,6 +26,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
+            // Keep this layout fixture independent of the real Drift database.
+            openSeriesProvider.overrideWith((ref) => Stream.value(null)),
             activeMatchProvider.overrideWith(
               (ref) => Stream<MatchDetail?>.value(_activeMatch),
             ),

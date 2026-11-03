@@ -1,6 +1,7 @@
 """Evidence classification checks; no Android device or build is used."""
 
 import copy
+from contextlib import closing
 import hashlib
 import importlib.util
 import json
@@ -275,6 +276,54 @@ class ObserverEvidenceTest(unittest.TestCase):
                         observer.validate_json_envelope(payload)
                 else:
                     self.assertTrue(observer.validate_json_envelope(payload)['json_envelope_valid'])
+
+    def test_schema_four_backup_envelope_includes_series_counts(self):
+        data = {'matches': [], 'matchSeries': [{'id': 'series-1'}], 'seriesMatches': []}
+        manifest = {'appName': 'Hoopito', 'appVersion': 'development',
+                    'formatVersion': 2, 'schemaVersion': 4,
+                    'exportedAt': '2026-11-02T00:00:00.000Z',
+                    'recordCounts': {'matches': 0, 'matchSeries': 1, 'seriesMatches': 0}}
+        manifest['checksum'] = observer.sha256(observer.encode({
+            'manifest': manifest, 'data': data,
+        }))
+        result = observer.validate_json_envelope(observer.encode({'manifest': manifest, 'data': data}))
+        self.assertEqual(result['record_counts']['matchSeries'], 1)
+        manifest['schemaVersion'] = 5
+        with self.assertRaises(ValueError):
+            observer.validate_json_envelope(observer.encode({'manifest': manifest, 'data': data}))
+
+    def test_schema_four_database_observation_detects_series_changes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'series.sqlite'
+            with closing(sqlite3.connect(path)) as connection:
+                connection.execute('PRAGMA user_version=4')
+                for table in (*observer.BUSINESS_TABLES, 'match_series', 'series_matches'):
+                    connection.execute(f'CREATE TABLE "{table}"(id TEXT)')
+                connection.execute('CREATE TABLE app_settings(key TEXT, value_json TEXT)')
+                connection.execute("INSERT INTO match_series VALUES ('series-1')")
+                connection.commit()
+            first, _ = observer.app_database_summary(path)
+            self.assertEqual(first['match_series']['count'], 1)
+            self.assertEqual(first['series_matches']['count'], 0)
+            with closing(sqlite3.connect(path)) as connection:
+                connection.execute("INSERT INTO series_matches VALUES ('match-1')")
+                connection.commit()
+            second, _ = observer.app_database_summary(path)
+            self.assertNotEqual(first['series_matches']['sha256'], second['series_matches']['sha256'])
+            self.assertEqual(first['matches'], second['matches'])
+
+    def test_schema_three_database_observation_keeps_legacy_table_set(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'legacy.sqlite'
+            with closing(sqlite3.connect(path)) as connection:
+                connection.execute('PRAGMA user_version=3')
+                for table in observer.BUSINESS_TABLES:
+                    connection.execute(f'CREATE TABLE "{table}"(id TEXT)')
+                connection.execute('CREATE TABLE app_settings(key TEXT, value_json TEXT)')
+                connection.commit()
+            tables, _ = observer.app_database_summary(path)
+            self.assertNotIn('match_series', tables)
+            self.assertEqual(tables['matches']['count'], 0)
 
     def test_output_rejects_repo_paths_and_existing_evidence(self):
         with self.assertRaises(ValueError):

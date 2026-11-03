@@ -1,3 +1,6 @@
+import 'package:hoopito/app/series_routes.dart';
+import 'package:hoopito/features/series/series_detail_page.dart';
+import 'package:hoopito/core/domain/entities/match_series.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -38,6 +41,10 @@ import 'package:hoopito/app/route_status.dart';
 import 'package:hoopito/app/update_providers.dart';
 import 'package:hoopito/features/settings/software_update_page.dart';
 import 'package:uuid/uuid.dart';
+
+final _startIntentsProvider = Provider<Map<String, StartMatchCommand>>(
+  (ref) => {},
+);
 
 // Keep a finish intent stable across a failed transaction and UI retry.
 final _finishIntentsProvider = Provider<Map<String, FinishMatchCommand>>(
@@ -145,6 +152,16 @@ GoRouter buildProviderAppRouter({
           ),
           StatefulShellBranch(routes: [buildPlayerRoutes().first]),
         ],
+      ),
+      GoRoute(
+        path: '/series/:seriesId',
+        builder: (context, state) =>
+            SeriesRoute(id: state.pathParameters['seriesId']!),
+      ),
+      GoRoute(
+        path: '/series/:seriesId/next',
+        builder: (context, state) =>
+            SeriesNextRoute(id: state.pathParameters['seriesId']!),
       ),
       GoRoute(
         path: '/pregame',
@@ -258,6 +275,8 @@ class _HomeRoute extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
+    final openSeriesState = ref.watch(openSeriesProvider);
+    final openSeries = openSeriesState.valueOrNull;
     final active = ref.watch(activeMatchProvider);
     final recent =
         ref.watch(recentMatchSummariesProvider).valueOrNull ??
@@ -270,6 +289,19 @@ class _HomeRoute extends ConsumerWidget {
       ),
       data: (detail) => HomePage(
         activeMatch: detail,
+        seriesResume: openSeries == null
+            ? null
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SeriesOverview(series: openSeries),
+                  FilledButton(
+                    key: const Key('home-resume-series'),
+                    onPressed: () => context.push('/series/${openSeries.id}'),
+                    child: Text(l10n.seriesResume),
+                  ),
+                ],
+              ),
         showDirectory: false,
         recentMatches: recent,
         onRecentMatchTap: (id) => context.push('/matches/$id/summary'),
@@ -293,6 +325,11 @@ class _HomeRoute extends ConsumerWidget {
               ..showSnackBar(
                 SnackBar(content: Text(l10n.routeActiveMatchTitle)),
               );
+            return;
+          }
+          if (openSeriesState.isLoading || openSeriesState.hasError) return;
+          if (openSeries != null) {
+            context.push('/series/${openSeries.id}');
             return;
           }
           context.push('/pregame');
@@ -336,6 +373,17 @@ class _PregameRoute extends ConsumerWidget {
         onAbandon: () => _abandon(context, ref, active.match.id),
       );
     }
+
+    final seriesState = ref.watch(openSeriesProvider);
+    if (seriesState.isLoading) return const RouteLoading();
+    if (seriesState.hasError) {
+      return RouteMessage(
+        title: l10n.seriesLoadError,
+        message: l10n.actionFailedRetry,
+      );
+    }
+    final open = seriesState.valueOrNull;
+    if (open != null) return SeriesRoute(id: open.id);
 
     final templates = ref.watch(ruleTemplatesProvider);
     final players = ref.watch(playerProfilesProvider);
@@ -467,6 +515,10 @@ class _ScoringRoute extends ConsumerWidget {
       final feedback = ref.watch(scoringFeedbackServiceProvider);
       return ScoringPage(
         controller: controller,
+        seriesContextLabel:
+            ref.watch(matchSeriesProvider(matchId)).valueOrNull == null
+            ? null
+            : '${l10n.seriesTitle} #${ref.watch(matchSeriesProvider(matchId)).valueOrNull!.games.firstWhere((g) => g.matchId == matchId).gameNumber}',
         showInitialGuide:
             ref.watch(scoringGuideSeenProvider).valueOrNull == false,
         onGuideDismissed: () => unawaited(
@@ -589,7 +641,44 @@ class _HistoryRouteState extends ConsumerState<_HistoryRoute> {
   @override
   Widget build(BuildContext context) {
     final active = ref.watch(activeMatchProvider).valueOrNull;
+    final seriesState = ref.watch(seriesListProvider);
+    final l10n = AppLocalizations.of(context)!;
     return HistoryPage(
+      seriesContent: seriesState.when(
+        loading: () => const RouteLoading(),
+        error: (e, s) => RouteMessage(
+          title: l10n.seriesLoadError,
+          message: l10n.actionFailedRetry,
+          onRetry: () => ref.invalidate(seriesListProvider),
+        ),
+        data: (list) => list.isEmpty
+            ? Center(child: Text(l10n.seriesEmpty))
+            : ListView(
+                children: [
+                  for (final series in list)
+                    SeriesOverview(
+                      series: series,
+                      onOpen: () => context.push('/series/${series.id}'),
+                    ),
+                ],
+              ),
+      ),
+      seriesLinkBuilder: (matchId) {
+        final series = seriesState.valueOrNull
+            ?.where((s) => s.games.any((g) => g.matchId == matchId))
+            .firstOrNull;
+        return series == null
+            ? null
+            : Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () => context.push('/series/${series.id}'),
+                  child: Text(
+                    '${l10n.seriesTitle} · ${series.slotAName} / ${series.slotBName}',
+                  ),
+                ),
+              );
+      },
       controller: _controller,
       activeMatch: active == null ? null : _historySummaryFromActive(active),
       onResumeActive: active == null
@@ -1217,7 +1306,24 @@ Future<void> _startMatch(
     }
     await ref
         .read(matchCommandServiceProvider)
-        .start(buildStartMatchCommand(setup));
+        .start(
+          ref
+              .read(_startIntentsProvider)
+              .putIfAbsent(
+                setup.matchId,
+                () => buildStartMatchCommand(
+                  setup,
+                  seriesContext: setup.continuous
+                      ? SeriesStartContext(
+                          seriesId: const Uuid().v4(),
+                          expectedRevision: 0,
+                          gameNumber: 1,
+                          create: true,
+                        )
+                      : null,
+                ),
+              ),
+        );
     if (context.mounted) context.pushReplacement('/scoring/${setup.matchId}');
   } on PregameSetupValidationException catch (error) {
     if (context.mounted) {
