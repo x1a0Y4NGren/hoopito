@@ -1,6 +1,8 @@
 # Hoopito · 球豆文档入口
 
-项目已发布 **Hoopito · 球豆 v2.0.1**（Android `2.0.1+5`），主工作区统一维护 `main` 的 2.0 源码。实际分支以 Git 为准，当前发行来源与范围见 [v2.0.1 发行记录](release/v2.0.1-release-record.md)。应用与签名 tag 来源固定为 `4ecd960e5af1f6b12124a43e330d67efb628281b`；后续宣传文档、截图和网站提交不改变 APK 来源。历史 HoopTrace 发行和候选记录保留各自源码、设备及验收来源。
+当前版本为 **Hoopito · 球豆 v2.1.0**（Android `2.1.0+6`，schema 4、JSON 格式 2），维护分支为 `main`，实际分支以 Git 为准。当前应用与签名 tag 来源固定为 `9bbd3b87e99d71f5d9117cd2c5a763a7f8b95d1f`，范围及实际验证见 [v2.1.0 发行记录](release/v2.1.0-release-record.md)。后续文档、截图和网站提交不改变 APK 来源；历史发行与候选记录保留各自源码、设备及验收来源。
+
+本轮没有部署官网；v2.1.0 使用 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0)。本次核验官网更新接口返回 404，应用会尝试 GitHub 备源；网站发行元数据仍保留原有 v2.0.1 来源，后续上线需单独授权。
 
 ## 当前开发与维护
 
@@ -25,9 +27,10 @@
 - [发行清单](release/release-checklist.md)：正式发行时使用的模板，当前完成状态以对应发行记录为准。
 - [可复现构建](release/reproducible-builds.md)与[性能证据](release/performance.md)
 - [F-Droid 准备](release/fdroid-notes.md)：按对应渠道任务范围使用。
-- [当前 v2.0.1 下载与附件](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1)
-- [当前双语 v2.0.1 说明](release/v2.0.1-release-notes.md)与[发行记录](release/v2.0.1-release-record.md)
-- [截图维护清单](release/screenshots-checklist.md)与[双语八张正式包原图来源](release/v2.0.1-screenshots.json)
+- [当前 v2.1.0 下载与附件](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0)
+- [当前双语 v2.1.0 说明](release/v2.1.0-release-notes.md)与[发行记录](release/v2.1.0-release-record.md)
+- [本次 v2.1.0 中英文计分与整组截图来源](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/screenshots.json)：正式签名包实拍，展示副本仅裁除系统区域。
+- [截图维护清单](release/screenshots-checklist.md)与[历史 v2.0.1 双语八张正式包原图来源](release/v2.0.1-screenshots.json)
 
 ## 历史资料
 
@@ -35,6 +38,7 @@
 - [设计与实施记录的使用边界](superpowers/README.md)
 - [历史分支提示](branch-prompts/README.md)与[历史执行顺序](branch-execution-order.md)
 - [已发布 v1.0 说明](release/v1.0.0-release-notes.md)
+- [历史 v2.0.1 说明](release/v2.0.1-release-notes.md)、[发行记录](release/v2.0.1-release-record.md)与[原图来源](release/v2.0.1-screenshots.json)
 - [历史 v2.0.0 说明](release/v2.0.0-release-notes.md)
 
 历史计划中的基线、代理波次、技能要求及发布命令属于当时任务；只在追溯相关决策时查阅，不构成当前待办或授权。
