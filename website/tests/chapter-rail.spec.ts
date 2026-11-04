@@ -132,7 +132,18 @@ async function settled(page: Page, id: string) {
         )!;
         const start = Number(el.dataset.scrollReadStart),
           end = Number(el.dataset.scrollReadEnd);
-        return scrollY >= start - 2 && scrollY <= end + 2;
+        const ready = scrollY >= start - 2 && scrollY <= end + 2;
+        return ready
+          ? true
+          : {
+              y: scrollY,
+              start,
+              end,
+              stop: document.documentElement.dataset.scrollStop,
+              state: document.documentElement.dataset.scrollState,
+              height: el.getBoundingClientRect().height,
+              active: document.activeElement?.outerHTML.slice(0, 240),
+            };
       }, id),
     )
     .toBe(true);

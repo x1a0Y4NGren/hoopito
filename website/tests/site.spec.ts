@@ -3485,6 +3485,27 @@ test(
       .locator('#court-canvas')
       .getAttribute('data-render-count');
     const host = page.locator('[data-demo-court-host]');
+    await host.evaluate((element) => {
+      const events: { state: string | null; input: boolean }[] = [];
+      const observer = new MutationObserver((records) => {
+        // A slow driver can finish this 800ms cue between two protocol polls.
+        // Mutation old values retain every actual state even in one batch.
+        records.forEach((_, index) =>
+          events.push({
+            state:
+              records[index + 1]?.oldValue ??
+              element.getAttribute('data-demo-invitation'),
+            input: document.documentElement.dataset.interactive === 'true',
+          }),
+        );
+      });
+      observer.observe(element, {
+        attributes: true,
+        attributeOldValue: true,
+        attributeFilter: ['data-demo-invitation'],
+      });
+      Reflect.set(window, '__invitationAudit', { events, observer });
+    });
     await host.scrollIntoViewIfNeeded();
     await page.waitForTimeout(1750);
     await expect(page.locator('#court-canvas')).toHaveAttribute(
@@ -3498,8 +3519,23 @@ test(
       'data-interactive',
       'true',
     );
-    await expect(host).toHaveAttribute('data-demo-invitation', 'playing');
     await expect(host).toHaveAttribute('data-demo-invitation', 'done');
+    const events = await page.evaluate(() => {
+      const audit = Reflect.get(window, '__invitationAudit') as {
+        events: { state: string | null; input: boolean }[];
+        observer: MutationObserver;
+      };
+      audit.observer.disconnect();
+      return audit.events;
+    });
+    await testInfo.attach('court-invitation-states', {
+      body: JSON.stringify(events),
+      contentType: 'application/json',
+    });
+    const playing = events.filter((event) => event.state === 'playing');
+    expect(playing).toHaveLength(1);
+    expect(playing[0].input).toBe(true);
+    expect(events.at(-1)?.state).toBe('done');
   },
 );
 

@@ -668,7 +668,10 @@ test('transition review video uses the production renderer and ordinary motion @
     reducedMotion: 'no-preference',
     recordVideo: {
       dir: testInfo.outputPath('video'),
-      size: { width: 1440, height: 900 },
+      // Keep the real 1440px viewport and ordinary renderer. On shared runners
+      // 1440px VP9 encoding queued 40+ seconds of drain after every assertion
+      // had passed; this review copy reduces encoding pixels, not scene density.
+      size: { width: 720, height: 450 },
     },
   });
   const page = await context.newPage();

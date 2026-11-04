@@ -522,9 +522,10 @@ for (const path of ['/', '/en/']) {
     }
     await expect(card).toHaveCSS('opacity', '1');
     await expect(page.locator('[data-download-dialog]')).not.toBeVisible();
-    // WebKit's platform default skips links in sequential tab navigation.
-    // Enter keyboard modality, then establish the same focused-link condition.
-    await page.keyboard.press('Tab');
+    // Establish keyboard modality without Tab's native jump to a later button
+    // on systems that skip links. That jump can make this chapter inert before
+    // programmatic focus reaches the action being measured.
+    await page.keyboard.press('ArrowLeft');
     await button.focus();
     await expect(button).toBeFocused();
     await expect(button).toHaveCSS('outline-style', 'solid');
