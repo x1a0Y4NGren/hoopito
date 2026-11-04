@@ -308,7 +308,7 @@ export function storyItemPose(
   };
 }
 
-/** Fade static labels without moving the geometry used by pins and relay anchors. */
+/** Fade static labels without moving the geometry used by pins and reading bounds. */
 export function storyOrnamentVisibility(
   state: StoryStageState,
   options?: {

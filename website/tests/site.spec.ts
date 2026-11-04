@@ -3649,18 +3649,34 @@ test(
       await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
       await expect(page.locator('#court-canvas')).toHaveAttribute(
         'data-antialias',
-        'fxaa',
+        /^(fxaa|native-msaa-[1-9]\d*)$/,
       );
+      const direct =
+        (await page.locator('#court-canvas').getAttribute('data-pipeline')) ===
+        'direct';
+      if (direct) {
+        await expect(page.locator('#court-canvas')).toHaveAttribute(
+          'data-quality',
+          'density',
+        );
+      } else {
+        await expect(page.locator('#court-canvas')).toHaveAttribute(
+          'data-antialias',
+          'fxaa',
+        );
+      }
       await page.setViewportSize({ width: 1280, height: 800 });
       await expect
         .poll(() =>
           page
             .locator('#court-canvas')
-            .evaluate(
-              (canvas: HTMLCanvasElement) =>
-                canvas.width === canvas.clientWidth * 2 &&
-                canvas.height === canvas.clientHeight * 2,
-            ),
+            .evaluate((canvas: HTMLCanvasElement) => {
+              const ratio = canvas.dataset.quality === 'density' ? 1.25 : 2;
+              return (
+                canvas.width === Math.floor(canvas.clientWidth * ratio) &&
+                canvas.height === Math.floor(canvas.clientHeight * ratio)
+              );
+            }),
         )
         .toBe(true);
       await page
@@ -3685,6 +3701,51 @@ test(
     }
   },
 );
+
+for (const reducedMotion of ['reduce', 'no-preference'] as const) {
+  test(
+    `missing GPU timer starts conservatively with ${reducedMotion} motion`,
+    { tag: '@webgl', lock: 'webgl-renderer' },
+    async ({ page }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== 'chromium',
+        'Real WebGL in Chromium.',
+      );
+      await allowSoftwareWebGL(page);
+      await page.emulateMedia({ reducedMotion });
+      await page.addInitScript(() => {
+        const original = WebGL2RenderingContext.prototype.getExtension;
+        WebGL2RenderingContext.prototype.getExtension = function (
+          this: WebGL2RenderingContext,
+          name: string,
+        ) {
+          return name === 'EXT_disjoint_timer_query_webgl2'
+            ? null
+            : Reflect.apply(original, this, [name]);
+        } as typeof original;
+      });
+      await page.goto('/');
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+      const canvas = page.locator('#court-canvas');
+      await expect(canvas).toHaveAttribute('data-quality', 'density');
+      await expect(canvas).toHaveAttribute(
+        'data-calibration-status',
+        'unavailable',
+      );
+      await expect(canvas).toHaveAttribute('data-calibration', '[]');
+      await page
+        .locator('#experience')
+        .evaluate((section) =>
+          section.scrollIntoView({ behavior: 'instant', block: 'start' }),
+        );
+      await page.locator('[data-point-preset="center"]').click();
+      await page.locator('[data-record]').click();
+      await expect(page.locator('[data-blue-score]')).toHaveText('8');
+      await page.locator('[data-reset]').click();
+      await expectReset(page);
+    },
+  );
+}
 
 test(
   'initial GPU budget covers story views and restores the opening pose',
@@ -3816,8 +3877,16 @@ for (const scale of [1, 2]) {
         // The custom chapter rail hides the native scrollbar gutter. The
         // actual background now spans the complete layout viewport.
         expect(pixels.cssWidth).toBe(1440);
-        expect(pixels.antialias).toMatch(/^(msaa-[24]|fxaa)$/);
-        if (pixels.antialias !== 'fxaa')
+        expect(pixels.antialias).toMatch(
+          /^(msaa-[24]|fxaa|native-msaa-[1-9]\d*)$/,
+        );
+        if (pixels.antialias?.startsWith('native-')) {
+          expect(pixels.quality).toBe('density');
+          const native = await page
+            .locator('#court-canvas')
+            .getAttribute('data-native-samples');
+          expect(pixels.antialias).toBe(`native-msaa-${native}`);
+        } else if (pixels.antialias !== 'fxaa')
           expect(
             pixels.buffers.some(
               (buffer) =>
@@ -3880,6 +3949,16 @@ for (const scale of [1, 2]) {
               .locator('#court-canvas')
               .evaluate((canvas: HTMLCanvasElement) => {
                 const gl = canvas.getContext('webgl2')!;
+                if (canvas.dataset.pipeline === 'direct') {
+                  const native = gl.getContextAttributes()?.antialias
+                    ? Number(gl.getParameter(gl.SAMPLES))
+                    : 0;
+                  return (
+                    canvas.dataset.quality === 'density' &&
+                    native > 0 &&
+                    canvas.dataset.antialias === `native-msaa-${native}`
+                  );
+                }
                 const color = Array.from(
                   gl.getInternalformatParameter(
                     gl.RENDERBUFFER,

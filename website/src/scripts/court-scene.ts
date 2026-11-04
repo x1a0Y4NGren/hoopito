@@ -605,6 +605,7 @@ export async function createCourtScene(
     renderer.info.autoReset = false;
     // Three r186 creates a WebGL2 context; the installed declarations also retain the legacy union.
     const gl = renderer.getContext() as WebGL2RenderingContext;
+    const hasGpuTimer = !!gl.getExtension('EXT_disjoint_timer_query_webgl2');
     nativeSamples = gl.getContextAttributes()?.antialias
       ? Number(gl.getParameter(gl.SAMPLES))
       : 0;
@@ -1039,7 +1040,22 @@ export async function createCourtScene(
     composer.addPass(own(new OutputPass()));
     fallbackAA = own(new ShaderPass(FXAAShader));
     composer.addPass(fallbackAA);
-    resize();
+    // Missing timing evidence cannot justify the expensive HDR/optical path.
+    // Select the conservative material branch before compiling or drawing it,
+    // including reduced-motion sessions which do not run active calibration.
+    if (!hasGpuTimer) {
+      applyQuality('density');
+      canvas.dataset.calibrationStatus = 'unavailable';
+      canvas.dataset.calibration = '[]';
+      monitor.quality = monitor.qualityCeiling = quality;
+    } else resize();
+    const yieldPreparation = async () => {
+      // A task boundary lets the page's eight-second deadline and cancellation
+      // run between driver calls; a resolved Promise would only yield a microtask.
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+      if (disposed || options.signal.aborted)
+        throw new DOMException('Scene aborted', 'AbortError');
+    };
     // Compile upfront before main reveals the canvas; no frame-blocking asset fetch.
     const preparationTrail = add(createShotTrail({ x: 0.72, y: 0.65 }));
     own(preparationTrail.geometry);
@@ -1053,12 +1069,18 @@ export async function createCourtScene(
       for (const cutaway of [0, 0.5]) {
         if (disposed || options.signal.aborted) break;
         applyViewCutaway(cutaway);
-        renderer.setRenderTarget(scenePass.target);
+        renderer.setRenderTarget(
+          sceneRenderRoute(quality, nativeSamples) === 'direct'
+            ? null
+            : scenePass.target,
+        );
         await renderer.compileAsync(scene, camera);
-        if (nativeSamples > 0 && !disposed && !options.signal.aborted) {
+        await yieldPreparation();
+        if (hasGpuTimer && nativeSamples > 0) {
           // Direct output has distinct tone-mapping/color-space defines.
           renderer.setRenderTarget(null);
           await renderer.compileAsync(scene, camera);
+          await yieldPreparation();
         }
       }
       canvas.dataset.cutawayPrepared = 'true';
@@ -1073,8 +1095,9 @@ export async function createCourtScene(
     // Viewport or display density may have changed while shader compilation was pending.
     resize();
     drawFrame();
+    await yieldPreparation();
     if (failed) throw new Error('Court shaders could not initialize');
-    if (motionEnabled && !document.hidden) {
+    if (hasGpuTimer && motionEnabled && !document.hidden) {
       // A prepared GPU draw leaves room for native composition and page animation.
       // Probe the same ordered tiers before revealing the scene, while the matching
       // poster remains visible. Compilation and network delays are not evidence.
@@ -1134,6 +1157,7 @@ export async function createCourtScene(
           if (candidate !== quality) applyQuality(candidate);
           const views: (typeof calibration)[number]['views'] = [];
           for (const probeFrame of probeFrames) {
+            await yieldPreparation();
             if (performance.now() >= calibrationDeadline) break qualityProbe;
             frame = probeFrame;
             updateCamera();
@@ -1196,7 +1220,7 @@ export async function createCourtScene(
         try {
           intro.progress = 1;
           for (const probeFrame of probeFrames) {
-            if (disposed || options.signal.aborted) break;
+            await yieldPreparation();
             frame = probeFrame;
             updateCamera();
             drawFrame();

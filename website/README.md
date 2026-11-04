@@ -52,11 +52,8 @@ FAQ 使用开放问答行，与自然滚动的页尾共同收束。真实截图�
 到达边界后由新手势切章；手机、无 JavaScript 与减少动态效果仍可阅读全部内容。
 复盘图表在阅读区间呈现终场8:11；比分保持整行、不参与压缩，避免两位数换行引起舞台跳位。
 
-首屏至社区六章共用一个 SVG 橙色接力，由 `story-relay.ts` 读取同一转场轨道，
-在12–85%之间展开、移动和收拢。`data-relay-anchor` 位于不做变换的布局槽，未单独标记时
-使用静态章节标记；停靠坐标在尺寸刷新后重测，不跟随正在飞入的卡片。
-SVG 仅占短线自身大小，通过 CSS 变换移动，避免用整个视口的 SVG 重绘一条装饰线。
-阅读时静止，进入 FAQ 与页尾时收起；移动端和减少动态效果隐藏。它只作装饰，不表达比赛数据。
+已移除悬浮橙色装饰接力线及其定位／动画逻辑，避免它停留在标题、正文或卡片旁边。
+右侧章节轨道、手机顶部阅读进度及按钮的功能选中标记保持独立。
 所有舞台和独立组件均观察尺寸变化，静态网格高度决定固定资格；顶部导航实际高度写入
 `--measured-header` 保护内容，基础 `--header` 不反向增大。尺寸变化继续暂停、重测并续播原切章目标。
 
@@ -149,12 +146,13 @@ Playwright WebKit 在 macOS 原生 Cocoa 宿主运行，仍是其打包引擎的
 增量不超过 800 KiB。体积检查、模拟设备检查和真实 GPU 帧率各自保留证据。
 CI 先执行 15 分钟有界的 `validate`，只构建一次；生成包含源码提交 SHA、逐文件
 SHA-256、字节数和总摘要的 `build-artifact.json`，连同 `dist/` 上传当前运行的构建产物。
-三个普通 UI 任务（Linux Chromium／Firefox、macOS WebKit，各25分钟、2 workers）与 Chromium
+三个普通 UI 任务（Linux Chromium／Firefox、macOS WebKit，各35分钟、1 worker）与 Chromium
 软件 WebGL 的两个分片（Windows，各35分钟、1 worker）只依赖 `validate`，使用独立 runner；
 任一浏览器或分片失败不取消其余任务。普通 UI 关闭 WebGL，标记 `@webgl` 的检查按
 [Playwright sharding](https://playwright.dev/docs/test-sharding)分到两个独立任务，分片内部串行运行。
 两个分片的用例并集必须等于完整 WebGL 清单，均完成且零失败／flaky才算该组通过。
-任务总时限覆盖扩充后的七章用例与诊断收集，单项断言、采样与产品初始化期限不放宽。
+原生输入与逐帧计时使用单一浏览器 worker，避免同时绘制的另一用例干扰手势与命中测试。
+任务总时限覆盖完整七章串行用例与诊断收集，单项断言、采样与产品初始化期限不放宽。
 WebGL 任务使用 `playwright.webgl.config.ts`，保留完整 Chromium；CI 按
 [Chromium 的软件 WebGL 模式](https://github.com/chromium/chromium/blob/156.0.8078.4/docs/gpu/swiftshader.md)
 采用软件合成器，仅将 WebGL 绘制交给 SwiftShader，避免把它同时用作整个浏览器的 GL 驱动。
@@ -162,8 +160,8 @@ WebGL 任务使用 `playwright.webgl.config.ts`，保留完整 Chromium；CI 按
 软件渲染检查只证明场景与交互生命周期，不代表真实 GPU 的显示帧率。
 CI 的 WebGL 检查在 Windows runner 上以有窗口模式运行，直接使用其桌面，
 通过 `npx playwright install --no-shell chromium` 安装完整浏览器，无需 Linux 的 Xvfb 或 APT。
-Linux SwiftShader 的初始 WebGL 加载问题仍由 [Issue #45](https://github.com/x1a0Y4NGren/hoopito/issues/45)
-跟踪；切换执行环境不减少用例或放宽门禁。普通 UI 保持无头运行，本地启动参数不变。日志保存实际浏览器
+共享 Linux 与 Windows runner 均出现过初始 WebGL 加载失败，由 [Issue #45](https://github.com/x1a0Y4NGren/hoopito/issues/45)
+保留证据；切换执行环境本身不代表已修复，也不减少用例或放宽门禁。普通 UI 保持无头运行，本地启动参数不变。日志保存实际浏览器
 启动参数，WebGL 报告附上现有画布、渲染器、可见性及运行环境信息。
 WebGL 任务还保存 `runtime.jsonl`；Windows 仅记录平台、CPU 型号／数量等运行环境元数据
 与子进程退出结果，不提供 Linux `/proc`、cgroup 或 Chromium 进程资源计数。
@@ -474,7 +472,10 @@ JavaScript 未运行时，介绍、截图和下载链接仍可访问。
 保留颜色纹理与解析标线。`full`／`effects` 继续使用逐片元细法线与粗糙度高光。
 仅连续活跃帧参与采样，并使用滞回与
 冷却时间排除空闲、后台和短暂加载；短暂阅读保留活跃帧证据，后台和视口变化清空。
-初始化先准备不透明与半透明剖切材质，以及拖尾的HDR／直接输出变体。
+初始化先查询 GPU 计时能力；扩展缺失时，在首次编译／绘制前选择 `density`，包括减少动态效果状态，
+不先执行未经测量的高档预热。仅准备该档实际使用的不透明与半透明剖切输出变体。
+计时可用时保留 HDR／直接输出变体与后续完整校准。预热视角及编译步骤之间让出主线程，
+使页面的取消与 8 秒回退任务能执行；单个同步驱动调用仍不能被 JavaScript 中途打断。
 正常动效且页面可见时，GPU计时准备覆盖六个章节阅读位和首屏→计分、下载→社区两个轨道中点，
 共八个视角；使用六张代表性玻璃区域，并在近篮架视角准备篮球、变形篮网和拖尾。
 每个视角先绘制，再取三次GPU绘制中位成本；开场的首轮预热另存，不计入档位判断。

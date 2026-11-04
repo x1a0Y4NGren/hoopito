@@ -110,23 +110,6 @@ body:not(.privacy-page) main {
 [data-story-reveal] {
   clip-path: inset(0 0 calc((1 - var(--story-reveal, 1)) * 100%) 0);
 }
-.story-relay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 112px;
-  height: 2px;
-  pointer-events: none;
-  z-index: 3;
-  overflow: visible;
-  color: var(--orange);
-}
-.story-relay path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: square;
-}
 .scoring,
 .experience,
 .replay,
@@ -2264,9 +2247,6 @@ body:not(.privacy-page) main {
   [data-story-reveal],
   .landscape-device[data-story-reveal] {
     clip-path: none;
-  }
-  .story-relay {
-    display: none;
   }
   .button,
   .text-link,

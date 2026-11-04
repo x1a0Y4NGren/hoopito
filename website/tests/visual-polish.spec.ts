@@ -51,55 +51,91 @@ async function layoutStable(page: Page) {
   // before reading coordinates; never seek an obsolete range until it passes.
   let previous = '';
   let stableSince = 0;
-  await expect
-    .poll(async () => {
-      const checkpoint = await page.evaluate(() => {
-        const header = document.querySelector('.site-header')!;
-        const measured = parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            '--measured-header',
-          ),
-        );
-        const geometry = [
-          ...document.querySelectorAll<HTMLElement>(
-            '[data-story-stage], #closing',
-          ),
-        ].map((element) => ({
-          start: element.dataset.scrollReadStart,
-          end: element.dataset.scrollReadEnd,
-          storyStart: element.dataset.storyStart,
-          storyEnd: element.dataset.storyEnd,
-          width: element.getBoundingClientRect().width,
-          height: element.getBoundingClientRect().height,
-          contentHeight: element.scrollHeight,
-        }));
-        return {
-          key: JSON.stringify({
-            geometry,
-            height: document.documentElement.scrollHeight,
-            header: header.getBoundingClientRect().height,
-            measured,
-          }),
-          ready:
-            document.fonts.status === 'loaded' &&
-            geometry.every(
-              ({ start, end }) =>
-                start !== undefined &&
-                end !== undefined &&
-                Number.isFinite(Number(start)) &&
-                Number(end) >= Number(start),
-            ) &&
-            Math.abs(header.getBoundingClientRect().height - measured) <= 1 &&
-            document.documentElement.dataset.scrollState === 'idle',
-        };
-      });
-      if (checkpoint.key !== previous || !checkpoint.ready) {
-        previous = checkpoint.key;
-        stableSince = Date.now();
-      }
-      return checkpoint.ready && Date.now() - stableSince >= 300;
-    })
-    .toBe(true);
+  let lastCheckpoint: unknown;
+  try {
+    await expect
+      .poll(async () => {
+        const checkpoint = await page.evaluate(() => {
+          const header = document.querySelector('.site-header')!;
+          const closing = document.querySelector<HTMLElement>('#closing')!;
+          const closingBounds = closing.getBoundingClientRect();
+          const maxScroll = Math.max(
+            0,
+            document.documentElement.scrollHeight - innerHeight,
+          );
+          const publishedEnd = Number(closing.dataset.scrollReadEnd);
+          const closingGeometry = {
+            publishedEnd,
+            maxScroll,
+            height: closingBounds.height,
+            contentHeight: closing.scrollHeight,
+            documentBottom: scrollY + closingBounds.bottom,
+            openAnswers: closing.querySelectorAll('details[open]').length,
+          };
+          const measured = parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              '--measured-header',
+            ),
+          );
+          const geometry = [
+            ...document.querySelectorAll<HTMLElement>(
+              '[data-story-stage], #closing',
+            ),
+          ].map((element) => ({
+            start: element.dataset.scrollReadStart,
+            end: element.dataset.scrollReadEnd,
+            storyStart: element.dataset.storyStart,
+            storyEnd: element.dataset.storyEnd,
+            width: element.getBoundingClientRect().width,
+            height: element.getBoundingClientRect().height,
+            contentHeight: element.scrollHeight,
+          }));
+          return {
+            key: JSON.stringify({
+              geometry,
+              height: document.documentElement.scrollHeight,
+              header: header.getBoundingClientRect().height,
+              measured,
+              closing: closingGeometry,
+            }),
+            closing: closingGeometry,
+            document: {
+              hidden: document.hidden,
+              visibility: document.visibilityState,
+              focused: document.hasFocus(),
+              activeElement: document.activeElement?.tagName,
+            },
+            ready:
+              document.fonts.status === 'loaded' &&
+              geometry.every(
+                ({ start, end }) =>
+                  start !== undefined &&
+                  end !== undefined &&
+                  Number.isFinite(Number(start)) &&
+                  Number(end) >= Number(start),
+              ) &&
+              // Closing is the final document block on both presentation paths.
+              // A quiet old map is not ready after native details have expanded.
+              Math.abs(publishedEnd - maxScroll) <= 2 &&
+              Math.abs(header.getBoundingClientRect().height - measured) <= 1 &&
+              document.documentElement.dataset.scrollState === 'idle',
+          };
+        });
+        lastCheckpoint = checkpoint;
+        if (checkpoint.key !== previous || !checkpoint.ready) {
+          previous = checkpoint.key;
+          stableSince = Date.now();
+        }
+        return checkpoint.ready && Date.now() - stableSince >= 300;
+      })
+      .toBe(true);
+  } catch (error) {
+    await test.info().attach('layout-readiness', {
+      body: JSON.stringify(lastCheckpoint, null, 2),
+      contentType: 'application/json',
+    });
+    throw error;
+  }
 }
 
 async function open(

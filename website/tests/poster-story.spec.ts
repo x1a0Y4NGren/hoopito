@@ -535,18 +535,7 @@ for (const path of ['/', '/en/']) {
           .evaluate((heading) => heading.closest('[data-glass-card]') === null),
       ).toBe(true);
     }
-    await expect(page.locator('[data-relay-anchor]')).toHaveCount(3);
-    expect(
-      await page
-        .locator('[data-relay-anchor]')
-        .evaluateAll((anchors) =>
-          anchors.every(
-            (anchor) =>
-              !anchor.matches('[data-story-item]') &&
-              !anchor.closest('[data-story-item]'),
-          ),
-        ),
-    ).toBe(true);
+    await expect(page.locator('svg.story-relay')).toHaveCount(0);
     await evidence(page, testInfo, 'hero-poster');
   });
 }
@@ -779,8 +768,7 @@ test('reduced motion keeps independent headings and every optical item readable 
       }).length,
   );
   expect(moving).toBe(0);
-  const relay = page.locator('svg.story-relay');
-  if (await relay.count()) await expect(relay).toHaveCSS('opacity', '0');
+  await expect(page.locator('svg.story-relay')).toHaveCount(0);
   await expect(page.locator('#replay h2')).toBeVisible();
 });
 
@@ -869,60 +857,33 @@ test('without JavaScript the poster title, real screenshot links and download re
   }
 });
 
-test('the decorative relay is stable at reading stops and returns exactly with reverse scrolling', async ({
+test('chapters and native transitions stay clear of the removed decorative relay', async ({
   page,
 }) => {
   await open(page);
   await atReading(page, 'hero');
-  const relay = page.locator('svg.story-relay');
-  await expect(relay).toHaveCount(1);
-  await expect(relay).toHaveAttribute('aria-hidden', 'true');
-  await expect(relay).toHaveCSS('pointer-events', 'none');
-  const relayState = () =>
-    relay.evaluate((element) => ({
-      markup: element.innerHTML,
-      transform: (element as SVGElement).style.transform,
-      width: (element as SVGElement).style.width,
-    }));
-  const box = await relay.boundingBox();
-  expect(box!.width).toBeLessThanOrEqual(128);
-  expect(box!.height).toBeLessThanOrEqual(8);
-  const initial = await relayState();
-  await page.waitForTimeout(220);
-  expect(await relayState()).toEqual(initial);
+  const assertClear = () =>
+    expect(page.locator('svg.story-relay')).toHaveCount(0);
+  await assertClear();
   await seekReading(page, 'hero', 'end');
   await page.mouse.wheel(0, 24);
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-scroll-state',
+    'settling',
+  );
+  await assertClear();
   await atReading(page, 'scoring');
-  const scoring = await relayState();
-  expect(scoring).not.toEqual(initial);
-  await page.waitForTimeout(220);
-  expect(await relayState()).toEqual(scoring);
   await seekReading(page, 'scoring', 'start');
   await page.mouse.wheel(0, -24);
   await atReading(page, 'hero');
-  expect(await relayState()).toEqual(initial);
-  for (const chapter of ['replay', 'download', 'community'] as const) {
+  for (const chapter of [...chapters, 'closing']) {
     await page.goto('/#' + chapter);
-    await atReading(page, chapter);
-    await expect(relay).toHaveCSS('opacity', '1');
     await expect(page.locator('html')).toHaveAttribute(
-      'data-relay-chapter',
+      'data-scroll-stop',
       chapter,
     );
-    const settled = await relayState();
-    await page.waitForTimeout(120);
-    expect(await relayState()).toEqual(settled);
+    await assertClear();
   }
-  await page.goto('/#closing');
-  await expect(page.locator('html')).toHaveAttribute(
-    'data-scroll-stop',
-    'closing',
-  );
-  await expect(page.locator('html')).toHaveAttribute(
-    'data-scroll-state',
-    'idle',
-  );
-  await expect(relay).toHaveCSS('opacity', '0');
 });
 
 test('a non-glass title growing during a committed transition preserves the chosen chapter', async ({

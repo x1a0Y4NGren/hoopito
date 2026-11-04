@@ -135,9 +135,9 @@ jobs:
     name: UI (${{ matrix.browser }})
     needs: validate
     runs-on: ${{ matrix.browser == 'webkit' && 'macos-latest' || 'ubuntu-latest' }}
-    # The expanded seven-chapter suite runs hundreds of cases per browser;
-    # leave time for diagnostics and retained failure artifacts on shared CI.
-    timeout-minutes: 25
+    # Native input/frame timing needs an exclusive browser worker. Keep the
+    # full suite and allow its serial workload plus failure diagnostics.
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
@@ -193,7 +193,7 @@ jobs:
 
       - name: Run browser checks and reject flaky results
         id: tests
-        run: npm run test:e2e -- --project=${{ matrix.browser }} --grep-invert @webgl --workers=2 --fail-on-flaky-tests --output=output/playwright/ui-${{ matrix.browser }}/test-results 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/test.log
+        run: npm run test:e2e -- --project=${{ matrix.browser }} --grep-invert @webgl --workers=1 --fail-on-flaky-tests --output=output/playwright/ui-${{ matrix.browser }}/test-results 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/test.log
 
       - name: Record execution result
         if: always()

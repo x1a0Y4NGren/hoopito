@@ -12,7 +12,6 @@ import {
   storyOrnamentVisibility,
   type StoryRole,
 } from '../src/scripts/story-choreography.ts';
-import { relayPose } from '../src/scripts/story-relay.ts';
 
 const rest = { x: 0, y: 0, scale: 1, opacity: 1, reveal: 1 };
 const roles: StoryRole[] = ['heading', 'visual', 'control', 'detail'];
@@ -532,25 +531,6 @@ test('composed native reading through long content never changes camera or item 
         rest,
       );
   }
-});
-
-test('relay travels only within the accent window and holds static reading anchors', () => {
-  const anchors = {
-    hero: { x: 0, y: 500, length: 64 },
-    scoring: { x: 100, y: 400, length: 80 },
-    experience: { x: 200, y: 200, length: 96 },
-  };
-  const relayStops = stops.slice(0, 3);
-  assert.equal(relayPose(120, relayStops, anchors).x, 0);
-  assert.equal(relayPose(850, relayStops, anchors).x, 100);
-  assert.equal(relayPose(485, relayStops, anchors).x, 50);
-  const fade = relayPose(3100, relayStops, anchors, {
-    from: 'experience',
-    to: 'replay',
-    progress: 0.5,
-  });
-  assert.ok(fade.opacity > 0 && fade.opacity < 1);
-  assert.equal(fade.x, 200);
 });
 
 test('static chapter labels fade with the shared flight while the footer prompt leaves first', () => {

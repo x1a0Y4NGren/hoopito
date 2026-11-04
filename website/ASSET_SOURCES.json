@@ -542,15 +542,15 @@
       "output": "public/art/scene-poster-compact.webp",
       "bytes": 22954,
       "sha256": "5e88a806c7c6b05600d0c41ffdca6ad6431ace881957e3051a4afd2b035c2d0e",
-      "source": "website/assets/art/source/scene-poster-compact-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-compact-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "81766cf5f25968b041e1e650cb9ff1191c5d4a8b9d9c1c66ec48a2c8e7c12059",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -598,7 +598,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -670,11 +670,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -718,7 +714,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -766,11 +762,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -786,7 +782,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -842,7 +838,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -860,15 +856,15 @@
       "output": "public/art/scene-poster-standard.webp",
       "bytes": 41550,
       "sha256": "5c17dda31faabbe5522c36372701d475a0da602fe444d646fa8ba468ece57513",
-      "source": "website/assets/art/source/scene-poster-standard-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-standard-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "625fc501859196614bdf5cdafe3df1c98435055fd92521f4af4271bbd579fe07",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -916,7 +912,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -988,11 +984,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -1036,7 +1028,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -1084,11 +1076,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -1104,7 +1096,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -1160,7 +1152,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -1178,15 +1170,15 @@
       "output": "public/art/scene-mobile.webp",
       "bytes": 10236,
       "sha256": "1897f38f0ff58935088420466ced301b1cad86957cf9f4455636af007f511e33",
-      "source": "website/assets/art/source/scene-poster-mobile-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-mobile-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "625fc501859196614bdf5cdafe3df1c98435055fd92521f4af4271bbd579fe07",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -1234,7 +1226,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -1306,11 +1298,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -1354,7 +1342,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -1402,11 +1390,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -1422,7 +1410,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -1478,7 +1466,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -1506,15 +1494,15 @@
       "output": "public/art/scene-poster-wide.webp",
       "bytes": 69028,
       "sha256": "2a4359c012994883636f3b6f053b9c86c9b077e8b54df1ef09174af39ee68afa",
-      "source": "website/assets/art/source/scene-poster-wide-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-wide-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "0eb5455c06913b3738fef9086cc22edd2526623c62e7828c3a94b5f173bb70de",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -1562,7 +1550,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -1634,11 +1622,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -1682,7 +1666,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -1730,11 +1714,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -1750,7 +1734,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -1806,7 +1790,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -1824,15 +1808,15 @@
       "output": "public/art/scene-poster-demo-compact.webp",
       "bytes": 5952,
       "sha256": "323be199c5ad33bbd231a1d7aef7deb2c52c01902b5fa661c2b6d153c51ad40b",
-      "source": "website/assets/art/source/scene-poster-demo-compact-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-demo-compact-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "e88f8a700215fa9a940f289eacd328ca9ad08199dcf04136c18571572772139e",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -1880,7 +1864,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -1952,11 +1936,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -2000,7 +1980,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -2048,11 +2028,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -2068,7 +2048,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -2124,7 +2104,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -2142,15 +2122,15 @@
       "output": "public/art/scene-poster-demo-standard.webp",
       "bytes": 8554,
       "sha256": "bba2a56059d83d1d27bc97068bdeb67aa64e4ff1907123b57e312d7da1131196",
-      "source": "website/assets/art/source/scene-poster-demo-standard-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-demo-standard-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "9d3f1e703f210df17db54d9d0012372bc9380a4606b53eb065d8efa07dcadbde",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -2198,7 +2178,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -2270,11 +2250,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -2318,7 +2294,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -2366,11 +2342,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -2386,7 +2362,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -2442,7 +2418,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -2460,15 +2436,15 @@
       "output": "public/art/scene-poster-demo-wide.webp",
       "bytes": 10214,
       "sha256": "f3677b80443c8a8fcb7d8ecf2f59c6157dbc90b5e52b97a9ffb5ba81880a31bd",
-      "source": "website/assets/art/source/scene-poster-demo-wide-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-demo-wide-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "51e6a85e88b7ef359522a7903496c146adb736f77579a8f714638396c8898777",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -2516,7 +2492,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -2588,11 +2564,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -2636,7 +2608,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -2684,11 +2656,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -2704,7 +2676,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -2760,7 +2732,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -2778,15 +2750,15 @@
       "output": "public/art/scene-mobile-hero.webp",
       "bytes": 29036,
       "sha256": "20ffd43bab94bde560fba228bfdaebd03cee40dea2a0d99e8f3edcf2f7d03207",
-      "source": "website/assets/art/source/scene-poster-mobile-hero-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-mobile-hero-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "a0ae77c434c0ff15ff3a75a7ecc05d2468c154aacf804f2355f3808af77d4ccc",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -2834,7 +2806,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -2906,11 +2878,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -2954,7 +2922,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -3002,11 +2970,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -3022,7 +2990,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -3078,7 +3046,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -3106,15 +3074,15 @@
       "output": "public/art/scene-mobile-court.webp",
       "bytes": 23058,
       "sha256": "ccfe38ed7ad48e2a649d49a9a0a5127ba412253fa940c3fd24ca818bc83ac251",
-      "source": "website/assets/art/source/scene-poster-mobile-court-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-mobile-court-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "f5b4b92f5d8c62a8514fe9066d326366c998c621ac8534b8d807c11e53aea21a",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -3162,7 +3130,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -3234,11 +3202,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -3282,7 +3246,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -3330,11 +3294,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -3350,7 +3314,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -3406,7 +3370,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -3434,15 +3398,15 @@
       "output": "public/art/scene-mobile-hoop.webp",
       "bytes": 20790,
       "sha256": "92f9dba33ab9b01a51d897b333384d58d8785a0f69e3b01140b92324d97caeaa",
-      "source": "website/assets/art/source/scene-poster-mobile-hoop-2026-11-04T02-51-25-763Z.webp",
+      "source": "website/assets/art/source/scene-poster-mobile-hoop-2026-11-04T07-59-43-192Z.webp",
       "source_sha256": "74776eda789e3973aae271446e4a159da0b288e61ce4c8c8b23b38b2f66df983",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "dacd4b43534993748a5615d8c28b335c8da153f7468ae30f7b15b85de84301e3",
-      "captured_with": "156.0.8078.74; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "cca0dc3dd1b0b27c5aaf60170db87873c82a34730a4cba68800e872f54c96672",
+      "captured_with": "156.0.8078.81; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -3490,7 +3454,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/camera-placement.ts",
@@ -3562,11 +3526,7 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/scene-commit.ts",
@@ -3610,7 +3570,7 @@
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "53e6f18a814bebcea5f7c76fb97b2cc2f990083edb08be2221eb39b7bbf86fcf"
+          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -3658,11 +3618,11 @@
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/CourtDiagram.astro",
@@ -3678,7 +3638,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ReplayShowcase.astro",
@@ -3734,7 +3694,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "fb1a6b60f8d5b2a992abc30011d2f78fce0f97e614ed3d9e12ee2f45bc7f0d30"
+          "sha256": "2f5fd8f8a581d80ff530f9d3531883799fc138d441c5b1f2045e8dcd37ab08c6"
         }
       ],
       "pose": {
@@ -4685,11 +4645,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "81aad53674cf3fd655b7b848935ae310939d9147f420d65c8d85d17402681607"
+          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
         },
         {
           "path": "src/components/HeroPoster.astro",
-          "sha256": "0df2d6246202d135dc54d8de85208c310a08de03c20800006eb5a2cafe9c8693"
+          "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
         },
         {
           "path": "src/components/Icon.astro",
@@ -4725,7 +4685,7 @@
         },
         {
           "path": "src/components/ScoringShowcase.astro",
-          "sha256": "950e6b4d2ac4928802e8d2deb888bb6a3fc6b857c98bb4e844205d1fd1381d90"
+          "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
         },
         {
           "path": "src/components/ScreenshotViewer.astro",
@@ -4833,7 +4793,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "757a4ee77cf3336a911c14a922f973e8d220471569126f029b7b371c18739144"
+          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
         },
         {
           "path": "src/scripts/court-textures.ts",
@@ -4869,7 +4829,7 @@
         },
         {
           "path": "src/scripts/main.ts",
-          "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
+          "sha256": "b70d0dcb8011d4b2da67b77e439df643552b878b073bdf6821f343bf1a2ddcea"
         },
         {
           "path": "src/scripts/mobile-navigation.ts",
@@ -4929,7 +4889,7 @@
         },
         {
           "path": "src/scripts/screenshot-viewer.ts",
-          "sha256": "dc8b49b2af3ac04d06fcadbb8833140fdb8bc2725b8147dc64f2de93103fbfac"
+          "sha256": "033b46b306824e9a603d8394c807b2d2a3540738b929a0c85d35be1e7e4eb4bf"
         },
         {
           "path": "src/scripts/shaders/court.ts",
@@ -4949,15 +4909,11 @@
         },
         {
           "path": "src/scripts/story-choreography.ts",
-          "sha256": "9ac6252e2f02c58f798f7160eb58eb6cbb5d8d5a44e7973763f93afe65ad12d4"
+          "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
         },
         {
           "path": "src/scripts/story-pose.ts",
           "sha256": "945b9894178af6ebee578b6c2065b457f2da8a6510e5d733a4caf36816de965a"
-        },
-        {
-          "path": "src/scripts/story-relay.ts",
-          "sha256": "65022e0373caeea0f64dd0617514b239b7dd7d8262957169e670a6249536f996"
         }
       ],
       "license": "SIL-OFL-1.1",

@@ -30,7 +30,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 2 : 3,
+  workers: process.env.CI ? 1 : 3,
   // Software WebGL on shared CI runners needs bounded extra test time. The
   // website's eight-second initialization deadline is unchanged and still tested.
   timeout: process.env.CI ? 90_000 : 30_000,

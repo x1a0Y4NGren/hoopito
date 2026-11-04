@@ -23,7 +23,6 @@ import {
   type StoryRole,
   type StoryEnter,
 } from './story-choreography';
-import { relayPose, type RelayAnchor, type RelayChapter } from './story-relay';
 import { createSceneCommitGuard } from './scene-commit';
 import {
   cameraStateAtScroll,
@@ -650,7 +649,6 @@ function updateStory() {
   mobilePresentation?.update();
   demoArt.update();
   updateStoryItems(sections);
-  updateStoryRelay();
   chapterRail?.update();
   const hostBounds = courtHost.getBoundingClientRect();
   const smooth = (value: number) => value * value * (3 - 2 * value);
@@ -1103,87 +1101,6 @@ const storyOrnaments = [
 ];
 const lastItemPose = new WeakMap<HTMLElement, string>();
 const stageBottomInsets = new WeakMap<HTMLElement, number>();
-const relayChapters: readonly RelayChapter[] = [
-  'hero',
-  'scoring',
-  'experience',
-  'replay',
-  'download',
-  'community',
-];
-let relayAnchors: Partial<Record<RelayChapter, RelayAnchor>> = {};
-const relay = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-relay.classList.add('story-relay');
-relay.setAttribute('aria-hidden', 'true');
-relay.setAttribute('focusable', 'false');
-relay.setAttribute('viewBox', '0 0 1 4');
-relay.setAttribute('preserveAspectRatio', 'none');
-relay.style.pointerEvents = 'none';
-const relayLine = document.createElementNS(
-  'http://www.w3.org/2000/svg',
-  'path',
-);
-relayLine.setAttribute('fill', 'none');
-relayLine.setAttribute('stroke', 'currentColor');
-relayLine.setAttribute('stroke-width', '2');
-relayLine.setAttribute('stroke-linecap', 'round');
-relayLine.setAttribute('d', 'M0 2h1');
-relayLine.setAttribute('vector-effect', 'non-scaling-stroke');
-relay.append(relayLine);
-document.body.append(relay);
-let lastRelay = '';
-
-function measureRelayAnchors() {
-  const anchors: Partial<Record<RelayChapter, RelayAnchor>> = {};
-  for (const id of relayChapters) {
-    const stage = select<HTMLElement>(`[data-story-stage="${id}"]`);
-    const stop = readingStops.find((candidate) => candidate.id === id);
-    if (!stage || !stop) continue;
-    const anchor =
-      document.querySelector<HTMLElement>(`[data-relay-anchor="${id}"]`) ??
-      stage.querySelector<HTMLElement>('.section-top') ??
-      stage;
-    // These slots are never transformed. Store their reading-stop viewport
-    // position, not the current position of an approaching optical surface.
-    const rect = anchor.getBoundingClientRect();
-    const stageRect = stage.getBoundingClientRect();
-    const rest = stages.get(id)?.trigger.pin
-      ? stageRestTop(stage)
-      : scrollY + stageRect.top - stop.readStart;
-    anchors[id] = {
-      x: rect.left + Math.min(24, rect.width * 0.08),
-      y: rest + rect.bottom - stageRect.top + 8,
-      length: Math.min(112, Math.max(64, rect.width * 0.25)),
-    };
-  }
-  relayAnchors = anchors;
-}
-
-function updateStoryRelay() {
-  const stops = relayChapters.flatMap((id) => {
-    const stop = readingStops.find((candidate) => candidate.id === id);
-    return stop ? [{ ...stop, id }] : [];
-  });
-  const pose = relayPose(scrollY, stops, relayAnchors, storyFrame.cameraTrack);
-  const visible = desktop.matches && !reduced() && pose.opacity > 0;
-  const key = [pose.x, pose.y, pose.length, visible ? pose.opacity : 0].join(
-    ',',
-  );
-  if (key !== lastRelay) {
-    // A tiny compositor layer moves the accent. Rewriting a full-viewport SVG
-    // path would repaint millions of pixels for this single 112px line.
-    const width = `${pose.length}px`;
-    if (relay.style.width !== width) relay.style.width = width;
-    relay.style.transform = `translate3d(${pose.x}px, ${pose.y - 2}px, 0)`;
-    const opacity = String(visible ? pose.opacity : 0);
-    if (relay.style.opacity !== opacity) relay.style.opacity = opacity;
-    lastRelay = key;
-  }
-  const chapter = visible ? (pose.chapter ?? '') : '';
-  if (root.dataset.relayChapter !== chapter)
-    root.dataset.relayChapter = chapter;
-}
-
 function updateStoryItems(
   sections: { element: HTMLElement; bounds: DOMRect }[],
 ) {
@@ -1512,8 +1429,6 @@ function refreshReadingStops() {
     width: hostBounds.width,
     height: hostBounds.height,
   };
-  measureRelayAnchors();
-  updateStoryRelay();
   chapterScroll?.refresh();
   mobileTouch?.refresh();
   chapterRail?.refresh();
@@ -1644,7 +1559,6 @@ window.addEventListener('pagehide', (event) => {
   stopFlight();
   stopScene();
   cardResizeObserver.disconnect();
-  relay.remove();
   document.removeEventListener('focusin', onScroll);
   choreography.revert();
   replayPresentation.restore();

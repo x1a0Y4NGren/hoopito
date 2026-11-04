@@ -51,7 +51,6 @@ for (const path of [
   'src/scripts/gpu-calibration.ts',
   'src/scripts/story-pose.ts',
   'src/scripts/story-choreography.ts',
-  'src/scripts/story-relay.ts',
   'src/scripts/scene-commit.ts',
   'src/scripts/chapter-scroll.ts',
   'src/scripts/chapter-rail.ts',
