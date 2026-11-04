@@ -134,7 +134,9 @@ jobs:
   ui:
     name: UI (${{ matrix.browser }})
     needs: validate
-    runs-on: ${{ matrix.browser == 'webkit' && 'macos-latest' || 'ubuntu-latest' }}
+    # Keep native macOS/WebKit coverage without the ARM64 capacity queue.
+    # This is the standard Intel runner, not a paid larger-runner tier.
+    runs-on: ${{ matrix.browser == 'webkit' && 'macos-26-intel' || 'ubuntu-latest' }}
     # Native input/frame timing needs an exclusive browser worker. Keep the
     # full suite and allow its serial workload plus failure diagnostics.
     timeout-minutes: 35

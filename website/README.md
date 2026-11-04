@@ -204,6 +204,8 @@ WebGL 任务还保存 `runtime.jsonl`；Windows 仅记录平台、CPU 型号／�
 这些软件 WebGL 功能检查不代表真实 GPU 帧率或开场墙钟耗时。
 Linux UI 的浏览器安装通过 `scripts/install-ci-browser.sh` 在一次性 runner 上执行；
 macOS WebKit 直接用 `npx playwright install --no-shell webkit` 安装完整套件所需引擎。
+WebKit与iOS编译固定使用标准 `macos-26-intel` runner，避开ARM64容量排队；
+保持macOS26、锁定的WebKit27.2、完整用例、单worker和flaky门禁，不启用付费大型runner。
 Linux 安装期间将 Azure HTTP 镜像入口替换为 Ubuntu 官方 HTTPS archive，并按
 [APT 配置](https://manpages.ubuntu.com/manpages/jammy/man5/apt.conf.5.html)
 限制连接／数据停滞为30秒、失败重试2次。安装结束恢复原镜像和临时配置；
