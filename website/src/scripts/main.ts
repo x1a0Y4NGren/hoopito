@@ -189,9 +189,18 @@ function syncScoringFeedback(
   const stage = scoreDevice.closest<HTMLElement>('[data-story-stage]')!;
   const bounds = stage.getBoundingClientRect();
   const headerBottom = siteHeader.getBoundingClientRect().bottom;
+  // A refresh can publish the new reading boundary one frame before anchor
+  // reconciliation. Preserve the current idle chapter's local cue during that
+  // frame; a gesture/navigation departure still owns cancellation immediately.
+  const holdingReadingChapter =
+    scoringOnChapter &&
+    root.dataset.scrollState === 'idle' &&
+    root.dataset.scrollStop === 'scoring' &&
+    bounds.bottom > headerBottom &&
+    bounds.top < innerHeight;
   const onChapter =
     desktop.matches && !reduced()
-      ? phase === 'reading'
+      ? phase === 'reading' || holdingReadingChapter
       : bounds.bottom > headerBottom && bounds.top < innerHeight;
   if (!onChapter) {
     cancelAnimationFrame(scoreInvitationFrame);

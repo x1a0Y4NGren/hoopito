@@ -923,7 +923,10 @@ export function createChapterScroll(options: ChapterScrollOptions) {
       Math.sign(nativeTail.remaining) === Math.sign(delta)
         ? nativeTail.remaining
         : 0;
-    nativeTail = { remaining: carried + delta, expires: now + 80 };
+    // Native compositor writes can arrive after the 80ms intent bucket on
+    // WebKit. Retain their signed, bounded receipt through the gesture's quiet
+    // window; explicit pointer, keyboard and navigation takeover still clears it.
+    nativeTail = { remaining: carried + delta, expires: now + QUIET_DELAY };
   }
   function wheel(event: WheelEvent) {
     if (disposed) return;

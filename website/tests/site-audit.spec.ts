@@ -813,7 +813,7 @@ for (const locale of ['/', '/en/']) {
   ]) {
     test(`chapter polish: ${locale} ${viewport.width}px full release and expanded details reflow at 200 percent text`, async ({
       page,
-    }) => {
+    }, info) => {
       await page.setViewportSize(viewport);
       await page.goto(`${locale}#download`);
       await page.evaluate(() => document.fonts.ready);
@@ -851,6 +851,55 @@ for (const locale of ['/', '/en/']) {
       });
       expect(iconOverflow).toBeLessThanOrEqual(1);
       const layout = await page.evaluate(() => {
+        const contentBounds = (element: HTMLElement) => {
+          const outer = element.getBoundingClientRect();
+          const boxes: { text: string; left: number; right: number }[] = [];
+          const walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT,
+          );
+          while (walker.nextNode()) {
+            const node = walker.currentNode;
+            if (!node.textContent?.trim()) continue;
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            for (const rect of range.getClientRects()) {
+              if (rect.width && rect.height)
+                boxes.push({
+                  text: node.textContent.trim().slice(0, 80),
+                  left: rect.left,
+                  right: rect.right,
+                });
+            }
+          }
+          for (const control of element.querySelectorAll(
+            'a, button, input, select, textarea, summary, img, svg',
+          )) {
+            for (const rect of control.getClientRects()) {
+              if (rect.width && rect.height)
+                boxes.push({
+                  text: control.tagName,
+                  left: rect.left,
+                  right: rect.right,
+                });
+            }
+          }
+          return {
+            selector: element.className,
+            scrollOverflow: element.scrollWidth - element.clientWidth,
+            outside: boxes.filter(
+              (box) => box.left < outer.left - 1 || box.right > outer.right + 1,
+            ),
+          };
+        };
+        const renderedChildren = (element: Element): Element[] =>
+          [...element.children].flatMap((child) =>
+            getComputedStyle(child).display === 'contents'
+              ? renderedChildren(child)
+              : child.getClientRects().length
+                ? [child]
+                : [],
+          );
         const card = document
           .querySelector('.download-package')!
           .getBoundingClientRect();
@@ -865,14 +914,14 @@ for (const locale of ['/', '/en/']) {
           .getBoundingClientRect();
         return {
           overflow: document.documentElement.scrollWidth - innerWidth,
-          clipped: [
+          content: [
             ...document.querySelectorAll<HTMLElement>(
               '.version-line, .demo-actions, .faq',
             ),
-          ].map((element) => element.scrollWidth - element.clientWidth),
-          cardContentInside: [
-            ...document.querySelectorAll<HTMLElement>('.download-package > *'),
-          ].every((element) => {
+          ].map(contentBounds),
+          cardContentInside: renderedChildren(
+            document.querySelector('.download-package')!,
+          ).every((element) => {
             const bounds = element.getBoundingClientRect();
             return (
               bounds.left >= card.left - 1 && bounds.right <= card.right + 1
@@ -884,8 +933,20 @@ for (const locale of ['/', '/en/']) {
             reset.top >= record.bottom - 1 || reset.left >= record.right - 1,
         };
       });
+      await info.attach('expanded-reading-content-bounds', {
+        body: JSON.stringify(layout, null, 2),
+        contentType: 'application/json',
+      });
       expect(layout.overflow).toBeLessThanOrEqual(1);
-      expect(layout.clipped.every((value) => value <= 1)).toBe(true);
+      // FAQ's feathered ::before deliberately paints beyond the box. Check
+      // its real text and controls, including content in opened disclosures.
+      for (const content of layout.content) {
+        expect(content.outside, content.selector).toEqual([]);
+        if (content.selector !== 'faq')
+          expect(content.scrollOverflow, content.selector).toBeLessThanOrEqual(
+            1,
+          );
+      }
       expect(layout.cardContentInside).toBe(true);
       expect(layout.versionInside).toBe(true);
       expect(layout.actionsApart).toBe(true);

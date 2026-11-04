@@ -199,8 +199,52 @@ test('@webgl scroll synchronizes optical contours and omits them for CSS quality
     'true',
     { timeout: 20000 },
   );
+  await page.evaluate(() => document.fonts.ready);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-scroll-state',
+    'idle',
+  );
+  // A long reading range consumes its first gesture without changing chapters.
+  // Begin this optical transition check at the measured outward boundary.
+  await page.locator('[data-story-stage="experience"]').evaluate((stage) =>
+    window.scrollTo({
+      top: Number((stage as HTMLElement).dataset.scrollReadEnd),
+      behavior: 'instant',
+    }),
+  );
+  await expect
+    .poll(() =>
+      page
+        .locator('[data-story-stage="experience"]')
+        .evaluate((stage) =>
+          Math.abs(
+            scrollY - Number((stage as HTMLElement).dataset.scrollReadEnd),
+          ),
+        ),
+    )
+    .toBeLessThan(2);
+  await page.mouse.move(12, 450);
+  // Animation-time input is deliberately drained, so finish each owned flight
+  // before asking the real wheel sequence to reverse its optical motion.
   await page.mouse.wheel(0, 240);
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-scroll-stop',
+    'replay',
+  );
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-scroll-state',
+    'idle',
+  );
   await page.mouse.wheel(0, -180);
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-scroll-stop',
+    'experience',
+  );
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-scroll-state',
+    'idle',
+  );
   await expect
     .poll(() =>
       page.evaluate(() => {
@@ -223,6 +267,8 @@ test('@webgl scroll synchronizes optical contours and omits them for CSS quality
   const optical = frames.filter(
     (frame) => frame.quality === 'full' && frame.glass === 'webgl',
   );
+  for (const frame of frames)
+    expect(frame.surfaces.length).toBeLessThanOrEqual(6);
   await testInfo.attach('optical-quality-frames', {
     body: JSON.stringify(frames),
     contentType: 'application/json',
@@ -258,7 +304,10 @@ test('mobile scoreboard and action dock retain independently measurable glass su
   const scoreboard = page.locator('[data-glass-id="experience-scoreboard"]');
   const scoreboardBounds = await scoreboard.boundingBox();
   expect(scoreboardBounds!.width).toBeGreaterThan(300);
-  expect(scoreboardBounds!.height).toBeGreaterThan(100);
+  // The approved phone layout compacts the scoreboard to about 80px while
+  // retaining a separate full-width optical region above the court.
+  expect(scoreboardBounds!.height).toBeGreaterThanOrEqual(80);
+  expect(scoreboardBounds!.height).toBeLessThanOrEqual(100);
   expect(
     await panel.evaluate((item) => item.scrollHeight <= item.clientHeight + 1),
   ).toBe(true);

@@ -40,6 +40,7 @@ const locales = [
     lang: 'zh-CN',
     brand: '球豆',
     title: '每一球都有迹可循',
+    lead: '在球场上记比分、标记出手位置。 打完再看比分走势，回顾自己的比赛。',
     other: '/en/',
     privacy: '/privacy/',
   },
@@ -48,6 +49,7 @@ const locales = [
     lang: 'en',
     brand: 'Hoopito',
     title: 'Every shot has a trace',
+    lead: 'Keep score and mark your shots on court. After the game, review the score flow and your records.',
     other: '/',
     privacy: '/en/privacy/',
   },
@@ -556,7 +558,24 @@ test(
               window,
               '__observedStoryCourt',
             ) as ObservedStoryCourt;
-            return Boolean(probe.frame) && probe.scroll === scrollY;
+            if (!probe.frame) return false;
+            if (probe.scroll === scrollY) return true;
+            if (probe.frame.cameraTrack) return false;
+            // Identical reading poses are intentionally deduplicated. Native
+            // reading can move without requiring another setStoryFrame call;
+            // only reuse that pose inside its own freshly measured interval.
+            const stage = document.querySelector<HTMLElement>(
+              `[data-story-stage="${probe.frame.chapter}"]`,
+            );
+            const start = Number(stage?.dataset.scrollReadStart);
+            const end = Number(stage?.dataset.scrollReadEnd);
+            return (
+              Number.isFinite(start) &&
+              Number.isFinite(end) &&
+              scrollY >= start - 2 &&
+              scrollY <= end + 2 &&
+              document.documentElement.dataset.scrollState === 'idle'
+            );
           }),
         )
         .toBe(true);
@@ -1633,7 +1652,7 @@ test('touch gallery pinches and pans within bounds then returns focus', async ({
 });
 
 for (const locale of locales) {
-  test(`${locale.lang}: mobile replay keeps its analysis together, then result and history with distinct examples`, async ({
+  test(`${locale.lang}: mobile replay shows the result then analysis and expandable history with distinct examples`, async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
@@ -1642,13 +1661,22 @@ for (const locale of locales) {
     // Measure one settled layout; swapping fonts between successive boxes
     // otherwise compares positions from different document geometries.
     await page.evaluate(() => document.fonts.ready);
+    const history = page.locator('[data-mobile-disclosure="history"]');
+    await expect(history).not.toHaveAttribute('open');
+    await expect(
+      page.locator('[data-replay-device="history"]'),
+    ).not.toBeVisible();
+    await history.locator(':scope > summary').click();
+    await expect(history).toHaveAttribute('open');
     const sequence = [
       '.replay-introduction',
-      '.replay-insight',
       '[data-replay-device="summary"]',
+      '.replay-insight',
       '[data-replay-device="history"]',
     ];
-    let bottom = 0;
+    // Opening history can scroll the viewport. Ordering is document-relative,
+    // so the first item need not remain below the viewport's top edge.
+    let bottom = -Infinity;
     for (const selector of sequence) {
       const box = await page.locator(selector).boundingBox();
       expect(box).not.toBeNull();
@@ -2839,7 +2867,7 @@ for (const locale of locales) {
       'aria-label',
       'Hoopito · 球豆',
     );
-    await expect(page.locator('.hero-lead')).toContainText(locale.brand);
+    await expect(page.locator('.hero-lead')).toHaveText(locale.lead);
     await expect(page.locator('.install-note')).toContainText('v2.1.0');
     await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
     await expectDownload(page);
@@ -3019,12 +3047,25 @@ for (const locale of locales) {
         }
       }
       if ([390, 1440].includes(width) && testInfo.project.name === 'chromium') {
-        for (const id of ['scoring', 'experience', 'replay', 'download'])
+        for (const id of [
+          'scoring',
+          'experience',
+          'replay',
+          'download',
+          'community',
+          'closing',
+        ])
           await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+        // Native lazy loading is tied to each image's viewport proximity.
+        // Visit displayed content images instead of waiting for unseen pages.
+        for (const image of await page.locator('main img').all())
+          if (await image.isVisible()) await image.scrollIntoViewIfNeeded();
         await page.waitForFunction(() =>
           [...document.images].every(
             (image) =>
               !image.getClientRects().length ||
+              image.closest('details:not([open])') !== null ||
+              (!image.hasAttribute('src') && image.hasAttribute('data-src')) ||
               (image.complete && image.naturalWidth > 0),
           ),
         );
@@ -3752,13 +3793,15 @@ for (const scale of [1, 2]) {
         // The full-screen court keeps the existing five-million-pixel budget.
         // Three.js floors canvas dimensions when its capped ratio is fractional.
         const density = Math.min(
-          pixels.quality === 'density' ? Math.min(scale, 1.5) : scale,
+          pixels.quality === 'density' ? Math.min(scale, 1.25) : scale,
           Math.sqrt(5_000_000 / (pixels.cssWidth * pixels.cssHeight)),
         );
         expect(pixels.width).toBe(Math.floor(pixels.cssWidth * density));
         expect(pixels.height).toBe(Math.floor(pixels.cssHeight * density));
         expect(pixels.width * pixels.height).toBeLessThanOrEqual(5_000_000);
-        expect(pixels.cssWidth).toBeLessThan(1440);
+        // The custom chapter rail hides the native scrollbar gutter. The
+        // actual background now spans the complete layout viewport.
+        expect(pixels.cssWidth).toBe(1440);
         expect(pixels.antialias).toMatch(/^(msaa-[24]|fxaa)$/);
         if (pixels.antialias !== 'fxaa')
           expect(
@@ -3804,7 +3847,7 @@ for (const scale of [1, 2]) {
               .evaluate((canvas: HTMLCanvasElement) => {
                 const density = Math.min(
                   canvas.dataset.quality === 'density'
-                    ? Math.min(window.devicePixelRatio, 1.5)
+                    ? Math.min(window.devicePixelRatio, 1.25)
                     : window.devicePixelRatio,
                   Math.sqrt(
                     5_000_000 / (canvas.clientWidth * canvas.clientHeight),
@@ -3842,7 +3885,11 @@ for (const scale of [1, 2]) {
                   ...color.filter(
                     (value) =>
                       value >= 2 &&
-                      value <= (window.devicePixelRatio >= 1.5 ? 2 : 4) &&
+                      value <=
+                        (canvas.dataset.quality === 'density' ||
+                        window.devicePixelRatio >= 1.5
+                          ? 2
+                          : 4) &&
                       depth.includes(value),
                   ),
                 );

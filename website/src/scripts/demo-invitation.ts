@@ -79,14 +79,12 @@ export function createDemoInvitation(
     const cue = cues[0];
     const rect = courtHost.getBoundingClientRect();
     const projected = options.projectCourtHint?.();
-    cue.layer.style.setProperty(
-      '--court-hint-x',
-      `${projected ? projected.x - rect.left - courtHost.clientLeft : rect.width * 0.5}px`,
-    );
-    cue.layer.style.setProperty(
-      '--court-hint-y',
-      `${projected ? projected.y - rect.top - courtHost.clientTop : rect.height * 0.65}px`,
-    );
+    const x = `${projected ? projected.x - rect.left - courtHost.clientLeft : rect.width * 0.5}px`;
+    const y = `${projected ? projected.y - rect.top - courtHost.clientTop : rect.height * 0.65}px`;
+    if (cue.layer.style.getPropertyValue('--court-hint-x') !== x)
+      cue.layer.style.setProperty('--court-hint-x', x);
+    if (cue.layer.style.getPropertyValue('--court-hint-y') !== y)
+      cue.layer.style.setProperty('--court-hint-y', y);
   }
   function runNext() {
     if (

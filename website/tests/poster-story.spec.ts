@@ -75,13 +75,23 @@ async function atReading(page: Page, chapter: Chapter) {
     .toBe(true);
   await expect
     .poll(() =>
-      page
-        .locator(stageSelector(chapter))
-        .evaluate((stage) =>
-          [...stage.querySelectorAll<HTMLElement>('[data-story-item]')].every(
-            (item) => Number(getComputedStyle(item).opacity) >= 0.999,
-          ),
+      page.locator(stageSelector(chapter)).evaluate((stage) =>
+        [...stage.querySelectorAll<HTMLElement>('[data-story-item]')].every(
+          (item) => {
+            // Phone items reveal on their own viewport entry rather than
+            // the complete chapter playhead. Below-fold items may wait.
+            if (matchMedia('(max-width:767px)').matches) {
+              const rect = item.getBoundingClientRect();
+              if (
+                !item.getClientRects().length ||
+                rect.top > innerHeight * 0.65
+              )
+                return true;
+            }
+            return Number(getComputedStyle(item).opacity) >= 0.999;
+          },
         ),
+      ),
     )
     .toBe(true);
 }
@@ -872,7 +882,7 @@ test('the decorative relay is stable at reading stops and returns exactly with r
     relay.evaluate((element) => ({
       markup: element.innerHTML,
       transform: (element as SVGElement).style.transform,
-      width: element.getBoundingClientRect().width,
+      width: (element as SVGElement).style.width,
     }));
   const box = await relay.boundingBox();
   expect(box!.width).toBeLessThanOrEqual(128);
@@ -993,6 +1003,24 @@ for (const path of ['/', '/en/']) {
         ),
       ).toBe(true);
       await seekReading(page, chapter, 'end');
+      // Complete each displayed component's own entry without requiring the
+      // collapsed history image to render before the reader opens it.
+      for (const item of await page
+        .locator(`${stageSelector(chapter)} [data-story-item]`)
+        .all()) {
+        if (!(await item.isVisible())) continue;
+        // Scrollbar-like preparation must not wait for a scroll-driven
+        // transform to become stable before bringing the item into view.
+        await item.evaluate((element) =>
+          element.scrollIntoView({ behavior: 'instant', block: 'center' }),
+        );
+        await item.evaluate((element) => {
+          const top = element.getBoundingClientRect().top;
+          if (top > innerHeight * 0.6)
+            scrollBy({ top: top - innerHeight * 0.6, behavior: 'instant' });
+        });
+        await expect(item).toHaveCSS('opacity', '1');
+      }
     }
     await seekReading(page, 'experience');
     await evidence(page, testInfo, 'mobile-experience');
@@ -1016,19 +1044,42 @@ for (const path of ['/', '/en/']) {
       ).toBe(true);
       await seekReading(page, chapter, 'end');
       const stage = page.locator(stageSelector(chapter));
-      const clipping = await stage.evaluate((element) =>
-        [...element.querySelectorAll<HTMLElement>('p, h1, h2, button, summary')]
+      const clipping = await stage.evaluate((element) => {
+        const overflow = (item: HTMLElement) => {
+          const bounds = item.getBoundingClientRect();
+          const walker = document.createTreeWalker(item, NodeFilter.SHOW_TEXT);
+          let maximum = 0;
+          for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            if (!node.textContent?.trim()) continue;
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            for (const rect of range.getClientRects())
+              maximum = Math.max(
+                maximum,
+                bounds.left - rect.left,
+                rect.right - bounds.right,
+              );
+          }
+          return maximum;
+        };
+        // Reading protection feathers outside the component deliberately;
+        // only actual text ranges can establish content clipping.
+        return [
+          ...element.querySelectorAll<HTMLElement>(
+            'p, h1, h2, button, summary',
+          ),
+        ]
           .filter((item) => getComputedStyle(item).display !== 'none')
           .filter((item) => item.clientWidth > 0)
-          .filter((item) => item.scrollWidth > item.clientWidth + 2)
+          .filter((item) => overflow(item) > 2)
           .map((item) => ({
             tag: item.tagName,
             class: item.className,
             text: item.textContent?.trim().slice(0, 100),
             width: item.clientWidth,
             scroll: item.scrollWidth,
-          })),
-      );
+          }));
+      });
       expect(clipping, chapter + ': overflowing text').toEqual([]);
     }
     await evidence(page, testInfo, 'short-large-text');

@@ -48,7 +48,7 @@ test(
         .toMatch(/\/art\/scene-poster-demo-standard\.webp$/);
       // The standard capture uses the continuous full-width background at its
       // actual 1440×900 reference viewport.
-      await expect(poster).toHaveJSProperty('naturalWidth', 1425);
+      await expect(poster).toHaveJSProperty('naturalWidth', 1440);
       await expect(poster).toHaveJSProperty('naturalHeight', 900);
       await expect(page.locator('[data-demo-court]')).toHaveCSS('opacity', '0');
       await expect(page.locator('[data-point-preset="center"]')).toBeEnabled();

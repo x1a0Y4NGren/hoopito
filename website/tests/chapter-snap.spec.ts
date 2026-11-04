@@ -563,9 +563,25 @@ test('short screens and 200 percent text retain all final content', async ({
       () => document.documentElement.scrollWidth - innerWidth,
     ),
   ).toBeLessThanOrEqual(1);
-  const clipped = await page
-    .locator('#closing .faq')
-    .evaluate((element) => element.scrollWidth - element.clientWidth);
+  const clipped = await page.locator('#closing .faq').evaluate((element) => {
+    const bounds = element.getBoundingClientRect();
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    let maximum = 0;
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (!node.textContent?.trim()) continue;
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      for (const rect of range.getClientRects())
+        maximum = Math.max(
+          maximum,
+          bounds.left - rect.left,
+          rect.right - bounds.right,
+        );
+    }
+    // The accepted FAQ scrim feathers 72px beyond its box. Measure real text
+    // rather than counting that intentional decorative overflow as clipping.
+    return maximum;
+  });
   expect(clipped).toBeLessThanOrEqual(1);
   await page.screenshot({
     path: testInfo.outputPath('closing-200percent.png'),

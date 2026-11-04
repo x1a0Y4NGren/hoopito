@@ -263,11 +263,26 @@ test('scoring invitation starts once after background release without requiring 
   const observed = await first.evaluateHandle((element) => {
     const starts: number[] = [],
       ends: number[] = [];
+    const transitions: {
+      at: number;
+      state: string | undefined;
+      scroll: number;
+      start: string | undefined;
+      progress: string | undefined;
+    }[] = [];
     let previous = (element as HTMLElement).dataset.scoreInvitation;
     const observer = new MutationObserver(() => {
       const state = (element as HTMLElement).dataset.scoreInvitation;
       if (state === previous) return;
       previous = state;
+      const stage = element.closest<HTMLElement>('[data-story-stage]')!;
+      transitions.push({
+        at: Date.now(),
+        state,
+        scroll: scrollY,
+        start: stage.dataset.scrollReadStart,
+        progress: stage.dataset.storyProgress,
+      });
       if (state === 'playing') starts.push(Date.now());
       if (state === 'done') ends.push(Date.now());
     });
@@ -276,12 +291,22 @@ test('scoring invitation starts once after background release without requiring 
       attributeFilter: ['data-score-invitation'],
     });
     return {
-      read: () => ({ starts: [...starts], ends: [...ends] }),
+      read: () => ({ starts: [...starts], ends: [...ends], transitions }),
       stop: () => observer.disconnect(),
     };
   });
   try {
-    const before = await page.evaluate(() => scrollY);
+    const readingPosition = () =>
+      page.evaluate(() => ({
+        scroll: scrollY,
+        start: Number(
+          document.querySelector<HTMLElement>('[data-story-stage="scoring"]')!
+            .dataset.scrollReadStart,
+        ),
+        stop: document.documentElement.dataset.scrollStop,
+        state: document.documentElement.dataset.scrollState,
+      }));
+    const before = await readingPosition();
     await page.evaluate(() => {
       Object.defineProperty(document, 'hidden', {
         configurable: true,
@@ -293,8 +318,17 @@ test('scoring invitation starts once after background release without requiring 
     await expect(first).toHaveAttribute('data-score-invitation', 'playing');
     await page.clock.runFor(900);
     await expect(first).toHaveAttribute('data-score-invitation', 'done');
-    expect(await page.evaluate(() => scrollY)).toBe(before);
+    const after = await readingPosition();
+    // A font/pin refresh may relocate the document's reading stop while the
+    // background is paused. The invitation must preserve its reading offset.
+    expect(after.scroll - after.start).toBe(before.scroll - before.start);
+    expect(after.stop).toBe('scoring');
+    expect(after.state).toBe('idle');
     const run = await observed.evaluate((value) => value.read());
+    await info.attach('scoring-background-release-transitions', {
+      body: JSON.stringify({ ...run, before, after }, null, 2),
+      contentType: 'application/json',
+    });
     expect(run.starts).toHaveLength(1);
     expect(run.ends).toHaveLength(1);
     expect(run.ends[0] - run.starts[0]).toBeGreaterThanOrEqual(800);
@@ -315,7 +349,7 @@ test('scoring invitation starts once after background release without requiring 
     const repeated = await observed.evaluate((value) => value.read());
     expect(repeated.starts).toHaveLength(1);
     await info.attach('scoring-background-release-invitation', {
-      body: JSON.stringify(repeated),
+      body: JSON.stringify({ ...repeated, before, after }),
       contentType: 'application/json',
     });
   } finally {

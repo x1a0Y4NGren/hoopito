@@ -1,18 +1,18 @@
 {
   "version": 3,
   "source_hash_encoding": "utf8-lf",
-  "captured_at": "2026-11-03T16:20:29.324Z",
+  "captured_at": "2026-11-03T23:33:10.656Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "capture_method": "The actual production page scene observed at its dynamic factory export; no second renderer or authored capture pose.",
   "browser": "156.0.8078.74",
   "compiled_scene": {
-    "path": "_astro/court-scene.BdBTx5EW.js",
-    "sha256": "12c47462870ba5ee50904e8ff460346d2662567aaf2b0a3ac0e5ef38d4bad1bb"
+    "path": "_astro/court-scene.B9kA8vDU.js",
+    "sha256": "00a3007c911f0dba70147fc72d1b53b51238412141e4318b3b252bf7a62f937a"
   },
   "source_inputs": [
     {
       "path": "src/scripts/main.ts",
-      "sha256": "50b8ddf56cbed58901dadbb33b7e0f59e36ca346d3d65a7b8898b9d85291fa2b"
+      "sha256": "c1b91a9289df163a0294e4cc7d0ca5e809ef3c80b3f0996935b291b5674195cb"
     },
     {
       "path": "src/scripts/download-chooser.ts",
@@ -96,7 +96,7 @@
     },
     {
       "path": "src/scripts/demo-invitation.ts",
-      "sha256": "bb060893c93040d4edde12d9d6f6e5d1f6cd60c083e301e0f2eed4ab6f85e73e"
+      "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
     },
     {
       "path": "src/scripts/court-hardware.ts",
@@ -144,7 +144,7 @@
     },
     {
       "path": "src/scripts/chapter-scroll.ts",
-      "sha256": "8da6ebbed7b1cd324b02f5b9107c2ad9b7aafcd40b5bae3c06183d868fe00970"
+      "sha256": "1c942dfab2a9ff379b19439722b7bf5473ff048bee4c9f712bb3317bfa982c5a"
     },
     {
       "path": "src/scripts/chapter-rail.ts",
@@ -310,7 +310,7 @@
   "captures": [
     {
       "id": "compact",
-      "source": "source/scene-poster-compact-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-compact-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "81766cf5f25968b041e1e650cb9ff1191c5d4a8b9d9c1c66ec48a2c8e7c12059",
       "viewport": {
         "width": 1024,
@@ -356,7 +356,7 @@
     },
     {
       "id": "standard",
-      "source": "source/scene-poster-standard-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-standard-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "625fc501859196614bdf5cdafe3df1c98435055fd92521f4af4271bbd579fe07",
       "viewport": {
         "width": 1440,
@@ -402,7 +402,7 @@
     },
     {
       "id": "mobile",
-      "source": "source/scene-poster-mobile-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-mobile-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "625fc501859196614bdf5cdafe3df1c98435055fd92521f4af4271bbd579fe07",
       "viewport": {
         "width": 1440,
@@ -448,7 +448,7 @@
     },
     {
       "id": "wide",
-      "source": "source/scene-poster-wide-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-wide-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "0eb5455c06913b3738fef9086cc22edd2526623c62e7828c3a94b5f173bb70de",
       "viewport": {
         "width": 1920,
@@ -494,7 +494,7 @@
     },
     {
       "id": "demo-compact",
-      "source": "source/scene-poster-demo-compact-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-demo-compact-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "e88f8a700215fa9a940f289eacd328ca9ad08199dcf04136c18571572772139e",
       "viewport": {
         "width": 1024,
@@ -540,7 +540,7 @@
     },
     {
       "id": "demo-standard",
-      "source": "source/scene-poster-demo-standard-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-demo-standard-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "9d3f1e703f210df17db54d9d0012372bc9380a4606b53eb065d8efa07dcadbde",
       "viewport": {
         "width": 1440,
@@ -586,7 +586,7 @@
     },
     {
       "id": "demo-wide",
-      "source": "source/scene-poster-demo-wide-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-demo-wide-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "51e6a85e88b7ef359522a7903496c146adb736f77579a8f714638396c8898777",
       "viewport": {
         "width": 1920,
@@ -632,7 +632,7 @@
     },
     {
       "id": "mobile-hero",
-      "source": "source/scene-poster-mobile-hero-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-mobile-hero-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "a0ae77c434c0ff15ff3a75a7ecc05d2468c154aacf804f2355f3808af77d4ccc",
       "viewport": {
         "width": 2560,
@@ -678,7 +678,7 @@
     },
     {
       "id": "mobile-court",
-      "source": "source/scene-poster-mobile-court-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-mobile-court-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "f5b4b92f5d8c62a8514fe9066d326366c998c621ac8534b8d807c11e53aea21a",
       "viewport": {
         "width": 2560,
@@ -724,7 +724,7 @@
     },
     {
       "id": "mobile-hoop",
-      "source": "source/scene-poster-mobile-hoop-2026-11-03T16-20-19-024Z.webp",
+      "source": "source/scene-poster-mobile-hoop-2026-11-03T23-33-00-592Z.webp",
       "source_sha256": "74776eda789e3973aae271446e4a159da0b288e61ce4c8c8b23b38b2f66df983",
       "viewport": {
         "width": 2560,

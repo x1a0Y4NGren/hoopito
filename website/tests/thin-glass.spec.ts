@@ -147,6 +147,16 @@ async function seek(
     .toBe(true);
 }
 
+async function revealHistory(page: Page) {
+  const disclosure = page.locator('[data-mobile-disclosure="history"]');
+  if (
+    !(await disclosure.evaluate((element: HTMLDetailsElement) => element.open))
+  ) {
+    await disclosure.locator(':scope > summary').click();
+    await expect(disclosure).toHaveAttribute('open');
+  }
+}
+
 const layouts = [
   { name: 'mobile', width: 390, height: 844 },
   { name: 'compact', width: 1024, height: 768 },
@@ -172,8 +182,11 @@ for (const locale of ['zh', 'en'] as const) {
       }
       const states = [];
       for (const capture of captures) {
+        if (capture.image === 'history') await revealHistory(page);
         const figure = page.locator(capture.selector);
-        await figure.scrollIntoViewIfNeeded();
+        await figure.evaluate((element) =>
+          element.scrollIntoView({ behavior: 'instant', block: 'center' }),
+        );
         const image = figure.locator('img');
         await expect(image).toHaveJSProperty('naturalWidth', capture.width);
         await expect(image).toHaveJSProperty('naturalHeight', capture.height);
@@ -310,6 +323,7 @@ for (const locale of ['zh', 'en'] as const) {
         rowStates.push(state);
       }
       for (const capture of captures) {
+        if (capture.image === 'history') await revealHistory(page);
         const link = page.locator(`${capture.selector} .viewer-link`);
         await link.click();
         await expect(page.locator('[data-viewer-viewport]')).toHaveAttribute(
