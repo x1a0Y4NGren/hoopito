@@ -149,6 +149,9 @@ export function createScreenshotViewer(onOpenChange: (open: boolean) => void) {
     loadImage();
   });
   listen(dialog, 'close', () => {
+    // close() queues its event. A new image may already own the dialog when
+    // that event is delivered; the old session must not clear or resume it.
+    if (dialog.open) return;
     request++;
     clearTimeout(deadline);
     image.removeAttribute('src');

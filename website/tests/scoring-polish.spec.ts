@@ -14,6 +14,42 @@ async function open(page: Page, path: string) {
   );
 }
 
+async function settleReadingLayoutClock(page: Page) {
+  let previous = '';
+  let stableFor = 0;
+  for (let sample = 0; sample < 30; sample++) {
+    // Browser layout/ResizeObserver and native visibility events are not owned
+    // by Playwright's mocked timers. Let their queued refreshes publish before
+    // comparing the two reading offsets, without moving the page ourselves.
+    await page.clock.runFor(80);
+    const state = await page.evaluate(() => {
+      const stage = document.querySelector<HTMLElement>(
+        '[data-story-stage="scoring"]',
+      )!;
+      return {
+        key: JSON.stringify([
+          document.documentElement.scrollHeight,
+          stage.dataset.scrollReadStart,
+          stage.dataset.scrollReadEnd,
+          stage.offsetHeight,
+          scrollY,
+        ]),
+        atRest:
+          document.documentElement.dataset.scrollState === 'idle' &&
+          Math.abs(scrollY - Number(stage.dataset.scrollReadStart)) <= 1,
+      };
+    });
+    if (state.key === previous && state.atRest) stableFor += 80;
+    else stableFor = 0;
+    previous = state.key;
+    if (stableFor >= 320) return;
+  }
+  expect(
+    stableFor,
+    'visibility and layout refreshes must finish at the existing reading stop',
+  ).toBeGreaterThanOrEqual(320);
+}
+
 const layouts = [
   { name: 'compact desktop', width: 1024, height: 768 },
   { name: 'desktop', width: 1440, height: 900 },
@@ -259,6 +295,7 @@ test('scoring invitation starts once after background release without requiring 
   const first = page.locator('[data-score-feature="0"]');
   await pause();
   await page.clock.runFor(1200);
+  await settleReadingLayoutClock(page);
   await expect(first).toHaveAttribute('data-score-invitation', 'idle');
   const observed = await first.evaluateHandle((element) => {
     const starts: number[] = [],
@@ -318,6 +355,7 @@ test('scoring invitation starts once after background release without requiring 
     await expect(first).toHaveAttribute('data-score-invitation', 'playing');
     await page.clock.runFor(900);
     await expect(first).toHaveAttribute('data-score-invitation', 'done');
+    await settleReadingLayoutClock(page);
     const after = await readingPosition();
     // A font/pin refresh may relocate the document's reading stop while the
     // background is paused. The invitation must preserve its reading offset.

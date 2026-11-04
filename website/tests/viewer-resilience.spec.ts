@@ -9,6 +9,42 @@ async function openPage(page: Page, path = '/#scoring') {
 }
 
 for (const path of ['/', '/en/']) {
+  test(`${path}: a queued close event cannot clear a newly opened gallery`, async ({
+    page,
+  }) => {
+    await openPage(page, `${path}#replay`);
+    const summary = page.locator('[data-replay-device="summary"] .viewer-link');
+    const history = page.locator('[data-replay-device="history"] .viewer-link');
+    await summary.click();
+    await expect(page.locator('[data-viewer-viewport]')).toHaveAttribute(
+      'data-image-state',
+      'ready',
+    );
+    // Native close dispatch is queued. Reopen in that same turn to exercise
+    // the ownership race without relying on host/browser protocol latency.
+    await page.evaluate(() => {
+      document.querySelector<HTMLDialogElement>('[data-viewer]')!.close();
+      document
+        .querySelector<HTMLAnchorElement>(
+          '[data-replay-device="history"] .viewer-link',
+        )!
+        .click();
+    });
+    await expect(page.locator('[data-viewer-image]')).toHaveAttribute(
+      'src',
+      new URL((await history.getAttribute('href'))!, page.url()).href,
+    );
+    await expect(page.locator('[data-viewer-viewport]')).toHaveAttribute(
+      'data-image-state',
+      'ready',
+    );
+    await expect(page.locator('html')).toHaveClass(/image-viewer-open/);
+    await page.keyboard.press('Escape');
+    await expect(history).toBeFocused();
+    await expect(page.locator('[data-viewer]')).not.toBeVisible();
+    await expect(page.locator('html')).not.toHaveClass(/image-viewer-open/);
+  });
+
   test(`${path}: gallery reports a failed image and retries without leaving the reader trapped`, async ({
     page,
   }) => {

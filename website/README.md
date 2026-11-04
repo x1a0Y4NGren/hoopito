@@ -147,12 +147,12 @@ Playwright WebKit 是其打包引擎的自动化覆盖，不等同于实际 macO
 增量不超过 800 KiB。体积检查、模拟设备检查和真实 GPU 帧率各自保留证据。
 CI 先执行 15 分钟有界的 `validate`，只构建一次；生成包含源码提交 SHA、逐文件
 SHA-256、字节数和总摘要的 `build-artifact.json`，连同 `dist/` 上传当前运行的构建产物。
-三个普通 UI 任务（Chromium／Firefox／WebKit，各 15 分钟、2 workers）与 Chromium
-软件 WebGL 的两个分片（各20分钟、1 worker）只依赖 `validate`，使用独立 runner；
+三个普通 UI 任务（Chromium／Firefox／WebKit，各25分钟、2 workers）与 Chromium
+软件 WebGL 的两个分片（各35分钟、1 worker）只依赖 `validate`，使用独立 runner；
 任一浏览器或分片失败不取消其余任务。普通 UI 关闭 WebGL，标记 `@webgl` 的检查按
 [Playwright sharding](https://playwright.dev/docs/test-sharding)分到两个独立任务，分片内部串行运行。
 两个分片的用例并集必须等于完整 WebGL 清单，均完成且零失败／flaky才算该组通过。
-这是为软件渲染与依赖安装留出总时限余量，不增加单项／任务时限或减少采样与断言。
+任务总时限覆盖扩充后的七章用例与诊断收集，单项断言、采样与产品初始化期限不放宽。
 WebGL 任务使用 `playwright.webgl.config.ts`，保留完整 Chromium；CI 按
 [Chromium 的软件 WebGL 模式](https://github.com/chromium/chromium/blob/156.0.8078.4/docs/gpu/swiftshader.md)
 采用软件合成器，仅将 WebGL 绘制交给 SwiftShader，避免把它同时用作整个浏览器的 GL 驱动。
@@ -168,6 +168,10 @@ WebGL 任务还以两秒间隔保存 `runtime.jsonl`，记录主机 CPU／内存
 测试任务只下载当前工作流运行中按完整提交 SHA 命名的构建，校验本地源码身份、文件集合
 及每个文件的 SHA-256 后才启动 preview，不重新构建或引用其他提交的“最新产物”。
 失败允许一次诊断重试，但 `--fail-on-flaky-tests` 会将重试后通过也判为不稳定失败。
+追踪保留失败时的动作、源码及独立失败截图，关闭持续截图与 DOM 快照采集。
+原生滚轮序列逐包确认浏览器实际收到后再发送下一包，仍校验原有增量、数量与间隔。
+持续追踪会在输入传输中产生额外往返，并对软件 WebGL 增加画面回读负担，不能与
+真实输入／帧采样同时作为无干扰的计时依据；自有逐帧和输入回执继续保留。
 各任务无论成功与否均保存独立 HTML／JSON 结果、执行状态、日志、trace 和失败截图，
 按浏览器、WebGL分片及工作流运行次数区分，保留14天；构建身份摘要也随报告保存。
 网站的 8 秒初始化回退期限与现有单测、断言超时保持原值。

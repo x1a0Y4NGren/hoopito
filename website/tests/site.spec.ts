@@ -497,202 +497,216 @@ async function observeStoryCourt(page: Page) {
   });
 }
 
-test(
-  'large desktop text emits continuous camera poses across unpinned chapter boundaries',
-  { tag: '@webgl', lock: 'webgl-renderer' },
-  async ({ page }, testInfo) => {
-    test.skip(
-      testInfo.project.name !== 'chromium',
-      'Scene frames are verified against Chromium WebGL.',
-    );
-    await allowSoftwareWebGL(page);
-    await observeStoryCourt(page);
-    await page.setViewportSize({ width: 1440, height: 901 });
-    await page.goto('/en/');
-    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
-    await page.addStyleTag({
-      content: 'html {scroll-behavior:auto !important}',
-    });
-    await page.evaluate(() => document.fonts.ready);
-    const readStops = () =>
-      page.locator('[data-story-stage]').evaluateAll((stages) =>
-        stages.map((stage) => {
-          const element = stage as HTMLElement;
-          return [
-            element.dataset.scrollReadStart,
-            element.dataset.scrollReadEnd,
-          ];
-        }),
+// Each pair retains both boundaries, both directions and the same interior
+// samples. Independent cases bound CPU software-renderer work without dropping
+// positions or extending a single test's deadline.
+for (const [from, to] of [
+  ['hero', 'scoring'],
+  ['scoring', 'experience'],
+  ['experience', 'replay'],
+] as const) {
+  test(
+    `large desktop text emits continuous camera poses across unpinned chapter boundaries: ${from} to ${to}`,
+    { tag: '@webgl', lock: 'webgl-renderer' },
+    async ({ page }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== 'chromium',
+        'Scene frames are verified against Chromium WebGL.',
       );
-    const before = await readStops();
-    await page.evaluate(() => {
-      const items = [
-        ...document.querySelectorAll<HTMLElement>('body *'),
-      ].filter((e) =>
-        [...e.childNodes].some(
-          (n) => n.nodeType === Node.TEXT_NODE && n.textContent?.trim(),
-        ),
-      );
-      const sizes = items.map(
-        (e) => [e, parseFloat(getComputedStyle(e).fontSize)] as const,
-      );
-      for (const [element, size] of sizes)
-        element.style.fontSize = `${size * 2}px`;
-      dispatchEvent(new Event('resize'));
-    });
-    await expect(page.locator('.pin-spacer')).toHaveCount(0);
-    await expect.poll(readStops).not.toEqual(before);
-    const seek = async (top: number) => {
-      await page.evaluate(
-        (y) =>
-          new Promise<void>((resolve) => {
-            scrollTo({ top: y, behavior: 'instant' });
-            requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-          }),
-        top,
-      );
-      await expect
-        .poll(() =>
-          page.evaluate(() => {
-            const probe = Reflect.get(
-              window,
-              '__observedStoryCourt',
-            ) as ObservedStoryCourt;
-            if (!probe.frame) return false;
-            if (probe.scroll === scrollY) return true;
-            if (probe.frame.cameraTrack) return false;
-            // Identical reading poses are intentionally deduplicated. Native
-            // reading can move without requiring another setStoryFrame call;
-            // only reuse that pose inside its own freshly measured interval.
-            const stage = document.querySelector<HTMLElement>(
-              `[data-story-stage="${probe.frame.chapter}"]`,
-            );
-            const start = Number(stage?.dataset.scrollReadStart);
-            const end = Number(stage?.dataset.scrollReadEnd);
-            return (
-              Number.isFinite(start) &&
-              Number.isFinite(end) &&
-              scrollY >= start - 2 &&
-              scrollY <= end + 2 &&
-              document.documentElement.dataset.scrollState === 'idle'
-            );
-          }),
-        )
-        .toBe(true);
-      return page.evaluate(() => {
-        const probe = Reflect.get(
-          window,
-          '__observedStoryCourt',
-        ) as ObservedStoryCourt;
-        const host = document
-          .querySelector('[data-demo-court-host]')!
-          .getBoundingClientRect();
-        const points = [
-          { x: 0.4, y: 0.65 },
-          { x: 0.6, y: 0.45 },
-        ].map((point) => probe.scene.projectPoint(point)!);
-        return {
-          frame: probe.frame!,
-          scroll: scrollY,
-          host: { x: host.left, y: host.top },
-          points,
-        };
+      await allowSoftwareWebGL(page);
+      await observeStoryCourt(page);
+      await page.setViewportSize({ width: 1440, height: 901 });
+      await page.goto('/en/');
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+      await page.addStyleTag({
+        content: 'html {scroll-behavior:auto !important}',
       });
-    };
-    const chapters = ['hero', 'scoring', 'experience', 'replay'] as const;
-    for (let index = 1; index < chapters.length; index += 1) {
-      const from = chapters[index - 1]!,
-        to = chapters[index]!;
-      const gap = await page.evaluate(
-        ({ from, to }) => ({
-          start: Number(
-            document.querySelector<HTMLElement>(`[data-story-stage="${from}"]`)!
-              .dataset.scrollReadEnd,
-          ),
-          end: Number(
-            document.querySelector<HTMLElement>(`[data-story-stage="${to}"]`)!
-              .dataset.scrollReadStart,
-          ),
-        }),
-        { from, to },
-      );
-      expect(gap.end - gap.start).toBeGreaterThan(4);
-      for (const boundary of [
-        { at: gap.start, chapter: from },
-        { at: gap.end, chapter: to },
-      ]) {
-        for (const direction of [1, -1]) {
-          const samples = [];
-          for (const offset of [-2 * direction, 2 * direction]) {
-            const sample = await seek(boundary.at + offset);
-            if (Math.abs(sample.scroll - boundary.at) <= 2) {
-              expect(sample.frame.chapter).toBe(boundary.chapter);
-              expect(sample.frame.cameraTrack).toBeUndefined();
-            }
-            samples.push(sample);
-          }
-          const a = storyPose(samples[0].frame),
-            b = storyPose(samples[1].frame);
-          expect(
-            Math.hypot(
-              ...a.position.map((value, axis) => value - b.position[axis]!),
-            ),
-            `${from} → ${to}, actual committed frames: ${JSON.stringify(samples.map((sample) => sample.frame))}`,
-          ).toBeLessThan(0.08);
-          for (let point = 0; point < samples[0].points.length; point += 1) {
-            const a = samples[0].points[point],
-              b = samples[1].points[point];
-            expect(
-              Number.isFinite(a.x) &&
-                Number.isFinite(a.y) &&
-                Number.isFinite(b.x) &&
-                Number.isFinite(b.y),
-            ).toBe(true);
-            const hostX =
-              boundary.chapter === 'experience'
-                ? samples[0].host.x - samples[1].host.x
-                : 0;
-            const hostY =
-              boundary.chapter === 'experience'
-                ? samples[0].host.y - samples[1].host.y
-                : 0;
-            expect(
-              Math.hypot(a.x - b.x - hostX, a.y - b.y - hostY),
-            ).toBeLessThanOrEqual(2);
-          }
-        }
-      }
-      const references = new Map<number, Awaited<ReturnType<typeof seek>>>();
-      const observed = [];
-      for (const progress of [0.25, 0.5, 0.75, 0.5, 0.25]) {
-        const sample = await seek(gap.start + (gap.end - gap.start) * progress);
-        expect(sample.frame.cameraTrack).toMatchObject({ from, to });
-        expect(sample.frame.cameraTrack!.progress).toBeCloseTo(
-          (sample.scroll - gap.start) / (gap.end - gap.start),
-          5,
+      await page.evaluate(() => document.fonts.ready);
+      const readStops = () =>
+        page.locator('[data-story-stage]').evaluateAll((stages) =>
+          stages.map((stage) => {
+            const element = stage as HTMLElement;
+            return [
+              element.dataset.scrollReadStart,
+              element.dataset.scrollReadEnd,
+            ];
+          }),
         );
-        const previous = references.get(progress);
-        if (previous)
-          for (let point = 0; point < sample.points.length; point += 1)
+      const before = await readStops();
+      await page.evaluate(() => {
+        const items = [
+          ...document.querySelectorAll<HTMLElement>('body *'),
+        ].filter((e) =>
+          [...e.childNodes].some(
+            (n) => n.nodeType === Node.TEXT_NODE && n.textContent?.trim(),
+          ),
+        );
+        const sizes = items.map(
+          (e) => [e, parseFloat(getComputedStyle(e).fontSize)] as const,
+        );
+        for (const [element, size] of sizes)
+          element.style.fontSize = `${size * 2}px`;
+        dispatchEvent(new Event('resize'));
+      });
+      await expect(page.locator('.pin-spacer')).toHaveCount(0);
+      await expect.poll(readStops).not.toEqual(before);
+      const seek = async (top: number) => {
+        await page.evaluate(
+          (y) =>
+            new Promise<void>((resolve) => {
+              scrollTo({ top: y, behavior: 'instant' });
+              requestAnimationFrame(() =>
+                requestAnimationFrame(() => resolve()),
+              );
+            }),
+          top,
+        );
+        await expect
+          .poll(() =>
+            page.evaluate(() => {
+              const probe = Reflect.get(
+                window,
+                '__observedStoryCourt',
+              ) as ObservedStoryCourt;
+              if (!probe.frame) return false;
+              if (probe.scroll === scrollY) return true;
+              if (probe.frame.cameraTrack) return false;
+              // Identical reading poses are intentionally deduplicated. Native
+              // reading can move without requiring another setStoryFrame call;
+              // only reuse that pose inside its own freshly measured interval.
+              const stage = document.querySelector<HTMLElement>(
+                `[data-story-stage="${probe.frame.chapter}"]`,
+              );
+              const start = Number(stage?.dataset.scrollReadStart);
+              const end = Number(stage?.dataset.scrollReadEnd);
+              return (
+                Number.isFinite(start) &&
+                Number.isFinite(end) &&
+                scrollY >= start - 2 &&
+                scrollY <= end + 2 &&
+                document.documentElement.dataset.scrollState === 'idle'
+              );
+            }),
+          )
+          .toBe(true);
+        return page.evaluate(() => {
+          const probe = Reflect.get(
+            window,
+            '__observedStoryCourt',
+          ) as ObservedStoryCourt;
+          const host = document
+            .querySelector('[data-demo-court-host]')!
+            .getBoundingClientRect();
+          const points = [
+            { x: 0.4, y: 0.65 },
+            { x: 0.6, y: 0.45 },
+          ].map((point) => probe.scene.projectPoint(point)!);
+          return {
+            frame: probe.frame!,
+            scroll: scrollY,
+            host: { x: host.left, y: host.top },
+            points,
+          };
+        });
+      };
+      {
+        const gap = await page.evaluate(
+          ({ from, to }) => ({
+            start: Number(
+              document.querySelector<HTMLElement>(
+                `[data-story-stage="${from}"]`,
+              )!.dataset.scrollReadEnd,
+            ),
+            end: Number(
+              document.querySelector<HTMLElement>(`[data-story-stage="${to}"]`)!
+                .dataset.scrollReadStart,
+            ),
+          }),
+          { from, to },
+        );
+        expect(gap.end - gap.start).toBeGreaterThan(4);
+        for (const boundary of [
+          { at: gap.start, chapter: from },
+          { at: gap.end, chapter: to },
+        ]) {
+          for (const direction of [1, -1]) {
+            const samples = [];
+            for (const offset of [-2 * direction, 2 * direction]) {
+              const sample = await seek(boundary.at + offset);
+              if (Math.abs(sample.scroll - boundary.at) <= 2) {
+                expect(sample.frame.chapter).toBe(boundary.chapter);
+                expect(sample.frame.cameraTrack).toBeUndefined();
+              }
+              samples.push(sample);
+            }
+            const a = storyPose(samples[0].frame),
+              b = storyPose(samples[1].frame);
             expect(
               Math.hypot(
-                sample.points[point].x - previous.points[point].x,
-                sample.points[point].y - previous.points[point].y,
+                ...a.position.map((value, axis) => value - b.position[axis]!),
               ),
-            ).toBeLessThanOrEqual(2);
-        references.set(progress, sample);
-        observed.push(sample);
+              `${from} → ${to}, actual committed frames: ${JSON.stringify(samples.map((sample) => sample.frame))}`,
+            ).toBeLessThan(0.08);
+            for (let point = 0; point < samples[0].points.length; point += 1) {
+              const a = samples[0].points[point],
+                b = samples[1].points[point];
+              expect(
+                Number.isFinite(a.x) &&
+                  Number.isFinite(a.y) &&
+                  Number.isFinite(b.x) &&
+                  Number.isFinite(b.y),
+              ).toBe(true);
+              const hostX =
+                boundary.chapter === 'experience'
+                  ? samples[0].host.x - samples[1].host.x
+                  : 0;
+              const hostY =
+                boundary.chapter === 'experience'
+                  ? samples[0].host.y - samples[1].host.y
+                  : 0;
+              expect(
+                Math.hypot(a.x - b.x - hostX, a.y - b.y - hostY),
+              ).toBeLessThanOrEqual(2);
+            }
+          }
+        }
+        const references = new Map<number, Awaited<ReturnType<typeof seek>>>();
+        const observed = [];
+        for (const progress of [0.25, 0.5, 0.75, 0.5, 0.25]) {
+          const sample = await seek(
+            gap.start + (gap.end - gap.start) * progress,
+          );
+          expect(sample.frame.cameraTrack).toMatchObject({ from, to });
+          expect(sample.frame.cameraTrack!.progress).toBeCloseTo(
+            (sample.scroll - gap.start) / (gap.end - gap.start),
+            5,
+          );
+          const previous = references.get(progress);
+          if (previous)
+            for (let point = 0; point < sample.points.length; point += 1)
+              expect(
+                Math.hypot(
+                  sample.points[point].x - previous.points[point].x,
+                  sample.points[point].y - previous.points[point].y,
+                ),
+              ).toBeLessThanOrEqual(2);
+          references.set(progress, sample);
+          observed.push(sample);
+        }
+        await testInfo.attach(
+          `${from}-to-${to}-observed-frames-and-projection`,
+          {
+            body: JSON.stringify(observed),
+            contentType: 'application/json',
+          },
+        );
+        expect(storyPose(observed[0].frame).position).not.toEqual(
+          storyPose(observed[2].frame).position,
+        );
       }
-      await testInfo.attach(`${from}-to-${to}-observed-frames-and-projection`, {
-        body: JSON.stringify(observed),
-        contentType: 'application/json',
-      });
-      expect(storyPose(observed[0].frame).position).not.toEqual(
-        storyPose(observed[2].frame).position,
-      );
-    }
-  },
-);
+    },
+  );
+}
 
 for (const locale of locales) {
   for (const dpr of [1, 2]) {

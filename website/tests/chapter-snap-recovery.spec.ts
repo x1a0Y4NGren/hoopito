@@ -252,6 +252,35 @@ async function verifyWheelSequence(
   ).toBeLessThan(180);
 }
 
+async function sendWheelSequence(
+  page: Page,
+  deltas: number[],
+  interval: number,
+) {
+  let received = await page.evaluate(
+    () => (Reflect.get(window, '__snapRecoveryInputs') as unknown[]).length,
+  );
+  for (const [index, delta] of deltas.entries()) {
+    const sentAt = Date.now();
+    // Protocol dispatch does not acknowledge DOM delivery. Concurrent wheel
+    // commands can merge into larger packets before the page receives them.
+    // Keep one command in flight and wait for its actual browser receipt.
+    await page.mouse.wheel(0, delta);
+    await page.waitForFunction(
+      (count) =>
+        (Reflect.get(window, '__snapRecoveryInputs') as unknown[]).length >=
+        count,
+      ++received,
+      { polling: 5 },
+    );
+    if (index < deltas.length - 1) {
+      const remaining = interval - (Date.now() - sentAt);
+      if (remaining > 0)
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+    }
+  }
+}
+
 test('a wheel over a stationary card still reaches intent when later samples are uncancelable', async ({
   page,
 }, testInfo) => {
@@ -342,14 +371,7 @@ test('continued deliberate wheel pulses rearm after landing with the pointer fix
       [120, 'experience'],
       [-120, 'hero'],
     ] as const) {
-      // Schedule on the driver clock: awaiting a WebKit wheel round trip can
-      // itself create a >180ms pause and change the gesture under test.
-      await Promise.all(
-        Array.from({ length: 19 }, async (_, index) => {
-          await new Promise((resolve) => setTimeout(resolve, index * 90));
-          await page.mouse.wheel(0, delta);
-        }),
-      );
+      await sendWheelSequence(page, Array<number>(19).fill(delta), 90);
       await verifyWheelSequence(
         page,
         Array<number>(19).fill(delta),
@@ -490,12 +512,7 @@ test('a decaying wheel tail continuing beyond landing stays on its chosen chapte
       180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 50, 40, 32,
       24, 20, 16, 12, 8, 4, 2,
     ];
-    await Promise.all(
-      deltas.map(async (delta, index) => {
-        await new Promise((resolve) => setTimeout(resolve, index * 60));
-        await page.mouse.wheel(0, delta);
-      }),
-    );
+    await sendWheelSequence(page, deltas, 60);
     await verifyWheelSequence(page, deltas, browserName);
     await settled(page, 'scoring');
   });

@@ -616,6 +616,28 @@ test('scroll batching: one stationary scroll notification reads each chapter bou
     'data-chapter',
     'experience',
   );
+  // fonts.ready does not flush native anchor/ResizeObserver work. Measure
+  // steady-state batching only after those independent updates have settled.
+  await expect
+    .poll(() =>
+      page.evaluate(async () => {
+        const key = () =>
+          JSON.stringify([
+            scrollY,
+            document.documentElement.scrollHeight,
+            ...[
+              ...document.querySelectorAll<HTMLElement>('[data-story-stage]'),
+            ].map((el) => [
+              el.dataset.scrollReadStart,
+              el.dataset.scrollReadEnd,
+            ]),
+          ]);
+        const before = key();
+        await new Promise<void>((resolve) => setTimeout(resolve, 320));
+        return key() === before;
+      }),
+    )
+    .toBe(true);
   const reads = await page.evaluate(async () => {
     const chapters = new Set([
       'hero',

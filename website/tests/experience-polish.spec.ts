@@ -605,6 +605,9 @@ test('experience active record light stays paused until both gallery and hidden 
     Number(await light.evaluate((el) => getComputedStyle(el).opacity)),
   ).toBeCloseTo(before, 4);
   await page.locator('[data-viewer-close]').dispatchEvent('click');
+  // dialog.close() queues a native close event. Wait for that event to release
+  // the viewer's pause owner before advancing the independently mocked clock.
+  await expect(page.locator('html')).not.toHaveClass(/image-viewer-open/);
   await page.clock.runFor(400);
   await expect(record).toHaveAttribute('data-demo-invitation', 'playing');
   expect(

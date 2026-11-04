@@ -60,7 +60,16 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:4321',
     viewport: { width: 1440, height: 900 },
     reducedMotion: 'no-preference',
-    trace: 'retain-on-failure',
+    // Continuous trace snapshots/screencasts add protocol and GPU readback
+    // work during the very gestures and frames under measurement. Retain
+    // action/source traces and the separate failure screenshot without that
+    // capture workload changing native wheel delivery or render cadence.
+    trace: {
+      mode: 'retain-on-failure',
+      screenshots: false,
+      snapshots: false,
+      sources: true,
+    },
     screenshot: 'only-on-failure',
   },
   projects: [
