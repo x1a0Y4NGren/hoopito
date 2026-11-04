@@ -134,9 +134,9 @@ jobs:
   ui:
     name: UI (${{ matrix.browser }})
     needs: validate
-    # Keep native macOS/WebKit coverage without the ARM64 capacity queue.
-    # This is the standard Intel runner, not a paid larger-runner tier.
-    runs-on: ${{ matrix.browser == 'webkit' && 'macos-26-intel' || 'ubuntu-latest' }}
+    # Keep native Cocoa WebKit 27.2 / revision 2370 on a supported Intel host.
+    # The macOS 26 pool abandoned jobs before setup; this is a standard runner.
+    runs-on: ${{ matrix.browser == 'webkit' && 'macos-15-intel' || 'ubuntu-latest' }}
     # Native input/frame timing needs an exclusive browser worker. Keep the
     # full suite and allow its serial workload plus failure diagnostics.
     timeout-minutes: 35
