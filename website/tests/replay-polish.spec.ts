@@ -412,6 +412,60 @@ test('replay moment presentation follows the scroll playhead smoothly through ev
   });
 });
 
+for (const path of ['/', '/en/']) {
+  for (const layout of [
+    { name: 'wide desktop', width: 1920, height: 1200 },
+    { name: 'small mobile', width: 320, height: 740 },
+    { name: 'mobile', width: 390, height: 844 },
+    { name: '200 percent text', width: 1024, height: 640, largeText: true },
+  ]) {
+    test(`${path}: replay scores stay on one line at ${layout.name}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(layout);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await open(page, `${path}#replay`);
+      if (layout.largeText) {
+        await page.addStyleTag({ content: 'html{font-size:200%!important}' });
+        await stableLayout(page);
+      }
+      const samples = await page
+        .locator('[data-replay-red]')
+        .evaluate((red) => {
+          const original = red.textContent;
+          const score = red.closest<HTMLElement>('.replay-live-score')!;
+          const samples = ['0', '6', '8', '9', '11'].map((value) => {
+            red.textContent = value;
+            const text = document.createRange();
+            text.selectNodeContents(red);
+            const rows = new Set(
+              [...text.getClientRects()].map((rect) => rect.top),
+            );
+            return {
+              value,
+              rows: rows.size,
+              height: red.getBoundingClientRect().height,
+              lineHeight: parseFloat(getComputedStyle(red).lineHeight),
+              scoreWidth: score.getBoundingClientRect().width,
+              containerWidth:
+                score.parentElement!.getBoundingClientRect().width,
+            };
+          });
+          red.textContent = original;
+          return samples;
+        });
+      for (const sample of samples) {
+        expect(sample.rows, `score ${sample.value}`).toBe(1);
+        expect(sample.height).toBeLessThanOrEqual(sample.lineHeight + 1);
+        expect(sample.scoreWidth).toBeLessThanOrEqual(sample.containerWidth);
+      }
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+      ).toBeLessThanOrEqual(layout.width);
+    });
+  }
+}
+
 test('native replay wheels return a 23px preview and complete adjacent chapters in both directions with a fixed pointer', async ({
   page,
 }, info) => {

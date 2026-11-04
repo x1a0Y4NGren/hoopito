@@ -217,7 +217,9 @@ jobs:
     name: WebGL (Chromium software renderer, shard ${{ matrix.shard }}/2)
     needs: validate
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Software rendering can exceed the earlier 20-minute job limit before
+    # completing the full shard and uploading its diagnostics.
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:

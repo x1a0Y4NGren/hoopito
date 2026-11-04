@@ -1140,6 +1140,7 @@ body:not(.privacy-page) main {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+  white-space: nowrap;
   font-size: clamp(2.5rem, 3vw, 2.75rem);
   line-height: 1;
   letter-spacing: -0.03em;
