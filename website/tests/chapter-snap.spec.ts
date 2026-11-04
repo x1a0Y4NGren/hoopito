@@ -704,13 +704,7 @@ test('transition review video uses the production renderer and ordinary motion @
     await page.mouse.wheel(0, -60);
     await reading(page, 'scoring');
     await endTrace(page, testInfo, 'production-transition-frames');
-    await page.goto('/#download');
-    await reading(page, 'download');
-    await page.screenshot({ path: testInfo.outputPath('download.png') });
-    await page.goto('/#closing');
-    await reading(page, 'closing');
-    await page.screenshot({ path: testInfo.outputPath('closing.png') });
-    await testInfo.attach('production-runtime', {
+    await testInfo.attach('production-transition-runtime', {
       body: JSON.stringify(
         await page.evaluate(() => ({
           root: { ...document.documentElement.dataset },
@@ -731,5 +725,53 @@ test('transition review video uses the production renderer and ordinary motion @
         path: await video.path(),
         contentType: 'video/webm',
       });
+  }
+});
+
+test('production download and closing retain readable full-size captures @webgl', async ({
+  browser,
+}, testInfo) => {
+  const context = await browser.newContext({
+    baseURL: 'http://127.0.0.1:4321',
+    viewport: { width: 1440, height: 900 },
+    reducedMotion: 'no-preference',
+  });
+  try {
+    // These static checks need the real renderer, but no video encoder. Keeping
+    // them in the recording context added ~19s of unrelated frames and a 40s
+    // encoding drain after all assertions passed on a shared software runner.
+    const page = await context.newPage();
+    const available = await page.evaluate(() => {
+      const gl = document
+        .createElement('canvas')
+        .getContext('webgl2', { failIfMajorPerformanceCaveat: true });
+      gl?.getExtension('WEBGL_lose_context')?.loseContext();
+      return !!gl;
+    });
+    test.skip(!available, 'Production WebGL2 is unavailable.');
+    await open(page, '/#download', { css: false });
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d', {
+      timeout: 20000,
+    });
+    await reading(page, 'download');
+    await page.screenshot({ path: testInfo.outputPath('download.png') });
+    await page.goto('/#closing');
+    await reading(page, 'closing');
+    await page.screenshot({ path: testInfo.outputPath('closing.png') });
+    await testInfo.attach('production-runtime', {
+      body: JSON.stringify(
+        await page.evaluate(() => ({
+          root: { ...document.documentElement.dataset },
+          canvas: {
+            ...(document.querySelector('#court-canvas') as HTMLElement).dataset,
+          },
+        })),
+        null,
+        2,
+      ),
+      contentType: 'application/json',
+    });
+  } finally {
+    await context.close();
   }
 });

@@ -476,7 +476,10 @@ test.describe('fine input at the reported viewport and DPR', () => {
           ).toBeLessThan(180);
           return inputs;
         };
-        await burst(1600);
+        // Leave a fourth 80ms confirmation window after the first landing:
+        // a 16ms-clamped stream can put one extra packet in the first bucket.
+        // Keep the production decay policy and all input-qualification checks.
+        await burst(1800);
         const scoring = await range(page, 'scoring');
         const targetRange = await range(page, target);
         const y = await page.evaluate(() => scrollY);

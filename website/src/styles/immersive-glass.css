@@ -1,5 +1,10 @@
 /* One continuous arena. Surfaces are semantic HTML; the optical renderer
    replaces only their CSS tint and blur when its complete pass is ready. */
+html[data-scroll-state] body:not(.privacy-page) {
+  /* The story controller owns document position, including reflow recovery.
+     Native anchoring must not offset it again when pins/cards change pose. */
+  overflow-anchor: none;
+}
 body:not(.privacy-page) {
   --glass-radius: 20px;
   --muted: #bec2bb;
