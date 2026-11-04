@@ -81,8 +81,14 @@ export default defineConfig({
         channel: 'chromium',
         viewport: { width: 1440, height: 900 },
         launchOptions: {
+          // Only WebGL needs the software driver. Forcing browser compositing
+          // through it also slows CSS glass/scroll tests which never draw 3D.
           args: process.env.CI
-            ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader']
+            ? [
+                '--use-gl=angle',
+                '--use-angle=swiftshader-webgl',
+                '--enable-unsafe-swiftshader',
+              ]
             : ['--enable-gpu'],
         },
       },

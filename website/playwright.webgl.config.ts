@@ -13,7 +13,7 @@ export default defineConfig({
       ...chromium,
       use: {
         ...chromium.use,
-        // CI supplies a virtual display. Exercise full Chrome's windowed frame
+        // CI supplies a desktop display. Exercise full Chrome's windowed frame
         // lifecycle instead of the headless software compositor's frame pump.
         headless: process.env.CI ? false : chromium.use?.headless,
         launchOptions: {

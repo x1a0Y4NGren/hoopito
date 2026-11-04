@@ -378,14 +378,44 @@ test('horizontal, zoom and nested text scrolling do not trigger chapter switchin
 test('navigation and modal opening cancel the old scroll owner', async ({
   page,
 }) => {
+  // Observe the trusted input before the controller's capture listener cancels
+  // the old task; observing later would correctly see its already-idle state.
+  await page.addInitScript(() => {
+    window.addEventListener(
+      'pointerdown',
+      (event) => {
+        Reflect.set(window, '__navigationTakeoverInput', {
+          trusted: event.isTrusted,
+          link: (event.target as Element).closest('.nav-download') !== null,
+          state: document.documentElement.dataset.scrollState,
+        });
+      },
+      { once: true, capture: true },
+    );
+  });
   await open(page);
   await reading(page, 'hero');
+  const navigation = await page.locator('.nav-download').boundingBox();
+  expect(navigation).not.toBeNull();
+  await page.mouse.move(
+    navigation!.x + navigation!.width / 2,
+    navigation!.y + navigation!.height / 2,
+  );
   await page.mouse.wheel(0, 60);
   await expect(page.locator('html')).toHaveAttribute(
     'data-scroll-state',
     'settling',
   );
-  await page.locator('.nav-download').click();
+  // Keep the native pointer on the fixed header. A locator's preparatory
+  // scrollIntoView can compete with the owned flight in Firefox/APZ; it is
+  // not part of the user's click and must not take over this test's scroll.
+  await page.mouse.click(
+    navigation!.x + navigation!.width / 2,
+    navigation!.y + navigation!.height / 2,
+  );
+  expect(
+    await page.evaluate(() => Reflect.get(window, '__navigationTakeoverInput')),
+  ).toEqual({ trusted: true, link: true, state: 'settling' });
   await reading(page, 'download');
   await page.locator('.download-package [data-download]').click();
   await expect(page.locator('[data-download-dialog]')).toBeVisible();

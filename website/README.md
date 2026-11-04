@@ -141,14 +141,16 @@ npm run test:e2e
 ```
 
 Playwright 自动启动本地 `preview` 服务；失败时保留 trace 与截图，报告位于
-`output/playwright/`。Linux CI 为每个任务仅安装所需浏览器及运行时依赖。
-Playwright WebKit 是其打包引擎的自动化覆盖，不等同于实际 macOS／iOS Safari 验收。
+`output/playwright/`。CI 为每个任务仅安装所需浏览器；Linux UI 任务另装运行时依赖。
+Playwright WebKit 在 macOS 原生 Cocoa 宿主运行，仍是其打包引擎的自动化覆盖，
+不等同于实际 macOS／iOS Safari 验收。Linux WPE WebKit 的超时与布局／历史导航问题
+仍由 [Issue #45](https://github.com/x1a0Y4NGren/hoopito/issues/45) 跟踪，不能据此声称 Linux 已修复。
 构建预算以逐文件 gzip 计算：移动首屏每种语言不超过 500 KiB，桌面 3D
 增量不超过 800 KiB。体积检查、模拟设备检查和真实 GPU 帧率各自保留证据。
 CI 先执行 15 分钟有界的 `validate`，只构建一次；生成包含源码提交 SHA、逐文件
 SHA-256、字节数和总摘要的 `build-artifact.json`，连同 `dist/` 上传当前运行的构建产物。
-三个普通 UI 任务（Chromium／Firefox／WebKit，各25分钟、2 workers）与 Chromium
-软件 WebGL 的两个分片（各35分钟、1 worker）只依赖 `validate`，使用独立 runner；
+三个普通 UI 任务（Linux Chromium／Firefox、macOS WebKit，各25分钟、2 workers）与 Chromium
+软件 WebGL 的两个分片（Windows，各35分钟、1 worker）只依赖 `validate`，使用独立 runner；
 任一浏览器或分片失败不取消其余任务。普通 UI 关闭 WebGL，标记 `@webgl` 的检查按
 [Playwright sharding](https://playwright.dev/docs/test-sharding)分到两个独立任务，分片内部串行运行。
 两个分片的用例并集必须等于完整 WebGL 清单，均完成且零失败／flaky才算该组通过。
@@ -158,11 +160,14 @@ WebGL 任务使用 `playwright.webgl.config.ts`，保留完整 Chromium；CI 按
 采用软件合成器，仅将 WebGL 绘制交给 SwiftShader，避免把它同时用作整个浏览器的 GL 驱动。
 该配置继承原有用例、超时、画质与失败证据设置；本地仍使用现有真实 GPU 启动参数。
 软件渲染检查只证明场景与交互生命周期，不代表真实 GPU 的显示帧率。
-CI 的 WebGL 检查以有窗口模式运行，由
-[Xvfb 虚拟显示](https://playwright.dev/docs/ci#running-headed)提供 1920×1080 屏幕，
-避免依赖无头软件合成器的帧调度；普通 UI 和本地启动方式不变。日志保存实际浏览器
+CI 的 WebGL 检查在 Windows runner 上以有窗口模式运行，直接使用其桌面，
+通过 `npx playwright install --no-shell chromium` 安装完整浏览器，无需 Linux 的 Xvfb 或 APT。
+Linux SwiftShader 的初始 WebGL 加载问题仍由 [Issue #45](https://github.com/x1a0Y4NGren/hoopito/issues/45)
+跟踪；切换执行环境不减少用例或放宽门禁。普通 UI 保持无头运行，本地启动参数不变。日志保存实际浏览器
 启动参数，WebGL 报告附上现有画布、渲染器、可见性及运行环境信息。
-WebGL 任务还以两秒间隔保存 `runtime.jsonl`，记录主机 CPU／内存、可用的 cgroup
+WebGL 任务还保存 `runtime.jsonl`；Windows 仅记录平台、CPU 型号／数量等运行环境元数据
+与子进程退出结果，不提供 Linux `/proc`、cgroup 或 Chromium 进程资源计数。
+在 Linux 手动运行该采样器时，才以两秒间隔记录主机 CPU／内存、可用的 cgroup
 资源限制与本任务 Chromium 子进程的原始计数，供失败时区分资源争用和进程积累。
 采样不保存原始环境变量或命令行，不改变测试结果、时限、画质及绘制流程。
 测试任务只下载当前工作流运行中按完整提交 SHA 命名的构建，校验本地源码身份、文件集合
@@ -179,11 +184,12 @@ WebGL 任务还以两秒间隔保存 `runtime.jsonl`，记录主机 CPU／内存
 双向检查，保留 2px／0.5° 精度。开场使用加载前安装的受控时钟和逐帧 `runFor()`
 检查真实开场进度、中间／最终投影有效性与停绘；稳定阅读、下载和恢复交互使用真实时钟。
 这些软件 WebGL 功能检查不代表真实 GPU 帧率或开场墙钟耗时。
-浏览器安装通过 `scripts/install-ci-browser.sh` 在一次性 Linux runner 上执行：
-安装期间将 Azure HTTP 镜像入口替换为 Ubuntu 官方 HTTPS archive，并按
+Linux UI 的浏览器安装通过 `scripts/install-ci-browser.sh` 在一次性 runner 上执行；
+macOS WebKit 直接用 `npx playwright install --no-shell webkit` 安装完整套件所需引擎。
+Linux 安装期间将 Azure HTTP 镜像入口替换为 Ubuntu 官方 HTTPS archive，并按
 [APT 配置](https://manpages.ubuntu.com/manpages/jammy/man5/apt.conf.5.html)
 限制连接／数据停滞为30秒、失败重试2次。安装结束恢复原镜像和临时配置；
-不禁用包签名验证、不重试测试，不延长15／20分钟任务时限。
+不禁用包签名验证、不重试测试，不改变测试与任务时限。
 本机 `npm run test:e2e` 仍运行完整组合。可在 `website/` 手动校验构建：
 
 ```powershell
