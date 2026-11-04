@@ -522,10 +522,11 @@ for (const path of ['/', '/en/']) {
     }
     await expect(card).toHaveCSS('opacity', '1');
     await expect(page.locator('[data-download-dialog]')).not.toBeVisible();
-    // Establish keyboard modality without Tab's native jump to a later button
-    // on systems that skip links. That jump can make this chapter inert before
-    // programmatic focus reaches the action being measured.
-    await page.keyboard.press('ArrowLeft');
+    // Native Tab navigation establishes Firefox's keyboard focus mode. Start
+    // at this action and move backward so WebKit cannot skip links forward
+    // into a later chapter and make the hero inert before focus returns.
+    await button.focus();
+    await page.keyboard.press('Shift+Tab');
     await button.focus();
     await expect(button).toBeFocused();
     await expect(button).toHaveCSS('outline-style', 'solid');
