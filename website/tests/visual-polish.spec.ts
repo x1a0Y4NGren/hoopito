@@ -202,15 +202,19 @@ async function beginMotionTrace(page: Page) {
     let wheelAt: number | undefined;
     const wheel = () => (wheelAt ??= performance.now());
     window.addEventListener('wheel', wheel, { capture: true });
-    const schedule = () =>
-      requestAnimationFrame(() => {
-        // A newly awakened GSAP ticker may be later in this frame's RAF queue.
-        // Observe after all animation callbacks and their DOM-update microtasks,
-        // rather than labeling the previous frame's pose with the current time.
-        setTimeout(() => {
-          if (active) sample();
-        }, 0);
+    // Observe the actual DOM submission, before a paint can delay a timer task.
+    // A RAF -> timer chain can label the previous submitted pose with a later
+    // task's time. That cannot establish its onset or cosine phase. This still
+    // uses real time and preserves every cadence/partial-pose assertion below.
+    let queued = false;
+    const observer = new MutationObserver(() => {
+      if (queued || !active) return;
+      queued = true;
+      queueMicrotask(() => {
+        queued = false;
+        if (active) sample();
       });
+    });
     const sample = () => {
       const samplingStarted = performance.now();
       const roles = [
@@ -248,11 +252,16 @@ async function beginMotionTrace(page: Page) {
         roles,
         opticalErrors,
       });
-      if (active) schedule();
     };
-    schedule();
+    observer.observe(document.documentElement, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'data-scroll-state', 'data-scroll-stop'],
+    });
+    sample();
     Reflect.set(window, '__finishPolishMotionTrace', () => {
       active = false;
+      observer.disconnect();
       window.removeEventListener('wheel', wheel, { capture: true });
       sample();
       return { wheelAt, frames };

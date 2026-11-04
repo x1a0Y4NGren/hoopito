@@ -1,4 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
+import { installScrollAudit, attachScrollAudit } from './scroll-audit';
+
+test.beforeEach(async ({ page }) => installScrollAudit(page));
+test.afterEach(async ({ page }, testInfo) => attachScrollAudit(page, testInfo));
 
 const ids = [
   'hero',
