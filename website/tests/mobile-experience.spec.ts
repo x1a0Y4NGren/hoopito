@@ -626,14 +626,43 @@ test('native phone touch selects the SVG court before and after a real touch scr
     await expect(page.locator('[data-blue-score]')).toHaveText('6');
     await expect(record).toBeDisabled();
     const beforeScroll = await page.evaluate(() => scrollY);
+    const nativeEvents = await page.evaluateHandle(() => {
+      const seen = {
+        touchstart: 0,
+        touchmove: 0,
+        touchend: 0,
+        scroll: 0,
+        trusted: true,
+      };
+      for (const type of [
+        'touchstart',
+        'touchmove',
+        'touchend',
+        'scroll',
+      ] as const) {
+        window.addEventListener(
+          type,
+          (event) => {
+            seen[type]++;
+            seen.trusted &&= event.isTrusted;
+          },
+          { passive: true },
+        );
+      }
+      return seen;
+    });
     await session.send('Input.dispatchTouchEvent', {
       type: 'touchStart',
       touchPoints: [{ x: 20, y: 700, id: 1 }],
     });
     for (let step = 1; step <= 12; step++) {
+      // Decelerate before lifting. A constant-speed swipe leaves compositor
+      // inertia that consumes the next tap without dispatching a click, even
+      // when the chapter controller already reports idle.
+      const distance = 180 * (1 - (1 - step / 12) ** 3);
       await session.send('Input.dispatchTouchEvent', {
         type: 'touchMove',
-        touchPoints: [{ x: 20, y: 700 - step * 15, id: 1 }],
+        touchPoints: [{ x: 20, y: 700 - distance, id: 1 }],
       });
       await page.waitForTimeout(16);
     }
@@ -645,8 +674,15 @@ test('native phone touch selects the SVG court before and after a real touch scr
       .poll(() => page.evaluate(() => scrollY))
       .toBeGreaterThan(beforeScroll + 30);
     const afterScroll = await page.evaluate(() => scrollY);
+    const events = await nativeEvents.jsonValue();
+    await nativeEvents.dispose();
+    expect(events.touchstart).toBe(1);
+    expect(events.touchmove).toBeGreaterThan(0);
+    expect(events.touchend).toBe(1);
+    expect(events.scroll).toBeGreaterThan(0);
+    expect(events.trusted).toBe(true);
     samples.push({
-      nativeScroll: { before: beforeScroll, after: afterScroll },
+      nativeScroll: { before: beforeScroll, after: afterScroll, events },
     });
     await selectAt(0.65, 0.55);
     await record.tap();

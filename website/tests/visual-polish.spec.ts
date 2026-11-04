@@ -1,5 +1,6 @@
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import sharp from 'sharp';
+import { installContractClock, sampleRenderedFlight } from './controlled-clock';
 
 const sceneChunk = /court-scene[^/]*\.(?:js|ts)(?:\?|$)/;
 const stops = [
@@ -201,6 +202,15 @@ async function beginMotionTrace(page: Page) {
     let wheelAt: number | undefined;
     const wheel = () => (wheelAt ??= performance.now());
     window.addEventListener('wheel', wheel, { capture: true });
+    const schedule = () =>
+      requestAnimationFrame(() => {
+        // A newly awakened GSAP ticker may be later in this frame's RAF queue.
+        // Observe after all animation callbacks and their DOM-update microtasks,
+        // rather than labeling the previous frame's pose with the current time.
+        setTimeout(() => {
+          if (active) sample();
+        }, 0);
+      });
     const sample = () => {
       const samplingStarted = performance.now();
       const roles = [
@@ -238,9 +248,9 @@ async function beginMotionTrace(page: Page) {
         roles,
         opticalErrors,
       });
-      if (active) requestAnimationFrame(sample);
+      if (active) schedule();
     };
-    requestAnimationFrame(sample);
+    schedule();
     Reflect.set(window, '__finishPolishMotionTrace', () => {
       active = false;
       window.removeEventListener('wheel', wheel, { capture: true });
@@ -761,41 +771,53 @@ test('keyboard, navigation and modal actions take over a committed motion', asyn
   });
 });
 
-test('@webgl both flight directions keep rendered optical regions on their real DOM cards', async ({
-  page,
-}, testInfo) => {
-  test.setTimeout(60_000);
-  const capable = await page.evaluate(() => {
-    const context = document
-      .createElement('canvas')
-      .getContext('webgl2', { failIfMajorPerformanceCaveat: true });
-    context?.getExtension('WEBGL_lose_context')?.loseContext();
-    return !!context;
-  });
-  await attach(testInfo, 'webgl-capability', { capable });
-  test.skip(
-    !capable,
-    'Production WebGL2 capability probe is unavailable; CSS coverage runs separately.',
-  );
-  // Observe real scene submissions and flushes, without changing their timing,
-  // input, material, quality or rendering behavior.
-  await page.route(sceneChunk, async (route) => {
-    const response = await route.fetch();
-    let body = await response.text();
-    const exports = body.match(/export\s*\{([^}]*\bcreateCourtScene\b[^}]*)\}/);
-    const factory = exports?.[1].match(
-      /(?:^|,)\s*([\w$]+)\s+as\s+createCourtScene\b/,
-    )?.[1];
-    if (!exports || !factory)
-      throw new Error('Cannot observe the production scene factory.');
-    body = body.replace(
-      exports[0],
-      exports[0].replace(
-        /[\w$]+\s+as\s+createCourtScene\b/,
-        '__polishSceneCreate as createCourtScene',
-      ),
+for (const [source, edge, delta] of [
+  ['hero', 'end', 24],
+  ['experience', 'start', -24],
+] as const) {
+  test(`@webgl both flight directions keep rendered optical regions on their real DOM cards: from ${source}`, async ({
+    page,
+  }, testInfo) => {
+    test.setTimeout(60_000);
+    const capable = await page.evaluate(() => {
+      const context = document
+        .createElement('canvas')
+        .getContext('webgl2', { failIfMajorPerformanceCaveat: true });
+      context?.getExtension('WEBGL_lose_context')?.loseContext();
+      return !!context;
+    });
+    await attach(testInfo, 'webgl-capability', { capable });
+    test.skip(
+      !capable,
+      'Production WebGL2 capability probe is unavailable; CSS coverage runs separately.',
     );
-    body += `\nasync function __polishSceneCreate(...args) {
+    const pauseClock = await installContractClock(page);
+    testInfo.annotations.push({
+      type: 'clock',
+      description:
+        'Controlled 50ms pose samples with actual production draws; not wall-clock performance evidence.',
+    });
+    // Observe real scene submissions and flushes. The sampled animation clock
+    // controls pose coverage; native input, material and production draws remain.
+    await page.route(sceneChunk, async (route) => {
+      const response = await route.fetch();
+      let body = await response.text();
+      const exports = body.match(
+        /export\s*\{([^}]*\bcreateCourtScene\b[^}]*)\}/,
+      );
+      const factory = exports?.[1].match(
+        /(?:^|,)\s*([\w$]+)\s+as\s+createCourtScene\b/,
+      )?.[1];
+      if (!exports || !factory)
+        throw new Error('Cannot observe the production scene factory.');
+      body = body.replace(
+        exports[0],
+        exports[0].replace(
+          /[\w$]+\s+as\s+createCourtScene\b/,
+          '__polishSceneCreate as createCourtScene',
+        ),
+      );
+      body += `\nasync function __polishSceneCreate(...args) {
       const scene = await ${factory}(...args);
       let surfaces = [];
       const frames = [];
@@ -818,31 +840,29 @@ test('@webgl both flight directions keep rendered optical regions on their real 
       };
       return scene;
     }`;
-    await route.fulfill({ response, body, contentType: 'text/javascript' });
-  });
-  await open(page, '/#hero', { css: false });
-  // A positive capability probe followed by failed startup is a test failure,
-  // not a reason to reclassify the run as unsupported WebGL.
-  await expect(page.locator('html')).toHaveAttribute('data-scene', '3d', {
-    timeout: 20_000,
-  });
-  const flights: {
-    source: string;
-    started: number;
-    ended: number;
-    from: number;
-    to: number;
-  }[] = [];
-  for (const [source, edge, delta] of [
-    ['hero', 'end', 24],
-    ['experience', 'start', -24],
-  ] as const) {
+      await route.fulfill({ response, body, contentType: 'text/javascript' });
+    });
+    await open(page, '/#hero', { css: false });
+    // A positive capability probe followed by failed startup is a test failure,
+    // not a reason to reclassify the run as unsupported WebGL.
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d', {
+      timeout: 20_000,
+    });
+    const flights: {
+      source: string;
+      started: number;
+      ended: number;
+      from: number;
+      to: number;
+    }[] = [];
     await seekEdge(page, source, edge);
     await page.mouse.move(20, 450);
+    await pauseClock();
     const from = await page.evaluate(() => scrollY);
     const to = (await range(page, 'scoring'))[delta > 0 ? 'start' : 'end'];
     const started = await page.evaluate(() => performance.now());
     await page.mouse.wheel(0, delta);
+    await sampleRenderedFlight(page);
     await reading(page, 'scoring');
     flights.push({
       source,
@@ -851,62 +871,62 @@ test('@webgl both flight directions keep rendered optical regions on their real 
       from,
       to,
     });
-  }
-  const frames = await page.evaluate(
-    () =>
-      Reflect.get(window, '__polishOpticalFrames') as {
-        time: number;
-        y: number;
-        quality: string;
-        glass: string;
-        surfaces: { error: number }[];
-      }[],
-  );
-  await attach(testInfo, 'all-production-optical-flushes', frames);
-  await attach(testInfo, 'production-flight-intervals', flights);
-  expect(frames.length).toBeGreaterThan(6);
-  for (const flight of flights) {
-    const moving = frames.filter(
-      (frame) =>
-        frame.time >= flight.started &&
-        frame.time <= flight.ended &&
-        Math.min(flight.from, flight.to) + 2 < frame.y &&
-        frame.y < Math.max(flight.from, flight.to) - 2,
+    const frames = await page.evaluate(
+      () =>
+        Reflect.get(window, '__polishOpticalFrames') as {
+          time: number;
+          y: number;
+          quality: string;
+          glass: string;
+          surfaces: { error: number }[];
+        }[],
     );
-    expect(
-      moving.length,
-      `${flight.source}: real rendered moving frames`,
-    ).toBeGreaterThan(3);
-  }
-  const optical = frames.filter(
-    (frame) => frame.quality === 'full' && frame.glass === 'webgl',
-  );
-  await attach(testInfo, 'optical-capability-result', {
-    renderedFrames: frames.length,
-    opticalFrames: optical.length,
-    modes: [
-      ...new Set(frames.map((frame) => `${frame.quality}/${frame.glass}`)),
-    ],
-  });
-  if (optical.length) {
-    expect(
-      optical.filter((frame) => frame.surfaces.length).length,
-    ).toBeGreaterThan(6);
-    expect(
-      Math.max(
-        ...optical.flatMap((frame) =>
-          frame.surfaces.map((surface) => surface.error),
-        ),
-      ),
-    ).toBeLessThan(0.1);
-  } else {
-    testInfo.annotations.push({
-      type: 'capability',
-      description:
-        'WebGL court rendered with CSS optics; this run does not establish WebGL optical contour coverage.',
+    await attach(testInfo, 'all-production-optical-flushes', frames);
+    await attach(testInfo, 'production-flight-intervals', flights);
+    expect(frames.length).toBeGreaterThan(6);
+    for (const flight of flights) {
+      const moving = frames.filter(
+        (frame) =>
+          frame.time >= flight.started &&
+          frame.time <= flight.ended &&
+          Math.min(flight.from, flight.to) + 2 < frame.y &&
+          frame.y < Math.max(flight.from, flight.to) - 2,
+      );
+      expect(
+        moving.length,
+        `${flight.source}: real rendered moving frames`,
+      ).toBeGreaterThan(3);
+    }
+    const optical = frames.filter(
+      (frame) => frame.quality === 'full' && frame.glass === 'webgl',
+    );
+    await attach(testInfo, 'optical-capability-result', {
+      renderedFrames: frames.length,
+      opticalFrames: optical.length,
+      modes: [
+        ...new Set(frames.map((frame) => `${frame.quality}/${frame.glass}`)),
+      ],
     });
-  }
-  for (const frame of frames.filter((frame) => frame.quality !== 'full')) {
-    expect(frame.surfaces).toHaveLength(0);
-  }
-});
+    if (optical.length) {
+      expect(
+        optical.filter((frame) => frame.surfaces.length).length,
+      ).toBeGreaterThan(6);
+      expect(
+        Math.max(
+          ...optical.flatMap((frame) =>
+            frame.surfaces.map((surface) => surface.error),
+          ),
+        ),
+      ).toBeLessThan(0.1);
+    } else {
+      testInfo.annotations.push({
+        type: 'capability',
+        description:
+          'WebGL court rendered with CSS optics; this run does not establish WebGL optical contour coverage.',
+      });
+    }
+    for (const frame of frames.filter((frame) => frame.quality !== 'full')) {
+      expect(frame.surfaces).toHaveLength(0);
+    }
+  });
+}

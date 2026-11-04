@@ -7,7 +7,22 @@ const sceneChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
 async function ready(page: Page, path = '/#experience') {
   await page.route(sceneChunk, (route) => route.abort());
   await page.goto(path, { waitUntil: 'domcontentloaded' });
-  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(async () => {
+    // WebKit can hold fonts.ready until the document load event. This suite
+    // deliberately stalls a court image, so wait for its actual text faces
+    // rather than creating a dependency on the image we have not released.
+    const text = ['#experience h2', '[data-blue-score]', '.demo-status'];
+    await Promise.all(
+      text.map((selector) => {
+        const element = document.querySelector<HTMLElement>(selector)!;
+        const style = getComputedStyle(element);
+        return document.fonts.load(
+          `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`,
+          element.textContent ?? '',
+        );
+      }),
+    );
+  });
   await expect(page.locator('[data-point-preset="center"]')).toBeEnabled();
   await expect(page.locator('[data-story-stage="experience"]')).toHaveAttribute(
     'data-scroll-read-end',

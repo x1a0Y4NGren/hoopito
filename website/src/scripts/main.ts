@@ -1,5 +1,6 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { createAnimationClock } from './animation-clock';
 import { initialDemoState, reduceDemo, type DemoAction } from './demo-state';
 import { createScreenshotViewer } from './screenshot-viewer';
 import { createDownloadChooser } from './download-chooser';
@@ -127,12 +128,12 @@ let sceneGlassMode: 'webgl' | 'css' = 'css';
 let shotFeedback: ReturnType<typeof createShotFeedback> | undefined;
 let scoringFeedback: ReturnType<typeof createScoringFeedback> | undefined;
 let demoInvitation: ReturnType<typeof createDemoInvitation> | undefined;
-const suspension = new Set<string>(document.hidden ? ['hidden'] : []);
+const animationClock = createAnimationClock(document.hidden ? ['hidden'] : []);
+const suspension = animationClock.suspension;
 function setSuspended(reason: string, paused: boolean) {
   if (paused) mobileTouch?.cancel();
   if (paused) chapterScroll?.cancel();
-  if (paused) suspension.add(reason);
-  else suspension.delete(reason);
+  animationClock.setSuspended(reason, paused);
   chapterRail?.setPaused(suspension.size > 0);
   mobilePresentation?.setPaused(suspension.size > 0);
   scene?.setPaused(suspension.size > 0);
@@ -1326,6 +1327,30 @@ const observedCardSizes = new WeakMap<
   Element,
   { width: number; height: number }
 >();
+function scheduleContentRefresh() {
+  if (disposed) return;
+  // Preserve a committed destination before the debounce can outlive its tween.
+  chapterScroll?.prepareRefresh();
+  onScroll();
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (disposed) return;
+    if (needsChoreographyRefresh()) refreshChoreography();
+    else ScrollTrigger.refresh();
+    updateStory();
+  }, 120);
+}
+function onDisclosureToggle(event: Event) {
+  // Native details can expand while a browser defers resize delivery. Their
+  // semantic event guarantees a new reading map, without waiting for that
+  // observer or rebuilding unrelated pins on every animation frame.
+  if (
+    event.target instanceof HTMLDetailsElement &&
+    event.target.closest('main, #closing')
+  )
+    scheduleContentRefresh();
+}
+document.addEventListener('toggle', onDisclosureToggle, true);
 const cardResizeObserver = new ResizeObserver((entries) => {
   if (disposed) return;
   let changed = false;
@@ -1344,16 +1369,7 @@ const cardResizeObserver = new ResizeObserver((entries) => {
   // Initial observation and subpixel pin rounding do not change document layout.
   // Rebuilding pins for those samples could interrupt the first wheel transition.
   if (!changed) return;
-  // Preserve a committed destination before the debounce can outlive its tween.
-  chapterScroll?.prepareRefresh();
-  onScroll();
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    if (disposed) return;
-    if (needsChoreographyRefresh()) refreshChoreography();
-    else ScrollTrigger.refresh();
-    updateStory();
-  }, 120);
+  scheduleContentRefresh();
 });
 for (const element of new Set<Element>([
   siteHeader,
@@ -1559,6 +1575,7 @@ window.addEventListener('pagehide', (event) => {
   stopFlight();
   stopScene();
   cardResizeObserver.disconnect();
+  document.removeEventListener('toggle', onDisclosureToggle, true);
   document.removeEventListener('focusin', onScroll);
   choreography.revert();
   replayPresentation.restore();

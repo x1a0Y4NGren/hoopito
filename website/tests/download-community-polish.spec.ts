@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { release } from '../src/data/release';
 import { community } from '../src/data/community';
+import { expectAnchorReading } from './reading-ready';
 
 const sceneChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
 
@@ -438,6 +439,7 @@ for (const path of ['/', '/en/']) {
     await open(page, `${path}#download`);
     await page.addStyleTag({ content: 'html{font-size:200%!important}' });
     await stableLayout(page);
+    await expectAnchorReading(page, 'download');
     const collapsed = await range(page, 'download');
     const motions = [];
     for (const [selector, bodySelector] of [

@@ -105,6 +105,10 @@ export default defineConfig({
       use: {
         ...devices['Desktop Safari'],
         viewport: { width: 1440, height: 900 },
+        // Match the other engines' baseline raster workload. Safari's device
+        // preset silently defaults to 2x (four times the pixels); Retina/DPR
+        // checks create explicit contexts independently of this baseline.
+        deviceScaleFactor: 1,
       },
     },
   ],

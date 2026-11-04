@@ -8,6 +8,7 @@ import {
   storyStageOffset,
 } from '../src/scripts/story-choreography';
 import { getReplayState } from '../src/data/replay-example';
+import { expectAnchorReading } from './reading-ready';
 
 const test = base.extend({
   page: async ({ page }, use, testInfo) => {
@@ -2532,6 +2533,7 @@ test('short desktop scoring flows naturally and changes its explanation only on 
   await page.setViewportSize({ width: 1440, height: 650 });
   await page.route(threeChunk, (route) => route.abort());
   await page.goto('/#scoring');
+  await expectAnchorReading(page, 'scoring');
   await expect(page.locator('[data-score-feature="0"]')).toBeEnabled();
   await page.addStyleTag({ content: 'html {scroll-behavior:auto !important}' });
   const stage = page.locator('[data-story-stage="scoring"]');
@@ -2591,10 +2593,14 @@ test('short desktop scoring flows naturally and changes its explanation only on 
   await expect(device).toHaveAttribute('data-score-focus', '2');
   await expect(page.locator('[data-score-step]')).toHaveText('03 / 03');
   await page.locator('#download').scrollIntoViewIfNeeded();
-  await stage.scrollIntoViewIfNeeded();
+  // Navigate to the complete reading position. Scrolling a stage's box into
+  // view can leave its animated controls outside that position and inert.
+  await page.locator('[data-rail-node="scoring"]').click();
+  await expectAnchorReading(page, 'scoring');
   await expect(device).toHaveAttribute('data-score-focus', '2');
   const feature = page.locator('[data-score-feature="1"]');
   await feature.focus();
+  await expect(feature).toBeFocused();
   await expect(device).toHaveAttribute('data-score-focus', '2');
   await page.keyboard.press('Enter');
   await expect(device).toHaveAttribute('data-score-focus', '1');
@@ -2604,7 +2610,8 @@ test('short desktop scoring flows naturally and changes its explanation only on 
   await expect(device).toHaveAttribute('data-score-focus', '1');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.setViewportSize({ width: 1440, height: 900 });
-  await stage.scrollIntoViewIfNeeded();
+  await page.locator('[data-rail-node="scoring"]').click();
+  await expectAnchorReading(page, 'scoring');
   await expect(device).toHaveAttribute('data-score-focus', '1');
   expect(await device.evaluate((e) => getComputedStyle(e).transform)).toBe(
     'none',
@@ -2643,6 +2650,7 @@ for (const locale of locales) {
   }) => {
     await page.route(threeChunk, (route) => route.abort());
     await page.goto(`${locale.path}#scoring`);
+    await expectAnchorReading(page, 'scoring');
     await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
     await page.locator('[data-score-feature="2"]').click();
     const controls = page.locator('[data-score-controls]');

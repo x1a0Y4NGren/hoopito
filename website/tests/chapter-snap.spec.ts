@@ -341,38 +341,75 @@ test('horizontal, zoom and nested text scrolling do not trigger chapter switchin
   await open(page);
   await reading(page, 'hero');
   await page.mouse.wheel(120, 0);
-  await page.keyboard.down('Control');
-  await page.mouse.wheel(0, 60);
-  await page.keyboard.up('Control');
-  await expect(page.locator('html')).not.toHaveAttribute(
-    'data-scroll-state',
-    'settling',
-  );
-  await expect(page.locator('html')).toHaveAttribute(
-    'data-scroll-stop',
-    'hero',
-  );
-  await page.evaluate(() => {
-    const input = document.createElement('textarea');
-    input.id = 'snap-nested-reader';
-    input.style.cssText =
-      'position:fixed;top:150px;left:150px;width:200px;height:120px;z-index:99';
-    input.value = Array.from(
-      { length: 100 },
-      (_, i) => `Nested reading line ${i}`,
-    ).join('\n');
-    document.body.append(input);
-  });
-  const reader = page.locator('#snap-nested-reader');
-  await reader.hover();
-  await page.mouse.wheel(0, 120);
-  await expect
-    .poll(() => reader.evaluate((element) => element.scrollTop))
-    .toBeGreaterThan(0);
-  await expect(page.locator('html')).toHaveAttribute(
-    'data-scroll-stop',
-    'hero',
-  );
+  const originalWidth = await page.evaluate(() => innerWidth);
+  async function controlWheel(deltaY: number) {
+    await page.keyboard.down('Control');
+    try {
+      const [trustedZoom] = await Promise.all([
+        page.evaluate(
+          () =>
+            new Promise<boolean>((resolve) => {
+              window.addEventListener(
+                'wheel',
+                (event) => {
+                  requestAnimationFrame(() =>
+                    requestAnimationFrame(() =>
+                      resolve(event.isTrusted && event.ctrlKey),
+                    ),
+                  );
+                },
+                { once: true },
+              );
+            }),
+        ),
+        page.mouse.wheel(0, deltaY),
+      ]);
+      expect(trustedZoom).toBe(true);
+    } finally {
+      await page.keyboard.up('Control');
+    }
+  }
+  try {
+    await controlWheel(60);
+    await expect(page.locator('html')).not.toHaveAttribute(
+      'data-scroll-state',
+      'settling',
+    );
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-scroll-stop',
+      'hero',
+    );
+    await page.evaluate(() => {
+      const input = document.createElement('textarea');
+      input.id = 'snap-nested-reader';
+      input.style.cssText =
+        'position:fixed;top:150px;left:150px;width:200px;height:120px;z-index:99';
+      input.value = Array.from(
+        { length: 100 },
+        (_, i) => `Nested reading line ${i}`,
+      ).join('\n');
+      document.body.append(input);
+    });
+    const reader = page.locator('#snap-nested-reader');
+    await reader.hover();
+    await page.mouse.wheel(0, 120);
+    await expect
+      .poll(() => reader.evaluate((element) => element.scrollTop))
+      .toBeGreaterThan(0);
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-scroll-stop',
+      'hero',
+    );
+  } finally {
+    // Firefox retains origin zoom across contexts; its headless content input
+    // does not run the browser's Ctrl+0 shortcut. Reverse the native zoom and
+    // confirm it is restored before another test uses CSS pointer coordinates.
+    if ((await page.evaluate(() => innerWidth)) !== originalWidth)
+      await controlWheel(-60);
+    await expect
+      .poll(() => page.evaluate(() => innerWidth))
+      .toBe(originalWidth);
+  }
 });
 
 test('navigation and modal opening cancel the old scroll owner', async ({

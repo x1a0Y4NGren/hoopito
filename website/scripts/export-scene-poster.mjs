@@ -21,6 +21,7 @@ await mkdir(evidence, { recursive: true });
 const sourceInputs = [];
 for (const path of [
   'src/scripts/main.ts',
+  'src/scripts/animation-clock.ts',
   'src/scripts/download-chooser.ts',
   'src/scripts/mobile-navigation.ts',
   'src/scripts/mobile-progress.ts',

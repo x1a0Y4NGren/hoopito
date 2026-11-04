@@ -1,4 +1,5 @@
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
+import { installContractClock, sampleRenderedFlight } from './controlled-clock';
 
 const sceneChunk = /court-scene[^/]*\.(?:js|ts)(?:\?|$)/;
 const captures = [
@@ -468,38 +469,51 @@ for (const locale of ['zh', 'en'] as const) {
   });
 }
 
-test('@webgl real rendered frames exclude App captures while retaining their story transforms', async ({
-  page,
-}, info) => {
-  test.setTimeout(60_000);
-  const capable = await page.evaluate(() => {
-    const context = document.createElement('canvas').getContext('webgl2', {
-      failIfMajorPerformanceCaveat: true,
+for (const [chapter, edge, delta, destination] of [
+  ['hero', 'end', 24, 'scoring'],
+  ['experience', 'end', 24, 'replay'],
+  ['download', 'start', -24, 'replay'],
+] as const) {
+  test(`@webgl real rendered frames exclude App captures while retaining their story transforms: ${chapter} to ${destination}`, async ({
+    page,
+  }, info) => {
+    test.setTimeout(60_000);
+    const capable = await page.evaluate(() => {
+      const context = document.createElement('canvas').getContext('webgl2', {
+        failIfMajorPerformanceCaveat: true,
+      });
+      context?.getExtension('WEBGL_lose_context')?.loseContext();
+      return !!context;
     });
-    context?.getExtension('WEBGL_lose_context')?.loseContext();
-    return !!context;
-  });
-  test.skip(
-    !capable,
-    'Production WebGL2 unavailable; CSS contracts run separately.',
-  );
-  await page.route(sceneChunk, async (route) => {
-    const response = await route.fetch();
-    let body = await response.text();
-    const exports = body.match(/export\s*\{([^}]*\bcreateCourtScene\b[^}]*)\}/);
-    const factory = exports?.[1].match(
-      /(?:^|,)\s*([\w$]+)\s+as\s+createCourtScene\b/,
-    )?.[1];
-    if (!exports || !factory)
-      throw new Error('Cannot observe production scene factory.');
-    body = body.replace(
-      exports[0],
-      exports[0].replace(
-        /[\w$]+\s+as\s+createCourtScene\b/,
-        '__thinSceneCreate as createCourtScene',
-      ),
+    test.skip(
+      !capable,
+      'Production WebGL2 unavailable; CSS contracts run separately.',
     );
-    body += `\nasync function __thinSceneCreate(...args) {
+    const pauseClock = await installContractClock(page);
+    info.annotations.push({
+      type: 'clock',
+      description:
+        'Controlled 50ms pose samples with actual production draws; not wall-clock performance evidence.',
+    });
+    await page.route(sceneChunk, async (route) => {
+      const response = await route.fetch();
+      let body = await response.text();
+      const exports = body.match(
+        /export\s*\{([^}]*\bcreateCourtScene\b[^}]*)\}/,
+      );
+      const factory = exports?.[1].match(
+        /(?:^|,)\s*([\w$]+)\s+as\s+createCourtScene\b/,
+      )?.[1];
+      if (!exports || !factory)
+        throw new Error('Cannot observe production scene factory.');
+      body = body.replace(
+        exports[0],
+        exports[0].replace(
+          /[\w$]+\s+as\s+createCourtScene\b/,
+          '__thinSceneCreate as createCourtScene',
+        ),
+      );
+      body += `\nasync function __thinSceneCreate(...args) {
       const scene = await ${factory}(...args);
       let surfaces = [];
       const frames = [];
@@ -531,21 +545,18 @@ test('@webgl real rendered frames exclude App captures while retaining their sto
       };
       return scene;
     }`;
-    await route.fulfill({ response, body, contentType: 'text/javascript' });
-  });
-  await page.goto('/');
-  await layoutStable(page);
-  await expect(page.locator('html')).toHaveAttribute('data-scene', '3d', {
-    timeout: 20_000,
-  });
-  for (const [chapter, edge, delta, destination] of [
-    ['hero', 'end', 24, 'scoring'],
-    ['experience', 'end', 24, 'replay'],
-    ['download', 'start', -24, 'replay'],
-  ] as const) {
+      await route.fulfill({ response, body, contentType: 'text/javascript' });
+    });
+    await page.goto('/');
+    await layoutStable(page);
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d', {
+      timeout: 20_000,
+    });
     await seek(page, chapter, edge);
     await page.mouse.move(12, 450);
+    await pauseClock();
     await page.mouse.wheel(0, delta);
+    await sampleRenderedFlight(page);
     await expect(page.locator('html')).toHaveAttribute(
       'data-scroll-stop',
       destination,
@@ -554,93 +565,95 @@ test('@webgl real rendered frames exclude App captures while retaining their sto
       'data-scroll-state',
       'idle',
     );
-  }
-  type Frame = {
-    quality: string;
-    glass: string;
-    visibleOptical: number;
-    surfaces: { id: string; error: number }[];
-    captures: {
-      preset: string;
-      role: string;
-      transform: string;
-      opacity: number;
-      inert: boolean;
-      optical: boolean;
-    }[];
-  };
-  const frames = await page.evaluate(
-    () => Reflect.get(window, '__thinGlassFrames') as Frame[],
-  );
-  await attach(info, 'real-rendered-glass-and-capture-frames', frames);
-  expect(frames.length).toBeGreaterThan(6);
-  for (const frame of frames) {
-    expect(frame.surfaces.length).toBeLessThanOrEqual(6);
-    expect(frame.visibleOptical).toBeLessThanOrEqual(6);
-    expect(
-      frame.surfaces.some((surface) =>
-        ['scoring-screen', 'replay-summary', 'replay-history'].includes(
-          surface.id,
-        ),
-      ),
-    ).toBe(false);
-    expect(frame.captures).toHaveLength(3);
-    expect(
-      frame.captures.every(
-        (capture) => capture.role === 'visual' && !capture.optical,
-      ),
-    ).toBe(true);
-    expect(
-      frame.captures
-        .filter((capture) => capture.opacity < 0.05)
-        .every((capture) => capture.inert),
-    ).toBe(true);
-  }
-  for (const capture of captures) {
-    const moving = frames.flatMap((frame) =>
-      frame.captures.filter(
-        (item) =>
-          item.preset === capture.preset &&
-          item.opacity > 0.05 &&
-          item.opacity < 0.999,
-      ),
+    type Frame = {
+      quality: string;
+      glass: string;
+      visibleOptical: number;
+      surfaces: { id: string; error: number }[];
+      captures: {
+        preset: string;
+        role: string;
+        transform: string;
+        opacity: number;
+        inert: boolean;
+        optical: boolean;
+      }[];
+    };
+    const frames = await page.evaluate(
+      () => Reflect.get(window, '__thinGlassFrames') as Frame[],
     );
-    expect(
-      moving.length,
-      `${capture.preset} real moving frames`,
-    ).toBeGreaterThan(0);
-    expect(new Set(moving.map((item) => item.transform)).size).toBeGreaterThan(
-      1,
-    );
-  }
-  const optical = frames.filter(
-    (frame) => frame.quality === 'full' && frame.glass === 'webgl',
-  );
-  await attach(info, 'actual-optical-capability', {
-    opticalFrames: optical.length,
-    modes: [
-      ...new Set(frames.map((frame) => `${frame.quality}/${frame.glass}`)),
-    ],
-  });
-  if (optical.length) {
-    expect(optical.some((frame) => frame.surfaces.length)).toBe(true);
-    expect(
-      Math.max(
-        ...optical.flatMap((frame) =>
-          frame.surfaces.map((surface) => surface.error),
+    await attach(info, 'real-rendered-glass-and-capture-frames', frames);
+    expect(frames.length).toBeGreaterThan(6);
+    for (const frame of frames) {
+      expect(frame.surfaces.length).toBeLessThanOrEqual(6);
+      expect(frame.visibleOptical).toBeLessThanOrEqual(6);
+      expect(
+        frame.surfaces.some((surface) =>
+          ['scoring-screen', 'replay-summary', 'replay-history'].includes(
+            surface.id,
+          ),
         ),
-      ),
-    ).toBeLessThan(0.1);
-  } else {
-    info.annotations.push({
-      type: 'capability',
-      description:
-        'Actual adaptive runtime used CSS optics. This run does not establish full WebGL material coverage.',
+      ).toBe(false);
+      expect(frame.captures).toHaveLength(3);
+      expect(
+        frame.captures.every(
+          (capture) => capture.role === 'visual' && !capture.optical,
+        ),
+      ).toBe(true);
+      expect(
+        frame.captures
+          .filter((capture) => capture.opacity < 0.05)
+          .every((capture) => capture.inert),
+      ).toBe(true);
+    }
+    for (const capture of captures.filter(
+      (item) => item.chapter === destination,
+    )) {
+      const moving = frames.flatMap((frame) =>
+        frame.captures.filter(
+          (item) =>
+            item.preset === capture.preset &&
+            item.opacity > 0.05 &&
+            item.opacity < 0.999,
+        ),
+      );
+      expect(
+        moving.length,
+        `${capture.preset} real moving frames`,
+      ).toBeGreaterThan(0);
+      expect(
+        new Set(moving.map((item) => item.transform)).size,
+      ).toBeGreaterThan(1);
+    }
+    const optical = frames.filter(
+      (frame) => frame.quality === 'full' && frame.glass === 'webgl',
+    );
+    await attach(info, 'actual-optical-capability', {
+      opticalFrames: optical.length,
+      modes: [
+        ...new Set(frames.map((frame) => `${frame.quality}/${frame.glass}`)),
+      ],
     });
-  }
-  for (const frame of frames.filter((frame) => frame.quality !== 'full'))
-    expect(frame.surfaces).toHaveLength(0);
-});
+    if (optical.length) {
+      expect(optical.some((frame) => frame.surfaces.length)).toBe(true);
+      expect(
+        Math.max(
+          ...optical.flatMap((frame) =>
+            frame.surfaces.map((surface) => surface.error),
+          ),
+        ),
+      ).toBeLessThan(0.1);
+    } else {
+      info.annotations.push({
+        type: 'capability',
+        description:
+          'Actual adaptive runtime used CSS optics. This run does not establish full WebGL material coverage.',
+      });
+    }
+    for (const frame of frames.filter((frame) => frame.quality !== 'full'))
+      expect(frame.surfaces).toHaveLength(0);
+  });
+}
 
 test('@webgl optical initialization failure preserves readable CSS glass and product images', async ({
   page,

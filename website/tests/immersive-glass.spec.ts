@@ -38,6 +38,60 @@ test('expanding the final FAQ refreshes its reading range without moving communi
     0,
   );
 });
+
+test('native disclosures refresh reading bounds even when resize delivery is delayed', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const Original = ResizeObserver;
+    window.ResizeObserver = class extends Original {
+      constructor(callback: ResizeObserverCallback) {
+        super((entries, observer) => {
+          if (!Reflect.get(window, '__holdResizeDelivery'))
+            callback(entries, observer);
+        });
+      }
+    };
+  });
+  await page.route(/court-scene[^/]*\.js$/, (route) => route.abort());
+  await page.goto('/en/#closing');
+  await page.evaluate(() => document.fonts.ready);
+  const closing = page.locator('#closing');
+  await expect(closing).toHaveAttribute('data-scroll-read-end', /\d/);
+  await page.evaluate(async () => {
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
+    Reflect.set(window, '__holdResizeDelivery', true);
+  });
+  const initial = Number(await closing.getAttribute('data-scroll-read-end'));
+  try {
+    for (const summary of await closing.locator('.faq summary').all()) {
+      await summary.focus();
+      await page.keyboard.press('Enter');
+      await expect(summary.locator('..')).toHaveAttribute('open', '');
+    }
+    await expect
+      .poll(async () =>
+        Number(await closing.getAttribute('data-scroll-read-end')),
+      )
+      .toBeGreaterThan(initial + 20);
+    await expect
+      .poll(() =>
+        closing.evaluate((element) =>
+          Math.abs(
+            Number((element as HTMLElement).dataset.scrollReadEnd) -
+              (document.documentElement.scrollHeight - innerHeight),
+          ),
+        ),
+      )
+      .toBeLessThanOrEqual(2);
+  } finally {
+    await page.evaluate(() =>
+      Reflect.set(window, '__holdResizeDelivery', false),
+    );
+  }
+});
 test('@webgl interactive court accepts a pointer after its glass controls settle', async ({
   page,
 }, testInfo) => {
