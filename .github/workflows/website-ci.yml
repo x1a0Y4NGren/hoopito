@@ -134,10 +134,10 @@ jobs:
   ui:
     name: UI (${{ matrix.browser }}, shard ${{ matrix.shard }}/2)
     needs: validate
-    # Keep native Cocoa WebKit 27.2 / revision 2370 on a supported Intel host.
-    # The macOS 26 pool abandoned jobs before setup; this is a standard runner.
-    runs-on: ${{ matrix.browser == 'webkit' && 'macos-15-intel' || 'ubuntu-latest' }}
-    # Keep one browser worker per host. Split Cocoa's 33-minute serial workload
+    # Preserve the complete pinned WebKit suite on its supported Windows port.
+    # Cocoa runner timing failures remain recorded in issue #45, not waived.
+    runs-on: ${{ matrix.browser == 'webkit' && 'windows-latest' || 'ubuntu-latest' }}
+    # Keep one browser worker per host. Split the full serial workload
     # across fresh hosts, retaining every test, timing bound and flaky rejection.
     timeout-minutes: 35
     strategy:

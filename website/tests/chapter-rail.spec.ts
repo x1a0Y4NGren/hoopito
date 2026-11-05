@@ -725,24 +725,42 @@ test('waterdrop and page indicator follow actual shared scroll and finish uprigh
   expect(result.rotation).toBe('none');
 });
 
-async function nearestReadingStop(page: Page) {
-  return page.evaluate(() => {
-    const ranges = [
-      ...document.querySelectorAll<HTMLElement>('[data-story-stage], #closing'),
-    ].map((el) => ({
-      id: el.dataset.storyStage ?? el.id,
-      start: Number(el.dataset.scrollReadStart),
-      end: Number(el.dataset.scrollReadEnd),
-    }));
-    return ranges
-      .map((range) => ({
-        ...range,
-        distance: Math.abs(
-          scrollY - Math.min(range.end, Math.max(range.start, scrollY)),
+async function nearestReadingStop(page: Page, captureEscape = false) {
+  return page.evaluate((captureEscape) => {
+    const nearest = () => {
+      const ranges = [
+        ...document.querySelectorAll<HTMLElement>(
+          '[data-story-stage], #closing',
         ),
-      }))
-      .sort((a, b) => a.distance - b.distance)[0].id;
-  });
+      ].map((el) => ({
+        id: el.dataset.storyStage ?? el.id,
+        start: Number(el.dataset.scrollReadStart),
+        end: Number(el.dataset.scrollReadEnd),
+      }));
+      return ranges
+        .map((range) => ({
+          ...range,
+          distance: Math.abs(
+            scrollY - Math.min(range.end, Math.max(range.start, scrollY)),
+          ),
+        }))
+        .sort((a, b) => a.distance - b.distance)[0].id;
+    };
+    if (captureEscape) {
+      // Measure at native event delivery, before the production handler owns
+      // the scroll. A protocol round trip can cross a midpoint in flight.
+      window.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key === 'Escape')
+            Reflect.set(window, '__railEscapeTarget', nearest());
+        },
+        { capture: true, once: true },
+      );
+      return '';
+    }
+    return nearest();
+  }, captureEscape);
 }
 
 test('Escape cancels an owned chapter flight into the nearest complete reading range', async ({
@@ -760,8 +778,12 @@ test('Escape cancels an owned chapter flight into the nearest complete reading r
     (document.activeElement as HTMLElement)?.blur();
     el.focus();
   });
-  const target = await nearestReadingStop(page);
+  await nearestReadingStop(page, true);
   await page.keyboard.press('Escape');
+  const target = await page.evaluate(
+    () => Reflect.get(window, '__railEscapeTarget') as string,
+  );
+  expect(ids).toContain(target);
   await settled(page, target);
   await page.waitForTimeout(450);
   await settled(page, target);

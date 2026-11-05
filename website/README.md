@@ -141,14 +141,14 @@ npm run test:e2e
 
 Playwright 自动启动本地 `preview` 服务；失败时保留 trace 与截图，报告位于
 `output/playwright/`。CI 为每个任务仅安装所需浏览器；Linux UI 任务另装运行时依赖。
-Playwright WebKit 在 macOS 原生 Cocoa 宿主运行，仍是其打包引擎的自动化覆盖，
-不等同于实际 macOS／iOS Safari 验收。Linux WPE WebKit 的超时与布局／历史导航问题
+Playwright WebKit 在 Windows 宿主运行，仅表示其打包引擎的自动化覆盖，
+不等同于实际 macOS／iOS Safari 验收。Mac Cocoa WebKit 的输入／反向帧间隔失败，以及 Linux WPE WebKit 的超时与布局／历史导航问题
 仍由 [Issue #45](https://github.com/x1a0Y4NGren/hoopito/issues/45) 跟踪，不能据此声称 Linux 已修复。
 构建预算以逐文件 gzip 计算：移动首屏每种语言不超过 500 KiB，桌面 3D
 增量不超过 800 KiB。体积检查、模拟设备检查和真实 GPU 帧率各自保留证据。
 CI 先执行 15 分钟有界的 `validate`，只构建一次；生成包含源码提交 SHA、逐文件
 SHA-256、字节数和总摘要的 `build-artifact.json`，连同 `dist/` 上传当前运行的构建产物。
-三个引擎的普通 UI 任务（Linux Chromium／Firefox、macOS WebKit，各两分片、35分钟、1 worker）与 Chromium
+三个引擎的普通 UI 任务（Linux Chromium／Firefox、Windows WebKit，各两分片、35分钟、1 worker）与 Chromium
 软件 WebGL 的两个分片（Windows，各35分钟、1 worker）只依赖 `validate`，使用独立 runner；
 任一浏览器或分片失败不取消其余任务。普通 UI 关闭 WebGL，标记 `@webgl` 的检查按
 [Playwright sharding](https://playwright.dev/docs/test-sharding)分到两个独立任务，分片内部串行运行。
@@ -204,10 +204,10 @@ WebGL 任务还保存 `runtime.jsonl`；Windows 仅记录平台、CPU 型号／�
 生产能量、衰减判据及原有输入速率、单包大小、间隔和落位验收不变。
 这些软件 WebGL 功能检查不代表真实 GPU 帧率或开场墙钟耗时。
 Linux UI 的浏览器安装通过 `scripts/install-ci-browser.sh` 在一次性 runner 上执行；
-macOS WebKit 直接用 `npx playwright install --no-shell webkit` 安装完整套件所需引擎。
-WebKit使用标准 `macos-15-intel` runner，iOS编译继续使用 `macos-26-intel`。
+Windows WebKit 直接用 `npx playwright install --no-shell webkit` 安装完整套件所需引擎。
+WebKit使用标准 `windows-latest` runner，iOS编译继续使用 `macos-26-intel`。
 macOS26池曾在分配执行器前取消WebKit作业，见[Issue #46](https://github.com/x1a0Y4NGren/hoopito/issues/46)。
-WebKit仍为原生Cocoa宿主及锁定的27.2／revision2370，保留完整用例、单worker和flaky门禁，不启用付费大型runner。
+WebKit仍为锁定的27.2／revision2370，保留完整用例、单worker和flaky门禁，不启用付费大型runner。Windows原生滚轮能力跳过须与断言失败分别记录，不能冒称真实Safari或Mac节拍已经通过。
 Linux 安装期间将 Azure HTTP 镜像入口替换为 Ubuntu 官方 HTTPS archive，并按
 [APT 配置](https://manpages.ubuntu.com/manpages/jammy/man5/apt.conf.5.html)
 限制连接／数据停滞为30秒、失败重试2次。安装结束恢复原镜像和临时配置；
