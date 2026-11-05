@@ -1,0 +1,143 @@
+---
+import Icon from './Icon.astro';
+import CourtDiagram from './CourtDiagram.astro';
+import { content, type Locale } from '../data/content';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale];
+---
+
+<section id="experience" class="experience chapter content-width" data-demo>
+  <div class="experience-stage" data-story-stage="experience">
+    <div class="section-top chapter-kicker">
+      <span class="chapter-number display">{c.demo.number}</span>
+      <span class="eyebrow">{c.demo.eyebrow}</span>
+    </div>
+    <div class="demo-layout">
+      <div
+        class="experience-heading stage-heading"
+        data-story-item="heading"
+        data-story-enter="up"
+        data-story-preset="chapter-title"
+      >
+        <h2>
+          {c.demo.title.map((line) => (
+            <span data-story-line data-story-reveal>
+              {line}
+            </span>
+          ))}
+        </h2>
+        <p class="section-body reading-zone exposed-reading-zone">
+          {c.demo.body.split('\n').map((line) => (
+            <span class="copy-line">{line}</span>
+          ))}
+        </p>
+      </div>
+      <div class="experience-score-slot">
+        <div
+          class="demo-scoreboard"
+          data-glass-card
+          data-glass-id="experience-scoreboard"
+          data-story-item="visual"
+          data-story-enter="up"
+          data-story-preset="experience-scoreboard"
+        >
+          <div class="demo-scoreboard-head">
+            <p class="demo-label">
+              <i></i>
+              {c.demo.label}
+            </p>
+            <span class="demo-score-matchup display">
+              1 <i>v</i> 1
+            </span>
+          </div>
+          <div class="demo-score">
+            <div class="score-team blue-team">
+              <span class="blue-label">{c.demo.blue}</span>
+              <strong data-blue-score class="display">
+                6
+              </strong>
+            </div>
+            <div class="score-center">
+              <span class="score-separator display">:</span>
+            </div>
+            <div class="score-team red-team">
+              <span class="red-label">{c.demo.red}</span>
+              <strong data-red-score class="display">
+                6
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-map">
+        <div class="demo-court-stage" data-demo-court-host data-renderer="2d">
+          <CourtDiagram label={c.demo.courtLabel} />
+        </div>
+      </div>
+      <div
+        class="demo-controls"
+        data-glass-card
+        data-glass-id="experience-controls"
+        data-story-item="control"
+        data-story-enter="down"
+        data-story-preset="experience-controls"
+      >
+        <div class="demo-control-bar">
+          <div class="point-presets" role="group" aria-label={c.demo.choose}>
+            {(['left', 'center', 'right'] as const).map((point, i) => (
+              <button data-point-preset={point} aria-pressed="false" disabled>
+                {c.demo.points[i]}
+              </button>
+            ))}
+          </div>
+          <div class="demo-actions">
+            <button class="button button-orange" data-record disabled>
+              <span class="control-content">
+                <span>{c.demo.record}</span>
+                <Icon name="plus" />
+              </span>
+            </button>
+            <button class="reset-button" data-reset disabled>
+              <span class="control-content">
+                <Icon name="reset" />
+                <span>{c.demo.reset}</span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="demo-control-notes reading-zone">
+          <div class="demo-status-slot">
+            <p
+              class="demo-status"
+              data-demo-status
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              data-ready={c.demo.statuses.ready}
+              data-selected={c.demo.statuses.selected}
+              data-shooting={c.demo.statuses.shooting}
+              data-scored={c.demo.statuses.scored}
+            >
+              {c.demo.statuses.ready}
+            </p>
+            {Object.values(c.demo.statuses).map((text) => (
+              <span class="demo-status-size" aria-hidden="true">
+                {text}
+              </span>
+            ))}
+          </div>
+          <p class="fine-print">{c.demo.note}</p>
+          <noscript>
+            <p class="nojs-note">{c.demo.nojs}</p>
+          </noscript>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="trace-bridge" aria-hidden="true">
+    <span></span>
+  </div>
+</section>

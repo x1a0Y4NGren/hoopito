@@ -118,19 +118,39 @@ export class ActiveFrameMonitor {
   }
 }
 
-/** A Retina canvas retains at least 1.5 physical pixels per CSS pixel at every tier. */
+/** Density targets 1.25 DPR, with a hard pixel budget even on large displays. */
 export function renderDensity(
   deviceRatio: number,
   quality: SceneQuality,
   width: number,
   height: number,
 ) {
+  const cssWidth = Number.isFinite(width) ? Math.max(1, width) : 1;
+  const cssHeight = Number.isFinite(height) ? Math.max(1, height) : 1;
+  const pixelBudget = Math.sqrt(5_000_000 / cssWidth / cssHeight);
+  if (quality === 'density') {
+    const device =
+      Number.isFinite(deviceRatio) && deviceRatio > 0 ? deviceRatio : 1;
+    return Math.min(device, 1.25, pixelBudget);
+  }
   const device = Number.isFinite(deviceRatio) ? Math.max(1, deviceRatio) : 1;
   const floor = device >= 1.5 ? 1.5 : 1;
-  const desired = quality === 'density' ? floor : Math.min(2, device);
-  return Math.min(
-    desired,
-    Math.max(floor, Math.sqrt(5_000_000 / Math.max(1, width * height))),
+  return Math.min(Math.min(2, device), Math.max(floor, pixelBudget));
+}
+
+/** HDR targets use a count the GPU actually supports, or FXAA when none fits. */
+export function sceneMsaaSamples(
+  quality: SceneQuality,
+  pixelRatio: number,
+  supportedSamples: readonly number[],
+) {
+  const limit = quality === 'density' || pixelRatio >= 1.5 ? 2 : 4;
+  return Math.max(
+    0,
+    ...supportedSamples.filter(
+      (samples) =>
+        Number.isInteger(samples) && samples >= 2 && samples <= limit,
+    ),
   );
 }
 
@@ -150,11 +170,40 @@ export function shouldRenderContinuously(state: {
   motionEnabled: boolean;
   moving: boolean;
 }) {
+  return state.active && !state.paused && state.motionEnabled && state.moving;
+}
+
+export function shouldAnimateAmbient(state: {
+  active: boolean;
+  chapter: StoryChapter;
+  paused: boolean;
+  motionEnabled: boolean;
+}) {
   return (
     state.active &&
-    state.chapter !== 'download' &&
+    state.chapter !== 'experience' &&
     !state.paused &&
-    state.motionEnabled &&
-    state.moving
+    state.motionEnabled
   );
+}
+
+/** An independent clock: suspension never advances the phase or pauses a shot. */
+export class AmbientDrift {
+  private previous: number | null = null;
+  private elapsed = 0;
+
+  suspend() {
+    this.previous = null;
+  }
+
+  sample(now: number, enabled: boolean) {
+    if (!enabled || !Number.isFinite(now)) this.suspend();
+    else {
+      if (this.previous !== null)
+        this.elapsed += Math.max(0, Math.min(100, now - this.previous));
+      this.previous = now;
+    }
+    const phase = (this.elapsed / 12000) * Math.PI * 2;
+    return { x: 1.8 * Math.sin(phase), y: 0.65 * Math.sin(phase * 2) };
+  }
 }

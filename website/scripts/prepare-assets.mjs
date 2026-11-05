@@ -7,8 +7,13 @@ import sharp from 'sharp';
 import subsetFont from 'subset-font';
 import QRCode from 'qrcode';
 import { prepareCommunityAssets } from './prepare-community.mjs';
+import { makeMaterialData } from './material-data.mjs';
+import { prepareDemoCourtAssets } from './prepare-demo-court.mjs';
 import { release } from '../src/data/release.ts';
 import { courtTextures } from '../src/data/court-materials.ts';
+import { content } from '../src/data/content.ts';
+import { mobileScenes } from '../src/data/mobile-scenes.ts';
+import { createPosterFontSubset, posterFontFields } from './poster-font.mjs';
 import {
   presentation,
   presentationForCapture,
@@ -75,7 +80,6 @@ for (const [id, maximumSize, quality] of [
   ['metal', 768, 65],
   ['glass', 512, 75],
   ['leather', 1024, 72],
-  ['leatherDetail', 512, 68],
 ]) {
   const asset = materialGeneration.assets.find((entry) => entry.id === id);
   if (!asset) throw new Error(`Missing generated court material: ${id}`);
@@ -96,6 +100,34 @@ for (const [id, maximumSize, quality] of [
     generation_mode: materialGeneration.mode,
     dimensions_px: [metadata.width, metadata.height],
     transformation: `Proportional resize up to ${maximumSize}px; ${id === 'leatherDetail' ? 'grayscale microdetail; ' : ''}WebP quality ${quality}; no scene lighting or court markings added`,
+  });
+}
+
+for (const [id, kind] of [
+  ['mapleDetail', 'maple'],
+  ['leatherDetail', 'leather'],
+]) {
+  const source = await localSource('website/scripts/material-data.mjs');
+  const pixels = makeMaterialData(kind, 512);
+  const optimized = await sharp(pixels.data, {
+    raw: {
+      width: pixels.width,
+      height: pixels.height,
+      channels: pixels.channels,
+    },
+  })
+    .webp({ quality: 82, effort: 6 })
+    .toBuffer();
+  await output(courtTextures[id].slice(1), optimized, {
+    source: source.source,
+    source_sha256: source.source_sha256,
+    generation_record: materialRecord,
+    generation_record_sha256: materialProvenance.source_sha256,
+    generated_with: 'deterministic procedural material data',
+    generation_mode: 'procedural',
+    dimensions_px: [pixels.width, pixels.height],
+    color_space: 'linear',
+    transformation: `${id === 'mapleDetail' ? 'Packed RG tangent normal XY / B satin roughness' : 'Neutral periodic leather microheight in RGB'}; independent of albedo illumination; 512px; WebP quality82`,
   });
 }
 
@@ -123,6 +155,17 @@ await output('art/demo-maple.webp', demoWoodBytes, {
   transformation:
     '384px square 2D material derivative; WebP quality60; no court markings or baked lighting; lazy-loaded near the demo, maximum12KiB',
 });
+
+await prepareDemoCourtAssets({ repositoryRoot, output });
+
+// Scene compilation/capture needs current materials before source-bound posters
+// can be refreshed. This stage intentionally leaves the full asset manifest alone.
+if (process.argv.includes('--materials-only')) {
+  console.log(
+    'Prepared court materials only; run the complete asset pipeline after scene export.',
+  );
+  process.exit(0);
+}
 
 const artRecord = 'website/assets/art/generation.json';
 const artProvenance = await localSource(artRecord);
@@ -172,7 +215,11 @@ const posterProvenance = await localSource(posterRecord);
 const posterGeneration = JSON.parse(posterProvenance.bytes.toString('utf8'));
 for (const input of posterGeneration.source_inputs) {
   const current = await localSource(`website/${input.path}`);
-  if (current.source_sha256 !== input.sha256)
+  const sourceHash =
+    posterGeneration.source_hash_encoding === 'utf8-lf'
+      ? sha256(current.bytes.toString('utf8').replace(/\r\n/g, '\n'))
+      : current.source_sha256;
+  if (sourceHash !== input.sha256)
     throw new Error(
       `Stale scene poster source: ${input.path}. Build and export the current scene before preparing assets.`,
     );
@@ -183,21 +230,63 @@ for (const capture of posterGeneration.captures) {
     throw new Error(
       `Scene poster changed outside its capture record: ${capture.id}`,
     );
-  const optimized = await sharp(source.bytes)
-    .webp({ quality: 80, effort: 6 })
+  const mobile = capture.id === 'mobile';
+  const phoneScene = mobileScenes.find(
+    (scene) => scene.captureId === capture.id,
+  );
+  // Keep the reading camera intact and extract a reproducible portrait window.
+  const crop =
+    mobile || phoneScene
+      ? {
+          left: Math.round(
+            capture.width * (phoneScene?.cropCenter ?? 0.74) -
+              Math.floor((capture.height * 9) / 16) / 2,
+          ),
+          top: 0,
+          width: Math.floor((capture.height * 9) / 16),
+          height: capture.height,
+        }
+      : null;
+  let conversion = sharp(source.bytes);
+  if (crop)
+    conversion = conversion
+      .extract(crop)
+      .resize({ width: phoneScene ? 720 : 768, withoutEnlargement: true });
+  const optimized = await conversion
+    .webp({ quality: phoneScene ? 76 : mobile ? 68 : 80, effort: 6 })
     .toBuffer();
-  await output(`art/scene-poster-${capture.id}.webp`, optimized, {
-    source: source.source,
-    source_sha256: source.source_sha256,
-    capture_record: posterRecord,
-    capture_record_sha256: posterProvenance.source_sha256,
-    captured_with: `${posterGeneration.browser}; ${capture.renderer}; ${capture.engine}`,
-    source_inputs: posterGeneration.source_inputs,
-    pose: capture.pose,
-    dimensions_px: [capture.width, capture.height],
-    transformation:
-      'WebP quality 80 encoding of the exact compiled desktop scene; original dimensions and camera composition retained',
-  });
+  if ((mobile || phoneScene) && optimized.length > 120 * 1024)
+    throw new Error('Mobile scene background exceeds 120KiB');
+  const metadata = await sharp(optimized).metadata();
+  await output(
+    phoneScene
+      ? phoneScene.src.slice(1)
+      : mobile
+        ? 'art/scene-mobile.webp'
+        : `art/scene-poster-${capture.id}.webp`,
+    optimized,
+    {
+      source: source.source,
+      source_sha256: source.source_sha256,
+      capture_record: posterRecord,
+      capture_record_sha256: posterProvenance.source_sha256,
+      captured_with: `${posterGeneration.browser}; ${capture.renderer}; ${capture.engine}`,
+      source_inputs: posterGeneration.source_inputs,
+      pose: capture.pose,
+      dimensions_px: [metadata.width, metadata.height],
+      ...(crop
+        ? {
+            crop_px: crop,
+            source_dimensions_px: [capture.width, capture.height],
+          }
+        : {}),
+      transformation: phoneScene
+        ? `Portrait 9:16 crop of the actual desktop ${phoneScene.chapter} reading camera, centered at ${phoneScene.cropCenter * 100}% horizontal position; proportional resize to 720x1280; WebP quality 76; no UI or optical card surfaces`
+        : mobile
+          ? 'Portrait crop of the actual desktop hero court, centered at 74% horizontal position; proportional resize up to768px; WebP quality68; no UI or optical card surfaces'
+          : 'WebP quality80 encoding of the exact compiled desktop court without optical card surfaces; original dimensions and camera composition retained',
+    },
+  );
 }
 
 async function sourceFiles(directory) {
@@ -406,6 +495,52 @@ await output('fonts/noto-sc.woff2', notoSubset, {
   license: 'SIL-OFL-1.1',
   license_file: 'public/fonts/OFL-NotoSansSC.txt',
   copyright: fontCopyright.noto,
+});
+
+const posterFontRecord = await localSource('website/assets/fonts/sources.json');
+const posterFontSources = JSON.parse(posterFontRecord.bytes.toString('utf8'));
+const posterFontSource = posterFontSources.fonts.find(
+  ({ weight }) => weight === 900,
+);
+if (!posterFontSource)
+  throw new Error('Missing pinned Chinese poster font source.');
+const posterFont = await localSource(posterFontSource.source);
+if (posterFont.source_sha256 !== posterFontSource.source_sha256) {
+  throw new Error(
+    'Chinese poster font no longer matches its pinned source bytes.',
+  );
+}
+const posterSubset = await createPosterFontSubset(posterFont.bytes, content.zh);
+const posterFontCode = await localSource('website/scripts/poster-font.mjs');
+await output('fonts/noto-poster-black.woff2', posterSubset.bytes, {
+  source: posterFont.source,
+  source_sha256: posterFont.source_sha256,
+  source_url: posterFontSource.source_url,
+  upstream_commit: posterFontSource.upstream_commit,
+  source_record: posterFontRecord.source,
+  source_record_sha256: posterFontRecord.source_sha256,
+  font_family: 'NotoPoster',
+  font_weight: 900,
+  source_font_weight: 900,
+  gzip_bytes: posterSubset.gzipBytes,
+  transformation:
+    'WOFF2 subset of the Chinese hero, scoring, demo, replay, download, community and FAQ headings only; static Black 900 outlines, advances, copyright and license retained',
+  subset_code_points: posterSubset.requiredCodePoints,
+  required_glyphs: posterSubset.requiredCodePoints.map(
+    (codePoint) => `U+${codePoint.toString(16).toUpperCase()}`,
+  ),
+  text_sources: [
+    {
+      path: 'src/data/content.ts',
+      sha256: sha256(await readFile(join(websiteRoot, 'src/data/content.ts'))),
+      fields: posterFontFields.map((field) => `zh.${field}`),
+    },
+  ],
+  subset_generator: posterFontCode.source,
+  subset_generator_sha256: posterFontCode.source_sha256,
+  license: posterFontSource.license,
+  license_file: 'public/fonts/OFL-NotoSansSC.txt',
+  copyright: posterFontSource.copyright,
 });
 for (const [sourcePath, destination] of [
   ['assets/fonts/OFL.txt', 'fonts/OFL-Barlow.txt'],

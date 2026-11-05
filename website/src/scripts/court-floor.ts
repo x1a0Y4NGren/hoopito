@@ -1,206 +1,176 @@
 import * as THREE from 'three';
+import type { SceneQuality } from './scene-contract';
 
-type Point = readonly [number, number, number];
+import {
+  COURT_LIGHTING,
+  FLOOR_TEXTURE_LAYOUT,
+  FLOOR_Y,
+  floorSurfaceGLSL,
+  floorVarnishVertexGLSL,
+  sampleFloorLighting,
+} from './court-lighting.ts';
+export { sampleFloorLighting } from './court-lighting.ts';
+
 type Owner = <T extends { dispose(): void }>(resource: T) => T;
 
-interface FloorLamp {
-  position: Point;
-  color: THREE.Color;
-  intensity: number;
-  distance: number;
-  decay: number;
-  target?: Point;
-  angle?: number;
-  penumbra?: number;
-}
-
-const lamps: readonly FloorLamp[] = [
-  {
-    position: [4, 10, 1],
-    target: [0, 0, -2],
-    color: new THREE.Color('#FFF0DF'),
-    intensity: 130,
-    distance: 48,
-    decay: 1.8,
-    angle: 0.45,
-    penumbra: 0.78,
-  },
-  {
-    position: [-5, 7.9, -7],
-    target: [0, 2, -3],
-    color: new THREE.Color('#DE783F'),
-    intensity: 125,
-    distance: 40,
-    decay: 1.8,
-    angle: 0.68,
-    penumbra: 0.85,
-  },
-  {
-    position: [7, 5, 5],
-    color: new THREE.Color('#A7BBC7'),
-    intensity: 38,
-    distance: 20,
-    decay: 2,
-  },
-  {
-    position: [3.5, 0.72, 3.6],
-    target: [2.6, 0.13, 4.1],
-    color: new THREE.Color('#FFE4BE'),
-    intensity: 1.45,
-    distance: 3.6,
-    decay: 2,
-    angle: 0.72,
-    penumbra: 0.7,
-  },
-  {
-    position: [2.05, 0.2, 3.76],
-    color: new THREE.Color('#CE692D'),
-    intensity: 1.1,
-    distance: 2.2,
-    decay: 2,
-  },
-];
-const ambient = new THREE.Color('#BDCCD7').multiplyScalar(0.14 / Math.PI);
-const floorY = 0.004;
-
-function lampAt(lamp: FloorLamp, x: number, z: number) {
-  const dx = lamp.position[0] - x;
-  const dy = lamp.position[1] - floorY;
-  const dz = lamp.position[2] - z;
-  const length = Math.hypot(dx, dy, dz);
-  const cutoff = Math.max(0, 1 - (length / lamp.distance) ** 4) ** 2;
-  let attenuation = cutoff / Math.max(length ** lamp.decay, 0.01);
-  if (lamp.target) {
-    const axis = lamp.position.map(
-      (value, index) => value - lamp.target![index]!,
-    ) as unknown as Point;
-    const cosine =
-      (dx * axis[0] + dy * axis[1] + dz * axis[2]) /
-      (length * Math.hypot(...axis));
-    const cone = Math.cos(lamp.angle!);
-    const penumbra = Math.cos(lamp.angle! * (1 - lamp.penumbra!));
-    const along = THREE.MathUtils.clamp(
-      (cosine - cone) / (penumbra - cone),
-      0,
-      1,
+/** One mesh: retain the fine court grid and extend only its outermost border. */
+function createFloorGeometry() {
+  const extent = 256;
+  const columns = 64;
+  const rows = 96;
+  const reference = FLOOR_TEXTURE_LAYOUT;
+  const geometry = new THREE.PlaneGeometry(extent, extent, columns, rows);
+  const position = geometry.getAttribute('position');
+  const uv = geometry.getAttribute('uv');
+  for (let vertex = 0; vertex < position.count; vertex++) {
+    const column = vertex % (columns + 1);
+    const row = Math.floor(vertex / (columns + 1));
+    const x =
+      column === 0
+        ? -extent / 2
+        : column === columns
+          ? extent / 2
+          : (column * reference.width) / columns - reference.width / 2;
+    const y =
+      row === 0
+        ? extent / 2
+        : row === rows
+          ? -extent / 2
+          : reference.length / 2 - (row * reference.length) / rows;
+    position.setXY(vertex, x, y);
+    // Albedo and painted surface detail share the original reference and phase.
+    // UVs intentionally extend beyond 0–1; RepeatWrapping preserves board width.
+    uv.setXY(
+      vertex,
+      (x + reference.width / 2) / reference.width,
+      (y + reference.length / 2) / reference.length,
     );
-    attenuation *= along * along * (3 - 2 * along);
   }
-  const radiance = lamp.intensity * attenuation;
-  return { diffuse: (radiance * Math.max(0, dy / length)) / Math.PI, radiance };
+  return geometry;
 }
 
-/** Static luminaires are sampled once; only the two story lights vary at runtime. */
-export function sampleFloorLighting(x: number, z: number) {
-  const dynamic: [number, number, number] = [0, 0, 0];
-  const fixed: [number, number, number] = [ambient.r, ambient.g, ambient.b];
-  const specular: [number, number] = [0, 0];
-  lamps.forEach((lamp, index) => {
-    const sample = lampAt(lamp, x, z);
-    const target = index < 2 ? dynamic : fixed;
-    target[0] += sample.diffuse * lamp.color.r;
-    target[1] += sample.diffuse * lamp.color.g;
-    target[2] += sample.diffuse * lamp.color.b;
-    if (index < 2) specular[index] = sample.radiance;
-  });
-  return { dynamic, fixed, specular };
+/** One-time irradiance attributes are used by both surface materials. */
+function cacheLighting(geometry: THREE.PlaneGeometry, centerZ: number) {
+  const position = geometry.getAttribute('position');
+  const dynamic = new Float32Array(position.count * 3);
+  const fixed = new Float32Array(position.count * 3);
+  const specular = new Float32Array(position.count * 2);
+  for (let vertex = 0; vertex < position.count; vertex++) {
+    const light = sampleFloorLighting(
+      position.getX(vertex),
+      centerZ - position.getY(vertex),
+    );
+    dynamic.set(light.dynamic, vertex * 3);
+    fixed.set(light.fixed, vertex * 3);
+    specular.set(light.specular, vertex * 2);
+  }
+  geometry.setAttribute('aFloorDynamic', new THREE.BufferAttribute(dynamic, 3));
+  geometry.setAttribute('aFloorFixed', new THREE.BufferAttribute(fixed, 3));
+  geometry.setAttribute(
+    'aFloorSpecular',
+    new THREE.BufferAttribute(specular, 2),
+  );
 }
 
 /** Cached diffuse lighting plus two bounded view-dependent varnish highlights. */
 export function createCourtFloor({
   own,
   mapleMap,
+  detailMap,
   rim,
 }: {
   own: Owner;
   mapleMap: THREE.Texture;
+  detailMap?: THREE.Texture;
   rim: THREE.Vector3;
 }) {
-  mapleMap.repeat.set(28 / 2.8, 42 / 2.8);
-  const geometry = own(new THREE.PlaneGeometry(28, 42, 64, 96));
-  const position = geometry.getAttribute('position');
-  const colors = new Float32Array(position.count * 3);
-  const fixed = new Float32Array(position.count * 3);
-  const specular = new Float32Array(position.count * 2);
-  for (let vertex = 0; vertex < position.count; vertex += 1) {
-    const light = sampleFloorLighting(
-      position.getX(vertex),
-      4 - position.getY(vertex),
-    );
-    colors.set(light.dynamic, vertex * 3);
-    fixed.set(light.fixed, vertex * 3);
-    specular.set(light.specular, vertex * 2);
+  const textureLayout = FLOOR_TEXTURE_LAYOUT;
+  mapleMap.wrapS = mapleMap.wrapT = THREE.RepeatWrapping;
+  mapleMap.repeat.set(textureLayout.repeatX, textureLayout.repeatZ);
+  if (detailMap) {
+    detailMap.colorSpace = THREE.NoColorSpace;
+    detailMap.wrapS = detailMap.wrapT = THREE.RepeatWrapping;
+    detailMap.repeat.copy(mapleMap.repeat);
   }
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  geometry.setAttribute('aFloorFixed', new THREE.BufferAttribute(fixed, 3));
-  geometry.setAttribute(
-    'aFloorSpecular',
-    new THREE.BufferAttribute(specular, 2),
-  );
+  const geometry = own(createFloorGeometry());
+  cacheLighting(geometry, textureLayout.centerZ);
+  const paintGeometry = own(new THREE.PlaneGeometry(15, 14, 36, 34));
+  cacheLighting(paintGeometry, 0);
   const strength = { value: 1 };
+  const density = { value: 0 };
+  const paintUniforms = {
+    uFloorDensity: density,
+    uFloorLight: strength,
+    uFloorFlatNormal: { value: new THREE.Vector3(0, 1, 0) },
+    uFloorDetail: { value: detailMap ?? mapleMap },
+    uFloorHasDetail: { value: detailMap ? 1 : 0 },
+    uFloorDetailRepeat: { value: mapleMap.repeat },
+    uFloorTextureFrame: {
+      value: new THREE.Vector4(
+        textureLayout.width / 2,
+        textureLayout.centerZ + textureLayout.length / 2,
+        textureLayout.width,
+        textureLayout.length,
+      ),
+    },
+    uFloorKeyPosition: {
+      value: new THREE.Vector3(...COURT_LIGHTING.key.position),
+    },
+    uFloorAmberPosition: {
+      value: new THREE.Vector3(...COURT_LIGHTING.amber.position),
+    },
+    uFloorKeyColor: { value: new THREE.Color(COURT_LIGHTING.key.color) },
+    uFloorAmberColor: { value: new THREE.Color(COURT_LIGHTING.amber.color) },
+  };
   const surface = own(
     new THREE.MeshBasicMaterial({
-      color: '#756B62',
+      color: '#C6BBAC',
       map: mapleMap,
-      vertexColors: true,
       toneMapped: true,
     }),
   );
-  surface.customProgramCacheKey = () => 'hoopito-cached-maple-light-v1';
+  surface.customProgramCacheKey = () => 'hoopito-cached-maple-light-v4';
   surface.onBeforeCompile = (shader) => {
-    shader.uniforms.uFloorLight = strength;
+    Object.assign(shader.uniforms, paintUniforms);
     shader.vertexShader = shader.vertexShader
       .replace(
         '#include <common>',
         `#include <common>
+        attribute vec3 aFloorDynamic;
         attribute vec3 aFloorFixed;
         attribute vec2 aFloorSpecular;
+        varying vec3 vFloorDynamic;
         varying vec3 vFloorFixed;
         varying vec2 vFloorSpecular;
-        varying vec3 vFloorPosition;`,
+        varying vec3 vFloorPosition;
+${floorVarnishVertexGLSL}`,
       )
       .replace(
         '#include <worldpos_vertex>',
         `#include <worldpos_vertex>
+        vFloorDynamic = aFloorDynamic;
         vFloorFixed = aFloorFixed;
         vFloorSpecular = aFloorSpecular;
-        vFloorPosition = (modelMatrix * vec4(transformed, 1.0)).xyz;`,
+        vFloorPosition = (modelMatrix * vec4(transformed, 1.0)).xyz;
+        vFloorVertexVarnish = floorVertexVarnish(vFloorPosition, aFloorSpecular);`,
       );
     shader.fragmentShader = shader.fragmentShader
       .replace(
         '#include <common>',
         `#include <common>
-        uniform float uFloorLight;
-        varying vec3 vFloorFixed;
-        varying vec2 vFloorSpecular;
-        varying vec3 vFloorPosition;
-        float varnish(vec3 lamp, vec3 viewDirection) {
-          vec3 halfDirection = normalize(normalize(lamp - vFloorPosition) + viewDirection);
-          return pow(max(halfDirection.y, 0.0), 26.0);
-        }`,
-      )
-      .replace(
-        '#include <color_fragment>',
-        'diffuseColor.rgb *= vColor.rgb * uFloorLight + vFloorFixed;',
+${floorSurfaceGLSL}`,
       )
       .replace(
         '#include <opaque_fragment>',
         `
-        vec3 floorView = normalize(cameraPosition - vFloorPosition);
-        float keySheen = varnish(vec3(4.0, 10.0, 1.0), floorView) * vFloorSpecular.x;
-        float amberSheen = varnish(vec3(-5.0, 7.9, -7.0), floorView) * vFloorSpecular.y;
-        vec3 sheen = vec3(0.085, 0.072, 0.060) * keySheen
-          + vec3(0.095, 0.032, 0.012) * amberSheen;
-        // Fine albedo variation also breaks up varnish without another texture fetch.
-        float grain = 0.92 + 0.08 * sampledDiffuseColor.r;
-        outgoingLight += min(sheen, vec3(0.32)) * grain * uFloorLight;
+        outgoingLight = floorSurface(diffuseColor.rgb);
         #include <opaque_fragment>`,
       );
   };
   const mesh = new THREE.Mesh(geometry, surface);
   mesh.name = 'cached-maple-floor';
   mesh.rotation.x = -Math.PI / 2;
-  mesh.position.set(0, floorY, 4);
+  mesh.position.set(0, FLOOR_Y, textureLayout.centerZ);
   mesh.receiveShadow = false;
 
   const shadow = own(
@@ -232,11 +202,16 @@ export function createCourtFloor({
   );
   contact.name = 'cached-basket-base-shadow';
   // Child coordinates share the plane axes; the floor rotation places it at y=.009.
-  contact.position.set(rim.x, 4 - (rim.z - 2.15), 0.005);
+  contact.position.set(rim.x, textureLayout.centerZ - (rim.z - 2.15), 0.005);
   mesh.add(contact);
 
   return {
     mesh,
+    paintGeometry,
+    paintUniforms,
+    setQuality(quality: SceneQuality) {
+      density.value = quality === 'density' ? 1 : 0;
+    },
     setViewCutaway(value: number) {
       const amount = Number.isFinite(value)
         ? THREE.MathUtils.clamp(value, 0, 1)

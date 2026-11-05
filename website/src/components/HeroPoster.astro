@@ -1,0 +1,93 @@
+---
+import Icon from './Icon.astro';
+import { content, type Locale } from '../data/content';
+import { release } from '../data/release';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale];
+---
+
+<section id="hero" class="hero chapter">
+  <div class="hero-stage" data-story-stage="hero">
+    <div class="hero-topline">
+      <span>
+        <i></i>
+        {c.hero.eyebrow}
+      </span>
+      <span class="display hero-edition">01 / HOOPITO</span>
+    </div>
+    <div
+      class="hero-copy stage-heading"
+      data-story-item="heading"
+      data-story-enter="up"
+      data-story-preset="hero-title"
+    >
+      <h1 data-story-reveal>
+        {c.hero.lines.map((line, i) => (
+          <span
+            data-hero-line
+            data-story-line
+            class:list={[i === 1 && 'hero-accent']}
+          >
+            {line}
+            {locale === 'en' && i === 0 ? ' ' : ''}
+          </span>
+        ))}
+      </h1>
+    </div>
+    <div
+      class="hero-introduction"
+      data-story-item="detail"
+      data-story-enter="up"
+    >
+      <p class="hero-lead">{c.hero.lead}</p>
+      <ul class="hero-tags">
+        {c.hero.tags.map((tag) => (
+          <li>{tag}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="hero-action-slot">
+      <div
+        class="hero-actions-panel"
+        data-glass-card
+        data-glass-id="hero-actions"
+        data-story-item="control"
+        data-story-enter="left"
+        data-story-preset="hero-actions"
+      >
+        <div class="hero-actions">
+          <a
+            class="button button-orange"
+            data-download
+            href={release.upstreamApkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-haspopup="dialog"
+            aria-controls="download-dialog"
+          >
+            <span class="control-content">
+              <span>{c.hero.download}</span>
+              <Icon name="download" />
+            </span>
+          </a>
+          <a class="text-link" href="#scoring">
+            <span class="control-content">
+              <span>{c.hero.explore}</span>
+              <Icon name="arrow" />
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-floor">
+      <a href="#scoring">
+        <span class="scroll-line"></span>
+        {c.hero.scroll}
+      </a>
+      <span class="display">V{release.version}</span>
+    </div>
+  </div>
+</section>

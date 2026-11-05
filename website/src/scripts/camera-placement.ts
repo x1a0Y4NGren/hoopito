@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { storyPose } from './story-pose.ts';
+import { storyPose, evaluateCameraTrack } from './story-pose.ts';
 import type { StoryPose } from './story-pose.ts';
 import type {
   CameraPlacement,
@@ -27,12 +27,17 @@ export function normalizeCameraPlacement(
     !placement ||
     !Number.isFinite(placement.blend) ||
     !validRegion(placement.region) ||
+    (placement.restRegion !== undefined &&
+      (!validRegion(placement.restRegion) ||
+        placement.restRegion.width <= INSET * 2 ||
+        placement.restRegion.height <= INSET * 2)) ||
     placement.region.width <= INSET * 2 ||
     placement.region.height <= INSET * 2
   )
     return null;
   return {
     region: { ...placement.region },
+    restRegion: { ...(placement.restRegion ?? placement.region) },
     blend: clamp(placement.blend),
     inputEnabled: placement.inputEnabled === true,
   };
@@ -117,10 +122,10 @@ function overheadPose(viewport: SceneRegion, region: SceneRegion): StoryPose {
     { x: 1, y: 1 },
   ];
   // An explicit floor-aligned up vector stays well defined at the pole.
-  // Reproject corners to account for the small forward offset without cropping.
+  // Reproject corners to retain the full 24px safety inset without cropping.
   for (let iteration = 0; iteration < 4; iteration += 1) {
     target.set(0, 0, 0);
-    camera.position.set(0, height, 0.01);
+    camera.position.set(0, height, 0);
     camera.lookAt(target);
     camera.updateMatrixWorld();
     raycaster.setFromCamera(center, camera);
@@ -143,60 +148,121 @@ function overheadPose(viewport: SceneRegion, region: SceneRegion): StoryPose {
     if (overflow <= 1.000001 || iteration === 3) break;
     height *= overflow * 1.000001;
   }
+  // Keep the optical axis above x=0 so elevated basket hardware shares the
+  // floor centerline. The horizontal film shift reproduces the fitted ground
+  // projection exactly, without the height parallax of a translated camera.
+  const filmOffset = (target.x / height) * camera.getFilmWidth();
+  camera.position.x = 0;
+  target.x = 0;
   return {
     ...pose,
     position: camera.position.toArray() as StoryPose['position'],
     target: target.toArray() as StoryPose['target'],
     up: [0, 0, -1],
+    filmOffset,
   };
 }
 
+type OverheadFit = (
+  viewport: SceneRegion,
+  region: SceneRegion,
+  source: 'rest' | 'live',
+) => StoryPose;
+
+function composeCameraPoseWithFit(
+  frame: StoryFrame,
+  viewport: SceneRegion,
+  normalized: CameraPlacement | null,
+  motionEnabled: boolean,
+  fitOverhead: OverheadFit,
+): StoryPose {
+  const reading = (chapter: StoryFrame['chapter'], useRestRegion: boolean) => {
+    const pose = storyPose({ chapter, progress: 0, active: true });
+    if (chapter === 'experience' && normalized && validRegion(viewport))
+      return fitOverhead(
+        viewport,
+        useRestRegion ? normalized.restRegion! : normalized.region,
+        useRestRegion ? 'rest' : 'live',
+      );
+    // Preserve the existing full-viewport macro framing and ball volume.
+    if (chapter === 'hero' && validRegion(viewport)) {
+      const position = new THREE.Vector3(...pose.position);
+      const target = new THREE.Vector3(...pose.target);
+      const forward = target.clone().sub(position);
+      const right = forward
+        .clone()
+        .cross(new THREE.Vector3(0, 1, 0))
+        .normalize();
+      const shift =
+        0.5 *
+        forward.length() *
+        Math.tan((pose.fov * Math.PI) / 360) *
+        (viewport.width / viewport.height);
+      target.addScaledVector(right, -shift);
+      pose.target = target.toArray() as StoryPose['target'];
+    }
+    return pose;
+  };
+  if (!motionEnabled || !frame.cameraTrack)
+    return reading(frame.chapter, false);
+  // The live card is moving during a flight. Its DOM rectangle must never
+  // change a world-space endpoint; fit once to its transform-free reading ROI.
+  const { from, to } = frame.cameraTrack;
+  return evaluateCameraTrack(
+    frame.cameraTrack,
+    reading(from, true),
+    reading(to, true),
+  );
+}
+
+/** Uncached composition remains the reference for projection and diagnostics. */
 export function composeCameraPose(
   frame: StoryFrame,
   viewport: SceneRegion,
   placement: CameraPlacement | null,
   motionEnabled = true,
 ): StoryPose {
-  const original = storyPose(frame, motionEnabled);
-  const normalized = normalizeCameraPlacement(placement);
-  if (
-    !normalized ||
-    !validRegion(viewport) ||
-    !['scoring', 'experience', 'replay'].includes(frame.chapter) ||
-    (!motionEnabled && frame.chapter !== 'experience')
-  )
-    return original;
-  // Scoring and experience share the same start of the flight. Native stage
-  // entry controls its blend, so a chapter change cannot advance the camera.
-  const base =
-    frame.chapter === 'replay'
-      ? original
-      : storyPose({ chapter: 'scoring', progress: 0, active: true });
-  const blend = !motionEnabled ? 1 : normalized.blend;
-  if (blend === 0) return base;
-  const overhead = overheadPose(viewport, normalized.region);
-  if (blend === 1) return overhead;
-  const mix = (from: number, to: number) => from + (to - from) * blend;
-  return {
-    position: base.position.map((value, axis) =>
-      mix(value, overhead.position[axis]!),
-    ) as StoryPose['position'],
-    target: base.target.map((value, axis) =>
-      mix(value, overhead.target[axis]!),
-    ) as StoryPose['target'],
-    // Keeping world-up while moving vertically lets the final 0.01m offset
-    // determine roll, squeezing ~35 degrees into the last few scroll pixels.
-    // Transport screen-up towards the floor along the same shared path.
-    up: [0, 1 - blend, -blend],
-    fov: mix(base.fov, overhead.fov),
-    light: mix(base.light, overhead.light),
-    reveal: mix(base.reveal, overhead.reveal),
-  };
+  return composeCameraPoseWithFit(
+    frame,
+    viewport,
+    normalizeCameraPlacement(placement),
+    motionEnabled,
+    overheadPose,
+  );
 }
 
 export function createCameraPoseResolver(): typeof composeCameraPose {
   let previous: readonly unknown[] | undefined;
   let pose: StoryPose | undefined;
+  let endpointSnapshot: readonly unknown[] | undefined;
+  let endpoint: StoryPose | undefined;
+  const fitOverhead: OverheadFit = (viewport, region, source) => {
+    // Fit only the selected ROI. A live host moving during a flight has no
+    // bearing on its static endpoint; changing progress still evaluates the
+    // complete world track below. Keep a single fit owned by this scene.
+    const snapshot = [
+      source,
+      viewport.left,
+      viewport.top,
+      viewport.width,
+      viewport.height,
+      region.left,
+      region.top,
+      region.width,
+      region.height,
+    ];
+    if (
+      endpoint &&
+      endpointSnapshot &&
+      snapshot.every((value, index) =>
+        Object.is(value, endpointSnapshot![index]),
+      )
+    )
+      return endpoint;
+    endpoint = overheadPose(viewport, region);
+    endpointSnapshot = snapshot;
+    return endpoint;
+  };
   return (frame, viewport, placement, motionEnabled = true) => {
     // Each scene retains one scalar snapshot, so fresh objects can reuse a pose
     // while in-place layout and story mutations always invalidate it.
@@ -204,6 +270,9 @@ export function createCameraPoseResolver(): typeof composeCameraPose {
       frame.chapter,
       frame.progress,
       frame.active,
+      frame.cameraTrack?.from,
+      frame.cameraTrack?.to,
+      frame.cameraTrack?.progress,
       viewport.left,
       viewport.top,
       viewport.width,
@@ -213,6 +282,10 @@ export function createCameraPoseResolver(): typeof composeCameraPose {
       placement?.region.top,
       placement?.region.width,
       placement?.region.height,
+      placement?.restRegion?.left,
+      placement?.restRegion?.top,
+      placement?.restRegion?.width,
+      placement?.restRegion?.height,
       placement?.blend,
       placement?.inputEnabled,
       motionEnabled,
@@ -223,7 +296,20 @@ export function createCameraPoseResolver(): typeof composeCameraPose {
       snapshot.every((value, index) => Object.is(value, previous![index]))
     )
       return pose;
-    pose = composeCameraPose(frame, viewport, placement, motionEnabled);
+    const normalized = normalizeCameraPlacement(placement);
+    if (!normalized || !validRegion(viewport)) {
+      // Removal or invalid geometry ends the previous placement's lifetime.
+      // Restoration must fit the newly adopted region before accepting input.
+      endpoint = undefined;
+      endpointSnapshot = undefined;
+    }
+    pose = composeCameraPoseWithFit(
+      frame,
+      viewport,
+      normalized,
+      motionEnabled,
+      fitOverhead,
+    );
     previous = snapshot;
     return pose;
   };

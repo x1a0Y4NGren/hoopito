@@ -1,22 +1,23 @@
 {
-  "version": 3,
-  "generated_at": "2026-10-16",
+  "version": 4,
+  "generated_at": "2026-10-31",
   "tool": "image_gen.imagegen",
   "mode": "built-in",
-  "purpose": "Hoopito indoor court materials. The unbranded basketball uses independently generated natural game-ball leather; classic eight-panel channels, material response and lighting are rendered in Three.js.",
-  "previous_generation_record": "generation-v2.json",
+  "purpose": "Cinematic training arena: uniformly lit generated maple and fine leather albedo, with independent deterministic microstructure data.",
+  "previous_generation_record": "generation-v3.json",
   "assets": [
     {
       "id": "maple",
-      "source": "source/maple-floor-v2.png",
-      "prompt": "Use case: photorealistic-natural. Asset type: seamless 1024 by 1024 PBR base color texture for a premium indoor basketball arena hardwood court. A perfectly flat orthographic overhead material swatch made entirely of exquisite fine-grained hard maple boards. Use slender parallel boards running vertically, approximately twenty-four tightly fitted boards across the image, restrained staggered end joints and delicate authentic fibers. Quiet natural pale honey, cream and light toasted beige, with very subtle local variation. Immaculate craftsmanship, satin sealed wood. Uniform neutral diffuse illumination with constant overall brightness across the tile. Real high-frequency wood detail, refined thin seams without dark cracks, and very few understated curls. All four edges must repeat seamlessly. Every pixel depicts only the flat surface. No room or scene, no perspective, no big wide planks, no giant grain whorls, no dramatic zebra stripes, no court markings, no logos or text. No baked highlights, shadows, glossy reflections, ambient occlusion, vignettes or lighting gradients; lighting and paint will be rendered at runtime. No watermark.",
+      "source": "source/maple-floor-v4.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless square base-color/albedo texture for a real-time 3D premium indoor basketball training court. Generate a flat orthographic material scan, ideally 2048x2048. Entire image is warm pale honey hard-maple flooring, slender parallel planks running vertically, approximately twenty tightly fitted boards across the tile; understated staggered end joints, fine natural fibers, very restrained board-to-board cream/beige variation and a few tiny believable wear marks. Elegant well-maintained professional training floor. Perfectly uniform neutral diffuse scan illumination; constant overall brightness across the tile. This is COLOR ONLY: no directional shading, baked highlights, varnish glare, cast shadows, ambient occlusion, vignette, dark cracks or perspective. Material relief and lighting will be generated separately. Every edge must tile seamlessly in both axes. No court lines, circles, text, numbers, logo, ball, room, equipment, frame, border or watermark. Fine restrained grain, not large whorls, orange/brown zebra stripes, rustic wide boards or weathered wood.",
       "conversion": {
         "maximum_size": 1024,
         "quality": 72,
         "color_space": "srgb"
       },
-      "source_sha256": "942ac328eb3b464ce460155b407d65c641325c0ffd451a67efddddcc08997b16",
-      "source_dimensions_px": [1254, 1254]
+      "source_sha256": "723ebf5a28dd01eb08e19ed5a44b7316fe7142efab14ec77dec10d6bb40c34e0",
+      "source_dimensions_px": [1254, 1254],
+      "reviewed_at": "2026-10-31"
     },
     {
       "id": "metal",
@@ -46,40 +47,38 @@
     },
     {
       "id": "leather",
-      "source": "source/basketball-leather-v3.png",
-      "prompt": "Use case: photorealistic-natural. Asset type: seamless square PBR base-color texture for the leather cover of a classic eight-panel NBA-style indoor game basketball, with absolutely no branding. Primary request: a flat orthographic material scan of genuine broken-in orange-brown basketball leather, close enough to reveal the fine embossed pebble grain. Thousands of tiny, tightly packed, low-relief, slightly flattened irregular rounded pebbles with fine shallow creases, natural leather pores and subtle rubbed tops. The grain must look like authentic game-ball leather, NOT separate beads, cobblestones, reptile scales, porous foam or inflated rubber bumps. Refined tawny burnt orange / warm saddle brown, restrained color variation and a dry matte finish. Each tiny grain approximately 5–8 pixels wide in a 1536px tile; consistent scale and evenly distributed grain across the whole image. Composition: the full square is only the flat leather surface, all four edges tile seamlessly. Lighting: perfectly even neutral diffuse scan illumination, no directional highlights, shadows, vignette or large brightness gradients; the 3D renderer adds lighting. Constraints: no ball silhouette, no sphere, no black panel channels, no lines or seams, no text or numbers, no letters, no NBA or manufacturer logo, no printed marks, no watermark, no border. This is a production material texture, not a picture of a finished ball; classic eight-panel black channels are applied separately on the 3D sphere.",
+      "source": "source/basketball-leather-v4.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless square COLOR / albedo-only material texture for a premium unbranded indoor basketball in a macro real-time 3D shot. Flat orthographic scan of genuine fine-grained orange-tan basketball leather, ideally 2048x2048. Thousands of tightly packed small flattened irregular rounded leather pebbles, naturally warm tawny orange with subtle saddle-tan pigment variation; fine shallow creases between grains. Grain should be very fine and low contrast: approximately 2–4 pixels per pebble in a 1254px tile, not large beads or craters. Dry supple well-maintained game leather, fine tactile surface, refined product-photo realism. Perfectly uniform neutral diffuse scan lighting; no micro shadows, black crevices, highlights or directional shading, as normals and runtime lighting are separate. Constant overall brightness from edge to edge, seamlessly repeating in both axes. Entire square only leather. NO basketball silhouette, sphere, channel/seam lines, dark panels, logos, branding, letters, numbers, text, watermarks, border, vignette, glossy coating, reptile scales, sponge, large gravel or exaggerated cobblestone bumps. Warm natural orange-tan, never deeply red or dark burnt brown.\nTargeted edit: Edit ONLY the fine material scale and pigment shading of this basketball leather texture. Keep warm orange-tan color, flat square swatch, no lines, no branding. Make every pebble FOUR TIMES SMALLER in each dimension: this entire square must show approximately 300 to 400 tiny flattened grains across its width, not the current roughly60 large pebbles. The whole image should read as quiet nearly uniform orange from a distance. Flatten the tonal contrast by70%; remove directional micro shadows and bright pebble edges, so it works as COLOR/ALBEDO ONLY. Very fine shallow, irregular close-packed authentic game leather pores, not a relief photograph. Neutral diffuse scan lighting, seamless edges, uniform overall brightness, no perspective, no shiny beads, no dark cracks, no new elements, no watermark.",
       "conversion": {
         "maximum_size": 1024,
         "quality": 72,
         "color_space": "srgb"
       },
-      "source_sha256": "707c84227ba8e7585b4b077c90cd8b012bff6e344f8fb674dbb40d77cd086470",
+      "source_sha256": "73a5d222ea43243b9c0d986716dfba6868d2b30a6e2ec7cc30da202a28422fd4",
       "source_dimensions_px": [1254, 1254],
-      "visual_references": [
-        {
-          "url": "https://www.wilson.com/en-us/products/nba-official-game-basketball-wz10025",
-          "role": "Reference for genuine game-ball leather grain and warm orange-brown color. No manufacturer image or printed branding is used in the asset."
-        },
-        {
-          "url": "https://pr.nba.com/wilson-nba-global-partnership/",
-          "role": "Reference for the traditional eight-panel configuration. Channels are defined on the sphere separately from the generated repeating material."
-        }
-      ],
-      "reviewed_at": "2026-10-16"
+      "reviewed_at": "2026-10-31"
     },
     {
       "id": "leatherDetail",
-      "source": "source/basketball-leather-v3.png",
-      "generated_source_id": "leather",
+      "source": "../../scripts/material-data.mjs",
+      "generation_mode": "procedural",
+      "derivation": "Periodic neutral64-cell microheight independent of generated albedo lighting",
       "conversion": {
         "maximum_size": 512,
-        "quality": 68,
-        "grayscale": true,
+        "quality": 82,
         "color_space": "linear"
-      },
-      "source_sha256": "707c84227ba8e7585b4b077c90cd8b012bff6e344f8fb674dbb40d77cd086470",
-      "source_dimensions_px": [1254, 1254],
-      "derivation": "Grayscale encoding of the independently generated v3 game-ball leather color source. Used as a linear microdetail bump map; no brand marks or black channels are baked into the tile."
+      }
+    },
+    {
+      "id": "mapleDetail",
+      "source": "../../scripts/material-data.mjs",
+      "generation_mode": "procedural",
+      "derivation": "Periodic packed normal XY and roughness,20 boards per1.4m tile",
+      "conversion": {
+        "maximum_size": 512,
+        "quality": 82,
+        "color_space": "linear"
+      }
     }
   ]
 }

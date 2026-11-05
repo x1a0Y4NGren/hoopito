@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "generated_at": "2026-11-03",
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "purpose": "Light-realistic shared SVG interactive basketball court: independent honey maple surface and isolated transparent backboard/rim, preserving exact SVG court and dynamic net.",
+  "runtime_scope": "Phone and 2D fallback only; desktop real-time 3D materials remain unchanged.",
+  "assets": [
+    {
+      "id": "maple",
+      "source": "source/demo-maple-v2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: seamless square material image for a lightweight interactive overhead basketball court on a mobile website. Generate a premium well-maintained indoor training-court hard-maple floor texture, flat orthographic scan with absolutely no perspective. Warm natural pale honey and champagne beige wood, elegant fine straight fibers, slender tightly fitted planks running vertically, about sixteen to twenty boards across the image, discreet staggered end joints with extremely thin light seams. Very restrained variations between boards, a few subtle believable marks, no rustic knots or heavy distress. Uniform neutral diffuse illumination across the full image; subtle satin-varnish surface appearance but no baked glare, directional lighting, cast shadows, vignette, depth, room or objects. Seamlessly tileable left/right and top/bottom. This is only a beautiful floor-color texture, not a scene. No court lines, circles, arcs, paint, basketballs, hoops, nets, logos, lettering, numbers, borders, frames or watermark. Avoid orange saturated wood, gray muddy tint, broad dark plank gaps and repetitive zebra-striping. Square image about1024px, high material detail, opaque background.",
+      "source_sha256": "3b38b373c8d2c8e5c62e8684eb64833649b42273fb7d187a0c8641eef0fbf7b9",
+      "source_dimensions_px": [1254, 1254],
+      "generation_output": "exec-ffb29ed9-8998-45ab-a02f-47497c823c6c.png",
+      "reviewed_at": "2026-11-03",
+      "transparent": false,
+      "conversion": {
+        "width": 384,
+        "height": 384,
+        "quality": 64,
+        "maximum_bytes": 12288
+      },
+      "registration_method": "Square uniformly lit maple color material. Original texture and plank arrangement retained; no court markings, text or illumination painted into conversion."
+    },
+    {
+      "id": "hoop",
+      "source": "source/demo-hoop-v1.png",
+      "prompt": "Precise-object-edit. Edit this isolated basketball backboard and orange rim sprite. Keep its refined transparent glass, graphite metal, warm orange metal material, symmetry, soft lighting, clean isolated silhouette, no basketball net and genuinely transparent background. CORRECT THE PROPORTIONS AND CAMERA: the rim must become a broad shallow HORIZONTAL ELLIPSE viewed from high above. Its outside width should be about800px relative to a2100px board width; outside height about350px, exactly width×0.4375. The current rim is too round and narrow; make it wider and strongly foreshortened vertically. Keep the backboard a thin shallow horizontal slab seen from above, its full width2.6times the rim width. Center the rim beneath the board on the same vertical axis, with a short small attachment neck, very little vertical gap. Board must occupy upperhalf with sufficientmargin, entire assembly compact. No front-facing round circle. One board and one open elliptical orange ring only. No net, basketball, floor, text, checkerboard, background, detached extra hardware or glow. Keep transparent open center and surroundings. Deliver the full corrected assembly on genuine RGBA transparency with clean edges.",
+      "source_sha256": "6e621623d06119bc5ec2583a5fc9d0d94aa7397de0ba4ae6b7c888e69e2eb943",
+      "source_dimensions_px": [2019, 779],
+      "generation_output": "exec-30b487bc-3e00-4b14-a715-85f1cd036cbd.png",
+      "reviewed_at": "2026-11-03",
+      "transparent": true,
+      "crop_px": {
+        "left": 40,
+        "top": 160,
+        "width": 1940,
+        "height": 488
+      },
+      "rim_anchor_px": {
+        "cx": 1007,
+        "cy": 484,
+        "rx": 400,
+        "ry": 142
+      },
+      "registration_method": "Reviewed transparent RGBA source. Rim centerline measured in original pixel coordinates; source crop preserves complete assembly and alpha. Uniform display scale targets rim center(300,82) and horizontal radius20 SVG units; original generated perspective retained, resulting vertical radius7.1. No stretch or repaint.",
+      "generation_history": [
+        {
+          "mode": "built-in generate",
+          "prompt": "Use case: stylized-concept with photorealistic materials. Asset type: one transparent-background isolated basketball backboard and rim game sprite for a mobile interactive overhead court. Primary request: a precisely centered premium tempered-glass backboard with slim graphite-metal edges, two discreet mounting bolts, a small graphite mounting bracket and one elegant burnt-orange powder-coated steel basketball rim projecting toward the bottom of the picture. No net whatsoever. Camera: orthographic, symmetric left/right, almost top-down on a court; the upright backboard is viewed strongly from above and foreshortened into a shallow horizontal glass slab, NOT a tall front-facing rectangle. The horizontal backboard width is approximately2.6 times the rim's full outside width. The rim is a clean centered horizontal ellipse with height approximately44percent of its width and a fully open transparent center. Show its graceful round tubular metal thickness and restrained warm highlights. The rim is directly below the backboard and bracket, centered on exactly the same vertical axis; no rotation or diagonal tilt. Materials: crystal-clear smoke-free glass with fine subtle beveled edges and just enough pale reflections to define the glass, dark gray satin metal fittings, rich natural orange steel ring. Soft warm studio key from upper-left and very faint cool fill, coherent refined light-realistic small-scale3D rendering, crisp detailed silhouette that will remain legible when displayed about50CSSpx wide. Fully isolated with generous transparent space around every edge. Genuine transparent RGBA background, including open rim and area around glass; NOT a drawn checkerboard or solid backdrop. Absolutely no basketball net, nylon cords, floor, court markings, target-square paint, basketball, pole, pedestal, room, frame outside the backboard, typography, logo, watermark, cast-shadow on a background or glow. One complete assembly only; no alternative views or duplicated objects. Do not generate an entire court or UI.",
+          "source_sha256": "210b771ae24424392d73f6642b2781616ecdc0c740ba3dad042bcc480b6ef17e",
+          "source_dimensions_px": [2022, 778],
+          "generation_output": "exec-680635c8-e06d-4074-aff1-0fc5eaef0da2.png",
+          "selected": false,
+          "reason": "The original rim was too round and narrow for the elevated court composition; edited through the built-in imagegen tool."
+        },
+        {
+          "mode": "built-in edit",
+          "prompt": "Precise-object-edit. Edit this isolated basketball backboard and orange rim sprite. Keep its refined transparent glass, graphite metal, warm orange metal material, symmetry, soft lighting, clean isolated silhouette, no basketball net and genuinely transparent background. CORRECT THE PROPORTIONS AND CAMERA: the rim must become a broad shallow HORIZONTAL ELLIPSE viewed from high above. Its outside width should be about800px relative to a2100px board width; outside height about350px, exactly width×0.4375. The current rim is too round and narrow; make it wider and strongly foreshortened vertically. Keep the backboard a thin shallow horizontal slab seen from above, its full width2.6times the rim width. Center the rim beneath the board on the same vertical axis, with a short small attachment neck, very little vertical gap. Board must occupy upperhalf with sufficientmargin, entire assembly compact. No front-facing round circle. One board and one open elliptical orange ring only. No net, basketball, floor, text, checkerboard, background, detached extra hardware or glow. Keep transparent open center and surroundings. Deliver the full corrected assembly on genuine RGBA transparency with clean edges.",
+          "source_sha256": "6e621623d06119bc5ec2583a5fc9d0d94aa7397de0ba4ae6b7c888e69e2eb943",
+          "selected": true
+        }
+      ],
+      "conversion": {
+        "maximum_size": 512,
+        "quality": 82,
+        "alpha_quality": 100,
+        "maximum_bytes": 24576
+      }
+    }
+  ]
+}

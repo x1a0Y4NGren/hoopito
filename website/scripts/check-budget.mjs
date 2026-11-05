@@ -3,6 +3,7 @@ import { resolve, relative, extname, sep } from 'node:path';
 import { gzipSync, brotliCompressSync, constants } from 'node:zlib';
 import { courtTextures } from '../src/data/court-materials.ts';
 import { selectImageResource } from './responsive-images.mjs';
+import { mobileScenes } from '../src/data/mobile-scenes.ts';
 
 // Measure the generated HTML and its resource graph, rather than guessing from source sizes.
 const dist = resolve(process.argv[2] || 'dist');
@@ -105,7 +106,15 @@ async function initialResources(page, viewport) {
     ) {
       resources.push(localPath(attr.href, page));
     }
-    if (tag.startsWith('<img') && attr.loading !== 'lazy' && attr.src)
+    const desktopPreload =
+      attr['data-desktop-preload'] !== undefined &&
+      viewport.width >= 1024 &&
+      viewport.pointer === 'fine';
+    if (
+      tag.startsWith('<img') &&
+      (attr.loading !== 'lazy' || desktopPreload) &&
+      attr.src
+    )
       resources.push(localPath(selectImageResource(attr, [], viewport), page));
     // Inline CSS background assets are requested independently of HTML images.
   }
@@ -186,6 +195,16 @@ try {
             avif,
             pointer: 'coarse',
           });
+          const hero = localPath(mobileScenes[0].src);
+          if (width <= 767 && !resources.has(hero))
+            throw new Error(
+              'Phone initial graph must include its real hero plate',
+            );
+          for (const scene of mobileScenes.slice(width <= 767 ? 1 : 0))
+            if (resources.has(localPath(scene.src)))
+              throw new Error(
+                `Deferred phone plate requested at startup: ${scene.id}`,
+              );
           resources.forEach((file) => baseline.add(file));
           mobileReports.push({
             label: `Mobile initial ${page === 'index.html' ? 'zh-CN' : 'en'} ${width}px ${dpr}x ${avif ? 'AVIF' : 'WebP'}`,
@@ -231,6 +250,11 @@ try {
           throw new Error(`Missing desktop demo poster at ${width}px`);
         extra.add(demoPoster);
         const initial = await initialResources('index.html', viewport);
+        for (const scene of mobileScenes)
+          if (initial.has(localPath(scene.src)))
+            throw new Error(
+              `Desktop initial graph requests a phone plate: ${scene.id}`,
+            );
         initial.forEach((file) => {
           if (!baseline.has(file)) extra.add(file);
         });

@@ -1,7 +1,14 @@
 import { expect, test as base, type Page } from '@playwright/test';
 import { storyPose } from '../src/scripts/story-pose';
-import type { StoryFrame } from '../src/scripts/scene-contract';
+import type { CourtScene, StoryFrame } from '../src/scripts/scene-contract';
+import { courtTextures } from '../src/data/court-materials';
 import { installContractClock } from './controlled-clock';
+import {
+  storyItemPose,
+  storyStageOffset,
+} from '../src/scripts/story-choreography';
+import { getReplayState } from '../src/data/replay-example';
+import { expectAnchorReading } from './reading-ready';
 
 const test = base.extend({
   page: async ({ page }, use, testInfo) => {
@@ -26,14 +33,15 @@ const test = base.extend({
 });
 
 const apk =
-  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk';
+  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/Hoopito-v2.1.0-android.apk';
 const origin = 'http://127.0.0.1:4321';
 const locales = [
   {
     path: '/',
     lang: 'zh-CN',
     brand: '球豆',
-    title: '每一球，都有迹可循。',
+    title: '每一球都有迹可循',
+    lead: '在球场上记比分、标记出手位置。 打完再看比分走势，回顾自己的比赛。',
     other: '/en/',
     privacy: '/privacy/',
   },
@@ -41,7 +49,8 @@ const locales = [
     path: '/en/',
     lang: 'en',
     brand: 'Hoopito',
-    title: 'Every play leaves a trace.',
+    title: 'Every shot has a trace',
+    lead: 'Keep score and mark your shots on court. After the game, review the score flow and your records.',
     other: '/',
     privacy: '/en/privacy/',
   },
@@ -49,24 +58,82 @@ const locales = [
 const threeChunk = /court-(?:scene|engine)[^/]*\.(?:js|ts)(?:\?|$)/;
 
 async function expectDesktopPins(page: Page) {
-  const expected = await page.evaluate(() => {
-    if (
-      matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      !matchMedia('(min-width:1024px) and (pointer:fine)').matches
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const enabled =
+          !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+          matchMedia('(min-width:1024px) and (pointer:fine)').matches;
+        const expected = [
+          ...document.querySelectorAll<HTMLElement>('[data-story-stage]'),
+        ].filter((stage) => {
+          if (!enabled) return false;
+          const heading = stage.querySelector('.section-top');
+          const inset =
+            stage.dataset.storyStage === 'hero'
+              ? 0
+              : document.querySelector('.site-header')!.getBoundingClientRect()
+                  .bottom +
+                20 -
+                (heading
+                  ? heading.getBoundingClientRect().top -
+                    stage.getBoundingClientRect().top
+                  : 0);
+          const available =
+            stage.dataset.storyStage === 'hero'
+              ? innerHeight + 1
+              : innerHeight - inset - 16;
+          // Transforming an offscreen poster item can expand scrollHeight.
+          // Pin eligibility depends on the static grid content footprint.
+          const bottom = Math.max(
+            0,
+            ...[...stage.children].map((child) => {
+              const item = child as HTMLElement;
+              return item.offsetTop + item.offsetHeight;
+            }),
+          );
+          const footprint = Math.max(
+            stage.offsetHeight,
+            bottom + (parseFloat(getComputedStyle(stage).paddingBottom) || 0),
+          );
+          return footprint <= available;
+        }).length;
+        return document.querySelectorAll('.pin-spacer').length - expected;
+      }),
     )
-      return 0;
-    return ['hero', 'experience', 'replay'].filter((chapter) => {
-      const stage = document.querySelector<HTMLElement>(
-        `[data-story-stage="${chapter}"]`,
-      )!;
-      return (
-        stage.scrollHeight <=
-        innerHeight -
-          (chapter === 'experience' ? 104 : chapter === 'replay' ? 88 : 50)
-      );
-    }).length;
-  });
-  await expect(page.locator('.pin-spacer')).toHaveCount(expected);
+    .toBe(0);
+}
+
+async function expectReplayReading(page: Page) {
+  const stage = page.locator('[data-story-stage="replay"]');
+  await expect(stage).toHaveAttribute('data-replay-progress', '1.0000');
+  await expect
+    .poll(() =>
+      stage.evaluate(async (element) => {
+        const stage = element as HTMLElement;
+        const pin = stage.parentElement!.classList.contains('pin-spacer');
+        const start = Number(stage.dataset.storyStart),
+          end = Number(stage.dataset.storyEnd);
+        const top = scrollY;
+        await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+        const phase = Number(stage.dataset.storyProgress);
+        const heading = stage
+          .querySelector('.section-top')!
+          .getBoundingClientRect();
+        const header = document
+          .querySelector('.site-header')!
+          .getBoundingClientRect();
+        // A fixed heading is already aligned while the native smooth anchor is
+        // still moving through the reading interval. Wait for the actual stop.
+        return (
+          scrollY === top &&
+          (!pin || Math.abs(phase - 0.4) <= 0.5 / (end - start) + 0.0001) &&
+          Math.abs(heading.top - header.bottom - 20) < 2
+        );
+      }),
+    )
+    .toBe(true);
 }
 
 for (const locale of locales) {
@@ -84,10 +151,7 @@ for (const locale of locales) {
       await page.evaluate(() => {
         const samples: Record<string, number> = {};
         Object.assign(window, { spotlightAlignment: samples });
-        for (const [selector, kind] of [
-          ['[data-demo-court-host]', 'court'],
-          ['.point-presets', 'presets'],
-        ]) {
+        for (const [selector, kind] of [['[data-demo-court-host]', 'court']]) {
           const target = document.querySelector<HTMLElement>(selector)!;
           new MutationObserver(() => {
             if (target.dataset.demoInvitation !== 'playing') return;
@@ -108,14 +172,29 @@ for (const locale of locales) {
           });
         }
       });
-      await page.locator('#experience').scrollIntoViewIfNeeded();
       const host = page.locator('[data-demo-court-host]');
-      const presets = page.locator('.point-presets');
-      await host.scrollIntoViewIfNeeded();
+      if (width >= 1024) {
+        await page.locator('.site-header nav > a[href="#experience"]').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-stop',
+          'experience',
+        );
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-state',
+          'idle',
+        );
+      } else await host.scrollIntoViewIfNeeded();
       await expect(host).toHaveAttribute('data-demo-invitation', 'done');
-      await presets.scrollIntoViewIfNeeded();
-      await expect(presets).toHaveAttribute('data-demo-invitation', 'done');
-      for (const kind of ['court', 'presets'] as const) {
+      await expect(page.locator('.point-presets')).not.toHaveAttribute(
+        'data-demo-invitation',
+        /.+/,
+      );
+      await expect(
+        page.locator(
+          '.demo-invitation-arrow, .demo-invitation-shade, .demo-invitation-layer[data-cue-kind="presets"]',
+        ),
+      ).toHaveCount(0);
+      for (const kind of ['court'] as const) {
         // Completed layers are display:none to prevent stale-size overflow.
         // Assert their geometry while the actual spotlight was visible.
         const alignment = await page.evaluate(
@@ -150,8 +229,25 @@ for (const locale of locales) {
         await expect(layer).toHaveCSS('opacity', '0');
       await page.locator('[data-reset]').click();
       await expectReset(page);
-      await page.locator('#download').scrollIntoViewIfNeeded();
-      await host.scrollIntoViewIfNeeded();
+      if (width >= 1024) {
+        await page.locator('.nav-download').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-stop',
+          'download',
+        );
+        await page.locator('.site-header nav > a[href="#experience"]').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-stop',
+          'experience',
+        );
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-state',
+          'idle',
+        );
+      } else {
+        await page.locator('#download').scrollIntoViewIfNeeded();
+        await host.scrollIntoViewIfNeeded();
+      }
       await expect(host).toHaveAttribute('data-demo-invitation', 'done');
       for (const layer of await page.locator('.demo-invitation-layer').all())
         await expect(layer).toHaveCSS('opacity', '0');
@@ -181,11 +277,10 @@ test(
       );
     });
     await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
-    await page.locator('#experience').scrollIntoViewIfNeeded();
+    await page.locator('.site-header nav > a[href="#experience"]').click();
     const host = page.locator('[data-demo-court-host]');
     const canvas = page.locator('#court-canvas');
-    const sceneWidth = () =>
-      page.evaluate(() => document.documentElement.clientWidth * 0.48);
+    const sceneWidth = () => page.evaluate(() => document.body.clientWidth);
     await expect(host).toHaveAttribute('data-renderer', '3d');
     await expect(page.locator('.scene-background > #court-canvas')).toHaveCount(
       1,
@@ -203,11 +298,13 @@ test(
     const range = await page
       .locator('[data-story-stage="experience"]')
       .evaluate((e) => ({
-        start: Number((e as HTMLElement).dataset.storyStart),
-        end: Number((e as HTMLElement).dataset.storyEnd),
-        height: innerHeight,
+        start: Number((e as HTMLElement).dataset.scrollReadStart),
+        end: Number((e as HTMLElement).dataset.scrollReadEnd),
+        current: scrollY,
       }));
-    expect(range.end - range.start).toBeCloseTo(range.height * 0.32, 0);
+    expect(range.end).toBeGreaterThanOrEqual(range.start);
+    expect(range.current).toBeGreaterThanOrEqual(range.start - 2);
+    expect(range.current).toBeLessThanOrEqual(range.end + 2);
     const bounds = await host.boundingBox();
     await host.click({
       position: { x: bounds!.width * 0.5, y: bounds!.height * 0.63 },
@@ -220,7 +317,7 @@ test(
     await expectReset(page);
     await page.locator('#scoring').scrollIntoViewIfNeeded();
     await expect(page.locator('.scene-background canvas')).toHaveCount(1);
-    await page.locator('#experience').scrollIntoViewIfNeeded();
+    await page.locator('.site-header nav > a[href="#experience"]').click();
     await expect(host).toHaveAttribute('data-renderer', '3d');
     expect(
       await page.evaluate(
@@ -353,97 +450,264 @@ for (const locale of locales) {
   }
 }
 
-test(
-  'large desktop text emits continuous camera poses across unpinned chapter boundaries',
-  { tag: '@webgl', lock: 'webgl-renderer' },
-  async ({ page }, testInfo) => {
-    test.skip(
-      testInfo.project.name !== 'chromium',
-      'Scene frames are verified against Chromium WebGL.',
-    );
-    await allowSoftwareWebGL(page);
-    await page.setViewportSize({ width: 1440, height: 901 });
-    await page.goto('/en/');
-    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
-    await page.addStyleTag({
-      content: 'html {scroll-behavior:auto !important}',
-    });
-    await page.evaluate(() => document.fonts.ready);
-    await page.evaluate(() => {
-      const items = [
-        ...document.querySelectorAll<HTMLElement>('body *'),
-      ].filter((e) =>
-        [...e.childNodes].some(
-          (n) => n.nodeType === Node.TEXT_NODE && n.textContent?.trim(),
+interface ObservedStoryCourt {
+  scene: CourtScene;
+  frame: StoryFrame | null;
+  scroll: number;
+}
+
+// Observe production commits at the existing dynamic factory boundary. The
+// renderer, camera resolver, projection and original setters remain real.
+async function observeStoryCourt(page: Page) {
+  await page.route(/court-scene[^/]*\.(?:js|ts)(?:\?|$)/, async (route) => {
+    const response = await route.fetch();
+    let body = await response.text();
+    const exports = body.match(/export\s*\{([^}]*\bcreateCourtScene\b[^}]*)\}/);
+    let factory = exports?.[1].match(
+      /(?:^|,)\s*([\w$]+)\s+as\s+createCourtScene\b/,
+    )?.[1];
+    if (exports && factory) {
+      body = body.replace(
+        exports[0],
+        exports[0].replace(
+          /[\w$]+\s+as\s+createCourtScene\b/,
+          '__observedStoryCreate as createCourtScene',
         ),
       );
-      const sizes = items.map(
-        (e) => [e, parseFloat(getComputedStyle(e).fontSize)] as const,
+    } else if (/export async function createCourtScene\(/.test(body)) {
+      factory = '__observedStoryOriginal';
+      body = body.replace(
+        /export async function createCourtScene\(/,
+        'async function __observedStoryOriginal(',
       );
-      for (const [element, size] of sizes)
-        element.style.fontSize = `${size * 2}px`;
-      dispatchEvent(new Event('resize'));
-    });
-    await expect(page.locator('.pin-spacer')).toHaveCount(0);
-    for (const chapter of ['scoring', 'experience', 'replay']) {
-      const cut = await page
-        .locator(`#${chapter}`)
-        .evaluate(
-          (e) =>
-            e.getBoundingClientRect().top +
-            scrollY -
-            Math.min(innerHeight * 0.3, 260),
+      body += '\nexport { __observedStoryCreate as createCourtScene };\n';
+    } else throw new Error('The real scene factory must be observed');
+    body += `\nasync function __observedStoryCreate(...args) {
+      const scene = await ${factory}(...args);
+      const probe = { scene, frame: null, scroll: scrollY };
+      const setFrame = scene.setStoryFrame.bind(scene);
+      scene.setStoryFrame = (frame) => {
+        probe.frame = structuredClone(frame);
+        probe.scroll = scrollY;
+        return setFrame(frame);
+      };
+      Reflect.set(window, '__observedStoryCourt', probe);
+      return scene;
+    }\n`;
+    await route.fulfill({ response, body, contentType: 'text/javascript' });
+  });
+}
+
+// Each pair retains both boundaries, both directions and the same interior
+// samples. Independent cases bound CPU software-renderer work without dropping
+// positions or extending a single test's deadline.
+for (const [from, to] of [
+  ['hero', 'scoring'],
+  ['scoring', 'experience'],
+  ['experience', 'replay'],
+] as const) {
+  test(
+    `large desktop text emits continuous camera poses across unpinned chapter boundaries: ${from} to ${to}`,
+    { tag: '@webgl', lock: 'webgl-renderer' },
+    async ({ page }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== 'chromium',
+        'Scene frames are verified against Chromium WebGL.',
+      );
+      await allowSoftwareWebGL(page);
+      await observeStoryCourt(page);
+      await page.setViewportSize({ width: 1440, height: 901 });
+      await page.goto('/en/');
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+      await page.addStyleTag({
+        content: 'html {scroll-behavior:auto !important}',
+      });
+      await page.evaluate(() => document.fonts.ready);
+      const readStops = () =>
+        page.locator('[data-story-stage]').evaluateAll((stages) =>
+          stages.map((stage) => {
+            const element = stage as HTMLElement;
+            return [
+              element.dataset.scrollReadStart,
+              element.dataset.scrollReadEnd,
+            ];
+          }),
         );
-      for (const direction of [1, -1]) {
-        const samples: StoryFrame[] = [];
-        for (const offset of [-2 * direction, 2 * direction]) {
-          await page.evaluate((y) => window.scrollTo(0, y), cut + offset);
-          const previous = {
-            scoring: 'hero',
-            experience: 'scoring',
-            replay: 'experience',
+      const before = await readStops();
+      await page.evaluate(() => {
+        const items = [
+          ...document.querySelectorAll<HTMLElement>('body *'),
+        ].filter((e) =>
+          [...e.childNodes].some(
+            (n) => n.nodeType === Node.TEXT_NODE && n.textContent?.trim(),
+          ),
+        );
+        const sizes = items.map(
+          (e) => [e, parseFloat(getComputedStyle(e).fontSize)] as const,
+        );
+        for (const [element, size] of sizes)
+          element.style.fontSize = `${size * 2}px`;
+        dispatchEvent(new Event('resize'));
+      });
+      await expect(page.locator('.pin-spacer')).toHaveCount(0);
+      await expect.poll(readStops).not.toEqual(before);
+      const seek = async (top: number) => {
+        await page.evaluate(
+          (y) =>
+            new Promise<void>((resolve) => {
+              scrollTo({ top: y, behavior: 'instant' });
+              requestAnimationFrame(() =>
+                requestAnimationFrame(() => resolve()),
+              );
+            }),
+          top,
+        );
+        await expect
+          .poll(() =>
+            page.evaluate(() => {
+              const probe = Reflect.get(
+                window,
+                '__observedStoryCourt',
+              ) as ObservedStoryCourt;
+              if (!probe.frame) return false;
+              if (probe.scroll === scrollY) return true;
+              if (probe.frame.cameraTrack) return false;
+              // Identical reading poses are intentionally deduplicated. Native
+              // reading can move without requiring another setStoryFrame call;
+              // only reuse that pose inside its own freshly measured interval.
+              const stage = document.querySelector<HTMLElement>(
+                `[data-story-stage="${probe.frame.chapter}"]`,
+              );
+              const start = Number(stage?.dataset.scrollReadStart);
+              const end = Number(stage?.dataset.scrollReadEnd);
+              return (
+                Number.isFinite(start) &&
+                Number.isFinite(end) &&
+                scrollY >= start - 2 &&
+                scrollY <= end + 2 &&
+                document.documentElement.dataset.scrollState === 'idle'
+              );
+            }),
+          )
+          .toBe(true);
+        return page.evaluate(() => {
+          const probe = Reflect.get(
+            window,
+            '__observedStoryCourt',
+          ) as ObservedStoryCourt;
+          const host = document
+            .querySelector('[data-demo-court-host]')!
+            .getBoundingClientRect();
+          const points = [
+            { x: 0.4, y: 0.65 },
+            { x: 0.6, y: 0.45 },
+          ].map((point) => probe.scene.projectPoint(point)!);
+          return {
+            frame: probe.frame!,
+            scroll: scrollY,
+            host: { x: host.left, y: host.top },
+            points,
           };
-          const expectedChapter =
-            offset < 0 ? previous[chapter as keyof typeof previous] : chapter;
-          // Software rendering can delay the scroll RAF beyond a fixed sleep.
-          // Wait for the actual chapter boundary, while still requiring the
-          // shared endpoint pose rather than accepting a stale camera sample.
-          await expect(page.locator('#court-canvas')).toHaveAttribute(
-            'data-chapter',
-            expectedChapter,
-          );
-          await expect
-            .poll(async () =>
-              Number(
-                await page
-                  .locator('#court-canvas')
-                  .getAttribute('data-story-progress'),
-              ),
-            )
-            [offset < 0 ? 'toBeGreaterThan' : 'toBeLessThan'](
-              offset < 0 ? 0.99 : 0.01,
-            );
-          samples.push(
-            (await page.locator('#court-canvas').evaluate((e) => ({
-              chapter: (e as HTMLElement).dataset.chapter,
-              progress: Number((e as HTMLElement).dataset.storyProgress),
-              active: true,
-            }))) as StoryFrame,
-          );
-        }
-        const from = storyPose(samples[0]),
-          to = storyPose(samples[1]);
-        const delta = Math.hypot(
-          ...from.position.map((v, i) => v - to.position[i]),
+        });
+      };
+      {
+        const gap = await page.evaluate(
+          ({ from, to }) => ({
+            start: Number(
+              document.querySelector<HTMLElement>(
+                `[data-story-stage="${from}"]`,
+              )!.dataset.scrollReadEnd,
+            ),
+            end: Number(
+              document.querySelector<HTMLElement>(`[data-story-stage="${to}"]`)!
+                .dataset.scrollReadStart,
+            ),
+          }),
+          { from, to },
         );
-        expect(
-          delta,
-          `${chapter} ${direction}: ${JSON.stringify(samples)}`,
-        ).toBeLessThan(0.08);
+        expect(gap.end - gap.start).toBeGreaterThan(4);
+        for (const boundary of [
+          { at: gap.start, chapter: from },
+          { at: gap.end, chapter: to },
+        ]) {
+          for (const direction of [1, -1]) {
+            const samples = [];
+            for (const offset of [-2 * direction, 2 * direction]) {
+              const sample = await seek(boundary.at + offset);
+              if (Math.abs(sample.scroll - boundary.at) <= 2) {
+                expect(sample.frame.chapter).toBe(boundary.chapter);
+                expect(sample.frame.cameraTrack).toBeUndefined();
+              }
+              samples.push(sample);
+            }
+            const a = storyPose(samples[0].frame),
+              b = storyPose(samples[1].frame);
+            expect(
+              Math.hypot(
+                ...a.position.map((value, axis) => value - b.position[axis]!),
+              ),
+              `${from} → ${to}, actual committed frames: ${JSON.stringify(samples.map((sample) => sample.frame))}`,
+            ).toBeLessThan(0.08);
+            for (let point = 0; point < samples[0].points.length; point += 1) {
+              const a = samples[0].points[point],
+                b = samples[1].points[point];
+              expect(
+                Number.isFinite(a.x) &&
+                  Number.isFinite(a.y) &&
+                  Number.isFinite(b.x) &&
+                  Number.isFinite(b.y),
+              ).toBe(true);
+              const hostX =
+                boundary.chapter === 'experience'
+                  ? samples[0].host.x - samples[1].host.x
+                  : 0;
+              const hostY =
+                boundary.chapter === 'experience'
+                  ? samples[0].host.y - samples[1].host.y
+                  : 0;
+              expect(
+                Math.hypot(a.x - b.x - hostX, a.y - b.y - hostY),
+              ).toBeLessThanOrEqual(2);
+            }
+          }
+        }
+        const references = new Map<number, Awaited<ReturnType<typeof seek>>>();
+        const observed = [];
+        for (const progress of [0.25, 0.5, 0.75, 0.5, 0.25]) {
+          const sample = await seek(
+            gap.start + (gap.end - gap.start) * progress,
+          );
+          expect(sample.frame.cameraTrack).toMatchObject({ from, to });
+          expect(sample.frame.cameraTrack!.progress).toBeCloseTo(
+            (sample.scroll - gap.start) / (gap.end - gap.start),
+            5,
+          );
+          const previous = references.get(progress);
+          if (previous)
+            for (let point = 0; point < sample.points.length; point += 1)
+              expect(
+                Math.hypot(
+                  sample.points[point].x - previous.points[point].x,
+                  sample.points[point].y - previous.points[point].y,
+                ),
+              ).toBeLessThanOrEqual(2);
+          references.set(progress, sample);
+          observed.push(sample);
+        }
+        await testInfo.attach(
+          `${from}-to-${to}-observed-frames-and-projection`,
+          {
+            body: JSON.stringify(observed),
+            contentType: 'application/json',
+          },
+        );
+        expect(storyPose(observed[0].frame).position).not.toEqual(
+          storyPose(observed[2].frame).position,
+        );
       }
-    }
-  },
-);
+    },
+  );
+}
 
 for (const locale of locales) {
   for (const dpr of [1, 2]) {
@@ -502,11 +766,11 @@ for (const locale of locales) {
   }
 }
 
-test('replay completes the final fractional scroll pixel on a high density display', async ({
+test('replay remains fully readable at fractional reading positions on a high density display', async ({
   browser,
 }) => {
   const context = await browser.newContext({
-    viewport: { width: 1440, height: 1000 },
+    viewport: { width: 1920, height: 1440 },
     deviceScaleFactor: 2,
     reducedMotion: 'no-preference',
   });
@@ -519,7 +783,12 @@ test('replay completes the final fractional scroll pixel on a high density displ
     const stage = page.locator('[data-story-stage="replay"]');
     await stage.evaluate((element) =>
       scrollTo({
-        top: Number((element as HTMLElement).dataset.replayEnd) - 0.4,
+        top:
+          Number((element as HTMLElement).dataset.replayStart) +
+          (Number((element as HTMLElement).dataset.replayEnd) -
+            Number((element as HTMLElement).dataset.replayStart)) *
+            0.4 -
+          0.4,
         behavior: 'instant',
       }),
     );
@@ -550,8 +819,35 @@ test('replay completes the final fractional scroll pixel on a high density displ
 test('replay refresh preserves the card phase and media changes preserve the visible reading position', async ({
   page,
 }, testInfo) => {
+  await page.addInitScript(() => {
+    const rows: unknown[] = [];
+    Reflect.set(window, '__replayRefreshTrace', rows);
+    const sample = (kind: string, top?: number) => {
+      const stage = document.querySelector<HTMLElement>(
+        '[data-story-stage="replay"]',
+      );
+      rows.push({
+        time: performance.now(),
+        kind,
+        top,
+        y: scrollY,
+        height: innerHeight,
+        chapter: document.documentElement.dataset.chapter,
+        start: stage?.dataset.replayStart,
+        end: stage?.dataset.replayEnd,
+        phase: stage?.dataset.storyProgress,
+      });
+    };
+    const nativeScroll = window.scrollTo.bind(window);
+    window.scrollTo = ((...args: [number, number] | [ScrollToOptions]) => {
+      sample('scrollTo', typeof args[0] === 'number' ? args[1] : args[0].top);
+      Reflect.apply(nativeScroll, window, args);
+    }) as typeof window.scrollTo;
+    addEventListener('resize', () => sample('resize'));
+    addEventListener('scroll', () => sample('scroll'));
+  });
   await page.route(threeChunk, (route) => route.abort());
-  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.setViewportSize({ width: 1920, height: 1440 });
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
   await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
@@ -564,20 +860,43 @@ test('replay refresh preserves the card phase and media changes preserve the vis
       .poll(() =>
         stage.evaluate((element) => {
           const { replayStart, replayEnd } = (element as HTMLElement).dataset;
-          const spacer = element.closest('.pin-spacer-story-replay');
+          const spacer = element.closest('.pin-spacer');
           if (!spacer) return false;
           const expectedStart = Math.round(
-            scrollY + spacer.getBoundingClientRect().top - innerHeight * 0.5,
+            scrollY +
+              spacer.getBoundingClientRect().top -
+              Number((element as HTMLElement).dataset.storyRestTop),
           );
           return (
-            Math.abs(Number(replayStart) - expectedStart) <= 0.5 &&
+            Math.abs(Number(replayStart) - expectedStart) <= 0.501 &&
             Math.abs(
-              Number(replayEnd) - Number(replayStart) - innerHeight * 0.75,
-            ) <= 0.5
+              Number(replayEnd) - Number(replayStart) - innerHeight * 1.15,
+            ) <= 0.501
           );
         }),
       )
-      .toBe(true);
+      .toBe(true)
+      .catch(async (error) => {
+        await testInfo.attach('range-debug', {
+          body: JSON.stringify(
+            await stage.evaluate((element) => {
+              const s = element as HTMLElement;
+              return {
+                y: scrollY,
+                v: [innerWidth, innerHeight],
+                data: { ...s.dataset },
+                stage: s.getBoundingClientRect().toJSON(),
+                spacer: s
+                  .closest('.pin-spacer')
+                  ?.getBoundingClientRect()
+                  .toJSON(),
+              };
+            }),
+          ),
+          contentType: 'application/json',
+        });
+        throw error;
+      });
   };
   const expectSettledPhase = async (phase: number, restored = false) => {
     let lastMeasurement: unknown;
@@ -587,7 +906,7 @@ test('replay refresh preserves the card phase and media changes preserve the vis
           lastMeasurement = await stage.evaluate(
             async (element, target) => {
               const read = () => {
-                const { replayStart, replayEnd, replayProgress } = (
+                const { replayStart, replayEnd, storyProgress } = (
                   element as HTMLElement
                 ).dataset;
                 const start = Number(replayStart),
@@ -600,7 +919,7 @@ test('replay refresh preserves the card phase and media changes preserve the vis
                     0,
                     Math.min(1, (scrollY - start) / (end - start)),
                   ),
-                  rendered: Number(replayProgress),
+                  rendered: Number(storyProgress),
                 };
               };
               const before = read();
@@ -645,6 +964,16 @@ test('replay refresh preserves the card phase and media changes preserve the vis
         body: JSON.stringify(lastMeasurement, null, 2),
         contentType: 'application/json',
       });
+      await testInfo.attach('replay-refresh-trace', {
+        body: JSON.stringify(
+          await page.evaluate(() =>
+            Reflect.get(window, '__replayRefreshTrace'),
+          ),
+          null,
+          2,
+        ),
+        contentType: 'application/json',
+      });
       throw error;
     }
   };
@@ -674,7 +1003,7 @@ test('replay refresh preserves the card phase and media changes preserve the vis
   await expect
     .poll(async () => Math.abs((await stage.boundingBox())!.y - top))
     .toBeLessThan(1);
-  await page.setViewportSize({ width: 1440, height: 1050 });
+  await page.setViewportSize({ width: 1920, height: 1490 });
   await waitForMeasuredRange();
   await expectSettledPhase(midpoint, true);
   await stage.evaluate((element) =>
@@ -690,202 +1019,134 @@ test('replay refresh preserves the card phase and media changes preserve the vis
   await waitForMeasuredRange();
   await expectSettledPhase(1);
   await expect(page.locator('[data-replay-red]')).toHaveText('11');
-  // Leaving the fixed approach must stay natural across later refreshes.
+  // A departed stage follows document flow. Resizing changes upstream pin
+  // distances, so preserve reading states above and verify native flow here.
   await stage.evaluate((element) =>
     scrollTo({
-      top: Number((element as HTMLElement).dataset.replayEnd) + 200,
+      top: Number((element as HTMLElement).dataset.replayEnd) + 1000,
       behavior: 'instant',
     }),
   );
   await expectSettledPhase(1);
-  const leavingTop = (await stage.boundingBox())!.y;
-  await page.setViewportSize({ width: 1440, height: 1100 });
+  await page.setViewportSize({ width: 1920, height: 1540 });
   await waitForMeasuredRange();
   await expectSettledPhase(1);
   await expect
-    .poll(async () => Math.abs((await stage.boundingBox())!.y - leavingTop))
-    .toBeLessThan(1.5);
+    .poll(() =>
+      stage.evaluate(
+        (element) =>
+          element.getBoundingClientRect().top -
+          Number((element as HTMLElement).dataset.storyRestTop),
+      ),
+    )
+    .toBeLessThan(-100);
+  const flow = await stage.evaluate(async (element) => {
+    const before = {
+      top: element.getBoundingClientRect().top,
+      scroll: scrollY,
+    };
+    scrollBy({ top: 100, behavior: 'instant' });
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+    return {
+      before,
+      after: { top: element.getBoundingClientRect().top, scroll: scrollY },
+    };
+  });
+  expect(flow.after.scroll - flow.before.scroll).toBeCloseTo(100, 0);
+  expect(flow.before.top - flow.after.top).toBeCloseTo(100, 0);
+  await expectSettledPhase(1);
+  await page.locator('.nav-download').click();
+  await expect(page.locator('#download .button')).toBeInViewport();
   await expectNoOverflow(page);
 });
 
-test('replay arrival settles the page, both card faces and final score together', async ({
+test('replay cards settle during the reading interval with the complete score', async ({
   page,
 }) => {
   await page.route(threeChunk, (route) => route.abort());
-  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.setViewportSize({ width: 1920, height: 1440 });
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
   await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
   const stage = page.locator('[data-story-stage="replay"]');
-  await stage.evaluate((element) =>
-    scrollTo({
-      top: Number((element as HTMLElement).dataset.storyStart) - 100,
-      behavior: 'instant',
-    }),
-  );
-  await page.mouse.move(700, 400);
-  for (let i = 0; i < 24; i++) {
-    await page.mouse.wheel(0, 50);
-    await page.waitForTimeout(350);
-    if ((await stage.boundingBox())!.y <= 103) break;
-  }
-  await expect
-    .poll(async () => Number(await stage.getAttribute('data-replay-progress')))
-    .toBeCloseTo(1, 3);
-  expect((await stage.boundingBox())!.y).toBeCloseTo(88, 0);
+  await page.locator('a[href="#replay"]').first().click();
+  await expectReplayReading(page);
   await expect(page.locator('[data-replay-blue]')).toHaveText('8');
   await expect(page.locator('[data-replay-red]')).toHaveText('11');
-  for (const card of await page.locator('[data-replay-card]').all()) {
-    const tilt = await card.evaluate((element) => {
+  for (const card of await stage.locator('[data-glass-card]').all()) {
+    await expect(card).toHaveCSS('opacity', '1');
+    const offset = await card.evaluate((element) => {
       const m = new DOMMatrix(getComputedStyle(element).transform);
       return (
-        Math.abs(m.m13) + Math.abs(m.m23) + Math.abs(m.m41) + Math.abs(m.m43)
+        Math.abs(m.m13) +
+        Math.abs(m.m23) +
+        Math.abs(m.m41) +
+        Math.abs(m.m42) +
+        Math.abs(m.m43)
       );
     });
-    expect(tilt).toBeLessThan(0.001);
+    expect(offset).toBeLessThan(0.001);
   }
 });
 
 for (const locale of locales) {
-  test(`${locale.lang}: replay slows its arrival without slowing the score clock, and reverse scroll does not snap forward`, async ({
+  test(`${locale.lang}: replay stays fixed while its cards move and reverse gestures complete the adjacent chapter`, async ({
     page,
   }) => {
-    const errors: string[] = [];
-    page.on('pageerror', (error) => errors.push(error.message));
     await page.route(threeChunk, (route) => route.abort());
-    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.setViewportSize({ width: 1920, height: 1440 });
     await page.goto(locale.path);
     await page.evaluate(() => document.fonts.ready);
-    await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
     const stage = page.locator('[data-story-stage="replay"]');
-    const range = await stage.evaluate((element) => ({
-      start: Number((element as HTMLElement).dataset.replayStart),
-      end: Number((element as HTMLElement).dataset.replayEnd),
-    }));
     const tops: number[] = [];
-    for (const progress of [0.15, 0.35, 0.65, 0.85]) {
-      await page.evaluate(
-        (top) => scrollTo({ top, behavior: 'instant' }),
-        range.start + (range.end - range.start) * progress,
-      );
+    for (const phase of [0.15, 0.35, 0.65, 0.85]) {
+      await stage.evaluate((element, phase) => {
+        const stage = element as HTMLElement;
+        const start = Number(stage.dataset.replayStart),
+          end = Number(stage.dataset.replayEnd);
+        scrollTo({ top: start + (end - start) * phase, behavior: 'instant' });
+      }, phase);
       await expect
         .poll(async () =>
-          Number(await stage.getAttribute('data-replay-progress')),
+          Number(await stage.getAttribute('data-story-progress')),
         )
-        .toBeCloseTo(progress, 2);
+        .toBeCloseTo(phase, 2);
       tops.push((await stage.boundingBox())!.y);
     }
-    // Identical scroll distances produce progressively smaller page movement,
-    // while the graph advances on the unslowed shared scroll clock.
-    expect(tops[2] - tops[3]).toBeLessThan((tops[0] - tops[1]) * 0.6);
-    await expect(page.locator('[data-replay-blue]')).toHaveText('8');
-    await expect(page.locator('[data-replay-red]')).toHaveText('7');
-    await page.evaluate(
-      (top) => scrollTo({ top, behavior: 'instant' }),
-      range.start + (range.end - range.start) * 0.94,
-    );
-    // The native seek returns before WebKit commits its shared scroll clock.
-    // Begin the reverse gesture only once that seek has reached the cards, and
-    // hit page content rather than the mouse's default (0, 0) header boundary.
-    await expect
-      .poll(async () =>
-        Number(await stage.getAttribute('data-replay-progress')),
-      )
-      .toBeCloseTo(0.94, 2);
-    await page.mouse.move(700, 400);
-    const reverseDelta = -30;
-    const reverseGesture = await page.evaluateHandle((delta) => {
-      const gesture = {
-        seen: false,
-        destination: scrollY + delta,
-        stop: () => {},
-      };
-      const onWheel = () => {
-        gesture.seen = true;
-      };
-      window.addEventListener('wheel', onWheel, { once: true, passive: true });
-      gesture.stop = () => {
-        window.removeEventListener('wheel', onWheel);
-      };
-      return gesture;
-    }, reverseDelta);
-    try {
-      await page.mouse.wheel(0, reverseDelta);
-      // WebKit may deliver the compositor's remaining reverse wheel motion
-      // after 900 ms. Some engines expose scrollend but never dispatch it for
-      // this input, so require the full pixel delta before checking stability.
+    expect(Math.max(...tops) - Math.min(...tops)).toBeLessThan(1);
+    const atStop = async (id: string) => {
+      await expect(page.locator('html')).toHaveAttribute(
+        'data-scroll-stop',
+        id,
+      );
       await expect
         .poll(() =>
-          reverseGesture.evaluate(async (gesture) => {
-            if (!gesture.seen || Math.abs(scrollY - gesture.destination) >= 0.5)
-              return false;
-            const top = scrollY;
-            await new Promise(requestAnimationFrame);
-            await new Promise(requestAnimationFrame);
-            return scrollY === top;
-          }),
+          page.evaluate((id) => {
+            const stage = document.querySelector<HTMLElement>(
+              `[data-story-stage="${id}"]`,
+            )!;
+            return (
+              scrollY >= Number(stage.dataset.scrollReadStart) - 2 &&
+              scrollY <= Number(stage.dataset.scrollReadEnd) + 2 &&
+              document.documentElement.dataset.scrollState === 'idle'
+            );
+          }, id),
         )
         .toBe(true);
-    } finally {
-      await reverseGesture.evaluate((gesture) => gesture.stop());
-      await reverseGesture.dispose();
-    }
-    const reversed = await page.evaluate(() => scrollY);
-    expect(reversed).toBeLessThan(
-      range.start + (range.end - range.start) * 0.94,
-    );
-    expect(reversed).toBeGreaterThan(
-      range.start + (range.end - range.start) * 0.84,
-    );
-    await page.waitForTimeout(450);
-    expect(await page.evaluate(() => scrollY)).toBeCloseTo(reversed, 0);
-    // A direct navigation skips the approach and exposes readable screenshots.
+    };
     await page.locator('a[href="#replay"]').first().click();
-    await expect
-      .poll(async () =>
-        Number(await stage.getAttribute('data-replay-progress')),
-      )
-      .toBeCloseTo(1, 3);
-    await expect
-      .poll(async () => (await stage.boundingBox())!.y)
-      .toBeCloseTo(85, 0);
-    await expect(page.locator('[data-replay-red]')).toHaveText('11');
-    // Clicking the fixed header moves the pointer there. Deliver this gesture
-    // over content and wait for departure; engines need not scroll its exact delta.
+    await expectReplayReading(page);
     await page.mouse.move(700, 400);
-    const forwardGesture = await page.evaluateHandle(() => {
-      const gesture = { seen: false, stop: () => {} };
-      const onWheel = () => {
-        gesture.seen = true;
-      };
-      window.addEventListener('wheel', onWheel, { once: true, passive: true });
-      gesture.stop = () => window.removeEventListener('wheel', onWheel);
-      return gesture;
-    });
-    try {
-      await page.mouse.wheel(0, 1000);
-      await expect
-        .poll(() =>
-          forwardGesture.evaluate(async (gesture, end) => {
-            if (!gesture.seen || scrollY <= end + 100) return false;
-            const top = scrollY;
-            await new Promise(requestAnimationFrame);
-            await new Promise(requestAnimationFrame);
-            return scrollY === top;
-          }, range.end),
-        )
-        .toBe(true);
-    } finally {
-      await forwardGesture.evaluate((gesture) => gesture.stop());
-      await forwardGesture.dispose();
-    }
-    // A large forward scroll can leave normally; snapping must not pull back.
-    const left = await page.evaluate(() => scrollY);
-    expect(left).toBeGreaterThan(range.end + 100);
-    await page.waitForTimeout(400);
-    expect(await page.evaluate(() => scrollY)).toBeCloseTo(left, 0);
+    await page.mouse.wheel(0, -24);
+    await atStop('experience');
+    await page.locator('a[href="#replay"]').first().click();
+    await expectReplayReading(page);
+    await page.mouse.move(700, 400);
+    await page.mouse.wheel(0, 24);
+    await atStop('download');
+    await expect(page.locator('#download .button')).toBeInViewport();
     await expectNoOverflow(page);
-    expect(errors).toEqual([]);
   });
 
   test(`${locale.lang}: direct replay anchor arrives with readable faces and no unfinished score`, async ({
@@ -894,18 +1155,11 @@ for (const locale of locales) {
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
     await page.route(threeChunk, (route) => route.abort());
-    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.setViewportSize({ width: 1920, height: 1440 });
     await page.goto(`${locale.path}#replay`);
     await page.evaluate(() => document.fonts.ready);
     const stage = page.locator('[data-story-stage="replay"]');
-    await expect
-      .poll(async () =>
-        Number(await stage.getAttribute('data-replay-progress')),
-      )
-      .toBeCloseTo(1, 3);
-    await expect
-      .poll(async () => (await stage.boundingBox())!.y)
-      .toBeCloseTo(85, 0);
+    await expectReplayReading(page);
     await expect(page.locator('[data-replay-blue]')).toHaveText('8');
     await expect(page.locator('[data-replay-red]')).toHaveText('11');
     const opener = page.locator('[data-replay-device="summary"] .viewer-link');
@@ -953,118 +1207,284 @@ for (const locale of locales) {
     expect(errors).toEqual([]);
   });
 
-  test(`${locale.lang}: replay cards flip continuously from the approach and land with synchronized scores`, async ({
+  test(`${locale.lang}: replay visuals enter, hold and exit reversibly with synchronized scores`, async ({
     page,
-  }) => {
+  }, testInfo) => {
     await page.route(threeChunk, (route) => route.abort());
-    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.setViewportSize({ width: 1920, height: 1440 });
     await page.goto(locale.path);
     await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(() =>
+      Promise.all(
+        [...document.images].map((image) => {
+          image.loading = 'eager';
+          return image.decode().catch(() => {});
+        }),
+      ),
+    );
     await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
     const stage = page.locator('[data-story-stage="replay"]');
-    const cards = page.locator('[data-replay-card]');
-    await expect(cards).toHaveCount(2);
-    const seek = async (progress: number) => {
-      await stage.evaluate(
-        (element, p) =>
-          scrollTo({
-            top:
-              Number((element as HTMLElement).dataset.replayStart) +
-              (Number((element as HTMLElement).dataset.replayEnd) -
-                Number((element as HTMLElement).dataset.replayStart)) *
-                p,
-            behavior: 'instant',
-          }),
-        progress,
-      );
+    const cards = stage.locator('[data-story-item="visual"]');
+    await expect(cards).toHaveCount(3);
+    await expect(stage.locator('[data-glass-card]')).toHaveCount(1);
+    for (const back of await stage.locator('.replay-card-back').all())
+      await expect(back).toHaveCSS('display', 'none');
+    const layoutStable = async () => {
+      let previousLayout = '';
+      let stableSince = 0;
       await expect
-        .poll(async () =>
-          Number(await stage.getAttribute('data-replay-progress')),
-        )
-        .toBeCloseTo(progress, 2);
+        .poll(async () => {
+          const checkpoint = await page.evaluate(() => {
+            const header = document
+              .querySelector('.site-header')!
+              .getBoundingClientRect().height;
+            const measured = parseFloat(
+              getComputedStyle(document.documentElement).getPropertyValue(
+                '--measured-header',
+              ),
+            );
+            const stages = [
+              ...document.querySelectorAll<HTMLElement>(
+                '[data-story-stage], #closing',
+              ),
+            ].map((item) => ({
+              start: item.dataset.scrollReadStart,
+              end: item.dataset.scrollReadEnd,
+              width: item.getBoundingClientRect().width,
+              height: item.getBoundingClientRect().height,
+              content: item.scrollHeight,
+            }));
+            return {
+              key: JSON.stringify({
+                stages,
+                header,
+                measured,
+                height: document.documentElement.scrollHeight,
+              }),
+              ready:
+                document.fonts.status === 'loaded' &&
+                Math.abs(header - measured) <= 1 &&
+                stages.every(
+                  (item) =>
+                    item.start !== undefined &&
+                    item.end !== undefined &&
+                    Number(item.end) >= Number(item.start),
+                ),
+            };
+          });
+          if (checkpoint.key !== previousLayout || !checkpoint.ready) {
+            previousLayout = checkpoint.key;
+            stableSince = Date.now();
+          }
+          return checkpoint.ready && Date.now() - stableSince >= 200;
+        })
+        .toBe(true);
     };
-    await seek(0);
-    const initialSpin = await cards
-      .first()
-      .evaluate((element) =>
-        Number(
-          (element as HTMLElement).style.transform.match(
-            /rotateY\(([-\d.]+)deg\)/,
-          )?.[1],
-        ),
+    await layoutStable();
+    await page.mouse.click(12, 450);
+    const seek = async (
+      phase: 'incoming' | 'reading' | 'outgoing',
+      progress: number,
+    ) => {
+      await layoutStable();
+      const bounds = await page.evaluate((phase) => {
+        const replay = document.querySelector<HTMLElement>(
+          '[data-story-stage="replay"]',
+        )!;
+        const previous = document.querySelector<HTMLElement>(
+          '[data-story-stage="experience"]',
+        )!;
+        const next = document.querySelector<HTMLElement>(
+          '[data-story-stage="download"]',
+        )!;
+        return phase === 'incoming'
+          ? {
+              start: Number(previous.dataset.scrollReadEnd),
+              end: Number(replay.dataset.scrollReadStart),
+            }
+          : phase === 'outgoing'
+            ? {
+                start: Number(replay.dataset.scrollReadEnd),
+                end: Number(next.dataset.scrollReadStart),
+              }
+            : {
+                start: Number(replay.dataset.scrollReadStart),
+                end: Number(replay.dataset.scrollReadEnd),
+              };
+      }, phase);
+      if (phase !== 'reading')
+        expect(bounds.end - bounds.start).toBeGreaterThan(4);
+      const top = bounds.start + (bounds.end - bounds.start) * progress;
+      await page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), top);
+      await expect
+        .poll(() => page.evaluate((top) => Math.abs(scrollY - top), top))
+        .toBeLessThanOrEqual(1);
+      await page.evaluate(async () => {
+        await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+      });
+      return page.evaluate(
+        ({ start, end }) =>
+          end === start ? 1 : (scrollY - start) / (end - start),
+        bounds,
       );
+    };
+    const readPose = () =>
+      cards.evaluateAll((elements) =>
+        elements.map((element) => {
+          const m = new DOMMatrix(getComputedStyle(element).transform);
+          return {
+            preset: (element as HTMLElement).dataset.storyPreset!,
+            enter: (element as HTMLElement).dataset.storyEnter as
+              'left' | 'right',
+            x: m.m41,
+            y: m.m42,
+            scale: m.m11,
+            depth: Math.abs(m.m13) + Math.abs(m.m23),
+            opacity: Number(getComputedStyle(element).opacity),
+            inert: (element as HTMLElement).inert,
+          };
+        }),
+      );
+    const checkpoints: unknown[] = [];
+    const verify = async (
+      phase: 'incoming' | 'reading' | 'outgoing',
+      progress: number,
+    ) => {
+      const actual = await seek(phase, progress);
+      const geometry = await stage.evaluate((element: HTMLElement) => {
+        const top = element.getBoundingClientRect().top;
+        const heading = element.querySelector('.section-top');
+        return {
+          scroll: scrollY,
+          top,
+          pinned: element.parentElement!.classList.contains('pin-spacer'),
+          restTop:
+            document.querySelector('.site-header')!.getBoundingClientRect()
+              .bottom +
+            20 -
+            (heading ? heading.getBoundingClientRect().top - top : 0),
+          start: Number(element.dataset.scrollReadStart),
+          end: Number(element.dataset.scrollReadEnd),
+        };
+      });
+      const offset = storyStageOffset(
+        {
+          phase,
+          progress: actual,
+          anchorScroll:
+            phase === 'incoming'
+              ? geometry.start - 2
+              : phase === 'outgoing'
+                ? geometry.end + 2
+                : geometry.scroll,
+        },
+        geometry,
+      );
+      const poses = await readPose();
+      for (const pose of poses) {
+        const expected = storyItemPose(actual, 'visual', pose.enter, 1920, {
+          phase,
+          preset: pose.preset,
+        });
+        expect(pose.x, `${phase} ${pose.preset} x`).toBeCloseTo(expected.x, 1);
+        expect(pose.y).toBeCloseTo(
+          expected.y + (expected.opacity > 0 ? offset : 0),
+          1,
+        );
+        expect(pose.scale).toBeCloseTo(expected.scale, 3);
+        expect(pose.opacity).toBeCloseTo(expected.opacity, 3);
+        expect(pose.depth).toBeLessThan(0.001);
+        expect(pose.inert).toBe(pose.opacity < 0.05);
+      }
+      // The graph is an independent fictional example. Its incoming clock
+      // follows the analysis reveal; reading and outgoing remain at the end.
+      const graphProgress =
+        phase === 'incoming'
+          ? storyItemPose(actual, 'visual', 'left', 0, {
+              phase,
+              preset: 'replay-analysis',
+            }).reveal
+          : 1;
+      const expectedScore = getReplayState(graphProgress);
+      await expect(page.locator('[data-replay-blue]')).toHaveText(
+        String(expectedScore.leftScore),
+      );
+      await expect(page.locator('[data-replay-red]')).toHaveText(
+        String(expectedScore.rightScore),
+      );
+      checkpoints.push({
+        phase,
+        requested: progress,
+        actual,
+        graphProgress,
+        expectedScore,
+        poses,
+      });
+      return poses;
+    };
+    const entry = await verify('incoming', 0.2);
     await expect(page.locator('[data-replay-blue]')).toHaveText('0');
     await expect(page.locator('[data-replay-red]')).toHaveText('0');
-    await expect(page.locator('.replay-card-back')).toHaveCount(2);
-    for (const card of await cards.all()) {
-      const depth = await card.evaluate((element) => {
-        const m = new DOMMatrix(getComputedStyle(element).transform);
-        return Math.abs(m.m13) + Math.abs(m.m23);
-      });
-      expect(depth).toBeGreaterThan(0.2);
+    for (const pose of entry) {
+      expect(pose.opacity).toBe(0);
     }
-    await seek(0.45);
+    const partial = [];
+    partial.push(await verify('incoming', 0.5));
+    const approaching = await verify('incoming', 0.7);
+    partial.push(approaching);
     await expect(page.locator('[data-replay-blue]')).toHaveText('6');
     await expect(page.locator('[data-replay-red]')).toHaveText('2');
     await expect(page.locator('[data-replay-moment="lead"]')).toHaveAttribute(
       'data-current',
       'true',
     );
-    await seek(0.65);
+    await verify('incoming', 0.76);
     await expect(page.locator('[data-replay-blue]')).toHaveText('6');
     await expect(page.locator('[data-replay-red]')).toHaveText('6');
     await expect(page.locator('[data-replay-moment="tie"]')).toHaveAttribute(
       'data-current',
       'true',
     );
-    await seek(0.92);
-    await expect(page.locator('[data-replay-blue]')).toHaveText('8');
-    await expect(page.locator('[data-replay-red]')).toHaveText('9');
-    await seek(1);
-    await expect(page.locator('[data-replay-blue]')).toHaveText('8');
-    await expect(page.locator('[data-replay-red]')).toHaveText('11');
-    const finalSpin = await cards
-      .first()
-      .evaluate((element) =>
-        Number(
-          (element as HTMLElement).style.transform.match(
-            /rotateY\(([-\d.]+)deg\)/,
-          )?.[1],
-        ),
-      );
-    expect(
-      finalSpin - initialSpin,
-      'The main axis must complete one and a half turns.',
-    ).toBeCloseTo(540, 1);
-    const expectLanded = async () => {
-      for (const card of await cards.all()) {
-        await expect
-          .poll(() =>
-            card.evaluate((element) => {
-              const m = new DOMMatrix(getComputedStyle(element).transform);
-              return Math.max(
-                Math.abs(m.m11 - 1),
-                Math.abs(m.m22 - 1),
-                Math.abs(m.m33 - 1),
-                Math.abs(m.m12),
-                Math.abs(m.m13),
-                Math.abs(m.m23),
-                Math.abs(m.m41),
-                Math.abs(m.m42),
-                Math.abs(m.m43),
-              );
-            }),
-          )
-          .toBeLessThan(0.001);
+    partial.push(await verify('incoming', 0.9));
+    for (const preset of [
+      'replay-analysis',
+      'replay-summary',
+      'replay-history',
+    ])
+      expect(
+        partial
+          .flat()
+          .some(
+            (pose) =>
+              pose.preset === preset &&
+              pose.opacity > 0.05 &&
+              pose.opacity < 0.95,
+          ),
+        `${preset} has a real intermediate pose`,
+      ).toBe(true);
+    for (const progress of [0, 0.5, 1]) {
+      for (const pose of await verify('reading', progress)) {
+        expect(pose.x).toBeCloseTo(0, 3);
+        expect(pose.y).toBeCloseTo(0, 3);
+        expect(pose.scale).toBeCloseTo(1, 3);
+        expect(pose.depth).toBeLessThan(0.001);
+        expect(pose.opacity).toBe(1);
       }
-      for (const caption of await page
-        .locator('[data-replay-device] figcaption')
-        .all())
-        await expect(caption).toHaveCSS('opacity', '1');
-      for (const sheen of await page.locator('[data-replay-sheen]').all())
-        await expect(sheen).toHaveCSS('opacity', '0');
-    };
-    await expectLanded();
+      await expect(page.locator('[data-replay-blue]')).toHaveText('8');
+      await expect(page.locator('[data-replay-red]')).toHaveText('11');
+    }
+    const reversed = await verify('incoming', 0.7);
+    expect(reversed).toEqual(approaching);
+    const exiting = await verify('outgoing', 0.3);
+    expect(exiting[0].x).toBeGreaterThan(0);
+    expect(exiting[1].x).toBeLessThan(0);
+    for (const pose of exiting) {
+      expect(pose.scale).toBeLessThan(1);
+      expect(pose.opacity).toBeLessThan(1);
+      expect(pose.depth).toBeLessThan(0.001);
+    }
+    await verify('reading', 0.5);
     const link = page.locator('[data-replay-device="summary"] .viewer-link');
     await link.focus();
     await page.keyboard.press('Enter');
@@ -1074,18 +1494,12 @@ for (const locale of locales) {
     );
     await page.keyboard.press('Escape');
     await expect(link).toBeFocused();
-    // The browser queues the dialog's close event after returning native focus.
-    // Let its scroll restoration finish before starting a different navigation.
-    await page.evaluate(
-      () =>
-        new Promise<void>((resolve) =>
-          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-        ),
-    );
-    for (const progress of [0.05, 0.46, 1, 0.08, 1]) await seek(progress);
-    await expectLanded();
     await page.locator('.nav-download').click();
     await expect(page.locator('#download .button')).toBeInViewport();
+    await testInfo.attach('replay-real-reading-gap-checkpoints', {
+      body: JSON.stringify(checkpoints, null, 2),
+      contentType: 'application/json',
+    });
   });
 
   test(`${locale.lang}: replay card motion reverts for narrow viewports and reduced motion`, async ({
@@ -1138,7 +1552,7 @@ for (const locale of locales) {
 test('native stage distances and reverse jumps leave replay upright and downloading usable', async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.setViewportSize({ width: 1920, height: 1440 });
   await page.goto('/');
   await expectDesktopPins(page);
   await expect(page.locator('[data-story-stage="scoring"]')).not.toHaveCSS(
@@ -1147,9 +1561,9 @@ test('native stage distances and reverse jumps leave replay upright and download
   );
   await page.addStyleTag({ content: 'html {scroll-behavior:auto !important}' });
   for (const [chapter, extra] of [
-    ['hero', 0.75],
-    ['experience', 0.32],
-    ['replay', 0.75],
+    ['hero', 1.15],
+    ['experience', 1.15],
+    ['replay', 1.15],
   ] as const) {
     const range = await page
       .locator(`[data-story-stage="${chapter}"]`)
@@ -1161,7 +1575,7 @@ test('native stage distances and reverse jumps leave replay upright and download
     expect(range.end - range.start).toBeCloseTo(range.height * extra, 0);
   }
   const stage = page.locator('[data-story-stage="replay"]');
-  for (const progress of [1, 0.05, 0.9, 0.2, 1]) {
+  for (const progress of [1, 0.05, 0.9, 0.2, 0.4]) {
     await stage.evaluate(
       (e, p) =>
         window.scrollTo(
@@ -1290,7 +1704,7 @@ test('touch gallery pinches and pans within bounds then returns focus', async ({
 });
 
 for (const locale of locales) {
-  test(`${locale.lang}: mobile replay reads introduction, result, insight, then history with distinct examples`, async ({
+  test(`${locale.lang}: mobile replay shows the result then analysis and expandable history with distinct examples`, async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
@@ -1299,13 +1713,22 @@ for (const locale of locales) {
     // Measure one settled layout; swapping fonts between successive boxes
     // otherwise compares positions from different document geometries.
     await page.evaluate(() => document.fonts.ready);
+    const history = page.locator('[data-mobile-disclosure="history"]');
+    await expect(history).not.toHaveAttribute('open');
+    await expect(
+      page.locator('[data-replay-device="history"]'),
+    ).not.toBeVisible();
+    await history.locator(':scope > summary').click();
+    await expect(history).toHaveAttribute('open');
     const sequence = [
       '.replay-introduction',
       '[data-replay-device="summary"]',
       '.replay-insight',
       '[data-replay-device="history"]',
     ];
-    let bottom = 0;
+    // Opening history can scroll the viewport. Ordering is document-relative,
+    // so the first item need not remain below the viewport's top edge.
+    let bottom = -Infinity;
     for (const selector of sequence) {
       const box = await page.locator(selector).boundingBox();
       expect(box).not.toBeNull();
@@ -1482,33 +1905,44 @@ for (const locale of locales) {
       ).toHaveCount(0);
       await expect(page.locator('[data-score-step]')).toHaveText('— / 03');
       await expect(first).toHaveAttribute('data-score-invitation', 'idle');
-      await expect(page.locator('[data-score-invite-arrow]')).toHaveCSS(
-        'opacity',
-        '0',
-      );
+      await expect(page.locator('[data-score-invite-arrow]')).toHaveCount(0);
       await page.addStyleTag({
         content: 'html{scroll-behavior:auto!important}',
       });
       await first.evaluate((element) => {
         let peak = 0;
-        let dimming = 1;
+        let played = false;
+        let otherControlsOpacity = 1;
         let deviceBrightness = 1;
         let deviceOpacity = 1;
-        let arrowPeak = 0;
+        let invitationStartedSettled = true;
+        let indicatorScalePeak = 1;
         const display = document.querySelector('.scoring-display')!;
+        const otherControls = [
+          ...document.querySelectorAll('[data-score-feature]'),
+        ].slice(1);
         const observer = new MutationObserver(() => {
+          const starting =
+            !played &&
+            (element as HTMLElement).dataset.scoreInvitation === 'playing';
+          played ||=
+            (element as HTMLElement).dataset.scoreInvitation === 'playing';
+          if (starting && innerWidth >= 1024) {
+            invitationStartedSettled =
+              document.documentElement.dataset.scrollStop === 'scoring' &&
+              document.documentElement.dataset.scrollState === 'idle' &&
+              Number(getComputedStyle(element).opacity) === 1;
+          }
           peak = Math.max(
             peak,
             Number(
               (element as HTMLElement).style.getPropertyValue('--score-invite'),
             ),
           );
-          dimming = Math.min(
-            dimming,
-            Number(
-              getComputedStyle(
-                document.querySelector('[data-score-feature="1"]')!,
-              ).opacity,
+          otherControlsOpacity = Math.min(
+            otherControlsOpacity,
+            ...otherControls.map((button) =>
+              Number(getComputedStyle(button).opacity),
             ),
           );
           const displayStyle = getComputedStyle(display);
@@ -1517,35 +1951,60 @@ for (const locale of locales) {
             deviceBrightness,
             brightness ? Number(brightness[1]) : 1,
           );
-          deviceOpacity = Math.min(deviceOpacity, Number(displayStyle.opacity));
-          arrowPeak = Math.max(
-            arrowPeak,
-            Number(
-              getComputedStyle(
-                element.querySelector('[data-score-invite-arrow]')!,
-              ).opacity,
-            ),
+          // The outer glass enters with opacity; the App screenshot itself
+          // must stay opaque throughout the invitation.
+          deviceOpacity = Math.min(
+            deviceOpacity,
+            Number(getComputedStyle(display.querySelector('img')!).opacity),
+          );
+          const indicator = element.querySelector('.feature-indicator')!;
+          indicatorScalePeak = Math.max(
+            indicatorScalePeak,
+            new DOMMatrix(getComputedStyle(indicator).transform).m11,
           );
         });
         observer.observe(element, {
           attributes: true,
-          attributeFilter: ['style'],
+          subtree: true,
+          attributeFilter: ['style', 'data-score-invitation'],
         });
         Object.assign(window, {
+          scoreInvitationPlayed: () => played,
           readScoreInvitation: () => {
             observer.disconnect();
             return {
               peak,
-              dimming,
+              otherControlsOpacity,
               deviceBrightness,
               deviceOpacity,
-              arrowPeak,
+              invitationStartedSettled,
+              indicatorScalePeak,
             };
           },
         });
       });
-      await first.scrollIntoViewIfNeeded();
-      await expect(first).toHaveAttribute('data-score-invitation', 'playing');
+      if (width >= 1024) {
+        await page.locator('.hero-actions a[href="#scoring"]').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-stop',
+          'scoring',
+        );
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-state',
+          'idle',
+        );
+      } else await first.scrollIntoViewIfNeeded();
+      // The invitation can complete while a slow engine finishes the native
+      // anchor. Its observer records the actual playing state before navigation.
+      await expect
+        .poll(() =>
+          page.evaluate(() =>
+            (
+              window as typeof window & { scoreInvitationPlayed: () => boolean }
+            ).scoreInvitationPlayed(),
+          ),
+        )
+        .toBe(true);
       await expect(device).toHaveAttribute('data-score-focus', 'none');
       await expect(device).toHaveAttribute('data-score-playing', 'false');
       for (const region of await page.locator('[data-score-region]').all())
@@ -1556,31 +2015,62 @@ for (const locale of locales) {
           window as typeof window & {
             readScoreInvitation: () => {
               peak: number;
-              dimming: number;
+              otherControlsOpacity: number;
               deviceBrightness: number;
               deviceOpacity: number;
-              arrowPeak: number;
+              invitationStartedSettled: boolean;
+              indicatorScalePeak: number;
             };
           }
         ).readScoreInvitation(),
       );
       expect(invitation.peak).toBeGreaterThan(0.5);
-      expect(invitation.dimming).toBeLessThan(0.5);
-      expect(invitation.deviceBrightness).toBeLessThan(0.5);
+      expect(invitation.otherControlsOpacity).toBe(1);
+      expect(invitation.deviceBrightness).toBe(1);
       expect(invitation.deviceOpacity).toBe(1);
-      expect(invitation.arrowPeak).toBeGreaterThan(0.8);
+      expect(invitation.invitationStartedSettled).toBe(true);
+      expect(invitation.indicatorScalePeak).toBe(1);
       await expect(page.locator('.scoring-display')).toHaveCSS(
         'filter',
         'none',
       );
-      await expect(page.locator('[data-score-invite-arrow]')).toHaveCSS(
-        'opacity',
-        '0',
-      );
+      await expect(page.locator('[data-score-invite-arrow]')).toHaveCount(0);
       for (const button of await page.locator('[data-score-feature]').all())
         await expect(button).toHaveCSS('opacity', '1');
-      await page.locator('#download').scrollIntoViewIfNeeded();
-      await first.scrollIntoViewIfNeeded();
+      if (width >= 1024) {
+        // Pinned story items move independently of document scroll. Reach a
+        // real reading stop instead of scrollIntoView parking inside a flight.
+        await page.locator('.site-header .nav-download').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-stop',
+          'download',
+        );
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-state',
+          'idle',
+        );
+        await page.locator('.site-header .wordmark[href="#hero"]').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-stop',
+          'hero',
+        );
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-state',
+          'idle',
+        );
+        await page.locator('.hero-actions a[href="#scoring"]').click();
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-stop',
+          'scoring',
+        );
+        await expect(page.locator('html')).toHaveAttribute(
+          'data-scroll-state',
+          'idle',
+        );
+      } else {
+        await page.locator('#download').scrollIntoViewIfNeeded();
+        await first.scrollIntoViewIfNeeded();
+      }
       await expect(first).toHaveAttribute('data-score-invitation', 'done');
       await first.click();
       await expect(first).toHaveAttribute('aria-pressed', 'true');
@@ -1662,7 +2152,7 @@ for (const locale of locales) {
             .toBe(1);
           await expect
             .poll(() => feedback.evaluate((value) => value.read().shadePeak))
-            .toBeGreaterThan(0.2);
+            .toBeCloseTo(0.18, 2);
           await expect(device).toHaveAttribute('data-score-playing', 'false');
           await expect(cue).toHaveCSS('opacity', '0');
           await expect(image).toHaveAttribute('src', src!);
@@ -1764,9 +2254,14 @@ for (const locale of locales) {
           });
         const initial = await read();
         expect(initial.rings).toHaveLength(index === 0 ? 2 : 1);
-        expect(initial.traces).toHaveLength(index === 0 ? 2 : 1);
+        expect(initial.traces).toHaveLength(0);
+        await expect(
+          action.locator(
+            '[data-score-cursor], .score-operation-path, .score-operation-head',
+          ),
+        ).toHaveCount(0);
         for (const ring of initial.rings) {
-          expect(ring.radius).toBe(22);
+          expect(ring.radius).toBe(18);
           expect(ring.opacity).toBe(0);
         }
         // Real mouse/keyboard activation is covered separately. Dispatching here
@@ -1781,13 +2276,19 @@ for (const locale of locales) {
         for (const [order, origin] of initial.rings.entries()) {
           const rings = samples.map((sample) => sample.rings[order]);
           const radii = rings.map((ring) => ring.radius);
-          expect(radii.at(-1)).toBeCloseTo(112, 3);
+          expect(Math.max(...radii)).toBeCloseTo(52, 3);
+          expect(radii.at(-1)).toBe(18);
           expect(
-            new Set(radii.filter((radius) => radius > 22 && radius < 112)).size,
+            new Set(radii.filter((radius) => radius > 18 && radius < 52)).size,
           ).toBeGreaterThanOrEqual(6);
           for (let frame = 1; frame < rings.length; frame++) {
-            expect(radii[frame]).toBeGreaterThanOrEqual(radii[frame - 1]);
-            expect(radii[frame] - radii[frame - 1]).toBeLessThan(30);
+            // Completion clears the hidden cue and restores its original radius.
+            if (samples[frame].action !== 0) {
+              expect(radii[frame]).toBeGreaterThanOrEqual(radii[frame - 1]);
+              expect(radii[frame] - radii[frame - 1]).toBeLessThan(10);
+            }
+            expect(radii[frame]).toBeGreaterThanOrEqual(18);
+            expect(radii[frame]).toBeLessThanOrEqual(52);
           }
           for (const ring of rings) {
             expect(ring.x).toBe(origin.x);
@@ -1800,21 +2301,28 @@ for (const locale of locales) {
           ).toBeGreaterThan(0.5);
         }
         expect(Math.max(...samples.map((sample) => sample.action))).toBe(1);
-        expect(Math.max(...samples.map((sample) => sample.cursor))).toBe(1);
+        expect(Math.max(...samples.map((sample) => sample.cursor))).toBe(0);
         expect(Math.max(...samples.map((sample) => sample.shade))).toBeCloseTo(
-          0.58,
-          2,
+          0.18,
+          3,
         );
-        expect(
-          samples.some((sample) =>
-            sample.traces.every(
-              (trace) => trace.opacity === 1 && trace.offset === 0,
+        expect(samples.every((sample) => sample.traces.length === 0)).toBe(
+          true,
+        );
+        expect(Math.max(...samples.map((sample) => sample.head))).toBe(0);
+        expect(Math.max(...samples.map((sample) => sample.path))).toBe(0);
+        if (index === 0) {
+          const firstVisible = initial.rings.map((_, order) =>
+            samples.findIndex((sample) => sample.rings[order].opacity > 0.05),
+          );
+          expect(firstVisible[0]).toBeGreaterThan(0);
+          expect(firstVisible[1] - firstVisible[0]).toBeGreaterThanOrEqual(14);
+          expect(
+            samples.every(
+              (sample) =>
+                sample.rings.filter((ring) => ring.opacity > 0.05).length <= 1,
             ),
-          ),
-        ).toBe(true);
-        if (index > 0) {
-          expect(Math.max(...samples.map((sample) => sample.head))).toBe(1);
-          expect(Math.max(...samples.map((sample) => sample.path))).toBe(1);
+          ).toBe(true);
         }
         const final = samples.at(-1)!;
         expect(final.action).toBe(0);
@@ -1840,9 +2348,9 @@ for (const locale of locales) {
       'false',
     );
     await expect(page.locator('[data-score-note]')).toHaveText(
-      locale.lang === 'zh-CN'
-        ? '在中央球场点选，留下出手的位置。'
-        : 'Tap the court to keep a trace of your shot.',
+      (await page
+        .locator('[data-score-feature="1"]')
+        .getAttribute('data-score-feedback'))!,
     );
     await expect(page.locator('[data-score-region="1"]')).toHaveCSS(
       'opacity',
@@ -1918,7 +2426,7 @@ test('controlled clock remains valid when delivery of the pause command is delay
 test('clicking during the button invitation restores the page and only selects the clicked feature', async ({
   page,
 }) => {
-  // The invitation lasts 1.45 seconds. Hold its clock before entering the
+  // The invitation lasts 800ms. Hold its clock before entering the
   // section so navigation and locator checks cannot consume the playing phase.
   const pauseClock = await installContractClock(page);
   await page.setViewportSize({ width: 390, height: 900 });
@@ -1933,13 +2441,14 @@ test('clicking during the button invitation restores the page and only selects t
   );
   await page.clock.runFor(300);
   await expect(first).toHaveAttribute('data-score-invitation', 'playing');
+  await expect(page.locator('.scoring-display')).toHaveCSS('filter', 'none');
+  await expect(page.locator('.scoring-display img')).toHaveCSS('opacity', '1');
+  for (const button of await page.locator('[data-score-feature]').all())
+    await expect(button).toHaveCSS('opacity', '1');
   await page.locator('[data-score-feature="1"]').click();
   await expect(first).toHaveAttribute('data-score-invitation', 'done');
   await expect(first).toHaveAttribute('aria-pressed', 'false');
-  await expect(page.locator('[data-score-invite-arrow]')).toHaveCSS(
-    'opacity',
-    '0',
-  );
+  await expect(page.locator('[data-score-invite-arrow]')).toHaveCount(0);
   await expect(page.locator('[data-story-device]')).toHaveAttribute(
     'data-score-focus',
     '1',
@@ -1960,10 +2469,7 @@ test('reduced motion keeps the initial scoring state unselected and skips the bu
   await first.scrollIntoViewIfNeeded();
   await expect(first).toHaveAttribute('data-score-invitation', 'done');
   await expect(first).toHaveAttribute('aria-pressed', 'false');
-  await expect(page.locator('[data-score-invite-arrow]')).toHaveCSS(
-    'opacity',
-    '0',
-  );
+  await expect(page.locator('[data-score-invite-arrow]')).toHaveCount(0);
   await expect(page.locator('[data-story-device]')).toHaveAttribute(
     'data-score-focus',
     'none',
@@ -1983,114 +2489,88 @@ test('reduced motion keeps the initial scoring state unselected and skips the bu
 
 for (const width of [390, 1440]) {
   for (const index of [1, 2]) {
-    test(`${width}px operation arrows ${index} stay connected and face the drawing direction throughout reveal`, async ({
+    test(`${width}px operation cue ${index} stays on its exact screenshot target without competing arrows`, async ({
       page,
     }) => {
-      // Geometry needs every reveal phase, independent of host load. This
-      // controlled browser clock is not a measurement of display frame rate.
       const pauseClock = await installContractClock(page);
       await page.route(threeChunk, (route) => route.abort());
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/#scoring');
-      await expect(page.locator('[data-score-feature="0"]')).toBeEnabled();
+      const feature = page.locator(`[data-score-feature="${index}"]`);
+      await expect(feature).toBeEnabled();
       await page.evaluate(() => document.fonts.ready);
-      // install() still lets the fake clock follow wall time. Pause it after
-      // loading so locator checks cannot advance beyond the sampled phase.
+      await page.locator('[data-story-device] img').evaluate(async (image) => {
+        await (image as HTMLImageElement).decode();
+      });
       await pauseClock();
       await page.clock.runFor(2000);
       const action = page.locator(`[data-score-action="${index}"]`);
-      await expect(action.locator('.score-operation-head')).toHaveCount(1);
-      await action.evaluate((element) => {
-        const path = element.querySelector<SVGPathElement>(
-          '.score-operation-path',
-        )!;
-        const head = element.querySelector<SVGPathElement>(
-          '.score-operation-head',
-        )!;
-        const length = path.getTotalLength();
-        const samples: { distance: number; gap: number; alignment: number }[] =
-          [];
-        const observer = new MutationObserver(() => {
-          const distance = length - parseFloat(path.style.strokeDashoffset);
-          if (!(distance > 0) || getComputedStyle(head).opacity === '0') return;
-          const numbers = head
-            .getAttribute('d')
-            ?.match(/-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/g)
-            ?.map(Number);
-          if (!numbers || numbers.length !== 6) return;
-          const [ax, ay, ex, ey, bx, by] = numbers;
-          const tip = path.getPointAtLength(distance);
-          const before = path.getPointAtLength(Math.max(0, distance - 0.5));
-          const after = path.getPointAtLength(Math.min(length, distance + 0.5));
-          const tx = after.x - before.x,
-            ty = after.y - before.y;
-          const hx = ex - (ax + bx) / 2,
-            hy = ey - (ay + by) / 2;
-          samples.push({
-            distance,
-            gap: Math.hypot(ex - tip.x, ey - tip.y),
-            alignment:
-              (tx * hx + ty * hy) / (Math.hypot(tx, ty) * Math.hypot(hx, hy)),
-          });
-        });
-        observer.observe(head, { attributes: true, attributeFilter: ['d'] });
-        Object.assign(window, {
-          readArrowReveal: () => {
-            observer.disconnect();
-            return { length, samples };
-          },
-        });
+      await expect(
+        action.locator(
+          '[data-score-cursor], .score-operation-path, .score-operation-head',
+        ),
+      ).toHaveCount(0);
+      const ring = action.locator('[data-score-pulse]');
+      const expected = index === 1 ? { x: 1050, y: 640 } : { x: 709, y: 74 };
+      await expect(ring).toHaveAttribute('cx', String(expected.x));
+      await expect(ring).toHaveAttribute('cy', String(expected.y));
+      await expect(ring).toHaveCSS('filter', 'none');
+      const target = await ring.evaluate((element) => {
+        const c = new DOMPoint(
+          Number(element.getAttribute('cx')),
+          Number(element.getAttribute('cy')),
+        ).matrixTransform((element as SVGCircleElement).getScreenCTM()!);
+        return { x: c.x, y: c.y };
       });
-      await page.locator(`[data-score-feature="${index}"]`).click();
-      await page.clock.runFor(600);
-      await expect(action.locator('[data-score-cursor]')).toHaveCSS(
-        'opacity',
-        '0',
+      await feature.dispatchEvent('click');
+      await page.clock.runFor(400);
+      await expect(ring).toHaveCSS('opacity', /^(?:0\.[1-9]|1)/);
+      const middle = await ring.evaluate((element) => ({
+        radius: Number(element.getAttribute('r')),
+        transform: element.getAttribute('transform'),
+        cssTransform: getComputedStyle(element).transform,
+        center: new DOMPoint(
+          Number(element.getAttribute('cx')),
+          Number(element.getAttribute('cy')),
+        )
+          .matrixTransform((element as SVGCircleElement).getScreenCTM()!)
+          .toJSON(),
+      }));
+      expect(middle.radius).toBeGreaterThan(18);
+      expect(middle.radius).toBeLessThan(52);
+      expect(middle.transform).toBeNull();
+      expect(middle.cssTransform).toBe('none');
+      expect(middle.center.x).toBeCloseTo(target.x, 2);
+      expect(middle.center.y).toBeCloseTo(target.y, 2);
+      await page.clock.runFor(300);
+      await expect(ring).toHaveCSS('opacity', '0');
+      await expect(ring).toHaveAttribute('r', '52');
+      await expect(page.locator('[data-story-device]')).toHaveAttribute(
+        'data-score-playing',
+        'true',
       );
-      await expect(action.locator('.score-operation-head')).toHaveCSS(
-        'opacity',
-        '1',
-      );
-      await page.clock.runFor(800);
-      // The pointer takes over after the directional cue, keeping the head readable.
-      await expect(action.locator('.score-operation-head')).toHaveCSS(
-        'opacity',
-        '0',
-      );
-      await expect(action.locator('[data-score-cursor]')).toHaveCSS(
-        'opacity',
-        '1',
-      );
-      await page.clock.runFor(600);
+      await page.clock.runFor(1300);
       await expect(page.locator('[data-story-device]')).toHaveAttribute(
         'data-score-playing',
         'false',
       );
-      const result = await page.evaluate(() =>
-        (
-          window as typeof window & {
-            readArrowReveal: () => {
-              length: number;
-              samples: { distance: number; gap: number; alignment: number }[];
-            };
-          }
-        ).readArrowReveal(),
+      await expect(ring).toHaveAttribute('r', '18');
+      await expect(page.locator(`[data-score-region="${index}"]`)).toHaveCSS(
+        'opacity',
+        '1',
       );
-      expect(result.samples.length).toBeGreaterThan(8);
-      expect(Math.max(...result.samples.map((s) => s.gap))).toBeLessThan(0.02);
-      expect(
-        Math.min(...result.samples.map((s) => s.alignment)),
-      ).toBeGreaterThan(0.99);
-      expect(result.samples.at(-1)!.distance).toBeCloseTo(result.length, 2);
+      await expect(feature).toHaveAttribute('aria-pressed', 'true');
     });
   }
 }
 
-test('scoring flows naturally and changes its explanation only on button activation', async ({
+test('short desktop scoring flows naturally and changes its explanation only on button activation', async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 1440, height: 650 });
   await page.route(threeChunk, (route) => route.abort());
   await page.goto('/#scoring');
+  await expectAnchorReading(page, 'scoring');
   await expect(page.locator('[data-score-feature="0"]')).toBeEnabled();
   await page.addStyleTag({ content: 'html {scroll-behavior:auto !important}' });
   const stage = page.locator('[data-story-stage="scoring"]');
@@ -2150,10 +2630,14 @@ test('scoring flows naturally and changes its explanation only on button activat
   await expect(device).toHaveAttribute('data-score-focus', '2');
   await expect(page.locator('[data-score-step]')).toHaveText('03 / 03');
   await page.locator('#download').scrollIntoViewIfNeeded();
-  await stage.scrollIntoViewIfNeeded();
+  // Navigate to the complete reading position. Scrolling a stage's box into
+  // view can leave its animated controls outside that position and inert.
+  await page.locator('[data-rail-node="scoring"]').click();
+  await expectAnchorReading(page, 'scoring');
   await expect(device).toHaveAttribute('data-score-focus', '2');
   const feature = page.locator('[data-score-feature="1"]');
   await feature.focus();
+  await expect(feature).toBeFocused();
   await expect(device).toHaveAttribute('data-score-focus', '2');
   await page.keyboard.press('Enter');
   await expect(device).toHaveAttribute('data-score-focus', '1');
@@ -2163,7 +2647,8 @@ test('scoring flows naturally and changes its explanation only on button activat
   await expect(device).toHaveAttribute('data-score-focus', '1');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.setViewportSize({ width: 1440, height: 900 });
-  await stage.scrollIntoViewIfNeeded();
+  await page.locator('[data-rail-node="scoring"]').click();
+  await expectAnchorReading(page, 'scoring');
   await expect(device).toHaveAttribute('data-score-focus', '1');
   expect(await device.evaluate((e) => getComputedStyle(e).transform)).toBe(
     'none',
@@ -2202,6 +2687,7 @@ for (const locale of locales) {
   }) => {
     await page.route(threeChunk, (route) => route.abort());
     await page.goto(`${locale.path}#scoring`);
+    await expectAnchorReading(page, 'scoring');
     await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
     await page.locator('[data-score-feature="2"]').click();
     const controls = page.locator('[data-score-controls]');
@@ -2430,7 +2916,7 @@ for (const locale of locales) {
     expect(response?.ok()).toBe(true);
     await expect(page.locator('html')).toHaveAttribute('lang', locale.lang);
     await expect(page.locator('h1')).toHaveText(locale.title);
-    await expect(page).toHaveTitle(`${locale.brand} — ${locale.title}`);
+    await expect(page).toHaveTitle(`${locale.brand} · ${locale.title}`);
     await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
       'content',
       'Hoopito · 球豆',
@@ -2440,8 +2926,8 @@ for (const locale of locales) {
       'aria-label',
       'Hoopito · 球豆',
     );
-    await expect(page.locator('.hero-lead')).toContainText(locale.brand);
-    await expect(page.locator('.install-note')).toContainText('v2.0.1');
+    await expect(page.locator('.hero-lead')).toHaveText(locale.lead);
+    await expect(page.locator('.install-note')).toContainText('v2.1.0');
     await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
     await expectDownload(page);
     for (const id of ['hero', 'scoring', 'experience', 'replay', 'download']) {
@@ -2580,7 +3066,7 @@ for (const locale of locales) {
     await page.goto(`${origin}${locale.path}`);
     await expect(page.locator('h1')).toHaveText(locale.title);
     await expectDownload(page);
-    await expect(page.locator('#download')).toContainText('2.0.1');
+    await expect(page.locator('#download')).toContainText('2.1.0');
     await expect(page.locator('#download')).toContainText('JSON');
     await expect(page.locator('[data-record]')).toBeDisabled();
     await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
@@ -2608,17 +3094,37 @@ for (const locale of locales) {
       ]) {
         for (const control of await page.locator(selector).all()) {
           const box = await control.boundingBox();
-          expect(box?.height).toBeGreaterThanOrEqual(48);
-          expect(box?.width).toBeGreaterThanOrEqual(48);
+          expect(box).not.toBeNull();
+          // Firefox can return 47.99997 for an exact 48px CSS target after
+          // viewport transforms. Keep the 48px budget at subpixel precision.
+          expect(Math.round(box!.height * 1000) / 1000).toBeGreaterThanOrEqual(
+            48,
+          );
+          expect(Math.round(box!.width * 1000) / 1000).toBeGreaterThanOrEqual(
+            48,
+          );
         }
       }
       if ([390, 1440].includes(width) && testInfo.project.name === 'chromium') {
-        for (const id of ['scoring', 'experience', 'replay', 'download'])
+        for (const id of [
+          'scoring',
+          'experience',
+          'replay',
+          'download',
+          'community',
+          'closing',
+        ])
           await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+        // Native lazy loading is tied to each image's viewport proximity.
+        // Visit displayed content images instead of waiting for unseen pages.
+        for (const image of await page.locator('main img').all())
+          if (await image.isVisible()) await image.scrollIntoViewIfNeeded();
         await page.waitForFunction(() =>
           [...document.images].every(
             (image) =>
               !image.getClientRects().length ||
+              image.closest('details:not([open])') !== null ||
+              (!image.hasAttribute('src') && image.hasAttribute('data-src')) ||
               (image.complete && image.naturalWidth > 0),
           ),
         );
@@ -2778,7 +3284,7 @@ test(
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
     let requested = false;
-    await page.route('**/textures/maple-albedo-v2.webp', async (route) => {
+    await page.route(`**${courtTextures.maple}`, async (route) => {
       requested = true;
       await route.abort('failed');
     });
@@ -2816,7 +3322,7 @@ test(
     });
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
-    await page.route('**/textures/maple-albedo-v2.webp', async (route) => {
+    await page.route(`**${courtTextures.maple}`, async (route) => {
       requested = true;
       await gate;
       await route.continue().catch(() => {});
@@ -3016,6 +3522,27 @@ test(
       .locator('#court-canvas')
       .getAttribute('data-render-count');
     const host = page.locator('[data-demo-court-host]');
+    await host.evaluate((element) => {
+      const events: { state: string | null; input: boolean }[] = [];
+      const observer = new MutationObserver((records) => {
+        // A slow driver can finish this 800ms cue between two protocol polls.
+        // Mutation old values retain every actual state even in one batch.
+        records.forEach((_, index) =>
+          events.push({
+            state:
+              records[index + 1]?.oldValue ??
+              element.getAttribute('data-demo-invitation'),
+            input: document.documentElement.dataset.interactive === 'true',
+          }),
+        );
+      });
+      observer.observe(element, {
+        attributes: true,
+        attributeOldValue: true,
+        attributeFilter: ['data-demo-invitation'],
+      });
+      Reflect.set(window, '__invitationAudit', { events, observer });
+    });
     await host.scrollIntoViewIfNeeded();
     await page.waitForTimeout(1750);
     await expect(page.locator('#court-canvas')).toHaveAttribute(
@@ -3029,8 +3556,23 @@ test(
       'data-interactive',
       'true',
     );
-    await expect(host).toHaveAttribute('data-demo-invitation', 'playing');
     await expect(host).toHaveAttribute('data-demo-invitation', 'done');
+    const events = await page.evaluate(() => {
+      const audit = Reflect.get(window, '__invitationAudit') as {
+        events: { state: string | null; input: boolean }[];
+        observer: MutationObserver;
+      };
+      audit.observer.disconnect();
+      return audit.events;
+    });
+    await testInfo.attach('court-invitation-states', {
+      body: JSON.stringify(events),
+      contentType: 'application/json',
+    });
+    const playing = events.filter((event) => event.state === 'playing');
+    expect(playing).toHaveLength(1);
+    expect(playing[0].input).toBe(true);
+    expect(events.at(-1)?.state).toBe('done');
   },
 );
 
@@ -3188,18 +3730,34 @@ test(
       await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
       await expect(page.locator('#court-canvas')).toHaveAttribute(
         'data-antialias',
-        'fxaa',
+        /^(fxaa|native-msaa-[1-9]\d*)$/,
       );
+      const direct =
+        (await page.locator('#court-canvas').getAttribute('data-pipeline')) ===
+        'direct';
+      if (direct) {
+        await expect(page.locator('#court-canvas')).toHaveAttribute(
+          'data-quality',
+          'density',
+        );
+      } else {
+        await expect(page.locator('#court-canvas')).toHaveAttribute(
+          'data-antialias',
+          'fxaa',
+        );
+      }
       await page.setViewportSize({ width: 1280, height: 800 });
       await expect
         .poll(() =>
           page
             .locator('#court-canvas')
-            .evaluate(
-              (canvas: HTMLCanvasElement) =>
-                canvas.width === canvas.clientWidth * 2 &&
-                canvas.height === canvas.clientHeight * 2,
-            ),
+            .evaluate((canvas: HTMLCanvasElement) => {
+              const ratio = canvas.dataset.quality === 'density' ? 1.25 : 2;
+              return (
+                canvas.width === Math.floor(canvas.clientWidth * ratio) &&
+                canvas.height === Math.floor(canvas.clientHeight * ratio)
+              );
+            }),
         )
         .toBe(true);
       await page
@@ -3225,6 +3783,51 @@ test(
   },
 );
 
+for (const reducedMotion of ['reduce', 'no-preference'] as const) {
+  test(
+    `missing GPU timer starts conservatively with ${reducedMotion} motion`,
+    { tag: '@webgl', lock: 'webgl-renderer' },
+    async ({ page }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== 'chromium',
+        'Real WebGL in Chromium.',
+      );
+      await allowSoftwareWebGL(page);
+      await page.emulateMedia({ reducedMotion });
+      await page.addInitScript(() => {
+        const original = WebGL2RenderingContext.prototype.getExtension;
+        WebGL2RenderingContext.prototype.getExtension = function (
+          this: WebGL2RenderingContext,
+          name: string,
+        ) {
+          return name === 'EXT_disjoint_timer_query_webgl2'
+            ? null
+            : Reflect.apply(original, this, [name]);
+        } as typeof original;
+      });
+      await page.goto('/');
+      await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+      const canvas = page.locator('#court-canvas');
+      await expect(canvas).toHaveAttribute('data-quality', 'density');
+      await expect(canvas).toHaveAttribute(
+        'data-calibration-status',
+        'unavailable',
+      );
+      await expect(canvas).toHaveAttribute('data-calibration', '[]');
+      await page
+        .locator('#experience')
+        .evaluate((section) =>
+          section.scrollIntoView({ behavior: 'instant', block: 'start' }),
+        );
+      await page.locator('[data-point-preset="center"]').click();
+      await page.locator('[data-record]').click();
+      await expect(page.locator('[data-blue-score]')).toHaveText('8');
+      await page.locator('[data-reset]').click();
+      await expectReset(page);
+    },
+  );
+}
+
 test(
   'initial GPU budget covers story views and restores the opening pose',
   { tag: '@webgl', lock: 'webgl-renderer' },
@@ -3244,7 +3847,22 @@ test(
       for (const cost of costs) {
         expect(
           cost.views.map((view: { chapter: string }) => view.chapter),
-        ).toEqual(['hero', 'scoring', 'experience', 'replay']);
+        ).toEqual([
+          'hero',
+          'scoring',
+          'experience',
+          'replay',
+          'download',
+          'community',
+          // Mid-flight preparation follows the hero/scoring and
+          // download/community tracks after the six static reading views.
+          'scoring',
+          'community',
+        ]);
+        for (const view of cost.views) {
+          expect(Number.isFinite(view.milliseconds)).toBe(true);
+          expect(view.milliseconds).toBeGreaterThanOrEqual(0);
+        }
         expect(cost.milliseconds).toBe(
           Math.max(
             ...cost.views.map(
@@ -3321,18 +3939,35 @@ for (const scale of [1, 2]) {
             cssWidth: canvas.clientWidth,
             cssHeight: canvas.clientHeight,
             antialias: canvas.dataset.antialias,
+            quality: canvas.dataset.quality,
             buffers: Reflect.get(window, 'hoopitoRenderbuffers') as {
               samples: number;
               width: number;
               height: number;
             }[],
           }));
-        // Native density reaches the actual visible scene region without a full-screen buffer.
-        expect(pixels.width).toBe(Math.round(pixels.cssWidth * scale));
-        expect(pixels.height).toBe(Math.round(pixels.cssHeight * scale));
-        expect(pixels.cssWidth).toBeLessThan(1440);
-        expect(pixels.antialias).toMatch(/^(msaa-[24]|fxaa)$/);
-        if (pixels.antialias !== 'fxaa')
+        // The full-screen court keeps the existing five-million-pixel budget.
+        // Three.js floors canvas dimensions when its capped ratio is fractional.
+        const density = Math.min(
+          pixels.quality === 'density' ? Math.min(scale, 1.25) : scale,
+          Math.sqrt(5_000_000 / (pixels.cssWidth * pixels.cssHeight)),
+        );
+        expect(pixels.width).toBe(Math.floor(pixels.cssWidth * density));
+        expect(pixels.height).toBe(Math.floor(pixels.cssHeight * density));
+        expect(pixels.width * pixels.height).toBeLessThanOrEqual(5_000_000);
+        // The custom chapter rail hides the native scrollbar gutter. The
+        // actual background now spans the complete layout viewport.
+        expect(pixels.cssWidth).toBe(1440);
+        expect(pixels.antialias).toMatch(
+          /^(msaa-[24]|fxaa|native-msaa-[1-9]\d*)$/,
+        );
+        if (pixels.antialias?.startsWith('native-')) {
+          expect(pixels.quality).toBe('density');
+          const native = await page
+            .locator('#court-canvas')
+            .getAttribute('data-native-samples');
+          expect(pixels.antialias).toBe(`native-msaa-${native}`);
+        } else if (pixels.antialias !== 'fxaa')
           expect(
             pixels.buffers.some(
               (buffer) =>
@@ -3373,13 +4008,20 @@ for (const scale of [1, 2]) {
           .poll(() =>
             page
               .locator('#court-canvas')
-              .evaluate(
-                (canvas: HTMLCanvasElement) =>
-                  canvas.width ===
-                    Math.round(canvas.clientWidth * window.devicePixelRatio) &&
-                  canvas.height ===
-                    Math.round(canvas.clientHeight * window.devicePixelRatio),
-              ),
+              .evaluate((canvas: HTMLCanvasElement) => {
+                const density = Math.min(
+                  canvas.dataset.quality === 'density'
+                    ? Math.min(window.devicePixelRatio, 1.25)
+                    : window.devicePixelRatio,
+                  Math.sqrt(
+                    5_000_000 / (canvas.clientWidth * canvas.clientHeight),
+                  ),
+                );
+                return (
+                  canvas.width === Math.floor(canvas.clientWidth * density) &&
+                  canvas.height === Math.floor(canvas.clientHeight * density)
+                );
+              }),
           )
           .toBe(true);
         await expect
@@ -3388,6 +4030,16 @@ for (const scale of [1, 2]) {
               .locator('#court-canvas')
               .evaluate((canvas: HTMLCanvasElement) => {
                 const gl = canvas.getContext('webgl2')!;
+                if (canvas.dataset.pipeline === 'direct') {
+                  const native = gl.getContextAttributes()?.antialias
+                    ? Number(gl.getParameter(gl.SAMPLES))
+                    : 0;
+                  return (
+                    canvas.dataset.quality === 'density' &&
+                    native > 0 &&
+                    canvas.dataset.antialias === `native-msaa-${native}`
+                  );
+                }
                 const color = Array.from(
                   gl.getInternalformatParameter(
                     gl.RENDERBUFFER,
@@ -3407,7 +4059,11 @@ for (const scale of [1, 2]) {
                   ...color.filter(
                     (value) =>
                       value >= 2 &&
-                      value <= (window.devicePixelRatio >= 1.5 ? 2 : 4) &&
+                      value <=
+                        (canvas.dataset.quality === 'density' ||
+                        window.devicePixelRatio >= 1.5
+                          ? 2
+                          : 4) &&
                       depth.includes(value),
                   ),
                 );

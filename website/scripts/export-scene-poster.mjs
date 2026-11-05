@@ -2,6 +2,7 @@ import { chromium } from '@playwright/test';
 import { createHash } from 'node:crypto';
 import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { mobileScenes } from '../src/data/mobile-scenes.ts';
 
 // Development-only capture tool: no debug handle or second renderer ships in the website.
 const dist = resolve('dist');
@@ -13,15 +14,34 @@ if (!sceneChunk)
   throw new Error('Build the website before exporting its scene.');
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const runId = new Date().toISOString().replaceAll(/[:.]/g, '-');
-const evidence = resolve('output/court-continuity');
+const evidence = resolve(
+  process.env.HOOPITO_POSTER_OUTPUT ?? 'output/court-continuity',
+);
 await mkdir(evidence, { recursive: true });
 const sourceInputs = [];
 for (const path of [
   'src/scripts/main.ts',
+  'src/scripts/animation-clock.ts',
   'src/scripts/download-chooser.ts',
+  'src/scripts/mobile-navigation.ts',
+  'src/scripts/mobile-progress.ts',
+  'src/scripts/mobile-progress-math.ts',
+  'src/scripts/mobile-touch.ts',
+  'src/scripts/mobile-touch-math.ts',
+  'src/scripts/mobile-reading.ts',
+  'src/scripts/demo-art.ts',
+  'src/data/demo-court-art.ts',
+  'src/scripts/mobile-presentation.ts',
+  'src/scripts/mobile-presentation-math.ts',
   'src/scripts/court-scene.ts',
   'src/scripts/camera-placement.ts',
+  'src/scripts/camera-track.ts',
+  'src/scripts/court-lighting.ts',
+  'src/scripts/shot-motion.ts',
+  'scripts/material-data.mjs',
+  'scripts/prepare-demo-court.mjs',
   'src/scripts/replay-cards.ts',
+  'src/data/replay-example.ts',
   'src/scripts/demo-invitation.ts',
   'src/scripts/court-hardware.ts',
   'src/scripts/court-floor.ts',
@@ -31,28 +51,53 @@ for (const path of [
   'src/scripts/scene-performance.ts',
   'src/scripts/gpu-calibration.ts',
   'src/scripts/story-pose.ts',
+  'src/scripts/story-choreography.ts',
+  'src/scripts/scene-commit.ts',
+  'src/scripts/chapter-scroll.ts',
+  'src/scripts/chapter-rail.ts',
+  'src/scripts/chapter-rail-math.ts',
+  'src/scripts/glass-surfaces.ts',
+  'src/scripts/liquid-glass-pass.ts',
   'src/scripts/shaders/court.ts',
   'src/styles/site.css',
-  'src/styles/refinement.css',
-  'src/styles/replay-cards.css',
-  'src/styles/mobile-download-polish.css',
+  'src/styles/immersive-glass.css',
+  'src/styles/demo-invitation.css',
+  'src/styles/poster-layout.css',
+  'src/styles/chapter-rail.css',
+  'src/styles/screenshot-viewer.css',
   'src/styles/download-chooser.css',
-  'src/styles/community.css',
+  'src/styles/mobile-navigation.css',
+  'src/styles/mobile-layout.css',
+  'src/styles/mobile-motion.css',
   'src/components/Layout.astro',
   'src/components/Landing.astro',
+  'src/components/MobileNavigation.astro',
+  'src/components/MobileBackdrop.astro',
+  'src/components/ChapterRail.astro',
+  'src/components/HeroPoster.astro',
+  'src/components/ExperienceStage.astro',
+  'src/components/CourtDiagram.astro',
+  'src/components/DownloadPass.astro',
+  'src/components/Closing.astro',
+  'src/components/ScoringShowcase.astro',
+  'src/components/ReplayShowcase.astro',
+  'src/components/ReplayCapture.astro',
   'src/components/DownloadChooser.astro',
   'src/components/Community.astro',
   'src/data/content.ts',
   'src/data/community.ts',
+  'src/data/mobile-scenes.ts',
   '../docs/design/screenshot-presentation.json',
   'src/data/court-materials.ts',
+  'src/data/glass-material.ts',
   'assets/materials/generation.json',
+  'assets/materials/demo-court-generation-v2.json',
   'package-lock.json',
   'scripts/export-scene-poster.mjs',
 ]) {
   sourceInputs.push({
     path,
-    sha256: sha256(await readFile(path)),
+    sha256: sha256((await readFile(path, 'utf8')).replace(/\r\n/g, '\n')),
   });
 }
 const compiledScene = {
@@ -81,10 +126,17 @@ try {
   for (const [id, width, height, chapter] of [
     ['compact', 1024, 768, 'hero'],
     ['standard', 1440, 900, 'hero'],
+    ['mobile', 1440, 900, 'hero'],
     ['wide', 1920, 1080, 'hero'],
     ['demo-compact', 1024, 768, 'experience'],
     ['demo-standard', 1440, 900, 'experience'],
     ['demo-wide', 1920, 1080, 'experience'],
+    ...mobileScenes.map((scene) => [
+      scene.captureId,
+      2560,
+      1600,
+      scene.chapter,
+    ]),
   ]) {
     const context = await browser.newContext({
       viewport: { width, height },
@@ -118,7 +170,12 @@ try {
           const previous = Reflect.get(window, '__courtPoster');
           const probe = {
             scene, canvas: args[0], creations: (previous?.creations ?? 0) + 1,
-            placement: null, frame: null,
+            placement: null, frame: null, glass: [],
+          };
+          const setGlass = scene.setGlassSurfaces.bind(scene);
+          scene.setGlassSurfaces = (surfaces) => {
+            probe.glass = structuredClone(surfaces);
+            return setGlass(surfaces);
           };
           const place = scene.setCameraPlacement.bind(scene);
           scene.setCameraPlacement = (placement) => {
@@ -135,11 +192,10 @@ try {
         }\n`;
         await route.fulfill({ response, body, contentType: 'text/javascript' });
       });
-      await page.goto(
-        `${origin}/${chapter === 'experience' ? '#experience' : ''}`,
-      );
+      await page.goto(`${origin}/#${chapter}`);
       await page.evaluate(() => document.fonts.ready);
       await page.waitForSelector('html[data-scene="3d"]', { timeout: 20000 });
+      await page.waitForSelector(`#court-canvas[data-chapter="${chapter}"]`);
       if (chapter === 'experience') {
         await page.waitForSelector('html[data-interactive="true"]');
         await page.waitForSelector(
@@ -164,7 +220,16 @@ try {
           );
         const inputEnabled = element.dataset.inputEnabled === 'true';
         probe.scene.setPaused(true);
-        const image = probe.scene.exportFrame();
+        // Capture only the live court. HTML and optical card surfaces are excluded.
+        const glass = probe.glass;
+        let image;
+        try {
+          probe.scene.setGlassSurfaces([]);
+          image = probe.scene.exportFrame();
+        } finally {
+          probe.scene.setGlassSurfaces(glass);
+          probe.scene.setPaused(false);
+        }
         const bounds = element.getBoundingClientRect();
         return {
           image,
@@ -206,7 +271,8 @@ try {
     }
   }
   const record = {
-    version: 2,
+    version: 3,
+    source_hash_encoding: 'utf8-lf',
     captured_at: new Date().toISOString(),
     generated_by: 'node scripts/export-scene-poster.mjs',
     capture_method:

@@ -255,7 +255,8 @@ jobs:
   ios-no-sign:
     name: iOS no-sign compile
     needs: quality
-    runs-on: macos-latest
+    # Pin the standard Intel macOS 26 pool; ARM64 capacity can cancel before setup.
+    runs-on: macos-26-intel
     timeout-minutes: 30
     steps:
       - name: Check out source

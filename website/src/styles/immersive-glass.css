@@ -1,0 +1,173 @@
+/* One continuous arena. Surfaces are semantic HTML; the optical renderer
+   replaces only their CSS tint and blur when its complete pass is ready. */
+html[data-scroll-state] body:not(.privacy-page) {
+  /* The story controller owns document position, including reflow recovery.
+     Native anchoring must not offset it again when pins/cards change pose. */
+  overflow-anchor: none;
+}
+body:not(.privacy-page) {
+  --glass-radius: 20px;
+  --muted: #bec2bb;
+  --caption-size: 0.75rem;
+  --reading-size: 0.875rem;
+  background: #0b1012;
+}
+body:not(.privacy-page) main {
+  /* Offscreen entrances must not enlarge the native horizontal scroll range. */
+  overflow-x: clip;
+}
+.scene-background {
+  display: block;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+.scene-background::before,
+.scene-background::after,
+.scene-shade,
+.hero-art,
+.download-halo,
+.scoring::before,
+.experience::before,
+.replay::before,
+.replay-editorial::before {
+  display: none;
+}
+.scene-background .scene-poster {
+  display: block;
+  opacity: 1;
+}
+.scene-background .scene-poster img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: none;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+html[data-chapter]:not([data-chapter='hero']):not([data-scene='3d'])
+  .scene-background
+  > .scene-poster {
+  opacity: 1;
+}
+html[data-scene='3d'] .scene-background > .scene-poster {
+  opacity: 0;
+}
+.scene-background > .demo-scene-poster {
+  display: none !important;
+  position: absolute;
+  inset: 0;
+}
+.scene-background > .demo-scene-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+html:not([data-scene='3d']):not(
+    [data-scene-fallback]
+  )[data-chapter='experience']
+  .scene-background
+  > .demo-scene-poster {
+  display: block !important;
+  opacity: 1;
+}
+.scene-background #court-canvas {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+@media (min-width: 1024px) and (pointer: fine) {
+  html[data-chapter]:not([data-scene-fallback])
+    .demo-court-stage[data-renderer='2d']
+    .demo-court {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+body:not(.privacy-page)
+  :is(
+    .hero,
+    .scoring,
+    .experience,
+    .replay,
+    .download,
+    .community,
+    .site-footer
+  ) {
+  background: transparent;
+}
+body:not(.privacy-page) .site-header {
+  background: #101719b8;
+  border-bottom: 1px solid #dfcfb52b;
+  -webkit-backdrop-filter: blur(22px) saturate(0.8);
+  backdrop-filter: blur(22px) saturate(0.8);
+  box-shadow: 0 8px 30px #00000012;
+}
+[data-glass-card] {
+  position: relative;
+  min-width: 0;
+  padding: 32px;
+  border: 1px solid rgb(243 239 229 / var(--glass-edge-side));
+  border-top-color: rgb(243 239 229 / var(--glass-edge-top));
+  border-bottom-color: rgb(243 239 229 / var(--glass-edge-bottom));
+  border-radius: var(--glass-radius);
+  background: rgb(var(--glass-rgb) / var(--glass-fill-opacity));
+  color: #f1eee6;
+  -webkit-backdrop-filter: blur(var(--glass-blur))
+    saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  box-shadow: var(--glass-shadow);
+  transform-origin: center;
+}
+html[data-glass='webgl'] [data-glass-card] {
+  /* Retain one CSS pixel of layout, but let the shader own the only rim. */
+  border-color: transparent;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+body:not(.privacy-page)
+  :is(
+    .section-top,
+    .section-foot,
+    .trace-bridge,
+    .hero-topline,
+    .hero-floor,
+    .site-footer
+  ) {
+  color: #c6c5ba;
+  text-shadow: 0 2px 14px #000a;
+}
+[data-glass-card] :is(a, button, summary) {
+  min-height: 48px;
+}
+[data-glass-card] a:focus-visible,
+[data-glass-card] button:focus-visible,
+[data-glass-card] summary:focus-visible {
+  outline: 2px solid #ffbf8c;
+  outline-offset: 5px;
+}
+/* Low quality avoids a full-resolution backdrop copy for each moving card. */
+html[data-quality='density'] [data-glass-card] {
+  background: rgb(var(--glass-rgb) / var(--glass-density-opacity));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+@media (prefers-reduced-transparency: reduce) {
+  html:not([data-glass='webgl']) [data-glass-card] {
+    background: rgb(
+      var(--glass-rgb) / var(--glass-reduced-transparency-opacity)
+    );
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (max-width: 1023px), (pointer: coarse) {
+  [data-glass-card] {
+    padding: 24px;
+  }
+}

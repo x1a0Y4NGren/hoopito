@@ -1,0 +1,151 @@
+---
+import '../styles/chapter-rail.css';
+import type { Locale } from '../data/content';
+import { liquidMaterial } from '../scripts/chapter-rail-math';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const ids = [
+  'hero',
+  'scoring',
+  'experience',
+  'replay',
+  'download',
+  'community',
+  'closing',
+];
+const titles =
+  locale === 'zh'
+    ? ['首页', '计分', '体验', '复盘', '下载', '社区', '常见问题与页尾']
+    : [
+        'Home',
+        'Scoring',
+        'Try it',
+        'Review',
+        'Download',
+        'Community',
+        'FAQ and footer',
+      ];
+const label = locale === 'zh' ? '章节导航' : 'Chapter navigation';
+const scrollLabel =
+  locale === 'zh' ? '拖动球豆浏览页面' : 'Drag Hoopito to scroll the page';
+const instructions =
+  locale === 'zh'
+    ? '方向键滚动 Page Up 和 Page Down 翻屏 Home 到首页 End 到页底 Escape 结束拖动'
+    : 'Use arrow keys to scroll, Page Up or Page Down for a screen, Home or End for the page edges, and Escape to finish dragging.';
+---
+
+<aside class="chapter-rail" data-chapter-rail data-locale={locale} hidden>
+  <div class="chapter-rail-track" data-rail-track>
+    <span class="chapter-rail-line" aria-hidden="true"></span>
+    <span class="chapter-rail-fill" data-rail-fill aria-hidden="true"></span>
+    <nav aria-label={label}>
+      <ol class="chapter-rail-nodes">
+        {ids.map((id, index) => (
+          <li class="chapter-rail-stop" data-rail-stop={id}>
+            <a
+              class="chapter-rail-node"
+              data-rail-node={id}
+              href={`#${id}`}
+              aria-label={`${String(index + 1).padStart(2, '0')} ${titles[index]}`}
+            >
+              <span class="chapter-rail-tooltip" aria-hidden="true">
+                <span class="chapter-rail-tooltip-number">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span data-rail-title>{titles[index]}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+    <div
+      class="chapter-rail-thumb"
+      data-rail-thumb
+      role="scrollbar"
+      tabindex="0"
+      aria-label={scrollLabel}
+      aria-controls="main"
+      aria-describedby="chapter-rail-instructions"
+      aria-orientation="vertical"
+      aria-valuemin="0"
+      aria-valuemax="0"
+      aria-valuenow="0"
+    >
+      <span
+        class="chapter-rail-tooltip"
+        data-rail-current-title
+        aria-hidden="true"
+      >
+        01 {titles[0]}
+      </span>
+      <svg
+        class="chapter-rail-liquid"
+        data-rail-liquid-surface
+        viewBox={Object.values(liquidMaterial.viewBox).join(' ')}
+        width="56"
+        height="160"
+        aria-hidden="true"
+      >
+        <defs>
+          <filter
+            id="chapter-rail-goo"
+            x="-28"
+            y="-80"
+            width="56"
+            height="160"
+            filterUnits="userSpaceOnUse"
+            primitiveUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB"
+          >
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation={liquidMaterial.blur}
+              result="soft"
+            />
+            <feColorMatrix
+              in="soft"
+              type="matrix"
+              values={`1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${liquidMaterial.alphaSlope} ${liquidMaterial.alphaBias}`}
+            />
+          </filter>
+        </defs>
+        <circle data-rail-solid cx="0" cy="0" r={liquidMaterial.radius} />
+        <g data-rail-liquid filter="url(#chapter-rail-goo)">
+          <circle data-liquid-main cx="0" cy="0" r={liquidMaterial.radius} />
+          <circle data-liquid-contact="0" cx="0" cy="0" r="0" />
+          <circle data-liquid-contact="1" cx="0" cy="0" r="0" />
+        </g>
+      </svg>
+      <span class="chapter-rail-logo" data-rail-logo aria-hidden="true">
+        <span class="chapter-rail-symbol">
+          <img
+            src="/brand/mark.webp"
+            alt=""
+            width="512"
+            height="512"
+            decoding="async"
+            draggable="false"
+          />
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="chapter-rail-counter" aria-hidden="true">
+    <span data-rail-counter>01</span>
+    <span class="chapter-rail-count">/ 07</span>
+  </div>
+  <p class="chapter-rail-assistive" id="chapter-rail-instructions">
+    {instructions}
+  </p>
+  <p
+    class="chapter-rail-assistive"
+    data-rail-status
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></p>
+</aside>

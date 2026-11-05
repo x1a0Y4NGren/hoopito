@@ -1,0 +1,133 @@
+---
+import Icon from './Icon.astro';
+import { content, type Locale } from '../data/content';
+import { release } from '../data/release';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = content[locale];
+---
+
+<section id="download" class="download chapter" data-story-stage="download">
+  <div class="content-width">
+    <div class="section-top chapter-kicker">
+      <span class="chapter-number display">{c.download.number}</span>
+      <span class="eyebrow">{c.download.eyebrow}</span>
+    </div>
+    <div class="download-layout">
+      <div
+        class="download-pass-brand download-invitation stage-heading"
+        data-story-item="heading"
+        data-story-enter="up"
+        data-story-preset="download-title"
+      >
+        <h2 data-story-reveal>
+          <span data-story-line>{c.download.title[0]}</span>
+        </h2>
+        <p class="download-lead reading-zone exposed-reading-zone">
+          {c.download.body}
+        </p>
+        <span class="download-sigil" aria-hidden="true"></span>
+      </div>
+      <div
+        class="download-pass download-package"
+        data-glass-card
+        data-glass-id="download-pass"
+        data-story-item="visual"
+        data-story-enter="down"
+        data-story-preset="download-card"
+      >
+        <div class="download-pass-action">
+          <div class="package-copy">
+            <div class="package-heading">
+              <span class="release-tag">{c.download.channel}</span>
+              <span class="display package-platform">ANDROID</span>
+            </div>
+            <div class="version-line">
+              <span class="display">HOOPITO</span>
+              <b class="display">{release.version}</b>
+            </div>
+            <p class="package-meta">
+              {c.download.system.replace('{version}', release.minimumAndroid)}
+              <span>·</span>
+              {c.download.size.replace(
+                '{size}',
+                String(Math.round(release.apkBytes / 1024 / 1024)),
+              )}
+            </p>
+          </div>
+          <a
+            class="button button-dark"
+            data-download
+            href={release.upstreamApkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-haspopup="dialog"
+            aria-controls="download-dialog"
+          >
+            <span class="control-content">
+              <span>{c.download.button}</span>
+              <Icon name="download" />
+            </span>
+          </a>
+          <div class="download-links">
+            <a class="release-link" href={release.releaseUrl}>
+              {c.download.release}
+              <Icon name="arrow" />
+            </a>
+          </div>
+        </div>
+        <details class="mobile-qr-disclosure" data-mobile-disclosure="qr" open>
+          <summary>
+            <span>
+              {locale === 'zh' ? '在其他设备打开' : 'Open on another device'}
+            </span>
+            <span class="mobile-disclosure-symbol" aria-hidden="true">
+              +
+            </span>
+          </summary>
+          <div class="download-pass-qr qr-block">
+            <img
+              src="/brand/release-qr.svg"
+              alt={c.download.qr}
+              width="112"
+              height="112"
+              loading="lazy"
+            />
+            <span>{c.download.qr}</span>
+          </div>
+        </details>
+        <p class="install-note reading-zone">{c.download.install}</p>
+        <div class="download-pass-support">
+          <div class="package-bottom">
+            <details class="checksum">
+              <summary>
+                {c.download.verify}
+                <Icon name="plus" />
+              </summary>
+              <code class="reading-zone">{release.sha256}</code>
+            </details>
+            <div class="download-extras">
+              <a href={release.repositoryUrl}>
+                <Icon name="github" />
+                {c.download.source}
+              </a>
+              <a href={release.issuesUrl}>
+                {c.download.feedback}
+                <Icon name="arrow" />
+              </a>
+            </div>
+          </div>
+          <details class="upgrade">
+            <summary>
+              {c.download.upgrade}
+              <Icon name="plus" />
+            </summary>
+            <p class="reading-zone">{c.download.upgradeBody}</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

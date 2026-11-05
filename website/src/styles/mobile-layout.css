@@ -1,0 +1,607 @@
+/* Neutral wrappers keep desktop figures in their original grid cells. */
+[data-mobile-disclosure] {
+  display: contents;
+}
+[data-mobile-disclosure]::details-content {
+  display: contents;
+}
+[data-mobile-disclosure] > summary,
+.feature-short-title {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  body:not(.privacy-page) {
+    --gutter: 20px;
+    --scrim-inline: 24px;
+    --scrim-block: 12px;
+  }
+  .scoring,
+  .experience,
+  .replay,
+  .download,
+  .community,
+  .closing {
+    min-height: max(0px, calc(100svh - var(--measured-header, var(--header))));
+  }
+  .hero-stage {
+    padding-top: calc(var(--measured-header, 64px) + 24px);
+    padding-bottom: 24px;
+    row-gap: 24px;
+  }
+  .hero-copy {
+    padding-block: 16px 0;
+  }
+  .hero h1,
+  .en .hero h1 {
+    font-size: clamp(3rem, 13vw, 3.5rem);
+    line-height: 1.07;
+  }
+  .en .hero-accent {
+    font-size: 0.9em;
+  }
+  .hero-introduction::before {
+    background: rgb(8 13 16 / var(--glass-exposed-reading-opacity));
+  }
+  .hero-introduction {
+    width: fit-content;
+  }
+  .hero-tags {
+    gap: 8px 14px;
+    margin-top: 12px;
+    font-size: 0.875rem;
+  }
+  .hero-actions-panel[data-glass-card] {
+    padding: 6px;
+  }
+  .hero-actions {
+    gap: 6px;
+  }
+  .hero-actions .button {
+    flex: 1 1 170px;
+    min-height: 56px;
+    padding: 12px 14px;
+    gap: 12px;
+  }
+  .hero-actions .text-link {
+    flex: 0 1 96px;
+    padding-inline: 4px;
+    font-size: 0.875rem;
+    text-align: center;
+    min-height: 48px;
+  }
+  .hero-actions .text-link > .control-content {
+    gap: 6px;
+  }
+  .hero-actions .text-link .icon {
+    width: 18px;
+    height: 18px;
+    flex: none;
+  }
+  .hero-floor {
+    margin-top: 0;
+    gap: 8px 16px;
+  }
+  .hero-floor > a::before {
+    background: rgb(8 13 16 / var(--glass-exposed-reading-opacity));
+  }
+  .hero-floor > a {
+    font-size: 0.875rem;
+  }
+  .scoring,
+  .experience,
+  .replay,
+  .download,
+  .community {
+    padding-block: 24px 36px;
+  }
+  [data-story-stage]:not(.hero-stage) {
+    padding-block: 24px;
+    row-gap: 20px;
+  }
+  .section-top {
+    gap: 12px;
+  }
+  .stage-heading h2,
+  .scoring-stage h2,
+  .experience-heading h2,
+  .replay-introduction h2,
+  .community-heading h2 {
+    font-size: clamp(1.875rem, 8.4vw, 2.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+  }
+  .stage-heading h2 [data-story-line] {
+    text-wrap: balance;
+  }
+  .scoring-stage h2 > [data-story-line] + [data-story-line],
+  .en .scoring-stage h2 > [data-story-line] + [data-story-line],
+  .experience-heading h2 > [data-story-line] + [data-story-line],
+  .en .experience-heading h2 > [data-story-line] + [data-story-line],
+  .replay-introduction h2 > [data-story-line] + [data-story-line],
+  .en .replay-introduction h2 > [data-story-line] + [data-story-line],
+  .community-heading h2 > [data-story-line] + [data-story-line],
+  .en .community-heading h2 > [data-story-line] + [data-story-line] {
+    font-size: clamp(1.875rem, 8.4vw, 2.25rem);
+    line-height: 1.2;
+    margin-top: 6px;
+  }
+  .section-body,
+  .section-intro > p,
+  .experience-heading .section-body,
+  .replay-introduction .section-body {
+    margin-top: 16px;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  .reading-zone::before {
+    inset-inline: -16px;
+  }
+  /* A phone-sized product image and its three controls share one reading group. */
+  .scoring-display,
+  .scoring-display .scoring-caption {
+    display: contents;
+  }
+  .scoring-display .scoring-caption::before {
+    content: none;
+  }
+  .scoring-stage .section-top {
+    order: 0;
+  }
+  .scoring-stage .section-intro {
+    order: 1;
+  }
+  .scoring-body .copy-line {
+    overflow-wrap: normal;
+    line-break: strict;
+    text-wrap: pretty;
+  }
+  .scoring-display .landscape-device {
+    order: 2;
+  }
+  .scoring-control-slot {
+    order: 3;
+    margin-top: -10px;
+  }
+  .score-preview {
+    position: relative;
+    isolation: isolate;
+    order: 4;
+    margin-top: -10px;
+  }
+  .score-preview::before {
+    content: '';
+    position: absolute;
+    inset: -12px -16px;
+    z-index: -1;
+    pointer-events: none;
+    background: rgb(8 13 16 / var(--glass-exposed-reading-opacity));
+    mask-image: linear-gradient(
+      transparent,
+      #000 12px,
+      #000 calc(100% - 12px),
+      transparent
+    );
+  }
+  .score-caption-meta {
+    order: 5;
+    font-size: 0.875rem;
+    align-items: center;
+    gap: 2px 12px;
+    margin-top: -12px;
+  }
+  .score-caption-meta .capture-note {
+    flex: 1 1 170px;
+    display: grid;
+    gap: 0;
+  }
+  .score-caption-meta .viewer-link {
+    flex: none;
+    min-height: 48px;
+    font-size: 0.875rem;
+  }
+  .score-controls[data-glass-card] {
+    padding: 4px;
+  }
+  .score-guide,
+  .score-feature-copy > strong,
+  .feature-description {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+  .score-features {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .score-feature {
+    display: grid;
+    place-items: center;
+    min-height: 48px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .score-feature + .score-feature {
+    border-top: 0;
+  }
+  .score-feature::after {
+    left: calc(50% - 12px);
+    top: auto;
+    bottom: 0;
+    width: 24px;
+    height: 2px;
+    opacity: 0;
+  }
+  .score-feature .feature-index,
+  .score-feature .feature-indicator {
+    display: none;
+  }
+  .feature-short-title {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    white-space: normal;
+  }
+  .score-feature[aria-pressed='true'] .feature-short-title {
+    color: #ffb08c;
+  }
+  /* The active court and its controls stay in natural flow without scroll motion. */
+  .demo-layout {
+    row-gap: 12px;
+  }
+  .experience-heading {
+    margin-bottom: 8px;
+  }
+  .experience-score-slot {
+    width: 100%;
+  }
+  .demo-scoreboard[data-glass-card] {
+    padding: 6px 16px 8px;
+  }
+  .demo-scoreboard-head {
+    padding-bottom: 0;
+    gap: 8px;
+  }
+  .demo-label {
+    gap: 6px;
+    font-size: 0.875rem;
+  }
+  .demo-score-matchup {
+    font-size: 0.875rem;
+  }
+  .demo-score {
+    gap: 8px;
+    margin-top: 2px;
+  }
+  .score-team {
+    gap: 8px;
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+  .score-team > span {
+    white-space: nowrap;
+  }
+  .demo-score strong {
+    font-size: 2.5rem;
+    line-height: 1;
+    min-inline-size: 2ch;
+  }
+  .score-separator {
+    font-size: 1.5rem;
+  }
+  .demo-map {
+    width: min(100%, 288px);
+    justify-self: center;
+  }
+  .demo-court-stage {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 15 / 14;
+  }
+  .demo-controls[data-glass-card] {
+    padding: 12px;
+  }
+  .demo-control-bar {
+    gap: 8px;
+  }
+  .point-presets {
+    gap: 4px;
+  }
+  .point-presets button {
+    padding: 10px 6px;
+    font-size: 0.875rem;
+  }
+  .demo-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .demo-actions .button {
+    flex: 1 1 10rem;
+    padding-inline: 14px;
+    min-height: 52px;
+  }
+  .reset-button {
+    flex: 0 1 auto;
+    padding: 8px;
+    min-height: 48px;
+  }
+  .demo-control-notes {
+    margin-top: 10px;
+    gap: 10px;
+  }
+  .demo-controls .fine-print {
+    padding-top: 10px;
+    border-top: 1px solid #f3efe51a;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .demo-control-notes::before {
+    inset: -6px;
+    background: rgb(8 13 16 / var(--glass-reading-opacity));
+  }
+  /* One real match result leads; the separately labelled example follows. */
+  .replay-editorial {
+    gap: 24px;
+  }
+  .replay-story {
+    display: contents;
+  }
+  .replay-introduction {
+    order: 0;
+    justify-self: stretch;
+  }
+  .summary-device {
+    order: 1;
+    max-width: 288px;
+  }
+  .replay-analysis[data-glass-card] {
+    order: 2;
+    padding: 18px;
+    justify-self: stretch;
+  }
+  .replay-graph-source {
+    flex-basis: 110px;
+  }
+  .replay-graph figcaption {
+    gap: 8px;
+  }
+  .replay-live-score {
+    font-size: 2.5rem;
+  }
+  .replay-plot {
+    margin-top: 4px;
+  }
+  .replay-moments {
+    gap: 8px;
+  }
+  .replay-moments > div {
+    padding-top: 8px;
+  }
+  .replay-findings {
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .portrait-device figcaption {
+    gap: 2px;
+    padding-top: 10px;
+  }
+  .portrait-device .viewer-link {
+    min-height: 48px;
+  }
+  [data-mobile-disclosure] {
+    display: block;
+    min-width: 0;
+    width: 100%;
+    border-top: 1px solid #f3efe52e;
+  }
+  [data-mobile-disclosure]::details-content {
+    display: block;
+  }
+  [data-mobile-disclosure] > summary {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 12px;
+    list-style: none;
+    font-size: 0.875rem;
+    color: #f0e5d6;
+    cursor: pointer;
+  }
+  [data-mobile-disclosure] > summary::-webkit-details-marker {
+    display: none;
+  }
+  [data-mobile-disclosure] > summary:focus-visible {
+    outline: 2px solid #ffd6ad;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .mobile-disclosure-symbol {
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #ffb08c;
+    transition: transform 160ms ease;
+  }
+  [data-mobile-disclosure][open] > summary .mobile-disclosure-symbol {
+    transform: rotate(45deg);
+  }
+  .mobile-history-disclosure {
+    order: 3;
+  }
+  .history-device {
+    max-width: 250px;
+    margin: 8px auto 0;
+  }
+  .download .section-top {
+    margin-bottom: 20px;
+  }
+  .download-layout {
+    gap: 24px;
+  }
+  .download-invitation h2,
+  .en .download-invitation h2 {
+    font-size: clamp(3rem, 13vw, 3.5rem);
+  }
+  .download-lead {
+    margin-top: 16px;
+  }
+  .download-sigil {
+    margin-top: 16px;
+    width: 48px;
+    height: 4px;
+  }
+  .download-pass[data-glass-card] {
+    padding: 20px;
+    gap: 16px;
+  }
+  .download-pass-action {
+    order: 0;
+  }
+  .version-line {
+    gap: 6px 12px;
+    margin-top: 16px;
+  }
+  .version-line > .display {
+    font-size: 1.875rem;
+  }
+  .version-line > b {
+    font-size: 2.25rem;
+  }
+  .package-meta {
+    gap: 4px 8px;
+    margin-block: 10px 20px;
+  }
+  .install-note {
+    order: 1;
+  }
+  .mobile-qr-disclosure {
+    order: 2;
+  }
+  .download-pass-qr {
+    padding-top: 8px;
+    gap: 16px;
+    align-items: center;
+  }
+  .download-pass-support {
+    order: 3;
+    padding-top: 0;
+  }
+  .upgrade {
+    margin-top: 4px;
+  }
+  /* Shared content is visually sequenced for a single phone, without copies. */
+  .community {
+    row-gap: 20px;
+  }
+  .community-heading {
+    order: 0;
+  }
+  .community-heading .eyebrow {
+    margin-bottom: 14px;
+  }
+  .community-copy,
+  .community-actions {
+    display: contents;
+  }
+  .community-description {
+    order: 6;
+  }
+  .community-number {
+    order: 1;
+    margin-block: 0 4px;
+    gap: 6px;
+  }
+  .community-number strong {
+    font-size: clamp(2.5rem, calc(8vw + 1.5rem), 3.5rem);
+    white-space: nowrap;
+    letter-spacing: -0.04em;
+  }
+  .community-artwork {
+    order: 2;
+    width: min(100%, 360px);
+  }
+  .community-save-action[data-glass-card] {
+    order: 3;
+    width: 100%;
+    padding: 12px 18px;
+    min-height: 52px;
+  }
+  .community-instructions {
+    order: 4;
+  }
+  .community-note {
+    order: 7;
+    margin-top: -4px;
+  }
+  .community-artwork figcaption {
+    gap: 0 12px;
+    padding-top: 8px;
+  }
+  .community-open {
+    min-height: 48px;
+  }
+  .closing {
+    gap: 32px;
+    padding-block: 24px;
+  }
+  .faq {
+    gap: 20px;
+  }
+  .faq h3 {
+    font-size: 2rem;
+  }
+  .faq summary {
+    gap: 10px;
+    padding-block: 16px;
+  }
+  .faq details p {
+    margin-inline: 28px 0;
+  }
+  .footer-heading {
+    gap: 12px 20px;
+    padding-bottom: 20px;
+  }
+  .footer-heading > .display {
+    font-size: clamp(2.5rem, 11vw, 3rem);
+  }
+  .footer-heading > p {
+    flex-basis: 10rem;
+    font-size: 0.875rem;
+  }
+  .footer-bottom {
+    gap: 12px;
+    padding-top: 12px;
+  }
+  .footer-bottom > p {
+    gap: 4px 14px;
+  }
+}
+
+@media (max-width: 359px) {
+  body:not(.privacy-page) {
+    --gutter: 16px;
+  }
+  .hero-actions .button,
+  .hero-actions .text-link {
+    flex-basis: 100%;
+  }
+  .score-feature {
+    padding-inline: 4px;
+  }
+  .demo-scoreboard[data-glass-card],
+  .download-pass[data-glass-card] {
+    padding-inline: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 767px) {
+  .mobile-disclosure-symbol {
+    transition: none;
+  }
+}

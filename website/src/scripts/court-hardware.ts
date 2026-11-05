@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import type { SceneQuality } from './scene-contract.ts';
 
 type ResourceOwner = <T extends { dispose(): void }>(resource: T) => T;
 type ViewRole = 'basket' | 'ceiling' | 'perimeter' | 'rear-support';
@@ -15,6 +16,7 @@ interface CourtHardwareOptions {
 interface GeometryBatch {
   material: THREE.Material;
   parts: THREE.BufferGeometry[];
+  farParts: THREE.BufferGeometry[];
   castShadow: boolean;
   viewRole: ViewRole;
 }
@@ -27,6 +29,11 @@ export function createCourtHardware({
   rim,
 }: CourtHardwareOptions): {
   group: THREE.Group;
+  setDetailForCamera(
+    camera: THREE.PerspectiveCamera,
+    viewportCSSHeight: number,
+    quality?: SceneQuality,
+  ): boolean;
   setNetImpact(value: number): void;
   setCeilingVisibility(value: number): void;
   setViewCutaway(value: number): void;
@@ -57,18 +64,19 @@ export function createCourtHardware({
     batches.set(name, {
       material: own(new THREE.MeshStandardMaterial(parameters)),
       parts: [],
+      farParts: [],
       castShadow,
       viewRole,
     });
     return name;
   };
   const steel = finish('painted-steel', {
-    color: '#85929A',
+    color: '#566168',
     map: metalMap,
     bumpMap: metalMap,
     bumpScale: 0.0014,
-    roughness: 0.48,
-    metalness: 0.8,
+    roughness: 0.63,
+    metalness: 0.22,
   });
   const brushed = finish('brushed-fasteners', {
     color: '#B4BDC0',
@@ -81,7 +89,7 @@ export function createCourtHardware({
   const padding = finish(
     'padded-protection',
     {
-      color: '#15191C',
+      color: '#242B30',
       bumpMap: metalMap,
       bumpScale: 0.004,
       roughness: 0.91,
@@ -96,8 +104,6 @@ export function createCourtHardware({
     bumpScale: 0.0007,
     roughness: 0.31,
     metalness: 0.35,
-    emissive: '#A6360F',
-    emissiveIntensity: 0.08,
   });
   const lens = finish(
     'ceiling-optics',
@@ -136,17 +142,18 @@ export function createCourtHardware({
       }),
     ),
     parts: [],
+    farParts: [],
     castShadow: false,
     viewRole: 'basket',
   });
   const glassEdge = finish(
     'glass-edge',
     {
-      color: '#9ABDC6',
+      color: '#719C9C',
       roughness: 0.18,
       metalness: 0.08,
       transparent: true,
-      opacity: 0.48,
+      opacity: 0.56,
       depthWrite: false,
     },
     false,
@@ -158,6 +165,7 @@ export function createCourtHardware({
     batches.set(name, {
       material: own(original.material.clone()),
       parts: [],
+      farParts: [],
       castShadow: original.castShadow,
       viewRole: 'rear-support',
     });
@@ -168,8 +176,12 @@ export function createCourtHardware({
 
   // Construction parts never reach the renderer. Dispose these local staging
   // geometries after merging; only the final geometry belongs to the scene owner.
+  type GeometryPair =
+    THREE.BufferGeometry | [THREE.BufferGeometry, THREE.BufferGeometry];
+  const hasCloseDetail = (batch: string) =>
+    ['basket', 'rear-support'].includes(batches.get(batch)!.viewRole);
   function place(
-    geometry: THREE.BufferGeometry,
+    geometry: GeometryPair,
     batch: string,
     position: THREE.Vector3,
     rotation = new THREE.Euler(),
@@ -182,8 +194,11 @@ export function createCourtHardware({
       scale,
     );
     if (parent) matrix.premultiply(parent);
-    geometry.applyMatrix4(matrix);
-    batches.get(batch)!.parts.push(geometry);
+    const [near, far] = Array.isArray(geometry)
+      ? geometry
+      : [geometry, geometry.clone()];
+    batches.get(batch)!.parts.push(near.applyMatrix4(matrix));
+    batches.get(batch)!.farParts.push(far.applyMatrix4(matrix));
   }
   function block(
     size: [number, number, number],
@@ -192,12 +207,16 @@ export function createCourtHardware({
     radius = 0.018,
     parent?: THREE.Matrix4,
   ) {
-    place(
+    const rounded = (segments: number) =>
       new RoundedBoxGeometry(
         ...size,
-        2,
+        segments,
         Math.min(radius, Math.min(...size) * 0.45),
-      ),
+      );
+    place(
+      hasCloseDetail(batch)
+        ? [rounded(2), rounded(1)]
+        : new THREE.BoxGeometry(...size),
       batch,
       new THREE.Vector3(...position),
       undefined,
@@ -212,14 +231,19 @@ export function createCourtHardware({
     position: [number, number, number],
     batch: string,
     rotation = new THREE.Euler(),
-    segments = 24,
+    segments = 20,
   ) {
-    place(
-      new THREE.CylinderGeometry(top, bottom, height, segments),
-      batch,
-      new THREE.Vector3(...position),
-      rotation,
+    const nearSegments = hasCloseDetail(batch)
+      ? segments
+      : Math.min(segments, 6);
+    const near = new THREE.CylinderGeometry(top, bottom, height, nearSegments);
+    const far = new THREE.CylinderGeometry(
+      top,
+      bottom,
+      height,
+      Math.min(nearSegments, 8),
     );
+    place([near, far], batch, new THREE.Vector3(...position), rotation);
   }
   function beam(
     start: THREE.Vector3,
@@ -228,56 +252,78 @@ export function createCourtHardware({
     batch: string,
   ) {
     const direction = end.clone().sub(start);
-    const geometry = new THREE.CylinderGeometry(
-      radius,
-      radius,
-      direction.length(),
-      24,
-    );
-    geometry.applyQuaternion(
+    const length = direction.length();
+    const rotation = new THREE.Euler().setFromQuaternion(
       new THREE.Quaternion().setFromUnitVectors(up, direction.normalize()),
     );
-    geometry.translate(...start.clone().add(end).multiplyScalar(0.5).toArray());
-    batches.get(batch)!.parts.push(geometry);
+    cylinder(
+      radius,
+      radius,
+      length,
+      start.clone().add(end).multiplyScalar(0.5).toArray() as [
+        number,
+        number,
+        number,
+      ],
+      batch,
+      rotation,
+      hasCloseDetail(batch) ? 16 : 6,
+    );
   }
   function pipe(
     points: THREE.Vector3[],
     radius: number,
     batch: string,
-    segments = Math.max(24, points.length * 8),
-    radialSegments = 12,
+    segments = Math.max(16, points.length * 4),
+    radialSegments = 8,
   ) {
-    const geometry = new THREE.TubeGeometry(
-      new THREE.CatmullRomCurve3(points),
-      segments,
-      radius,
-      radialSegments,
-      false,
+    const curve = new THREE.CatmullRomCurve3(points);
+    place(
+      [
+        new THREE.TubeGeometry(curve, segments, radius, radialSegments, false),
+        new THREE.TubeGeometry(
+          curve,
+          Math.max(8, Math.floor(segments / 2)),
+          radius,
+          5,
+          false,
+        ),
+      ],
+      batch,
+      new THREE.Vector3(),
     );
-    batches.get(batch)!.parts.push(geometry);
   }
 
   // Suspended indoor luminaires and acoustic architecture, rather than streetlight poles.
   // The ceiling details use simple boxes: the near basket keeps the fine hardware budget.
-  // Remote dark trusses carry a fixed ambient graphite finish. Their geometry
-  // supplies the silhouette; per-pixel physical lighting adds no useful close-up detail.
+  // Remote silhouettes use boxes and hexagonal rods; near hardware retains bevels.
   const architecture = 'arena-structure';
   batches.set(architecture, {
-    material: own(new THREE.MeshBasicMaterial({ color: '#0B1318' })),
+    material: own(
+      new THREE.MeshStandardMaterial({
+        color: '#39434A',
+        roughness: 0.78,
+        metalness: 0.18,
+      }),
+    ),
     parts: [],
+    farParts: [],
     castShadow: false,
     viewRole: 'perimeter',
   });
   const ceilingStructure = 'ceiling-structure';
   batches.set(ceilingStructure, {
     material: own(
-      new THREE.MeshBasicMaterial({
-        color: '#0B1318',
+      new THREE.MeshStandardMaterial({
+        color: '#39434A',
+        roughness: 0.78,
+        metalness: 0.18,
         transparent: true,
         depthWrite: false,
       }),
     ),
     parts: [],
+    farParts: [],
     castShadow: false,
     viewRole: 'ceiling',
   });
@@ -297,7 +343,7 @@ export function createCourtHardware({
   const acoustic = finish(
     'acoustic-panels',
     {
-      color: '#20282B',
+      color: '#384248',
       roughness: 0.98,
       metalness: 0,
     },
@@ -490,6 +536,47 @@ export function createCourtHardware({
       0.002,
     );
 
+  // A through-bolted load plate connects the breakaway mechanism to the board;
+  // the lower gussets carry the overhang into the ring instead of floating below it.
+  block(
+    [0.19, 0.245, 0.024],
+    [rim.x, rim.y + 0.12, boardZ + 0.036],
+    steel,
+    0.008,
+  );
+  for (const dx of [-0.063, 0.063]) {
+    for (const dy of [0.045, 0.2]) {
+      cylinder(
+        0.017,
+        0.017,
+        0.018,
+        [rim.x + dx, rim.y + dy, boardZ + 0.058],
+        brushed,
+        new THREE.Euler(Math.PI / 2, 0, 0),
+        6,
+      );
+      cylinder(
+        0.022,
+        0.022,
+        0.019,
+        [rim.x + dx, rim.y + dy, boardZ + 0.018],
+        brushed,
+        new THREE.Euler(Math.PI / 2, 0, 0),
+        12,
+      );
+    }
+    const shape = new THREE.Shape();
+    shape.moveTo(0, 0);
+    shape.lineTo(0.19, 0.075);
+    shape.lineTo(0, 0.075);
+    shape.closePath();
+    place(
+      new THREE.ExtrudeGeometry(shape, { depth: 0.012, bevelEnabled: false }),
+      orange,
+      new THREE.Vector3(rim.x + dx, rim.y - 0.105, boardZ + 0.1),
+      new THREE.Euler(0, -Math.PI / 2, 0),
+    );
+  }
   block(
     [0.158, 0.148, 0.18],
     [rim.x, rim.y - 0.026, boardZ + 0.13],
@@ -524,7 +611,10 @@ export function createCourtHardware({
   }
   pipe(spring, 0.004, brushed, 96, 8);
   place(
-    new THREE.TorusGeometry(0.243, 0.018, 16, 96),
+    [
+      new THREE.TorusGeometry(0.243, 0.018, 12, 72),
+      new THREE.TorusGeometry(0.243, 0.018, 8, 40),
+    ],
     orange,
     rim.clone(),
     new THREE.Euler(Math.PI / 2, 0, 0),
@@ -532,7 +622,10 @@ export function createCourtHardware({
   for (let hook = 0; hook < 12; hook += 1) {
     const angle = (hook / 12) * Math.PI * 2;
     place(
-      new THREE.TorusGeometry(0.012, 0.0037, 8, 20),
+      [
+        new THREE.TorusGeometry(0.012, 0.0037, 6, 12),
+        new THREE.TorusGeometry(0.012, 0.0037, 4, 8),
+      ],
       orange,
       new THREE.Vector3(
         rim.x + Math.sin(angle) * 0.232,
@@ -596,6 +689,7 @@ export function createCourtHardware({
   batches.set('nylon-net', {
     material: nylon,
     parts: [],
+    farParts: [],
     castShadow: false,
     viewRole: 'basket',
   });
@@ -620,17 +714,15 @@ export function createCourtHardware({
     ).normalize();
     middle.addScaledVector(radial, 0.003);
     middle.y -= 0.002;
-    batches
-      .get('nylon-net')!
-      .parts.push(
-        new THREE.TubeGeometry(
-          new THREE.QuadraticBezierCurve3(start, middle, end),
-          5,
-          0.0032,
-          8,
-          false,
-        ),
-      );
+    const curve = new THREE.QuadraticBezierCurve3(start, middle, end);
+    place(
+      [
+        new THREE.TubeGeometry(curve, 3, 0.0032, 6, false),
+        new THREE.TubeGeometry(curve, 2, 0.0032, 4, false),
+      ],
+      'nylon-net',
+      new THREE.Vector3(),
+    );
   }
   for (let index = 0; index < 12; index += 1) {
     const start = nodes[0]![index]!.clone();
@@ -643,36 +735,65 @@ export function createCourtHardware({
       const adjacent = (index + (row % 2 ? 1 : -1) + 12) % 12;
       rope(nodes[row - 1]![index]!, knot);
       rope(nodes[row - 1]![adjacent]!, knot);
-      place(new THREE.SphereGeometry(0.0052, 10, 6), 'nylon-net', knot);
+      place(
+        [
+          new THREE.SphereGeometry(0.0052, 6, 4),
+          new THREE.OctahedronGeometry(0.0052),
+        ],
+        'nylon-net',
+        knot,
+      );
     }
   }
   const lowerLoop = new THREE.CatmullRomCurve3(nodes.at(-1)!, true);
-  batches
-    .get('nylon-net')!
-    .parts.push(new THREE.TubeGeometry(lowerLoop, 96, 0.0032, 8, true));
+  place(
+    [
+      new THREE.TubeGeometry(lowerLoop, 60, 0.0032, 6, true),
+      new THREE.TubeGeometry(lowerLoop, 30, 0.0032, 4, true),
+    ],
+    'nylon-net',
+    new THREE.Vector3(),
+  );
 
-  for (const [name, batch] of batches) {
-    if (!batch.parts.length) continue;
-    const allIndexed = batch.parts.every((geometry) => geometry.index !== null);
-    const parts = allIndexed
-      ? batch.parts
-      : batch.parts.map((geometry) =>
+  const levels: {
+    mesh: THREE.Mesh<THREE.BufferGeometry, THREE.Material>;
+    near: THREE.BufferGeometry;
+    far: THREE.BufferGeometry;
+  }[] = [];
+  function mergeParts(parts: THREE.BufferGeometry[], name: string) {
+    const allIndexed = parts.every((geometry) => geometry.index !== null);
+    const normalized = allIndexed
+      ? parts
+      : parts.map((geometry) =>
           geometry.index ? geometry.toNonIndexed() : geometry,
         );
-    const geometry = mergeGeometries(parts, false);
-    for (const part of new Set([...batch.parts, ...parts])) part.dispose();
-    batch.parts.length = 0;
+    const geometry = mergeGeometries(normalized, false);
+    for (const part of new Set([...parts, ...normalized])) part.dispose();
+    parts.length = 0;
     if (!geometry)
       throw new Error(`Court hardware geometry failed to merge: ${name}`);
     geometry.computeBoundingSphere();
     if (name === 'nylon-net' && geometry.boundingSphere)
-      geometry.boundingSphere.radius += 0.09;
-    const mesh = new THREE.Mesh(own(geometry), batch.material);
+      geometry.boundingSphere.radius += 0.15;
+    return own(geometry);
+  }
+  for (const [name, batch] of batches) {
+    if (!batch.parts.length) continue;
+    const near = mergeParts(batch.parts, name);
+    const closeDetail = hasCloseDetail(name);
+    let far = near;
+    if (closeDetail) far = mergeParts(batch.farParts, name);
+    else {
+      for (const part of batch.farParts) part.dispose();
+      batch.farParts.length = 0;
+    }
+    const mesh = new THREE.Mesh(near, batch.material);
     mesh.name = name;
     mesh.userData.viewRole = batch.viewRole;
     mesh.castShadow = batch.castShadow;
     mesh.receiveShadow = !name.startsWith('ceiling-') && name !== 'glass-panel';
     group.add(mesh);
+    if (closeDetail) levels.push({ mesh, near, far });
     if (batch.viewRole === 'ceiling') ceilingMeshes.push(mesh);
     if (batch.viewRole === 'perimeter' || batch.viewRole === 'rear-support')
       cutawayMeshes.push({
@@ -683,9 +804,34 @@ export function createCourtHardware({
         castShadow: batch.castShadow,
       });
   }
+  let detail: 'near' | 'far' = 'near';
+  const cameraSpaceRim = new THREE.Vector3();
 
   return {
     group,
+    setDetailForCamera(camera, viewportCSSHeight, quality = 'full') {
+      if (!Number.isFinite(viewportCSSHeight) || viewportCSSHeight <= 0)
+        return false;
+      cameraSpaceRim.copy(rim).applyMatrix4(camera.matrixWorldInverse);
+      const depth = Math.max(0.1, -cameraSpaceRim.z);
+      const pixels =
+        (0.486 * viewportCSSHeight * camera.projectionMatrix.elements[5]!) /
+        (2 * depth);
+      const bias =
+        quality === 'density' ? 1.35 : quality === 'effects' ? 1.12 : 1;
+      const next =
+        detail === 'near'
+          ? pixels < 52 * bias
+            ? 'far'
+            : 'near'
+          : pixels > 82 * bias
+            ? 'near'
+            : 'far';
+      if (next === detail) return false;
+      detail = next;
+      for (const level of levels) level.mesh.geometry = level[next];
+      return true;
+    },
     setNetImpact(value) {
       impact.value = Number.isFinite(value)
         ? THREE.MathUtils.clamp(value, -0.2, 1)

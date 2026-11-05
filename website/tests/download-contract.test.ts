@@ -3,26 +3,29 @@ import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
 import { release } from '../src/data/release.ts';
 
-const apkUrl = '/downloads/v2.0.1/Hoopito-v2.0.1-android.apk';
-const apkFilename = 'Hoopito-v2.0.1-android.apk';
+const apkUrl = '/downloads/v2.1.0/Hoopito-v2.1.0-android.apk';
+const apkFilename = 'Hoopito-v2.1.0-android.apk';
 
 test('the domestic channel uses the maintainer Lanzou share and public password without a Baidu placeholder', () => {
-  assert.equal(release.lanzouUrl, 'https://wwbdc.lanzoub.com/ixNAU4d7x6kj');
-  assert.equal(release.lanzouPassword, 'gkyz');
+  assert.equal(release.lanzouUrl, 'https://xiaoyangren.lanzoub.com/b01i5z85wb');
+  assert.equal(release.lanzouPassword, 'ayj6');
   assert.equal('baiduPanUrl' in release, false);
 });
 
 test('the website serves the unchanged signed release from a versioned same-origin URL', () => {
+  assert.equal(release.version, '2.1.0');
+  assert.equal(release.appVersion, '2.1.0+6');
+  assert.equal(release.versionCode, 6);
   assert.equal(release.apkUrl, apkUrl);
   assert.equal(release.apkFilename, apkFilename);
   assert.equal(
     release.upstreamApkUrl,
-    'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk',
+    'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/Hoopito-v2.1.0-android.apk',
   );
-  assert.equal(release.apkBytes, 76441047);
+  assert.equal(release.apkBytes, 77976935);
   assert.equal(
     release.sha256,
-    'c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9',
+    'c408707fbb1298f845e059c1a7eeada7d5474ca987ba04e46dfd9d2dbee7fb1a',
   );
   assert.equal(release.downloadPageUrl, 'https://hoopito.com/#download');
 });

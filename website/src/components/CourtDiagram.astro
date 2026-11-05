@@ -1,9 +1,23 @@
 ---
 import { netPath } from '../scripts/shot-timing';
+import { demoCourtArt } from '../data/demo-court-art';
 interface Props {
   label: string;
 }
 const { label } = Astro.props;
+const courtLines = [
+  { id: 'demo-court-boundary', d: 'M28 28H572V532H28ZM206 28V238H394V28' },
+  { id: 'demo-court-free-throw', d: 'M206 238A94 94 0 0 0 394 238' },
+  {
+    id: 'demo-court-free-throw-return',
+    d: 'M206 238A94 94 0 0 1 394 238',
+    dash: '8 9',
+  },
+  {
+    id: 'demo-court-three-point',
+    d: 'M57 28V133A243 243 0 0 0 543 133V28M234 532A66 66 0 0 1 366 532',
+  },
+];
 ---
 
 <svg
@@ -14,15 +28,18 @@ const { label } = Astro.props;
   aria-label={label}
 >
   <defs>
+    {courtLines.map(({ id, d }) => (
+      <path id={id} d={d} />
+    ))}
     <linearGradient id="court-surface" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#26302f" />
-      <stop offset=".42" stop-color="#201f1c" />
-      <stop offset="1" stop-color="#10171a" />
+      <stop stop-color="#ba8d59" />
+      <stop offset=".46" stop-color="#c69760" />
+      <stop offset="1" stop-color="#9c693c" />
     </linearGradient>
-    <radialGradient id="court-spotlight" cx="50%" cy="0%" r="90%">
-      <stop stop-color="#e6b587" stop-opacity=".12" />
-      <stop offset=".58" stop-color="#e6a36e" stop-opacity=".025" />
-      <stop offset="1" stop-color="#e6a36e" stop-opacity="0" />
+    <radialGradient id="court-spotlight" cx="46%" cy="35%" r="78%">
+      <stop stop-color="#fff1d4" stop-opacity=".10" />
+      <stop offset=".6" stop-color="#f4d6a5" stop-opacity="0" />
+      <stop offset="1" stop-color="#382110" stop-opacity=".20" />
     </radialGradient>
     <pattern
       id="court-planks"
@@ -30,20 +47,21 @@ const { label } = Astro.props;
       height="126"
       patternUnits="userSpaceOnUse"
     >
-      <path d="M0 0V126M26 0V126" stroke="#ccb394" stroke-opacity=".04" />
-      <path d="M0 34H26M26 93H52" stroke="#ccb394" stroke-opacity=".035" />
+      <path d="M0 0V126M26 0V126" stroke="#795133" stroke-opacity=".12" />
+      <path d="M0 34H26M26 93H52" stroke="#795133" stroke-opacity=".10" />
     </pattern>
     <pattern
       id="court-wood"
-      width="300"
-      height="300"
+      width={demoCourtArt.floor.tile}
+      height={demoCourtArt.floor.tile}
       patternUnits="userSpaceOnUse"
     >
       <image
         data-demo-surface
-        data-src="/art/demo-maple.webp"
-        width="300"
-        height="300"
+        data-demo-art="floor"
+        data-src={demoCourtArt.floor.src}
+        width={demoCourtArt.floor.tile}
+        height={demoCourtArt.floor.tile}
         preserveAspectRatio="none"
       />
     </pattern>
@@ -65,6 +83,21 @@ const { label } = Astro.props;
       <stop offset=".48" stop-color="#e5a170" stop-opacity=".06" />
       <stop offset="1" stop-color="#e5a170" stop-opacity=".28" />
     </linearGradient>
+    <linearGradient id="demo-board-glass" x1="0" y1="0" x2=".35" y2="1">
+      <stop stop-color="#e7f0eb" stop-opacity=".47" />
+      <stop offset=".45" stop-color="#9fbdba" stop-opacity=".12" />
+      <stop offset="1" stop-color="#d4e0d9" stop-opacity=".3" />
+    </linearGradient>
+    <linearGradient id="demo-hoop-metal" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#ffbd74" />
+      <stop offset=".35" stop-color="#f48035" />
+      <stop offset=".7" stop-color="#cb4b17" />
+      <stop offset="1" stop-color="#8b3216" />
+    </linearGradient>
+    <radialGradient id="demo-hoop-shadow">
+      <stop stop-color="#432613" stop-opacity=".25" />
+      <stop offset="1" stop-color="#432613" stop-opacity="0" />
+    </radialGradient>
   </defs>
   <rect
     x="15"
@@ -83,50 +116,129 @@ const { label } = Astro.props;
     width="544"
     height="504"
     fill="url(#court-wood)"
-    opacity=".14"
+    opacity="1"
   />
   <rect x="28" y="28" width="544" height="504" fill="url(#court-spotlight)" />
-  <path d="M206 28V238H394V28Z" fill="#ead5b8" fill-opacity=".025" />
+  <path d="M206 28V238H394V28Z" fill="#915b30" fill-opacity=".05" />
   <g
-    stroke="#e8e1d6"
-    stroke-opacity=".64"
+    stroke="#6e472a"
+    opacity=".18"
+    fill="none"
+    stroke-width="3.4"
+    stroke-linejoin="round"
+    pointer-events="none"
+  >
+    {courtLines.map(({ id, dash }) => (
+      <use
+        href={`#${id}`}
+        stroke-dasharray={dash}
+        stroke-opacity={dash ? '.5' : undefined}
+      />
+    ))}
+  </g>
+  <g
+    stroke="#f8efdc"
+    stroke-opacity=".9"
     fill="none"
     stroke-width="2.2"
     stroke-linejoin="round"
   >
-    <path d="M28 28H572V532H28ZM206 28V238H394V28" />
-    <path d="M206 238A94 94 0 0 0 394 238" />
-    <path
-      d="M206 238A94 94 0 0 1 394 238"
-      stroke-dasharray="8 9"
-      stroke-opacity=".28"
-    />
-    <path d="M57 28V133A243 243 0 0 0 543 133V28M234 532A66 66 0 0 1 366 532" />
-    <path d="M258 64H342" stroke-width="5" stroke="#c7cdd0" />
-    <path d="M300 65V75" stroke="#c7cdd0" />
+    {courtLines.map(({ id, dash }) => (
+      <use
+        href={`#${id}`}
+        stroke-dasharray={dash}
+        stroke-opacity={dash ? '.5' : undefined}
+      />
+    ))}
   </g>
   <g
     data-demo-net
-    transform="translate(300 82)"
+    transform="translate(300 82) scale(1.25)"
     fill="none"
-    stroke="#eee4d6"
-    stroke-opacity=".6"
-    stroke-width="1.3"
+    stroke="#6d5034"
+    stroke-opacity=".7"
+    stroke-width="2"
+    pointer-events="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
   >
-    <path data-net-weave d={netPath(0)} />
+    <path id="demo-net-strands" data-net-weave d={netPath(0)} />
+    <use
+      href="#demo-net-strands"
+      stroke="#fff4d9"
+      stroke-opacity=".92"
+      stroke-width=".95"
+      transform="translate(-.15 -.2)"
+    />
+    {Array.from({ length: 8 }, (_, index) => {
+      const angle = (index * Math.PI) / 4;
+      return (
+        <circle
+          cx={16 * Math.cos(angle)}
+          cy={16 * Math.sin(angle)}
+          r=".7"
+          fill="#f6e9ce"
+        />
+      );
+    })}
   </g>
-  <ellipse
-    cx="300"
-    cy="82"
-    rx="16"
-    ry="7"
-    fill="none"
-    stroke="#ee945e"
-    stroke-width="3.8"
+  <g data-hoop-fallback pointer-events="none">
+    <circle cx="302" cy="86" r="28" fill="url(#demo-hoop-shadow)" />
+    <path d="M237 54H364L364.5 57H237.5Z" fill="#42504b" />
+    <rect
+      x="237"
+      y="53"
+      width="127"
+      height="3.4"
+      rx="1"
+      fill="url(#demo-board-glass)"
+      stroke="#dce5dc"
+      stroke-opacity=".66"
+      stroke-width="1.2"
+    />
+    <path
+      d="M238 53.7H363"
+      fill="none"
+      stroke="#f2efe4"
+      stroke-opacity=".7"
+      stroke-width="1"
+    />
+    <path d="M295 56H305L304 62H296Z" fill="#46514b" />
+    <path d="M297 57V60" stroke="#99a79c" stroke-width="1.4" />
+    <path d="M296 61H304V64H296Z" fill="url(#demo-hoop-metal)" />
+    <circle
+      cx="300"
+      cy="82"
+      r="20"
+      fill="none"
+      stroke="#773313"
+      stroke-width="4.8"
+    />
+    <circle
+      cx="300"
+      cy="82"
+      r="20"
+      fill="none"
+      stroke="url(#demo-hoop-metal)"
+      stroke-width="3.6"
+    />
+  </g>
+  <image
+    data-demo-art="hoop"
+    data-src={demoCourtArt.hoop.src}
+    data-rim-cx={demoCourtArt.hoop.rim.cx}
+    data-rim-cy={demoCourtArt.hoop.rim.cy}
+    data-rim-r={demoCourtArt.hoop.rim.rx}
+    x={demoCourtArt.hoop.placement.x}
+    y={demoCourtArt.hoop.placement.y}
+    width={demoCourtArt.hoop.placement.width}
+    height={demoCourtArt.hoop.placement.height}
+    preserveAspectRatio="xMidYMid meet"
+    pointer-events="none"
   />
   <g
-    opacity=".12"
-    fill="#e3d7c9"
+    opacity=".22"
+    fill="#68452a"
     font-family="Barlow Condensed, sans-serif"
     font-size="22"
     text-anchor="middle"
@@ -142,20 +254,21 @@ const { label } = Astro.props;
       r="31"
       fill="#e7a272"
       fill-opacity=".055"
-      stroke="#e7a272"
-      stroke-opacity=".22"
+      stroke="#704323"
+      stroke-opacity=".38"
     />
     <circle
       r="20"
       fill="#e7a272"
       fill-opacity=".12"
-      stroke="#e7a272"
+      stroke="#914418"
+      stroke-opacity=".75"
       stroke-width="1.4"
     />
-    <circle r="4" fill="#e7a272" />
+    <circle r="4" fill="#b45524" />
     <path
       d="M-30 0H-24M24 0H30M0-30V-24M0 24V30"
-      stroke="#e7a272"
+      stroke="#b45524"
       stroke-width="1.4"
     />
   </g>
@@ -164,18 +277,18 @@ const { label } = Astro.props;
       r="29"
       fill="#79acdf"
       fill-opacity=".06"
-      stroke="#79acdf"
-      stroke-opacity=".2"
+      stroke="#386f9b"
+      stroke-opacity=".45"
     />
     <circle
       r="18"
       fill="#79acdf"
       fill-opacity=".13"
-      stroke="#79acdf"
+      stroke="#386f9b"
       stroke-width="1.5"
     />
-    <circle r="7" fill="#79acdf" />
-    <path d="M-3 0L-1 3L4-3" fill="none" stroke="#0c1720" stroke-width="1.6" />
+    <circle r="7" fill="#205e8a" />
+    <path d="M-3 0L-1 3L4-3" fill="none" stroke="#f3f1e5" stroke-width="1.6" />
   </g>
   <path
     data-demo-trail
@@ -194,3 +307,15 @@ const { label } = Astro.props;
     </g>
   </g>
 </svg>
+
+<style>
+  [data-demo-art] {
+    opacity: 0;
+  }
+  [data-demo-art][data-art-ready='true'] {
+    opacity: 1;
+  }
+  [data-hoop-ready='true'] [data-hoop-fallback] {
+    display: none;
+  }
+</style>

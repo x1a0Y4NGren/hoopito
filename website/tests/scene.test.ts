@@ -26,7 +26,7 @@ test('sustained tail latency above twenty milliseconds lowers quality despite a 
   assert.equal(monitor.quality, 'effects');
 });
 
-test('chapter camera endpoints join without a jump and invalid progress cannot poison a pose', async () => {
+test('reading poses ignore local card progress and explicit adjacent tracks join without a jump', async () => {
   const { storyPose } = await import('../src/scripts/story-pose.ts');
   const chapters = [
     'hero',
@@ -34,34 +34,31 @@ test('chapter camera endpoints join without a jump and invalid progress cannot p
     'experience',
     'replay',
     'download',
+    'community',
   ] as const;
+  for (const chapter of chapters) {
+    const rest = storyPose({ chapter, progress: 0, active: true });
+    for (const progress of [0, 0.5, 1, NaN, Infinity, -1])
+      assert.deepEqual(storyPose({ chapter, progress, active: true }), rest);
+  }
   for (let index = 1; index < chapters.length; index += 1) {
-    const previous = storyPose({
-      chapter: chapters[index - 1]!,
-      progress: 1,
-      active: true,
-    });
-    const next = storyPose({
-      chapter: chapters[index]!,
-      progress: 0,
-      active: true,
-    });
-    assert.deepEqual(
-      next,
-      previous,
-      'Adjacent chapters share one camera and lighting pose',
-    );
+    const from = chapters[index - 1]!;
+    const to = chapters[index]!;
+    for (const progress of [0, 1])
+      assert.deepEqual(
+        storyPose({
+          chapter: from,
+          progress: 0.5,
+          active: true,
+          cameraTrack: { from, to, progress },
+        }),
+        storyPose({
+          chapter: progress === 0 ? from : to,
+          progress: 0,
+          active: true,
+        }),
+      );
   }
-  for (const progress of [NaN, Infinity, -1]) {
-    assert.deepEqual(
-      storyPose({ chapter: 'hero', progress, active: true }),
-      storyPose({ chapter: 'hero', progress: 0, active: true }),
-    );
-  }
-  assert.deepEqual(
-    storyPose({ chapter: 'replay', progress: 2, active: true }),
-    storyPose({ chapter: 'replay', progress: 1, active: true }),
-  );
 });
 
 test('the interactive chapter holds a true overhead camera, including reduced motion', async () => {
@@ -117,7 +114,7 @@ test('sustained active load removes effects before reducing density and respects
     if (sample?.changed) changes.push(sample.quality);
   }
   assert.deepEqual(changes, ['effects', 'density']);
-  assert.equal(renderDensity(2, 'density', 1440, 900), 1.5);
+  assert.equal(renderDensity(2, 'density', 1440, 900), 1.25);
   assert.equal(renderDensity(1, 'density', 1920, 1080), 1);
   assert.ok(renderDensity(2, 'full', 1920, 1080) >= 1.5);
 });
@@ -134,7 +131,7 @@ test('short recovery cannot oscillate quality and sustained recovery restores on
   assert.equal(monitor.quality, 'full');
 });
 
-test('reading and download stop refreshes while a visible shot or camera movement keeps rendering', async () => {
+test('stationary reading stops refreshes while visible movement renders in all chapters', async () => {
   const { shouldRenderContinuously } =
     await import('../src/scripts/scene-performance.ts');
   const reading = {
@@ -152,7 +149,7 @@ test('reading and download stop refreshes while a visible shot or camera movemen
   );
   assert.equal(
     shouldRenderContinuously({ ...reading, moving: true, chapter: 'download' }),
-    false,
+    true,
   );
   assert.equal(
     shouldRenderContinuously({ ...reading, moving: true, active: false }),
@@ -168,22 +165,36 @@ test('reading and download stop refreshes while a visible shot or camera movemen
   );
 });
 
-test('reduced motion keeps the hero artwork outside the interactive chapter and full motion resolves the retained chapter', async () => {
+test('reduced motion ignores flight and retains the current chapter reading camera', async () => {
   const { storyPose } = await import('../src/scripts/story-pose.ts');
-  const hero = storyPose({ chapter: 'hero', progress: 0, active: true });
-  const latest = { chapter: 'replay' as const, progress: 0.72, active: true };
-  for (const chapter of ['hero', 'scoring', 'replay', 'download'] as const) {
-    for (const progress of [0, 0.5, 1]) {
-      assert.deepEqual(
-        storyPose({ chapter, progress, active: true }, false),
-        hero,
-      );
-    }
+  for (const chapter of [
+    'hero',
+    'scoring',
+    'experience',
+    'replay',
+    'download',
+    'community',
+  ] as const) {
+    const latest = {
+      chapter,
+      progress: 0.72,
+      active: true,
+      cameraTrack: {
+        from: 'scoring' as const,
+        to: 'experience' as const,
+        progress: 0.4,
+      },
+    };
+    assert.deepEqual(
+      storyPose(latest, false),
+      storyPose({ chapter, progress: 0, active: true }),
+    );
+    assert.equal(
+      latest.cameraTrack.progress,
+      0.4,
+      'motion changes never mutate retained scroll state',
+    );
   }
-  assert.deepEqual(storyPose(latest, false), hero);
-  assert.deepEqual(latest, { chapter: 'replay', progress: 0.72, active: true });
-  assert.deepEqual(storyPose(latest, true), storyPose(latest));
-  assert.notDeepEqual(storyPose(latest, true), hero);
 });
 
 test('restoring the same recorded shot keeps its rebound alive while replacement or reset cancels it', async () => {

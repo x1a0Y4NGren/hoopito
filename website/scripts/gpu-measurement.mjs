@@ -106,7 +106,7 @@ export function summarizeSubmissions(events, { minimumIntervals = 12 } = {}) {
   for (const event of events) {
     if (!Number.isFinite(event.time) || !Number.isFinite(event.count)) continue;
     if (previous && event.count > previous.count) {
-      if (event.rendering === 'active' || event.rendering === 'idle') {
+      if (['active', 'idle', 'ambient'].includes(event.rendering)) {
         const interval = event.time - previous.time;
         if (interval > 0) intervals.push(interval);
         skippedCounts += Math.max(0, event.count - previous.count - 1);
@@ -147,6 +147,51 @@ export function summarizeSubmissions(events, { minimumIntervals = 12 } = {}) {
             'Insufficient individually observed active submissions. Idle time is excluded; long active intervals are retained.',
         }
       : {}),
+  };
+}
+
+/** Deliberately capped reading motion is diagnostic, never a 58Hz active gate. */
+export function summarizeReadingDrift(events, { minimumIntervals = 12 } = {}) {
+  const intervals = [];
+  const unexpectedRenderStates = new Set();
+  let previous;
+  let segments = 0;
+  let skippedCounts = 0;
+  for (const event of events) {
+    if (!Number.isFinite(event.time) || !Number.isFinite(event.count)) continue;
+    if (event.rendering !== 'ambient') {
+      unexpectedRenderStates.add(event.rendering ?? 'missing');
+      previous = undefined;
+      continue;
+    }
+    if (!previous) segments += 1;
+    else if (event.count > previous.count) {
+      const interval = event.time - previous.time;
+      if (interval > 0) intervals.push(interval);
+      skippedCounts += Math.max(0, event.count - previous.count - 1);
+    }
+    if (!previous || event.count > previous.count) previous = event;
+  }
+  const { activeDurationMs, ...statistics } = cadence(intervals);
+  const status =
+    intervals.length < minimumIntervals ||
+    skippedCounts > 0 ||
+    unexpectedRenderStates.size
+      ? 'unavailable'
+      : 'recorded';
+  return {
+    status,
+    thresholdApplied: false,
+    nominalMaximumFps: 24,
+    frames: intervals.length + segments,
+    ambientSegments: segments,
+    observedDurationMs: activeDurationMs,
+    skippedCounts,
+    unexpectedRenderStates: [...unexpectedRenderStates],
+    ...statistics,
+    intervals,
+    limitation:
+      'Reading drift uses a deliberately capped scheduler. Cadence is recorded without an active-frame acceptance threshold; submissions do not establish presentation.',
   };
 }
 

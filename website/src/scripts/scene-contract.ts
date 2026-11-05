@@ -46,13 +46,19 @@ export class ShotContinuation {
 }
 
 export type StoryChapter =
-  'hero' | 'scoring' | 'experience' | 'replay' | 'download';
+  'hero' | 'scoring' | 'experience' | 'replay' | 'download' | 'community';
 
 /** The DOM and camera consume the same chapter-local, native-scroll timeline. */
 export interface StoryFrame {
   chapter: StoryChapter;
   progress: number;
   active: boolean;
+  /** The real scroll gap between two adjacent reading intervals. */
+  cameraTrack?: {
+    from: StoryChapter;
+    to: StoryChapter;
+    progress: number;
+  };
 }
 
 export type SceneQuality = 'full' | 'effects' | 'density';
@@ -67,11 +73,22 @@ export interface SceneRegion {
 
 export interface CameraPlacement {
   region: SceneRegion;
+  /** Transform-free ROI at the reading stop, used only to author flight endpoints. */
+  restRegion?: SceneRegion;
   blend: number;
   inputEnabled: boolean;
 }
 
+/** Live court optics in browser viewport CSS pixels. DOM foreground stays sharp. */
+export interface GlassSurface {
+  id: string;
+  region: SceneRegion;
+  radius: number;
+  opacity: number;
+}
+
 export interface CourtScene {
+  setGlassSurfaces(surfaces: readonly GlassSurface[]): void;
   setStoryFrame(frame: StoryFrame): void;
   /** Compose the existing camera into a transparent HTML interaction region. */
   setCameraPlacement(placement: CameraPlacement | null): void;
@@ -80,6 +97,8 @@ export interface CourtScene {
   projectPoint(point: CourtPoint): { x: number; y: number } | null;
   /** Paint the current chapter at the current host size before revealing it. */
   presentFrame(): void;
+  /** Commit DOM-linked camera and optics before this browser frame is painted. */
+  flushFrame(): void;
   /** Render and capture the current pose before the WebGL drawing buffer is released. */
   exportFrame(): string;
   selectPoint(point: CourtPoint | null): void;
@@ -99,4 +118,5 @@ export interface CourtSceneOptions {
   motionEnabled: boolean;
   onFailure(reason: 'context-lost' | 'performance' | 'initialization'): void;
   onQualityChange?(quality: SceneQuality): void;
+  onGlassChange?(mode: 'webgl' | 'css'): void;
 }

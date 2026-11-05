@@ -132,14 +132,19 @@ jobs:
           retention-days: 14
 
   ui:
-    name: UI (${{ matrix.browser }})
+    name: UI (${{ matrix.browser }}, shard ${{ matrix.shard }}/2)
     needs: validate
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Preserve the complete pinned WebKit suite on its supported Windows port.
+    # Cocoa runner timing failures remain recorded in issue #45, not waived.
+    runs-on: ${{ matrix.browser == 'webkit' && 'windows-latest' || 'ubuntu-latest' }}
+    # Keep one browser worker per host. Split the full serial workload
+    # across fresh hosts, retaining every test, timing bound and flaky rejection.
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
+        shard: [1, 2]
     defaults:
       run:
         shell: bash
@@ -182,11 +187,16 @@ jobs:
 
       - name: Install only the assigned browser
         id: browser
-        run: bash scripts/install-ci-browser.sh ${{ matrix.browser }} 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/browser-install.log
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            bash scripts/install-ci-browser.sh ${{ matrix.browser }}
+          else
+            npx playwright install --no-shell ${{ matrix.browser }}
+          fi 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/browser-install.log
 
       - name: Run browser checks and reject flaky results
         id: tests
-        run: npm run test:e2e -- --project=${{ matrix.browser }} --grep-invert @webgl --workers=2 --fail-on-flaky-tests --output=output/playwright/ui-${{ matrix.browser }}/test-results 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/test.log
+        run: npm run test:e2e -- --project=${{ matrix.browser }} --grep-invert @webgl --shard=${{ matrix.shard }}/2 --workers=1 --fail-on-flaky-tests --output=output/playwright/ui-${{ matrix.browser }}/test-results 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/test.log
 
       - name: Record execution result
         if: always()
@@ -199,14 +209,14 @@ jobs:
           import { mkdir, writeFile } from 'node:fs/promises';
           const directory = 'output/playwright/ui-${{ matrix.browser }}';
           await mkdir(directory, { recursive: true });
-          await writeFile(directory + '/execution.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, job: 'ui', browser: process.env.BROWSER, status: process.env.JOB_STATUS, steps: JSON.parse(process.env.STEPS_JSON) }, null, 2) + '\n');
+          await writeFile(directory + '/execution.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, job: 'ui', browser: process.env.BROWSER, shard: '${{ matrix.shard }}/2', status: process.env.JOB_STATUS, steps: JSON.parse(process.env.STEPS_JSON) }, null, 2) + '\n');
           NODE
 
       - name: Preserve reports, logs and failure evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: hoopito-website-ui-${{ matrix.browser }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          name: hoopito-website-ui-${{ matrix.browser }}-${{ matrix.shard }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
           path: website/output/playwright/ui-${{ matrix.browser }}/
           if-no-files-found: warn
           retention-days: 14
@@ -214,8 +224,12 @@ jobs:
   webgl:
     name: WebGL (Chromium software renderer, shard ${{ matrix.shard }}/2)
     needs: validate
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Keep the required software-WebGL suite on the verified Windows backend;
+    # Linux initial-context loading remains tracked in issue #45.
+    runs-on: windows-latest
+    # Software rendering can exceed the earlier 20-minute job limit before
+    # completing the full shard and uploading its diagnostics.
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
@@ -263,11 +277,11 @@ jobs:
 
       - name: Install only the assigned browser
         id: browser
-        run: bash scripts/install-ci-browser.sh chromium 2>&1 | tee output/playwright/webgl-chromium-${{ matrix.shard }}/browser-install.log
+        run: npx playwright install --no-shell chromium 2>&1 | tee output/playwright/webgl-chromium-${{ matrix.shard }}/browser-install.log
 
       - name: Run browser checks and reject flaky results
         id: tests
-        run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" node scripts/ci-runtime-sampler.mjs --output output/playwright/webgl-chromium-${{ matrix.shard }}/runtime.jsonl -- npm run test:e2e -- --config=playwright.webgl.config.ts --project=chromium --grep @webgl --shard=${{ matrix.shard }}/2 --workers=1 --fail-on-flaky-tests --output=output/playwright/webgl-chromium-${{ matrix.shard }}/test-results 2>&1 | tee output/playwright/webgl-chromium-${{ matrix.shard }}/test.log
+        run: node scripts/ci-runtime-sampler.mjs --output output/playwright/webgl-chromium-${{ matrix.shard }}/runtime.jsonl -- npm run test:e2e -- --config=playwright.webgl.config.ts --project=chromium --grep @webgl --shard=${{ matrix.shard }}/2 --workers=1 --fail-on-flaky-tests --output=output/playwright/webgl-chromium-${{ matrix.shard }}/test-results 2>&1 | tee output/playwright/webgl-chromium-${{ matrix.shard }}/test.log
 
       - name: Record execution result
         if: always()

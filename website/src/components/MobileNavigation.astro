@@ -1,0 +1,108 @@
+---
+import Icon from './Icon.astro';
+import type { Locale } from '../data/content';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const zh = locale === 'zh';
+const ids = [
+  'hero',
+  'scoring',
+  'experience',
+  'replay',
+  'download',
+  'community',
+  'closing',
+];
+const titles = zh
+  ? [
+      '首页',
+      '现场计分',
+      '试着记下一球',
+      '赛后复盘',
+      '下载球豆',
+      '球友社区',
+      '常见问题与页尾',
+    ]
+  : [
+      'Home',
+      'Keep score',
+      'Try a shot',
+      'Review a game',
+      'Download',
+      'Community',
+      'FAQ and footer',
+    ];
+const label = zh ? '章节' : 'Menu';
+---
+
+<div
+  class="mobile-reading-progress"
+  data-mobile-progress
+  role="progressbar"
+  aria-label={zh ? '页面阅读进度' : 'Page reading progress'}
+  aria-valuemin="0"
+  aria-valuemax="100"
+  aria-valuenow="0"
+  hidden
+>
+  <span data-mobile-progress-fill></span>
+</div>
+<button
+  class="mobile-menu-toggle"
+  data-mobile-menu-toggle
+  data-mobile-menu-label={label}
+  type="button"
+  aria-haspopup="dialog"
+  aria-controls="mobile-chapters"
+  aria-expanded="false"
+  hidden
+>
+  <span>{label}</span>
+  <span class="mobile-page-number" data-mobile-page aria-hidden="true" hidden>
+    01 / 07
+  </span>
+</button>
+<dialog
+  class="mobile-menu"
+  id="mobile-chapters"
+  data-mobile-menu
+  aria-labelledby="mobile-menu-title"
+>
+  <div class="mobile-menu-heading">
+    <h2 id="mobile-menu-title">{zh ? '浏览球豆' : 'Explore Hoopito'}</h2>
+    <button
+      type="button"
+      data-mobile-menu-close
+      aria-label={zh ? '关闭章节菜单' : 'Close chapter menu'}
+    >
+      <Icon name="plus" />
+    </button>
+  </div>
+  <div
+    class="mobile-menu-links"
+    role="navigation"
+    aria-label={zh ? '章节导航' : 'Chapter navigation'}
+  >
+    {ids.map((id, index) => (
+      <a href={`#${id}`} data-mobile-menu-link={id}>
+        <span class="display" aria-hidden="true">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <strong>{titles[index]}</strong>
+        <Icon name="arrow" />
+      </a>
+    ))}
+  </div>
+</dialog>
+<noscript>
+  <details class="mobile-menu-fallback">
+    <summary>{label}</summary>
+    <div>
+      {ids.map((id, index) => (
+        <a href={`#${id}`}>{titles[index]}</a>
+      ))}
+    </div>
+  </details>
+</noscript>

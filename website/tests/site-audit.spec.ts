@@ -1,11 +1,11 @@
 import { createServer, request as proxyRequest } from 'node:http';
 import { expect, test as base, type Page } from '@playwright/test';
 
-const apk = '/downloads/v2.0.1/Hoopito-v2.0.1-android.apk';
-const apkFilename = 'Hoopito-v2.0.1-android.apk';
+const apk = '/downloads/v2.1.0/Hoopito-v2.1.0-android.apk';
+const apkFilename = 'Hoopito-v2.1.0-android.apk';
 const upstreamApk =
-  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.0.1/Hoopito-v2.0.1-android.apk';
-const lanzouShare = 'https://wwbdc.lanzoub.com/ixNAU4d7x6kj';
+  'https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/Hoopito-v2.1.0-android.apk';
+const lanzouShare = 'https://xiaoyangren.lanzoub.com/b01i5z85wb';
 const githubAttachment = '/__download-fixture__/github.apk';
 
 const test = base.extend<{
@@ -192,13 +192,13 @@ for (const locale of ['/', '/en/']) {
                   await expect(lanzou).toHaveAttribute('href', lanzouShare);
                   await expect(lanzou).toContainText(
                     locale === '/'
-                      ? '蓝奏云下载渠道（国内）'
+                      ? '蓝奏云下载（国内）'
                       : 'Lanzou download (China)',
                   );
                   await expect(
                     page.locator('[data-download-password]'),
                   ).toHaveText(
-                    locale === '/' ? /密码：\s*gkyz/ : /Password:\s*gkyz/,
+                    locale === '/' ? /密码：\s*ayj6/ : /Password:\s*ayj6/,
                   );
                   await expect(
                     page.locator('[data-download-channel="baidu"]'),
@@ -284,11 +284,11 @@ for (const locale of ['/', '/en/']) {
       'github',
     );
     await expect(channels.nth(0)).toContainText(
-      locale === '/' ? '蓝奏云下载渠道（国内）' : 'Lanzou download (China)',
+      locale === '/' ? '蓝奏云下载（国内）' : 'Lanzou download (China)',
     );
     await expect(channels.nth(1)).toContainText(
       locale === '/'
-        ? 'GitHub下载渠道（国外）'
+        ? 'GitHub 下载（国外）'
         : 'GitHub download (international)',
     );
     await expect(channels.nth(0)).toHaveAttribute('href', lanzouShare);
@@ -299,9 +299,9 @@ for (const locale of ['/', '/en/']) {
     const password = page.locator('p[data-download-password]');
     await expect(password).toHaveAttribute('id', 'download-lanzou-password');
     await expect(password).toHaveText(
-      locale === '/' ? /密码：\s*gkyz/ : /Password:\s*gkyz/,
+      locale === '/' ? /密码：\s*ayj6/ : /Password:\s*ayj6/,
     );
-    await expect(password.locator('code')).toHaveText('gkyz');
+    await expect(password.locator('code')).toHaveText('ayj6');
     await expect(page.locator('[data-download-channel="baidu"]')).toHaveCount(
       0,
     );
@@ -310,7 +310,7 @@ for (const locale of ['/', '/en/']) {
       page.locator('.download-links .release-link:not(.download-fallback)'),
     ).toHaveAttribute(
       'href',
-      'https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.0.1',
+      'https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0',
     );
   });
 
@@ -596,7 +596,7 @@ test('replay refresh preserves its plot without rewriting unchanged SVG geometry
   });
   expect(result.after).toEqual(result.before);
   expect(result.writes).toEqual([]);
-  await page.locator('.site-header a[href="#replay"]').click();
+  await page.locator('.site-header nav > a[href="#replay"]').click();
   await expect(stage).toHaveAttribute('data-replay-progress', '1.0000');
   await expect(page.locator('[data-replay-blue]')).toHaveText('8');
   await expect(page.locator('[data-replay-red]')).toHaveText('11');
@@ -616,6 +616,28 @@ test('scroll batching: one stationary scroll notification reads each chapter bou
     'data-chapter',
     'experience',
   );
+  // fonts.ready does not flush native anchor/ResizeObserver work. Measure
+  // steady-state batching only after those independent updates have settled.
+  await expect
+    .poll(() =>
+      page.evaluate(async () => {
+        const key = () =>
+          JSON.stringify([
+            scrollY,
+            document.documentElement.scrollHeight,
+            ...[
+              ...document.querySelectorAll<HTMLElement>('[data-story-stage]'),
+            ].map((el) => [
+              el.dataset.scrollReadStart,
+              el.dataset.scrollReadEnd,
+            ]),
+          ]);
+        const before = key();
+        await new Promise<void>((resolve) => setTimeout(resolve, 320));
+        return key() === before;
+      }),
+    )
+    .toBe(true);
   const reads = await page.evaluate(async () => {
     const chapters = new Set([
       'hero',
@@ -644,7 +666,7 @@ test('scroll batching: one stationary scroll notification reads each chapter bou
   expect(reads.experience).toBe(1);
   for (const count of Object.values(reads)) expect(count).toBe(1);
   await expect(
-    page.locator('.site-header a[href="#experience"]'),
+    page.locator('.site-header nav > a[href="#experience"]'),
   ).toHaveAttribute('aria-current', 'location');
 });
 
@@ -655,6 +677,9 @@ test('scroll batching: a stationary court invitation does not rewrite its placem
   await page.goto('/en/#experience');
   await page.evaluate(() => document.fonts.ready);
   const host = page.locator('[data-demo-court-host]');
+  // Native reading input releases the direct-link intent before scrolling to
+  // the court below the now self-contained controls card.
+  await page.keyboard.press('Escape');
   await host.scrollIntoViewIfNeeded();
   await expect(host).toHaveAttribute('data-demo-invitation', 'playing');
   const placement = await page.evaluate(async () => {
@@ -720,11 +745,14 @@ async function enlargeChapterText(page: Page) {
   try {
     await page.evaluate(() => {
       const pending = new Set(
-        ['hero', 'experience', 'replay'].map((chapter) =>
-          document.querySelector(`[data-story-stage="${chapter}"]`)!,
-        ),
+        ['hero', 'experience', 'replay']
+          .map((chapter) =>
+            document.querySelector(`[data-story-stage="${chapter}"]`)!,
+          )
+          // Mobile natural flow has no fixed-stage ScrollTriggers to publish.
+          .filter((stage) => stage.hasAttribute('data-story-start')),
       );
-      const probe = { done: false, stop: () => {} };
+      const probe = { done: pending.size === 0, stop: () => {} };
       const observer = new MutationObserver((records) => {
         for (const record of records) pending.delete(record.target as Element);
         probe.done = pending.size === 0;
@@ -807,11 +835,11 @@ for (const locale of ['/', '/en/']) {
   ]) {
     test(`chapter polish: ${locale} ${viewport.width}px full release and expanded details reflow at 200 percent text`, async ({
       page,
-    }) => {
+    }, info) => {
       await page.setViewportSize(viewport);
       await page.goto(`${locale}#download`);
       await page.evaluate(() => document.fonts.ready);
-      await expect(page.locator('.version-line > b')).toHaveText('2.0.1');
+      await expect(page.locator('.version-line > b')).toHaveText('2.1.0');
       await expect(page.locator('.release-tag')).toHaveText(
         locale === '/' ? '正式版' : 'Stable',
       );
@@ -819,7 +847,7 @@ for (const locale of ['/', '/en/']) {
         page.locator('.download-package [data-download]'),
       ).toHaveAttribute('href', upstreamApk);
       await expect(page.locator('.checksum code')).toHaveText(
-        'c42a9a71836f47c70bd1cafb08ae1232083909970afdc7d9e150ce9cc68b87b9',
+        'c408707fbb1298f845e059c1a7eeada7d5474ca987ba04e46dfd9d2dbee7fb1a',
       );
       await enlargeChapterText(page);
       for (const selector of [
@@ -845,6 +873,55 @@ for (const locale of ['/', '/en/']) {
       });
       expect(iconOverflow).toBeLessThanOrEqual(1);
       const layout = await page.evaluate(() => {
+        const contentBounds = (element: HTMLElement) => {
+          const outer = element.getBoundingClientRect();
+          const boxes: { text: string; left: number; right: number }[] = [];
+          const walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT,
+          );
+          while (walker.nextNode()) {
+            const node = walker.currentNode;
+            if (!node.textContent?.trim()) continue;
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            for (const rect of range.getClientRects()) {
+              if (rect.width && rect.height)
+                boxes.push({
+                  text: node.textContent.trim().slice(0, 80),
+                  left: rect.left,
+                  right: rect.right,
+                });
+            }
+          }
+          for (const control of element.querySelectorAll(
+            'a, button, input, select, textarea, summary, img, svg',
+          )) {
+            for (const rect of control.getClientRects()) {
+              if (rect.width && rect.height)
+                boxes.push({
+                  text: control.tagName,
+                  left: rect.left,
+                  right: rect.right,
+                });
+            }
+          }
+          return {
+            selector: element.className,
+            scrollOverflow: element.scrollWidth - element.clientWidth,
+            outside: boxes.filter(
+              (box) => box.left < outer.left - 1 || box.right > outer.right + 1,
+            ),
+          };
+        };
+        const renderedChildren = (element: Element): Element[] =>
+          [...element.children].flatMap((child) =>
+            getComputedStyle(child).display === 'contents'
+              ? renderedChildren(child)
+              : child.getClientRects().length
+                ? [child]
+                : [],
+          );
         const card = document
           .querySelector('.download-package')!
           .getBoundingClientRect();
@@ -859,14 +936,14 @@ for (const locale of ['/', '/en/']) {
           .getBoundingClientRect();
         return {
           overflow: document.documentElement.scrollWidth - innerWidth,
-          clipped: [
+          content: [
             ...document.querySelectorAll<HTMLElement>(
               '.version-line, .demo-actions, .faq',
             ),
-          ].map((element) => element.scrollWidth - element.clientWidth),
-          cardContentInside: [
-            ...document.querySelectorAll<HTMLElement>('.download-package > *'),
-          ].every((element) => {
+          ].map(contentBounds),
+          cardContentInside: renderedChildren(
+            document.querySelector('.download-package')!,
+          ).every((element) => {
             const bounds = element.getBoundingClientRect();
             return (
               bounds.left >= card.left - 1 && bounds.right <= card.right + 1
@@ -878,8 +955,20 @@ for (const locale of ['/', '/en/']) {
             reset.top >= record.bottom - 1 || reset.left >= record.right - 1,
         };
       });
+      await info.attach('expanded-reading-content-bounds', {
+        body: JSON.stringify(layout, null, 2),
+        contentType: 'application/json',
+      });
       expect(layout.overflow).toBeLessThanOrEqual(1);
-      expect(layout.clipped.every((value) => value <= 1)).toBe(true);
+      // FAQ's feathered ::before deliberately paints beyond the box. Check
+      // its real text and controls, including content in opened disclosures.
+      for (const content of layout.content) {
+        expect(content.outside, content.selector).toEqual([]);
+        if (content.selector !== 'faq')
+          expect(content.scrollOverflow, content.selector).toBeLessThanOrEqual(
+            1,
+          );
+      }
       expect(layout.cardContentInside).toBe(true);
       expect(layout.versionInside).toBe(true);
       expect(layout.actionsApart).toBe(true);
@@ -966,7 +1055,7 @@ test('chapter polish: enabled actions share pressed and keyboard feedback while 
       getComputedStyle(element).transitionDuration.split(',').map(parseFloat),
     );
     expect(
-      durations.every((duration) => Math.abs(duration - 0.2) < 0.001),
+      durations.every((duration) => duration >= 0.12 && duration <= 0.18),
     ).toBe(true);
     if (selector === '.download-package [data-download]') {
       // Release on the link: Firefox retains native :active on a cancelled
@@ -1129,8 +1218,9 @@ for (const locale of ['/', '/en/']) {
       'data-chapter',
       'download',
     );
-    // A real scroll gesture cancels a still-pending fragment navigation.
-    await page.mouse.wheel(0, -1);
+    // Pointer input cancels the fragment owner before a scrollbar-like seek.
+    // A tiny wheel now intentionally schedules a return to its reading stop.
+    await page.mouse.click(12, 450);
     await page.locator('#experience').evaluate((el) =>
       scrollTo({
         top: scrollY + el.getBoundingClientRect().top - 140,
@@ -1203,7 +1293,7 @@ for (const locale of ['/', '/en/']) {
     );
   });
 
-  test(`${locale}: fallback background leaves product screenshots clear beyond the hero`, async ({
+  test(`${locale}: fallback court stays behind clear product screenshots beyond the hero`, async ({
     page,
   }) => {
     await page.route(/court-(?:scene|engine)[^/]*\.js$/, (route) =>
@@ -1220,7 +1310,10 @@ for (const locale of ['/', '/en/']) {
           .locator('.scene-background > .scene-poster')
           .evaluate((el) => getComputedStyle(el).opacity),
       )
-      .toBe('0');
+      .toBe('1');
+    const screenshot = page.locator('[data-replay-device="summary"] img');
+    await expect(screenshot).toBeVisible();
+    await expect(screenshot).toHaveCSS('filter', 'none');
   });
 
   test(`${locale}: mobile header and privacy links retain 48px touch targets`, async ({
