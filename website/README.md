@@ -148,11 +148,12 @@ Playwright WebKit 在 macOS 原生 Cocoa 宿主运行，仍是其打包引擎的
 增量不超过 800 KiB。体积检查、模拟设备检查和真实 GPU 帧率各自保留证据。
 CI 先执行 15 分钟有界的 `validate`，只构建一次；生成包含源码提交 SHA、逐文件
 SHA-256、字节数和总摘要的 `build-artifact.json`，连同 `dist/` 上传当前运行的构建产物。
-三个普通 UI 任务（Linux Chromium／Firefox、macOS WebKit，各35分钟、1 worker）与 Chromium
+三个引擎的普通 UI 任务（Linux Chromium／Firefox、macOS WebKit，各两分片、35分钟、1 worker）与 Chromium
 软件 WebGL 的两个分片（Windows，各35分钟、1 worker）只依赖 `validate`，使用独立 runner；
 任一浏览器或分片失败不取消其余任务。普通 UI 关闭 WebGL，标记 `@webgl` 的检查按
 [Playwright sharding](https://playwright.dev/docs/test-sharding)分到两个独立任务，分片内部串行运行。
-两个分片的用例并集必须等于完整 WebGL 清单，均完成且零失败／flaky才算该组通过。
+完整 UI 清单同样分成两片，避免单一宿主连续运行约33分钟而耗尽诊断上传时间。
+每组分片的用例并集必须等于该组完整清单，均完成且零失败／flaky才算该组通过。
 原生输入与逐帧计时使用单一浏览器 worker，避免同时绘制的另一用例干扰手势与命中测试。
 三引擎的常规基线均为1440×900、DPR1；显式DPR1.5／2、缩放和高清缓冲用例另建上下文，保持原有密度与断言。
 不沿用 Desktop Safari 预设隐含的DPR2来比较常规转场节奏，避免仅该引擎承担四倍像素的基线绘制。

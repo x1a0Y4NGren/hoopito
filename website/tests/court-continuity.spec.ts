@@ -521,7 +521,14 @@ for (const viewport of [
   // Overlap both neighboring endpoints so every original one-pixel edge is
   // checked in both directions without combining all software draws in one case.
   for (const interval of [
-    { first: -60, last: -25, consistency: [-27, -26, -25], clamp: false },
+    ...(viewport.width === 1920
+      ? [
+          { first: -60, last: -42, consistency: [], clamp: false },
+          { first: -43, last: -25, consistency: [-27, -26, -25], clamp: false },
+        ]
+      : [
+          { first: -60, last: -25, consistency: [-27, -26, -25], clamp: false },
+        ]),
     { first: -26, last: 2, consistency: [-2, -1, 0, 1, 2], clamp: true },
   ]) {
     test(

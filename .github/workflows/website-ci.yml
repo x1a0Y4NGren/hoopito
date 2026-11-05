@@ -132,18 +132,19 @@ jobs:
           retention-days: 14
 
   ui:
-    name: UI (${{ matrix.browser }})
+    name: UI (${{ matrix.browser }}, shard ${{ matrix.shard }}/2)
     needs: validate
     # Keep native Cocoa WebKit 27.2 / revision 2370 on a supported Intel host.
     # The macOS 26 pool abandoned jobs before setup; this is a standard runner.
     runs-on: ${{ matrix.browser == 'webkit' && 'macos-15-intel' || 'ubuntu-latest' }}
-    # Native input/frame timing needs an exclusive browser worker. Keep the
-    # full suite and allow its serial workload plus failure diagnostics.
+    # Keep one browser worker per host. Split Cocoa's 33-minute serial workload
+    # across fresh hosts, retaining every test, timing bound and flaky rejection.
     timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
+        shard: [1, 2]
     defaults:
       run:
         shell: bash
@@ -195,7 +196,7 @@ jobs:
 
       - name: Run browser checks and reject flaky results
         id: tests
-        run: npm run test:e2e -- --project=${{ matrix.browser }} --grep-invert @webgl --workers=1 --fail-on-flaky-tests --output=output/playwright/ui-${{ matrix.browser }}/test-results 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/test.log
+        run: npm run test:e2e -- --project=${{ matrix.browser }} --grep-invert @webgl --shard=${{ matrix.shard }}/2 --workers=1 --fail-on-flaky-tests --output=output/playwright/ui-${{ matrix.browser }}/test-results 2>&1 | tee output/playwright/ui-${{ matrix.browser }}/test.log
 
       - name: Record execution result
         if: always()
@@ -208,14 +209,14 @@ jobs:
           import { mkdir, writeFile } from 'node:fs/promises';
           const directory = 'output/playwright/ui-${{ matrix.browser }}';
           await mkdir(directory, { recursive: true });
-          await writeFile(directory + '/execution.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, job: 'ui', browser: process.env.BROWSER, status: process.env.JOB_STATUS, steps: JSON.parse(process.env.STEPS_JSON) }, null, 2) + '\n');
+          await writeFile(directory + '/execution.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, job: 'ui', browser: process.env.BROWSER, shard: '${{ matrix.shard }}/2', status: process.env.JOB_STATUS, steps: JSON.parse(process.env.STEPS_JSON) }, null, 2) + '\n');
           NODE
 
       - name: Preserve reports, logs and failure evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: hoopito-website-ui-${{ matrix.browser }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          name: hoopito-website-ui-${{ matrix.browser }}-${{ matrix.shard }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
           path: website/output/playwright/ui-${{ matrix.browser }}/
           if-no-files-found: warn
           retention-days: 14

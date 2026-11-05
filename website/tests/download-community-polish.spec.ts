@@ -660,8 +660,13 @@ test('expanded large-text download content scrolls to its real reading boundary 
   await open(page);
   await page.addStyleTag({ content: 'html{font-size:200%!important}' });
   await stableLayout(page);
+  // Stable dimensions do not mean the initial anchor/reflow has finished.
+  // Wait for the visible reading state before focusing an inert-capable card.
+  await expectAnchorReading(page, 'download');
   for (const selector of ['.checksum', '.upgrade']) {
-    await page.locator(`${selector} summary`).focus();
+    const summary = page.locator(`${selector} summary`);
+    await summary.focus();
+    await expect(summary).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.locator(selector)).toHaveAttribute('open', '');
   }

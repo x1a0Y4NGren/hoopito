@@ -819,6 +819,33 @@ test('replay remains fully readable at fractional reading positions on a high de
 test('replay refresh preserves the card phase and media changes preserve the visible reading position', async ({
   page,
 }, testInfo) => {
+  await page.addInitScript(() => {
+    const rows: unknown[] = [];
+    Reflect.set(window, '__replayRefreshTrace', rows);
+    const sample = (kind: string, top?: number) => {
+      const stage = document.querySelector<HTMLElement>(
+        '[data-story-stage="replay"]',
+      );
+      rows.push({
+        time: performance.now(),
+        kind,
+        top,
+        y: scrollY,
+        height: innerHeight,
+        chapter: document.documentElement.dataset.chapter,
+        start: stage?.dataset.replayStart,
+        end: stage?.dataset.replayEnd,
+        phase: stage?.dataset.storyProgress,
+      });
+    };
+    const nativeScroll = window.scrollTo.bind(window);
+    window.scrollTo = ((...args: [number, number] | [ScrollToOptions]) => {
+      sample('scrollTo', typeof args[0] === 'number' ? args[1] : args[0].top);
+      Reflect.apply(nativeScroll, window, args);
+    }) as typeof window.scrollTo;
+    addEventListener('resize', () => sample('resize'));
+    addEventListener('scroll', () => sample('scroll'));
+  });
   await page.route(threeChunk, (route) => route.abort());
   await page.setViewportSize({ width: 1920, height: 1440 });
   await page.goto('/');
@@ -935,6 +962,16 @@ test('replay refresh preserves the card phase and media changes preserve the vis
     } catch (error) {
       await testInfo.attach('replay-layout-state', {
         body: JSON.stringify(lastMeasurement, null, 2),
+        contentType: 'application/json',
+      });
+      await testInfo.attach('replay-refresh-trace', {
+        body: JSON.stringify(
+          await page.evaluate(() =>
+            Reflect.get(window, '__replayRefreshTrace'),
+          ),
+          null,
+          2,
+        ),
         contentType: 'application/json',
       });
       throw error;
