@@ -2,7 +2,7 @@
 
 当前版本为 **Hoopito · 球豆 v2.1.0**（Android `2.1.0+6`，schema 4、JSON 格式 2），维护分支为 `main`，实际分支以 Git 为准。当前应用与签名 tag 来源固定为 `9bbd3b87e99d71f5d9117cd2c5a763a7f8b95d1f`，范围及实际验证见 [v2.1.0 发行记录](release/v2.1.0-release-record.md)。后续文档、截图和网站提交不改变 APK 来源；历史发行与候选记录保留各自源码、设备及验收来源。
 
-本轮没有部署官网；v2.1.0 使用 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0)。本次核验官网更新接口返回 404，应用会尝试 GitHub 备源；网站发行元数据仍保留原有 v2.0.1 来源，后续上线需单独授权。
+v2.1.0 可从[官网下载区](https://hoopito.com/#download)或 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0)获取。[官网更新接口](https://hoopito.com/updates/android/stable.json)已同步到正式 v2.1.0，应用仍保留 GitHub 备源。官网生产源码、部署身份及核验见[交接记录](development/handoff.md#官网球馆重构与生产发布2026-11-06)。
 
 ## 当前开发与维护
 
