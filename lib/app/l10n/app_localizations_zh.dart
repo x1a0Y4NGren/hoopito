@@ -2607,4 +2607,108 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get seriesActiveHelp => '请先完成或放弃当前比赛，再结束本次对局。';
+
+  @override
+  String get practiceTitle => '快速上手';
+
+  @override
+  String get practiceInviteTitle => '先跟着练一场？';
+
+  @override
+  String get practiceInviteBody => '试试记分、撤销和结束比赛。练习不计入比赛记录，以后可在「设置 → 快速上手」再练。';
+
+  @override
+  String get practiceStart => '开始练习';
+
+  @override
+  String get practiceUseApp => '直接使用';
+
+  @override
+  String get practiceBadge => '练习';
+
+  @override
+  String get practiceExit => '退出练习';
+
+  @override
+  String get practiceSetupHint => '蓝方、红方就是比赛双方。名字可不改，不用建球员档案。点「开始练习」。';
+
+  @override
+  String get practiceAdvancedHint => '计时和目标分都在高级设置里。练习先不计时、不限分。';
+
+  @override
+  String get practiceScoreHint => '点蓝方 +2，加两分。';
+
+  @override
+  String get practiceUndoHint => '点「撤销」，收回刚才的得分。';
+
+  @override
+  String get practiceCourtHint => '点球场，选个出手位置。';
+
+  @override
+  String get practiceLocatedScoreHint => '位置选好了，点红方 +2。';
+
+  @override
+  String get practiceMissHint => '点蓝方「未命中」：记一次出手，比分不变。';
+
+  @override
+  String get practiceFinishHint => '点「结束」，试着结束这场练习。';
+
+  @override
+  String get practiceWrongAction => '先点箭头指的地方。';
+
+  @override
+  String get practiceSaving => '正在完成这一步…';
+
+  @override
+  String get practiceFinished => '练习结束';
+
+  @override
+  String get practiceResultHint => '练完了。正式比赛的赛果可以在「历史」查看。';
+
+  @override
+  String get practiceReplay => '再练一次';
+
+  @override
+  String get practiceRealGame => '开始正式比赛';
+
+  @override
+  String get practiceReturnMatch => '返回原比赛';
+
+  @override
+  String get practicePauseTitle => '先暂停当前比赛？';
+
+  @override
+  String get practicePauseBody => '练习不会影响这场比赛的记录。先暂停，练习结束后再由你继续。';
+
+  @override
+  String get practicePauseAction => '暂停并练习';
+
+  @override
+  String get practiceRetry => '重试';
+
+  @override
+  String get practiceLoadFailed => '练习暂时打不开，请重试。';
+
+  @override
+  String get practiceSettingsSubtitle => '练一遍记分、撤销和结束比赛';
+
+  @override
+  String get practiceManualHelp => '计分说明';
+
+  @override
+  String practiceStepProgress(int current, int total) {
+    return '第 $current/$total 步';
+  }
+
+  @override
+  String get practiceFinishControlsHint => '再点「结束比赛」，然后确认比分。';
+
+  @override
+  String get practiceFinishCoverageHint => '核对比分和记录范围，再点「结束比赛」。';
+
+  @override
+  String get practiceShowHint => '展开提示';
+
+  @override
+  String get practiceHideHint => '收起提示';
 }

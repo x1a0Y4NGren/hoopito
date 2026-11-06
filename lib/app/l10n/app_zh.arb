@@ -854,5 +854,49 @@
   "seriesLockedPair": "本次对局的双方已固定，可交换红蓝方。",
   "seriesGames": "单场",
   "seriesLoadError": "连续对局加载失败",
-  "seriesActiveHelp": "请先完成或放弃当前比赛，再结束本次对局。"
+  "seriesActiveHelp": "请先完成或放弃当前比赛，再结束本次对局。",
+  "practiceTitle": "快速上手",
+  "practiceInviteTitle": "先跟着练一场？",
+  "practiceInviteBody": "试试记分、撤销和结束比赛。练习不计入比赛记录，以后可在「设置 → 快速上手」再练。",
+  "practiceStart": "开始练习",
+  "practiceUseApp": "直接使用",
+  "practiceBadge": "练习",
+  "practiceExit": "退出练习",
+  "practiceSetupHint": "蓝方、红方就是比赛双方。名字可不改，不用建球员档案。点「开始练习」。",
+  "practiceAdvancedHint": "计时和目标分都在高级设置里。练习先不计时、不限分。",
+  "practiceScoreHint": "点蓝方 +2，加两分。",
+  "practiceUndoHint": "点「撤销」，收回刚才的得分。",
+  "practiceCourtHint": "点球场，选个出手位置。",
+  "practiceLocatedScoreHint": "位置选好了，点红方 +2。",
+  "practiceMissHint": "点蓝方「未命中」：记一次出手，比分不变。",
+  "practiceFinishHint": "点「结束」，试着结束这场练习。",
+  "practiceWrongAction": "先点箭头指的地方。",
+  "practiceSaving": "正在完成这一步…",
+  "practiceFinished": "练习结束",
+  "practiceResultHint": "练完了。正式比赛的赛果可以在「历史」查看。",
+  "practiceReplay": "再练一次",
+  "practiceRealGame": "开始正式比赛",
+  "practiceReturnMatch": "返回原比赛",
+  "practicePauseTitle": "先暂停当前比赛？",
+  "practicePauseBody": "练习不会影响这场比赛的记录。先暂停，练习结束后再由你继续。",
+  "practicePauseAction": "暂停并练习",
+  "practiceRetry": "重试",
+  "practiceLoadFailed": "练习暂时打不开，请重试。",
+  "practiceSettingsSubtitle": "练一遍记分、撤销和结束比赛",
+  "practiceManualHelp": "计分说明",
+  "practiceStepProgress": "第 {current}/{total} 步",
+  "@practiceStepProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "practiceFinishControlsHint": "再点「结束比赛」，然后确认比分。",
+  "practiceFinishCoverageHint": "核对比分和记录范围，再点「结束比赛」。",
+  "practiceShowHint": "展开提示",
+  "practiceHideHint": "收起提示"
 }

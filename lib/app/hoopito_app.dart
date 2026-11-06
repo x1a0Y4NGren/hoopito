@@ -8,6 +8,7 @@ import 'package:hoopito/app/app_update_host.dart';
 import 'package:hoopito/app/entry/hoopito_entry_gate.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/app/provider_router.dart';
+import 'package:hoopito/app/practice_host.dart';
 import 'package:hoopito/core/data/app_database.dart';
 import 'package:hoopito/core/settings/scoring_feedback.dart';
 
@@ -218,22 +219,27 @@ class _HoopitoAppViewState extends ConsumerState<_HoopitoAppView> {
     EntryStartupStatus status,
     EntryMotionPreferenceLoader motionLoader,
     GoRouter? router,
-  ) => AppUpdateHost(
+  ) => PracticeHost(
     ready: status == EntryStartupStatus.ready,
     entryRevealed: _entryRevealed,
     router: router,
-    child: widget.showEntryAnimation
-        ? HoopitoEntryGate(
-            key: _entryGateKey,
-            motionPreferenceLoader: motionLoader,
-            playbackSession:
-                widget.entryPlaybackSession ?? _processEntryPlaybackSession,
-            startupStatus: status,
-            waitingLabel: AppLocalizations.of(context)!.entryPreparingRecords,
-            onRevealed: () => _entryRevealed.value = true,
-            child: child ?? const SizedBox.shrink(),
-          )
-        : child ?? const SizedBox.shrink(),
+    child: AppUpdateHost(
+      ready: status == EntryStartupStatus.ready,
+      entryRevealed: _entryRevealed,
+      router: router,
+      child: widget.showEntryAnimation
+          ? HoopitoEntryGate(
+              key: _entryGateKey,
+              motionPreferenceLoader: motionLoader,
+              playbackSession:
+                  widget.entryPlaybackSession ?? _processEntryPlaybackSession,
+              startupStatus: status,
+              waitingLabel: AppLocalizations.of(context)!.entryPreparingRecords,
+              onRevealed: () => _entryRevealed.value = true,
+              child: child ?? const SizedBox.shrink(),
+            )
+          : child ?? const SizedBox.shrink(),
+    ),
   );
 }
 

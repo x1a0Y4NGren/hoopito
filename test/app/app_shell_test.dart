@@ -1,3 +1,4 @@
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hoopito/app/hoopito_app.dart';
@@ -14,6 +15,7 @@ import '../test_helpers/test_database.dart';
 void main() {
   testWidgets('Hoopito app starts on home route', (tester) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       await tester.pumpWidget(const SizedBox.shrink());
       await database.close();
@@ -44,6 +46,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       await tester.pumpWidget(const SizedBox.shrink());
       await database.close();
@@ -69,6 +72,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(1095, 616));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       await tester.pumpWidget(const SizedBox.shrink());
       await database.close();

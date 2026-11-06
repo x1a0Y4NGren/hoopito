@@ -1,3 +1,4 @@
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,6 +20,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(3000, 1080));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     final feedbackPlatform = _CountingFeedbackPlatform(database);
     final feedback = ScoringFeedbackService(
       ScoringFeedbackPreferencesRepository(database),

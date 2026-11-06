@@ -5097,6 +5097,210 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'请先完成或放弃当前比赛，再结束本次对局。'**
   String get seriesActiveHelp;
+
+  /// No description provided for @practiceTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'快速上手'**
+  String get practiceTitle;
+
+  /// No description provided for @practiceInviteTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'先跟着练一场？'**
+  String get practiceInviteTitle;
+
+  /// No description provided for @practiceInviteBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'试试记分、撤销和结束比赛。练习不计入比赛记录，以后可在「设置 → 快速上手」再练。'**
+  String get practiceInviteBody;
+
+  /// No description provided for @practiceStart.
+  ///
+  /// In zh, this message translates to:
+  /// **'开始练习'**
+  String get practiceStart;
+
+  /// No description provided for @practiceUseApp.
+  ///
+  /// In zh, this message translates to:
+  /// **'直接使用'**
+  String get practiceUseApp;
+
+  /// No description provided for @practiceBadge.
+  ///
+  /// In zh, this message translates to:
+  /// **'练习'**
+  String get practiceBadge;
+
+  /// No description provided for @practiceExit.
+  ///
+  /// In zh, this message translates to:
+  /// **'退出练习'**
+  String get practiceExit;
+
+  /// No description provided for @practiceSetupHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'蓝方、红方就是比赛双方。名字可不改，不用建球员档案。点「开始练习」。'**
+  String get practiceSetupHint;
+
+  /// No description provided for @practiceAdvancedHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'计时和目标分都在高级设置里。练习先不计时、不限分。'**
+  String get practiceAdvancedHint;
+
+  /// No description provided for @practiceScoreHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'点蓝方 +2，加两分。'**
+  String get practiceScoreHint;
+
+  /// No description provided for @practiceUndoHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'点「撤销」，收回刚才的得分。'**
+  String get practiceUndoHint;
+
+  /// No description provided for @practiceCourtHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'点球场，选个出手位置。'**
+  String get practiceCourtHint;
+
+  /// No description provided for @practiceLocatedScoreHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'位置选好了，点红方 +2。'**
+  String get practiceLocatedScoreHint;
+
+  /// No description provided for @practiceMissHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'点蓝方「未命中」：记一次出手，比分不变。'**
+  String get practiceMissHint;
+
+  /// No description provided for @practiceFinishHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'点「结束」，试着结束这场练习。'**
+  String get practiceFinishHint;
+
+  /// No description provided for @practiceWrongAction.
+  ///
+  /// In zh, this message translates to:
+  /// **'先点箭头指的地方。'**
+  String get practiceWrongAction;
+
+  /// No description provided for @practiceSaving.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在完成这一步…'**
+  String get practiceSaving;
+
+  /// No description provided for @practiceFinished.
+  ///
+  /// In zh, this message translates to:
+  /// **'练习结束'**
+  String get practiceFinished;
+
+  /// No description provided for @practiceResultHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'练完了。正式比赛的赛果可以在「历史」查看。'**
+  String get practiceResultHint;
+
+  /// No description provided for @practiceReplay.
+  ///
+  /// In zh, this message translates to:
+  /// **'再练一次'**
+  String get practiceReplay;
+
+  /// No description provided for @practiceRealGame.
+  ///
+  /// In zh, this message translates to:
+  /// **'开始正式比赛'**
+  String get practiceRealGame;
+
+  /// No description provided for @practiceReturnMatch.
+  ///
+  /// In zh, this message translates to:
+  /// **'返回原比赛'**
+  String get practiceReturnMatch;
+
+  /// No description provided for @practicePauseTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'先暂停当前比赛？'**
+  String get practicePauseTitle;
+
+  /// No description provided for @practicePauseBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'练习不会影响这场比赛的记录。先暂停，练习结束后再由你继续。'**
+  String get practicePauseBody;
+
+  /// No description provided for @practicePauseAction.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂停并练习'**
+  String get practicePauseAction;
+
+  /// No description provided for @practiceRetry.
+  ///
+  /// In zh, this message translates to:
+  /// **'重试'**
+  String get practiceRetry;
+
+  /// No description provided for @practiceLoadFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'练习暂时打不开，请重试。'**
+  String get practiceLoadFailed;
+
+  /// No description provided for @practiceSettingsSubtitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'练一遍记分、撤销和结束比赛'**
+  String get practiceSettingsSubtitle;
+
+  /// No description provided for @practiceManualHelp.
+  ///
+  /// In zh, this message translates to:
+  /// **'计分说明'**
+  String get practiceManualHelp;
+
+  /// No description provided for @practiceStepProgress.
+  ///
+  /// In zh, this message translates to:
+  /// **'第 {current}/{total} 步'**
+  String practiceStepProgress(int current, int total);
+
+  /// No description provided for @practiceFinishControlsHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'再点「结束比赛」，然后确认比分。'**
+  String get practiceFinishControlsHint;
+
+  /// No description provided for @practiceFinishCoverageHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'核对比分和记录范围，再点「结束比赛」。'**
+  String get practiceFinishCoverageHint;
+
+  /// No description provided for @practiceShowHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'展开提示'**
+  String get practiceShowHint;
+
+  /// No description provided for @practiceHideHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'收起提示'**
+  String get practiceHideHint;
 }
 
 class _AppLocalizationsDelegate

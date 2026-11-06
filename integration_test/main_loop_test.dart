@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/core/data/app_database.dart';
 import 'package:hoopito/core/data/repositories/match_repository.dart';
@@ -31,6 +32,7 @@ void main() {
     final playerId = 'integration-profile-$runId';
     final playerName = '集成档案-$runId';
     final database = AppDatabase.inMemory();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();

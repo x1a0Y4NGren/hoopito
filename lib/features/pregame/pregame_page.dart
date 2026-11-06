@@ -13,6 +13,9 @@ import 'package:hoopito/core/domain/entities/match_setup_preset.dart';
 import 'package:hoopito/core/domain/entities/rule_template.dart';
 import 'package:hoopito/features/pregame/pregame_controller.dart';
 
+import 'package:hoopito/features/practice/practice_presentation.dart';
+import 'package:hoopito/features/practice/practice_coach.dart';
+
 const _temporaryProfileId = '__temporary_profile__';
 
 /// Kept as a page-level compatibility helper for route consumers; the
@@ -52,6 +55,7 @@ String _validationText(PregameValidationError error, AppLocalizations l10n) {
 class PregamePage extends StatefulWidget {
   const PregamePage({
     this.onStartMatch,
+    this.practice,
     this.players = const [],
     this.playersNotice,
     this.templates = RuleTemplateRepository.builtIns,
@@ -64,6 +68,7 @@ class PregamePage extends StatefulWidget {
     super.key,
   });
 
+  final PracticePresentation? practice;
   final FutureOr<void> Function(MatchSetup)? onStartMatch;
   final List<Player> players;
   final String? playersNotice;
@@ -105,11 +110,13 @@ class _PregamePageState extends State<PregamePage> {
   void initState() {
     super.initState();
     _controller = PregameController(
-      templates: widget.templates,
-      players: widget.players,
-      initialPreset: widget.initialPreset,
+      templates: widget.practice == null
+          ? widget.templates
+          : RuleTemplateRepository.builtIns,
+      players: widget.practice == null ? widget.players : const [],
+      initialPreset: widget.practice == null ? widget.initialPreset : null,
     );
-    if (widget.initialPreset != null) {
+    if (widget.practice == null && widget.initialPreset != null) {
       _redNameUsesLocalizedDefault = false;
       _blueNameUsesLocalizedDefault = false;
     }
@@ -140,11 +147,11 @@ class _PregamePageState extends State<PregamePage> {
   @override
   void didUpdateWidget(covariant PregamePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.templates != widget.templates) {
+    if (widget.practice == null && oldWidget.templates != widget.templates) {
       _controller.setTemplates(widget.templates);
       _syncCountdownMinutesController();
     }
-    if (oldWidget.players != widget.players) {
+    if (widget.practice == null && oldWidget.players != widget.players) {
       // A repository stream can emit while this page is open. Updating the
       // available options must not recreate the controller or overwrite a
       // temporary name the user is currently typing.
@@ -165,11 +172,10 @@ class _PregamePageState extends State<PregamePage> {
     final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
     final state = _controller.state;
     final viewInsets = MediaQuery.viewInsetsOf(context);
-
-    return EditorialScaffold(
+    final page = EditorialScaffold(
       maxContentWidth: 960,
       masthead: EditorialMasthead(
-        title: l10n.pregameTitle,
+        title: widget.practice == null ? l10n.pregameTitle : l10n.practiceTitle,
         compact: true,
         leading: IconButton(
           key: const Key('pregame-cancel'),
@@ -194,7 +200,7 @@ class _PregamePageState extends State<PregamePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (!widget.lockedPair) ...[
+                    if (widget.practice == null && !widget.lockedPair) ...[
                       Wrap(
                         spacing: 8,
                         children: [
@@ -220,11 +226,12 @@ class _PregamePageState extends State<PregamePage> {
                       ),
                       if (_continuous) Text(l10n.seriesModeHelp),
                       const SizedBox(height: 12),
-                    ] else ...[
+                    ] else if (widget.practice == null) ...[
                       Text(l10n.seriesLockedPair),
                       const SizedBox(height: 12),
                     ],
-                    if (widget.initialPreset != null) ...[
+                    if (widget.practice == null &&
+                        widget.initialPreset != null) ...[
                       Text(
                         l10n.v2PresetApplied,
                         key: const Key('pregame-preset-notice'),
@@ -240,7 +247,7 @@ class _PregamePageState extends State<PregamePage> {
                     const SizedBox(height: 12),
                     EditorialSectionRule(label: l10n.pregamePlayers),
                     const SizedBox(height: 12),
-                    if (widget.lockedPair)
+                    if (widget.practice == null && widget.lockedPair)
                       Wrap(
                         spacing: 24,
                         runSpacing: 8,
@@ -310,19 +317,21 @@ class _PregamePageState extends State<PregamePage> {
                           );
                         },
                       ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: TextButton.icon(
-                        key: const Key('pregame-swap-sides'),
-                        style: TextButton.styleFrom(
-                          minimumSize: const Size(48, 48),
+                    if (widget.practice == null)
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton.icon(
+                          key: const Key('pregame-swap-sides'),
+                          style: TextButton.styleFrom(
+                            minimumSize: const Size(48, 48),
+                          ),
+                          onPressed: _starting ? null : _swapSides,
+                          icon: const Icon(Icons.swap_horiz),
+                          label: Text(l10n.v2SwapSides),
                         ),
-                        onPressed: _starting ? null : _swapSides,
-                        icon: const Icon(Icons.swap_horiz),
-                        label: Text(l10n.v2SwapSides),
                       ),
-                    ),
-                    if (widget.playersNotice != null) ...[
+                    if (widget.practice == null &&
+                        widget.playersNotice != null) ...[
                       const SizedBox(height: 8),
                       Text(
                         widget.playersNotice!,
@@ -330,125 +339,142 @@ class _PregamePageState extends State<PregamePage> {
                       ),
                     ],
                     const SizedBox(height: 8),
-                    Container(
-                      key: const Key('pregame-configuration-rail'),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                            color: editorialThemeOf(context).arenaAccent,
-                            width: 4,
-                          ),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                    if (widget.practice != null)
+                      ExpansionTile(
+                        key: const Key('pregame-practice-advanced'),
+                        title: Text(l10n.pregameAdvanced),
                         children: [
-                          KeyedSubtree(
-                            key: const Key('pregame-rules-section'),
-                            child: Semantics(
-                              container: true,
-                              label: l10n.pregameRuleTemplate,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  EditorialSectionRule(
-                                    label: l10n.pregameRuleTemplate,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 12),
-                                    child: DropdownButtonFormField<String>(
-                                      key: const Key('pregame-rule-template'),
-                                      initialValue: state.ruleTemplateId,
-                                      isExpanded: true,
-                                      decoration: InputDecoration(
-                                        labelText: l10n.pregameRuleTemplate,
-                                        border: const OutlineInputBorder(),
-                                      ),
-                                      items: [
-                                        for (final template
-                                            in _controller.templates)
-                                          DropdownMenuItem(
-                                            value: template.id,
-                                            child: Text(
-                                              _templateLabel(template, l10n),
-                                            ),
-                                          ),
-                                      ],
-                                      onChanged: (value) {
-                                        if (value == null) return;
-                                        setState(() {
-                                          _controller.setRuleTemplateId(value);
-                                          _syncCountdownMinutesController();
-                                          _clearValidation();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  if (widget.onManageRules != null)
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: SizedBox(
-                                        height: 48,
-                                        child: TextButton.icon(
-                                          onPressed: widget.onManageRules,
-                                          icon: const Icon(Icons.tune),
-                                          label: Text(l10n.pregameManageRules),
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Text(l10n.practiceAdvancedHint),
                           ),
-                          const SizedBox(height: 12),
-                          _coverageChoices(l10n),
-                          const SizedBox(height: 12),
-                          KeyedSubtree(
-                            key: const Key('pregame-advanced-section'),
-                            child: Semantics(
-                              container: true,
-                              label: l10n.pregameAdvanced,
-                              child: ExpansionTile(
-                                key: const Key('pregame-advanced'),
-                                tilePadding: EdgeInsets.zero,
-                                title: Text(l10n.pregameAdvanced),
-                                initiallyExpanded: state.advancedExpanded,
-                                maintainState: true,
-                                onExpansionChanged:
-                                    _controller.setAdvancedExpanded,
-                                children: [
-                                  _goalScoringModeChoices(l10n),
-                                  if (state.goalScoringMode ==
-                                      GoalScoringMode.target)
-                                    _NumberSetting(
-                                      label: l10n.pregameTargetScore,
-                                      value: state.targetScore,
-                                      onEdit: _editTargetScore,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _controller.setTargetScore(value);
-                                          _clearValidation();
-                                        });
-                                      },
-                                    ),
-                                  const SizedBox(height: 12),
-                                  _timerSettings(l10n),
-                                ],
-                              ),
-                            ),
-                          ),
-                          if (_validationErrors.isNotEmpty) ...[
-                            const SizedBox(height: 12),
-                            _ValidationMessage(
-                              key: const Key('pregame-validation'),
-                              errors: _validationErrors,
-                            ),
-                          ],
                         ],
                       ),
-                    ),
+                    if (widget.practice == null)
+                      Container(
+                        key: const Key('pregame-configuration-rail'),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                              color: editorialThemeOf(context).arenaAccent,
+                              width: 4,
+                            ),
+                          ),
+                        ),
+                        padding: const EdgeInsets.only(left: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            KeyedSubtree(
+                              key: const Key('pregame-rules-section'),
+                              child: Semantics(
+                                container: true,
+                                label: l10n.pregameRuleTemplate,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    EditorialSectionRule(
+                                      label: l10n.pregameRuleTemplate,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 12),
+                                      child: DropdownButtonFormField<String>(
+                                        key: const Key('pregame-rule-template'),
+                                        initialValue: state.ruleTemplateId,
+                                        isExpanded: true,
+                                        decoration: InputDecoration(
+                                          labelText: l10n.pregameRuleTemplate,
+                                          border: const OutlineInputBorder(),
+                                        ),
+                                        items: [
+                                          for (final template
+                                              in _controller.templates)
+                                            DropdownMenuItem(
+                                              value: template.id,
+                                              child: Text(
+                                                _templateLabel(template, l10n),
+                                              ),
+                                            ),
+                                        ],
+                                        onChanged: (value) {
+                                          if (value == null) return;
+                                          setState(() {
+                                            _controller.setRuleTemplateId(
+                                              value,
+                                            );
+                                            _syncCountdownMinutesController();
+                                            _clearValidation();
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    if (widget.onManageRules != null)
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: SizedBox(
+                                          height: 48,
+                                          child: TextButton.icon(
+                                            onPressed: widget.onManageRules,
+                                            icon: const Icon(Icons.tune),
+                                            label: Text(
+                                              l10n.pregameManageRules,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            _coverageChoices(l10n),
+                            const SizedBox(height: 12),
+                            KeyedSubtree(
+                              key: const Key('pregame-advanced-section'),
+                              child: Semantics(
+                                container: true,
+                                label: l10n.pregameAdvanced,
+                                child: ExpansionTile(
+                                  key: const Key('pregame-advanced'),
+                                  tilePadding: EdgeInsets.zero,
+                                  title: Text(l10n.pregameAdvanced),
+                                  initiallyExpanded: state.advancedExpanded,
+                                  maintainState: true,
+                                  onExpansionChanged:
+                                      _controller.setAdvancedExpanded,
+                                  children: [
+                                    _goalScoringModeChoices(l10n),
+                                    if (state.goalScoringMode ==
+                                        GoalScoringMode.target)
+                                      _NumberSetting(
+                                        label: l10n.pregameTargetScore,
+                                        value: state.targetScore,
+                                        onEdit: _editTargetScore,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _controller.setTargetScore(value);
+                                            _clearValidation();
+                                          });
+                                        },
+                                      ),
+                                    const SizedBox(height: 12),
+                                    _timerSettings(l10n),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            if (_validationErrors.isNotEmpty) ...[
+                              const SizedBox(height: 12),
+                              _ValidationMessage(
+                                key: const Key('pregame-validation'),
+                                errors: _validationErrors,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -458,16 +484,26 @@ class _PregamePageState extends State<PregamePage> {
               child: SizedBox(
                 width: double.infinity,
                 height: 54,
-                child: FilledButton(
-                  key: const Key('pregame-start-match'),
-                  onPressed: _starting || _creatingPlayer ? null : _startMatch,
-                  child: _starting
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(l10n.pregameStartMatch),
+                child: PracticeTarget(
+                  active: widget.practice != null,
+                  id: PracticeTargetId.start,
+                  child: FilledButton(
+                    key: const Key('pregame-start-match'),
+                    onPressed: _starting || _creatingPlayer
+                        ? null
+                        : _startMatch,
+                    child: _starting
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(
+                            widget.practice == null
+                                ? l10n.pregameStartMatch
+                                : l10n.practiceStart,
+                          ),
+                  ),
                 ),
               ),
             ),
@@ -475,6 +511,9 @@ class _PregamePageState extends State<PregamePage> {
         ),
       ),
     );
+    return widget.practice == null
+        ? page
+        : PracticeCoachHost(presentation: widget.practice!, child: page);
   }
 
   Widget _participantCard(
@@ -502,20 +541,31 @@ class _PregamePageState extends State<PregamePage> {
           Container(height: 6, color: teamColor),
           Padding(
             padding: const EdgeInsets.all(12),
-            child: _ParticipantSetup(
-              sideLabel: sideLabel,
-              profileKey: profileKey,
-              nameKey: nameKey,
-              nameController: nameController,
-              selectedProfileId: selectedProfileId,
-              players: _availablePlayers,
-              onProfileChanged: onProfileChanged,
-              onNameChanged: onNameChanged,
-              onCreatePlayer:
-                  widget.onCreatePlayer == null || _starting || _creatingPlayer
-                  ? null
-                  : () => _createPlayer(red),
-            ),
+            child: widget.practice != null
+                ? PracticeAvoid(
+                    child: TextField(
+                      key: nameKey,
+                      controller: nameController,
+                      onChanged: onNameChanged,
+                      decoration: InputDecoration(labelText: sideLabel),
+                    ),
+                  )
+                : _ParticipantSetup(
+                    sideLabel: sideLabel,
+                    profileKey: profileKey,
+                    nameKey: nameKey,
+                    nameController: nameController,
+                    selectedProfileId: selectedProfileId,
+                    players: _availablePlayers,
+                    onProfileChanged: onProfileChanged,
+                    onNameChanged: onNameChanged,
+                    onCreatePlayer:
+                        widget.onCreatePlayer == null ||
+                            _starting ||
+                            _creatingPlayer
+                        ? null
+                        : () => _createPlayer(red),
+                  ),
           ),
         ],
       ),
@@ -708,6 +758,10 @@ class _PregamePageState extends State<PregamePage> {
   }
 
   void _cancel() {
+    if (widget.practice != null) {
+      widget.practice!.onExit();
+      return;
+    }
     final onCancel = widget.onCancel;
     if (onCancel != null) {
       onCancel();
@@ -821,7 +875,7 @@ class _PregamePageState extends State<PregamePage> {
     try {
       await onStart(
         (_pendingSetup ??= _controller.createMatchSetup(
-          continuous: _continuous,
+          continuous: widget.practice == null && _continuous,
         )),
       );
     } catch (_) {

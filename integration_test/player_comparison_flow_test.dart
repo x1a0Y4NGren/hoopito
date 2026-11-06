@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:hoopito/core/data/app_database.dart';
 import 'package:hoopito/core/data/repositories/player_repository.dart';
 import 'package:hoopito/core/domain/entities/player.dart';
@@ -25,6 +26,7 @@ void main() {
       const subjectName = '集成主角';
       const opponentName = '集成对手';
       final database = AppDatabase.inMemory();
+      await PracticePreferences(database).markInvitationHandled();
       addTearDown(() async {
         await tester.pumpWidget(const SizedBox.shrink());
         await tester.pump();

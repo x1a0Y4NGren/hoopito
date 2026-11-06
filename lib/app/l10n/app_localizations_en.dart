@@ -2743,4 +2743,117 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get seriesActiveHelp =>
       'Finish or abandon the current match before closing the series.';
+
+  @override
+  String get practiceTitle => 'Learn the basics';
+
+  @override
+  String get practiceInviteTitle => 'Try a practice game?';
+
+  @override
+  String get practiceInviteBody =>
+      'Try scoring, undoing and finishing a game. Practice stays out of your game records. You can try again in Settings → Learn the basics.';
+
+  @override
+  String get practiceStart => 'Start practice';
+
+  @override
+  String get practiceUseApp => 'Use the app';
+
+  @override
+  String get practiceBadge => 'Practice';
+
+  @override
+  String get practiceExit => 'Exit practice';
+
+  @override
+  String get practiceSetupHint =>
+      'Blue and Red are the two sides. Keep or change the names—no profiles needed. Tap Start practice.';
+
+  @override
+  String get practiceAdvancedHint =>
+      'Timer and target score options are in Advanced settings. This practice has neither.';
+
+  @override
+  String get practiceScoreHint => 'Tap Blue’s +2 to add two points.';
+
+  @override
+  String get practiceUndoHint => 'Tap Undo to take back that score.';
+
+  @override
+  String get practiceCourtHint => 'Tap the court to pick a shot location.';
+
+  @override
+  String get practiceLocatedScoreHint => 'Location set. Now tap Red’s +2.';
+
+  @override
+  String get practiceMissHint =>
+      'Tap Blue’s Miss. It records an attempt without adding points.';
+
+  @override
+  String get practiceFinishHint => 'Tap Finish to end this practice game.';
+
+  @override
+  String get practiceWrongAction => 'Try the action the arrow points to.';
+
+  @override
+  String get practiceSaving => 'Completing this step…';
+
+  @override
+  String get practiceFinished => 'Practice finished';
+
+  @override
+  String get practiceResultHint =>
+      'Practice done. After a real game, find the result in History.';
+
+  @override
+  String get practiceReplay => 'Practice again';
+
+  @override
+  String get practiceRealGame => 'Start a real game';
+
+  @override
+  String get practiceReturnMatch => 'Return to your game';
+
+  @override
+  String get practicePauseTitle => 'Pause your current game?';
+
+  @override
+  String get practicePauseBody =>
+      'Practice keeps your game records separate. Pause this game first, then resume it yourself when you are ready.';
+
+  @override
+  String get practicePauseAction => 'Pause and practice';
+
+  @override
+  String get practiceRetry => 'Retry';
+
+  @override
+  String get practiceLoadFailed => 'Couldn’t open practice. Try again.';
+
+  @override
+  String get practiceSettingsSubtitle =>
+      'Try scoring, undoing and finishing a game';
+
+  @override
+  String get practiceManualHelp => 'Scoring help';
+
+  @override
+  String practiceStepProgress(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get practiceFinishControlsHint =>
+      'Tap Finish match, then check the score.';
+
+  @override
+  String get practiceFinishCoverageHint =>
+      'Check the score and choose what you recorded. Then tap Finish match.';
+
+  @override
+  String get practiceShowHint => 'Show hint';
+
+  @override
+  String get practiceHideHint => 'Hide hint';
 }

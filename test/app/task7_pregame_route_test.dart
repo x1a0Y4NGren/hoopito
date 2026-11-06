@@ -1,3 +1,4 @@
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hoopito/app/hoopito_app.dart';
@@ -12,6 +13,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     final repository = PlayerRepository(database);
     await repository.save(
       Player(

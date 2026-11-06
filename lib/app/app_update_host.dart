@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hoopito/app/app_providers.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
+import 'package:hoopito/app/practice_providers.dart';
 import 'package:hoopito/app/update_providers.dart';
 import 'package:hoopito/core/update/app_update.dart';
 import 'package:hoopito/features/settings/software_update_page.dart';
@@ -50,6 +51,7 @@ class _AppUpdateHostState extends ConsumerState<AppUpdateHost>
     WidgetsBinding.instance.addObserver(this);
     widget.entryRevealed.addListener(_schedule);
     widget.router?.routeInformationProvider.addListener(_schedule);
+    widget.router?.routerDelegate.addListener(_schedule);
   }
 
   @override
@@ -61,7 +63,9 @@ class _AppUpdateHostState extends ConsumerState<AppUpdateHost>
     }
     if (oldWidget.router != widget.router) {
       oldWidget.router?.routeInformationProvider.removeListener(_schedule);
+      oldWidget.router?.routerDelegate.removeListener(_schedule);
       widget.router?.routeInformationProvider.addListener(_schedule);
+      widget.router?.routerDelegate.addListener(_schedule);
     }
     _schedule();
   }
@@ -72,6 +76,7 @@ class _AppUpdateHostState extends ConsumerState<AppUpdateHost>
     _observer?.removeListener(_schedule);
     widget.entryRevealed.removeListener(_schedule);
     widget.router?.routeInformationProvider.removeListener(_schedule);
+    widget.router?.routerDelegate.removeListener(_schedule);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -123,13 +128,20 @@ class _AppUpdateHostState extends ConsumerState<AppUpdateHost>
     }
     final router = widget.router;
     if (router == null) return;
-    if (router.routeInformationProvider.value.uri.path == '/settings/update') {
+    final configuration = router.routerDelegate.currentConfiguration;
+    final location = configuration.isEmpty
+        ? null
+        : configuration.last.matchedLocation;
+    if (location == '/settings/update') {
       _pendingReminder = false;
     }
     if (!_pendingReminder || _showingReminder || !controller.autoCheckEnabled) {
       return;
     }
     if (!canRestoreBackupFor(ref.read(activeMatchProvider)) ||
+        ref.read(practiceInvitationBlockingProvider) ||
+        ref.read(practiceFlowVisibleProvider) ||
+        location == '/practice' ||
         _observer?.hasPopup == true) {
       return;
     }
@@ -209,6 +221,8 @@ class _AppUpdateHostState extends ConsumerState<AppUpdateHost>
     if (widget.ready && ref.watch(updatePlatformProvider).supported) {
       ref.watch(updateControllerProvider);
       ref.watch(activeMatchProvider);
+      ref.watch(practiceInvitationBlockingProvider);
+      ref.watch(practiceFlowVisibleProvider);
       final observer = ref.watch(updateNavigationObserverProvider);
       if (!identical(_observer, observer)) {
         _observer?.removeListener(_schedule);

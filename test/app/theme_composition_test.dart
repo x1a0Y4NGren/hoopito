@@ -1,3 +1,4 @@
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,6 +20,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       await tester.pumpWidget(const SizedBox.shrink());
       await database.close();
@@ -53,6 +55,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       tester.platformDispatcher.clearLocaleTestValue();
       await tester.pumpWidget(const SizedBox.shrink());
@@ -76,6 +79,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       tester.platformDispatcher.clearLocaleTestValue();
       await tester.pumpWidget(const SizedBox.shrink());
@@ -123,6 +127,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     final repository = LanguagePreferencesRepository(database);
     await repository.save(AppLanguagePreference.english);
     final language = LanguagePreferencesController(repository);
@@ -157,6 +162,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       tester.platformDispatcher.clearLocaleTestValue();
       await tester.pumpWidget(const SizedBox.shrink());
