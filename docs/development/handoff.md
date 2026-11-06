@@ -1,5 +1,15 @@
 # Hoopito · 球豆交接记录
 
+## 官网球馆重构与生产发布（2026-11-06）
+
+官网通过 [PR #44](https://github.com/x1a0Y4NGren/hoopito/pull/44) 合入 `main`，生产源码为 `e9bb32228cf9a4c2e85d123e67a3214a18c96842`。Vercel Production `dpl_9pPShH2m9F6g6dxapTb6HmDtp2Lr` 已就绪，[hoopito.com](https://hoopito.com/) 指向该部署。网站包含连续球馆镜头、桌面章节轨道、移动触屏章节导航、二维投篮演示及 v2.1.0 下载；[官网维护说明](../../website/README.md#vercel-预览与正式域名)保留部署和预览入口。
+
+生产环境 14 项 HTTP 检查和中英桌面、中文移动三个浏览器场景通过。公开下载的 `Hoopito-v2.1.0-android.apk` 实测 77,976,935 字节，SHA-256 为 `c408707fbb1298f845e059c1a7eeada7d5474ca987ba04e46dfd9d2dbee7fb1a`，与正式发行附件一致。应用版本 `2.1.0+6` 的构建来源仍为 `9bbd3b87e99d71f5d9117cd2c5a763a7f8b95d1f`，截图来源仍为 v2.0.1。
+
+该生产源码的合并后 [Website CI](https://github.com/x1a0Y4NGren/hoopito/actions/runs/42059717171)、[Flutter CI](https://github.com/x1a0Y4NGren/hoopito/actions/runs/42059717217)、[仓库策略](https://github.com/x1a0Y4NGren/hoopito/actions/runs/42059717148)和 [CodeQL](https://github.com/x1a0Y4NGren/hoopito/actions/runs/42059716665) 均通过。Windows WebKit 的中英文反向跳章和浏览器返回定向复测共 10 次通过。真实 macOS／iPhone Safari 仍待复测，历史 Cocoa 失败与验证边界见 [#45](https://github.com/x1a0Y4NGren/hoopito/issues/45)；GitHub Actions 状态结算异常继续由 [#46](https://github.com/x1a0Y4NGren/hoopito/issues/46) 观察。
+
+发布原始回执保存在 `D:/temp/hoopito-release-20261105/`，收尾回执保存在 `D:/DevCache/HoopitoArtifacts/website-closeout-20261106/`。收尾记录的提交不改变生产部署或 APK 来源。
+
 ## 连续对局与 v2.1.0 发行交接（2026-11-03）
 
 连续对局已通过 [PR #41](https://github.com/x1a0Y4NGren/hoopito/pull/41) 手动 squash 合入 `main`，正式应用源码为 `9bbd3b87e99d71f5d9117cd2c5a763a7f8b95d1f`；下载、截图与发行记录通过 [PR #42](https://github.com/x1a0Y4NGren/hoopito/pull/42) 合入，本次收尾起点为 `main@ca184120ed1de16fc99c3693a473749f44f0021c`。当前维护版本为 `2.1.0+6`，数据库 schema 4、JSON 格式 2；下文旧版本、待验和未发布描述保留各自历史时点，不作为当前状态。

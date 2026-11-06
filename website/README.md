@@ -753,10 +753,13 @@ Vercel 项目 Root Directory 设置为 `website`，Node.js 为 24.x，安装命�
 `dist/`、`.vercel/`、浏览器报告和本地环境变量文件不提交。
 
 既有 Vercel 项目已更名为 `hoopito-website`，项目身份保持不变，所属空间为
-`xyr175-9459s-projects`。当前网站（含 #7–#10 精修）已合入 `main`，正式官网为
+`xyr175-9459s-projects`。当前连续球馆网站已通过
+[PR #44](https://github.com/x1a0Y4NGren/hoopito/pull/44) 合入 `main`，正式官网为
 [https://hoopito.com](https://hoopito.com/)，英文首页为
 [https://hoopito.com/en/](https://hoopito.com/en/)。`www.hoopito.com` 通过 HTTPS 308
-跳转至主域名。首次正式部署为 `dpl_FnxezeHNKKawui9NGstwDh8LQSLf`，当时的网站构建源码为
+跳转至主域名。当前生产部署为 `dpl_9pPShH2m9F6g6dxapTb6HmDtp2Lr`，构建源码为
+`e9bb32228cf9a4c2e85d123e67a3214a18c96842`，发布验证见[交接记录](../docs/development/handoff.md#官网球馆重构与生产发布2026-11-06)。
+首次正式部署为 `dpl_FnxezeHNKKawui9NGstwDh8LQSLf`，当时的网站构建源码为
 `64944b7e59ffb9fca9b8307ab238789bb6b3f125`。
 
 预览分支 `preview/website` 的受保护

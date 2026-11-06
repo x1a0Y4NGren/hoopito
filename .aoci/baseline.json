@@ -1,7 +1,7 @@
 {
   "version": 1,
   "created_at": "2026-10-07T06:13:57Z",
-  "updated_at": "2026-11-03T05:15:36Z",
+  "updated_at": "2026-11-06T02:54:11Z",
   "files": {
     ".gitattributes": {
       "role": "index",
@@ -53,9 +53,9 @@
     },
     ".github/workflows/flutter-ci.yml": {
       "role": "index",
-      "sha256": "8e107c526965c24cce2e2288a2e3ad599602b0984ded3dbe40ce20bccbd2a366",
-      "size": 10300,
-      "normalized_sha256": "f99a04e7c22e4151198bce2b4f40dc97c9d7339fe6085086881290f3cde83831"
+      "sha256": "0b45f50eaea5774a3209b4077d89be11fd2d262c9fad0e6d5384656c4d79c423",
+      "size": 10387,
+      "normalized_sha256": "b41b8655a525273ecea79fb72a3bc53ebb34189a9431d72f6e3bd71177773ac3"
     },
     ".github/workflows/repository-policy.yml": {
       "role": "index",
@@ -65,9 +65,9 @@
     },
     ".github/workflows/website-ci.yml": {
       "role": "index",
-      "sha256": "4c30d08f46863d53578e4d242972b48e2b8f78f5884ae39db414508f6c847234",
-      "size": 13116,
-      "normalized_sha256": "8e26fa6428f621b93945951be37c1f06e5ddb3f4056ab0c6cd97daf04df2258d"
+      "sha256": "ad928544a42ff64ee02cc92ca16d6454e68575bdb321b37ebad0cd90d6c3bbf9",
+      "size": 14007,
+      "normalized_sha256": "585a0c6d98e30fd9b0d060cc31aa28be271b5f76d05ae7ef8f182c46c22e02b4"
     },
     ".gitignore": {
       "role": "index",
@@ -158,9 +158,9 @@
     },
     "README.md": {
       "role": "index",
-      "sha256": "ed90a635984c3cff59159ec25e94b74d4c6da45341cfe126799559139f71d508",
-      "size": 16271,
-      "normalized_sha256": "2b0f44f24be0e15e64c6bf74414f8045075e3f27e93edf152f8c93e387137c2a"
+      "sha256": "435861229f0f58ee99a15c767129b2d87719d45b250941554c6875f10699c95d",
+      "size": 16263,
+      "normalized_sha256": "f21bcecfcfdda4a55c809175c04ac4acb8647764b70e7cb4693fabd5665539c4"
     },
     "SECURITY.md": {
       "role": "index",
@@ -594,9 +594,9 @@
     },
     "aoci.code.txt": {
       "role": "index",
-      "sha256": "83eeab28766bf05c52480399ff870a5f0994ef2b55be1c32a6a9a6db36946bbf",
-      "size": 252912,
-      "normalized_sha256": "83eeab28766bf05c52480399ff870a5f0994ef2b55be1c32a6a9a6db36946bbf"
+      "sha256": "6cc96c64a92cbeb22e919dcd522a8d291adb4ea0bafede471a66ca03cf910bc6",
+      "size": 283350,
+      "normalized_sha256": "6cc96c64a92cbeb22e919dcd522a8d291adb4ea0bafede471a66ca03cf910bc6"
     },
     "aoci.meta.txt": {
       "role": "index",
@@ -784,9 +784,9 @@
     },
     "docs/README.md": {
       "role": "index",
-      "sha256": "2dee20cb7ee53d44b11c45d9b7cda48b6283c905cec7b8bc27e0cfaca09eaaee",
-      "size": 4907,
-      "normalized_sha256": "5b02bfb3d516a36481c535155be37e137d2ac900b5278ee88630bbd0fd739404"
+      "sha256": "405ba76eac71f545c341ad3106cbede1eaf73545763d389e6fbe6748d0713854",
+      "size": 5038,
+      "normalized_sha256": "012d0b436d67c2f76639462a07f4e8ea121f9787de1d9c9f184b353765fd2bb1"
     },
     "docs/archive/README.md": {
       "role": "index",
@@ -952,9 +952,9 @@
     },
     "docs/development/handoff.md": {
       "role": "index",
-      "sha256": "e79624d856ac126ea0a3f4547b9b26bb53f1bcb7010b208779d49bab965667cb",
-      "size": 59750,
-      "normalized_sha256": "15fa6414d1cc3427e954a26662dfc7d2b4be1bc8fe611393ec60903339ba5a32"
+      "sha256": "c3d64000d5fafd74b38ca90448710c84bc6bf833f2f96fd5913751a15fac38a4",
+      "size": 61603,
+      "normalized_sha256": "005cddc7f2d2e2351c66a6785fe0e115403770fad77f594d378401a1d9095fdb"
     },
     "docs/development/in-app-updates.md": {
       "role": "index",
@@ -4209,21 +4209,21 @@
     },
     "website/ASSET_SOURCES.json": {
       "role": "index",
-      "sha256": "5a60dc8f762992f247c725af62b075ef70bfe79c0d28cebe5322716b17f384b9",
-      "size": 94060,
-      "normalized_sha256": "5a60dc8f762992f247c725af62b075ef70bfe79c0d28cebe5322716b17f384b9"
+      "sha256": "52392cd350491cf6d8c6392b1e7aee46d881fe84aaa36f2588f39345e28752e0",
+      "size": 198662,
+      "normalized_sha256": "52392cd350491cf6d8c6392b1e7aee46d881fe84aaa36f2588f39345e28752e0"
     },
     "website/README.md": {
       "role": "index",
-      "sha256": "6131255599652ed659cf55e826af82b5752a24fb3c9fd15fddcd9b870993dd10",
-      "size": 46404,
-      "normalized_sha256": "6131255599652ed659cf55e826af82b5752a24fb3c9fd15fddcd9b870993dd10"
+      "sha256": "2408e70d56e1e789373b419c8f9d523dc9a56aa7a9586cb92cc62e00f86e7f79",
+      "size": 75608,
+      "normalized_sha256": "2408e70d56e1e789373b419c8f9d523dc9a56aa7a9586cb92cc62e00f86e7f79"
     },
     "website/THIRD_PARTY_NOTICES.md": {
       "role": "index",
-      "sha256": "ee4628872036ee12fcbc986da1535184879786197433919f45ba5acb95a7dd53",
-      "size": 3712,
-      "normalized_sha256": "ee4628872036ee12fcbc986da1535184879786197433919f45ba5acb95a7dd53"
+      "sha256": "1392733993f55c8c8186a5af5336970438fb778b6b6b76c52fe7edb2e795db91",
+      "size": 11217,
+      "normalized_sha256": "1392733993f55c8c8186a5af5336970438fb778b6b6b76c52fe7edb2e795db91"
     },
     "website/VERIFICATION.md": {
       "role": "index",
@@ -4239,9 +4239,9 @@
     },
     "website/assets/art/scene-poster.json": {
       "role": "index",
-      "sha256": "066609dbcf9fc139a45a7541035cca303ddfc798e103484ce2b287205267af3a",
-      "size": 11730,
-      "normalized_sha256": "066609dbcf9fc139a45a7541035cca303ddfc798e103484ce2b287205267af3a"
+      "sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
+      "size": 23484,
+      "normalized_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a"
     },
     "website/assets/community/README.md": {
       "role": "index",
@@ -4255,6 +4255,41 @@
       "size": 3000,
       "normalized_sha256": "12b741df3f50fb32bf18a1252e36843529c024fcb2bbee06a83982c87b3435fc"
     },
+    "website/assets/fonts/NotoSansSC-Black.otf": {
+      "role": "observe",
+      "sha256": "ccb496022356b7dd14d117538a472ae40feff8f6e8f3fe8bffc5616785d2f3f9",
+      "size": 8855916
+    },
+    "website/assets/fonts/OFL-NotoSansSC.txt": {
+      "role": "observe",
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+      "size": 4301,
+      "normalized_sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    "website/assets/fonts/README.md": {
+      "role": "observe",
+      "sha256": "92ba25d5668ea89c72071f5042da60f4ac7a7030ac990caa136721a023c2372c",
+      "size": 1906,
+      "normalized_sha256": "92ba25d5668ea89c72071f5042da60f4ac7a7030ac990caa136721a023c2372c"
+    },
+    "website/assets/fonts/sources.json": {
+      "role": "observe",
+      "sha256": "7e96f4da7df76166009b69791d131b9ebd7f3ee1521d5955351066f587cac34d",
+      "size": 1785,
+      "normalized_sha256": "7e96f4da7df76166009b69791d131b9ebd7f3ee1521d5955351066f587cac34d"
+    },
+    "website/assets/materials/demo-court-generation-v1.json": {
+      "role": "index",
+      "sha256": "349509860a1de8bc77c2bfa6d920b52ccfdff49931dbb303ebc798f35f72d10a",
+      "size": 8581,
+      "normalized_sha256": "349509860a1de8bc77c2bfa6d920b52ccfdff49931dbb303ebc798f35f72d10a"
+    },
+    "website/assets/materials/demo-court-generation-v2.json": {
+      "role": "index",
+      "sha256": "67f9a04f10f65e010d13c8c621d85616b0133c5595cccf7765a0fc9b24fad7ee",
+      "size": 8095,
+      "normalized_sha256": "67f9a04f10f65e010d13c8c621d85616b0133c5595cccf7765a0fc9b24fad7ee"
+    },
     "website/assets/materials/generation-v1.json": {
       "role": "index",
       "sha256": "ce99cbdd4e8ef8103ee13f6cedb9f02f86736bb0ec8ced539b8d98727ec8c882",
@@ -4267,17 +4302,71 @@
       "size": 6773,
       "normalized_sha256": "3f95efb1c6384880d2015ca8082b1790607448831e49993d62d2ec3f62268296"
     },
-    "website/assets/materials/generation.json": {
+    "website/assets/materials/generation-v3.json": {
       "role": "index",
       "sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8",
       "size": 7790,
       "normalized_sha256": "c9c0e0592ab8f6aef774b97e3f85c4d26e269f32efd982bdfd427204355d06d8"
+    },
+    "website/assets/materials/generation.json": {
+      "role": "index",
+      "sha256": "702a9234749233669b87abb4583498744bcd7fcc6b88a269e23ce22459a801f1",
+      "size": 7785,
+      "normalized_sha256": "702a9234749233669b87abb4583498744bcd7fcc6b88a269e23ce22459a801f1"
     },
     "website/astro.config.mjs": {
       "role": "index",
       "sha256": "40e61ac26429a02c2f2e5e9bb05a4fd146bb37ff41eb762db5f77f91ab7aaf77",
       "size": 842,
       "normalized_sha256": "40e61ac26429a02c2f2e5e9bb05a4fd146bb37ff41eb762db5f77f91ab7aaf77"
+    },
+    "website/docs/chapter-rail-2026-11-02.md": {
+      "role": "index",
+      "sha256": "cb434811828acd86192479dfb4f864d0d6bfc7d31468ea2892918395c543fc99",
+      "size": 7217,
+      "normalized_sha256": "cb434811828acd86192479dfb4f864d0d6bfc7d31468ea2892918395c543fc99"
+    },
+    "website/docs/component-copy-2026-11-01.md": {
+      "role": "index",
+      "sha256": "0839824443ece62edc35f7a4cc001b4ea2c317058980ea5b28f8ea3d443869b0",
+      "size": 130943,
+      "normalized_sha256": "0839824443ece62edc35f7a4cc001b4ea2c317058980ea5b28f8ea3d443869b0"
+    },
+    "website/docs/component-refinement-2026-11-01.md": {
+      "role": "index",
+      "sha256": "2820864f334884b952d9d1bdac8961567162caf43e04970923124181f27784e4",
+      "size": 4343,
+      "normalized_sha256": "2820864f334884b952d9d1bdac8961567162caf43e04970923124181f27784e4"
+    },
+    "website/docs/download-community-polish-2026-11-02.md": {
+      "role": "index",
+      "sha256": "ff595dafa25681fb44b9fc5cd9d9ff8a1b7c4c64acea5541fbea8fadb607e047",
+      "size": 5444,
+      "normalized_sha256": "ff595dafa25681fb44b9fc5cd9d9ff8a1b7c4c64acea5541fbea8fadb607e047"
+    },
+    "website/docs/experience-polish-2026-11-02.md": {
+      "role": "index",
+      "sha256": "11e524efd93f7e6bebf2396301012e391473b7f64a3614fbb7a16c0b90cebf24",
+      "size": 3012,
+      "normalized_sha256": "11e524efd93f7e6bebf2396301012e391473b7f64a3614fbb7a16c0b90cebf24"
+    },
+    "website/docs/replay-polish-2026-11-02.md": {
+      "role": "index",
+      "sha256": "516acb8f8c03546c83ed0ba76046907b512fb1cc8f3cc33a62e6c8f3a8a9a09e",
+      "size": 4540,
+      "normalized_sha256": "516acb8f8c03546c83ed0ba76046907b512fb1cc8f3cc33a62e6c8f3a8a9a09e"
+    },
+    "website/docs/scoring-polish-2026-11-02.md": {
+      "role": "index",
+      "sha256": "a7593c8ca6098e1e1051e87ad7eb4bcf44fe478f32dc6f4b22beb44ee9e414c7",
+      "size": 3752,
+      "normalized_sha256": "a7593c8ca6098e1e1051e87ad7eb4bcf44fe478f32dc6f4b22beb44ee9e414c7"
+    },
+    "website/docs/thin-glass-2026-11-01.md": {
+      "role": "index",
+      "sha256": "9a612d5c27ca77202e688d433889286f7abccac25311b3b32f959f0f41c4af49",
+      "size": 7125,
+      "normalized_sha256": "9a612d5c27ca77202e688d433889286f7abccac25311b3b32f959f0f41c4af49"
     },
     "website/package-lock.json": {
       "role": "index",
@@ -4293,15 +4382,15 @@
     },
     "website/playwright.config.ts": {
       "role": "index",
-      "sha256": "434f7f9ed51333ba0fe5df44cca85207226137a1c7aa523dbdfa5655d524e4c6",
-      "size": 2155,
-      "normalized_sha256": "434f7f9ed51333ba0fe5df44cca85207226137a1c7aa523dbdfa5655d524e4c6"
+      "sha256": "096f288bb8799d5800c52a277e199d5e931e0d67b283d0653d13dd1d974673d7",
+      "size": 3781,
+      "normalized_sha256": "096f288bb8799d5800c52a277e199d5e931e0d67b283d0653d13dd1d974673d7"
     },
     "website/playwright.webgl.config.ts": {
       "role": "index",
-      "sha256": "0b63acc786c40cc3753a39fedda460152518c7a9e5108a66eeddb09d579fdcd2",
+      "sha256": "8cbd5624af752e69c39fbfb163097586422d691e2e6b27112482d0194a2b4efc",
       "size": 1216,
-      "normalized_sha256": "0b63acc786c40cc3753a39fedda460152518c7a9e5108a66eeddb09d579fdcd2"
+      "normalized_sha256": "8cbd5624af752e69c39fbfb163097586422d691e2e6b27112482d0194a2b4efc"
     },
     "website/public/brand/court-poster.svg": {
       "role": "index",
@@ -4342,10 +4431,15 @@
       "sha256": "835d6974e9cc030828dd22aad9e816057685fa172f54fee420501a56dd551bf4",
       "size": 39216
     },
+    "website/public/fonts/noto-poster-black.woff2": {
+      "role": "observe",
+      "sha256": "d5d69d0b727c54a778a547ed07296bfb10ccb4bd890c41eab862e0a20dd49124",
+      "size": 8940
+    },
     "website/public/fonts/noto-sc.woff2": {
       "role": "observe",
-      "sha256": "c45b52e6abbab0668cb5c6d80e8bc33c333cf551d63ace7ec5fa35b9fa4362a8",
-      "size": 126440
+      "sha256": "a8e12c69bbf74531207a9932a3e43dbded9fe713b042e135fbdeb65ea2d98038",
+      "size": 128492
     },
     "website/public/licenses/GSAP.txt": {
       "role": "index",
@@ -4403,9 +4497,9 @@
     },
     "website/scripts/check-budget.mjs": {
       "role": "index",
-      "sha256": "03b844a91382e2c97fb99d32a37210258fc6df35be7ff4380503e4094b249dc6",
-      "size": 9133,
-      "normalized_sha256": "03b844a91382e2c97fb99d32a37210258fc6df35be7ff4380503e4094b249dc6"
+      "sha256": "abee6dd7f5767732bb2d52a266faf93c20daf919212a9a917ae847087ad6ea4d",
+      "size": 10062,
+      "normalized_sha256": "abee6dd7f5767732bb2d52a266faf93c20daf919212a9a917ae847087ad6ea4d"
     },
     "website/scripts/check-journey.mjs": {
       "role": "index",
@@ -4433,21 +4527,21 @@
     },
     "website/scripts/export-scene-poster.mjs": {
       "role": "index",
-      "sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7",
-      "size": 8263,
-      "normalized_sha256": "129c1dd14c9e20e96be26167c8b6ed076a589bd28b1b00ffc26aa7b1c5e7cda7"
+      "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624",
+      "size": 10698,
+      "normalized_sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
     },
     "website/scripts/gpu-measurement.mjs": {
       "role": "index",
-      "sha256": "85ad19605ac1350bef1ad55167acae189418e15203c261cce212f968272c9fe9",
-      "size": 8196,
-      "normalized_sha256": "85ad19605ac1350bef1ad55167acae189418e15203c261cce212f968272c9fe9"
+      "sha256": "3129e7e18d976c8beb2fe515f677b3655f42e2b4aaefead817bc98b164abe2ad",
+      "size": 9804,
+      "normalized_sha256": "3129e7e18d976c8beb2fe515f677b3655f42e2b4aaefead817bc98b164abe2ad"
     },
     "website/scripts/gpu-wheel-input.mjs": {
       "role": "index",
-      "sha256": "67a9e124cd22342de0dce4830b7f6a2c922fe61aa1dca18109f78fb90e2f50ce",
-      "size": 6327,
-      "normalized_sha256": "67a9e124cd22342de0dce4830b7f6a2c922fe61aa1dca18109f78fb90e2f50ce"
+      "sha256": "62ba2c197406c0ce8f6cce8fb2563cbab2e4a7912b0cbbf8a8a8d76843e86d05",
+      "size": 8009,
+      "normalized_sha256": "62ba2c197406c0ce8f6cce8fb2563cbab2e4a7912b0cbbf8a8a8d76843e86d05"
     },
     "website/scripts/install-ci-browser.sh": {
       "role": "index",
@@ -4455,29 +4549,47 @@
       "size": 1282,
       "normalized_sha256": "d3968c1c323ae8eb3e28e333a6503d144193d947efab4350d57d636899bf34c5"
     },
+    "website/scripts/material-data.mjs": {
+      "role": "index",
+      "sha256": "9e3c7f82bb42a7ec1e19def7324a0eca6dd35ea0cfa52656a8b2e5e69cd819e2",
+      "size": 2203,
+      "normalized_sha256": "9e3c7f82bb42a7ec1e19def7324a0eca6dd35ea0cfa52656a8b2e5e69cd819e2"
+    },
     "website/scripts/measure-gpu.mjs": {
       "role": "index",
-      "sha256": "bb42ae9bb2e2bfd6b1450c3e4c7048c1468e62c232ecc8e24fefe2ffb1b2c9ca",
-      "size": 43829,
-      "normalized_sha256": "bb42ae9bb2e2bfd6b1450c3e4c7048c1468e62c232ecc8e24fefe2ffb1b2c9ca"
+      "sha256": "03d9b864ab1c6238195a29fbaf063cbce6ef7f38a3f975a24d0c1ad2f01b84a0",
+      "size": 47023,
+      "normalized_sha256": "03d9b864ab1c6238195a29fbaf063cbce6ef7f38a3f975a24d0c1ad2f01b84a0"
     },
     "website/scripts/measure-performance.mjs": {
       "role": "index",
-      "sha256": "1a87c2dede73a24d07a7a3336e5fe0b25b4571d16c0760c2935caaeb93464f5d",
-      "size": 12138,
-      "normalized_sha256": "1a87c2dede73a24d07a7a3336e5fe0b25b4571d16c0760c2935caaeb93464f5d"
+      "sha256": "5885262fdcb5acfb993939b620ad5b7324d553026c0bb77025adce35a668d147",
+      "size": 12262,
+      "normalized_sha256": "5885262fdcb5acfb993939b620ad5b7324d553026c0bb77025adce35a668d147"
+    },
+    "website/scripts/poster-font.mjs": {
+      "role": "index",
+      "sha256": "762518bcdffe19a7b5837d0d4e02384c609858ea18ffa859685057d9dad3325a",
+      "size": 2732,
+      "normalized_sha256": "762518bcdffe19a7b5837d0d4e02384c609858ea18ffa859685057d9dad3325a"
     },
     "website/scripts/prepare-assets.mjs": {
       "role": "index",
-      "sha256": "6a54f1c90086a4edbff69a85e7321a2ec07e294782cef132e798f396a3594675",
-      "size": 22736,
-      "normalized_sha256": "6a54f1c90086a4edbff69a85e7321a2ec07e294782cef132e798f396a3594675"
+      "sha256": "99c2677574b4ce507a8367a46e8927beb8434fd7c5fdd030f91eedfc9d5ffe1b",
+      "size": 28327,
+      "normalized_sha256": "99c2677574b4ce507a8367a46e8927beb8434fd7c5fdd030f91eedfc9d5ffe1b"
     },
     "website/scripts/prepare-community.mjs": {
       "role": "index",
       "sha256": "02e81dcb9736f5e722bbb4f0d5f8f3a9fa2ee3eca8c06bd3c7bd76974b8a98b8",
       "size": 6706,
       "normalized_sha256": "02e81dcb9736f5e722bbb4f0d5f8f3a9fa2ee3eca8c06bd3c7bd76974b8a98b8"
+    },
+    "website/scripts/prepare-demo-court.mjs": {
+      "role": "index",
+      "sha256": "53f1662473e6ac17a902936fb8ed7e721e00f4abd7ea94625d9b8ac970da3238",
+      "size": 6416,
+      "normalized_sha256": "53f1662473e6ac17a902936fb8ed7e721e00f4abd7ea94625d9b8ac970da3238"
     },
     "website/scripts/prepare-download.mjs": {
       "role": "index",
@@ -4497,17 +4609,29 @@
       "size": 1193,
       "normalized_sha256": "e174efcf88bc73fb51e81423b2bdf0e955afed0d7638e8573bba7d6d87875564"
     },
+    "website/src/components/ChapterRail.astro": {
+      "role": "index",
+      "sha256": "31b47faf8b839d205d3490e67794d37bd713b5c7db442789bb93a11c036754d3",
+      "size": 4588,
+      "normalized_sha256": "31b47faf8b839d205d3490e67794d37bd713b5c7db442789bb93a11c036754d3"
+    },
+    "website/src/components/Closing.astro": {
+      "role": "index",
+      "sha256": "e2e7691c69717c3a63d882cb4a528bf0554d530b5ec241cdfe4daecedefdc20f",
+      "size": 1798,
+      "normalized_sha256": "e2e7691c69717c3a63d882cb4a528bf0554d530b5ec241cdfe4daecedefdc20f"
+    },
     "website/src/components/Community.astro": {
       "role": "index",
-      "sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72",
-      "size": 1651,
-      "normalized_sha256": "ef25ca43c6e6282a2bf82df12fdf8fbf3f8cf7eea1c0f0518f21fc7d46778b72"
+      "sha256": "74fe1b50d4e9f36d5355bfde6ad8708c6057432690da6f910e30767aa4af41a8",
+      "size": 3132,
+      "normalized_sha256": "74fe1b50d4e9f36d5355bfde6ad8708c6057432690da6f910e30767aa4af41a8"
     },
     "website/src/components/CourtDiagram.astro": {
       "role": "index",
-      "sha256": "69bcc430b38cd6905878a6d952504631b73f093d5d81821aad23c6a6d9e016d7",
-      "size": 4975,
-      "normalized_sha256": "69bcc430b38cd6905878a6d952504631b73f093d5d81821aad23c6a6d9e016d7"
+      "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac",
+      "size": 8481,
+      "normalized_sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
     },
     "website/src/components/DownloadChooser.astro": {
       "role": "index",
@@ -4515,23 +4639,53 @@
       "size": 2916,
       "normalized_sha256": "5c28eebb2f278158fed132081125b30b4b316249f3482fadf3e003b44744aa57"
     },
+    "website/src/components/DownloadPass.astro": {
+      "role": "index",
+      "sha256": "735e68819e7d4ee113a7c44e0551889300b742fc2366332a10f145548d189606",
+      "size": 4443,
+      "normalized_sha256": "735e68819e7d4ee113a7c44e0551889300b742fc2366332a10f145548d189606"
+    },
+    "website/src/components/ExperienceStage.astro": {
+      "role": "index",
+      "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200",
+      "size": 4697,
+      "normalized_sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+    },
+    "website/src/components/HeroPoster.astro": {
+      "role": "index",
+      "sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915",
+      "size": 2451,
+      "normalized_sha256": "789e364b5ccd709dd73974cb7e45bbed77ca2dde3e9ad8891d1c6de5ab54e915"
+    },
     "website/src/components/Icon.astro": {
       "role": "index",
-      "sha256": "1454ad92dbb02bedd50eb8302172f619068ecb32fb2dbd2a2b008e4a8546828d",
-      "size": 720,
-      "normalized_sha256": "1454ad92dbb02bedd50eb8302172f619068ecb32fb2dbd2a2b008e4a8546828d"
+      "sha256": "cee9c87fb54b9a146dc2673c660ca0389c3d2cb693ea866be35ef005e0853713",
+      "size": 742,
+      "normalized_sha256": "cee9c87fb54b9a146dc2673c660ca0389c3d2cb693ea866be35ef005e0853713"
     },
     "website/src/components/Landing.astro": {
       "role": "index",
-      "sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2",
-      "size": 16643,
-      "normalized_sha256": "61420167fddbe55b9b5b22449b603b226de10b1f7c02bf20542a6dccfca869e2"
+      "sha256": "21084191139da3363e9b7faace54d9f0234f7726453bb2007304b1d56ef73dc4",
+      "size": 5588,
+      "normalized_sha256": "21084191139da3363e9b7faace54d9f0234f7726453bb2007304b1d56ef73dc4"
     },
     "website/src/components/Layout.astro": {
       "role": "index",
-      "sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c",
-      "size": 3452,
-      "normalized_sha256": "1e336d3d94e4b37b9a01fdc0fa596cc63bc0d4c242ac27e1575c1c67241e651c"
+      "sha256": "82128bd14ff7fdd6b7f2a4b2c8bb7586bef0319e6e974a30339e99af5fc139a2",
+      "size": 3895,
+      "normalized_sha256": "82128bd14ff7fdd6b7f2a4b2c8bb7586bef0319e6e974a30339e99af5fc139a2"
+    },
+    "website/src/components/MobileBackdrop.astro": {
+      "role": "index",
+      "sha256": "328ab2afaebad7f8971f619c08c752fd572d2de2b44c91ae4d785ac882dfd172",
+      "size": 309,
+      "normalized_sha256": "328ab2afaebad7f8971f619c08c752fd572d2de2b44c91ae4d785ac882dfd172"
+    },
+    "website/src/components/MobileNavigation.astro": {
+      "role": "index",
+      "sha256": "96fe646539fe3a8ee7fd4dbee76bbf2dfe5d2a2381491641baae46d029fc059d",
+      "size": 2348,
+      "normalized_sha256": "96fe646539fe3a8ee7fd4dbee76bbf2dfe5d2a2381491641baae46d029fc059d"
     },
     "website/src/components/Privacy.astro": {
       "role": "index",
@@ -4539,17 +4693,23 @@
       "size": 2335,
       "normalized_sha256": "44f0746c3c03e82cf6d5911ffeedafa1bdf5339da5c41a7f15b1b4a49bceb0c0"
     },
+    "website/src/components/ReplayCapture.astro": {
+      "role": "index",
+      "sha256": "0d44e26fea479f63dd1cb8adf059a6b99426103825444c56e5e4ec4e58669457",
+      "size": 1631,
+      "normalized_sha256": "0d44e26fea479f63dd1cb8adf059a6b99426103825444c56e5e4ec4e58669457"
+    },
     "website/src/components/ReplayShowcase.astro": {
       "role": "index",
-      "sha256": "310f669c4aa62f50acb3377488c4df2abebde97c7c0a3e2a238f80cf68d4d236",
-      "size": 9719,
-      "normalized_sha256": "310f669c4aa62f50acb3377488c4df2abebde97c7c0a3e2a238f80cf68d4d236"
+      "sha256": "dca03078f9ffd27df2b73235acfb1608c09a0c54d2c04e57c86e1a7605f1975b",
+      "size": 8045,
+      "normalized_sha256": "dca03078f9ffd27df2b73235acfb1608c09a0c54d2c04e57c86e1a7605f1975b"
     },
     "website/src/components/ScoringShowcase.astro": {
       "role": "index",
-      "sha256": "fb2e145e9edf9109124bb36c3ddd2b78cef59f636c7cd82f5908fd7a334a0ca1",
-      "size": 6462,
-      "normalized_sha256": "fb2e145e9edf9109124bb36c3ddd2b78cef59f636c7cd82f5908fd7a334a0ca1"
+      "sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737",
+      "size": 5904,
+      "normalized_sha256": "a3bee05dfef674fb88eeca6fbc026aa8efb112198f37fbc41df8f04524d2f737"
     },
     "website/src/components/ScreenshotViewer.astro": {
       "role": "index",
@@ -4571,27 +4731,45 @@
     },
     "website/src/data/content.ts": {
       "role": "index",
-      "sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404",
-      "size": 23733,
-      "normalized_sha256": "c9dcb6165de381db49828229ce7a9e5e7bc3e581128014b6f0b2a03f03085404"
+      "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495",
+      "size": 24359,
+      "normalized_sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
     },
     "website/src/data/court-materials.ts": {
       "role": "index",
-      "sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9",
-      "size": 366,
-      "normalized_sha256": "e2755dee2684933aff1cd7247587bb02e72a94f237b39811081ce1a7742331f9"
+      "sha256": "509fae5b0cae2bb86588bbfc875278fbc6467dfcfeffe4edb4747ec1b368f9b9",
+      "size": 733,
+      "normalized_sha256": "509fae5b0cae2bb86588bbfc875278fbc6467dfcfeffe4edb4747ec1b368f9b9"
+    },
+    "website/src/data/demo-court-art.ts": {
+      "role": "index",
+      "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85",
+      "size": 760,
+      "normalized_sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+    },
+    "website/src/data/glass-material.ts": {
+      "role": "index",
+      "sha256": "38afadb18ee34a99576f18a7f9fe5b8938b78a8c4298d660353e81d2408a53bc",
+      "size": 1564,
+      "normalized_sha256": "38afadb18ee34a99576f18a7f9fe5b8938b78a8c4298d660353e81d2408a53bc"
+    },
+    "website/src/data/mobile-scenes.ts": {
+      "role": "index",
+      "sha256": "9e3911e57831af2a3bac3a6fd84d31eef6597a8de36886e22d9fe024e9969549",
+      "size": 615,
+      "normalized_sha256": "9e3911e57831af2a3bac3a6fd84d31eef6597a8de36886e22d9fe024e9969549"
     },
     "website/src/data/release.ts": {
       "role": "index",
-      "sha256": "f25cd4a141a7ba65be58e1ee32cc65bca8c7cc3f399faf07ba2dc3dd8ebb2de6",
-      "size": 1935,
-      "normalized_sha256": "f25cd4a141a7ba65be58e1ee32cc65bca8c7cc3f399faf07ba2dc3dd8ebb2de6"
+      "sha256": "626ad39761c69ed97c9bef6c09b8b54ad35c955d4766546dc127128d1d6c111b",
+      "size": 2081,
+      "normalized_sha256": "626ad39761c69ed97c9bef6c09b8b54ad35c955d4766546dc127128d1d6c111b"
     },
     "website/src/data/replay-example.ts": {
       "role": "index",
-      "sha256": "0a27edaca29ea11e0985b217f9601291913035f1e4519974c32595c7ad63e66c",
-      "size": 4780,
-      "normalized_sha256": "0a27edaca29ea11e0985b217f9601291913035f1e4519974c32595c7ad63e66c"
+      "sha256": "cba9834a2611c48618c1245edc798ce1c2b2a6bee275ca689fd320cfd4856f1a",
+      "size": 5478,
+      "normalized_sha256": "cba9834a2611c48618c1245edc798ce1c2b2a6bee275ca689fd320cfd4856f1a"
     },
     "website/src/pages/en/index.astro": {
       "role": "index",
@@ -4635,6 +4813,12 @@
       "size": 366,
       "normalized_sha256": "21601d4ae0710a708283fc531a28601593f8e88156b64bd2eeff17c9e017a2fd"
     },
+    "website/src/scripts/animation-clock.ts": {
+      "role": "index",
+      "sha256": "8b2856a9ca025dc30ce1a0de8f92e46e2b0564393bea0827c7ff94921716f2fa",
+      "size": 1049,
+      "normalized_sha256": "8b2856a9ca025dc30ce1a0de8f92e46e2b0564393bea0827c7ff94921716f2fa"
+    },
     "website/src/scripts/arrow-drawing.ts": {
       "role": "index",
       "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17",
@@ -4643,39 +4827,75 @@
     },
     "website/src/scripts/camera-placement.ts": {
       "role": "index",
-      "sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c",
-      "size": 7427,
-      "normalized_sha256": "334f7439caa968fb14d6824c3ed729163b2e92580582fdbf6d05ea78ba65ba2c"
+      "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65",
+      "size": 10059,
+      "normalized_sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+    },
+    "website/src/scripts/camera-track.ts": {
+      "role": "index",
+      "sha256": "8741c435b38b268eab5355e9f2f7c1c8ce7bf844768a34e9cb4371490efc7921",
+      "size": 3245,
+      "normalized_sha256": "8741c435b38b268eab5355e9f2f7c1c8ce7bf844768a34e9cb4371490efc7921"
+    },
+    "website/src/scripts/chapter-rail-math.ts": {
+      "role": "index",
+      "sha256": "76bc16e7e0a98c1ae09963c6377493fd08eaf4f76b3659de5cb4bc70067e340a",
+      "size": 8094,
+      "normalized_sha256": "76bc16e7e0a98c1ae09963c6377493fd08eaf4f76b3659de5cb4bc70067e340a"
+    },
+    "website/src/scripts/chapter-rail.ts": {
+      "role": "index",
+      "sha256": "675fdc27ee26240b455263a1d3bcac55e353745767355cc5949b46f5a39b5888",
+      "size": 16367,
+      "normalized_sha256": "675fdc27ee26240b455263a1d3bcac55e353745767355cc5949b46f5a39b5888"
+    },
+    "website/src/scripts/chapter-scroll.ts": {
+      "role": "index",
+      "sha256": "1c942dfab2a9ff379b19439722b7bf5473ff048bee4c9f712bb3317bfa982c5a",
+      "size": 36016,
+      "normalized_sha256": "1c942dfab2a9ff379b19439722b7bf5473ff048bee4c9f712bb3317bfa982c5a"
     },
     "website/src/scripts/court-floor.ts": {
       "role": "index",
-      "sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850",
-      "size": 8050,
-      "normalized_sha256": "5ae07c345cb957967e6339f8a54786d3e1659f05e52700d246d3920381956850"
+      "sha256": "2f7277aa3cff6423e7be4d53e03c64f01fa4d668f2a6cbaf978997d808d3d36c",
+      "size": 7638,
+      "normalized_sha256": "2f7277aa3cff6423e7be4d53e03c64f01fa4d668f2a6cbaf978997d808d3d36c"
     },
     "website/src/scripts/court-hardware.ts": {
       "role": "index",
-      "sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20",
-      "size": 20941,
-      "normalized_sha256": "94fc2a1ada837a11f4a697287cdf7b3f3afb6ae42a6b8053d529863aaacd6c20"
+      "sha256": "618028e499d01fae7f43c7bd8cf3d3c2627780dc9ca3ff7274d87305373ddf69",
+      "size": 25205,
+      "normalized_sha256": "618028e499d01fae7f43c7bd8cf3d3c2627780dc9ca3ff7274d87305373ddf69"
+    },
+    "website/src/scripts/court-lighting.ts": {
+      "role": "index",
+      "sha256": "5e6995ea30b2f9669abf155089967358745d247b2e97405babf1bab527e51054",
+      "size": 7337,
+      "normalized_sha256": "5e6995ea30b2f9669abf155089967358745d247b2e97405babf1bab527e51054"
     },
     "website/src/scripts/court-scene.ts": {
       "role": "index",
-      "sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178",
-      "size": 47056,
-      "normalized_sha256": "51575bb92da113001a7e0f0b16bff225536f8fc31244740c2c842fcdbaa92178"
+      "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84",
+      "size": 60264,
+      "normalized_sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
     },
     "website/src/scripts/court-textures.ts": {
       "role": "index",
-      "sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e",
-      "size": 1364,
-      "normalized_sha256": "1942eac00565c9d1e0ee6f297d694c06926b857f1687e78541301ca0c2b0294e"
+      "sha256": "af221170190260a9fe1117141cd013f6067659991996b713d2553f713e53736d",
+      "size": 1403,
+      "normalized_sha256": "af221170190260a9fe1117141cd013f6067659991996b713d2553f713e53736d"
+    },
+    "website/src/scripts/demo-art.ts": {
+      "role": "index",
+      "sha256": "1ee36aacba1b3aaee310c78848b8cce724e48c7ef48e44b7c045f0590fb36908",
+      "size": 1421,
+      "normalized_sha256": "1ee36aacba1b3aaee310c78848b8cce724e48c7ef48e44b7c045f0590fb36908"
     },
     "website/src/scripts/demo-invitation.ts": {
       "role": "index",
-      "sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36",
-      "size": 8109,
-      "normalized_sha256": "28530f8a4e9c762a5c3ff31fe23a0f709e5047c338ea3d870a0f47eced16da36"
+      "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97",
+      "size": 5801,
+      "normalized_sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
     },
     "website/src/scripts/demo-state.ts": {
       "role": "index",
@@ -4689,17 +4909,77 @@
       "size": 3560,
       "normalized_sha256": "10625d547f05a250e69fa32cfa2b9e9fa110d100a0cbf9c23c5bed17db334159"
     },
+    "website/src/scripts/glass-surfaces.ts": {
+      "role": "index",
+      "sha256": "2c56740851840ecc7335425021cb4a0daf9a1ffc49dc3dd656008dd37d707c73",
+      "size": 1543,
+      "normalized_sha256": "2c56740851840ecc7335425021cb4a0daf9a1ffc49dc3dd656008dd37d707c73"
+    },
     "website/src/scripts/gpu-calibration.ts": {
       "role": "index",
       "sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d",
       "size": 1424,
       "normalized_sha256": "4f92b5a2be90aadeebd6e654840d63f3daf5a737fe03c01a0ae1625e51a6c78d"
     },
+    "website/src/scripts/liquid-glass-pass.ts": {
+      "role": "index",
+      "sha256": "1beb41843c192ea0d9b763c8691da465a7faeea234f92274dcf6760cb77803ca",
+      "size": 6654,
+      "normalized_sha256": "1beb41843c192ea0d9b763c8691da465a7faeea234f92274dcf6760cb77803ca"
+    },
     "website/src/scripts/main.ts": {
       "role": "index",
-      "sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61",
-      "size": 38754,
-      "normalized_sha256": "cb919fdabbcd90d958cfeb87665fd19567a706bcac059e7ea9d5823472b0ea61"
+      "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db",
+      "size": 56633,
+      "normalized_sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+    },
+    "website/src/scripts/mobile-navigation.ts": {
+      "role": "index",
+      "sha256": "89a404978fa6aa1ef6d16e2ae5fbd92b29c31da04c82cf0ed021e2c12aa4a956",
+      "size": 4051,
+      "normalized_sha256": "89a404978fa6aa1ef6d16e2ae5fbd92b29c31da04c82cf0ed021e2c12aa4a956"
+    },
+    "website/src/scripts/mobile-presentation-math.ts": {
+      "role": "index",
+      "sha256": "851f6b4e307871372ae14386d255ccfd04fdb5ac43ce39ac69a102f565748136",
+      "size": 4037,
+      "normalized_sha256": "851f6b4e307871372ae14386d255ccfd04fdb5ac43ce39ac69a102f565748136"
+    },
+    "website/src/scripts/mobile-presentation.ts": {
+      "role": "index",
+      "sha256": "78609d874619bc679e45e0842496997641b8d21c55cd634a1344436761c00911",
+      "size": 10167,
+      "normalized_sha256": "78609d874619bc679e45e0842496997641b8d21c55cd634a1344436761c00911"
+    },
+    "website/src/scripts/mobile-progress-math.ts": {
+      "role": "index",
+      "sha256": "d6f79985f4e33bf6f861defebbf76651d16ba62ae2372df5a3df2f864465ffc2",
+      "size": 1007,
+      "normalized_sha256": "d6f79985f4e33bf6f861defebbf76651d16ba62ae2372df5a3df2f864465ffc2"
+    },
+    "website/src/scripts/mobile-progress.ts": {
+      "role": "index",
+      "sha256": "7c2c18939a712cad7954b19862c65f08bb029fdf5a20d65df933dba282e854cd",
+      "size": 3044,
+      "normalized_sha256": "7c2c18939a712cad7954b19862c65f08bb029fdf5a20d65df933dba282e854cd"
+    },
+    "website/src/scripts/mobile-reading.ts": {
+      "role": "index",
+      "sha256": "21f47e28c4eb97aff7d5fe8a843837290daf220c1fdebb04fd411399ce51f8fd",
+      "size": 846,
+      "normalized_sha256": "21f47e28c4eb97aff7d5fe8a843837290daf220c1fdebb04fd411399ce51f8fd"
+    },
+    "website/src/scripts/mobile-touch-math.ts": {
+      "role": "index",
+      "sha256": "d3d1479b857ce466536827803ec50676f7ac8aacc78cd436423abb737e40dbc6",
+      "size": 6869,
+      "normalized_sha256": "d3d1479b857ce466536827803ec50676f7ac8aacc78cd436423abb737e40dbc6"
+    },
+    "website/src/scripts/mobile-touch.ts": {
+      "role": "index",
+      "sha256": "b6d242fd416f977a2f99054bf02bfa5457d4a0551a18197948bcff87e1f15f88",
+      "size": 10783,
+      "normalized_sha256": "b6d242fd416f977a2f99054bf02bfa5457d4a0551a18197948bcff87e1f15f88"
     },
     "website/src/scripts/presentation-state.ts": {
       "role": "index",
@@ -4709,39 +4989,45 @@
     },
     "website/src/scripts/replay-cards.ts": {
       "role": "index",
-      "sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12",
-      "size": 6564,
-      "normalized_sha256": "23def624ffccd44972f09fb7e9c96572536262745541df39505ce7470abbff12"
+      "sha256": "13364abaa49c0d8e3d219d286cdd098dbbbcb6d5ed1f784fe2becd005bb74ae6",
+      "size": 4507,
+      "normalized_sha256": "13364abaa49c0d8e3d219d286cdd098dbbbcb6d5ed1f784fe2becd005bb74ae6"
+    },
+    "website/src/scripts/scene-commit.ts": {
+      "role": "index",
+      "sha256": "80c1eef75a14d7666e6126fb1447cca7fe540ad7ebfe685e705cac1a22e1794a",
+      "size": 863,
+      "normalized_sha256": "80c1eef75a14d7666e6126fb1447cca7fe540ad7ebfe685e705cac1a22e1794a"
     },
     "website/src/scripts/scene-contract.ts": {
       "role": "index",
-      "sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9",
-      "size": 3301,
-      "normalized_sha256": "c02a8d7319a6487187275dfb5f43fe3873d520b8d7db0c412f0b2d0ed93fa8d9"
+      "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250",
+      "size": 3997,
+      "normalized_sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
     },
     "website/src/scripts/scene-performance.ts": {
       "role": "index",
-      "sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205",
-      "size": 4858,
-      "normalized_sha256": "33e498c343803586c6a8bf369b03f9bd9f0fd3e91b40bfa8527fcf89d3422205"
+      "sha256": "1e9bd513ecb950e1f660fa17c892492a7e348dca79b25657dd7b93d6dbdc537a",
+      "size": 6371,
+      "normalized_sha256": "1e9bd513ecb950e1f660fa17c892492a7e348dca79b25657dd7b93d6dbdc537a"
     },
     "website/src/scripts/scoring-feedback.ts": {
       "role": "index",
-      "sha256": "9c1a9f685a5e153f9c29718962c43a0077ea45aae6119bf6592c230ee3ee3427",
-      "size": 7832,
-      "normalized_sha256": "9c1a9f685a5e153f9c29718962c43a0077ea45aae6119bf6592c230ee3ee3427"
+      "sha256": "2e33b671602c5159353748e2201daf0ca58fac556b722cd5e967fa420d9c38bb",
+      "size": 3441,
+      "normalized_sha256": "2e33b671602c5159353748e2201daf0ca58fac556b722cd5e967fa420d9c38bb"
     },
     "website/src/scripts/screenshot-viewer.ts": {
       "role": "index",
-      "sha256": "dc8b49b2af3ac04d06fcadbb8833140fdb8bc2725b8147dc64f2de93103fbfac",
-      "size": 8886,
-      "normalized_sha256": "dc8b49b2af3ac04d06fcadbb8833140fdb8bc2725b8147dc64f2de93103fbfac"
+      "sha256": "033b46b306824e9a603d8394c807b2d2a3540738b929a0c85d35be1e7e4eb4bf",
+      "size": 9069,
+      "normalized_sha256": "033b46b306824e9a603d8394c807b2d2a3540738b929a0c85d35be1e7e4eb4bf"
     },
     "website/src/scripts/shaders/court.ts": {
       "role": "index",
-      "sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc",
-      "size": 4163,
-      "normalized_sha256": "e72f0e00aaf228ae41c3052af64c71cd8494644e72d63dd27445ef78942a14dc"
+      "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429",
+      "size": 4943,
+      "normalized_sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
     },
     "website/src/scripts/shot-feedback.ts": {
       "role": "index",
@@ -4749,17 +5035,35 @@
       "size": 2525,
       "normalized_sha256": "7437084f66f5e288c06d9d72693a864c7c268ea50aa4721c58da771666fc9ff4"
     },
+    "website/src/scripts/shot-motion.ts": {
+      "role": "index",
+      "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4",
+      "size": 5766,
+      "normalized_sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+    },
     "website/src/scripts/shot-timing.ts": {
       "role": "index",
-      "sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151",
-      "size": 2588,
-      "normalized_sha256": "9c5bb983fbd6f3473101c36daac7e62bb90ea5a341cc7f3a623fd40ef9856151"
+      "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38",
+      "size": 3083,
+      "normalized_sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+    },
+    "website/src/scripts/story-choreography.ts": {
+      "role": "index",
+      "sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708",
+      "size": 10825,
+      "normalized_sha256": "1e797bf9341e4600dc269ef4cae6b58a4bd9a3d59087339fa06d8604416a6708"
     },
     "website/src/scripts/story-pose.ts": {
       "role": "index",
-      "sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12",
-      "size": 3440,
-      "normalized_sha256": "fc0c8d77dae8017fca83aa29ec62d5098103b0d5f6fcdc380ee0105a1d212d12"
+      "sha256": "945b9894178af6ebee578b6c2065b457f2da8a6510e5d733a4caf36816de965a",
+      "size": 5232,
+      "normalized_sha256": "945b9894178af6ebee578b6c2065b457f2da8a6510e5d733a4caf36816de965a"
+    },
+    "website/src/styles/chapter-rail.css": {
+      "role": "index",
+      "sha256": "a1164da2272f851adfe6039675778e4d5b25e0dbac37fb50cb30b1b64a537ef7",
+      "size": 5706,
+      "normalized_sha256": "a1164da2272f851adfe6039675778e4d5b25e0dbac37fb50cb30b1b64a537ef7"
     },
     "website/src/styles/community.css": {
       "role": "index",
@@ -4769,21 +5073,51 @@
     },
     "website/src/styles/demo-invitation.css": {
       "role": "index",
-      "sha256": "62301bf008524724c1f57057830385ddca2ce93bdaeb82464bca2bd3f9c8a8cb",
-      "size": 2589,
-      "normalized_sha256": "62301bf008524724c1f57057830385ddca2ce93bdaeb82464bca2bd3f9c8a8cb"
+      "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94",
+      "size": 1352,
+      "normalized_sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
     },
     "website/src/styles/download-chooser.css": {
       "role": "index",
-      "sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9",
-      "size": 4254,
-      "normalized_sha256": "86ff20d9f49c8bfac53dafd3f08519b1de0b491933c4e081bdf268f21b59cbd9"
+      "sha256": "d8f91b26744933fe8b18b7c74e2f2668f5cc4dd8bb4e2dce851c206148f94ed2",
+      "size": 4204,
+      "normalized_sha256": "d8f91b26744933fe8b18b7c74e2f2668f5cc4dd8bb4e2dce851c206148f94ed2"
+    },
+    "website/src/styles/immersive-glass.css": {
+      "role": "index",
+      "sha256": "2e4328537b0fbe2f7b87234e03fcd81a171df8708bd6fdfd6a6d9ac27590cb42",
+      "size": 4448,
+      "normalized_sha256": "2e4328537b0fbe2f7b87234e03fcd81a171df8708bd6fdfd6a6d9ac27590cb42"
     },
     "website/src/styles/mobile-download-polish.css": {
       "role": "index",
       "sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea",
       "size": 4699,
       "normalized_sha256": "875787f8ea0dbc24c22c230535db95335bd7d65af5097405540e35aea91726ea"
+    },
+    "website/src/styles/mobile-layout.css": {
+      "role": "index",
+      "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da",
+      "size": 12194,
+      "normalized_sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+    },
+    "website/src/styles/mobile-motion.css": {
+      "role": "index",
+      "sha256": "b795270f612c6e4196f27caac8480c8b48edce23a195a2c11d6692556f4b12cb",
+      "size": 882,
+      "normalized_sha256": "b795270f612c6e4196f27caac8480c8b48edce23a195a2c11d6692556f4b12cb"
+    },
+    "website/src/styles/mobile-navigation.css": {
+      "role": "index",
+      "sha256": "ae73189e23559c5776bb82137bcf1933b0fcf180ec8377341adc91757ada165e",
+      "size": 4920,
+      "normalized_sha256": "ae73189e23559c5776bb82137bcf1933b0fcf180ec8377341adc91757ada165e"
+    },
+    "website/src/styles/poster-layout.css": {
+      "role": "index",
+      "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa",
+      "size": 45243,
+      "normalized_sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
     },
     "website/src/styles/refinement.css": {
       "role": "index",
@@ -4797,11 +5131,17 @@
       "size": 5701,
       "normalized_sha256": "9163371059a94cafe149844f582c0054acd43857f91b3825e532811ff3091ebe"
     },
+    "website/src/styles/screenshot-viewer.css": {
+      "role": "index",
+      "sha256": "5c945417b85251f0cee580db5b5e8881056c5586b52567fdef3fcca7e046346a",
+      "size": 5102,
+      "normalized_sha256": "5c945417b85251f0cee580db5b5e8881056c5586b52567fdef3fcca7e046346a"
+    },
     "website/src/styles/site.css": {
       "role": "index",
-      "sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87",
-      "size": 56013,
-      "normalized_sha256": "732c51e51ce26c5a0e16a5bd41ec7017212fe046eaee2d13e8a84208deed8a87"
+      "sha256": "76aa18e13f651c15df6905c33cb28b99ea7194851ba3c342ddac232fab51a655",
+      "size": 12739,
+      "normalized_sha256": "76aa18e13f651c15df6905c33cb28b99ea7194851ba3c342ddac232fab51a655"
     },
     "website/tests/active-gpu-driver-lifecycle.test.ts": {
       "role": "observe",
@@ -4817,9 +5157,15 @@
     },
     "website/tests/android-update.test.ts": {
       "role": "observe",
-      "sha256": "c80565db3becd3d28f7523f6c8981469088fa1c6d24b7138a47612f9b9751e2a",
+      "sha256": "0b9d8a1ff8e40851238a19778c5f1a00a84b23497d1e2842cdfc28f03bdbce47",
       "size": 4785,
-      "normalized_sha256": "c80565db3becd3d28f7523f6c8981469088fa1c6d24b7138a47612f9b9751e2a"
+      "normalized_sha256": "0b9d8a1ff8e40851238a19778c5f1a00a84b23497d1e2842cdfc28f03bdbce47"
+    },
+    "website/tests/animation-clock.test.ts": {
+      "role": "observe",
+      "sha256": "747896625c5cca7728f4712586726a8f54fc17cbddc96c030a007904532f9099",
+      "size": 3124,
+      "normalized_sha256": "747896625c5cca7728f4712586726a8f54fc17cbddc96c030a007904532f9099"
     },
     "website/tests/build-artifact.test.ts": {
       "role": "observe",
@@ -4829,15 +5175,63 @@
     },
     "website/tests/camera-placement.test.ts": {
       "role": "observe",
-      "sha256": "558a0334bbcef6b4910934b658297b4a5d730e9abf39073bc504789e668a4117",
-      "size": 13371,
-      "normalized_sha256": "558a0334bbcef6b4910934b658297b4a5d730e9abf39073bc504789e668a4117"
+      "sha256": "ed649053043f506b98fede14eef6c66ef2a2b8c74dc5368c58c8412ac64ab941",
+      "size": 29236,
+      "normalized_sha256": "ed649053043f506b98fede14eef6c66ef2a2b8c74dc5368c58c8412ac64ab941"
+    },
+    "website/tests/camera-track.test.ts": {
+      "role": "observe",
+      "sha256": "1ac7f5bd70b7e406db41de6dbfe02d6432ec03bf7677fd89d42e4549b4e18327",
+      "size": 10584,
+      "normalized_sha256": "1ac7f5bd70b7e406db41de6dbfe02d6432ec03bf7677fd89d42e4549b4e18327"
+    },
+    "website/tests/chapter-liquid.spec.ts": {
+      "role": "observe",
+      "sha256": "dea1587432a297a1ad148585a629167c33c97c7b3e11fdf9ce69c0afe59a304a",
+      "size": 14690,
+      "normalized_sha256": "dea1587432a297a1ad148585a629167c33c97c7b3e11fdf9ce69c0afe59a304a"
     },
     "website/tests/chapter-polish.spec.ts": {
       "role": "observe",
-      "sha256": "944a701ceeb6f7a4d306b3613abba41718e2f12a1821272fc39b6af0d726dcd6",
-      "size": 9781,
-      "normalized_sha256": "944a701ceeb6f7a4d306b3613abba41718e2f12a1821272fc39b6af0d726dcd6"
+      "sha256": "4cb9f54c5dfdac71bebe50e06d2551cfac1139b4234f5119cbd92b2c1821fb7e",
+      "size": 9858,
+      "normalized_sha256": "4cb9f54c5dfdac71bebe50e06d2551cfac1139b4234f5119cbd92b2c1821fb7e"
+    },
+    "website/tests/chapter-rail-math.test.ts": {
+      "role": "observe",
+      "sha256": "13aaa851ddc975c904d83e988a33955121f1089bc5b2b8f1126b1a1c244de108",
+      "size": 12507,
+      "normalized_sha256": "13aaa851ddc975c904d83e988a33955121f1089bc5b2b8f1126b1a1c244de108"
+    },
+    "website/tests/chapter-rail-recovery.spec.ts": {
+      "role": "observe",
+      "sha256": "35f524c3272c22a285a1de23b41d297b8bec165fd9398332d16f45117ce6c11d",
+      "size": 4723,
+      "normalized_sha256": "35f524c3272c22a285a1de23b41d297b8bec165fd9398332d16f45117ce6c11d"
+    },
+    "website/tests/chapter-rail.spec.ts": {
+      "role": "observe",
+      "sha256": "1eca19d7924ead0cbcff33b283abc6847b6f950fedff3021676b2dac82455926",
+      "size": 28505,
+      "normalized_sha256": "1eca19d7924ead0cbcff33b283abc6847b6f950fedff3021676b2dac82455926"
+    },
+    "website/tests/chapter-scroll.test.ts": {
+      "role": "observe",
+      "sha256": "78c352af2162974919c5a5691558877ac182faef1f693713653dcdc72552d05f",
+      "size": 54681,
+      "normalized_sha256": "78c352af2162974919c5a5691558877ac182faef1f693713653dcdc72552d05f"
+    },
+    "website/tests/chapter-snap-recovery.spec.ts": {
+      "role": "observe",
+      "sha256": "7bad917163288ea14d4568ea7908c6f7693d76442a3fe1546e224cbb835826b4",
+      "size": 34479,
+      "normalized_sha256": "7bad917163288ea14d4568ea7908c6f7693d76442a3fe1546e224cbb835826b4"
+    },
+    "website/tests/chapter-snap.spec.ts": {
+      "role": "observe",
+      "sha256": "ff3cd704bd31720f5f7eed70ae9fd4a61ea71e3ad038a59577cb4d6400124af3",
+      "size": 26238,
+      "normalized_sha256": "ff3cd704bd31720f5f7eed70ae9fd4a61ea71e3ad038a59577cb4d6400124af3"
     },
     "website/tests/ci-runtime-sampler.test.ts": {
       "role": "observe",
@@ -4851,29 +5245,59 @@
       "size": 2338,
       "normalized_sha256": "d43ab04618dbad4541adb277fb2a5c689d5490cc8497206fbf787821576272bc"
     },
+    "website/tests/component-refinement.spec.ts": {
+      "role": "observe",
+      "sha256": "dd2d1e6f504a797d6aacc2979e21b58c3d1113de3eceb9152c24f3d0e908c46e",
+      "size": 5297,
+      "normalized_sha256": "dd2d1e6f504a797d6aacc2979e21b58c3d1113de3eceb9152c24f3d0e908c46e"
+    },
     "website/tests/controlled-clock.ts": {
       "role": "observe",
-      "sha256": "469906a29e5b976e808565957a226d504c2b636ae00e161e4c71573552eba704",
-      "size": 486,
-      "normalized_sha256": "469906a29e5b976e808565957a226d504c2b636ae00e161e4c71573552eba704"
+      "sha256": "91caac94e5b2fcc2439e4fb3e3da64bb193b81d7ee649cf8998b46fd6b03894a",
+      "size": 959,
+      "normalized_sha256": "91caac94e5b2fcc2439e4fb3e3da64bb193b81d7ee649cf8998b46fd6b03894a"
     },
     "website/tests/court-continuity.spec.ts": {
       "role": "observe",
-      "sha256": "6fd8ae1445d2ca11293a3e6664d777d22bea5f331e7c8fba88e1cba3202ac72e",
-      "size": 55376,
-      "normalized_sha256": "6fd8ae1445d2ca11293a3e6664d777d22bea5f331e7c8fba88e1cba3202ac72e"
+      "sha256": "e179f6a584a44a77ff7ffaa3dd39d94cc2c71916047ca5f7ffacde31cc62641d",
+      "size": 64414,
+      "normalized_sha256": "e179f6a584a44a77ff7ffaa3dd39d94cc2c71916047ca5f7ffacde31cc62641d"
     },
     "website/tests/court-floor.test.ts": {
       "role": "observe",
-      "sha256": "4169c5a4fa5f449153263d71dc0615a4219fb22931d85eea70dc8a92293d6e64",
-      "size": 2390,
-      "normalized_sha256": "4169c5a4fa5f449153263d71dc0615a4219fb22931d85eea70dc8a92293d6e64"
+      "sha256": "025f559bd558839c4882dfb96d676dd95d6e4bf0a96704f13b49b9e11346cf45",
+      "size": 14827,
+      "normalized_sha256": "025f559bd558839c4882dfb96d676dd95d6e4bf0a96704f13b49b9e11346cf45"
     },
     "website/tests/court-hardware.test.ts": {
       "role": "observe",
-      "sha256": "d49f81a3125bd041fc84583a50f2ec153d741e47dfbe7da8f4f72683a17cc8b9",
-      "size": 5175,
-      "normalized_sha256": "d49f81a3125bd041fc84583a50f2ec153d741e47dfbe7da8f4f72683a17cc8b9"
+      "sha256": "79578b1f6425a9a154efeda6800b35866efd4864026f7f436848e582e85e3f58",
+      "size": 14144,
+      "normalized_sha256": "79578b1f6425a9a154efeda6800b35866efd4864026f7f436848e582e85e3f58"
+    },
+    "website/tests/court-lighting.test.ts": {
+      "role": "observe",
+      "sha256": "198a8ec853b8b21f43dc0567f16c47ed9b315de70128b65ca376bcadc395c24f",
+      "size": 829,
+      "normalized_sha256": "198a8ec853b8b21f43dc0567f16c47ed9b315de70128b65ca376bcadc395c24f"
+    },
+    "website/tests/demo-court-art.spec.ts": {
+      "role": "observe",
+      "sha256": "c6c7d45bc329724857dbf4507bf711d59d9e64da6a37f81b8d732494c722c3ec",
+      "size": 20339,
+      "normalized_sha256": "c6c7d45bc329724857dbf4507bf711d59d9e64da6a37f81b8d732494c722c3ec"
+    },
+    "website/tests/demo-court-assets.test.ts": {
+      "role": "observe",
+      "sha256": "d517ead0885d31cd921cacd9d51c22b1031c1110dad42e9641d7b8841efde09d",
+      "size": 5260,
+      "normalized_sha256": "d517ead0885d31cd921cacd9d51c22b1031c1110dad42e9641d7b8841efde09d"
+    },
+    "website/tests/demo-court-registration.test.ts": {
+      "role": "observe",
+      "sha256": "d99e92127dc6c7aaa412f1123de52111043d4fbb51be06e7f4fe6f692ebeb19d",
+      "size": 2059,
+      "normalized_sha256": "d99e92127dc6c7aaa412f1123de52111043d4fbb51be06e7f4fe6f692ebeb19d"
     },
     "website/tests/demo.test.ts": {
       "role": "observe",
@@ -4881,35 +5305,131 @@
       "size": 2174,
       "normalized_sha256": "a102f52c57df181938e918ff9ddcaa4b059abb29448424b71177b81ab3f675bf"
     },
+    "website/tests/download-community-polish.spec.ts": {
+      "role": "observe",
+      "sha256": "b3993181bb5128657ce0c730147926f206c40762b02ebb64d400af5d11a9677f",
+      "size": 27012,
+      "normalized_sha256": "b3993181bb5128657ce0c730147926f206c40762b02ebb64d400af5d11a9677f"
+    },
     "website/tests/download-contract.test.ts": {
       "role": "observe",
-      "sha256": "295dac3304cf7aa5a318916f16bb7db80f3f9ba45a6ee1dc70a01e741e791c96",
-      "size": 2318,
-      "normalized_sha256": "295dac3304cf7aa5a318916f16bb7db80f3f9ba45a6ee1dc70a01e741e791c96"
+      "sha256": "8dc8961e317df75a206b701aa85606c3c3c6b1acd6111c81554e6461bfdaddcc",
+      "size": 2451,
+      "normalized_sha256": "8dc8961e317df75a206b701aa85606c3c3c6b1acd6111c81554e6461bfdaddcc"
+    },
+    "website/tests/experience-polish.spec.ts": {
+      "role": "observe",
+      "sha256": "09d81731a21b7b6da2c1781ef037f0476ee5c4778c04d1075681f0f208d5b5da",
+      "size": 24866,
+      "normalized_sha256": "09d81731a21b7b6da2c1781ef037f0476ee5c4778c04d1075681f0f208d5b5da"
     },
     "website/tests/font-assets.test.ts": {
       "role": "observe",
-      "sha256": "ea6553ef1d6774bdab965a914584ede24e9f6ba982798918246fa646ddde0eba",
-      "size": 5850,
-      "normalized_sha256": "ea6553ef1d6774bdab965a914584ede24e9f6ba982798918246fa646ddde0eba"
+      "sha256": "7257fe7c3fa3e28745430c6186ce0425d7f3a40533a099b656a1b623a1c4b980",
+      "size": 8959,
+      "normalized_sha256": "7257fe7c3fa3e28745430c6186ce0425d7f3a40533a099b656a1b623a1c4b980"
+    },
+    "website/tests/font-subset.test.ts": {
+      "role": "observe",
+      "sha256": "805018f39227282df96ae17af53e2e0c4d4ab53e9cd074d43c26de66b7735fd8",
+      "size": 7150,
+      "normalized_sha256": "805018f39227282df96ae17af53e2e0c4d4ab53e9cd074d43c26de66b7735fd8"
+    },
+    "website/tests/glass-material.test.ts": {
+      "role": "observe",
+      "sha256": "7fcb277e843c8964bf0fee95542b48f67b0e3cc7e87341d563b4fe92c064432c",
+      "size": 1390,
+      "normalized_sha256": "7fcb277e843c8964bf0fee95542b48f67b0e3cc7e87341d563b4fe92c064432c"
+    },
+    "website/tests/glass-renderer.test.ts": {
+      "role": "observe",
+      "sha256": "bf74cbe7f7758aff7d4ed52fe190abec4f640232761d892b8a4037def5d3fa7d",
+      "size": 5216,
+      "normalized_sha256": "bf74cbe7f7758aff7d4ed52fe190abec4f640232761d892b8a4037def5d3fa7d"
     },
     "website/tests/gpu-measurement.test.ts": {
       "role": "observe",
-      "sha256": "7da71b60455591f58bd8d80a212d19157a2a286937bc175b9b3fb5f331217b5f",
-      "size": 5435,
-      "normalized_sha256": "7da71b60455591f58bd8d80a212d19157a2a286937bc175b9b3fb5f331217b5f"
+      "sha256": "fca1d06682e8f3fb4b6a1d13b83bb9635b6bb8bf6a94dbca63099c52cfa92f34",
+      "size": 7847,
+      "normalized_sha256": "fca1d06682e8f3fb4b6a1d13b83bb9635b6bb8bf6a94dbca63099c52cfa92f34"
     },
     "website/tests/gpu-wheel-input.test.ts": {
       "role": "observe",
-      "sha256": "27ba124a3589e0c552eca6ac2dbbd1f1f0f0524fc8e10be085f74087b1ac5573",
-      "size": 9749,
-      "normalized_sha256": "27ba124a3589e0c552eca6ac2dbbd1f1f0f0524fc8e10be085f74087b1ac5573"
+      "sha256": "c91d9ece6eee09ae3840c43f0dd08d7c4cbe5e74dc1f0f9e3002e33c634f6a0b",
+      "size": 14202,
+      "normalized_sha256": "c91d9ece6eee09ae3840c43f0dd08d7c4cbe5e74dc1f0f9e3002e33c634f6a0b"
+    },
+    "website/tests/immersive-camera.test.ts": {
+      "role": "observe",
+      "sha256": "08892bfe8d4d10fa082abd508dd4b0323d0a458c6c66731592c3813c631dfe18",
+      "size": 1663,
+      "normalized_sha256": "08892bfe8d4d10fa082abd508dd4b0323d0a458c6c66731592c3813c631dfe18"
+    },
+    "website/tests/immersive-glass.spec.ts": {
+      "role": "observe",
+      "sha256": "1a238479a26c29d3f720ce5b6f604185325d7ee71c51ad54893651f27136d972",
+      "size": 14207,
+      "normalized_sha256": "1a238479a26c29d3f720ce5b6f604185325d7ee71c51ad54893651f27136d972"
     },
     "website/tests/loading-navigation.spec.ts": {
       "role": "observe",
-      "sha256": "21e88e7a76fdcb3155cf2aba5d7282b01a996f53a3b80d5ab235c741eef0b18f",
-      "size": 12890,
-      "normalized_sha256": "21e88e7a76fdcb3155cf2aba5d7282b01a996f53a3b80d5ab235c741eef0b18f"
+      "sha256": "794981bed5efebe97bda1e18d7a2aa2041592ab22b045976878d9cbff7ced805",
+      "size": 12391,
+      "normalized_sha256": "794981bed5efebe97bda1e18d7a2aa2041592ab22b045976878d9cbff7ced805"
+    },
+    "website/tests/material-data.test.ts": {
+      "role": "observe",
+      "sha256": "052f34fff8401d5586c0638fb6c4745587d4ad78ab847aeb5622d913ee94ead6",
+      "size": 1226,
+      "normalized_sha256": "052f34fff8401d5586c0638fb6c4745587d4ad78ab847aeb5622d913ee94ead6"
+    },
+    "website/tests/mobile-assets.test.ts": {
+      "role": "observe",
+      "sha256": "8e35ca96643d00358d3951c164f4798c7b858029ce84f2d65ab516194ce3a060",
+      "size": 2735,
+      "normalized_sha256": "8e35ca96643d00358d3951c164f4798c7b858029ce84f2d65ab516194ce3a060"
+    },
+    "website/tests/mobile-experience.spec.ts": {
+      "role": "observe",
+      "sha256": "fd287ecd6d72013826027b26c08faa12151f38242fec2d1b96edff1e5b7b39a6",
+      "size": 26446,
+      "normalized_sha256": "fd287ecd6d72013826027b26c08faa12151f38242fec2d1b96edff1e5b7b39a6"
+    },
+    "website/tests/mobile-presentation.test.ts": {
+      "role": "observe",
+      "sha256": "785e77c865f29b60265ad2917fd4a5e8b0fb65f067707b2db89afc5ae6aee794",
+      "size": 4819,
+      "normalized_sha256": "785e77c865f29b60265ad2917fd4a5e8b0fb65f067707b2db89afc5ae6aee794"
+    },
+    "website/tests/mobile-progress.test.ts": {
+      "role": "observe",
+      "sha256": "13efe0e2361735b58a44b424ceaeffad824b785b25f4aa1bd6928e4b38484fbd",
+      "size": 2667,
+      "normalized_sha256": "13efe0e2361735b58a44b424ceaeffad824b785b25f4aa1bd6928e4b38484fbd"
+    },
+    "website/tests/mobile-snap.spec.ts": {
+      "role": "observe",
+      "sha256": "cab9ef5c7379a85a5b4cceb8d490f3911bfa7da6cccb795a33c39b7dda948de6",
+      "size": 15150,
+      "normalized_sha256": "cab9ef5c7379a85a5b4cceb8d490f3911bfa7da6cccb795a33c39b7dda948de6"
+    },
+    "website/tests/mobile-touch.test.ts": {
+      "role": "observe",
+      "sha256": "d750b7bf17de4e5c120eb9d0d9be3c4d7eec18648ab8b42987bc98b869f0ea2b",
+      "size": 6810,
+      "normalized_sha256": "d750b7bf17de4e5c120eb9d0d9be3c4d7eec18648ab8b42987bc98b869f0ea2b"
+    },
+    "website/tests/poster-choreography.test.ts": {
+      "role": "observe",
+      "sha256": "ffffc7d91655844f267c04a6ad9b605412f544008b29bf43ae44efaed6df1d72",
+      "size": 3993,
+      "normalized_sha256": "ffffc7d91655844f267c04a6ad9b605412f544008b29bf43ae44efaed6df1d72"
+    },
+    "website/tests/poster-story.spec.ts": {
+      "role": "observe",
+      "sha256": "00e9b6246ae13a7d32779a0675fa2b850c073b43413ba7a82bfa1e5a92431e54",
+      "size": 42434,
+      "normalized_sha256": "00e9b6246ae13a7d32779a0675fa2b850c073b43413ba7a82bfa1e5a92431e54"
     },
     "website/tests/prepare-download.test.ts": {
       "role": "observe",
@@ -4917,11 +5437,23 @@
       "size": 10868,
       "normalized_sha256": "a007d03a10d56b9a642b269b294d9be5bafda5b0d97c79dd904141a45564207b"
     },
+    "website/tests/reading-ready.ts": {
+      "role": "observe",
+      "sha256": "6cc26380d8973aaf291eccfb11432a4cbc20ea8b3b834f201ed5a7e908fb058e",
+      "size": 1712,
+      "normalized_sha256": "6cc26380d8973aaf291eccfb11432a4cbc20ea8b3b834f201ed5a7e908fb058e"
+    },
     "website/tests/replay-example.test.ts": {
       "role": "observe",
-      "sha256": "a3da035d2a8d9828dd782730ca1d6eeac6379baeba1a4f4f32233d56bf91aa35",
-      "size": 4904,
-      "normalized_sha256": "a3da035d2a8d9828dd782730ca1d6eeac6379baeba1a4f4f32233d56bf91aa35"
+      "sha256": "2a4b18d24e6caada393344e3f17393004baffbe258e9603fe11fd7628e5431ce",
+      "size": 8508,
+      "normalized_sha256": "2a4b18d24e6caada393344e3f17393004baffbe258e9603fe11fd7628e5431ce"
+    },
+    "website/tests/replay-polish.spec.ts": {
+      "role": "observe",
+      "sha256": "d751d0c00df6cbdbd63c29228632af34a49f741040ab175bcd275b39d22d608d",
+      "size": 19260,
+      "normalized_sha256": "d751d0c00df6cbdbd63c29228632af34a49f741040ab175bcd275b39d22d608d"
     },
     "website/tests/resources.test.ts": {
       "role": "observe",
@@ -4929,23 +5461,47 @@
       "size": 2857,
       "normalized_sha256": "ab36f1d4ae107a9a6f53a27cd3096bc6878cee72847357a6232f7774280a1e88"
     },
+    "website/tests/scene-commit.test.ts": {
+      "role": "observe",
+      "sha256": "6372d39dcf185ba60dfef0e2c6590bbd5213ce6614b8e02ac2f83e23a1ed04b1",
+      "size": 2716,
+      "normalized_sha256": "6372d39dcf185ba60dfef0e2c6590bbd5213ce6614b8e02ac2f83e23a1ed04b1"
+    },
     "website/tests/scene-provenance.test.ts": {
       "role": "observe",
       "sha256": "0b74e95e3ed5b4d6cc8e4e8f690d74d893c3fa17aff148704703ea508a3f38e9",
       "size": 1037,
       "normalized_sha256": "0b74e95e3ed5b4d6cc8e4e8f690d74d893c3fa17aff148704703ea508a3f38e9"
     },
+    "website/tests/scene-quality.test.ts": {
+      "role": "observe",
+      "sha256": "8f5b50e06af4d7821688188b0d6263ee55c51b70397519ba570d70153c0df5e4",
+      "size": 2583,
+      "normalized_sha256": "8f5b50e06af4d7821688188b0d6263ee55c51b70397519ba570d70153c0df5e4"
+    },
     "website/tests/scene.test.ts": {
       "role": "observe",
-      "sha256": "bebdc70d36a8a318b902c2f8a9944d45135a6397ebd65cce35113494fc9ec512",
-      "size": 12319,
-      "normalized_sha256": "bebdc70d36a8a318b902c2f8a9944d45135a6397ebd65cce35113494fc9ec512"
+      "sha256": "e38c38e2d57314fd62e7f36c97df180c7c9b96a71385d101d976043a24badab5",
+      "size": 12195,
+      "normalized_sha256": "e38c38e2d57314fd62e7f36c97df180c7c9b96a71385d101d976043a24badab5"
+    },
+    "website/tests/scoring-polish.spec.ts": {
+      "role": "observe",
+      "sha256": "8842d07d286d4522d13ab67de03b4b05f8a0d4fefe511340f0631d3edf7700f6",
+      "size": 15899,
+      "normalized_sha256": "8842d07d286d4522d13ab67de03b4b05f8a0d4fefe511340f0631d3edf7700f6"
     },
     "website/tests/screenshot-presentation.test.ts": {
       "role": "observe",
       "sha256": "45490c924c7e7979051ebf6872b337887f0969e24e4ded2758c87e03caa05681",
       "size": 2634,
       "normalized_sha256": "45490c924c7e7979051ebf6872b337887f0969e24e4ded2758c87e03caa05681"
+    },
+    "website/tests/scroll-audit.ts": {
+      "role": "observe",
+      "sha256": "4e2b45dbf69728ff009c18bb783a7942e2e10bb3c4ebe86acf4948a44a832fdc",
+      "size": 2994,
+      "normalized_sha256": "4e2b45dbf69728ff009c18bb783a7942e2e10bb3c4ebe86acf4948a44a832fdc"
     },
     "website/tests/shot-continuation.test.ts": {
       "role": "observe",
@@ -4955,21 +5511,45 @@
     },
     "website/tests/shot-feedback.test.ts": {
       "role": "observe",
-      "sha256": "ac049e840a12dc442049712db5af3cdc8cc446ee14b9fb4cc12cfdc1153d0581",
-      "size": 1486,
-      "normalized_sha256": "ac049e840a12dc442049712db5af3cdc8cc446ee14b9fb4cc12cfdc1153d0581"
+      "sha256": "1454c0f7ebfc37763772a053f0cdb046f16206ad7e2f5c1cb235b8b40b21bd60",
+      "size": 2613,
+      "normalized_sha256": "1454c0f7ebfc37763772a053f0cdb046f16206ad7e2f5c1cb235b8b40b21bd60"
+    },
+    "website/tests/shot-motion.test.ts": {
+      "role": "observe",
+      "sha256": "17b9cb96215f5a66d74e6c65e815fc2e6398238df56c1f1e9e895c6d773356f7",
+      "size": 6243,
+      "normalized_sha256": "17b9cb96215f5a66d74e6c65e815fc2e6398238df56c1f1e9e895c6d773356f7"
     },
     "website/tests/site-audit.spec.ts": {
       "role": "observe",
-      "sha256": "2c6debd337ebdf82eb170ed8a73e5fb31b825ab2ad4490912c30209e314bbd2f",
-      "size": 47433,
-      "normalized_sha256": "2c6debd337ebdf82eb170ed8a73e5fb31b825ab2ad4490912c30209e314bbd2f"
+      "sha256": "a487f6d945a59106ca2f0eb13bd6c30fa9b6733a7cb3faa3636195b811fb7c68",
+      "size": 51160,
+      "normalized_sha256": "a487f6d945a59106ca2f0eb13bd6c30fa9b6733a7cb3faa3636195b811fb7c68"
     },
     "website/tests/site.spec.ts": {
       "role": "observe",
-      "sha256": "a7c7c994e2ce8d068428e31dbff1cc36bdca6b5a3ef646ddd25a61ee2da541bc",
-      "size": 141433,
-      "normalized_sha256": "a7c7c994e2ce8d068428e31dbff1cc36bdca6b5a3ef646ddd25a61ee2da541bc"
+      "sha256": "c90ec635f8ee558fc74ce874ca3290cbf3f6f66a268d30dd6dafd1722c1c2384",
+      "size": 167278,
+      "normalized_sha256": "c90ec635f8ee558fc74ce874ca3290cbf3f6f66a268d30dd6dafd1722c1c2384"
+    },
+    "website/tests/story-choreography.test.ts": {
+      "role": "observe",
+      "sha256": "ee99eb53241de4353348ba51447188c1f64c68b582d28ad47464ebd515f937e1",
+      "size": 3060,
+      "normalized_sha256": "ee99eb53241de4353348ba51447188c1f64c68b582d28ad47464ebd515f937e1"
+    },
+    "website/tests/story-track-choreography.test.ts": {
+      "role": "observe",
+      "sha256": "668acf93a046754c0ebf0e28e14b7ec9f25abe985ced218823080614aac116fb",
+      "size": 19550,
+      "normalized_sha256": "668acf93a046754c0ebf0e28e14b7ec9f25abe985ced218823080614aac116fb"
+    },
+    "website/tests/thin-glass.spec.ts": {
+      "role": "observe",
+      "sha256": "3cbf94cae596417b2feb2db703f08fb6705ef1dbddf8c37e17590547db223c3b",
+      "size": 31200,
+      "normalized_sha256": "3cbf94cae596417b2feb2db703f08fb6705ef1dbddf8c37e17590547db223c3b"
     },
     "website/tests/viewer-focus.test.ts": {
       "role": "observe",
@@ -4979,9 +5559,15 @@
     },
     "website/tests/viewer-resilience.spec.ts": {
       "role": "observe",
-      "sha256": "bfe19d4a4908b80394aef974f42ce80dd25162f953f641d2891338ddf4e662ff",
-      "size": 9049,
-      "normalized_sha256": "bfe19d4a4908b80394aef974f42ce80dd25162f953f641d2891338ddf4e662ff"
+      "sha256": "779817ac658d1795dc0ff22e79dd47c3085bcb8bdac9dce2c65c9b70b74ed553",
+      "size": 10941,
+      "normalized_sha256": "779817ac658d1795dc0ff22e79dd47c3085bcb8bdac9dce2c65c9b70b74ed553"
+    },
+    "website/tests/visual-polish.spec.ts": {
+      "role": "observe",
+      "sha256": "00acb851c56a92e1323724dd37bc1656850042e9703e4380b04069ba189a5543",
+      "size": 34828,
+      "normalized_sha256": "00acb851c56a92e1323724dd37bc1656850042e9703e4380b04069ba189a5543"
     },
     "website/tsconfig.json": {
       "role": "index",
@@ -4991,9 +5577,9 @@
     },
     "website/vercel.json": {
       "role": "index",
-      "sha256": "dae547713f1e8d471ad8747ea081a904809a4d58a22fbacdacce174366fd1e28",
+      "sha256": "8d73aacc429ae3b71e5cfa35bfe146a1e427002cfb86dc88a9351e102d556b1d",
       "size": 1287,
-      "normalized_sha256": "dae547713f1e8d471ad8747ea081a904809a4d58a22fbacdacce174366fd1e28"
+      "normalized_sha256": "8d73aacc429ae3b71e5cfa35bfe146a1e427002cfb86dc88a9351e102d556b1d"
     }
   },
   "managed_scope": {
