@@ -26,9 +26,11 @@
 
 主源是 `https://hoopito.com/updates/android/stable.json`，主源失败或格式无效才尝试 GitHub 最新正式发行的 `android-update.json`。每个源最多等待 8 秒，版本信息最多 64 KiB，自动失败静默，手动失败可重试。
 
-官网的发行元数据是已发布稳定版的来源，不随尚未发行的开发版本自动提升。官网更新文件与 GitHub 附件由同一个序列化函数生成；版本文件重新验证缓存，带版本号的 APK 地址保持不可变。生成、校验命令及先发布附件再更新官网的顺序见 [website/README](../../website/README.md#发行信息维护) 和[发布清单](../release/release-checklist.md)。当前正式 v2.1.0 已随 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0) 发布并匿名回读验证 `android-update.json` 附件；历史 v2.0.1 Release 没有该附件，v2.0.1 APK 也没有更新器，用户须先手动安装一次新版。
+官网的发行元数据是已发布稳定版的来源。官网更新文件与 GitHub 附件由同一个序列化函数生成。版本文件重新验证缓存，带版本号的 APK 地址保持不可变。生成、校验命令及先发布附件再更新官网的顺序见 [website/README](../../website/README.md#发行信息维护) 和[发布清单](../release/release-checklist.md)。v2.1.1 的 `android-update.json` 已随 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.1) 发布并通过匿名回读。v2.0.1 用户需要先手动安装一次新版才能使用更新器。
 
-本次发行未部署官网，网站源码发行元数据仍为 v2.0.1；2026-11-03 02:57:50 UTC 实测官网 `/updates/android/stable.json` 返回 HTTP 404，不能称有效旧版 feed。更新器遇到该失败应按既有规则尝试 GitHub 备源；本轮没有实际完成在线成功检查、下载或系统安装新版的设备验收。来源与限制见 [v2.1.0 发行记录](../release/v2.1.0-release-record.md)。两个线上入口均未提供信息时必须报告检查失败，不能假称已是最新。
+网站源码的稳定版本和生产 feed 仍为 v2.1.0。2026-11-07 实测官网返回 HTTP 200 和 versionCode 6。客户端会采用有效的官网信息，因此 v2.1.0 可能暂不提示已在 GitHub 发布的 v2.1.1。需要升级时可从 GitHub 手动下载安装。
+
+本次 API 36 模拟器上的 v2.1.1 手动重试检查成功，并根据现有官网版本返回已是最新。API 24 模拟器上的两版在线检查都失败，平台探针报告官网 TLS 信任锚不可用、GitHub 连接超时。新版在应用内提示、下载和安装的完整线上流程仍待验证。两个线上入口均不可用时，手动检查应显示失败并提供重试。设备与线上回执见 [v2.1.1 发行记录](../release/v2.1.1-release-record.md#官网与应用内更新)。
 
 网络及权限说明见 [PRIVACY](../../PRIVACY.md)。核心记录始终离线，版本请求不附带比赛、球员、设置或设备标识。后续商店或 F-Droid 渠道接入需单独评审分发策略及签名兼容性。
 

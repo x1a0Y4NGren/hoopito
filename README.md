@@ -18,19 +18,36 @@ Hoopito（中文名：球豆）是一款为篮球爱好者准备的离线单挑�
 
 **[中文官网](https://hoopito.com/)** · **[Official website (English)](https://hoopito.com/en/)**
 
-**[下载 v2.1.0 APK](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/Hoopito-v2.1.0-android.apk)** · [查看本次更新](docs/release/v2.1.0-release-notes.md) · [安装与备份](docs/release/v2.1.0-release-notes.md#升级与备份) · [隐私说明](PRIVACY.md) · [参与贡献](CONTRIBUTING.md)
+**[下载 v2.1.1 APK](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.1/Hoopito-v2.1.1-android.apk)** · [查看本次更新](docs/release/v2.1.1-release-notes.md) · [安装与备份](docs/release/v2.1.1-release-notes.md#升级与备份) · [隐私说明](PRIVACY.md) · [参与贡献](CONTRIBUTING.md)
 
-**Hoopito · 球豆 v2.1.0** 新增连续对局、自由／目标计分与 Android 应用内更新。沿用 v2 正式证书与安装身份，可覆盖升级 v2.0.0／v2.0.1；请先将完整 JSON 备份保存到 App 外。旧比赛不会自动归组。新版可导入兼容的旧 HoopTrace 与新 Hoopito JSON，**旧 App 无法导入 schema 4 备份，也不能读取升级后的数据库，请勿降级后继续使用该数据库**。历史发行文件和截图保留真实来源，名称与安装身份见[品牌与兼容性](docs/design/brand/naming-and-compatibility.md)。
+**Hoopito · 球豆 v2.1.1** 新增「快速上手」。跟着提示练一遍记分、撤销、记录落点和结束比赛，练习记录不会进入正式历史、统计或备份。首次邀请可以跳过，之后随时从「设置 → 快速上手」进入。
 
-介绍与下载官网已上线，提供中英文页面、桌面连续 3D 球场和手机二维投篮演示。v2.1.0 可从[官网下载区](https://hoopito.com/#download)或上方 GitHub 入口获取。应用先检查[官网版本信息](https://hoopito.com/updates/android/stable.json)，失败或无效时尝试 GitHub 备源。网站独立于 Flutter 构建，维护说明位于 [`website/`](website/README.md)，生产发布核验见[交接记录](docs/development/handoff.md#官网球馆重构与生产发布2026-11-06)。
+新版沿用 v2 正式证书与安装身份，可覆盖安装官方 v2.0.0、v2.0.1 或 v2.1.0。请先在 App 外保存完整 JSON 备份并确认可以读取。v2.1.0 的数据库已是 schema 4，无需再次迁移。较早版本无法读取迁移后的数据库或恢复 schema 4 备份。名称与安装身份见[品牌与兼容性](docs/design/brand/naming-and-compatibility.md)。
+
+官网提供中英文介绍、桌面连续 3D 球场和手机二维投篮演示。[官网下载区](https://hoopito.com/#download)和[官网更新信息](https://hoopito.com/updates/android/stable.json)当前仍为 v2.1.0。升级 v2.1.1 请使用上方 GitHub 下载。官网生产记录见[交接记录](docs/development/handoff.md#官网球馆重构与生产发布2026-11-06)。
 
 > **安装提示：v2 使用新的正式签名，不能覆盖安装历史 v1。** 若旧版有需要保留的记录，请先导出完整 JSON，确认文件已保存在应用之外，再卸载旧版、安装 v2 并恢复。卸载会移除应用私有数据；CSV 和战报图片不能恢复数据库。
 
 **连续对局**让固定两人连打多场，交换红蓝后仍正确累计胜场；平局单列，放弃不计胜负。每场独立计分、计时和复盘，赛后可调整下一场设置，结束整组后可在条件满足时从历史重新打开。自由计分不设目标；目标计分达到 1～999 的设定值后，保留实际比分，由你确认结束或继续。C「独眼球怪」标识与静音 Q 弹启动继续保留，替换恢复与安全副本回退都先保护当前数据。
 
-当前应用版本为 **`2.1.0+6`**，数据库 schema 4、JSON 格式 2。构建、CI、专用模拟器与公开下载核验的实际来源及文件哈希见[发行记录](docs/release/v2.1.0-release-record.md)，历史证据保留原有来源。自动备份默认关闭；自然 24 小时调度未实测，系统后台任务不保证准点执行。
+当前应用版本为 **`2.1.1+7`**，数据库 schema 4、JSON 格式 2。构建、CI、设备和公开下载核验见[发行记录](docs/release/v2.1.1-release-record.md)。自动备份默认关闭。自然 24 小时调度尚未实测，系统后台任务不保证准点执行。
 
 ## 先看比赛，不看说明书
+
+### v2.1.1 快速上手
+
+<p align="center">
+  <a href="https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.1/Hoopito-v2.1.1-practice-invitation-zh.png">
+    <img src="https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.1/Hoopito-v2.1.1-practice-invitation-zh.png" width="28%" alt="球豆 2.1.1 中文浅色首页的首次练习邀请">
+  </a>
+  <a href="https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.1/Hoopito-v2.1.1-practice-scoring-zh.png">
+    <img src="https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.1/Hoopito-v2.1.1-practice-scoring-zh.png" width="64%" alt="球豆 2.1.1 中文浅色横屏练习，提示当前计分操作">
+  </a>
+</p>
+
+中文浅色图来自正式签名 v2.1.1 的 API 24 设备，展示首次邀请（320×616）和横屏计分（640×296）。API 36 的英文深色图可查看[练习计分](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.1/Hoopito-v2.1.1-practice-scoring-en.png)（1920×954）和[练习结果](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.1/Hoopito-v2.1.1-practice-result-en.png)（1080×1794）。所有画面使用合成数据，点击可查看裁掉系统区域的完整分辨率副本。原图摘要和实际裁剪矩形见[截图来源清单](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.1/screenshots.json)。
+
+### v2.1.0 连续对局实拍
 
 <p align="center">
   <a href="https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/Hoopito-v2.1.0-scoring-zh.png">
@@ -75,8 +92,8 @@ Hoopito（中文名：球豆）是一款为篮球爱好者准备的离线单挑�
 
 ## 当前阵容
 
-- 当前版本：[Hoopito · 球豆 `v2.1.0`](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0)，Android `2.1.0+6`，沿用 v2 正式签名，可覆盖升级 v2.0.0／v2.0.1；历史 v1 不能直接覆盖安装。
-- 发行应用源码与签名 tag 指向 `9bbd3b87e99d71f5d9117cd2c5a763a7f8b95d1f`，维护分支为 `main`；数据库 schema 4、JSON 格式 2。后续文档、截图与网站提交不改变 APK 构建来源，详见[发行记录](docs/release/v2.1.0-release-record.md)。
+- 当前版本为 [Hoopito · 球豆 `v2.1.1`](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.1)，Android `2.1.1+7`。沿用 v2 正式签名，可覆盖升级官方 v2.0.0、v2.0.1 和 v2.1.0。历史 v1 需先备份，再卸载升级。
+- 发行应用源码和签名 tag 指向 `b5371c39e3a5984e7da963adb6d57f6af6d50359`。维护分支为 `main`，数据库 schema 4、JSON 格式 2。后续文档、截图和网站提交独立于 APK 构建来源，详见[发行记录](docs/release/v2.1.1-release-record.md)。
 - 当前平台：Android 优先，最低 Android API 24，目标 Android API 36。
 - Android Application ID：`io.github.x1a0y4ngren.hooptrace`，改名后保留以支持覆盖升级和已有本地数据。
 - iOS 无签名编译已纳入 CI，但尚未完成真机验收和正式发布。
@@ -84,7 +101,7 @@ Hoopito（中文名：球豆）是一款为篮球爱好者准备的离线单挑�
 
 ## 隐私与离线原则
 
-v2.1.0 提供 Android 应用内更新：在「设置 → 软件更新」手动检查，或使用默认开启、可关闭的启动检查。通过 HTTPS 读取官网信息，失败或无效时尝试 GitHub，不上传比赛、球员、设置或设备标识；分发服务会接收 IP 地址等连接信息。无新版或自动检查失败不打扰计分，未结束的比赛会延后提醒。由你选择下载并在系统安装器中确认，没有静默安装或强制更新；活动比赛期间不能安装。**v2.0.1 不含更新器，需要先手动安装一次新版。** 详见[应用内更新](docs/development/in-app-updates.md)。
+从 v2.1.0 起，可在「设置 → 软件更新」手动检查，或使用默认开启、可关闭的启动检查。应用优先读取有效的官网信息，失败或无效时尝试 GitHub。检查不会上传比赛、球员、设置或设备标识，分发服务会接收 IP 地址等连接信息。活动比赛和练习会延后自动提醒，安装须在没有活动比赛时由你确认。**v2.0.1 不含更新器，需手动安装新版。** 官网目前仍提供 v2.1.0，应用可能暂时不提示 v2.1.1。详见[应用内更新](docs/development/in-app-updates.md)。
 
 连续对局使用 schema 4，JSON 格式仍为 2；支持导入格式/schema 组合 1/2、2/3、2/4，保留旧数据库自动迁移和完整备份恢复。新导出的 schema 4 备份需要 v2.1.0 或更高版本恢复，规则与备份说明见[连续对局维护](docs/development/continuous-matches.md)。
 

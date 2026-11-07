@@ -1,5 +1,17 @@
 # Hoopito · 球豆交接记录
 
+## 快速上手与 v2.1.1 发行交接（2026-11-07）
+
+快速上手练习通过 [PR #51](https://github.com/x1a0Y4NGren/hoopito/pull/51) 合入。练习复用赛前、计分与结果页面，每次使用隔离内存库，正式数据库仅保存引导偏好及用户确认的原比赛暂停。[PR #52](https://github.com/x1a0Y4NGren/hoopito/pull/52) 为 CI 的 API 24 安装增加等待上限及诊断。[PR #53](https://github.com/x1a0Y4NGren/hoopito/pull/53) 合入发行元数据，正式 APK 和签名 tag 均指向应用源码 `b5371c39e3a5984e7da963adb6d57f6af6d50359`。Android 版本为 `2.1.1+7`，数据库 schema 4，JSON 格式 2。
+
+[GitHub Release v2.1.1](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.1) 已于 2026-11-07 11:09:22 UTC 公开，发行 ID `437520980`，状态为不可变。APK 为 78,386,559 字节，SHA-256 `fe6807576e2735ef9effdf8238318e51914654e11764c64f2a5bea76662bd320`，沿用 v2 正式证书。全部 8 个附件通过草稿和匿名公开回读。公开 APK 已重新验签，并于 API 36 模拟器从正式 v2.1.0 覆盖安装，核对已安装 APK 后验证首次邀请及首页。
+
+发行源码的合并后 [App CI](https://github.com/x1a0Y4NGren/hoopito/actions/runs/42364715907) 通过，含 1,523 项 Flutter 测试、API 24／36 集成、未签名复现及 iOS 无签名编译。Website CI 聚合门禁、仓库策略及 CodeQL 亦通过。设备验收另有 API 24 正式包全新安装、API 36 同证覆盖、离线完整练习及冷启动。API 36 线上手动检查按官网现有版本返回已是最新，API 24 模拟器的官网 TLS 校验失败且 GitHub 备用源连接超时。真实线上新版下载与安装及实体设备仍待验证，iOS、商店和 F-Droid 尚未正式发行。
+
+官网生产、官网 feed 和蓝奏云仍对应 v2.1.0。下载 v2.1.1 使用 GitHub Release，当前有效的旧官网主源可能使应用暂时不提示新版。README 引用的四张练习展示图均来自 v2.1.1 正式包，按设备边界裁剪。此前的连续对局及官网画面沿用各自真实版本。
+
+[发行记录](../release/v2.1.1-release-record.md)整理了 CI、签名、设备和公开回读事实，原始证据保存在 `D:/DevCache/HoopitoArtifacts/release-2.1.1-20261107/`。本次收尾的 AOCI 对齐、PR 整合、合并后 CI 和工作树回执以外部实际记录为准。下文各节保留其交付时点的状态。
+
 ## 官网球馆重构与生产发布（2026-11-06）
 
 官网通过 [PR #44](https://github.com/x1a0Y4NGren/hoopito/pull/44) 合入 `main`，生产源码为 `e9bb32228cf9a4c2e85d123e67a3214a18c96842`。Vercel Production `dpl_9pPShH2m9F6g6dxapTb6HmDtp2Lr` 已就绪，[hoopito.com](https://hoopito.com/) 指向该部署。网站包含连续球馆镜头、桌面章节轨道、移动触屏章节导航、二维投篮演示及 v2.1.0 下载；[官网维护说明](../../website/README.md#vercel-预览与正式域名)保留部署和预览入口。
