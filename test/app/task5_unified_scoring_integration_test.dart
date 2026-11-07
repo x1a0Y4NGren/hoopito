@@ -1,3 +1,4 @@
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/drift.dart' hide isNull;
@@ -21,6 +22,7 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       await tester.pumpWidget(const SizedBox.shrink());
       await database.close();
@@ -87,6 +89,7 @@ void main() {
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       final database = createTestDatabase();
+      await PracticePreferences(database).markInvitationHandled();
       addTearDown(() async {
         await tester.pumpWidget(const SizedBox.shrink());
         await database.close();

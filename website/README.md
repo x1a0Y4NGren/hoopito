@@ -129,7 +129,13 @@ npm run dev
 | `node scripts/check-journey.mjs --android` | 在已有 Android AVD 的 Chrome 中检查中英文真实触摸路径               |
 | `node scripts/export-scene-poster.mjs`     | 从当前生产构建导出桌面占位和移动同源背景，随后运行 `npm run assets` |
 
-首次运行浏览器测试时安装对应浏览器，然后先构建：
+按[贡献指南的验证矩阵](../CONTRIBUTING.md#测试要求)选择本地检查。纯维护文档走文档检查。
+页面文案、静态素材和发布配置改动，核对受影响的双语页面、生成产物及适用的构建和下载校验。
+交互或布局改动，复验受影响的浏览器和用例，例如
+`npm run test:e2e -- --project=chromium --grep "<用例>"`。
+渲染、动效或性能改动，补受影响的画面、完整路径或 GPU 证据，并遵循本轮约定的验收范围。
+
+首次运行浏览器测试时安装对应浏览器，先构建再测试。需要完整浏览器验收时使用以下命令：
 
 ```powershell
 npx playwright install --no-shell chromium firefox webkit
@@ -146,8 +152,9 @@ Playwright WebKit 在 Windows 宿主运行，仅表示其打包引擎的自动�
 仍由 [Issue #45](https://github.com/x1a0Y4NGren/hoopito/issues/45) 跟踪，不能据此声称 Linux 已修复。
 构建预算以逐文件 gzip 计算：移动首屏每种语言不超过 500 KiB，桌面 3D
 增量不超过 800 KiB。体积检查、模拟设备检查和真实 GPU 帧率各自保留证据。
-CI 先执行 15 分钟有界的 `validate`，只构建一次；生成包含源码提交 SHA、逐文件
-SHA-256、字节数和总摘要的 `build-artifact.json`，连同 `dist/` 上传当前运行的构建产物。
+CI 先执行 15 分钟有界的 `validate`，只构建一次。各测试任务下载同一工作流运行中按
+完整提交 SHA 命名的 `dist/` 和 `build-artifact.json`，核对源码身份、文件集合、字节数、
+逐文件 SHA-256 和总摘要后启动 preview。
 三个引擎的普通 UI 任务（Linux Chromium／Firefox、Windows WebKit，各两分片、35分钟、1 worker）与 Chromium
 软件 WebGL 的两个分片（Windows，各35分钟、1 worker）只依赖 `validate`，使用独立 runner；
 任一浏览器或分片失败不取消其余任务。普通 UI 关闭 WebGL，标记 `@webgl` 的检查按
@@ -162,7 +169,7 @@ WebGL 任务使用 `playwright.webgl.config.ts`，保留完整 Chromium；CI 按
 [Chromium 的软件 WebGL 模式](https://github.com/chromium/chromium/blob/156.0.8078.4/docs/gpu/swiftshader.md)
 采用软件合成器，仅将 WebGL 绘制交给 SwiftShader，避免把它同时用作整个浏览器的 GL 驱动。
 该配置继承原有用例、超时、画质与失败证据设置；本地仍使用现有真实 GPU 启动参数。
-软件渲染检查只证明场景与交互生命周期，不代表真实 GPU 的显示帧率。
+软件渲染检查覆盖场景与交互生命周期，真实 GPU 显示帧率与开场墙钟耗时使用各自的实测证据。
 CI 的 WebGL 检查在 Windows runner 上以有窗口模式运行，直接使用其桌面，
 通过 `npx playwright install --no-shell chromium` 安装完整浏览器，无需 Linux 的 Xvfb 或 APT。
 共享 Linux 与 Windows runner 均出现过初始 WebGL 加载失败，由 [Issue #45](https://github.com/x1a0Y4NGren/hoopito/issues/45)
@@ -173,9 +180,8 @@ WebGL 任务还保存 `runtime.jsonl`；Windows 仅记录平台、CPU 型号／�
 在 Linux 手动运行该采样器时，才以两秒间隔记录主机 CPU／内存、可用的 cgroup
 资源限制与本任务 Chromium 子进程的原始计数，供失败时区分资源争用和进程积累。
 采样不保存原始环境变量或命令行，不改变测试结果、时限、画质及绘制流程。
-测试任务只下载当前工作流运行中按完整提交 SHA 命名的构建，校验本地源码身份、文件集合
-及每个文件的 SHA-256 后才启动 preview，不重新构建或引用其他提交的“最新产物”。
-失败允许一次诊断重试，但 `--fail-on-flaky-tests` 会将重试后通过也判为不稳定失败。
+Playwright 在 CI 中对单个失败用例自动重试一次，`--fail-on-flaky-tests` 会将重试后通过
+也判为不稳定失败。人工重跑作业按[贡献指南的重试规则](../CONTRIBUTING.md#处理失败与重试)执行。
 追踪保留失败时的动作、源码及独立失败截图，关闭持续截图与 DOM 快照采集。
 原生滚轮序列逐包确认浏览器实际收到后再发送下一包，仍校验原有增量、数量与间隔。
 持续追踪会在输入传输中产生额外往返，并对软件 WebGL 增加画面回读负担，不能与
@@ -202,7 +208,6 @@ WebGL 任务还保存 `runtime.jsonl`；Windows 仅记录平台、CPU 型号／�
 原生回归使用可实际锚定的对照，验证受控页面不被额外移动，并验证自然路径仍补偿内容增长。
 小增量输入回归的首次持续输入为1800ms，给16ms分包流留出第四个80ms确认窗口；
 生产能量、衰减判据及原有输入速率、单包大小、间隔和落位验收不变。
-这些软件 WebGL 功能检查不代表真实 GPU 帧率或开场墙钟耗时。
 Linux UI 的浏览器安装通过 `scripts/install-ci-browser.sh` 在一次性 runner 上执行；
 Windows WebKit 直接用 `npx playwright install --no-shell webkit` 安装完整套件所需引擎。
 WebKit使用标准 `windows-latest` runner，iOS编译继续使用 `macos-26-intel`。
@@ -588,7 +593,9 @@ ImageGen 的完整提示词、原图摘要、透明裁剪与篮圈测量；`scri
 像素回归验证每张副本与原图对应区域完全一致。后续对外商店素材遵守同一规范，
 不直接使用保留系统栏的原始证据文件。
 
-完成文案、页面或交互源码修改后运行 `npm run assets`，再重新构建与检查。
+完成文案、页面或交互源码修改后运行 `npm run assets`，再重新构建与检查。改动触及
+场景占位来源时，按本节重导出并校验。生成素材及来源清单随对应源码修正和定向回归
+集中推送。
 生成器扫描 `src/` 的 Astro、TypeScript、JavaScript 和 JSON，形成正文 Regular 400 的中文
 WOFF2 子集；章节标题另由 `scripts/poster-font.mjs` 从七个实际标题字段生成 `NotoPoster`
 Black 900 子集，使用与正文相同 Noto CJK 版本的真实静态粗字重，不把 Regular 声明为可变字重。
@@ -816,3 +823,18 @@ Vercel Production 环境已设置 `SITE_URL=https://hoopito.com`，用于 canoni
 [`assets/community/README.md`](assets/community/README.md)。`npm run assets` 同时生成邀请卡、
 延迟加载的预览和可保存的完整 PNG；不加载 QQ 脚本或自动访问第三方服务。
 更换群码后必须核对群名／群号并使用 QQ 实扫，通用 QR 解码器不支持该圆形定位码。
+
+### 手动生产部署与线上冒烟
+
+1. 按[合并与部署流程](../CONTRIBUTING.md#合并与部署)核对本轮授权和已验证的合并源码。
+   在既有 Vercel 项目指定精确 Git 提交创建手动 Production 部署，保留上一份 READY 生产部署的回执。
+2. 部署完成后回读实际 Git SHA、部署 ID、Production 目标、`READY` 状态和
+   `hoopito.com` 的指向。检查 `www` HTTPS 308 跳转保留路径和查询，双语首页及隐私页
+   可达，canonical、语言替代链接、robots 和 sitemap 使用生产配置。
+3. 在代表性桌面和移动视口打开正式域名，检查首屏、语言切换及本次改动涉及的主要入口。
+   核对下载渠道指向已发布版本，确认 `/updates/android/stable.json` 与发行附件
+   `android-update.json` 逐字节一致，核对 feed 的缓存头。
+   同域 APK 检查真实响应头、Range 请求和完整下载的字节数及 SHA-256。
+4. 记录线上结果、部署来源及仍待处理的问题。冒烟覆盖生产环境和主要入口，跨浏览器、
+   完整旅程或 GPU 的复验按改动影响和本轮验收条件决定。发现阻断时报告实际状态，
+   回退按本轮授权执行。

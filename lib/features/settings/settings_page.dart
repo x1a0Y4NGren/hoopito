@@ -17,6 +17,7 @@ class SettingsPage extends StatefulWidget {
     this.onOpenProject,
     this.onOpenData,
     this.onOpenUpdate,
+    this.onOpenPractice,
     this.themeController,
     this.languageController,
     super.key,
@@ -26,6 +27,7 @@ class SettingsPage extends StatefulWidget {
   final VoidCallback? onOpenProject;
   final VoidCallback? onOpenData;
   final VoidCallback? onOpenUpdate;
+  final VoidCallback? onOpenPractice;
   final ThemePreferencesController? themeController;
   final LanguagePreferencesController? languageController;
 
@@ -211,6 +213,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 _SettingsSection(
                   title: l10n.settingsAboutSection,
                   children: [
+                    SettingsActionTile(
+                      key: const Key('settings-practice-row'),
+                      icon: Icons.sports_basketball_outlined,
+                      title: l10n.practiceTitle,
+                      subtitle: l10n.practiceSettingsSubtitle,
+                      onTap: widget.onOpenPractice,
+                    ),
                     SettingsActionTile(
                       key: const Key('settings-update-row'),
                       icon: Icons.system_update_outlined,

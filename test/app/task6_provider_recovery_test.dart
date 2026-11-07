@@ -1,3 +1,4 @@
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -150,6 +151,7 @@ void main() {
     'rebuilding the widget tree with the same database shows resume card',
     (tester) async {
       final database = createTestDatabase();
+      await PracticePreferences(database).markInvitationHandled();
       _closeDatabaseAfterWidgetTest(tester, database);
       final commandService = MatchCommandService(database);
       final now = DateTime.utc(2026, 8, 23, 12);
@@ -202,6 +204,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     _closeDatabaseAfterWidgetTest(tester, database);
     final now = DateTime.utc(2026, 8, 23, 12);
     await MatchCommandService(database).start(
@@ -242,6 +245,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     _closeDatabaseAfterWidgetTest(tester, database);
     final now = DateTime.now().toUtc();
     final commandService = MatchCommandService(database);
@@ -315,6 +319,7 @@ void main() {
     tester,
   ) async {
     final database = createTestDatabase();
+    await PracticePreferences(database).markInvitationHandled();
     _closeDatabaseAfterWidgetTest(tester, database);
     await tester.pumpWidget(
       ProviderScope(

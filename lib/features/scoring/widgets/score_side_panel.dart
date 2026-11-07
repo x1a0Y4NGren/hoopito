@@ -4,6 +4,8 @@ import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/app/l10n/app_localizations_zh.dart';
 import 'package:hoopito/core/domain/value_objects/team_side.dart';
 
+import 'package:hoopito/features/practice/practice_coach.dart';
+
 class ScoreSidePanel extends StatelessWidget {
   const ScoreSidePanel({
     required this.side,
@@ -14,6 +16,8 @@ class ScoreSidePanel extends StatelessWidget {
     required this.onScore,
     required this.onMiss,
     this.scoreButtons = const [1, 2, 3],
+    this.practiceHighlightPoints,
+    this.practiceHighlightMiss = false,
     this.scoreEnabled = true,
     this.missEnabled = true,
     this.locationPoints,
@@ -35,6 +39,8 @@ class ScoreSidePanel extends StatelessWidget {
   final ValueChanged<int> onScore;
   final VoidCallback onMiss;
   final List<int> scoreButtons;
+  final int? practiceHighlightPoints;
+  final bool practiceHighlightMiss;
   final bool scoreEnabled;
   final bool missEnabled;
   final int? locationPoints;
@@ -86,44 +92,56 @@ class ScoreSidePanel extends StatelessWidget {
             final actionWidth = availableWidth;
             final actions = <Widget>[
               for (final points in scoreButtons)
-                _ScoreAction(
+                PracticeTarget(
+                  id: points == 2
+                      ? (side == TeamSide.blue
+                            ? PracticeTargetId.blueTwo
+                            : PracticeTargetId.redTwo)
+                      : null,
+                  active: practiceHighlightPoints == points,
+                  child: _ScoreAction(
+                    side: side,
+                    teamLabel: teamLabel ?? name,
+                    points: points,
+                    width: actionWidth,
+                    height: buttonHeight,
+                    color: color,
+                    buttonSurface: buttonSurface,
+                    ruleColor: editorial.rule,
+                    compact: true,
+                    enabled: scoreEnabled,
+                    locationActive: locationPoints == points,
+                    locationRemainingSeconds: locationPoints == points
+                        ? locationRemainingSeconds
+                        : null,
+                    locationRevealDuration: locationRevealDuration,
+                    reduceMotion: reduceMotion,
+                    geometryKey: scoreButtonKeys?[points],
+                    onPressed: () => onScore(points),
+                  ),
+                ),
+              PracticeTarget(
+                id: side == TeamSide.blue ? PracticeTargetId.blueMiss : null,
+                active: practiceHighlightMiss,
+                child: _MissAction(
                   side: side,
                   teamLabel: teamLabel ?? name,
-                  points: points,
                   width: actionWidth,
                   height: buttonHeight,
                   color: color,
                   buttonSurface: buttonSurface,
                   ruleColor: editorial.rule,
                   compact: true,
-                  enabled: scoreEnabled,
-                  locationActive: locationPoints == points,
-                  locationRemainingSeconds: locationPoints == points
+                  enabled: missEnabled,
+                  locationActive: locationPoints == 0,
+                  locationRemainingSeconds: locationPoints == 0
                       ? locationRemainingSeconds
                       : null,
                   locationRevealDuration: locationRevealDuration,
                   reduceMotion: reduceMotion,
-                  geometryKey: scoreButtonKeys?[points],
-                  onPressed: () => onScore(points),
+                  geometryKey: missButtonKey,
+                  onPressed: onMiss,
                 ),
-              _MissAction(
-                side: side,
-                teamLabel: teamLabel ?? name,
-                width: actionWidth,
-                height: buttonHeight,
-                color: color,
-                buttonSurface: buttonSurface,
-                ruleColor: editorial.rule,
-                compact: true,
-                enabled: missEnabled,
-                locationActive: locationPoints == 0,
-                locationRemainingSeconds: locationPoints == 0
-                    ? locationRemainingSeconds
-                    : null,
-                locationRevealDuration: locationRevealDuration,
-                reduceMotion: reduceMotion,
-                geometryKey: missButtonKey,
-                onPressed: onMiss,
               ),
             ];
 
@@ -195,44 +213,58 @@ class ScoreSidePanel extends StatelessWidget {
                       reduceMotion: reduceMotion,
                     ),
                     for (final points in scoreButtons)
-                      _ScoreAction(
+                      PracticeTarget(
+                        id: points == 2
+                            ? (side == TeamSide.blue
+                                  ? PracticeTargetId.blueTwo
+                                  : PracticeTargetId.redTwo)
+                            : null,
+                        active: practiceHighlightPoints == points,
+                        child: _ScoreAction(
+                          side: side,
+                          teamLabel: teamLabel ?? name,
+                          points: points,
+                          width: double.infinity,
+                          height: buttonHeight,
+                          color: color,
+                          buttonSurface: buttonSurface,
+                          ruleColor: editorial.rule,
+                          compact: false,
+                          enabled: scoreEnabled,
+                          locationActive: locationPoints == points,
+                          locationRemainingSeconds: locationPoints == points
+                              ? locationRemainingSeconds
+                              : null,
+                          locationRevealDuration: locationRevealDuration,
+                          reduceMotion: reduceMotion,
+                          geometryKey: scoreButtonKeys?[points],
+                          onPressed: () => onScore(points),
+                        ),
+                      ),
+                    PracticeTarget(
+                      id: side == TeamSide.blue
+                          ? PracticeTargetId.blueMiss
+                          : null,
+                      active: practiceHighlightMiss,
+                      child: _MissAction(
                         side: side,
                         teamLabel: teamLabel ?? name,
-                        points: points,
                         width: double.infinity,
                         height: buttonHeight,
                         color: color,
                         buttonSurface: buttonSurface,
                         ruleColor: editorial.rule,
                         compact: false,
-                        enabled: scoreEnabled,
-                        locationActive: locationPoints == points,
-                        locationRemainingSeconds: locationPoints == points
+                        enabled: missEnabled,
+                        locationActive: locationPoints == 0,
+                        locationRemainingSeconds: locationPoints == 0
                             ? locationRemainingSeconds
                             : null,
                         locationRevealDuration: locationRevealDuration,
                         reduceMotion: reduceMotion,
-                        geometryKey: scoreButtonKeys?[points],
-                        onPressed: () => onScore(points),
+                        geometryKey: missButtonKey,
+                        onPressed: onMiss,
                       ),
-                    _MissAction(
-                      side: side,
-                      teamLabel: teamLabel ?? name,
-                      width: double.infinity,
-                      height: buttonHeight,
-                      color: color,
-                      buttonSurface: buttonSurface,
-                      ruleColor: editorial.rule,
-                      compact: false,
-                      enabled: missEnabled,
-                      locationActive: locationPoints == 0,
-                      locationRemainingSeconds: locationPoints == 0
-                          ? locationRemainingSeconds
-                          : null,
-                      locationRevealDuration: locationRevealDuration,
-                      reduceMotion: reduceMotion,
-                      geometryKey: missButtonKey,
-                      onPressed: onMiss,
                     ),
                   ],
                 ),

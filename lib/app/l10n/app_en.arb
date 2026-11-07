@@ -854,5 +854,49 @@
   "seriesLockedPair": "This pair is fixed. You can swap sides.",
   "seriesGames": "Matches",
   "seriesLoadError": "Could not load series",
-  "seriesActiveHelp": "Finish or abandon the current match before closing the series."
+  "seriesActiveHelp": "Finish or abandon the current match before closing the series.",
+  "practiceTitle": "Learn the basics",
+  "practiceInviteTitle": "Try a practice game?",
+  "practiceInviteBody": "Try scoring, undoing and finishing a game. Practice stays out of your game records. You can try again in Settings → Learn the basics.",
+  "practiceStart": "Start practice",
+  "practiceUseApp": "Use the app",
+  "practiceBadge": "Practice",
+  "practiceExit": "Exit practice",
+  "practiceSetupHint": "Blue and Red are the two sides. Keep or change the names—no profiles needed. Tap Start practice.",
+  "practiceAdvancedHint": "Timer and target score options are in Advanced settings. This practice has neither.",
+  "practiceScoreHint": "Tap Blue’s +2 to add two points.",
+  "practiceUndoHint": "Tap Undo to take back that score.",
+  "practiceCourtHint": "Tap the court to pick a shot location.",
+  "practiceLocatedScoreHint": "Location set. Now tap Red’s +2.",
+  "practiceMissHint": "Tap Blue’s Miss. It records an attempt without adding points.",
+  "practiceFinishHint": "Tap Finish to end this practice game.",
+  "practiceWrongAction": "Try the action the arrow points to.",
+  "practiceSaving": "Completing this step…",
+  "practiceFinished": "Practice finished",
+  "practiceResultHint": "Practice done. After a real game, find the result in History.",
+  "practiceReplay": "Practice again",
+  "practiceRealGame": "Start a real game",
+  "practiceReturnMatch": "Return to your game",
+  "practicePauseTitle": "Pause your current game?",
+  "practicePauseBody": "Practice keeps your game records separate. Pause this game first, then resume it yourself when you are ready.",
+  "practicePauseAction": "Pause and practice",
+  "practiceRetry": "Retry",
+  "practiceLoadFailed": "Couldn’t open practice. Try again.",
+  "practiceSettingsSubtitle": "Try scoring, undoing and finishing a game",
+  "practiceManualHelp": "Scoring help",
+  "practiceStepProgress": "Step {current} of {total}",
+  "@practiceStepProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "practiceFinishControlsHint": "Tap Finish match, then check the score.",
+  "practiceFinishCoverageHint": "Check the score and choose what you recorded. Then tap Finish match.",
+  "practiceShowHint": "Show hint",
+  "practiceHideHint": "Hide hint"
 }

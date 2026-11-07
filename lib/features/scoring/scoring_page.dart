@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:hoopito/app/design_system/design_system.dart';
 import 'package:hoopito/app/design_system/recording_confirmation.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
@@ -21,6 +22,9 @@ import 'package:hoopito/features/scoring/widgets/score_side_panel.dart';
 import 'package:hoopito/features/scoring/widgets/scoring_guide.dart';
 import 'package:hoopito/features/scoring/motion/scoring_motion.dart';
 
+import 'package:hoopito/features/practice/practice_presentation.dart';
+import 'package:hoopito/features/practice/practice_coach.dart';
+
 const scoringResumeClockKey = Key('scoring-resume-clock');
 
 double _landscapeSideWidth(double availableWidth) =>
@@ -34,6 +38,7 @@ class ScoringPage extends StatefulWidget {
   const ScoringPage({
     this.matchId,
     this.seriesContextLabel,
+    this.practice,
     this.setup,
     this.controller,
     this.onOpenReplay,
@@ -56,6 +61,7 @@ class ScoringPage extends StatefulWidget {
     super.key,
   }) : assert(matchId != null || setup != null || controller != null);
 
+  final PracticePresentation? practice;
   final String? matchId;
   final String? seriesContextLabel;
   final bool showInitialGuide;
@@ -96,10 +102,87 @@ class _ScoringPageState extends State<ScoringPage>
       widget.onFinishDecision != null || widget.onFinishWithCoverage != null;
   late ScoringController _controller;
   bool _ownsController = false;
+  bool _practiceActionBusy = false;
+  bool _practiceExitRequested = false;
+  final Set<ModalRoute<dynamic>> _practicePopupRoutes = {};
+  PracticeStep? _practiceConsumedStep;
+
+  bool _practiceAllows(PracticeStep step) {
+    if (widget.practice == null) return true;
+    if (!_practiceExitRequested &&
+        widget.practice!.step == step &&
+        !_practiceActionBusy &&
+        !_controller.isSaving &&
+        _practiceConsumedStep != step) {
+      return true;
+    }
+    _rejectPracticeAction();
+    return false;
+  }
+
+  void _rejectPracticeAction() {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(_localizations(context).practiceWrongAction),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<void> _practiceAction(
+    PracticeStep step,
+    Future<void> Function() action,
+  ) async {
+    if (!_practiceAllows(step)) return;
+    if (widget.practice == null) {
+      await action();
+      return;
+    }
+    final before = _practiceProjectionSignature();
+    _practiceActionBusy = true;
+    _practiceConsumedStep = step;
+    try {
+      await action();
+    } finally {
+      _practiceActionBusy = false;
+      if (_practiceProjectionSignature() == before) {
+        _practiceConsumedStep = null;
+      }
+    }
+  }
+
+  String _practiceProjectionSignature() =>
+      _controller.state.events.map((e) => '${e.id}:${e.isDeleted}').join('|');
+
+  Future<void> _practiceScore(TeamSide side, int points) async {
+    final step = side == TeamSide.blue
+        ? PracticeStep.scoreBlueTwo
+        : PracticeStep.scoreRedTwo;
+    if (widget.practice != null && points != 2) {
+      _rejectPracticeAction();
+      return;
+    }
+    await _practiceAction(step, () => _recordScore(side, points));
+  }
+
+  Future<void> _practiceMiss(TeamSide side) async {
+    if (widget.practice != null && side != TeamSide.blue) {
+      _rejectPracticeAction();
+      return;
+    }
+    await _practiceAction(PracticeStep.missBlue, () async {
+      await _recordMiss(side);
+    });
+  }
+
   bool _guideVisible = false;
   bool _leaveBusy = false;
   bool _decisionBusy = false;
   bool _finishConfirmationOpen = false;
+  bool _matchControlsOpen = false;
+  final FocusNode _practiceCourtFocus = FocusNode(debugLabel: 'practice-court');
   bool _interactionPaused = false;
   bool _pauseTransitionBusy = false;
   bool _pausedPanelVisible = false;
@@ -147,7 +230,7 @@ class _ScoringPageState extends State<ScoringPage>
   @override
   void initState() {
     super.initState();
-    _guideVisible = widget.showInitialGuide;
+    _guideVisible = widget.practice == null && widget.showInitialGuide;
     WidgetsBinding.instance.addObserver(this);
     _attachController();
     _interactionPaused =
@@ -172,8 +255,20 @@ class _ScoringPageState extends State<ScoringPage>
   @override
   void didUpdateWidget(covariant ScoringPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!oldWidget.showInitialGuide && widget.showInitialGuide) {
+    if (widget.practice == null &&
+        !oldWidget.showInitialGuide &&
+        widget.showInitialGuide) {
       _guideVisible = true;
+    }
+    if (oldWidget.practice?.step != widget.practice?.step) {
+      _practiceConsumedStep = null;
+      if (widget.practice?.step == PracticeStep.courtPoint) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && widget.practice?.step == PracticeStep.courtPoint) {
+            _practiceCourtFocus.requestFocus();
+          }
+        });
+      }
     }
     final controllerChanged =
         oldWidget.controller != widget.controller ||
@@ -210,6 +305,15 @@ class _ScoringPageState extends State<ScoringPage>
   @override
   void dispose() {
     _disposed = true;
+    _practiceCourtFocus.dispose();
+    for (final route in _practicePopupRoutes.toList()) {
+      final navigator = route.navigator;
+      if (navigator == null) continue;
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (navigator.mounted && route.isActive) navigator.removeRoute(route);
+      });
+    }
+    _practicePopupRoutes.clear();
     final pausedRoute = _pausedPanelRoute;
     final pausedNavigator = pausedRoute?.navigator;
     if (pausedRoute != null && pausedNavigator != null) {
@@ -535,7 +639,7 @@ class _ScoringPageState extends State<ScoringPage>
         child: LayoutBuilder(
           builder: (context, constraints) {
             final portrait = _usesPortraitScoringLayout(constraints);
-            return Stack(
+            final workspace = Stack(
               key: _motionWorkspaceKey,
               fit: StackFit.expand,
               children: [
@@ -543,23 +647,52 @@ class _ScoringPageState extends State<ScoringPage>
                   absorbing: _interactionPaused,
                   child: Column(
                     children: [
-                      _Scoreboard(
-                        seriesContextLabel: widget.seriesContextLabel,
-                        state: state,
-                        clock: clock,
-                        portrait: portrait,
-                        onLeave: _requestLeave,
-                        onUndo: () => unawaited(_undoLastScoringAction()),
-                        onFoul: (side) => unawaited(_recordFoul(side)),
-                        foulEnabled:
-                            !decisionControlsDeferred &&
-                            state.courtFirstShotDraft == null &&
-                            state.pendingLocation == null,
-                        onMore: _showMore,
-                        onFinish: decisionControlsDeferred
-                            ? null
-                            : _showMatchControls,
-                        labels: labels,
+                      PracticeAvoid(
+                        enabled: widget.practice != null,
+                        child: _Scoreboard(
+                          seriesContextLabel: widget.seriesContextLabel,
+                          state: state,
+                          clock: clock,
+                          portrait: portrait,
+                          onLeave: _requestLeave,
+                          onUndo: () => unawaited(
+                            _practiceAction(
+                              PracticeStep.undo,
+                              _undoLastScoringAction,
+                            ),
+                          ),
+                          onFoul: (side) {
+                            if (widget.practice != null) {
+                              _rejectPracticeAction();
+                              return;
+                            }
+                            unawaited(_recordFoul(side));
+                          },
+                          foulEnabled:
+                              !decisionControlsDeferred &&
+                              state.courtFirstShotDraft == null &&
+                              state.pendingLocation == null,
+                          onMore: () {
+                            if (widget.practice != null) {
+                              _rejectPracticeAction();
+                              return;
+                            }
+                            unawaited(_showMore());
+                          },
+                          onFinish: decisionControlsDeferred
+                              ? null
+                              : () {
+                                  if (widget.practice != null) {
+                                    if (_practiceAllows(PracticeStep.finish)) {
+                                      unawaited(_showMatchControls());
+                                    }
+                                  } else {
+                                    unawaited(_showMatchControls());
+                                  }
+                                },
+                          labels: labels,
+                          practiceStep: widget.practice?.step,
+                        ),
                       ),
                       _buildRecordStatus(context, state),
                       Expanded(
@@ -622,11 +755,25 @@ class _ScoringPageState extends State<ScoringPage>
                   _buildDecisionOverlay(context, state),
               ],
             );
+            return workspace;
           },
         ),
       ),
     );
-    if (widget.onRequestLeave == null) return page;
+    final coachedPage = widget.practice == null
+        ? page
+        : PracticeCoachHost(
+            presentation: widget.practice!,
+            enabled:
+                !_matchControlsOpen &&
+                !_finishConfirmationOpen &&
+                !_practiceExitRequested &&
+                (ModalRoute.of(context)?.isCurrent ?? true),
+            child: page,
+          );
+    if (widget.onRequestLeave == null && widget.practice == null) {
+      return coachedPage;
+    }
     return PopScope<void>(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -634,7 +781,7 @@ class _ScoringPageState extends State<ScoringPage>
           unawaited(_requestLeave());
         }
       },
-      child: page,
+      child: coachedPage,
     );
   }
 
@@ -706,28 +853,74 @@ class _ScoringPageState extends State<ScoringPage>
       for (final location in state.shotLocations)
         if (location.isMiss && !_showsMissLocations(location.side)) location.id,
     };
+    final practicePoint =
+        state.courtFirstShotDraft?.point ??
+        state.shotLocations.lastOrNull?.point;
+    final court = CourtView(
+      key: const Key('scoring-court'),
+      geometryKey: _courtGeometryKey,
+      shotLocations: state.shotLocations,
+      pendingLocation: state.pendingLocation,
+      detailedShotDraft: state.courtFirstShotDraft,
+      hiddenShotLocationIds: displayHiddenIds,
+      transientMarkers: _transientMarkers.values
+          .where((marker) => !marker.isMiss || _showsMissLocations(marker.side))
+          .toList(growable: false),
+      eraserMarkers: _eraserMarkers.values
+          .where((marker) => !marker.isMiss || _showsMissLocations(marker.side))
+          .toList(growable: false),
+      locationPrompt: prompt,
+      onPendingLocationChanged: (point) {
+        if (widget.practice == null) {
+          _controller.updatePendingLocation(point);
+        }
+      },
+      onCourtPointTap: _handleCourtPoint,
+    );
     return Padding(
       padding: const EdgeInsets.all(8),
-      child: CourtView(
-        key: const Key('scoring-court'),
-        geometryKey: _courtGeometryKey,
-        shotLocations: state.shotLocations,
-        pendingLocation: state.pendingLocation,
-        detailedShotDraft: state.courtFirstShotDraft,
-        hiddenShotLocationIds: displayHiddenIds,
-        transientMarkers: _transientMarkers.values
-            .where(
-              (marker) => !marker.isMiss || _showsMissLocations(marker.side),
-            )
-            .toList(growable: false),
-        eraserMarkers: _eraserMarkers.values
-            .where(
-              (marker) => !marker.isMiss || _showsMissLocations(marker.side),
-            )
-            .toList(growable: false),
-        locationPrompt: prompt,
-        onPendingLocationChanged: _controller.updatePendingLocation,
-        onCourtPointTap: _handleCourtPoint,
+      child: PracticeTarget(
+        active: widget.practice?.step == PracticeStep.courtPoint,
+        id: PracticeTargetId.court,
+        rectBuilder: (size) => Rect.fromCenter(
+          center: HalfCourtGeometry.pointToOffset(
+            CourtPoint(x: .5, y: .5),
+            size,
+          ),
+          width: 48,
+          height: 48,
+        ),
+        child: PracticeAvoid(
+          enabled: widget.practice != null && practicePoint != null,
+          rectBuilder: (size) => Rect.fromCenter(
+            center: HalfCourtGeometry.pointToOffset(
+              practicePoint ?? CourtPoint(x: .5, y: .5),
+              size,
+            ),
+            width: 40,
+            height: 40,
+          ),
+          child: widget.practice == null
+              ? court
+              : FocusableActionDetector(
+                  key: const Key('practice-court-keyboard'),
+                  focusNode: _practiceCourtFocus,
+                  autofocus: widget.practice?.step == PracticeStep.courtPoint,
+                  shortcuts: const <ShortcutActivator, Intent>{
+                    SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
+                    SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
+                  },
+                  actions: <Type, Action<Intent>>{
+                    ActivateIntent: CallbackAction<ActivateIntent>(
+                      onInvoke: (_) {
+                        _handleCourtPoint(CourtPoint(x: .5, y: .5));
+                        return null;
+                      },
+                    ),
+                  },
+                  child: court,
+                ),
+        ),
       ),
     );
   }
@@ -806,6 +999,13 @@ class _ScoringPageState extends State<ScoringPage>
       score: isBlue ? state.score.blueScore : state.score.redScore,
       fouls: isBlue ? state.blueFouls : state.redFouls,
       scoreButtons: const [1, 2, 3],
+      practiceHighlightPoints:
+          (isBlue && widget.practice?.step == PracticeStep.scoreBlueTwo) ||
+              (!isBlue && widget.practice?.step == PracticeStep.scoreRedTwo)
+          ? 2
+          : null,
+      practiceHighlightMiss:
+          isBlue && widget.practice?.step == PracticeStep.missBlue,
       scoreEnabled:
           !decisionControlsDeferred &&
           (draft != null || state.pendingLocation == null),
@@ -820,8 +1020,8 @@ class _ScoringPageState extends State<ScoringPage>
       missButtonKey: _missButtonKeys[side],
       foulStamp: _foulStampSide == side,
       foulStampVersion: _foulStampVersion,
-      onScore: (points) => unawaited(_recordScore(side, points)),
-      onMiss: () => unawaited(_recordMiss(side)),
+      onScore: (points) => unawaited(_practiceScore(side, points)),
+      onMiss: () => unawaited(_practiceMiss(side)),
     );
   }
 
@@ -1062,6 +1262,10 @@ class _ScoringPageState extends State<ScoringPage>
   }
 
   void _handleCourtPoint(CourtPoint point) {
+    if (widget.practice != null) {
+      if (!_practiceAllows(PracticeStep.courtPoint)) return;
+      _practiceConsumedStep = PracticeStep.courtPoint;
+    }
     final draft = _controller.courtFirstShotDraft;
     if (draft != null) {
       _controller.updateCourtFirstShot(point: point);
@@ -1390,6 +1594,10 @@ class _ScoringPageState extends State<ScoringPage>
   }
 
   Future<void> _requestLeave() async {
+    if (widget.practice != null) {
+      widget.practice!.onExit();
+      return;
+    }
     final generation = _actionGeneration;
     final controller = _controller;
     final onRequestLeave = widget.onRequestLeave;
@@ -1444,64 +1652,144 @@ class _ScoringPageState extends State<ScoringPage>
     }
   }
 
+  Widget _practicePopupCoach(
+    BuildContext dialogContext,
+    Widget dialog,
+    PracticeTargetId target,
+    String hint,
+  ) {
+    final practice = widget.practice;
+    if (practice == null) return dialog;
+    final route = ModalRoute.of(dialogContext)!;
+    final navigator = Navigator.of(dialogContext);
+    if (_practicePopupRoutes.add(route)) {
+      unawaited(
+        route.completed.then<void>((_) {
+          _practicePopupRoutes.remove(route);
+        }),
+      );
+    }
+    return PracticeCoachHost(
+      presentation: PracticePresentation(
+        step: practice.step,
+        showCoach: practice.showCoach,
+        onExit: () {
+          if (_practiceExitRequested) return;
+          // Invalidate continuations before the owned popup is dismissed.
+          _practiceExitRequested = true;
+          _actionGeneration++;
+          if (mounted) setState(() {});
+          if (route.isActive && navigator.mounted) {
+            if (route.isCurrent) {
+              navigator.pop();
+            } else {
+              navigator.removeRoute(route);
+            }
+          }
+          unawaited(
+            route.completed.then<void>((_) {
+              if (mounted && !_disposed) practice.onExit();
+            }),
+          );
+        },
+      ),
+      target: target,
+      hint: hint,
+      child: dialog,
+    );
+  }
+
   Future<void> _showMatchControls() async {
-    if (_decisionBusy ||
+    if (_matchControlsOpen ||
+        _decisionBusy ||
         _interactionPaused ||
         _decisionControlsDeferred(_controller.state)) {
       return;
     }
-    final labels = _labels(context);
-    final action = await showDialog<_MatchControlAction>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => PopScope<void>(
-        canPop: false,
-        child: AlertDialog(
-          key: const Key('scoring-match-controls'),
-          title: Text(labels.matchControlsTitle),
-          content: Text(labels.matchControlsBody),
-          actions: [
-            TextButton(
-              key: const Key('match-controls-return'),
-              style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
-              onPressed: () => Navigator.of(
-                dialogContext,
-              ).pop(_MatchControlAction.returnToScoring),
-              child: Text(labels.returnToScoring),
-            ),
-            OutlinedButton(
-              key: const Key('match-controls-pause'),
-              onPressed: () =>
-                  Navigator.of(dialogContext).pop(_MatchControlAction.pause),
-              child: Text(labels.pauseMatch),
-            ),
-            FilledButton(
-              key: const Key('match-controls-finish'),
-              onPressed:
-                  !_canFinish ||
-                      _controller.state.decision?.canFinish == false ||
-                      _decisionControlsDeferred(_controller.state)
-                  ? null
-                  : () => Navigator.of(
+    setState(() => _matchControlsOpen = true);
+    try {
+      final labels = _labels(context);
+      final action = await showDialog<_MatchControlAction>(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => _practicePopupCoach(
+          dialogContext,
+          PopScope<void>(
+            canPop: false,
+            child: AlertDialog(
+              key: const Key('scoring-match-controls'),
+              scrollable: widget.practice != null,
+              title: PracticeAvoid(
+                enabled: widget.practice != null,
+                child: Text(labels.matchControlsTitle),
+              ),
+              content: PracticeAvoid(
+                enabled: widget.practice != null,
+                child: Text(labels.matchControlsBody),
+              ),
+              actions: [
+                PracticeAvoid(
+                  enabled: widget.practice != null,
+                  child: TextButton(
+                    key: const Key('match-controls-return'),
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size(48, 48),
+                    ),
+                    onPressed: () => Navigator.of(
                       dialogContext,
-                    ).pop(_MatchControlAction.finish),
-              child: Text(labels.finish),
+                    ).pop(_MatchControlAction.returnToScoring),
+                    child: Text(labels.returnToScoring),
+                  ),
+                ),
+                PracticeAvoid(
+                  enabled: widget.practice != null,
+                  child: OutlinedButton(
+                    key: const Key('match-controls-pause'),
+                    onPressed: widget.practice != null
+                        ? null
+                        : () => Navigator.of(
+                            dialogContext,
+                          ).pop(_MatchControlAction.pause),
+                    child: Text(labels.pauseMatch),
+                  ),
+                ),
+                PracticeTarget(
+                  active: widget.practice != null,
+                  id: PracticeTargetId.finishControls,
+                  child: FilledButton(
+                    key: const Key('match-controls-finish'),
+                    onPressed:
+                        !_canFinish ||
+                            _controller.state.decision?.canFinish == false ||
+                            _decisionControlsDeferred(_controller.state)
+                        ? null
+                        : () => Navigator.of(
+                            dialogContext,
+                          ).pop(_MatchControlAction.finish),
+                    child: Text(labels.finish),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
+          PracticeTargetId.finishControls,
+          _localizations(context).practiceFinishControlsHint,
         ),
-      ),
-    );
-    if (!mounted) return;
-    switch (action) {
-      case _MatchControlAction.pause:
-        await _pauseFromMatchControls();
-        return;
-      case _MatchControlAction.finish:
-        await _confirmFinishDecision();
-        return;
-      case _MatchControlAction.returnToScoring:
-      case null:
-        return;
+      );
+      if (!mounted || _practiceExitRequested) return;
+      switch (action) {
+        case _MatchControlAction.pause:
+          await _pauseFromMatchControls();
+          return;
+        case _MatchControlAction.finish:
+          await _confirmFinishDecision();
+          return;
+        case _MatchControlAction.returnToScoring:
+        case null:
+          return;
+      }
+    } finally {
+      if (mounted) setState(() => _matchControlsOpen = false);
     }
   }
 
@@ -1529,6 +1817,23 @@ class _ScoringPageState extends State<ScoringPage>
               _ => event.note ?? event.customLabel ?? l10n.replayFilterOther,
             },
           ].join(' ');
+    if (widget.practice != null) {
+      return Semantics(
+        liveRegion: saving,
+        child: Container(
+          key: const Key('scoring-record-status'),
+          width: double.infinity,
+          color: editorialThemeOf(context).surface,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+          child: Text(
+            saving ? l10n.practiceSaving : '${l10n.v2LastAction}: $action',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 12),
+          ),
+        ),
+      );
+    }
     final status = failed
         ? l10n.v2SaveFailed
         : saving
@@ -2194,7 +2499,7 @@ class _ScoringPageState extends State<ScoringPage>
                                 label:
                                     (AppLocalizations.of(sheetBuilderContext) ??
                                             AppLocalizationsZh())
-                                        .v2GuideTitle,
+                                        .practiceManualHelp,
                                 enabled: true,
                                 onTap: () async {
                                   Navigator.of(sheetBuilderContext).pop();
@@ -2528,7 +2833,7 @@ class _ScoringPageState extends State<ScoringPage>
     final blueScore = decision?.blueScore ?? state.score.blueScore;
     final l10n = _localizations(context);
     final failureMessage = _labels(context).failureRetry;
-    _finishConfirmationOpen = true;
+    setState(() => _finishConfirmationOpen = true);
     TrackingCoverage? coverage;
     try {
       coverage = await confirmRecordingCoverage(
@@ -2544,9 +2849,33 @@ class _ScoringPageState extends State<ScoringPage>
         confirmLabel: l10n.finishMatch,
         cancelKey: const Key('scoring-finish-cancel'),
         confirmKey: const Key('scoring-finish-confirm'),
+        decorateDialog: widget.practice == null
+            ? null
+            : (dialogContext, dialog) => _practicePopupCoach(
+                dialogContext,
+                dialog,
+                PracticeTargetId.finishConfirm,
+                l10n.practiceFinishCoverageHint,
+              ),
+        decorateTitle: widget.practice == null
+            ? null
+            : (_, child) => PracticeAvoid(child: child),
+        decorateScope: widget.practice == null
+            ? null
+            : (_, child) => PracticeAvoid(child: child),
+        decorateConfirm: widget.practice == null
+            ? null
+            : (_, child) => PracticeTarget(
+                active: true,
+                id: PracticeTargetId.finishConfirm,
+                child: child,
+              ),
+        decorateCancel: widget.practice == null
+            ? null
+            : (_, child) => PracticeAvoid(child: child),
       );
     } finally {
-      _finishConfirmationOpen = false;
+      if (mounted) setState(() => _finishConfirmationOpen = false);
     }
     if (coverage == null || !_isCurrentAction(generation, controller)) {
       return false;
@@ -2820,9 +3149,11 @@ class _Scoreboard extends StatelessWidget {
     required this.onMore,
     required this.onFinish,
     required this.labels,
+    this.practiceStep,
   });
 
   final String? seriesContextLabel;
+  final PracticeStep? practiceStep;
   final MatchScoringState state;
   final ClockProjection? clock;
   final bool portrait;
@@ -2864,23 +3195,29 @@ class _Scoreboard extends StatelessWidget {
       required IconData icon,
       required VoidCallback onPressed,
     }) {
-      return Tooltip(
-        message: tooltip,
-        child: OutlinedButton(
-          key: key,
-          onPressed: onPressed,
-          style: OutlinedButton.styleFrom(
-            minimumSize: const Size(48, 48),
-            padding: EdgeInsets.zero,
-            foregroundColor: Colors.white,
-            backgroundColor: HoopitoColors.ink,
-            elevation: 0,
-            side: const BorderSide(color: Color(0xFF777D82)),
-            shape: const BeveledRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(7)),
+      return PracticeTarget(
+        id: key == const Key('scoring-undo') ? PracticeTargetId.undo : null,
+        active:
+            key == const Key('scoring-undo') &&
+            practiceStep == PracticeStep.undo,
+        child: Tooltip(
+          message: tooltip,
+          child: OutlinedButton(
+            key: key,
+            onPressed: onPressed,
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size(48, 48),
+              padding: EdgeInsets.zero,
+              foregroundColor: Colors.white,
+              backgroundColor: HoopitoColors.ink,
+              elevation: 0,
+              side: const BorderSide(color: Color(0xFF777D82)),
+              shape: const BeveledRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+              ),
             ),
+            child: Icon(icon),
           ),
-          child: Icon(icon),
         ),
       );
     }
@@ -2917,7 +3254,20 @@ class _Scoreboard extends StatelessWidget {
           message: labels.foul,
           child: OutlinedButton(
             key: const Key('scoring-foul'),
-            onPressed: foulEnabled ? controller.open : null,
+            onPressed: foulEnabled
+                ? () {
+                    if (practiceStep != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(labels.l10n.practiceWrongAction),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    } else {
+                      controller.open();
+                    }
+                  }
+                : null,
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(48, 48),
               padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -3123,29 +3473,33 @@ class _Scoreboard extends StatelessWidget {
                   top: actionTop,
                   bottom: 4,
                   width: resolvedFinishWidth,
-                  child: Tooltip(
-                    message: labels.finish,
-                    child: FilledButton(
-                      key: const Key('scoring-finish'),
-                      onPressed: onFinish,
-                      style: FilledButton.styleFrom(
-                        minimumSize: const Size(48, 48),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: compact ? 2 : 12,
+                  child: PracticeTarget(
+                    id: PracticeTargetId.finish,
+                    active: practiceStep == PracticeStep.finish,
+                    child: Tooltip(
+                      message: labels.finish,
+                      child: FilledButton(
+                        key: const Key('scoring-finish'),
+                        onPressed: onFinish,
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size(48, 48),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: compact ? 2 : 12,
+                          ),
+                          foregroundColor: HoopitoColors.ink,
+                          backgroundColor: editorial.arenaAccent,
+                          elevation: 0,
+                          shape: const BeveledRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(7)),
+                          ),
                         ),
-                        foregroundColor: HoopitoColors.ink,
-                        backgroundColor: editorial.arenaAccent,
-                        elevation: 0,
-                        shape: const BeveledRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(7)),
-                        ),
-                      ),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          compact ? labels.finishShort : labels.finish,
-                          maxLines: 1,
-                          style: const TextStyle(fontWeight: FontWeight.w900),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            compact ? labels.finishShort : labels.finish,
+                            maxLines: 1,
+                            style: const TextStyle(fontWeight: FontWeight.w900),
+                          ),
                         ),
                       ),
                     ),

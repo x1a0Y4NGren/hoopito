@@ -13,6 +13,11 @@ Future<TrackingCoverage?> confirmRecordingCoverage(
   TrackingCoverage initial = TrackingCoverage.scoresOnly,
   Key? cancelKey,
   Key? confirmKey,
+  Widget Function(BuildContext, Widget)? decorateDialog,
+  Widget Function(BuildContext, Widget)? decorateTitle,
+  Widget Function(BuildContext, Widget)? decorateScope,
+  Widget Function(BuildContext, Widget)? decorateConfirm,
+  Widget Function(BuildContext, Widget)? decorateCancel,
 }) {
   var complete = initial.index >= TrackingCoverage.shotAttempts.index;
   return showDialog<TrackingCoverage>(
@@ -20,52 +25,66 @@ Future<TrackingCoverage?> confirmRecordingCoverage(
     builder: (dialogContext) => StatefulBuilder(
       builder: (context, setState) {
         final l10n = AppLocalizations.of(context) ?? AppLocalizationsZh();
-        return AlertDialog(
+        Widget decorate(
+          Widget child,
+          Widget Function(BuildContext, Widget)? decorator,
+        ) => decorator?.call(context, child) ?? child;
+        final dialog = AlertDialog(
           scrollable: true,
-          title: Text(title),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (scoreLine != null) Text(scoreLine),
-              if (draftNotice != null) Text(draftNotice),
-              const SizedBox(height: 16),
-              Text(
-                l10n.v2CoverageTitle,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              SwitchListTile.adaptive(
-                key: const Key('confirm-complete-recording'),
-                contentPadding: EdgeInsets.zero,
-                title: Text(
-                  complete ? l10n.v2CoverageComplete : l10n.v2CoverageScores,
+          title: decorate(Text(title), decorateTitle),
+          content: decorate(
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (scoreLine != null) Text(scoreLine),
+                if (draftNotice != null) Text(draftNotice),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.v2CoverageTitle,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-                value: complete,
-                onChanged: (value) => setState(() => complete = value),
-              ),
-              Text(l10n.v2CoverageHelp),
-            ],
+                SwitchListTile.adaptive(
+                  key: const Key('confirm-complete-recording'),
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    complete ? l10n.v2CoverageComplete : l10n.v2CoverageScores,
+                  ),
+                  value: complete,
+                  onChanged: (value) => setState(() => complete = value),
+                ),
+                Text(l10n.v2CoverageHelp),
+              ],
+            ),
+            decorateScope,
           ),
           actions: [
-            TextButton(
-              key: cancelKey,
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(l10n.cancelAction),
-            ),
-            FilledButton(
-              key: confirmKey,
-              onPressed: () => Navigator.pop(
-                dialogContext,
-                complete
-                    ? (initial.index > TrackingCoverage.shotAttempts.index
-                          ? initial
-                          : TrackingCoverage.shotAttempts)
-                    : TrackingCoverage.scoresOnly,
+            decorate(
+              TextButton(
+                key: cancelKey,
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(l10n.cancelAction),
               ),
-              child: Text(confirmLabel),
+              decorateCancel,
+            ),
+            decorate(
+              FilledButton(
+                key: confirmKey,
+                onPressed: () => Navigator.pop(
+                  dialogContext,
+                  complete
+                      ? (initial.index > TrackingCoverage.shotAttempts.index
+                            ? initial
+                            : TrackingCoverage.shotAttempts)
+                      : TrackingCoverage.scoresOnly,
+                ),
+                child: Text(confirmLabel),
+              ),
+              decorateConfirm,
             ),
           ],
         );
+        return decorate(dialog, decorateDialog);
       },
     ),
   );

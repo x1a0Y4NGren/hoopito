@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hoopito/app/hoopito_app.dart';
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/core/data/app_database.dart';
 import 'package:hoopito/core/data/repositories/match_repository.dart';
@@ -31,6 +32,7 @@ void main() {
     final playerId = 'integration-profile-$runId';
     final playerName = '集成档案-$runId';
     final database = AppDatabase.inMemory();
+    await PracticePreferences(database).markInvitationHandled();
     addTearDown(() async {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
@@ -107,13 +109,33 @@ void main() {
       description: 'ScoringPage after confirming pregame',
     );
     await _pumpUntilLandscape(tester);
-    await _pumpUntilFound(tester, find.byKey(const Key('scoring-guide')));
+    final scoringGuide = find.byKey(const Key('scoring-guide'));
+    expect(scoringGuide, findsNothing);
     expect(find.byType(Dialog), findsNothing);
     expect(find.byKey(const Key('red-score-2')).hitTestable(), findsOneWidget);
     await _tapWhenHitTestable(
       tester,
+      find.byKey(const Key('scoring-more')),
+      description: 'the scoring More menu',
+    );
+    final manualGuide = find.byKey(const Key('more-quick-guide'));
+    await _pumpUntilFound(tester, manualGuide);
+    await tester.ensureVisible(manualGuide);
+    await _tapWhenHitTestable(
+      tester,
+      manualGuide,
+      description: 'open the scoring guide from More',
+    );
+    await _pumpUntilFound(tester, scoringGuide);
+    await _tapWhenHitTestable(
+      tester,
       find.byKey(const Key('scoring-guide-skip')),
-      description: 'the inline first-use guide skip action',
+      description: 'close the manually opened scoring guide',
+    );
+    await _pumpUntilGone(
+      tester,
+      scoringGuide,
+      description: 'the scoring guide',
     );
 
     await tester.tap(find.byKey(const Key('red-score-2')));

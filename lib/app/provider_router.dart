@@ -37,6 +37,7 @@ import 'package:hoopito/features/scoring/scoring_page.dart';
 import 'package:hoopito/features/settings/data_management_page.dart';
 import 'package:hoopito/features/settings/settings_page.dart';
 import 'package:hoopito/app/summary_route.dart';
+import 'package:hoopito/app/practice_route.dart';
 import 'package:hoopito/app/route_status.dart';
 import 'package:hoopito/app/update_providers.dart';
 import 'package:hoopito/features/settings/software_update_page.dart';
@@ -170,6 +171,10 @@ GoRouter buildProviderAppRouter({
               ? state.extra as MatchSetupPreset
               : null,
         ),
+      ),
+      GoRoute(
+        path: '/practice',
+        builder: (context, state) => const PracticeRoute(),
       ),
       GoRoute(
         path: '/settings/rules',
@@ -519,17 +524,6 @@ class _ScoringRoute extends ConsumerWidget {
             ref.watch(matchSeriesProvider(matchId)).valueOrNull == null
             ? null
             : '${l10n.seriesTitle} #${ref.watch(matchSeriesProvider(matchId)).valueOrNull!.games.firstWhere((g) => g.matchId == matchId).gameNumber}',
-        showInitialGuide:
-            ref.watch(scoringGuideSeenProvider).valueOrNull == false,
-        onGuideDismissed: () => unawaited(
-          ref
-              .read(scoringGuidePreferencesProvider)
-              .markSeen()
-              .then(
-                (_) => ref.invalidate(scoringGuideSeenProvider),
-                onError: (Object error, StackTrace stack) {},
-              ),
-        ),
         onOpenReplay: () => context.push('/matches/$matchId/replay'),
         onRequestLeave: () => _leaveScoring(context, ref, matchId),
         onResumeClock: canResumeClock
@@ -810,6 +804,7 @@ class _SettingsRoute extends ConsumerWidget {
       onOpenProject: () => context.push('/about'),
       onOpenData: () => context.push('/settings/data'),
       onOpenUpdate: () => context.push('/settings/update'),
+      onOpenPractice: () => context.push('/practice'),
     );
   }
 }

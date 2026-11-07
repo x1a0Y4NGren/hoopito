@@ -2,33 +2,15 @@
 
 ## Scope and Completion
 
-Complete the current request, relevant verification, and documentation needed to use or maintain the change. Ordinary task completion does not authorize project closeout. Reuse authorization already given for that task; ask only when an unresolved choice materially changes scope or consequences. Preserve unrelated user changes.
-
-Read only relevant guidance: [CONTRIBUTING.md](CONTRIBUTING.md) for development, [HANDOFF.md](docs/development/handoff.md) for prior status, and the [release checklist](docs/release/release-checklist.md) when preparing a release. Historical plans and branch prompts are reference material, not current assignments or standing approval gates. Apply skills to the workflow they actually support; current user instructions take precedence over skill recommendations.
-
-The maintained checkout is `main`, currently the 2.1 codebase branded Hoopito · 球豆 (formerly HoopTrace). Read HANDOFF and check the actual branch before continuing. Use temporary worktrees only when isolation is needed. Integrate changes only within current authorization; worktree archival and project cleanup belong to explicitly requested closeout. Keep build and test evidence tied to its actual application source commit; later documentation commits do not change APK provenance.
+Complete the current request, applicable verification, and necessary documentation. Preserve unrelated changes. Check the actual branch and read [HANDOFF.md](docs/development/handoff.md). The maintained checkout is `main`. Use [CONTRIBUTING.md](CONTRIBUTING.md) for development and the [release checklist](docs/release/release-checklist.md) when preparing a release. Historical plans are reference material. Current user instructions take precedence over skill recommendations.
 
 ## Branch and PR Conventions
 
-Use [CONTRIBUTING.md](CONTRIBUTING.md#分支与提交) as the naming authority for humans and automation. Create ordinary branches as `<type>/<purpose>` using `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore`, or `revert`, and a lowercase ASCII alphanumeric, single-hyphen-separated purpose. Do not use an author, tool, or platform as a branch category or append an origin marker; repository conventions override a tool's default branch prefix. A purpose may name a tool when that tool is what the change actually addresses.
-
-Keep `main` as the maintenance branch and `preview/website` as the protected long-lived website preview branch. Use the verified preview entry in [website/README.md](website/README.md#vercel-预览与正式域名); historical branch names and deployment records retain their original identities. `deps/` is reserved for genuine same-repository Dependabot branches; human dependency fixes use an ordinary `build/` or `chore/` branch. Do not bulk rename historical local branches or rewrite recorded source identities.
-
-PR titles and final squash commits follow `type(scope)!: subject`, with scope and `!` optional; scope uses the same lowercase ASCII word syntax and subjects may be Chinese or English. Intermediate commit formatting is advisory. `Repository policy required` validates PR metadata and reruns after title edits; repair the name or title rather than bypassing the check. A naming exception must match the actual bot author and source repository, including an exact PR/head pair for legacy transitions.
+Follow [CONTRIBUTING.md](CONTRIBUTING.md#分支与提交) for branch names, PR titles, and squash commits. Keep `main` as the maintenance branch and `preview/website` as the protected website preview branch. Use the [verified preview entry](website/README.md#vercel-预览与正式域名) and preserve historical branch and deployment identities.
 
 ## 项目收尾：仅由用户明确触发
 
-只有用户以当前行动指令明确要求“做项目收尾”“执行项目收尾工作”“给本轮项目收尾”等同义事项时，才启动 [CONTRIBUTING.md 的项目收尾流程](CONTRIBUTING.md#项目收尾流程)。授权仅覆盖这次指定任务或阶段，不延续到后续开发任务；用户暂停或撤销后立即停止收尾。
-
-“继续”“完成这个功能”“实现计划”“完成除部署外的工作”“检查一下”“可以了”及普通完成汇报均不构成收尾授权。引用、示例、讨论或修改收尾规则中的上述措辞也不构成执行指令。没有明确指令时，不主动发起收尾，也不在每次任务结束时要求用户确认是否收尾。
-
-未触发收尾时，禁止以任务结束、索引 Dirty/Stale、刷新阈值、技能建议或维持干净工作区为由：执行 AOCI Maintain、Entry 更新、认知优化、初始化、迁移、Curation 或治理资产修复；更新交接／收尾记录；为收尾暂存或提交；清理、归档工作树、验证证据、缓存或开发服务。不得自动修改正式 AOCI 卷、Baseline、Scope 或其他治理配置。
-
-完成需求本身的源码、必要使用文档、格式化、测试、构建及内容／链接检查照常进行；本次操作造成的临时设备设置或资源占用须及时恢复，不等待收尾授权。按需读取已有 AOCI 合同和认知用于理解代码不属于收尾，但不得借读取触发写入、治理或修复；只为修改规则等局部文档任务，不额外启动全库认知读取。未维护的索引继续标为 Dirty/Stale，不冒称当前对齐；必要时在普通交付中简短说明待用户要求收尾后处理，不创建 AOCI 待办写入。
-
-明确收尾后，顺序为：核对本轮范围与限制 → 检查改动及适用验证 → 保存来源与更新必要交接文档 → 处理不依赖合并的本轮临时资源 → 最终稳定状态下维护 AOCI 并证明对齐 → 审查差异并本地提交 → 推送本轮分支并创建或更新 PR → 通过最新 main 基线的全部保护检查后手动 squash 合入 main → 核验整合与合并后 CI、保存回执并安全归档本轮工作树 → 汇报实际结果。完整步骤、跳过条件和安全边界见 CONTRIBUTING。
-
-明确的项目收尾默认授权本轮本地提交、分支推送、创建或更新 PR，以及通过检查后的 main 合并，无需再次询问同一整合授权。用户明确的暂停、仅本地、禁止提交或推送等限制优先；tag、正式发行、网站部署、长期预览分支更新及无关远端或共享资源删除仍须单独授权。用户直接单独要求其中一项时，仅执行该项，不据此扩展成整套收尾。本轮结果已经在 main 时只核验，不创建空 PR 或重复合并；保护检查失败或整合未完成时保留分支、工作树与证据，不绕过门禁，也不报告完整收尾完成。合并后的 SHA 和 CI 回执保存到外部证据并汇报，不为回填自身合并记录再创建一轮提交和 PR。
+只有用户明确要求本轮项目收尾时，才执行 [CONTRIBUTING.md 的项目收尾流程](CONTRIBUTING.md#项目收尾流程)。普通任务完成、单项操作和讨论或修改规则均不触发收尾。AOCI 写入、交接、收尾提交和归档须有对应授权。用户暂停或撤销后立即停止收尾。
 
 ## Project Structure
 
@@ -62,21 +44,11 @@ Keep core features offline-capable. Review privacy and architecture for new netw
 
 ## Proportionate Verification
 
-Use the validation matrix in CONTRIBUTING. Documentation-only edits need content/link checks and `git diff --check`, not Flutter builds. For Dart changes, format affected files, analyze, and run relevant `*_test.dart` tests. Broaden coverage for shared behavior, persistence, platform integration, or release work.
-
-Test observable behavior and inspect changed goldens. Reuse successful checks while their relevant inputs and environment remain unchanged; rerun for new changes, failures, or concrete concerns. Android integration tests can overwrite `app-debug.apk`; rebuild before manual installation.
-
-Run Android integration tests on a dedicated test device or isolated Android user (`--device-user <id>`): the runner can uninstall that user's app. File close/reopen tests do not establish process-restart recovery; use an actual file database and cold restart when that behavior is under verification.
-
-Keep startup evidence tied to its source commit, build mode, renderer, and device. Distinguish rendered previews, standard motion, and fallback runs; preserve failed samples and the approved frame budget. Restore temporary device settings after verification.
+Choose checks and reuse evidence using the [validation matrix](CONTRIBUTING.md#测试要求). Keep test and build evidence tied to the actual inputs and environment. Later documentation commits do not change APK provenance. Use an isolated Android test user or a dedicated device for integration tests, and restore temporary device settings after verification.
 
 ## Collaboration and Delivery
 
-网站每次改动默认先在本地实现、验证并运行，提供本地地址供用户检查和审阅。普通开发完成本地检查后保持本地改动，等待用户审阅；用户明确要求“推送”或“项目收尾”时，按本轮范围推送，其中明确收尾默认继续通过 PR 合入 main。更新长期远端预览或部署网站仍需该次明确授权；此前提交／部署授权不自动覆盖后续改动，收尾合并不等于发布网站。
-
-Delegate independent, bounded work when useful. Create worktrees only when isolation is needed. Wait only for an actual dependency; use completion notifications or bounded waits instead of fixed sleeps and repeated unchanged polls.
-
-When committing is authorized, use short imperative commits, such as `fix: guard replay navigation`. Report the result, actual verification, and remaining blockers. Explicit project closeout includes the current task's commit, branch push, PR and checked squash merge into main, subject to the user's narrower limits. Publishing, deployment and long-lived preview updates remain separately authorized; historical release instructions do not grant them.
+Follow the [day-to-day workflow](CONTRIBUTING.md#日常维护流程) for batching, local review, and authorization. Use temporary worktrees only when isolation is needed. Delegate independent, bounded work when useful. Report the result, actual verification, and remaining blockers.
 
 <!-- aoci:begin -->
 ## AOCI 仓库认知

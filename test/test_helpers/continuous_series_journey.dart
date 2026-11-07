@@ -7,7 +7,7 @@ import 'package:hoopito/core/domain/domain_enums.dart';
 import 'package:hoopito/core/domain/entities/match_series.dart';
 import 'package:hoopito/core/domain/value_objects/court_point.dart';
 import 'package:hoopito/core/domain/value_objects/team_side.dart';
-import 'package:hoopito/core/settings/scoring_guide_preferences.dart';
+import 'package:hoopito/core/settings/practice_preferences.dart';
 import 'package:hoopito/features/history/history_page.dart';
 import 'package:hoopito/features/home/home_page.dart';
 import 'package:hoopito/features/pregame/pregame_page.dart';
@@ -24,7 +24,7 @@ Future<void> runContinuousSeriesJourney(
   WidgetTester tester,
   AppDatabase database,
 ) async {
-  await ScoringGuidePreferences(database).markSeen();
+  await PracticePreferences(database).markInvitationHandled();
   final repository = MatchSeriesRepository(database);
   await tester.pumpWidget(
     HoopitoApp(database: database, showEntryAnimation: false),
