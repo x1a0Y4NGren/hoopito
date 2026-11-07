@@ -1,8 +1,8 @@
 # Hoopito · 球豆文档入口
 
-当前版本为 **Hoopito · 球豆 v2.1.0**（Android `2.1.0+6`，schema 4、JSON 格式 2），维护分支为 `main`，实际分支以 Git 为准。当前应用与签名 tag 来源固定为 `9bbd3b87e99d71f5d9117cd2c5a763a7f8b95d1f`，范围及实际验证见 [v2.1.0 发行记录](release/v2.1.0-release-record.md)。后续文档、截图和网站提交不改变 APK 来源；历史发行与候选记录保留各自源码、设备及验收来源。
+当前版本为 **Hoopito · 球豆 v2.1.1**（Android `2.1.1+7`，schema 4、JSON 格式 2），维护分支为 `main`。正式 APK 与签名 tag 均来自 `b5371c39e3a5984e7da963adb6d57f6af6d50359`，验收范围见 [v2.1.1 发行记录](release/v2.1.1-release-record.md)。历史发行与候选记录保留各自的源码、设备和验收来源。
 
-v2.1.0 可从[官网下载区](https://hoopito.com/#download)或 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0)获取。[官网更新接口](https://hoopito.com/updates/android/stable.json)已同步到正式 v2.1.0，应用仍保留 GitHub 备源。官网生产源码、部署身份及核验见[交接记录](development/handoff.md#官网球馆重构与生产发布2026-11-06)。
+v2.1.1 可从 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.1) 获取。[官网下载区](https://hoopito.com/#download)和[官网更新接口](https://hoopito.com/updates/android/stable.json)目前仍为 v2.1.0。官网生产源码、部署身份和核验见[交接记录](development/handoff.md#官网球馆重构与生产发布2026-11-06)。
 
 ## 当前开发与维护
 
@@ -12,6 +12,7 @@ v2.1.0 可从[官网下载区](https://hoopito.com/#download)或 [GitHub Release
 - [交接、验收与剩余门槛](development/handoff.md)
 - [仓库设置与协作规则](repository-settings.md)
 - [应用内更新维护](development/in-app-updates.md)
+- [快速上手练习维护](design/practice-onboarding.md)
 - [连续对局与 schema 4 兼容](development/continuous-matches.md)
 - [隐私说明](../PRIVACY.md)与[安全报告](../.github/SECURITY.md)
 - [变更记录](../CHANGELOG.md)与[第三方许可证](legal/THIRD_PARTY_NOTICES.md)
@@ -27,9 +28,9 @@ v2.1.0 可从[官网下载区](https://hoopito.com/#download)或 [GitHub Release
 - [发行清单](release/release-checklist.md)：正式发行时使用的模板，当前完成状态以对应发行记录为准。
 - [可复现构建](release/reproducible-builds.md)与[性能证据](release/performance.md)
 - [F-Droid 准备](release/fdroid-notes.md)：按对应渠道任务范围使用。
-- [当前 v2.1.0 下载与附件](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.0)
-- [当前双语 v2.1.0 说明](release/v2.1.0-release-notes.md)与[发行记录](release/v2.1.0-release-record.md)
-- [本次 v2.1.0 中英文计分与整组截图来源](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/screenshots.json)：正式签名包实拍，展示副本仅裁除系统区域。
+- [当前 v2.1.1 下载与附件](https://github.com/x1a0Y4NGren/hoopito/releases/tag/v2.1.1)
+- [当前双语 v2.1.1 说明](release/v2.1.1-release-notes.md)与[发行记录](release/v2.1.1-release-record.md)
+- [v2.1.1 双语练习截图来源](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.1/screenshots.json)，正式签名包实拍，展示副本仅裁除系统区域。
 - [截图维护清单](release/screenshots-checklist.md)与[历史 v2.0.1 双语八张正式包原图来源](release/v2.0.1-screenshots.json)
 
 ## 历史资料
@@ -38,6 +39,7 @@ v2.1.0 可从[官网下载区](https://hoopito.com/#download)或 [GitHub Release
 - [设计与实施记录的使用边界](superpowers/README.md)
 - [历史分支提示](branch-prompts/README.md)与[历史执行顺序](branch-execution-order.md)
 - [已发布 v1.0 说明](release/v1.0.0-release-notes.md)
+- [历史 v2.1.0 说明](release/v2.1.0-release-notes.md)、[发行记录](release/v2.1.0-release-record.md)与[连续对局截图来源](https://github.com/x1a0Y4NGren/hoopito/releases/download/v2.1.0/screenshots.json)
 - [历史 v2.0.1 说明](release/v2.0.1-release-notes.md)、[发行记录](release/v2.0.1-release-record.md)与[原图来源](release/v2.0.1-screenshots.json)
 - [历史 v2.0.0 说明](release/v2.0.0-release-notes.md)
 
