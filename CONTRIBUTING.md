@@ -11,6 +11,12 @@
 3. 安全问题不要公开披露；请按 [SECURITY.md](.github/SECURITY.md) 使用 GitHub 仓库的 Private vulnerability reporting。
 4. 所有贡献都按仓库的 MIT License 提供。
 
+## 接手项目
+
+1. 先运行 `git rev-parse --show-toplevel`、`git branch --show-current`、`git rev-parse HEAD` 和 `git status --short --branch`。核对 `git diff` 与 `git diff --cached`，区分现有改动和本轮范围。
+2. 从[文档索引](docs/README.md)找到适用说明。用[交接记录](docs/development/handoff.md)核对当前维护状态，分别追溯 App 正式包、官网部署和更新源。再读本轮涉及的源码与测试。历史记录用于追溯来源，行动范围以当前任务的授权为准。
+3. 按[验证矩阵](#测试要求)选择检查。当前工具缺少命令、设备或权限时，先完成可运行的检查，记录受阻的命令、原因和剩余验收项。按 [PR 模板](.github/pull_request_template.md)记录实测或复用的结果及其源码与环境，区分未执行和失败。
+
 ## 日常维护流程
 
 1. 确认问题、验收条件与本轮范围。有相关 Issue 时复用，小修复无需另建提案。新报告用 `needs-triage` 标记，维护者复现或明确需求后分类为 `bug`、`enhancement` 或 `question`，再移除待核实标签。重复或不采纳时说明原因。

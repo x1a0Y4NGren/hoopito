@@ -2,7 +2,11 @@
 
 ## Scope and Completion
 
-Complete the current request, applicable verification, and necessary documentation. Preserve unrelated changes. Check the actual branch and read [HANDOFF.md](docs/development/handoff.md). The maintained checkout is `main`. Use [CONTRIBUTING.md](CONTRIBUTING.md) for development and the [release checklist](docs/release/release-checklist.md) when preparing a release. Historical plans are reference material. Current user instructions take precedence over skill recommendations.
+Complete the current request, applicable verification, and necessary documentation. Preserve unrelated changes. The maintenance branch is `main`. Historical plans are reference material. Current user instructions take precedence over skill recommendations.
+
+## Starting or Resuming Work
+
+If the harness does not load this file automatically, ask it to read `AGENTS.md` from the repository root. Check the actual repository root, branch, HEAD, status, and diff before reading the relevant source and tests. Use the [docs index](docs/README.md) and [handoff](docs/development/handoff.md) for project context, the [contribution guide](CONTRIBUTING.md#接手项目) for the maintenance workflow, and the [release checklist](docs/release/release-checklist.md) when preparing a release.
 
 ## Branch and PR Conventions
 
