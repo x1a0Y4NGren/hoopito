@@ -399,6 +399,7 @@ test('native finger swipes flip once, read long content and leave court taps usa
     }
     await swipe(70);
     await landed(page, 'experience');
+    await page.locator('[data-demo-points="2"]').tap();
     await page.locator('[data-demo-court]').scrollIntoViewIfNeeded();
     const point = await page
       .locator('[data-demo-court]')

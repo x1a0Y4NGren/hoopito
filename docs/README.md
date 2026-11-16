@@ -19,6 +19,7 @@ v2.1.1 可从 [GitHub Release](https://github.com/x1a0Y4NGren/hoopito/releases/t
 
 ## 设计
 
+- [计分方式与落点](design/scoring-locations.md)：标准计分、记球制开关、区域提示与旧数据兼容。
 - [品牌名称与兼容性](design/brand/naming-and-compatibility.md)：当前中英文用法、升级身份及历史证据边界；对外改名同步由 [Issue #6](https://github.com/x1a0Y4NGren/hoopito/issues/6) 跟踪。
 - [C「独眼球怪」正式标识与验证](design/brand/README.md)
 - [Q 弹启动动效、APK 来源与设备验收限制](design/brand/entry-motion.md)

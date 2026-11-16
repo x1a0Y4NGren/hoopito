@@ -1,5 +1,6 @@
 import type { CourtPoint } from './scene-contract';
 import { netResponse, SHOT_TIMING } from './shot-timing.ts';
+import { courtToWorld, RIM_WORLD } from './court-geometry.ts';
 
 export type ShotVector = [number, number, number];
 
@@ -21,7 +22,7 @@ export interface ShotPose {
   };
 }
 
-const RIM: ShotVector = [0, 3.05, -5.3];
+const RIM = RIM_WORLD;
 const LAUNCH_HEIGHT = 1.2;
 const RIM_DOWN_SPEED = -4.2;
 const EXIT_DOWN_SPEED = -2.4;
@@ -33,11 +34,11 @@ const coordinate = (value: number) =>
 const smoothstep = (value: number) => value * value * (3 - 2 * value);
 
 function shotPath(point: CourtPoint) {
-  const launch: ShotVector = [
-    (coordinate(point.x) - 0.5) * 15,
-    LAUNCH_HEIGHT,
-    (coordinate(point.y) - 0.5) * 14,
-  ];
+  const launch = courtToWorld({
+    x: coordinate(point.x),
+    y: coordinate(point.y),
+  });
+  launch[1] = LAUNCH_HEIGHT;
   const dx = RIM[0] - launch[0];
   const dz = RIM[2] - launch[2];
   const distance = Math.hypot(dx, dz);

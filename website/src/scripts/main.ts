@@ -1,12 +1,27 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createAnimationClock } from './animation-clock';
-import { initialDemoState, reduceDemo, type DemoAction } from './demo-state';
+import {
+  initialDemoState,
+  reduceDemo,
+  allowedDemoPoints,
+  demoRegion,
+  demoPresets,
+  type DemoAction,
+  type DemoPoints,
+} from './demo-state';
+import {
+  COURT,
+  FREE_THROW_POINT,
+  SVG_COURT,
+  courtToSvg,
+  containsCourtPoint,
+} from './court-geometry';
 import { createScreenshotViewer } from './screenshot-viewer';
 import { createDownloadChooser } from './download-chooser';
 import { createShotFeedback } from './shot-feedback';
 import { createScoringFeedback } from './scoring-feedback';
-import { createDemoInvitation } from './demo-invitation';
+import { createDemoInvitation, type DemoCue } from './demo-invitation';
 import { createReplayPresentation } from './replay-cards';
 import { createChapterRail } from './chapter-rail';
 import { createMobileNavigation } from './mobile-navigation';
@@ -128,6 +143,7 @@ let sceneGlassMode: 'webgl' | 'css' = 'css';
 let shotFeedback: ReturnType<typeof createShotFeedback> | undefined;
 let scoringFeedback: ReturnType<typeof createScoringFeedback> | undefined;
 let demoInvitation: ReturnType<typeof createDemoInvitation> | undefined;
+let regionPulse: gsap.core.Tween | undefined;
 const animationClock = createAnimationClock(document.hidden ? ['hidden'] : []);
 const suspension = animationClock.suspension;
 function setSuspended(reason: string, paused: boolean) {
@@ -144,8 +160,9 @@ function setSuspended(reason: string, paused: boolean) {
   // A pause can precede the first invitation, so resuming an absent timeline
   // must also re-evaluate its current reading/visibility eligibility.
   if (!suspension.size && scoringFeedback) queueMicrotask(queueStoryUpdate);
-  if (suspension.size) demoInvitation?.pause();
-  else demoInvitation?.resume();
+  if (suspension.size) syncDemoGuide();
+  if (suspension.size) regionPulse?.pause();
+  queueMicrotask(queueStoryUpdate);
   if (!suspension.size) mobileTouch?.recoverGap();
 }
 const viewer = createScreenshotViewer((open) => setSuspended('viewer', open));
@@ -285,6 +302,12 @@ mobilePresentation = createMobilePresentation({
 if (suspension.size) mobilePresentation.setPaused(true);
 const blue = select<HTMLElement>('[data-blue-score]');
 const record = select<HTMLButtonElement>('[data-record]');
+const recordLabel = select<HTMLElement>('[data-record-label]');
+const pointButtons = [
+  ...document.querySelectorAll<HTMLButtonElement>('[data-demo-points]'),
+];
+const scoreOptions = select<HTMLElement>('.demo-score-options');
+const demoGuide = select<HTMLElement>('[data-demo-guide]');
 const reset = select<HTMLButtonElement>('[data-reset]');
 const status = select<HTMLElement>('[data-demo-status]');
 const court = select<SVGSVGElement>('[data-demo-court]');
@@ -305,40 +328,142 @@ const presets = [
 ];
 let demoHintReading = false;
 let demoHintEligible = false;
-demoInvitation = createDemoInvitation(
-  courtHost,
-  select<HTMLElement>('.point-presets'),
-  record,
-  {
-    isReading: () => demoHintReading,
-    canShowHint: () => demoHintEligible && !suspension.size,
-    projectCourtHint() {
-      const point = { x: 0.5, y: 0.65 };
-      if (scene) return scene.projectPoint(point);
-      const matrix = court.getScreenCTM();
-      if (!matrix) return null;
-      return new DOMPoint(
-        28 + point.x * 544,
-        28 + point.y * 504,
-      ).matrixTransform(matrix);
-    },
-  },
-);
-if (suspension.size) demoInvitation.pause();
-const positions: Record<string, CourtPoint> = {
-  left: { x: 0.25, y: 0.65 },
-  center: { x: 0.5, y: 0.65 },
-  right: { x: 0.75, y: 0.65 },
-};
+let demoRegionReading = false;
+demoInvitation = createDemoInvitation(demoGuide, { header: siteHeader });
+let regionPresentation = '';
+function syncDemoRegion() {
+  const region = demoRegion(state);
+  const visible =
+    !!region &&
+    state.phase === 'ready' &&
+    demoRegionReading &&
+    !suspension.size;
+  const pulse = visible && !state.point && demoHintEligible && !reduced();
+  courtHost.dataset.scoringRegion = region ?? 'none';
+  courtHost.dataset.regionPulse = String(pulse);
+  scene?.setScoringRegion(visible ? region : null, pulse);
+  const next = `${region}:${visible}:${pulse}:${!!scene}`;
+  if (regionPresentation === next) return;
+  regionPresentation = next;
+  regionPulse?.kill();
+  regionPulse = undefined;
+  court
+    .querySelectorAll<SVGElement>(
+      '[data-demo-region-shade], [data-demo-region-light]',
+    )
+    .forEach((element) => {
+      element.toggleAttribute(
+        'hidden',
+        !visible || element.dataset.region !== region,
+      );
+    });
+  const fixedPoint = court.querySelector('[data-demo-free-throw-point]');
+  fixedPoint?.toggleAttribute('hidden', !visible || region !== 'freeThrowLine');
+  const light = court.querySelector<SVGElement>(
+    `[data-demo-region-light][data-region="${region}"]`,
+  );
+  if (!light) return;
+  gsap.set(light, { opacity: 0.08 });
+  if (pulse && !(scene && desktop.matches))
+    regionPulse = gsap.fromTo(
+      light,
+      { opacity: 0.04 },
+      {
+        opacity: 0.12,
+        duration: 0.8,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true,
+      },
+    );
+}
+
+function demoText(template: string) {
+  return template
+    .replaceAll('{points}', String(state.points ?? ''))
+    .replaceAll('{score}', String(state.blue));
+}
+
+function scoreGuideText(available: readonly DemoPoints[]) {
+  if (!state.point) return demoGuide.dataset.scoreText!;
+  if (available.length === 1)
+    return demoGuide.dataset.scoreSingleText!.replace(
+      '{points}',
+      String(available[0]),
+    );
+  return demoGuide.dataset.scoreChoiceText!;
+}
+
+function syncDemoGuide() {
+  if (!demoInvitation) return;
+  // A mobile reader can scroll past the chapter's landing interval while
+  // its controls are still on screen. The overlay checks each visible target.
+  const inExperience = desktop.matches
+    ? demoRegionReading
+    : readingStop === 'experience';
+  const eligible = inExperience && demoHintEligible && !suspension.size;
+  const cues: DemoCue[] = [];
+  if (eligible && state.phase === 'ready') {
+    if (!record.disabled) {
+      cues.push({
+        kind: 'record',
+        text: demoText(status.dataset.selected!),
+        target: record,
+      });
+    } else {
+      if (!state.point) {
+        const point = projectDemoPoint(demoPresets(state.points).center);
+        if (point)
+          cues.push({
+            kind: 'court',
+            text:
+              state.points === 2
+                ? status.dataset.insideArc!
+                : state.points === 3
+                  ? status.dataset.outsideArc!
+                  : demoGuide.dataset.courtText!,
+            target: courtHost,
+            point,
+          });
+      }
+      if (state.points === null) {
+        const available = allowedDemoPoints(state);
+        const choice = pointButtons.find((button) => !button.disabled);
+        if (choice)
+          cues.push({
+            kind: 'score',
+            text: scoreGuideText(available),
+            target: available.length === 1 ? choice : scoreOptions,
+          });
+      }
+    }
+  }
+  demoInvitation.update(cues, {
+    round: state.generation,
+    eligible,
+    reduced: reduced(),
+  });
+}
 
 function render() {
   select<HTMLElement>('[data-demo]').dataset.demoPhase = state.phase;
   blue.textContent = String(state.blue);
-  record.disabled = state.phase !== 'ready' || !state.point;
+  record.disabled = state.phase !== 'ready' || !state.point || !state.points;
+  recordLabel.textContent = state.points
+    ? demoText(recordLabel.dataset.points!)
+    : recordLabel.dataset.default!;
   reset.disabled = false;
+  const available = allowedDemoPoints(state);
+  pointButtons.forEach((button) => {
+    const points = Number(button.dataset.demoPoints) as DemoPoints;
+    button.disabled = !available.includes(points);
+    button.setAttribute('aria-pressed', String(state.points === points));
+  });
+  const positions = demoPresets(state.points);
   presets.forEach((button) => {
-    button.disabled = state.phase !== 'ready';
-    const point = positions[button.dataset.pointPreset!];
+    button.disabled = state.phase !== 'ready' || state.points === 1;
+    const point =
+      positions[button.dataset.pointPreset as keyof typeof positions];
     button.setAttribute(
       'aria-pressed',
       String(
@@ -350,33 +475,93 @@ function render() {
   });
   const key =
     state.phase === 'scored'
-      ? 'scored'
+      ? state.points === 1
+        ? 'scoredFreeThrow'
+        : 'scored'
       : state.phase === 'shooting'
         ? 'shooting'
-        : state.point
-          ? 'selected'
-          : 'ready';
-  status.textContent = status.dataset[key]!;
+        : state.points === 1
+          ? 'freeThrowLine'
+          : state.point
+            ? state.points
+              ? 'selected'
+              : 'awaitingScore'
+            : (demoRegion(state) ?? 'ready');
+  status.textContent =
+    key === 'awaitingScore'
+      ? scoreGuideText(available)
+      : demoText(status.dataset[key]!);
   marker.toggleAttribute('hidden', !state.hasLocation);
   selection.toggleAttribute('hidden', !state.point || state.hasLocation);
   if (state.point) {
-    const transform = `translate(${28 + state.point.x * 544} ${28 + state.point.y * 504})`;
+    const point = courtToSvg(state.point);
+    const transform = `translate(${point.x} ${point.y})`;
     marker.setAttribute('transform', transform);
     selection.setAttribute('transform', transform);
   }
+  syncDemoRegion();
+  syncDemoGuide();
 }
 function dispatch(action: DemoAction) {
-  state = reduceDemo(state, action);
+  const next = reduceDemo(state, action);
+  if (next === state) return false;
+  state = next;
   render();
   if (action.type === 'complete' && state.hasLocation) {
     scene?.setMadePoint(state.point);
   }
+  return true;
+}
+function projectDemoPoint(point: CourtPoint) {
+  if (scene && desktop.matches) return scene.projectPoint(point);
+  const matrix = court.getScreenCTM();
+  if (!matrix) return null;
+  const svg = courtToSvg(point);
+  return new DOMPoint(svg.x, svg.y).matrixTransform(matrix);
+}
+function freeThrowEligible(point: CourtPoint) {
+  const start = projectDemoPoint({
+    x: 0.5 - COURT.freeThrowLineWidth / 2 / COURT.width,
+    y: FREE_THROW_POINT.y,
+  });
+  const end = projectDemoPoint({
+    x: 0.5 + COURT.freeThrowLineWidth / 2 / COURT.width,
+    y: FREE_THROW_POINT.y,
+  });
+  const target = projectDemoPoint(point);
+  if (!start || !end || !target) return false;
+  const dx = end.x - start.x,
+    dy = end.y - start.y;
+  const length = dx * dx + dy * dy;
+  if (!length) return false;
+  const along = Math.max(
+    0,
+    Math.min(
+      1,
+      ((target.x - start.x) * dx + (target.y - start.y) * dy) / length,
+    ),
+  );
+  return (
+    Math.hypot(
+      target.x - start.x - along * dx,
+      target.y - start.y - along * dy,
+    ) <= 24
+  );
 }
 function choose(point: CourtPoint) {
   if (state.phase !== 'ready') return;
-  dispatch({ type: 'select', point });
+  if (
+    !dispatch({
+      type: 'select',
+      point,
+      freeThrowEligible: freeThrowEligible(point),
+    })
+  ) {
+    status.textContent =
+      status.dataset[state.points === 1 ? 'freeThrowLine' : 'invalid']!;
+    return;
+  }
   scene?.selectPoint(state.point);
-  demoInvitation?.selected(reduced());
   if (!reduced()) {
     const halo = selection.querySelector('.aim-halo');
     gsap.killTweensOf(halo);
@@ -409,8 +594,24 @@ function completeShot() {
 }
 presets.forEach((button) =>
   button.addEventListener('click', () =>
-    choose(positions[button.dataset.pointPreset!]),
+    choose(
+      demoPresets(state.points)[
+        button.dataset.pointPreset as 'left' | 'center' | 'right'
+      ],
+    ),
   ),
+);
+pointButtons.forEach((button) =>
+  button.addEventListener('click', () => {
+    if (
+      !dispatch({
+        type: 'selectScore',
+        points: Number(button.dataset.demoPoints) as DemoPoints,
+      })
+    )
+      return;
+    scene?.selectPoint(state.point);
+  }),
 );
 court.addEventListener('click', (event) => {
   if (scene && desktop.matches) return;
@@ -419,8 +620,11 @@ court.addEventListener('click', (event) => {
   const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(
     matrix.inverse(),
   );
-  if (point.x < 28 || point.x > 572 || point.y < 28 || point.y > 532) return;
-  choose({ x: (point.x - 28) / 544, y: (point.y - 28) / 504 });
+  const selectedPoint = {
+    x: (point.x - SVG_COURT.left) / SVG_COURT.width,
+    y: (point.y - SVG_COURT.top) / SVG_COURT.height,
+  };
+  if (containsCourtPoint(selectedPoint)) choose(selectedPoint);
 });
 let courtPress:
   { id: number; x: number; y: number; scroll: number } | undefined;
@@ -470,8 +674,7 @@ courtHost.addEventListener('pointerleave', () => {
 });
 record.addEventListener('click', () => {
   if (!state.point || state.phase !== 'ready') return;
-  demoInvitation?.cancel();
-  dispatch({ type: 'record' });
+  if (!dispatch({ type: 'record' })) return;
   if (reduced()) {
     completeShot();
     return;
@@ -488,7 +691,6 @@ record.addEventListener('click', () => {
   );
 });
 reset.addEventListener('click', () => {
-  demoInvitation?.cancel();
   stopFlight();
   const halo = selection.querySelector('.aim-halo');
   gsap.killTweensOf(halo);
@@ -744,6 +946,7 @@ function updateStory() {
     storyFrame.cameraTrack,
   );
   const experienceRect = experienceStage.getBoundingClientRect();
+  demoRegionReading = experienceReading.phase === 'reading';
   demoHintReading =
     desktop.matches && !reduced()
       ? experienceReading.phase === 'reading'
@@ -754,8 +957,8 @@ function updateStory() {
     !layoutRefreshing &&
     (!desktop.matches || reduced() || root.dataset.scrollState === 'idle') &&
     (!desktop.matches || !!root.dataset.sceneFallback || interactive);
-  demoInvitation?.refresh();
-  if (demoHintEligible) demoInvitation?.invite(reduced());
+  syncDemoGuide();
+  syncDemoRegion();
   const renderer = scene && desktop.matches ? '3d' : '2d';
   if (courtHost.dataset.renderer !== renderer)
     courtHost.dataset.renderer = renderer;
@@ -1045,7 +1248,6 @@ window.addEventListener(
 function applyMotion() {
   chapterScroll?.cancel();
   if (reduced()) scoringFeedback?.cancel();
-  if (reduced()) demoInvitation?.cancel();
   scene?.setMotionEnabled(!reduced());
   if (reduced()) {
     gsap.killTweensOf(blue);
@@ -1571,8 +1773,9 @@ window.addEventListener('pagehide', (event) => {
   mobileProgress?.dispose();
   mobileTouch?.dispose();
   scoringFeedback?.cancel();
-  demoInvitation?.cancel();
-  stopFlight();
+  demoInvitation?.dispose();
+  regionPulse?.kill();
+  shotFeedback?.dispose();
   stopScene();
   cardResizeObserver.disconnect();
   document.removeEventListener('toggle', onDisclosureToggle, true);

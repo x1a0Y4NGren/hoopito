@@ -161,7 +161,7 @@ void main() {
         matchId: 'receipt-local-court',
         nowUtc: () => DateTime.utc(2026, 8, 25, 12),
       );
-      final point = CourtPoint(x: 0.2, y: 0.8);
+      final point = CourtPoint(x: 0.2, y: 0.4);
       expect(
         controller.beginOrMoveCourtFirstShot(point, side: TeamSide.red),
         isTrue,
@@ -614,10 +614,11 @@ void main() {
   test('skipping a location keeps the score without recording a marker', () {
     final controller = ScoringController(matchId: 'match-1');
 
-    controller.addScore(side: TeamSide.red, points: 1);
+    controller.addScore(side: TeamSide.red, points: 2);
+    expect(controller.locationSupplementWindow, isNotNull);
     controller.skipPendingLocation();
 
-    expect(controller.state.score.redScore, 1);
+    expect(controller.state.score.redScore, 2);
     expect(controller.state.pendingLocation, isNull);
     expect(controller.state.shotLocations, isEmpty);
   });
@@ -632,7 +633,7 @@ void main() {
       );
 
       await controller.recordScoreCommitted(side: TeamSide.red, points: 2);
-      final point = CourtPoint(x: 0.25, y: 0.75);
+      final point = CourtPoint(x: 0.25, y: 0.4);
       expect(await controller.attachSupplementLocation(point), isTrue);
       expect(controller.state.locationSupplementWindow, isNull);
       expect(controller.state.shotLocations, hasLength(1));
@@ -708,13 +709,13 @@ void main() {
 
       await controller.recordScoreCommitted(side: TeamSide.red, points: 2);
       now = now.add(const Duration(seconds: 1));
-      await controller.recordScoreCommitted(side: TeamSide.blue, points: 1);
+      await controller.recordScoreCommitted(side: TeamSide.blue, points: 3);
       expect(
         await controller.attachSupplementLocation(CourtPoint(x: 0.3, y: 0.7)),
         isTrue,
       );
       expect(await controller.undoLastScoringActionCommitted(), isTrue);
-      expect(controller.state.score.blueScore, 1);
+      expect(controller.state.score.blueScore, 3);
       expect(controller.state.shotLocations, isEmpty);
       expect(
         controller.locationSupplementWindow?.eventId,
@@ -752,7 +753,7 @@ void main() {
       );
       await located.recordScoreCommitted(side: TeamSide.red, points: 2);
       expect(
-        await located.attachSupplementLocation(CourtPoint(x: 0.2, y: 0.8)),
+        await located.attachSupplementLocation(CourtPoint(x: 0.2, y: 0.4)),
         isTrue,
       );
       now = now.add(const Duration(seconds: 1));
@@ -781,13 +782,14 @@ void main() {
         matchId: 'match-1',
         nowUtc: () => DateTime.utc(2026, 8, 25, 12),
       );
-      final point = CourtPoint(x: 0.4, y: 0.6);
+      final point = CourtPoint(x: 0.4, y: 0.4);
 
       expect(
         controller.beginOrMoveCourtFirstShot(point, side: TeamSide.red),
         isTrue,
       );
       expect(controller.state.courtFirstShotDraft, isNotNull);
+      controller.updateCourtFirstShot(points: 2);
       expect(await controller.recordFoulCommitted(TeamSide.blue), isFalse);
       expect(
         await controller.recordScoreCommitted(side: TeamSide.blue, points: 1),
@@ -796,7 +798,7 @@ void main() {
 
       expect(await controller.commitCourtFirstShot(), isTrue);
       expect(controller.state.courtFirstShotDraft, isNull);
-      expect(controller.state.score.redScore, 1);
+      expect(controller.state.score.redScore, 2);
       expect(controller.state.shotLocations, hasLength(1));
       expect(await controller.undoLastScoringActionCommitted(), isTrue);
       expect(controller.state.score.redScore, 0);
@@ -807,7 +809,7 @@ void main() {
 
   test('score-first confirmation locks and records the court point', () async {
     final controller = ScoringController(matchId: 'match-1');
-    final point = CourtPoint(x: 0.25, y: 0.75);
+    final point = CourtPoint(x: 0.25, y: 0.4);
 
     controller.addScore(side: TeamSide.blue, points: 2);
     await controller.confirmPendingLocation(point);
@@ -897,7 +899,7 @@ void main() {
         isTrue,
       );
       expect(
-        await controller.attachSupplementLocation(CourtPoint(x: 0.4, y: 0.6)),
+        await controller.attachSupplementLocation(CourtPoint(x: 0.4, y: 0.4)),
         isTrue,
       );
       expect(await controller.recordFoulCommitted(TeamSide.blue), isTrue);

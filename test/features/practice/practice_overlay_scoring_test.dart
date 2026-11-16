@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/value_objects/court_geometry.dart';
 import 'package:hoopito/core/domain/value_objects/team_side.dart';
 import 'package:hoopito/features/practice/practice_presentation.dart';
 import 'package:hoopito/features/practice/practice_coach.dart';
@@ -45,11 +46,16 @@ void main() {
         overlap.center - court.topLeft,
         court.size,
       );
+      // This fixture follows the coach's footprint, which may be either side
+      // of the arc. Its score must match that real location.
+      final points = CourtGeometry.contains(CourtRegion.insideArc, point)
+          ? 2
+          : 3;
       expect(
         controller.beginOrMoveCourtFirstShot(
           point,
           side: TeamSide.red,
-          points: 2,
+          points: points,
         ),
         isTrue,
       );

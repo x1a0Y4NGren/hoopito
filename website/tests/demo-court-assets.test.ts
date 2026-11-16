@@ -97,7 +97,7 @@ test('floor export stays square and never silently stretches a non-square materi
   );
 });
 
-test('selected independent generated assets reproduce their production files and the actual SVG registration', async () => {
+test('generated raster bytes and scale stay intact when the current court translates the hoop', async () => {
   const record = JSON.parse(
     await readFile(
       new URL(
@@ -131,7 +131,9 @@ test('selected independent generated assets reproduce their production files and
       assert.equal(asset.rim_shape, 'circle');
       assert.equal(asset.rim_anchor_px.rx, asset.rim_anchor_px.ry);
       assert.ok(result.provenance.placement_svg);
-      for (const dimension of ['x', 'y', 'width', 'height'] as const)
+      // Historical generation provenance retains its original (300,82) placement.
+      // Current presentation translates the same pixels to the shared basket geometry.
+      for (const dimension of ['x', 'width', 'height'] as const)
         assert.ok(
           Math.abs(
             result.provenance.placement_svg[dimension] -
@@ -139,6 +141,13 @@ test('selected independent generated assets reproduce their production files and
           ) < 1e-8,
           `The generated hoop ${dimension} must agree with its SVG image`,
         );
+      assert.ok(
+        Math.abs(
+          demoCourtArt.hoop.placement.y -
+            result.provenance.placement_svg.y -
+            2.7,
+        ) < 1e-8,
+      );
     }
   }
 });

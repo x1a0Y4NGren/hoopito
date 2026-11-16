@@ -21,7 +21,7 @@ test('the real hardware cuts away perimeter and rear support while preserving th
     },
     metalMap,
     glassMap,
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     assert.equal(typeof hardware.setViewCutaway, 'function');
@@ -156,7 +156,7 @@ test('hardware prebuilds two bounded detail levels and switches only across proj
     },
     metalMap: new THREE.Texture(),
     glassMap: new THREE.Texture(),
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     const meshes = hardware.group.children as THREE.Mesh<
@@ -174,8 +174,8 @@ test('hardware prebuilds two bounded detail levels and switches only across proj
       );
     const camera = new THREE.PerspectiveCamera(45, 1.5, 0.1, 100);
     const moveTo = (distance: number) => {
-      camera.position.set(0, 3.05, -5.3 + distance);
-      camera.lookAt(0, 3.05, -5.3);
+      camera.position.set(0, 3.05, -5.425 + distance);
+      camera.lookAt(0, 3.05, -5.425);
       camera.updateMatrixWorld();
     };
     moveTo(3);
@@ -274,7 +274,7 @@ test('powder coat, brushed fittings and pads use visibly different physical fini
     },
     metalMap: new THREE.Texture(),
     glassMap: new THREE.Texture(),
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     const material = (name: string) =>
@@ -305,7 +305,7 @@ test('powder coat, brushed fittings and pads use visibly different physical fini
 
 test('the breakaway rim mounts to the glass with a load plate and four visible fasteners', () => {
   const resources: { dispose(): void }[] = [];
-  const rim = new THREE.Vector3(0, 3.05, -5.3);
+  const rim = new THREE.Vector3(0, 3.05, -5.425);
   const hardware = createCourtHardware({
     own: (resource) => {
       resources.push(resource);
@@ -342,7 +342,7 @@ test('the breakaway rim mounts to the glass with a load plate and four visible f
 
 test('both net detail levels share a fixed top attachment and shader-driven bounded deformation', () => {
   const resources: { dispose(): void }[] = [];
-  const rim = new THREE.Vector3(0, 3.05, -5.3);
+  const rim = new THREE.Vector3(0, 3.05, -5.425);
   const hardware = createCourtHardware({
     own: (resource) => {
       resources.push(resource);

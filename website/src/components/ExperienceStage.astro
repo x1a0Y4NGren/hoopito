@@ -85,6 +85,17 @@ const c = content[locale];
         data-story-enter="down"
         data-story-preset="experience-controls"
       >
+        <div
+          class="demo-score-options"
+          role="group"
+          aria-label={c.demo.scoring}
+        >
+          {c.demo.scores.map((label, index) => (
+            <button data-demo-points={index + 1} aria-pressed="false" disabled>
+              {label}
+            </button>
+          ))}
+        </div>
         <div class="demo-control-bar">
           <div class="point-presets" role="group" aria-label={c.demo.choose}>
             {(['left', 'center', 'right'] as const).map((point, i) => (
@@ -96,7 +107,13 @@ const c = content[locale];
           <div class="demo-actions">
             <button class="button button-orange" data-record disabled>
               <span class="control-content">
-                <span>{c.demo.record}</span>
+                <span
+                  data-record-label
+                  data-default={c.demo.record}
+                  data-points={c.demo.recordPoints}
+                >
+                  {c.demo.record}
+                </span>
                 <Icon name="plus" />
               </span>
             </button>
@@ -117,13 +134,23 @@ const c = content[locale];
               aria-live="polite"
               aria-atomic="true"
               data-ready={c.demo.statuses.ready}
+              data-awaiting-score={c.demo.statuses.awaitingScore}
+              data-inside-arc={c.demo.statuses.insideArc}
+              data-outside-arc={c.demo.statuses.outsideArc}
+              data-free-throw-line={c.demo.statuses.freeThrowLine}
               data-selected={c.demo.statuses.selected}
               data-shooting={c.demo.statuses.shooting}
               data-scored={c.demo.statuses.scored}
+              data-scored-free-throw={c.demo.statuses.scoredFreeThrow}
+              data-invalid={c.demo.statuses.invalid}
             >
               {c.demo.statuses.ready}
             </p>
-            {Object.values(c.demo.statuses).map((text) => (
+            {[
+              ...Object.values(c.demo.statuses),
+              c.demo.guide.scoreSingle.replace('{points}', '3'),
+              c.demo.guide.scoreChoice,
+            ].map((text) => (
               <span class="demo-status-size" aria-hidden="true">
                 {text}
               </span>
@@ -135,6 +162,16 @@ const c = content[locale];
           </noscript>
         </div>
       </div>
+      <div
+        class="demo-guide"
+        data-demo-guide
+        data-court-text={c.demo.guide.court}
+        data-score-text={c.demo.guide.score}
+        data-score-single-text={c.demo.guide.scoreSingle}
+        data-score-choice-text={c.demo.guide.scoreChoice}
+        aria-hidden="true"
+        hidden
+      ></div>
     </div>
   </div>
   <div class="trace-bridge" aria-hidden="true">

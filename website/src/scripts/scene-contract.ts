@@ -1,3 +1,5 @@
+import type { CourtScoringRegion } from './court-geometry.ts';
+
 export type CourtPoint = { x: number; y: number };
 
 /** The DOM result can arrive before the decorative net rebound has finished. */
@@ -102,6 +104,8 @@ export interface CourtScene {
   /** Render and capture the current pose before the WebGL drawing buffer is released. */
   exportFrame(): string;
   selectPoint(point: CourtPoint | null): void;
+  /** Hint only: the page remains responsible for score and input eligibility. */
+  setScoringRegion(region: CourtScoringRegion | null, pulse: boolean): void;
   /** Restore a recorded location, preserving any remaining rebound of that same shot. */
   setMadePoint(point: CourtPoint | null): void;
   /** Adopt the DOM shot's active elapsed seconds, preserving its remaining flight/rebound. */

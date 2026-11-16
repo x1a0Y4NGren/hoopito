@@ -53,9 +53,10 @@ void main() {
                         AppLocalizations.localizationsDelegates,
                     supportedLocales: AppLocalizations.supportedLocales,
                     builder: (context, child) => MediaQuery(
-                      data: MediaQuery.of(
-                        context,
-                      ).copyWith(textScaler: const TextScaler.linear(2)),
+                      data: MediaQuery.of(context).copyWith(
+                        textScaler: const TextScaler.linear(2),
+                        disableAnimations: true,
+                      ),
                       child: child!,
                     ),
                     home: ValueListenableBuilder<PracticeStep>(
@@ -154,6 +155,23 @@ void main() {
                           .owner!
                           .semanticsOwner!
                           .performAction(courtNode!.id, ui.SemanticsAction.tap);
+                      await tester.pumpAndSettle();
+                      // The first semantic activation reveals a movable
+                      // candidate; a second activation explicitly confirms it.
+                      expect(controller.courtFirstShotDraft, isNull);
+                      final confirmationNode = _tapOwner(
+                        tester.getSemantics(
+                          find.byKey(const Key('scoring-court')),
+                        ),
+                      );
+                      tester
+                          .renderObject(find.byKey(const Key('scoring-court')))
+                          .owner!
+                          .semanticsOwner!
+                          .performAction(
+                            confirmationNode!.id,
+                            ui.SemanticsAction.tap,
+                          );
                       await tester.pumpAndSettle();
                       expect(controller.courtFirstShotDraft, isNotNull);
                       expect(controller.state.events, isEmpty);

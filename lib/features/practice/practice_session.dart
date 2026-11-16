@@ -8,6 +8,7 @@ import 'package:hoopito/core/domain/domain_enums.dart';
 import 'package:hoopito/core/domain/entities/match_detail.dart';
 import 'package:hoopito/core/domain/entities/rule_template.dart';
 import 'package:hoopito/core/domain/value_objects/team_side.dart';
+import 'package:hoopito/core/domain/value_objects/court_geometry.dart';
 import 'package:hoopito/features/practice/practice_presentation.dart';
 import 'package:hoopito/features/pregame/pregame_controller.dart';
 import 'package:hoopito/features/scoring/scoring_controller.dart';
@@ -50,6 +51,7 @@ class PracticeSession extends ChangeNotifier {
         id: 'free',
         name: 'Free scoring',
         scoreButtons: [1, 2, 3],
+        scoringConvention: ScoringConvention.standard,
       ),
       recordingMode: RecordingMode.detailed,
     );
@@ -99,6 +101,7 @@ class PracticeSession extends ChangeNotifier {
       case PracticeStep.courtPoint:
         final point = state.courtFirstShotDraft?.point;
         if (point != null &&
+            CourtGeometry.contains(CourtRegion.insideArc, point) &&
             point.x.isFinite &&
             point.y.isFinite &&
             point.x >= 0 &&

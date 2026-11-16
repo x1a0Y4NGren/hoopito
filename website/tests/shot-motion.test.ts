@@ -20,7 +20,7 @@ test('shots launch at the selected world location and reach the rim on a high ar
   assert.deepEqual(launch.position, [-7.5, 1.2, 7]);
   for (const point of points) {
     const rim = sampleShotPose(point, 1.2);
-    assert.deepEqual(rim.position, [0, 3.05, -5.3]);
+    assert.deepEqual(rim.position, [0, 3.05, -5.425]);
     const heights = Array.from(
       { length: 120 },
       (_, i) => sampleShotPose(point, i / 100).position[1],
@@ -70,7 +70,7 @@ test('the swish keeps moving down inside the basket diameter and keeps spinning'
     for (let i = 1; i <= 35; i++) {
       const pose = sampleShotPose(point, 1.2 + i / 100);
       assert.ok(pose.position[1] < previous.position[1]);
-      assert.ok(Math.hypot(pose.position[0], pose.position[2] + 5.3) < 0.11);
+      assert.ok(Math.hypot(pose.position[0], pose.position[2] + 5.425) < 0.11);
       assert.ok(pose.rotation[0] > previous.rotation[0]);
       previous = pose;
     }

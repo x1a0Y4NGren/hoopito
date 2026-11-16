@@ -18,7 +18,7 @@ test('one shot reaches the rim, records at1.55 and lets net rebound finish at2.1
   );
   assert.equal(shotFrame(1.2, point).phase, 'swish');
   assert.equal(shotFrame(1.2, point).x, 300);
-  assert.equal(shotFrame(1.2, point).y, 82);
+  assert.equal(shotFrame(1.2, point).y, 84.7);
   assert.equal(shotFrame(1.54, point).recorded, false);
   assert.equal(shotFrame(1.55, point).recorded, true);
   assert.equal(shotFrame(1.55, point).phase, 'rebound');
@@ -63,7 +63,7 @@ test('swish recedes through the centre instead of falling beneath the top-down h
   for (const t of [1.25, 1.3, 1.4, 1.54]) {
     const pose = shotFrame(t, point);
     assert.equal(pose.x, 300);
-    assert.equal(pose.y, 82);
+    assert.equal(pose.y, 84.7);
     assert.ok(pose.scale < lastScale);
     assert.ok(pose.rotation > shotFrame(1.2, point).rotation);
     lastScale = pose.scale;

@@ -1,57 +1,52 @@
-/* One-shot light cues stay local and never capture input or affect layout. */
-.demo-invitation-container {
-  position: relative;
-}
-.demo-invitation-layer,
-.demo-invitation-layer * {
+.demo-guide,
+.demo-guide-cue,
+.demo-guide-arrow {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
 }
-.demo-invitation-layer {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 8;
-  opacity: 0;
+.demo-guide {
+  z-index: 6;
+  overflow: clip;
+  user-select: none;
+}
+/* Keep the overlay's geometry measurable while a cue is off-screen. */
+.demo-guide[hidden],
+.demo-guide-cue[hidden] {
+  display: block !important;
   visibility: hidden;
-  border-radius: inherit;
 }
-.demo-invitation-layer[data-invitation-state='idle'],
-.demo-invitation-layer[data-invitation-state='done'] {
-  display: none;
-}
-.demo-invitation-light {
-  position: absolute;
+.demo-guide-arrow {
   display: block;
-  inset: 0;
-  border: 0;
-  border-radius: inherit;
-  opacity: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #ffae79;
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 2px #231006d9);
 }
-.demo-invitation-layer[data-cue-kind='court'] .demo-invitation-light {
-  inset: auto;
-  left: var(--court-hint-x, 50%);
-  top: var(--court-hint-y, 65%);
-  width: clamp(80px, 22%, 140px);
-  aspect-ratio: 1.25;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(
-    ellipse,
-    #ffd2a32e 0%,
-    #ffbd8017 35%,
-    #ffbd8000 72%
-  );
+.demo-guide-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(15rem, 55vw);
+  padding: 5px 9px;
+  border: 1px solid #ffb18354;
+  border-radius: 6px;
+  background: rgb(25 19 16 / 92%);
+  color: #fff0e2;
+  font-size: clamp(0.75rem, 1.1vw, 0.875rem);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
-.demo-invitation-layer[data-cue-kind='record'] {
-  inset: 2px;
-  overflow: hidden;
-  border-radius: inherit;
+.demo-guide-cue[data-status-anchor] .demo-guide-label {
+  clip-path: inset(50%);
 }
-.demo-invitation-layer[data-cue-kind='record'] .demo-invitation-light {
-  background: radial-gradient(ellipse at 42% 45%, #fff0d638, #fff0d600 80%);
-}
-@media (prefers-reduced-motion: reduce) {
-  .demo-invitation-layer {
-    display: none;
+@media (max-width: 729px) {
+  .demo-guide-label {
+    max-width: min(12rem, 52vw);
   }
 }

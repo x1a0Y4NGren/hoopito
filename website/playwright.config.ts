@@ -3,6 +3,8 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   testMatch: [
+    '**/shot-visibility.spec.ts',
+    '**/demo-scoring-regions.spec.ts',
     '**/site.spec.ts',
     '**/immersive-glass.spec.ts',
     '**/thin-glass.spec.ts',

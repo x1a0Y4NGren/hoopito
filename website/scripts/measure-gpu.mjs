@@ -909,6 +909,7 @@ async function measureDocument(
           const attempts = [];
           for (let index = 0; index < 4; index += 1) {
             await page.locator('[data-reset]').click();
+            await page.locator('[data-demo-points="2"]').click();
             await page.locator('[data-point-preset="center"]').click();
             await page.locator('[data-record]').click();
             await page.waitForFunction(

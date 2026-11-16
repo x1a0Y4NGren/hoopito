@@ -59,7 +59,7 @@ for (const path of ['/', '/en/']) {
           pinSpacers: document.querySelectorAll('.pin-spacer').length,
           targets: [
             ...document.querySelectorAll<HTMLElement>(
-              '.site-header button:not([hidden]), .site-header nav > a:not(.nav-story-link), [data-point-preset], [data-record], [data-reset], [data-score-feature]',
+              '.site-header button:not([hidden]), .site-header nav > a:not(.nav-story-link), [data-demo-points], [data-point-preset], [data-record], [data-reset], [data-score-feature]',
             ),
           ]
             .filter((el) => el.getClientRects().length)
@@ -157,6 +157,7 @@ for (const path of ['/', '/en/']) {
     await ready(page, `${path}#experience`);
     const record = page.locator('[data-record]');
     await expect(record).toBeDisabled();
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="center"]').click();
     await expect(record).toBeEnabled();
     await expect(page.locator('[data-point-preset="center"]')).toHaveAttribute(
@@ -174,6 +175,7 @@ for (const path of ['/', '/en/']) {
     await expect(page.locator('[data-blue-score]')).toHaveText('6');
     await expect(record).toBeDisabled();
     const court = page.locator('[data-demo-court]');
+    await page.locator('[data-demo-points="2"]').click();
     await court.click({ position: { x: 100, y: 130 } });
     await expect(record).toBeEnabled();
     await record.click();
@@ -461,6 +463,7 @@ test('large phone text and landscape keep content available without an internal 
       viewport.width - 15,
     );
     await expect(page.locator('[data-point-preset="center"]')).toBeEnabled();
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="center"]').click();
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -572,6 +575,7 @@ test('native phone touch selects the SVG court before and after a real touch scr
     const reset = page.locator('[data-reset]');
     const samples: unknown[] = [];
     async function selectAt(x: number, y: number) {
+      await page.locator('[data-demo-points="2"]').tap();
       await court.scrollIntoViewIfNeeded();
       const point = await court.evaluate(
         (element, value) => {
@@ -614,7 +618,7 @@ test('native phone touch selects the SVG court before and after a real touch scr
       expect(values[0]).toBeCloseTo(28 + x * 544, -1);
       expect(values[1]).toBeCloseTo(28 + y * 504, -1);
     }
-    await selectAt(0.35, 0.62);
+    await selectAt(0.35, 0.45);
     await record.tap();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
     await expect(page.locator('[data-demo]')).toHaveAttribute(
@@ -684,7 +688,7 @@ test('native phone touch selects the SVG court before and after a real touch scr
     samples.push({
       nativeScroll: { before: beforeScroll, after: afterScroll, events },
     });
-    await selectAt(0.65, 0.55);
+    await selectAt(0.65, 0.45);
     await record.tap();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
     await expect(page.locator('[data-demo]')).toHaveAttribute(

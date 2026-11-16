@@ -56,6 +56,7 @@ class MatchSetup {
     required this.timeLimitMinutes,
     required this.winByTwo,
     this.scoreButtons = const [1, 2, 3],
+    this.scoringConvention,
     this.foulLimit,
     this.possessionHintEnabled = false,
     this.possessionPolicy = PossessionPolicy.manual,
@@ -80,6 +81,7 @@ class MatchSetup {
   final int timeLimitMinutes;
   final bool winByTwo;
   final List<int> scoreButtons;
+  final ScoringConvention? scoringConvention;
   final int? foulLimit;
   final bool possessionHintEnabled;
   final PossessionPolicy possessionPolicy;
@@ -98,6 +100,7 @@ class PregameState {
     this.redPlayerProfileId,
     this.bluePlayerProfileId,
     this.ruleTemplateId = 'free',
+    this.scoringConvention = ScoringConvention.standard,
     this.timerEnabled = false,
     this.clockMode = ClockMode.countUp,
     this.goalScoringMode = GoalScoringMode.free,
@@ -117,6 +120,7 @@ class PregameState {
   final String? redPlayerProfileId;
   final String? bluePlayerProfileId;
   final String ruleTemplateId;
+  final ScoringConvention? scoringConvention;
   final bool timerEnabled;
   final ClockMode clockMode;
   final GoalScoringMode goalScoringMode;
@@ -138,6 +142,8 @@ class PregameState {
     bool clearRedPlayerProfileId = false,
     bool clearBluePlayerProfileId = false,
     String? ruleTemplateId,
+    ScoringConvention? scoringConvention,
+    bool clearScoringConvention = false,
     bool? timerEnabled,
     ClockMode? clockMode,
     GoalScoringMode? goalScoringMode,
@@ -162,6 +168,9 @@ class PregameState {
           ? null
           : bluePlayerProfileId ?? this.bluePlayerProfileId,
       ruleTemplateId: ruleTemplateId ?? this.ruleTemplateId,
+      scoringConvention: clearScoringConvention
+          ? null
+          : scoringConvention ?? this.scoringConvention,
       timerEnabled: timerEnabled ?? this.timerEnabled,
       clockMode: clockMode ?? this.clockMode,
       goalScoringMode: goalScoringMode ?? this.goalScoringMode,
@@ -203,6 +212,7 @@ class PregameController {
   List<RuleTemplate> _templates;
   List<Player> _players;
   RuleTemplate? _presetRules;
+  bool _scoringConventionOverridden = false;
   final String Function() _matchIdFactory;
 
   PregameState get state => _state;
@@ -220,12 +230,14 @@ class PregameController {
 
   void applyPreset(MatchSetupPreset preset) {
     _presetRules = preset.rules;
+    _scoringConventionOverridden = false;
     _state = PregameState(
       redName: preset.red.nameSnapshot,
       blueName: preset.blue.nameSnapshot,
       redPlayerProfileId: preset.red.playerId,
       bluePlayerProfileId: preset.blue.playerId,
       ruleTemplateId: preset.rules.id,
+      scoringConvention: preset.rules.scoringConvention,
       timerEnabled: preset.timerEnabled,
       clockMode: preset.clockMode,
       goalScoringMode: preset.rules.targetScore == null
@@ -253,8 +265,21 @@ class PregameController {
   }
 
   void setTemplates(List<RuleTemplate> templates) {
+    final previous = selectedRules;
     _templates = List.of(templates);
-    if (selectedRules != null) return;
+    final selected = selectedRules;
+    if (selected != null) {
+      final presetFrozen = _presetRules?.id == _state.ruleTemplateId;
+      if (!presetFrozen &&
+          !_scoringConventionOverridden &&
+          previous?.scoringConvention != selected.scoringConvention) {
+        _state = _state.copyWith(
+          scoringConvention: selected.scoringConvention,
+          clearScoringConvention: selected.scoringConvention == null,
+        );
+      }
+      return;
+    }
     final fallback =
         _templates.where((item) => item.id == 'free').firstOrNull ??
         _templates.firstOrNull;
@@ -304,8 +329,14 @@ class PregameController {
 
   void setRuleTemplateId(String value) {
     final selected = templates.where((item) => item.id == value).firstOrNull;
+    _scoringConventionOverridden = false;
     _state = _state.copyWith(
       ruleTemplateId: value,
+      scoringConvention: selected == null
+          ? ScoringConvention.standard
+          : selected.scoringConvention,
+      clearScoringConvention:
+          selected != null && selected.scoringConvention == null,
       timerEnabled: selected?.timeLimitSeconds != null
           ? true
           : _state.timerEnabled,
@@ -333,6 +364,20 @@ class PregameController {
 
   void setRecordingMode(RecordingMode value) {
     _state = _state.copyWith(recordingMode: value);
+  }
+
+  void setScoringConvention(ScoringConvention? value) {
+    _scoringConventionOverridden = true;
+    _state = _state.copyWith(
+      scoringConvention: value,
+      clearScoringConvention: value == null,
+    );
+  }
+
+  void setThreePointCountsAsTwo(bool value) {
+    setScoringConvention(
+      value ? ScoringConvention.oneAndTwo : ScoringConvention.onePerBasket,
+    );
   }
 
   void clearRecordingMode() {
@@ -439,7 +484,11 @@ class PregameController {
       timerEnabled: _state.timerEnabled,
       timeLimitMinutes: _state.timeLimitMinutes,
       winByTwo: false,
-      scoreButtons: selected?.scoreButtons ?? const [1, 2, 3],
+      scoreButtons:
+          _state.scoringConvention?.scoreButtons ??
+          selected?.scoreButtons ??
+          const [1, 2, 3],
+      scoringConvention: _state.scoringConvention,
       foulLimit: selected?.foulLimit,
       possessionHintEnabled: selected?.possessionHintEnabled ?? false,
       possessionPolicy: selected?.possessionPolicy ?? PossessionPolicy.manual,

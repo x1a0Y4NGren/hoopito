@@ -331,7 +331,8 @@
     min-height: 48px;
   }
   .demo-control-notes {
-    margin-top: 10px;
+    /* Leave a short route from the status caption to the confirm button. */
+    margin-top: 22px;
     gap: 10px;
   }
   .demo-controls .fine-print {

@@ -9,6 +9,7 @@ import 'package:hoopito/features/practice/practice_flow_page.dart';
 import 'package:hoopito/features/practice/practice_presentation.dart';
 import 'package:hoopito/features/scoring/scoring_page.dart';
 import 'package:hoopito/features/summary/match_summary_page.dart';
+import '../support/pump_practice_transitions.dart';
 
 Future<void> waitFor(WidgetTester tester, bool Function() ready) async {
   for (var i = 0; i < 160; i++) {
@@ -24,8 +25,9 @@ Future<void> waitFor(WidgetTester tester, bool Function() ready) async {
 Future<void> tapKey(WidgetTester tester, String key) async {
   final finder = find.byKey(Key(key));
   await tester.ensureVisible(finder);
-  await tester.pumpAndSettle();
-  await tester.tap(finder);
+  await pumpPracticeTransitions(tester);
+  await waitFor(tester, () => finder.hitTestable().evaluate().isNotEmpty);
+  await tester.tap(finder.hitTestable());
   await tester.pump();
 }
 
@@ -103,7 +105,13 @@ void runPracticeJourney({bool device = false}) {
       await tapKey(tester, 'blue-miss');
       await waitFor(tester, () => step() == PracticeStep.finish);
       await tapKey(tester, 'scoring-finish');
-      await tester.pumpAndSettle();
+      await waitFor(
+        tester,
+        () => find
+            .byKey(const Key('scoring-match-controls'))
+            .evaluate()
+            .isNotEmpty,
+      );
       expect(find.byKey(const Key('scoring-match-controls')), findsOneWidget);
       expect(
         tester
@@ -114,7 +122,13 @@ void runPracticeJourney({bool device = false}) {
         isNull,
       );
       await tapKey(tester, 'match-controls-finish');
-      await tester.pumpAndSettle();
+      await waitFor(
+        tester,
+        () => find
+            .byKey(const Key('confirm-complete-recording'))
+            .evaluate()
+            .isNotEmpty,
+      );
       expect(
         tester
             .widget<SwitchListTile>(
@@ -160,7 +174,7 @@ void runPracticeJourney({bool device = false}) {
       );
       expect(find.byKey(const Key('practice-coach')), findsNothing);
       expect(find.byKey(const Key('pregame-mode-series')), findsOneWidget);
-      await tester.pumpAndSettle();
+      await pumpPracticeTransitions(tester);
       await tester.runAsync(() async {
         expect(await database.select(database.matches).get(), isEmpty);
       });

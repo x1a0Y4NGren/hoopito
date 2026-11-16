@@ -1223,7 +1223,7 @@ void main() {
       );
       expect(
         controller.beginOrMoveCourtFirstShot(
-          CourtPoint(x: 0.2, y: 0.8),
+          CourtPoint(x: 0.2, y: 0.4),
           side: TeamSide.red,
         ),
         isTrue,
@@ -1246,7 +1246,7 @@ void main() {
       matchId: 'task8-local-score-first-undo',
     );
     expect(controller.addScore(side: TeamSide.red, points: 2), isTrue);
-    await controller.attachSupplementLocation(CourtPoint(x: 0.4, y: 0.6));
+    await controller.attachSupplementLocation(CourtPoint(x: 0.4, y: 0.4));
     expect(controller.state.shotLocations, hasLength(1));
     expect(await controller.undoLastScoringActionCommitted(), isTrue);
     expect(

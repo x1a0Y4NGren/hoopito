@@ -20,6 +20,7 @@ import 'package:hoopito/features/scoring/scoring_controller.dart';
 import 'package:hoopito/features/scoring/motion/scoring_motion.dart';
 import 'package:hoopito/features/scoring/scoring_page.dart';
 import 'package:hoopito/features/scoring/widgets/court_view.dart';
+import 'package:hoopito/features/scoring/widgets/court_painter.dart';
 import 'package:hoopito/features/scoring/widgets/score_side_panel.dart';
 
 import '../../test_helpers/test_database.dart';
@@ -97,7 +98,7 @@ class _FailingScoreController extends ScoringController {
     command: RecordMatchEventCommand(
       matchId: state.matchId,
       side: TeamSide.red,
-      points: 1,
+      points: 2,
       occurredAt: DateTime.utc(2026, 8, 25, 12),
     ),
     message: 'retryable score failure',
@@ -422,9 +423,7 @@ void main() {
         ),
       ),
     );
-    await tester.tapAt(
-      tester.getCenter(find.byKey(const Key('scoring-court'))),
-    );
+    await tester.tapAt(_courtPointOffset(tester, .5, .8));
     await tester.tap(find.byKey(const Key('red-score-3')));
     await tester.pump();
     expect(controller.state.shotLocations, hasLength(1));
@@ -450,9 +449,7 @@ void main() {
         ),
       ),
     );
-    await tester.tapAt(
-      tester.getCenter(find.byKey(const Key('scoring-court'))),
-    );
+    await tester.tapAt(_courtPointOffset(tester, .5, .8));
     await tester.tap(find.byKey(const Key('red-score-3')));
     await tester.pump();
     final overlay = tester.widget<ScoringMotionOverlay>(
@@ -780,7 +777,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(home: ScoringPage(controller: oldController)),
     );
-    await tester.tap(find.byKey(const Key('red-score-1')));
+    await tester.tap(find.byKey(const Key('red-score-2')));
     await tester.pump();
     expect(find.byType(SnackBarAction), findsOneWidget);
 
@@ -807,7 +804,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(home: ScoringPage(controller: controller)),
       );
-      await tester.tap(find.byKey(const Key('red-score-1')));
+      await tester.tap(find.byKey(const Key('red-score-2')));
       await tester.pump();
       expect(find.byType(SnackBarAction), findsOneWidget);
 
@@ -839,7 +836,7 @@ void main() {
       command: RecordMatchEventCommand(
         matchId: 'failed-retry',
         side: TeamSide.red,
-        points: 1,
+        points: 2,
         occurredAt: DateTime.utc(2026, 8, 25, 12),
       ),
       message: 'retry failed once',
@@ -852,7 +849,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(home: ScoringPage(controller: controller)),
     );
-    await tester.tap(find.byKey(const Key('red-score-1')));
+    await tester.tap(find.byKey(const Key('red-score-2')));
     await tester.pump();
     final firstRetry = tester.widget<SnackBarAction>(
       find.byType(SnackBarAction),
@@ -1344,6 +1341,7 @@ void main() {
   ) async {
     final controller = ScoringController(matchId: 'manual-finish');
     await controller.recordScoreCommitted(side: TeamSide.red, points: 2);
+    controller.cancelLocateLastUnlocatedShot();
     var redScore = -1;
     var blueScore = -1;
     await tester.pumpWidget(
@@ -1376,6 +1374,7 @@ void main() {
     ) async {
       final controller = ScoringController(matchId: 'finish-motion-$change');
       await controller.recordScoreCommitted(side: TeamSide.red, points: 2);
+      controller.cancelLocateLastUnlocatedShot();
       final preference = ValueNotifier(MotionPreference.standard);
       final media = ValueNotifier(const MediaQueryData());
       addTearDown(preference.dispose);
@@ -1612,46 +1611,57 @@ void main() {
     expect(controller.state.shotLocations, hasLength(1));
   });
 
-  testWidgets(
-    'court-first draft keeps score buttons enabled for side selection',
-    (tester) async {
-      final controller = ScoringController(matchId: 'draft-score-selection');
-      await tester.pumpWidget(
-        MaterialApp(home: ScoringPage(controller: controller)),
-      );
+  testWidgets('court-first draft enables only legal scores for either side', (
+    tester,
+  ) async {
+    final controller = ScoringController(matchId: 'draft-score-selection');
+    await tester.pumpWidget(
+      MaterialApp(home: ScoringPage(controller: controller)),
+    );
 
-      await tester.tapAt(
-        tester.getCenter(find.byKey(const Key('scoring-court'))),
-      );
-      await tester.pump();
+    await tester.tapAt(
+      tester.getCenter(find.byKey(const Key('scoring-court'))),
+    );
+    await tester.pump();
 
-      final score = tester.widget<FilledButton>(
-        find.byKey(const Key('blue-score-1')),
-      );
-      final semantics = tester.widget<Semantics>(
-        find
-            .ancestor(
-              of: find.byKey(const Key('blue-score-1')),
-              matching: find.byType(Semantics),
-            )
-            .first,
-      );
-      expect(score.onPressed, isNotNull);
-      expect(semantics.properties.enabled, isTrue);
+    final score = tester.widget<FilledButton>(
+      find.byKey(const Key('blue-score-2')),
+    );
+    final semantics = tester.widget<Semantics>(
+      find
+          .ancestor(
+            of: find.byKey(const Key('blue-score-2')),
+            matching: find.byType(Semantics),
+          )
+          .first,
+    );
+    expect(score.onPressed, isNotNull);
+    expect(
+      tester
+          .widget<FilledButton>(find.byKey(const Key('red-score-2')))
+          .onPressed,
+      isNotNull,
+    );
+    for (final side in ['red', 'blue']) {
       expect(
-        tester
-            .widget<OutlinedButton>(find.byKey(const Key('blue-miss')))
-            .onPressed,
-        isNotNull,
-      );
-      expect(
-        tester
-            .widget<OutlinedButton>(find.byKey(const Key('scoring-foul')))
-            .onPressed,
+        tester.widget<FilledButton>(find.byKey(Key('$side-score-3'))).onPressed,
         isNull,
       );
-    },
-  );
+    }
+    expect(semantics.properties.enabled, isTrue);
+    expect(
+      tester
+          .widget<OutlinedButton>(find.byKey(const Key('blue-miss')))
+          .onPressed,
+      isNotNull,
+    );
+    expect(
+      tester
+          .widget<OutlinedButton>(find.byKey(const Key('scoring-foul')))
+          .onPressed,
+      isNull,
+    );
+  });
 
   testWidgets('legacy pending location disables score buttons and semantics', (
     tester,
@@ -1707,9 +1717,7 @@ void main() {
     expect(find.byKey(const Key('red-score-3-location')), findsOneWidget);
     expect(find.textContaining('补充红方 +3 落点'), findsOneWidget);
 
-    await tester.tapAt(
-      tester.getCenter(find.byKey(const Key('scoring-court'))),
-    );
+    await tester.tapAt(_courtPointOffset(tester, .5, .8));
     await tester.pump();
     expect(controller.locationSupplementWindow, isNull);
     expect(controller.state.shotLocations, hasLength(1));
@@ -1766,7 +1774,7 @@ void main() {
     final firstDecoration = tester
         .widget<AnimatedContainer>(affordance)
         .decoration;
-    expect(tester.binding.transientCallbackCount, 0);
+    expect(tester.binding.transientCallbackCount, greaterThan(0));
 
     await tester.pump(const Duration(milliseconds: 500));
 
@@ -1774,7 +1782,7 @@ void main() {
       tester.widget<AnimatedContainer>(affordance).decoration,
       firstDecoration,
     );
-    expect(tester.binding.transientCallbackCount, 0);
+    expect(tester.binding.transientCallbackCount, greaterThan(0));
     expect(find.byKey(const Key('red-score-2-location')), findsOneWidget);
   });
 
@@ -1814,7 +1822,7 @@ void main() {
     ) async {
       final controller = ScoringController(
         matchId: 'location-reveal-${mode.duration.inMilliseconds}',
-      )..addScore(side: TeamSide.red, points: 1);
+      )..addScore(side: TeamSide.red, points: 2);
       await tester.pumpWidget(
         MaterialApp(
           home: MediaQuery(
@@ -1828,9 +1836,13 @@ void main() {
       );
 
       final reveal = tester.widget<AnimatedContainer>(
-        find.byKey(const Key('red-score-1-location-affordance')),
+        find.byKey(const Key('red-score-2-location-affordance')),
       );
       expect(reveal.duration, mode.duration);
+      final court = tester.widget<CourtView>(find.byType(CourtView));
+      expect(court.reduceMotion, isTrue);
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(tester.binding.transientCallbackCount, 0);
     });
   }
 
@@ -2684,7 +2696,7 @@ void main() {
     expect(find.text('犯规 0'), findsNWidgets(2));
     expect(find.text('犯规'), findsOneWidget);
     expect(find.text('未命中'), findsNWidgets(2));
-    expect(find.text('+1'), findsNWidgets(2));
+    expect(find.text('罚球 +1'), findsNWidgets(2));
     expect(find.text('+2'), findsNWidgets(2));
     expect(find.text('+3'), findsNWidgets(2));
     expect(find.byType(CustomPaint), findsWidgets);
@@ -3399,9 +3411,7 @@ void main() {
     await tester.tap(find.byKey(const Key('blue-score-3')));
     await tester.pump();
     expect(find.byKey(const Key('blue-score-3-location')), findsOneWidget);
-    await tester.tapAt(
-      tester.getCenter(find.byKey(const Key('scoring-court'))),
-    );
+    await tester.tapAt(_courtPointOffset(tester, .5, .8));
     await tester.pumpAndSettle();
 
     expect(controller.state.score.blueScore, 3);
@@ -4059,6 +4069,7 @@ void main() {
       MaterialApp(
         home: ScoringPage(
           controller: controller,
+          motionPreference: MotionPreference.reduced,
           onOpenReplay: () => openCount++,
         ),
       ),
@@ -4071,7 +4082,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(openCount, 1);
 
-    await tester.tap(find.byKey(const Key('red-score-1')));
+    await tester.tap(find.byKey(const Key('red-score-2')));
     await tester.pump();
     await tester.tap(find.byKey(const Key('scoring-more')));
     await tester.pumpAndSettle();
@@ -4359,6 +4370,12 @@ void main() {
     await tester.tap(find.byKey(const Key('leave-stay')));
     expect(leaveCalls, 0);
   });
+}
+
+Offset _courtPointOffset(WidgetTester tester, double x, double y) {
+  final rect = tester.getRect(find.byKey(const Key('scoring-court')));
+  return rect.topLeft +
+      HalfCourtGeometry.pointToOffset(CourtPoint(x: x, y: y), rect.size);
 }
 
 Future<void> _tapFoul(WidgetTester tester, TeamSide side) async {

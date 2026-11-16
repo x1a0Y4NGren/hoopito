@@ -130,13 +130,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get v2GuideScore => '直接记分';
 
   @override
-  String get v2GuideScoreBody => '点双方的 +1、+2、+3 即可记分。';
+  String get v2GuideScoreBody => '按本场规则点双方的得分按钮。标准计分的 +1 是罚球，记球制的 +1 是进球。';
 
   @override
   String get v2GuideLocation => '记落点和未命中';
 
   @override
-  String get v2GuideLocationBody => '可以先点球场再记分，也可以记分后在 10 秒内补落点。未命中也能记。';
+  String get v2GuideLocationBody =>
+      '先点球场再选可用的得分按钮，或记分后在 10 秒内点亮起的区域补落点。未命中也能记；罚球自动定位。';
 
   @override
   String get v2GuideUndo => '撤销和结束比赛';
@@ -2501,7 +2502,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get updateFallback => '正在使用 GitHub 备用下载渠道';
 
   @override
-  String get pregameGoalScoringMode => '计分方式';
+  String get pregameGoalScoringMode => '计分目标';
 
   @override
   String get pregameGoalModeFree => '自由计分';
@@ -2642,7 +2643,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get practiceUndoHint => '点「撤销」，收回刚才的得分。';
 
   @override
-  String get practiceCourtHint => '点球场，选个出手位置。';
+  String get practiceCourtHint => '点三分线内，选个两分球出手位置。';
 
   @override
   String get practiceLocatedScoreHint => '位置选好了，点红方 +2。';
@@ -2711,4 +2712,55 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get practiceHideHint => '收起提示';
+
+  @override
+  String get scoringMethodLabel => '记分方式';
+
+  @override
+  String get scoringMethodStandard => '标准计分';
+
+  @override
+  String get scoringMethodBaskets => '记球制';
+
+  @override
+  String get scoringMethodLegacy => '自定义分值（原规则）';
+
+  @override
+  String get scoringThreePointCountsAsTwo => '三分球算 +2';
+
+  @override
+  String get scoringThreePointCountsAsTwoHelp => '关闭时进球都算 +1；开启后线内 +1、线外 +2。';
+
+  @override
+  String get scoringFreeThrowButton => '罚球 +1';
+
+  @override
+  String get scoringFreeThrowAutoLocation => '罚球已自动定位到罚球线';
+
+  @override
+  String get courtRegionInsideHint => '请在三分线内选择落点';
+
+  @override
+  String get courtRegionOutsideHint => '请在三分线外选择落点';
+
+  @override
+  String get courtRegionAllHint => '请在球场内选择落点';
+
+  @override
+  String get courtRegionFreeThrowHint => '罚球位置在罚球线';
+
+  @override
+  String get courtMoveLeft => '向左移动落点';
+
+  @override
+  String get courtMoveRight => '向右移动落点';
+
+  @override
+  String get courtMoveUp => '向篮筐移动落点';
+
+  @override
+  String get courtMoveDown => '远离篮筐移动落点';
+
+  @override
+  String get courtConfirmPoint => '确认当前落点';
 }

@@ -38,6 +38,21 @@ Future<void> reachFinish(PracticeSession session) async {
 
 void main() {
   test(
+    'the court lesson waits for an inside-arc location before asking for +2',
+    () async {
+      final session = PracticeSession();
+      addTearDown(session.close);
+      await session.start(setup);
+      final controller = session.controller!;
+      await controller.recordScoreCommitted(side: TeamSide.blue, points: 2);
+      await controller.undoLastScoringActionCommitted();
+      controller.beginOrMoveCourtFirstShot(CourtPoint(x: .5, y: .9));
+      expect(session.step, PracticeStep.courtPoint);
+      controller.beginOrMoveCourtFirstShot(CourtPoint(x: .5, y: .5));
+      expect(session.step, PracticeStep.scoreRedTwo);
+    },
+  );
+  test(
     'a different score and a failed write cannot advance the lesson',
     () async {
       var fail = false;

@@ -273,48 +273,52 @@ void main() {
     expect(find.byIcon(Icons.location_on_outlined), findsOneWidget);
   });
 
-  testWidgets('editable court exposes an accessible center-point tap', (
-    tester,
-  ) async {
-    CourtPoint? tappedPoint;
-    final semanticsHandle = tester.ensureSemantics();
-    try {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: SizedBox(
-              width: 300,
-              height: 280,
-              child: CourtView(
-                key: const Key('accessible-court'),
-                shotLocations: const [],
-                onCourtPointTap: (point) => tappedPoint = point,
-                mode: CourtViewMode.editable,
+  testWidgets(
+    'editable court previews an accessible point before confirmation',
+    (tester) async {
+      CourtPoint? tappedPoint;
+      final semanticsHandle = tester.ensureSemantics();
+      try {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: SizedBox(
+                width: 300,
+                height: 280,
+                child: CourtView(
+                  key: const Key('accessible-court'),
+                  shotLocations: const [],
+                  onCourtPointTap: (point) => tappedPoint = point,
+                  mode: CourtViewMode.editable,
+                ),
               ),
             ),
           ),
-        ),
-      );
-      final editableCourt = find.semantics.byLabel('篮球场投篮位置编辑区');
-      final semantics = tester.getSemantics(
-        find.descendant(
-          of: find.byKey(const Key('accessible-court')),
-          matching: find.byType(Semantics),
-        ),
-      );
-      expect(
-        semantics.getSemanticsData().hasAction(ui.SemanticsAction.tap),
-        isTrue,
-      );
+        );
+        final editableCourt = find.semantics.byLabel('篮球场投篮位置编辑区');
+        final semantics = tester.getSemantics(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is Semantics && widget.properties.label == '篮球场投篮位置编辑区',
+          ),
+        );
+        expect(
+          semantics.getSemanticsData().hasAction(ui.SemanticsAction.tap),
+          isTrue,
+        );
 
-      tester.semantics.tap(editableCourt);
-      expect(tappedPoint, isNotNull);
-      expect(tappedPoint!.x, closeTo(0.5, 0.01));
-      expect(tappedPoint!.y, closeTo(0.5, 0.01));
-    } finally {
-      semanticsHandle.dispose();
-    }
-  });
+        tester.semantics.tap(editableCourt);
+        expect(tappedPoint, isNull);
+        await tester.pump();
+        tester.semantics.tap(editableCourt);
+        expect(tappedPoint, isNotNull);
+        expect(tappedPoint!.x, closeTo(0.5, 0.01));
+        expect(tappedPoint!.y, closeTo(0.5, 0.01));
+      } finally {
+        semanticsHandle.dispose();
+      }
+    },
+  );
 
   testWidgets('accessible court tap updates a pending location', (
     tester,
@@ -346,9 +350,12 @@ void main() {
       );
 
       tester.semantics.tap(find.semantics.byLabel('篮球场投篮位置编辑区'));
+      expect(updatedPoint, isNull);
+      await tester.pump();
+      tester.semantics.tap(find.semantics.byLabel('篮球场投篮位置编辑区'));
       expect(updatedPoint, isNotNull);
-      expect(updatedPoint!.x, closeTo(0.5, 0.01));
-      expect(updatedPoint!.y, closeTo(0.5, 0.01));
+      expect(updatedPoint!.x, closeTo(0.2, 0.01));
+      expect(updatedPoint!.y, closeTo(0.2, 0.01));
     } finally {
       semanticsHandle.dispose();
     }

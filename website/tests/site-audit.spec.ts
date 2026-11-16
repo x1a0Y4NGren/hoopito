@@ -489,6 +489,7 @@ test('download chooser: closing the chooser does not resume a shot while the pag
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="center"]').click();
   await page.locator('[data-record]').click();
   await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -670,7 +671,7 @@ test('scroll batching: one stationary scroll notification reads each chapter bou
   ).toHaveAttribute('aria-current', 'location');
 });
 
-test('scroll batching: a stationary court invitation does not rewrite its placement', async ({
+test('scroll batching: a stationary court guide does not rewrite its placement', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -680,34 +681,28 @@ test('scroll batching: a stationary court invitation does not rewrite its placem
   // Native reading input releases the direct-link intent before scrolling to
   // the court below the now self-contained controls card.
   await page.keyboard.press('Escape');
-  await host.scrollIntoViewIfNeeded();
-  await expect(host).toHaveAttribute('data-demo-invitation', 'playing');
-  const placement = await page.evaluate(async () => {
-    const layer = document.querySelector<HTMLElement>(
-      '[data-demo-court-host] .demo-invitation-layer[data-cue-kind="court"]',
-    )!;
-    const original = CSSStyleDeclaration.prototype.setProperty;
-    const repeated: string[] = [];
-    CSSStyleDeclaration.prototype.setProperty = function (
-      name,
-      value,
-      priority,
-    ) {
-      if (
-        this === layer.style &&
-        name.startsWith('--court-') &&
-        this.getPropertyValue(name) === value
-      )
-        repeated.push(name);
-      original.call(this, name, value, priority);
-    };
+  await host.evaluate((el) =>
+    el.scrollIntoView({ behavior: 'instant', block: 'center' }),
+  );
+  const cue = page.locator('[data-demo-cue="court"]');
+  await expect(cue).toHaveAttribute('data-cue-state', 'steady');
+  const placement = await cue.evaluate(async (el) => {
+    const changes: string[] = [];
+    const observer = new MutationObserver((records) => {
+      changes.push(...records.map((record) => record.attributeName!));
+    });
+    observer.observe(el, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ['d', 'style', 'viewBox'],
+    });
     try {
       dispatchEvent(new Event('scroll'));
       await new Promise(requestAnimationFrame);
       await new Promise(requestAnimationFrame);
-      return repeated;
+      return changes;
     } finally {
-      CSSStyleDeclaration.prototype.setProperty = original;
+      observer.disconnect();
     }
   });
   expect(placement).toEqual([]);
@@ -807,7 +802,7 @@ for (const locale of ['/', '/en/']) {
       await page.evaluate(() => document.fonts.ready);
       const sizes = await page
         .locator(
-          '[data-record], [data-reset], .download-package [data-download], .faq summary',
+          '[data-demo-points], [data-record], [data-reset], .download-package [data-download], .faq summary',
         )
         .evaluateAll((elements) =>
           elements.map((element) => {
@@ -1001,6 +996,7 @@ test('chapter polish: enabled actions share pressed and keyboard feedback while 
   ).toEqual(disabled);
   await page.mouse.move(0, 0);
   await page.mouse.up();
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="center"]').click();
   const download = page.locator('.download-package [data-download]');
   for (const selector of [
@@ -1095,6 +1091,7 @@ test('chapter polish: reduced motion preserves pressed contrast without moving a
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/en/#experience');
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="center"]').click();
   for (const selector of [
     '[data-record]',

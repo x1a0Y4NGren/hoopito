@@ -1,4 +1,30 @@
 import { floorSurfaceGLSL, floorVarnishVertexGLSL } from '../court-lighting.ts';
+import {
+  COURT,
+  CORNER_JOIN_Y,
+  FREE_THROW_HIGHLIGHT_HALF_DEPTH,
+} from '../court-geometry.ts';
+
+const scalar = (value: number) => value.toFixed(12);
+/** Generated constants keep shader paint, hint masks and CPU validation aligned. */
+const geometryGLSL = /* glsl */ `
+  const float courtWidth = ${scalar(COURT.width)};
+  const float courtDepth = ${scalar(COURT.depth)};
+  const float basketZ = ${scalar(COURT.basketY - COURT.depth / 2)};
+  const float arcRadius = ${scalar(COURT.threePointRadius)};
+  const float cornerX = ${scalar(COURT.width / 2 - COURT.cornerOffset)};
+  const float cornerJoinZ = ${scalar(CORNER_JOIN_Y - COURT.depth / 2)};
+  const float freeThrowZ = ${scalar(COURT.freeThrowLineY - COURT.depth / 2)};
+  const float freeThrowHalfWidth = ${scalar(COURT.freeThrowLineWidth / 2)};
+  vec2 courtWorld(vec2 uv) {
+    return vec2((uv.x - 0.5) * courtWidth, (0.5 - uv.y) * courtDepth);
+  }
+  bool outsideArc(vec2 point) {
+    if (point.y <= cornerJoinZ) return abs(point.x) > cornerX + 0.000000001;
+    vec2 delta = point - vec2(0.0, basketZ);
+    return dot(delta, delta) > arcRadius * arcRadius + 0.000000001;
+  }
+`;
 
 /** Generic plane vertex shader also used by the contact shadow. */
 export const courtVertex = /* glsl */ `
@@ -35,6 +61,7 @@ export const courtFragment = /* glsl */ `
   uniform float uReveal;
   varying vec2 vUv;
   ${floorSurfaceGLSL}
+  ${geometryGLSL}
 
   float segmentDistance(vec2 point, vec2 start, vec2 end) {
     vec2 direction = end - start;
@@ -76,17 +103,21 @@ export const courtFragment = /* glsl */ `
   }
 
   void main() {
-    vec2 point = vec2((vUv.x - 0.5) * 15.0, (0.5 - vUv.y) * 14.0);
+    vec2 point = courtWorld(vUv);
 
-    float white = lineCoverage(boxDistance(point, vec2(7.44, 6.94)));
-    white = max(white, lineCoverage(boxDistance(point - vec2(0.0, -4.07), vec2(2.45, 2.87))));
-    white = max(white, lineCoverage(length(point - vec2(0.0, -1.2)) - 1.8));
-    white = max(white, semicircleCoverage(point - vec2(0.0, -5.3), 6.65));
-    white = max(white, lineCoverage(segmentDistance(point, vec2(-6.65, -6.94), vec2(-6.65, -5.3))));
-    white = max(white, lineCoverage(segmentDistance(point, vec2(6.65, -6.94), vec2(6.65, -5.3))));
+    float white = lineCoverage(boxDistance(point, vec2(courtWidth, courtDepth) * 0.5));
+    white = max(white, lineCoverage(boxDistance(point - vec2(0.0, (freeThrowZ - courtDepth * 0.5) * 0.5), vec2(2.45, ${scalar(COURT.freeThrowLineY / 2)}))));
+    white = max(white, lineCoverage(segmentDistance(point, vec2(-freeThrowHalfWidth, freeThrowZ), vec2(freeThrowHalfWidth, freeThrowZ))));
+    white = max(white, lineCoverage(length(point - vec2(0.0, freeThrowZ)) - 1.8));
+    vec2 arcPoint = vec2(abs(point.x), point.y - basketZ);
+    float minAngle = atan(cornerJoinZ - basketZ, cornerX);
+    float angle = clamp(atan(arcPoint.y, arcPoint.x), minAngle, 1.57079632679);
+    white = max(white, lineCoverage(length(arcPoint - arcRadius * vec2(cos(angle), sin(angle)))));
+    white = max(white, lineCoverage(segmentDistance(point, vec2(-cornerX, -courtDepth * 0.5), vec2(-cornerX, cornerJoinZ))));
+    white = max(white, lineCoverage(segmentDistance(point, vec2(cornerX, -courtDepth * 0.5), vec2(cornerX, cornerJoinZ))));
     white = max(white, semicircleCoverage(vec2(point.x, 7.0 - point.y), 1.8));
 
-    float orange = semicircleCoverage(point - vec2(0.0, -5.3), 1.25);
+    float orange = semicircleCoverage(point - vec2(0.0, basketZ), 1.25);
     float coverage = max(white, orange);
     // Most of the floor contains no paint. Avoid blending transparent pixels
     // into the HDR/MSAA buffer; derivatives above must run before this discard.
@@ -103,26 +134,68 @@ export const courtFragment = /* glsl */ `
   }
 `;
 
-/** One immutable arc mesh; its illuminated window follows the ball. */
+/** One floor overlay shades the complement without changing recorded locations. */
+export const courtRegionFragment = /* glsl */ `
+  uniform float uRegion;
+  uniform float uLightOpacity;
+  varying vec2 vUv;
+  ${geometryGLSL}
+  void main() {
+    if (uRegion < 0.5) discard;
+    vec2 point = courtWorld(vUv);
+    bool outside = outsideArc(point);
+    bool valid = uRegion < 1.5 ? !outside : uRegion < 2.5 ? outside :
+      abs(point.y - freeThrowZ) <= ${scalar(FREE_THROW_HIGHLIGHT_HALF_DEPTH)} && abs(point.x) <= freeThrowHalfWidth;
+    vec3 warm = vec3(1.0, 0.4735, 0.147);
+    float alpha = valid ? uLightOpacity : 0.48;
+    if (uRegion > 2.5) {
+      // Fixed free-throw location: marker size is measured on the floor and never pulses.
+      float centerDistance = length(point - vec2(0.0, freeThrowZ));
+      float center = 1.0 - smoothstep(0.065, 0.083, centerDistance);
+      float ring = 1.0 - smoothstep(0.012, 0.028, abs(centerDistance - 0.248));
+      float disk = 1.0 - smoothstep(0.23, 0.25, centerDistance);
+      float marker = max(center * 0.95, max(ring * 0.9, disk * 0.35));
+      if (marker > 0.0) {
+        valid = true;
+        alpha = max(alpha, marker);
+      }
+    }
+    gl_FragColor = vec4(valid ? warm : vec3(0.0), alpha);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
+
+/** A narrow ribbon expands in CSS pixels after projection, independent of DPR. */
 export const trailVertex = /* glsl */ `
+  uniform vec2 uViewport;
+  uniform float uWidthPixels;
+  attribute vec3 tangent;
   varying vec2 vUv;
   void main() {
     vUv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vec4 center = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vec4 next = projectionMatrix * modelViewMatrix * vec4(position + tangent, 1.0);
+    vec2 direction = (next.xy / next.w - center.xy / center.w) * uViewport;
+    vec2 normal = normalize(vec2(-direction.y, direction.x) + vec2(0.000001));
+    center.xy += normal * (uv.y * 2.0 - 1.0) * uWidthPixels / uViewport * center.w;
+    gl_Position = center;
   }
 `;
 
 export const trailFragment = /* glsl */ `
   uniform float uHead;
+  uniform float uTail;
   uniform float uOpacity;
+  uniform float uHalo;
   varying vec2 vUv;
   void main() {
-    float tail = smoothstep(uHead - 0.26, uHead - 0.01, vUv.x);
-    float head = 1.0 - smoothstep(uHead, uHead + 0.018, vUv.x);
-    float circumference = 0.5 + 0.5 * sin(vUv.y * 6.2831853);
-    vec3 amber = mix(vec3(1.0, 0.16, 0.025), vec3(1.0, 0.72, 0.27), tail);
-    gl_FragColor = vec4(amber * 2.7, tail * head * circumference * uOpacity);
-    #include <tonemapping_fragment>
+    if (vUv.x < uTail || vUv.x > uHead || uHead <= uTail) discard;
+    float tail = smoothstep(uTail, mix(uTail, uHead, 0.6), vUv.x);
+    float distance = abs(vUv.y * 2.0 - 1.0);
+    float crossSection = mix(1.0, exp(-distance * distance * 5.0) * (1.0 - smoothstep(0.75, 1.0, distance)), uHalo);
+    vec3 amber = mix(vec3(1.0, 0.3, 0.07), vec3(1.0, 0.84, 0.51), 1.0 - uHalo);
+    gl_FragColor = vec4(amber, tail * crossSection * uOpacity);
     #include <colorspace_fragment>
   }
 `;

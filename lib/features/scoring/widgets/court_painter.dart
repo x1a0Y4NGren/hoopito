@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:hoopito/app/app_theme.dart';
+import 'package:hoopito/core/domain/value_objects/court_geometry.dart';
 import 'package:hoopito/core/domain/value_objects/court_point.dart';
 import 'package:hoopito/core/domain/value_objects/team_side.dart';
 import 'package:hoopito/features/scoring/scoring_controller.dart';
@@ -11,8 +12,8 @@ class HalfCourtGeometry {
 
   // FIBA dimensions, in meters. The app records normalized coordinates inside
   // this half-court rectangle so display and replay can share one mapping.
-  static const width = 15.0;
-  static const depth = 14.0;
+  static const width = CourtGeometry.width;
+  static const depth = CourtGeometry.depth;
   static const aspectRatio = width / depth;
 
   static Rect courtRectForSize(Size size) {
@@ -111,6 +112,20 @@ class EraserShotMarker {
   final bool isMiss;
 }
 
+/// A fixed display position derived from an explicit free-throw event. This
+/// carries no shot-location identity and never enters location coverage.
+class FreeThrowCourtMarker {
+  const FreeThrowCourtMarker({
+    required this.eventId,
+    required this.side,
+    this.isMiss = false,
+  });
+
+  final String eventId;
+  final TeamSide side;
+  final bool isMiss;
+}
+
 class CourtPainter extends CustomPainter {
   const CourtPainter({
     this.shotLocations = const [],
@@ -120,6 +135,11 @@ class CourtPainter extends CustomPainter {
     this.hiddenShotLocationIds = const <String>{},
     this.transientMarkers = const <TransientShotMarker>[],
     this.eraserMarkers = const <EraserShotMarker>[],
+    this.freeThrowMarkers = const <FreeThrowCourtMarker>[],
+    this.activeRegion,
+    this.regionPulse,
+    this.accessibleCursor,
+    this.highlightFreeThrowLine = false,
     this.surfaceColor = HoopitoColors.cream,
     this.lineColor = HoopitoColors.ink,
     this.accentColor = HoopitoColors.orange,
@@ -127,7 +147,7 @@ class CourtPainter extends CustomPainter {
     this.teamBlueColor = HoopitoColors.blue,
     this.teamRedColor = HoopitoColors.red,
     this.markerRingColor = HoopitoColors.ink,
-  });
+  }) : super(repaint: regionPulse);
 
   final List<ScoringShotLocation> shotLocations;
   final PendingShotLocation? pendingLocation;
@@ -136,6 +156,11 @@ class CourtPainter extends CustomPainter {
   final Set<String> hiddenShotLocationIds;
   final List<TransientShotMarker> transientMarkers;
   final List<EraserShotMarker> eraserMarkers;
+  final List<FreeThrowCourtMarker> freeThrowMarkers;
+  final CourtRegion? activeRegion;
+  final Animation<double>? regionPulse;
+  final CourtPoint? accessibleCursor;
+  final bool highlightFreeThrowLine;
   final Color surfaceColor;
   final Color lineColor;
   final Color accentColor;
@@ -177,7 +202,180 @@ class CourtPainter extends CustomPainter {
       mutedLinePaint: mutedLinePaint,
       rimPaint: rimPaint,
     );
+    _drawRegion(canvas, court);
     _drawMarkers(canvas, size);
+    _drawFreeThrows(canvas, size);
+    final cursor = accessibleCursor;
+    if (cursor != null) {
+      final center = HalfCourtGeometry.pointToOffset(cursor, size);
+      final paint = Paint()
+        ..color = accentColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.5;
+      canvas.drawCircle(center, 13, paint);
+      canvas.drawLine(center.translate(-19, 0), center.translate(19, 0), paint);
+      canvas.drawLine(center.translate(0, -19), center.translate(0, 19), paint);
+    }
+  }
+
+  static Path regionPath(CourtRegion region, Rect court) {
+    final all = Path()..addRect(court);
+    if (region == CourtRegion.all) return all;
+    if (region == CourtRegion.freeThrowLine) {
+      final left = HalfCourtGeometry.metersToOffset(
+        court,
+        CourtGeometry.centerX - CourtGeometry.freeThrowLineWidth / 2,
+        CourtGeometry.freeThrowLineY,
+      );
+      final right = HalfCourtGeometry.metersToOffset(
+        court,
+        CourtGeometry.centerX + CourtGeometry.freeThrowLineWidth / 2,
+        CourtGeometry.freeThrowLineY,
+      );
+      return Path.combine(
+        PathOperation.intersect,
+        all,
+        Path()..addRect(Rect.fromPoints(left, right).inflate(24)),
+      );
+    }
+    final basket = HalfCourtGeometry.metersToOffset(
+      court,
+      CourtGeometry.centerX,
+      CourtGeometry.basketY,
+    );
+    final circle = Rect.fromCircle(
+      center: basket,
+      radius:
+          CourtGeometry.threePointRadius / CourtGeometry.width * court.width,
+    );
+    final angle = math.atan2(
+      CourtGeometry.cornerJoinY - CourtGeometry.basketY,
+      CourtGeometry.centerX - CourtGeometry.cornerOffset,
+    );
+    final leftTop = HalfCourtGeometry.metersToOffset(
+      court,
+      CourtGeometry.cornerOffset,
+      0,
+    );
+    final leftJoin = HalfCourtGeometry.metersToOffset(
+      court,
+      CourtGeometry.cornerOffset,
+      CourtGeometry.cornerJoinY,
+    );
+    final rightTop = HalfCourtGeometry.metersToOffset(
+      court,
+      CourtGeometry.width - CourtGeometry.cornerOffset,
+      0,
+    );
+    final inside = Path()
+      ..moveTo(leftTop.dx, leftTop.dy)
+      ..lineTo(leftJoin.dx, leftJoin.dy)
+      ..arcTo(circle, math.pi - angle, -(math.pi - 2 * angle), false)
+      ..lineTo(rightTop.dx, rightTop.dy)
+      ..close();
+    return region == CourtRegion.insideArc
+        ? inside
+        : Path.combine(PathOperation.difference, all, inside);
+  }
+
+  void _drawRegion(Canvas canvas, Rect court) {
+    final region = activeRegion;
+    if (region != null) {
+      final valid = regionPath(region, court);
+      final outside = Path.combine(
+        PathOperation.difference,
+        Path()..addRect(court),
+        valid,
+      );
+      canvas.drawPath(
+        outside,
+        Paint()..color = Colors.black.withValues(alpha: .50),
+      );
+      // A full cosine cycle gives a smooth 1.6-second breath without blinking.
+      final phase =
+          .5 - .5 * math.cos((regionPulse?.value ?? .5) * 2 * math.pi);
+      canvas.drawPath(
+        valid,
+        Paint()..color = accentColor.withValues(alpha: .055 + .085 * phase),
+      );
+      canvas.drawPath(
+        valid,
+        Paint()
+          ..color = accentColor.withValues(alpha: .30 + .20 * phase)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
+      );
+    }
+    if (highlightFreeThrowLine) {
+      final left = HalfCourtGeometry.metersToOffset(
+        court,
+        CourtGeometry.centerX - CourtGeometry.freeThrowLineWidth / 2,
+        CourtGeometry.freeThrowLineY,
+      );
+      final right = HalfCourtGeometry.metersToOffset(
+        court,
+        CourtGeometry.centerX + CourtGeometry.freeThrowLineWidth / 2,
+        CourtGeometry.freeThrowLineY,
+      );
+      canvas.drawLine(
+        left,
+        right,
+        Paint()
+          ..color = accentColor.withValues(alpha: .3)
+          ..strokeWidth = 16
+          ..strokeCap = StrokeCap.round,
+      );
+      canvas.drawLine(
+        left,
+        right,
+        Paint()
+          ..color = accentColor
+          ..strokeWidth = 4
+          ..strokeCap = StrokeCap.round,
+      );
+    }
+  }
+
+  void _drawFreeThrows(Canvas canvas, Size size) {
+    for (final marker in freeThrowMarkers) {
+      final center = HalfCourtGeometry.pointToOffset(
+        CourtGeometry.freeThrowPoint,
+        size,
+      );
+      final diamond = Path()
+        ..moveTo(center.dx, center.dy - 9)
+        ..lineTo(center.dx + 9, center.dy)
+        ..lineTo(center.dx, center.dy + 9)
+        ..lineTo(center.dx - 9, center.dy)
+        ..close();
+      canvas.drawPath(
+        diamond,
+        Paint()..color = marker.isMiss ? surfaceColor : _sideColor(marker.side),
+      );
+      canvas.drawPath(
+        diamond,
+        Paint()
+          ..color = _sideColor(marker.side)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
+      );
+      if (marker.isMiss) {
+        canvas.drawLine(
+          center.translate(-3, -3),
+          center.translate(3, 3),
+          Paint()
+            ..color = _sideColor(marker.side)
+            ..strokeWidth = 2,
+        );
+        canvas.drawLine(
+          center.translate(-3, 3),
+          center.translate(3, -3),
+          Paint()
+            ..color = _sideColor(marker.side)
+            ..strokeWidth = 2,
+        );
+      }
+    }
   }
 
   void _drawHalfCourtLines({
@@ -188,14 +386,14 @@ class CourtPainter extends CustomPainter {
     required Paint rimPaint,
   }) {
     const centerX = HalfCourtGeometry.width / 2;
-    const basketY = 1.575;
-    const freeThrowLineY = 5.8;
+    const basketY = CourtGeometry.basketY;
+    const freeThrowLineY = CourtGeometry.freeThrowLineY;
     const laneWidth = 4.9;
-    const freeThrowLineWidth = 3.6;
+    const freeThrowLineWidth = CourtGeometry.freeThrowLineWidth;
     const freeThrowRadius = 1.8;
     const restrictedRadius = 1.25;
-    const threePointRadius = 6.75;
-    const cornerOffset = 0.9;
+    const threePointRadius = CourtGeometry.threePointRadius;
+    const cornerOffset = CourtGeometry.cornerOffset;
     const rimRadius = 0.225;
     const backboardY = 1.2;
     const backboardWidth = 1.8;
@@ -451,6 +649,11 @@ class CourtPainter extends CustomPainter {
         oldDelegate.hiddenShotLocationIds != hiddenShotLocationIds ||
         oldDelegate.transientMarkers != transientMarkers ||
         oldDelegate.eraserMarkers != eraserMarkers ||
+        oldDelegate.freeThrowMarkers != freeThrowMarkers ||
+        oldDelegate.activeRegion != activeRegion ||
+        oldDelegate.regionPulse != regionPulse ||
+        oldDelegate.accessibleCursor != accessibleCursor ||
+        oldDelegate.highlightFreeThrowLine != highlightFreeThrowLine ||
         oldDelegate.surfaceColor != surfaceColor ||
         oldDelegate.lineColor != lineColor ||
         oldDelegate.accentColor != accentColor ||

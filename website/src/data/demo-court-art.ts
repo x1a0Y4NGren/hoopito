@@ -1,8 +1,10 @@
 /** Registration is measured from the accepted generated sprite, not its center. */
+import { BASKET_POINT, courtToSvg } from '../scripts/court-geometry.ts';
 const crop = { width: 1742, height: 704 };
 const sourceRim = { cx: 865, cy: 410, rx: 273, ry: 273 };
 const production = { width: 512, height: 207 };
-const rim = { cx: 300, cy: 82, rx: 20 };
+const basket = courtToSvg(BASKET_POINT);
+const rim = { cx: basket.x, cy: basket.y, rx: 20 };
 const scale = rim.rx / sourceRim.rx;
 
 export const demoCourtArt = {

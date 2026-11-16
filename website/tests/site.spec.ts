@@ -2,6 +2,8 @@ import { expect, test as base, type Page } from '@playwright/test';
 import { storyPose } from '../src/scripts/story-pose';
 import type { CourtScene, StoryFrame } from '../src/scripts/scene-contract';
 import { courtTextures } from '../src/data/court-materials';
+import { courtToSvg, FREE_THROW_POINT } from '../src/scripts/court-geometry';
+import { demoPresets } from '../src/scripts/demo-state';
 import { installContractClock } from './controlled-clock';
 import {
   storyItemPose,
@@ -136,121 +138,251 @@ async function expectReplayReading(page: Page) {
     .toBe(true);
 }
 
+const demoCue = (page: Page, kind: 'court' | 'score' | 'record') =>
+  page.locator(`[data-demo-cue="${kind}"]`);
+
+async function demoArrowTip(page: Page, kind: 'court' | 'score' | 'record') {
+  return demoCue(page, kind)
+    .locator('[data-demo-arrow]')
+    .evaluate((element) => {
+      const path = element as SVGPathElement;
+      const head = path.parentElement!.querySelector<SVGPathElement>(
+        '[data-demo-arrow-head]',
+      )!;
+      const tip = path
+        .getPointAtLength(path.getTotalLength())
+        .matrixTransform(path.getScreenCTM()!);
+      const headTip = head
+        .getPointAtLength(head.getTotalLength() / 2)
+        .matrixTransform(head.getScreenCTM()!);
+      return {
+        x: tip.x,
+        y: tip.y,
+        headOffset: Math.hypot(headTip.x - tip.x, headTip.y - tip.y),
+      };
+    });
+}
+
+async function svgCourtPoint(page: Page, x: number, y: number) {
+  return page.locator('[data-demo-court]').evaluate((element, point) => {
+    const projected = new DOMPoint(point.x, point.y).matrixTransform(
+      (element as SVGSVGElement).getScreenCTM()!,
+    );
+    return { x: projected.x, y: projected.y };
+  }, courtToSvg({ x, y }));
+}
+
+async function expectCueLabel(
+  page: Page,
+  kind: 'court' | 'score' | 'record',
+  text: string,
+) {
+  const cue = demoCue(page, kind);
+  const label = cue.locator('.demo-guide-label');
+  await expect(label).toHaveText(text);
+  await expect(cue).toHaveAttribute('data-cue-state', 'steady');
+  await expect(cue.locator('[data-demo-arrow-head]')).toBeVisible();
+  const visibleLabel =
+    (await cue.getAttribute('data-status-anchor')) === null
+      ? label
+      : page.locator('[data-demo-status]');
+  await expect(visibleLabel).toBeVisible();
+  expect(
+    await visibleLabel.evaluate((element) => {
+      const label = element.getBoundingClientRect();
+      const header = document
+        .querySelector('.site-header')!
+        .getBoundingClientRect();
+      return (
+        label.top >= header.bottom &&
+        label.left >= 0 &&
+        label.right <= innerWidth &&
+        label.bottom <= innerHeight
+      );
+    }),
+  ).toBe(true);
+}
+
+async function expectControlCue(
+  page: Page,
+  kind: 'score' | 'record',
+  target: string,
+  label: string,
+) {
+  await expectCueLabel(page, kind, label);
+  const tip = await demoArrowTip(page, kind);
+  expect(tip.headOffset).toBeLessThanOrEqual(1);
+  const bounds = (await page.locator(target).boundingBox())!;
+  const dx = Math.max(bounds.x - tip.x, tip.x - bounds.x - bounds.width, 0);
+  const dy = Math.max(bounds.y - tip.y, tip.y - bounds.y - bounds.height, 0);
+  expect(Math.hypot(dx, dy)).toBeGreaterThan(0);
+  expect(Math.hypot(dx, dy)).toBeLessThanOrEqual(9);
+}
+
+async function expectSvgCourtCue(
+  page: Page,
+  points: 2 | 3 | null,
+  label: string,
+) {
+  await expectCueLabel(page, 'court', label);
+  const tip = await demoArrowTip(page, 'court');
+  expect(tip.headOffset).toBeLessThanOrEqual(1);
+  const target = demoPresets(points).center;
+  const projected = await svgCourtPoint(page, target.x, target.y);
+  expect(
+    Math.hypot(tip.x - projected.x, tip.y - projected.y),
+  ).toBeLessThanOrEqual(2);
+}
+
 for (const locale of locales) {
   for (const width of [390, 1440]) {
-    test(`${locale.lang}: ${width}px demo invitations explain court and controls without selecting or scoring`, async ({
+    test(`${locale.lang}: ${width}px demo guide follows either selection order and only confirms enabled choices`, async ({
       page,
     }) => {
       await page.route(threeChunk, (route) => route.abort());
       await page.setViewportSize({ width, height: 1000 });
-      await page.goto(locale.path);
+      await page.goto(width < 1024 ? `${locale.path}#experience` : locale.path);
       await page.evaluate(() => document.fonts.ready);
       await page.addStyleTag({
         content: 'html{scroll-behavior:auto!important}',
       });
-      await page.evaluate(() => {
-        const samples: Record<string, number> = {};
-        Object.assign(window, { spotlightAlignment: samples });
-        for (const [selector, kind] of [['[data-demo-court-host]', 'court']]) {
-          const target = document.querySelector<HTMLElement>(selector)!;
-          new MutationObserver(() => {
-            if (target.dataset.demoInvitation !== 'playing') return;
-            const layer = document.querySelector<HTMLElement>(
-              `.demo-invitation-layer[data-cue-kind="${kind}"]`,
-            )!;
-            const a = target.getBoundingClientRect(),
-              b = layer.getBoundingClientRect();
-            samples[kind] = Math.max(
-              Math.abs(a.left - b.left),
-              Math.abs(a.top - b.top),
-              Math.abs(a.width - b.width),
-              Math.abs(a.height - b.height),
-            );
-          }).observe(target, {
-            attributes: true,
-            attributeFilter: ['data-demo-invitation'],
-          });
-        }
-      });
       const host = page.locator('[data-demo-court-host]');
-      if (width >= 1024) {
-        await page.locator('.site-header nav > a[href="#experience"]').click();
-        await expect(page.locator('html')).toHaveAttribute(
-          'data-scroll-stop',
-          'experience',
-        );
-        await expect(page.locator('html')).toHaveAttribute(
-          'data-scroll-state',
-          'idle',
-        );
-      } else await host.scrollIntoViewIfNeeded();
-      await expect(host).toHaveAttribute('data-demo-invitation', 'done');
-      await expect(page.locator('.point-presets')).not.toHaveAttribute(
-        'data-demo-invitation',
-        /.+/,
-      );
-      await expect(
-        page.locator(
-          '.demo-invitation-arrow, .demo-invitation-shade, .demo-invitation-layer[data-cue-kind="presets"]',
-        ),
-      ).toHaveCount(0);
-      for (const kind of ['court'] as const) {
-        // Completed layers are display:none to prevent stale-size overflow.
-        // Assert their geometry while the actual spotlight was visible.
-        const alignment = await page.evaluate(
-          (cueKind) =>
-            (
-              window as typeof window & {
-                spotlightAlignment: Record<string, number>;
-              }
-            ).spotlightAlignment[cueKind],
-          kind,
-        );
-        expect(
-          alignment,
-          `${kind} spotlight must stay on its actual target`,
-        ).toBeLessThan(0.6);
-      }
-      await expect(
-        page.locator('[data-point-preset][aria-pressed="true"]'),
-      ).toHaveCount(0);
-      await expect(page.locator('[data-blue-score]')).toHaveText('6');
-      await expect(page.locator('[data-record]')).toBeDisabled();
-      await page.locator('[data-point-preset="center"]').focus();
-      await page.keyboard.press('Enter');
-      const record = page.locator('[data-record]');
-      await record.scrollIntoViewIfNeeded();
-      await expect(record).toHaveAttribute('data-demo-invitation', 'done');
-      await expect(record).toBeEnabled();
-      await expect(page.locator('[data-blue-score]')).toHaveText('6');
-      await record.click();
-      await expect(page.locator('[data-blue-score]')).toHaveText('8');
-      for (const layer of await page.locator('.demo-invitation-layer').all())
-        await expect(layer).toHaveCSS('opacity', '0');
-      await page.locator('[data-reset]').click();
-      await expectReset(page);
-      if (width >= 1024) {
-        await page.locator('.nav-download').click();
-        await expect(page.locator('html')).toHaveAttribute(
-          'data-scroll-stop',
-          'download',
-        );
-        await page.locator('.site-header nav > a[href="#experience"]').click();
-        await expect(page.locator('html')).toHaveAttribute(
-          'data-scroll-stop',
-          'experience',
-        );
-        await expect(page.locator('html')).toHaveAttribute(
-          'data-scroll-state',
-          'idle',
+      if (width < 1024) {
+        await host.evaluate((el) =>
+          el.scrollIntoView({ behavior: 'instant', block: 'center' }),
         );
       } else {
-        await page.locator('#download').scrollIntoViewIfNeeded();
-        await host.scrollIntoViewIfNeeded();
+        await page.locator('.site-header nav > a[href="#experience"]').click();
       }
-      await expect(host).toHaveAttribute('data-demo-invitation', 'done');
-      for (const layer of await page.locator('.demo-invitation-layer').all())
-        await expect(layer).toHaveCSS('opacity', '0');
+      const english = locale.lang === 'en';
+      const courtLabel = english
+        ? 'Tap the court to mark your shot.'
+        : '点一下球场，选个出手位置。';
+      const scoreLabel = english
+        ? 'How many points? Pick a value.'
+        : '这球值几分？点个分值。';
+      const confirmation = (points: number) =>
+        english
+          ? `Tap “Confirm +${points}” to add it.`
+          : `点「确认 +${points}」，把这球记上。`;
+      const guide = page.locator('[data-demo-guide]');
+      const status = page.locator('[data-demo-status]');
+      const score = (value: number) =>
+        page.locator(`[data-demo-points="${value}"]`);
+      const record = page.locator('[data-record]');
+      const reset = page.locator('[data-reset]');
+      await expectSvgCourtCue(page, null, courtLabel);
+      await expectControlCue(page, 'score', '.demo-score-options', scoreLabel);
+      await expect(demoCue(page, 'record')).toBeHidden();
+      await expectReset(page);
+
+      await score(2).click();
+      await expectSvgCourtCue(
+        page,
+        2,
+        (await status.getAttribute('data-inside-arc'))!,
+      );
+      await expect(demoCue(page, 'score')).toBeHidden();
+      const wrong = await svgCourtPoint(page, 0.5, 0.85);
+      await page.mouse.click(wrong.x, wrong.y);
+      await expect(status).toHaveText(
+        (await status.getAttribute('data-invalid'))!,
+      );
+      await expectSvgCourtCue(
+        page,
+        2,
+        (await status.getAttribute('data-inside-arc'))!,
+      );
+      await expect(record).toBeDisabled();
+      await expect(page.locator('[data-demo-selection]')).toBeHidden();
+
+      await page.locator('[data-point-preset="center"]').focus();
+      await page.keyboard.press('Enter');
+      await record.scrollIntoViewIfNeeded();
+      await expect(record).toBeEnabled();
+      await expectControlCue(page, 'record', '[data-record]', confirmation(2));
+      await expect(demoCue(page, 'court')).toBeHidden();
+      await expect(demoCue(page, 'score')).toBeHidden();
+      await expect(page.locator('[data-blue-score]')).toHaveText('6');
+      await record.click();
+      await expect(guide).toBeHidden();
+      await expect(page.locator('[data-blue-score]')).toHaveText('8');
+
+      await reset.click();
+      await expectReset(page);
+      await expectSvgCourtCue(page, null, courtLabel);
+      await expectControlCue(page, 'score', '.demo-score-options', scoreLabel);
+      const outside = await svgCourtPoint(page, 0.5, 0.85);
+      await page.mouse.click(outside.x, outside.y);
+      await expect(demoCue(page, 'court')).toBeHidden();
+      const scoreThree = english
+        ? 'This spot is worth +3.'
+        : '这个位置可以记 +3。';
+      await expectControlCue(
+        page,
+        'score',
+        '[data-demo-points="3"]',
+        scoreThree,
+      );
+      await expect(status).toHaveText(scoreThree);
+      await expect(score(1)).toBeDisabled();
+      await expect(score(2)).toBeDisabled();
+      await score(2).click({ force: true });
+      await expect(demoCue(page, 'record')).toBeHidden();
+      await expectControlCue(
+        page,
+        'score',
+        '[data-demo-points="3"]',
+        scoreThree,
+      );
+      await score(3).click();
+      await expectControlCue(page, 'record', '[data-record]', confirmation(3));
+      await record.click();
+      await expect(guide).toBeHidden();
+      await expect(page.locator('[data-blue-score]')).toHaveText('9');
+
+      await reset.click();
+      await expectReset(page);
+      const inside = await svgCourtPoint(page, 0.5, 0.25);
+      await page.mouse.click(inside.x, inside.y);
+      const scoreTwo = english
+        ? 'This spot is worth +2.'
+        : '这个位置可以记 +2。';
+      await expectControlCue(page, 'score', '[data-demo-points="2"]', scoreTwo);
+      await expect(score(2)).toBeEnabled();
+      await expect(score(1)).toBeDisabled();
+      await expect(score(3)).toBeDisabled();
+      const freeThrow = await svgCourtPoint(
+        page,
+        FREE_THROW_POINT.x,
+        FREE_THROW_POINT.y,
+      );
+      await page.mouse.click(freeThrow.x, freeThrow.y);
+      const freeThrowChoice = english
+        ? 'Pick +2 for a field goal or +1 for a free throw.'
+        : '投篮选 +2，罚球选 +1。';
+      await expectControlCue(
+        page,
+        'score',
+        '.demo-score-options',
+        freeThrowChoice,
+      );
+      await expect(score(1)).toBeEnabled();
+      await expect(score(2)).toBeEnabled();
+      await expect(score(3)).toBeDisabled();
+      await expect(record).toBeDisabled();
+      await expect(status).toHaveText(freeThrowChoice);
+      await reset.click();
+      await score(1).click();
+      await expectControlCue(page, 'record', '[data-record]', confirmation(1));
+      await expect(status).toHaveText(
+        (await status.getAttribute('data-free-throw-line'))!,
+      );
+      await expect(demoCue(page, 'court')).toBeHidden();
+      await expect(demoCue(page, 'score')).toBeHidden();
+      await record.click();
+      await expect(guide).toBeHidden();
+      await expect(page.locator('[data-blue-score]')).toHaveText('7');
     });
   }
 }
@@ -264,6 +396,7 @@ test(
       'Actual WebGL input is exercised in Chromium.',
     );
     await allowSoftwareWebGL(page);
+    await observeStoryCourt(page);
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
@@ -305,10 +438,24 @@ test(
     expect(range.end).toBeGreaterThanOrEqual(range.start);
     expect(range.current).toBeGreaterThanOrEqual(range.start - 2);
     expect(range.current).toBeLessThanOrEqual(range.end + 2);
-    const bounds = await host.boundingBox();
-    await host.click({
-      position: { x: bounds!.width * 0.5, y: bounds!.height * 0.63 },
-    });
+    await page.locator('[data-demo-points="2"]').click();
+    const client = await page.evaluate(
+      (point) =>
+        (
+          Reflect.get(window, '__observedStoryCourt') as ObservedStoryCourt
+        ).scene.projectPoint(point),
+      demoPresets(2).center,
+    );
+    expect(client).not.toBeNull();
+    await expect(demoCue(page, 'court')).toHaveAttribute(
+      'data-cue-state',
+      'steady',
+    );
+    const tip = await demoArrowTip(page, 'court');
+    expect(
+      Math.hypot(tip.x - client!.x, tip.y - client!.y),
+    ).toBeLessThanOrEqual(2);
+    await page.mouse.click(tip.x, tip.y);
     await expect(page.locator('[data-record]')).toBeEnabled();
     await expect(page.locator('[data-blue-score]')).toHaveText('6');
     await page.locator('[data-record]').click();
@@ -355,6 +502,9 @@ test(
     await expect(host).toHaveAttribute('data-renderer', '2d');
     await expect(host.locator('canvas')).toHaveCount(0);
     await expect(page.locator('[data-demo-court]')).toBeVisible();
+    await host.scrollIntoViewIfNeeded();
+    await page.locator('[data-demo-points="3"]').click();
+    await expectSvgCourtCue(page, 3, '三分，点三分线外。');
   },
 );
 
@@ -431,12 +581,14 @@ for (const locale of locales) {
           )
           .toBeCloseTo(1, 2);
       };
+      await page.locator('[data-demo-points="2"]').click();
       await page.locator('[data-point-preset="center"]').click();
       await sampleAlignment('center preset: animated and settled');
       await page.locator('[data-point-preset="left"]').click();
       await page.locator('[data-point-preset="right"]').click();
       await sampleAlignment('rapid reselection');
       await page.locator('[data-reset]').click();
+      await page.locator('[data-demo-points="2"]').click();
       await page.locator('[data-point-preset="center"]').focus();
       await page.keyboard.press('Enter');
       await sampleAlignment('keyboard selection after reset');
@@ -734,6 +886,7 @@ for (const locale of locales) {
           } as typeof original;
         });
         await page.goto(locale.path);
+        await page.locator('[data-demo-points="2"]').click();
         await page.locator('[data-point-preset="center"]').click();
         await page.locator('[data-record]').click();
         await page.setViewportSize({ width: 844, height: 390 });
@@ -1614,6 +1767,7 @@ for (const phase of [
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
     const resting = await page.locator('[data-net-weave]').getAttribute('d');
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="left"]').click();
     await page.locator('[data-record]').click();
     await page.waitForTimeout(phase.delay);
@@ -1638,6 +1792,7 @@ for (const phase of [
       'd',
       resting!,
     );
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="right"]').focus();
     await page.keyboard.press('Enter');
     await page.locator('[data-record]').click();
@@ -1760,6 +1915,7 @@ test('hidden-page and gallery suspension freeze a shot until all reasons are rel
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="center"]').click();
   await page.locator('[data-record]').click();
   await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -1829,6 +1985,7 @@ test('net rebound continues after a recorded marker and reset restores its ancho
       attributeFilter: ['hidden', 'd'],
     });
   }, resting);
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="center"]').click();
   await page.locator('[data-record]').click();
   await expect(page.locator('[data-demo-marker]')).not.toHaveAttribute(
@@ -3000,6 +3157,7 @@ for (const locale of locales) {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(`${locale.path}#experience`);
     await expectReset(page);
+    await page.locator('[data-demo-points="2"]').click();
     const preset = page.locator('[data-point-preset="left"]');
     await preset.focus();
     await page.keyboard.press('Enter');
@@ -3030,6 +3188,7 @@ for (const locale of locales) {
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`${locale.path}#experience`);
+    await page.locator('[data-demo-points="2"]').click();
     await page
       .locator('[data-demo-court]')
       .click({ position: { x: 80, y: 100 } });
@@ -3045,6 +3204,7 @@ for (const locale of locales) {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto(`${locale.path}#experience`);
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="center"]').click();
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -3088,6 +3248,7 @@ for (const locale of locales) {
         expect(requested.some((url) => threeChunk.test(url))).toBe(false);
       await page.locator('#experience').scrollIntoViewIfNeeded();
       for (const selector of [
+        '[data-demo-points]',
         '[data-point-preset]',
         '[data-record]',
         '[data-reset]',
@@ -3175,6 +3336,7 @@ test('a system motion change during a mobile shot completes once and still permi
   await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
   expect(requested.some((url) => threeChunk.test(url))).toBe(false);
   await page.locator('#experience').scrollIntoViewIfNeeded();
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="right"]').click();
   await page.locator('[data-record]').click();
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -3218,6 +3380,7 @@ for (const locale of locales) {
     await expectNoOverflow(page);
     await expectDownload(page);
     await page.locator('#experience').scrollIntoViewIfNeeded();
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="center"]').click();
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -3247,6 +3410,7 @@ test('missing WebGL2 keeps the static introduction and interactive demo', async 
   await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
   await expectDownload(page);
   await page.locator('#experience').scrollIntoViewIfNeeded();
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="center"]').click();
   await page.locator('[data-record]').click();
   await expect(page.locator('[data-demo-marker]')).toBeVisible();
@@ -3266,6 +3430,7 @@ test(
     await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
     await expectDownload(page);
     await page.locator('#experience').scrollIntoViewIfNeeded();
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="left"]').click();
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -3297,6 +3462,7 @@ test(
     );
     await expectDownload(page);
     await page.locator('#experience').scrollIntoViewIfNeeded();
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="center"]').click();
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -3426,6 +3592,7 @@ test(
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(page.locator('html')).toHaveAttribute('data-scene', '2d');
     await page.locator('#experience').scrollIntoViewIfNeeded();
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="center"]').click();
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-demo-marker]')).toBeVisible();
@@ -3503,7 +3670,7 @@ async function delayCourtAdoption(page: Page) {
 }
 
 test(
-  'the desktop loading poster does not consume the court invitation before input is ready',
+  'the desktop loading poster keeps the demo guide hidden until WebGL input is ready',
   { tag: '@webgl', lock: 'webgl-renderer' },
   async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'chromium', 'Real renderer lifecycle');
@@ -3522,16 +3689,16 @@ test(
       .locator('#court-canvas')
       .getAttribute('data-render-count');
     const host = page.locator('[data-demo-court-host]');
-    await host.evaluate((element) => {
-      const events: { state: string | null; input: boolean }[] = [];
+    const guide = page.locator('[data-demo-guide]');
+    await guide.evaluate((element) => {
+      const events: { hidden: boolean; input: boolean }[] = [];
       const observer = new MutationObserver((records) => {
-        // A slow driver can finish this 800ms cue between two protocol polls.
         // Mutation old values retain every actual state even in one batch.
         records.forEach((_, index) =>
           events.push({
-            state:
-              records[index + 1]?.oldValue ??
-              element.getAttribute('data-demo-invitation'),
+            hidden: records[index + 1]
+              ? records[index + 1].oldValue !== null
+              : element.hasAttribute('hidden'),
             input: document.documentElement.dataset.interactive === 'true',
           }),
         );
@@ -3539,7 +3706,7 @@ test(
       observer.observe(element, {
         attributes: true,
         attributeOldValue: true,
-        attributeFilter: ['data-demo-invitation'],
+        attributeFilter: ['hidden'],
       });
       Reflect.set(window, '__invitationAudit', { events, observer });
     });
@@ -3550,29 +3717,35 @@ test(
       preparedCount!,
     );
     await expect(page.locator('html')).toHaveAttribute('data-scene', 'loading');
-    await expect(host).toHaveAttribute('data-demo-invitation', 'idle');
+    await expect(guide).toBeHidden();
     await page.evaluate(() => Reflect.get(window, '__lateCourt').adopt());
     await expect(page.locator('html')).toHaveAttribute(
       'data-interactive',
       'true',
     );
-    await expect(host).toHaveAttribute('data-demo-invitation', 'done');
+    await expect(demoCue(page, 'court')).toHaveAttribute(
+      'data-cue-state',
+      'steady',
+    );
+    await expect(demoCue(page, 'score')).toHaveAttribute(
+      'data-cue-state',
+      'steady',
+    );
     const events = await page.evaluate(() => {
       const audit = Reflect.get(window, '__invitationAudit') as {
-        events: { state: string | null; input: boolean }[];
+        events: { hidden: boolean; input: boolean }[];
         observer: MutationObserver;
       };
       audit.observer.disconnect();
       return audit.events;
     });
-    await testInfo.attach('court-invitation-states', {
+    await testInfo.attach('court-guide-states', {
       body: JSON.stringify(events),
       contentType: 'application/json',
     });
-    const playing = events.filter((event) => event.state === 'playing');
-    expect(playing).toHaveLength(1);
-    expect(playing[0].input).toBe(true);
-    expect(events.at(-1)?.state).toBe('done');
+    const shown = events.filter((event) => !event.hidden);
+    expect(shown.length).toBeGreaterThan(0);
+    expect(shown.every((event) => event.input)).toBe(true);
   },
 );
 
@@ -3592,6 +3765,7 @@ for (const elapsed of [0.46, 1.7]) {
         'data-scene-ready',
         'true',
       );
+      await page.locator('[data-demo-points="2"]').click();
       await page.locator('[data-point-preset="center"]').click();
       // Advance the real DOM shot clock while suspended. GPU scheduling and
       // GSAP lag smoothing make wall-clock sleeps unsuitable for exact phases.
@@ -3657,6 +3831,7 @@ test(
     try {
       await page.goto('/#experience', { waitUntil: 'domcontentloaded' });
       await expect.poll(() => blocked).toBe(true);
+      await page.locator('[data-demo-points="2"]').click();
       await page.locator('[data-point-preset="left"]').click();
       await page.locator('[data-record]').click();
       await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -3765,6 +3940,7 @@ test(
         .evaluate((section) =>
           section.scrollIntoView({ behavior: 'instant', block: 'start' }),
         );
+      await page.locator('[data-demo-points="2"]').click();
       await page.locator('[data-point-preset="center"]').focus();
       await page.keyboard.press('Enter');
       await page.locator('[data-record]').focus();
@@ -3819,6 +3995,7 @@ for (const reducedMotion of ['reduce', 'no-preference'] as const) {
         .evaluate((section) =>
           section.scrollIntoView({ behavior: 'instant', block: 'start' }),
         );
+      await page.locator('[data-demo-points="2"]').click();
       await page.locator('[data-point-preset="center"]').click();
       await page.locator('[data-record]').click();
       await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -3984,6 +4161,7 @@ for (const scale of [1, 2]) {
           .evaluate((section) =>
             section.scrollIntoView({ behavior: 'instant', block: 'start' }),
           );
+        await page.locator('[data-demo-points="2"]').click();
         await page.locator('[data-point-preset="center"]').click();
         await page.locator('[data-record]').click();
         await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -4158,6 +4336,7 @@ test(
         section.scrollIntoView({ behavior: 'instant', block: 'start' }),
       );
     await expect.poll(count).toBeGreaterThan(idle);
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="center"]').click();
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
@@ -4191,6 +4370,7 @@ test(
       'The desktop renderer lifecycle runs in Chromium.',
     );
     await allowSoftwareWebGL(page);
+    await observeStoryCourt(page);
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/#experience');
     await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
@@ -4200,9 +4380,16 @@ test(
     );
     // The transparent host forwards a real pointer release to the background court.
     const host = page.locator('[data-demo-court-host]');
+    await page.locator('[data-demo-points="2"]').click();
+    const client = await page.evaluate(() =>
+      (
+        Reflect.get(window, '__observedStoryCourt') as ObservedStoryCourt
+      ).scene.projectPoint({ x: 0.5, y: 0.45 }),
+    );
+    expect(client).not.toBeNull();
     const bounds = (await host.boundingBox())!;
     await host.click({
-      position: { x: bounds.width * 0.5, y: bounds.height * 0.63 },
+      position: { x: client!.x - bounds.x, y: client!.y - bounds.y },
     });
     await expect(page.locator('[data-record]')).toBeEnabled();
     await page.locator('[data-record]').click();

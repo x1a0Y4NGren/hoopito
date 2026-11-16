@@ -5,6 +5,7 @@ import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/features/practice/practice_presentation.dart';
 import 'package:hoopito/features/scoring/scoring_controller.dart';
 import 'package:hoopito/features/scoring/scoring_page.dart';
+import '../../support/pump_practice_transitions.dart';
 
 void main() {
   for (final practice in [false, true]) {
@@ -78,10 +79,10 @@ void main() {
       );
       // Match the real flow: the existing scoring page transitions to court.
       step.value = PracticeStep.courtPoint;
-      await tester.pumpAndSettle();
+      await pumpPracticeTransitions(tester);
       expect(FocusManager.instance.primaryFocus?.debugLabel, 'practice-court');
       await tester.sendKeyEvent(key);
-      await tester.pumpAndSettle();
+      await pumpPracticeTransitions(tester);
       expect(controller.courtFirstShotDraft, isNotNull);
       expect(controller.courtFirstShotDraft!.point.x, .5);
       expect(controller.courtFirstShotDraft!.point.y, .5);
@@ -89,7 +90,7 @@ void main() {
       final before = controller.state.events.length;
       // A repeated key after progression must not place another draft or score.
       await tester.sendKeyEvent(key);
-      await tester.pumpAndSettle();
+      await pumpPracticeTransitions(tester);
       expect(controller.state.events.length, before);
       await tester.pumpWidget(const SizedBox());
       step.dispose();

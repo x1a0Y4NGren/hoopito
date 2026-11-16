@@ -10,11 +10,17 @@ class RuleTemplateRepository {
   final AppDatabase _database;
 
   static const builtIns = [
-    RuleTemplate(id: 'free', name: '自由计分', scoreButtons: [1, 2, 3]),
+    RuleTemplate(
+      id: 'free',
+      name: '自由计分',
+      scoreButtons: [1, 2, 3],
+      scoringConvention: ScoringConvention.standard,
+    ),
     RuleTemplate(
       id: 'eleven_win_by_two',
       name: '11 分制（领先 2 分）',
       scoreButtons: [1, 2, 3],
+      scoringConvention: ScoringConvention.standard,
       targetScore: 11,
       winByTwo: false,
     ),
@@ -22,12 +28,14 @@ class RuleTemplateRepository {
       id: 'twenty_one',
       name: '21 分制',
       scoreButtons: [1, 2, 3],
+      scoringConvention: ScoringConvention.standard,
       targetScore: 21,
     ),
     RuleTemplate(
       id: 'timed_ten',
       name: '10 分钟计时',
       scoreButtons: [1, 2, 3],
+      scoringConvention: ScoringConvention.standard,
       timeLimitSeconds: 600,
     ),
   ];
@@ -57,6 +65,8 @@ class RuleTemplateRepository {
                 'eventTypes': template.customEventTypes,
                 'possessionHintEnabled': template.possessionHintEnabled,
                 'possessionPolicy': template.possessionPolicy.name,
+                if (template.scoringConvention != null)
+                  'scoringConvention': template.scoringConvention!.name,
               }),
             ),
             isBuiltIn: Value(isBuiltIn),
@@ -123,6 +133,12 @@ class RuleTemplateRepository {
       possessionHintEnabled: possessionHintEnabled,
       possessionPolicy: possessionPolicy,
       customEventTypes: customEventTypes,
+      scoringConvention:
+          metadata is Map && metadata['scoringConvention'] != null
+          ? ScoringConvention.values.byName(
+              metadata['scoringConvention'] as String,
+            )
+          : null,
     );
   }
 }

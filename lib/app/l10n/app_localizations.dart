@@ -335,7 +335,7 @@ abstract class AppLocalizations {
   /// No description provided for @v2GuideScoreBody.
   ///
   /// In zh, this message translates to:
-  /// **'点双方的 +1、+2、+3 即可记分。'**
+  /// **'按本场规则点双方的得分按钮。标准计分的 +1 是罚球，记球制的 +1 是进球。'**
   String get v2GuideScoreBody;
 
   /// No description provided for @v2GuideLocation.
@@ -347,7 +347,7 @@ abstract class AppLocalizations {
   /// No description provided for @v2GuideLocationBody.
   ///
   /// In zh, this message translates to:
-  /// **'可以先点球场再记分，也可以记分后在 10 秒内补落点。未命中也能记。'**
+  /// **'先点球场再选可用的得分按钮，或记分后在 10 秒内点亮起的区域补落点。未命中也能记；罚球自动定位。'**
   String get v2GuideLocationBody;
 
   /// No description provided for @v2GuideUndo.
@@ -4897,7 +4897,7 @@ abstract class AppLocalizations {
   /// No description provided for @pregameGoalScoringMode.
   ///
   /// In zh, this message translates to:
-  /// **'计分方式'**
+  /// **'计分目标'**
   String get pregameGoalScoringMode;
 
   /// No description provided for @pregameGoalModeFree.
@@ -5167,7 +5167,7 @@ abstract class AppLocalizations {
   /// No description provided for @practiceCourtHint.
   ///
   /// In zh, this message translates to:
-  /// **'点球场，选个出手位置。'**
+  /// **'点三分线内，选个两分球出手位置。'**
   String get practiceCourtHint;
 
   /// No description provided for @practiceLocatedScoreHint.
@@ -5301,6 +5301,108 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'收起提示'**
   String get practiceHideHint;
+
+  /// No description provided for @scoringMethodLabel.
+  ///
+  /// In zh, this message translates to:
+  /// **'记分方式'**
+  String get scoringMethodLabel;
+
+  /// No description provided for @scoringMethodStandard.
+  ///
+  /// In zh, this message translates to:
+  /// **'标准计分'**
+  String get scoringMethodStandard;
+
+  /// No description provided for @scoringMethodBaskets.
+  ///
+  /// In zh, this message translates to:
+  /// **'记球制'**
+  String get scoringMethodBaskets;
+
+  /// No description provided for @scoringMethodLegacy.
+  ///
+  /// In zh, this message translates to:
+  /// **'自定义分值（原规则）'**
+  String get scoringMethodLegacy;
+
+  /// No description provided for @scoringThreePointCountsAsTwo.
+  ///
+  /// In zh, this message translates to:
+  /// **'三分球算 +2'**
+  String get scoringThreePointCountsAsTwo;
+
+  /// No description provided for @scoringThreePointCountsAsTwoHelp.
+  ///
+  /// In zh, this message translates to:
+  /// **'关闭时进球都算 +1；开启后线内 +1、线外 +2。'**
+  String get scoringThreePointCountsAsTwoHelp;
+
+  /// No description provided for @scoringFreeThrowButton.
+  ///
+  /// In zh, this message translates to:
+  /// **'罚球 +1'**
+  String get scoringFreeThrowButton;
+
+  /// No description provided for @scoringFreeThrowAutoLocation.
+  ///
+  /// In zh, this message translates to:
+  /// **'罚球已自动定位到罚球线'**
+  String get scoringFreeThrowAutoLocation;
+
+  /// No description provided for @courtRegionInsideHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'请在三分线内选择落点'**
+  String get courtRegionInsideHint;
+
+  /// No description provided for @courtRegionOutsideHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'请在三分线外选择落点'**
+  String get courtRegionOutsideHint;
+
+  /// No description provided for @courtRegionAllHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'请在球场内选择落点'**
+  String get courtRegionAllHint;
+
+  /// No description provided for @courtRegionFreeThrowHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'罚球位置在罚球线'**
+  String get courtRegionFreeThrowHint;
+
+  /// No description provided for @courtMoveLeft.
+  ///
+  /// In zh, this message translates to:
+  /// **'向左移动落点'**
+  String get courtMoveLeft;
+
+  /// No description provided for @courtMoveRight.
+  ///
+  /// In zh, this message translates to:
+  /// **'向右移动落点'**
+  String get courtMoveRight;
+
+  /// No description provided for @courtMoveUp.
+  ///
+  /// In zh, this message translates to:
+  /// **'向篮筐移动落点'**
+  String get courtMoveUp;
+
+  /// No description provided for @courtMoveDown.
+  ///
+  /// In zh, this message translates to:
+  /// **'远离篮筐移动落点'**
+  String get courtMoveDown;
+
+  /// No description provided for @courtConfirmPoint.
+  ///
+  /// In zh, this message translates to:
+  /// **'确认当前落点'**
+  String get courtConfirmPoint;
 }
 
 class _AppLocalizationsDelegate

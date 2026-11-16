@@ -146,7 +146,7 @@ for (const path of ['/', '/en/']) {
           ),
           targets: [
             ...element.querySelectorAll(
-              '[data-point-preset], [data-record], [data-reset]',
+              '[data-demo-points], [data-point-preset], [data-record], [data-reset]',
             ),
           ].map(rect),
         };
@@ -156,7 +156,7 @@ for (const path of ['/', '/en/']) {
       expect(metrics.bodyBackdrop).toBe('""');
       expect(metrics.noteZones).toBe(1);
       expect(metrics.statusLive).toBe('polite');
-      expect(metrics.ghostCount).toBe(4);
+      expect(metrics.ghostCount).toBe(12);
       expect(metrics.host.width).toBeCloseTo(metrics.map.width, 1);
       expect(metrics.host.height).toBeGreaterThan(0);
       expect(metrics.hostOverflow).toBe('visible');
@@ -241,8 +241,18 @@ for (const path of ['/', '/en/']) {
         await page
           .locator('[data-point-preset="center"]')
           .dispatchEvent('click');
+        await stable('awaiting a score');
+        await page.locator('[data-reset]').dispatchEvent('click');
+        await page.locator('[data-demo-points="2"]').dispatchEvent('click');
+        await stable('awaiting a matching location');
+        await page
+          .locator('[data-point-preset="center"]')
+          .dispatchEvent('click');
         await expect(status).toHaveText(
-          (await status.getAttribute('data-selected'))!,
+          (await status.getAttribute('data-selected'))!.replaceAll(
+            '{points}',
+            '2',
+          ),
         );
         await stable('selected');
         await page.locator('[data-record]').dispatchEvent('click');
@@ -277,52 +287,59 @@ for (const path of ['/', '/en/']) {
   }
 }
 
-test('experience invitation waits for settled reading then finishes one 800ms court light without selecting', async ({
+const guideRoot = '[data-demo-guide]';
+const cue = (page: Page, kind: 'court' | 'score' | 'record') =>
+  page.locator(`[data-demo-cue="${kind}"]`);
+
+async function scrollToTarget(page: Page, target: string) {
+  return page.locator(target).evaluate((el) => {
+    el.scrollIntoView({ behavior: 'instant', block: 'center' });
+    return scrollY;
+  });
+}
+
+async function setPageHidden(page: Page, hidden: boolean) {
+  await page.evaluate((value) => {
+    Object.defineProperty(document, 'hidden', { configurable: true, value });
+    document.dispatchEvent(new Event('visibilitychange'));
+  }, hidden);
+}
+
+test('experience guide waits for settled reading and draws each entry cue once per reset', async ({
   page,
-}, info) => {
+}) => {
   const pause = await installContractClock(page);
   await page.setViewportSize({ width: 1440, height: 1000 });
   await open(page, '/');
   await pause();
-  const host = page.locator('[data-demo-court-host]');
-  const observed = await host.evaluateHandle((element) => {
-    const starts: { at: number; scrollState?: string; chapter?: string }[] = [];
-    const ends: number[] = [];
-    const frames: number[] = [];
-    let frame = 0;
-    const sampleFrame = () => {
-      frames.push(Date.now());
-      frame = requestAnimationFrame(sampleFrame);
-    };
-    frame = requestAnimationFrame(sampleFrame);
-    let previous = (element as HTMLElement).dataset.demoInvitation;
-    const observer = new MutationObserver(() => {
-      const state = (element as HTMLElement).dataset.demoInvitation;
-      if (state === previous) return;
-      previous = state;
-      if (state === 'playing')
-        starts.push({
-          at: Date.now(),
-          scrollState: document.documentElement.dataset.scrollState,
+  const guide = page.locator(guideRoot);
+  const observed = await guide.evaluateHandle((element) => {
+    const events: {
+      kind: string;
+      at: number;
+      state: string;
+      chapter?: string;
+      scrollState?: string;
+    }[] = [];
+    const observer = new MutationObserver((records) => {
+      for (const record of records) {
+        const target = record.target as HTMLElement;
+        if (!target.dataset.demoCue || !target.dataset.cueState) continue;
+        events.push({
+          kind: target.dataset.demoCue,
+          at: performance.now(),
+          state: target.dataset.cueState,
           chapter: document.documentElement.dataset.scrollStop,
+          scrollState: document.documentElement.dataset.scrollState,
         });
-      if (state === 'done') ends.push(Date.now());
+      }
     });
     observer.observe(element, {
       attributes: true,
-      attributeFilter: ['data-demo-invitation'],
+      subtree: true,
+      attributeFilter: ['data-cue-state'],
     });
-    return {
-      read: () => ({
-        starts: [...starts],
-        ends: [...ends],
-        frames: [...frames],
-      }),
-      stop: () => {
-        observer.disconnect();
-        cancelAnimationFrame(frame);
-      },
-    };
+    return { events, observer };
   });
   try {
     await page.evaluate(() => {
@@ -332,124 +349,170 @@ test('experience invitation waits for settled reading then finishes one 800ms co
       const current = document.querySelector<HTMLElement>(
         '[data-story-stage="experience"]',
       )!;
-      const from = Number(previous.dataset.scrollReadEnd),
-        to = Number(current.dataset.scrollReadStart);
+      const from = Number(previous.dataset.scrollReadEnd);
+      const to = Number(current.dataset.scrollReadStart);
       scrollTo({ top: from + (to - from) * 0.2, behavior: 'instant' });
     });
     await page.clock.runFor(200);
-    expect(
-      (await observed.evaluate((value) => value.read())).starts,
-    ).toHaveLength(0);
-    await page.evaluate(() =>
-      scrollTo({
-        top: Number(
-          document.querySelector<HTMLElement>(
-            '[data-story-stage="experience"]',
-          )!.dataset.scrollReadStart,
-        ),
-        behavior: 'instant',
-      }),
-    );
-    await page.clock.runFor(1200);
+    await expect(guide).toBeHidden();
+    expect(await observed.evaluate(({ events }) => events)).toEqual([]);
+    await settleLayoutClock(page, true);
     await reading(page);
-    await expect(host).toHaveAttribute('data-demo-invitation', 'done');
-    const record = await observed.evaluate((value) => value.read());
-    expect(record.starts).toHaveLength(1);
-    expect(record.ends).toHaveLength(1);
-    expect(record.starts[0].scrollState).toBe('idle');
-    expect(record.starts[0].chapter).toBe('experience');
-    const gaps = record.frames
-      .slice(1)
-      .map((at, index) => at - record.frames[index]);
-    const frameInterval = Math.max(...gaps);
-    expect(gaps.length).toBeGreaterThan(20);
-    expect(frameInterval).toBeGreaterThan(0);
-    expect(frameInterval).toBeLessThanOrEqual(20);
-    // GSAP advances on its last ticker frame. Attribute mutation Date.now can
-    // lead/lag that sample by one observed RAF interval (792ms in the raw run),
-    // so verify the 800ms profile at actual measured frame resolution.
-    expect(
-      Math.abs(record.ends[0] - record.starts[0].at - 800),
-    ).toBeLessThanOrEqual(frameInterval);
-    await expect(page.locator('.point-presets')).not.toHaveAttribute(
-      'data-demo-invitation',
-      /.+/,
+    await page.clock.runFor(650);
+    for (const kind of ['court', 'score'] as const)
+      await expect(cue(page, kind)).toHaveAttribute('data-cue-state', 'steady');
+    const first = await observed.evaluate(({ events }) => events);
+    for (const kind of ['court', 'score'] as const) {
+      const steps = first.filter((event) => event.kind === kind);
+      expect(steps.map(({ state }) => state)).toEqual(['drawing', 'steady']);
+      expect(steps[0].chapter).toBe('experience');
+      expect(steps[0].scrollState).toBe('idle');
+      const duration = steps[1].at - steps[0].at;
+      // A 420ms draw may include the companion cue's short stagger and one RAF.
+      expect(duration).toBeGreaterThanOrEqual(400);
+      expect(duration).toBeLessThanOrEqual(560);
+    }
+    const articleScroll = await page.evaluate(() => scrollY);
+    const reset = page.locator('[data-reset]');
+    await reset.evaluate((el) =>
+      (el as HTMLButtonElement).focus({ preventScroll: true }),
     );
-    await expect(page.locator('.demo-invitation-layer')).toHaveCount(2);
-    await expect(
-      page.locator(
-        '.demo-invitation-arrow, .demo-invitation-shade, [data-cue-kind="presets"]',
-      ),
-    ).toHaveCount(0);
-    await expect(
-      page.locator('[data-point-preset][aria-pressed="true"]'),
-    ).toHaveCount(0);
+    for (let round = 0; round < 2; round++) {
+      await reset.dispatchEvent('click');
+      await page.clock.runFor(100);
+      await expect(cue(page, 'court')).toHaveAttribute(
+        'data-cue-state',
+        'drawing',
+      );
+      await page.clock.runFor(600);
+      await expect(cue(page, 'score')).toHaveAttribute(
+        'data-cue-state',
+        'steady',
+      );
+    }
+    await expect(reset).toBeFocused();
+    expect(await page.evaluate(() => scrollY)).toBe(articleScroll);
+    await expect(guide).toHaveAttribute('aria-hidden', 'true');
+    await expect(guide).toHaveCSS('pointer-events', 'none');
+    await expect(page.locator('[data-demo] [aria-pressed="true"]')).toHaveCount(
+      0,
+    );
     await expect(page.locator('[data-blue-score]')).toHaveText('6');
     await expect(page.locator('[data-record]')).toBeDisabled();
-    await info.attach('experience-once-court-light', {
-      body: JSON.stringify(record, null, 2),
-      contentType: 'application/json',
-    });
   } finally {
-    await observed.evaluate((value) => value.stop());
+    await observed.evaluate(({ observer }) => observer.disconnect());
     await observed.dispose();
   }
 });
 
-test('experience selection cancels the court light and invites only the enabled record button once', async ({
+test('experience guide resumes the selected step after leaving and returning', async ({
   page,
 }) => {
   const pause = await installContractClock(page);
-  await page.setViewportSize({ width: 390, height: 1000 });
-  await open(page, '/');
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await open(page, '/#experience');
   await pause();
-  await settleLayoutClock(page);
-  const host = page.locator('[data-demo-court-host]');
-  await host.evaluate((el) =>
-    el.scrollIntoView({ behavior: 'instant', block: 'center' }),
-  );
-  for (let frame = 0; frame < 10; frame++) {
-    await page.clock.runFor(40);
-    if ((await host.getAttribute('data-demo-invitation')) === 'playing') break;
-  }
-  await expect(host).toHaveAttribute('data-demo-invitation', 'playing');
-  await page.locator('[data-point-preset="left"]').dispatchEvent('click');
-  await expect(host).toHaveAttribute('data-demo-invitation', 'done');
-  const record = page.locator('[data-record]');
-  await expect(record).toBeEnabled();
-  await record.evaluate((el) =>
-    el.scrollIntoView({ behavior: 'instant', block: 'center' }),
-  );
-  await page.clock.runFor(240);
-  await expect(record).toHaveAttribute('data-demo-invitation', 'playing');
-  const layer = record.locator('.demo-invitation-layer');
-  const bounds = await record.evaluate((el) => {
-    const r = el.getBoundingClientRect(),
-      b = el.querySelector('.demo-invitation-layer')!.getBoundingClientRect();
-    return {
-      width: r.width,
-      height: r.height,
-      overflow: Math.max(
-        r.left - b.left,
-        r.top - b.top,
-        b.right - r.right,
-        b.bottom - r.bottom,
-      ),
-      transform: getComputedStyle(el).transform,
-    };
+  await settleLayoutClock(page, true);
+  const guide = page.locator(guideRoot);
+  await page.locator('[data-demo-points="3"]').dispatchEvent('click');
+  await page.clock.runFor(100);
+  await expect(cue(page, 'court')).toBeVisible();
+  const departure = await page.evaluate(() => {
+    const from = scrollY;
+    const replay = document.querySelector<HTMLElement>(
+      '[data-story-stage="replay"]',
+    )!;
+    scrollTo({
+      top: Number(replay.dataset.scrollReadStart),
+      behavior: 'instant',
+    });
+    return from;
   });
-  expect(bounds.overflow).toBeLessThanOrEqual(1);
-  expect(bounds.transform).toBe('none');
-  await page.clock.runFor(900);
-  await expect(record).toHaveAttribute('data-demo-invitation', 'done');
-  await expect(layer).toHaveCSS('opacity', '0');
-  await page.locator('[data-point-preset="right"]').dispatchEvent('click');
-  await page.clock.runFor(240);
-  await expect(record).toHaveAttribute('data-demo-invitation', 'done');
+  await page.clock.runFor(150);
+  await expect(guide).toBeHidden();
+  await page.evaluate(
+    (from) => scrollTo({ top: from, behavior: 'instant' }),
+    departure,
+  );
+  await settleLayoutClock(page, true);
+  await page.clock.runFor(650);
+  await expect(cue(page, 'court')).toBeVisible();
+  await expect(cue(page, 'court').locator('.demo-guide-label')).toHaveText(
+    (await page
+      .locator('[data-demo-status]')
+      .getAttribute('data-outside-arc'))!,
+  );
+  await expect(cue(page, 'score')).toBeHidden();
+  await expect(cue(page, 'record')).toBeHidden();
+  await expect(page.locator('[data-demo-points="3"]')).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   await expect(page.locator('[data-blue-score]')).toHaveText('6');
 });
 
-test('experience invitation resumes pending eligibility after background release without new scroll', async ({
+test('offscreen experience controls wait to display a static cue under reduced motion', async ({
+  page,
+}) => {
+  const pause = await installContractClock(page);
+  await page.setViewportSize({ width: 320, height: 667 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await open(page, '/en/');
+  await pause();
+  await settleLayoutClock(page);
+  const host = page.locator('[data-demo-court-host]');
+  await host.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    scrollTo({
+      top: scrollY + r.top - innerHeight + r.height * 0.4,
+      behavior: 'instant',
+    });
+  });
+  await page.clock.runFor(200);
+  await expect(cue(page, 'court')).toBeHidden();
+  await expect(cue(page, 'score')).toBeHidden();
+
+  await scrollToTarget(page, '[data-demo-court-host]');
+  await page.clock.runFor(240);
+  const court = cue(page, 'court');
+  await expect(court).toHaveAttribute('data-cue-state', 'steady');
+  const arrow = court.locator('[data-demo-arrow]');
+  const geometry = await arrow.getAttribute('d');
+  const dashOffset = await arrow.evaluate(
+    (el) => getComputedStyle(el).strokeDashoffset,
+  );
+  await page.clock.runFor(900);
+  await expect(arrow).toHaveAttribute('d', geometry!);
+  await expect(arrow).toHaveCSS('stroke-dashoffset', dashOffset);
+  await expect(court.locator('[data-demo-arrow-head]')).toBeVisible();
+
+  const points = page.locator('[data-demo-points="1"]');
+  await points.evaluate((el) =>
+    (el as HTMLButtonElement).focus({ preventScroll: true }),
+  );
+  await points.dispatchEvent('click');
+  const record = page.locator('[data-record]');
+  await expect(record).toBeEnabled();
+  const y = await scrollToTarget(page, '[data-record]');
+  await page.clock.runFor(300);
+  const recordCue = cue(page, 'record');
+  await expect(recordCue).toHaveAttribute('data-cue-state', 'steady');
+  await expect(recordCue.locator('.demo-guide-label')).toContainText(
+    'Confirm +1',
+  );
+  await expect(points).toBeFocused();
+  expect(await page.evaluate(() => scrollY)).toBe(y);
+  await expect(page.locator('[data-blue-score]')).toHaveText('6');
+  await expect(page.locator('[data-demo-marker]')).toBeHidden();
+  await expect(court).toBeHidden();
+  await expect(cue(page, 'score')).toBeHidden();
+  await record.dispatchEvent('click');
+  await expect(page.locator(guideRoot)).toBeHidden();
+  await expect(page.locator('[data-blue-score]')).toHaveText('7');
+  await expect(page.locator('[data-demo-marker]')).toBeVisible();
+});
+
+test('the experience guide stays hidden until both gallery and page visibility are released', async ({
   page,
 }) => {
   const pause = await installContractClock(page);
@@ -461,182 +524,43 @@ test('experience invitation resumes pending eligibility after background release
   );
   await page.setViewportSize({ width: 1440, height: 1000 });
   await open(page, '/#experience');
-  await reading(page);
-  await pause();
-  const host = page.locator('[data-demo-court-host]');
-  await page.clock.runFor(1200);
-  await expect(host).not.toHaveAttribute('data-demo-invitation', 'playing');
-  await expect(host).not.toHaveAttribute('data-demo-invitation', 'done');
-  const y = await page.evaluate(() => scrollY);
-  await page.evaluate(() => {
-    Object.defineProperty(document, 'hidden', {
-      configurable: true,
-      value: false,
-    });
-    document.dispatchEvent(new Event('visibilitychange'));
-  });
-  await page.clock.runFor(160);
-  await expect(host).toHaveAttribute('data-demo-invitation', 'playing');
-  await page.clock.runFor(900);
-  await expect(host).toHaveAttribute('data-demo-invitation', 'done');
-  expect(await page.evaluate(() => scrollY)).toBe(y);
-  await expect(page.locator('[data-blue-score]')).toHaveText('6');
-});
-
-test('experience departure cancels an active hint and returning never repeats its consumed cue', async ({
-  page,
-}) => {
-  const pause = await installContractClock(page);
-  await page.setViewportSize({ width: 1440, height: 1000 });
-  await open(page, '/');
-  await pause();
-  const host = page.locator('[data-demo-court-host]');
-  await page.evaluate(() =>
-    scrollTo({
-      top: Number(
-        document.querySelector<HTMLElement>('[data-story-stage="experience"]')!
-          .dataset.scrollReadStart,
-      ),
-      behavior: 'instant',
-    }),
-  );
-  await page.clock.runFor(200);
-  await expect(host).toHaveAttribute('data-demo-invitation', 'playing');
-  await page.evaluate(() => {
-    const current = document.querySelector<HTMLElement>(
-      '[data-story-stage="experience"]',
-    )!;
-    const next = document.querySelector<HTMLElement>(
-      '[data-story-stage="replay"]',
-    )!;
-    const from = Number(current.dataset.scrollReadEnd),
-      to = Number(next.dataset.scrollReadStart);
-    scrollTo({ top: from + (to - from) * 0.2, behavior: 'instant' });
-  });
-  await page.clock.runFor(80);
-  await expect(host).toHaveAttribute('data-demo-invitation', 'done');
-  for (const layer of await page.locator('.demo-invitation-layer').all())
-    await expect(layer).toHaveCSS('opacity', '0');
-  await page.evaluate(() =>
-    scrollTo({
-      top: Number(
-        document.querySelector<HTMLElement>('[data-story-stage="experience"]')!
-          .dataset.scrollReadStart,
-      ),
-      behavior: 'instant',
-    }),
-  );
-  await page.clock.runFor(1200);
-  await reading(page);
-  await expect(host).toHaveAttribute('data-demo-invitation', 'done');
-  for (const layer of await page.locator('.demo-invitation-layer').all())
-    await expect(layer).toHaveCSS('opacity', '0');
-  await expect(page.locator('[data-blue-score]')).toHaveText('6');
-});
-
-test('experience mobile light needs 55 percent visible target and reduced motion suppresses both hints', async ({
-  page,
-}) => {
-  const pause = await installContractClock(page);
-  await page.setViewportSize({ width: 390, height: 844 });
-  await open(page, '/');
-  await pause();
-  const host = page.locator('[data-demo-court-host]');
-  await host.evaluate((el) => {
-    const r = el.getBoundingClientRect();
-    scrollTo({
-      top: scrollY + r.top - innerHeight + r.height * 0.4,
-      behavior: 'instant',
-    });
-  });
-  await page.clock.runFor(200);
-  await expect(host).not.toHaveAttribute('data-demo-invitation', 'playing');
-  await host.evaluate((el) =>
-    el.scrollIntoView({ behavior: 'instant', block: 'center' }),
-  );
-  await page.clock.runFor(160);
-  await expect(host).toHaveAttribute('data-demo-invitation', 'playing');
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.clock.runFor(80);
-  await expect(host).toHaveAttribute('data-demo-invitation', 'done');
-  await page.locator('[data-point-preset="center"]').dispatchEvent('click');
-  await expect(page.locator('[data-record]')).toHaveAttribute(
-    'data-demo-invitation',
-    'done',
-  );
-  for (const layer of await page.locator('.demo-invitation-layer').all())
-    await expect(layer).toHaveCSS('opacity', '0');
-  await expect(page.locator('[data-blue-score]')).toHaveText('6');
-  await page.locator('[data-record]').dispatchEvent('click');
-  await expect(page.locator('[data-blue-score]')).toHaveText('8');
-  await expect(page.locator('[data-demo-marker]')).toBeVisible();
-});
-
-test('experience active record light stays paused until both gallery and hidden reasons are released', async ({
-  page,
-}, info) => {
-  const pause = await installContractClock(page);
-  await page.setViewportSize({ width: 1440, height: 1000 });
-  await open(page, '/#experience');
-  await reading(page);
   await pause();
   await settleLayoutClock(page, true);
+  const guide = page.locator(guideRoot);
+  await expect(guide).toBeHidden();
+  const y = await page.evaluate(() => scrollY);
+  await setPageHidden(page, false);
+  await page.clock.runFor(650);
+  await expect(cue(page, 'court')).toBeVisible();
+  await expect(cue(page, 'score')).toBeVisible();
+
+  await page.locator('[data-demo-points="2"]').dispatchEvent('click');
   await page.locator('[data-point-preset="center"]').dispatchEvent('click');
-  await page.clock.runFor(160);
-  const record = page.locator('[data-record]');
-  await expect(record).toBeEnabled();
-  await expect(record).toHaveAttribute('data-demo-invitation', 'playing');
-  const light = record.locator('.demo-invitation-light');
-  const before = Number(
-    await light.evaluate((el) => getComputedStyle(el).opacity),
-  );
-  await page.evaluate(() => {
-    Object.defineProperty(document, 'hidden', {
-      configurable: true,
-      value: true,
-    });
-    document.dispatchEvent(new Event('visibilitychange'));
-    document.querySelector<HTMLAnchorElement>('#scoring .viewer-link')!.click();
-  });
+  await page.clock.runFor(100);
+  await expect(cue(page, 'record')).toBeVisible();
+  await page.locator('#scoring .viewer-link').first().dispatchEvent('click');
   await expect(page.locator('[data-viewer]')).toBeVisible();
-  await page.clock.runFor(1600);
-  await expect(record).toHaveAttribute('data-demo-invitation', 'playing');
-  expect(
-    Number(await light.evaluate((el) => getComputedStyle(el).opacity)),
-  ).toBeCloseTo(before, 4);
+  await expect(guide).toBeHidden();
+  await setPageHidden(page, true);
   await page.locator('[data-viewer-close]').dispatchEvent('click');
-  // dialog.close() queues a native close event. Wait for that event to release
-  // the viewer's pause owner before advancing the independently mocked clock.
+  // The native close event releases the viewer's suspension reason.
   await expect(page.locator('html')).not.toHaveClass(/image-viewer-open/);
-  await page.clock.runFor(400);
-  await expect(record).toHaveAttribute('data-demo-invitation', 'playing');
-  expect(
-    Number(await light.evaluate((el) => getComputedStyle(el).opacity)),
-  ).toBeCloseTo(before, 4);
-  await page.evaluate(() => {
-    Object.defineProperty(document, 'hidden', {
-      configurable: true,
-      value: false,
-    });
-    document.dispatchEvent(new Event('visibilitychange'));
-  });
-  await page.clock.runFor(1000);
-  await expect(record).toHaveAttribute('data-demo-invitation', 'done');
-  await expect(record.locator('.demo-invitation-layer')).toHaveCSS(
-    'opacity',
-    '0',
+  await page.clock.runFor(650);
+  await expect(guide).toBeHidden();
+
+  await setPageHidden(page, false);
+  await page.clock.runFor(650);
+  await expect(cue(page, 'record')).toBeVisible();
+  await expect(cue(page, 'record').locator('.demo-guide-label')).toContainText(
+    '+2',
   );
+  await expect(cue(page, 'court')).toBeHidden();
+  await expect(cue(page, 'score')).toBeHidden();
+  await expect(page.locator('[data-record]')).toBeEnabled();
   await expect(page.locator('[data-blue-score]')).toHaveText('6');
   await expect(page.locator('[data-point-preset="center"]')).toHaveAttribute(
     'aria-pressed',
     'true',
   );
-  await info.attach('experience-dual-pause-light', {
-    body: JSON.stringify({
-      opacityBeforePause: before,
-      selected: 'center',
-      score: '6:6',
-    }),
-    contentType: 'application/json',
-  });
+  expect(await page.evaluate(() => scrollY)).toBe(y);
 });

@@ -243,6 +243,7 @@ test(
         (element as HTMLCanvasElement).getContext('webgl2'),
       ),
     );
+    await page.locator('[data-demo-points="2"]').click();
     await page.locator('[data-point-preset="center"]').click();
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');

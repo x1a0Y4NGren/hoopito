@@ -9,6 +9,7 @@ import 'package:hoopito/core/domain/analytics/player_analytics_snapshot.dart';
 import 'package:hoopito/core/domain/analytics/player_analytics_snapshot_calculator.dart';
 import 'package:hoopito/core/domain/entities/match.dart' as domain_match;
 import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/rules/scoring_convention.dart';
 import 'package:hoopito/core/domain/value_objects/team_side.dart';
 import 'package:hoopito/core/export/backup_manifest.dart';
 
@@ -1250,9 +1251,13 @@ class JsonBackupCodec {
     final possessionHint = customEventMetadata is Map<String, dynamic>
         ? customEventMetadata['possessionHintEnabled']
         : false;
+    final scoringConvention = customEventMetadata is Map<String, dynamic>
+        ? customEventMetadata['scoringConvention']
+        : null;
     if (customEvents is! List<dynamic> ||
         customEvents.any((value) => value is! String || value.trim().isEmpty) ||
-        possessionHint is! bool) {
+        possessionHint is! bool ||
+        !_validScoringConvention(scoringConvention)) {
       throw BackupValidationException(
         'Rule template ${template.id} has invalid custom event metadata.',
       );
@@ -1281,6 +1286,7 @@ class JsonBackupCodec {
             !PossessionPolicy.values.any(
               (policy) => policy.name == rule['possessionPolicy'],
             )) ||
+        !_validScoringConvention(rule['scoringConvention']) ||
         customEvents is! List<dynamic> ||
         customEvents.any((value) => value is! String || value.trim().isEmpty)) {
       throw BackupValidationException('$label is invalid.');
@@ -1294,6 +1300,13 @@ class JsonBackupCodec {
       throw BackupValidationException('$label is not valid JSON: $error');
     }
   }
+
+  bool _validScoringConvention(Object? value) =>
+      value == null ||
+      (value is String &&
+          ScoringConvention.values.any(
+            (convention) => convention.name == value,
+          ));
 
   Map<String, dynamic> _decodeJsonObject(String label, String source) {
     final decoded = _decodeJson(label, source);
