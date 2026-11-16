@@ -562,5 +562,8 @@ test('the experience guide stays hidden until both gallery and page visibility a
     'aria-pressed',
     'true',
   );
-  expect(await page.evaluate(() => scrollY)).toBe(y);
+  // Restoring native dialog focus can round the scroll position to a device pixel.
+  expect(
+    Math.abs((await page.evaluate(() => scrollY)) - y),
+  ).toBeLessThanOrEqual(1);
 });
