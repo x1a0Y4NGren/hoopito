@@ -3,6 +3,7 @@ import ts from 'typescript';
 import sharp from 'sharp';
 import { installContractClock } from './controlled-clock';
 import { sampleShotPose } from '../src/scripts/shot-motion';
+import type { CourtScene } from '../src/scripts/scene-contract';
 
 const sceneChunk = /court-scene[^/]*\.(?:js|ts)(?:\?|$)/;
 const point = { x: 0.5, y: 0.45 };
@@ -305,22 +306,36 @@ for (const dpr of [1, 2])
             quality === 'no-timer' ? 'density' : quality,
           );
           await page.locator('[data-demo-points="2"]').dispatchEvent('click');
-          const position = await screenPoint(page);
-          const before = await crop(page, position);
           await page
             .locator('[data-point-preset="center"]')
             .dispatchEvent('click');
           await page.clock.runFor(600);
+          const position = await screenPoint(page);
+          // Compare the same settled frame. Selecting a point also stops the
+          // region pulse, which changes the floor color underneath the marker.
+          const showMark = (visible: boolean) =>
+            page.evaluate(
+              ({ point, visible }) => {
+                const scene = Reflect.get(window, '__shotScene') as CourtScene;
+                scene.selectPoint(visible ? point : null);
+                scene.presentFrame();
+              },
+              { point, visible },
+            );
           const selected = await crop(page, position);
+          await showMark(false);
+          const before = await crop(page, position);
+          await showMark(true);
+          await info.attach('selected-point', {
+            body: selected,
+            contentType: 'image/png',
+          });
           expect(
             await addedHighlights(before, selected),
           ).toBeGreaterThanOrEqual(4);
           const selectedDraws = Number(
             await canvas.getAttribute('data-draw-calls'),
           );
-          await page.screenshot({
-            path: info.outputPath('selected-point.png'),
-          });
           await page.locator('[data-record]').dispatchEvent('click');
           let elapsed = 0;
           for (const instant of [300, 650, 1234, 1414]) {
@@ -339,11 +354,11 @@ for (const dpr of [1, 2])
               page,
               sampleShotPose(point, instant / 1000).position,
             );
-            expect(
-              await brightPixels(await crop(page, projected)),
-            ).toBeGreaterThanOrEqual(4);
-            await page.screenshot({
-              path: info.outputPath(`flight-${instant}.png`),
+            const flight = await crop(page, projected);
+            expect(await brightPixels(flight)).toBeGreaterThanOrEqual(4);
+            await info.attach(`flight-${instant}`, {
+              body: flight,
+              contentType: 'image/png',
             });
           }
           await info.attach('shot-draws', {
@@ -359,7 +374,6 @@ for (const dpr of [1, 2])
           await page.clock.runFor(100);
           await expect(canvas).toHaveAttribute('data-shot-trail', 'hidden');
           await expect(page.locator('[data-blue-score]')).toHaveText('8');
-          await page.screenshot({ path: info.outputPath('made-point.png') });
           await page.locator('[data-reset]').dispatchEvent('click');
           await page.clock.runFor(2400);
           await expect(canvas).toHaveAttribute('data-shot-trail', 'hidden');

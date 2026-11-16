@@ -756,7 +756,6 @@ for (const path of ['/', '/en/']) {
         '1.0000',
       );
       const point = { x: 0.37, y: 0.35 };
-      await page.locator('[data-demo-points="2"]').click();
       const client = await project(page, point);
       expect(client.y).toBeLessThan(900);
       const recovered = await page.evaluate((position) => {
@@ -772,6 +771,10 @@ for (const path of ['/', '/en/']) {
         ),
       ).toBeLessThanOrEqual(2);
       await page.mouse.click(client.x, client.y);
+      const twoPoints = page.locator('[data-demo-points="2"]');
+      await expect(page.locator('[data-demo-points="3"]')).toBeDisabled();
+      await expect(twoPoints).toBeEnabled();
+      await twoPoints.click();
       await expect(page.locator('[data-record]')).toBeEnabled();
       await expect(page.locator('[data-blue-score]')).toHaveText('6');
       const selection = await page
