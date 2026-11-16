@@ -181,6 +181,32 @@ async function addedHighlights(before: Buffer, after: Buffer) {
   return count;
 }
 
+function luminance(pixels: Buffer, offset: number) {
+  const linear = (channel: number) => {
+    const srgb = channel / 255;
+    return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
+  };
+  return (
+    0.2126 * linear(pixels[offset]) +
+    0.7152 * linear(pixels[offset + 1]) +
+    0.0722 * linear(pixels[offset + 2])
+  );
+}
+
+async function contrastingMarkerPixels(before: Buffer, after: Buffer) {
+  const [without, withEffect] = await Promise.all(
+    [before, after].map((frame) => sharp(frame).removeAlpha().raw().toBuffer()),
+  );
+  let count = 0;
+  for (let i = 0; i < withEffect.length; i += 3) {
+    // Count the amber ring and ticks against the floor at CSS-pixel scale.
+    const contrast =
+      (luminance(withEffect, i) + 0.05) / (luminance(without, i) + 0.05);
+    if (contrast >= 2) count++;
+  }
+  return count;
+}
+
 for (const locale of ['/', '/en/'])
   for (const dpr of [1, 2]) {
     test(`${locale} SVG luminous markers and a moving short trail at DPR ${dpr}`, async ({
@@ -273,6 +299,8 @@ for (const dpr of [1, 2])
           info.project.name !== 'chromium',
           'Real WebGL feedback runs in Chromium',
         );
+        // Sampling full-resolution flight frames is costly on CI's software GPU.
+        if (process.env.CI && quality === 'full') test.setTimeout(180_000);
         const context = await browser.newContext({
           viewport: { width: 1440, height: 1000 },
           deviceScaleFactor: dpr,
@@ -331,8 +359,8 @@ for (const dpr of [1, 2])
             contentType: 'image/png',
           });
           expect(
-            await addedHighlights(before, selected),
-          ).toBeGreaterThanOrEqual(4);
+            await contrastingMarkerPixels(before, selected),
+          ).toBeGreaterThanOrEqual(12);
           const selectedDraws = Number(
             await canvas.getAttribute('data-draw-calls'),
           );
