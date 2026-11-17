@@ -339,14 +339,16 @@ for (const dpr of [1, 2])
             .dispatchEvent('click');
           await page.clock.runFor(600);
           const position = await screenPoint(page);
+          const scene = await page.evaluateHandle(
+            () => Reflect.get(window, '__shotScene') as CourtScene,
+          );
           // Compare the same settled frame. Selecting a point also stops the
           // region pulse, which changes the floor color underneath the marker.
           const showMark = (visible: boolean) =>
-            page.evaluate(
-              ({ point, visible }) => {
-                const scene = Reflect.get(window, '__shotScene') as CourtScene;
-                scene.selectPoint(visible ? point : null);
-                scene.presentFrame();
+            scene.evaluate(
+              (renderer, { point, visible }) => {
+                renderer.selectPoint(visible ? point : null);
+                renderer.presentFrame();
               },
               { point, visible },
             );
@@ -367,7 +369,10 @@ for (const dpr of [1, 2])
           await page.locator('[data-record]').dispatchEvent('click');
           let elapsed = 0;
           for (const instant of [300, 650, 1234, 1414]) {
-            await page.clock.runFor(instant - elapsed);
+            // Each capture checks an actual rendered pose. Skipping intermediate
+            // frames keeps the software renderer from drawing the whole flight.
+            await page.clock.fastForward(instant - elapsed);
+            await scene.evaluate((renderer) => renderer.presentFrame());
             elapsed = instant;
             await expect(canvas).toHaveAttribute('data-shot-trail', 'visible');
             await expect(canvas).toHaveAttribute(
