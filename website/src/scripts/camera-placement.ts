@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { storyPose, evaluateCameraTrack } from './story-pose.ts';
 import type { StoryPose } from './story-pose.ts';
+import { COURT, containsCourtPoint, courtToWorld } from './court-geometry.ts';
 import type {
   CameraPlacement,
   CourtPoint,
@@ -8,8 +9,8 @@ import type {
   StoryFrame,
 } from './scene-contract.ts';
 
-const WIDTH = 15;
-const LENGTH = 14;
+const WIDTH = COURT.width;
+const LENGTH = COURT.depth;
 const INSET = 24;
 const floor = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
@@ -55,11 +56,7 @@ export function projectCourtPoint(
     !Number.isFinite(point.y)
   )
     return null;
-  const projected = new THREE.Vector3(
-    (point.x - 0.5) * WIDTH,
-    0,
-    (point.y - 0.5) * LENGTH,
-  ).project(camera);
+  const projected = new THREE.Vector3(...courtToWorld(point)).project(camera);
   if (![projected.x, projected.y, projected.z].every(Number.isFinite))
     return null;
   return {
@@ -90,7 +87,12 @@ export function courtPointFromClient(
   if (!hit) return null;
   const x = hit.x / WIDTH + 0.5;
   const y = hit.z / LENGTH + 0.5;
-  return x >= 0.02 && x <= 0.98 && y >= 0.04 && y <= 0.98 ? { x, y } : null;
+  // Ray/plane arithmetic can drift a few ULPs at the exact sidelines.
+  const epsilon = 1e-10;
+  if (x < -epsilon || x > 1 + epsilon || y < -epsilon || y > 1 + epsilon)
+    return null;
+  const point = { x: clamp(x), y: clamp(y) };
+  return containsCourtPoint(point) ? point : null;
 }
 
 function overheadPose(viewport: SceneRegion, region: SceneRegion): StoryPose {

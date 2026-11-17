@@ -15,6 +15,33 @@ import 'package:hoopito/features/rules/rule_template_list_page.dart';
 import '../../test_helpers/test_database.dart';
 
 void main() {
+  testWidgets('editor persists count baskets with one optional outside bonus', (
+    tester,
+  ) async {
+    final database = createTestDatabase();
+    final repository = RuleTemplateRepository(database);
+    await tester.pumpWidget(
+      MaterialApp(home: RuleTemplateEditorPage(repository: repository)),
+    );
+    await tester.enterText(find.byKey(const Key('rule-name')), 'Basket rule');
+    final baskets = find.byKey(const Key('rule-scoring-baskets'));
+    await tester.ensureVisible(baskets);
+    await tester.tap(baskets);
+    await tester.pumpAndSettle();
+    final bonus = find.byKey(const Key('rule-three-point-bonus'));
+    expect(tester.widget<SwitchListTile>(bonus).value, isFalse);
+    expect(find.byKey(const Key('rule-score-buttons')), findsNothing);
+    await tester.ensureVisible(bonus);
+    await tester.tap(bonus);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const Key('rule-save')));
+    await tester.tap(find.byKey(const Key('rule-save')));
+    await tester.pumpAndSettle();
+    final saved = (await repository.listAll()).single;
+    expect(saved.scoringConvention, ScoringConvention.oneAndTwo);
+    expect(saved.scoreButtons, [1, 2]);
+  });
+
   testWidgets('rule target accepts blank or 1 through 999 only', (
     tester,
   ) async {
@@ -341,6 +368,9 @@ void main() {
     await tester.enterText(find.byKey(const Key('rule-target-score')), '15');
     await tester.enterText(find.byKey(const Key('rule-time-limit')), '7');
     await tester.enterText(find.byKey(const Key('rule-foul-limit')), '4');
+    await tester.ensureVisible(find.byKey(const Key('rule-scoring-legacy')));
+    await tester.tap(find.byKey(const Key('rule-scoring-legacy')));
+    await tester.pumpAndSettle();
     await tester.enterText(
       find.byKey(const Key('rule-score-buttons')),
       '1,3,5',
@@ -479,6 +509,9 @@ void main() {
       MaterialApp(home: RuleTemplateEditorPage(repository: repository)),
     );
     await tester.enterText(find.byKey(const Key('rule-target-score')), '0');
+    await tester.ensureVisible(find.byKey(const Key('rule-scoring-legacy')));
+    await tester.tap(find.byKey(const Key('rule-scoring-legacy')));
+    await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('rule-score-buttons')), '0');
     await tester.scrollUntilVisible(
       find.byKey(const Key('rule-save')),

@@ -540,17 +540,17 @@
     },
     {
       "output": "public/art/scene-poster-compact.webp",
-      "bytes": 22974,
-      "sha256": "c90bc8a1780b3ca889d5061b709e20a0dcf376a4553d80f530de83761c4833f4",
-      "source": "website/assets/art/source/scene-poster-compact-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "5bccbe965399c417b994bf5deb9677c1167ac39f0fafde7fa046b357a8e1c73a",
+      "bytes": 23022,
+      "sha256": "539fcc5dd9e795e2f678983a1754cf475609a7c457b1b8eefbb5e2607120bc34",
+      "source": "website/assets/art/source/scene-poster-compact-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "585e96c087eb665991a1fa963e9dde82daf5dce454d8ca69d3a235856c543771",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -590,7 +590,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -602,11 +602,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -618,7 +618,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -638,7 +650,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -654,11 +670,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -702,7 +718,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -714,11 +738,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -738,7 +762,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -770,11 +794,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -806,7 +830,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -842,7 +866,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
@@ -858,17 +882,17 @@
     },
     {
       "output": "public/art/scene-poster-standard.webp",
-      "bytes": 41438,
-      "sha256": "c1e6fcf1399f3f4700f4410b6c01971b7e2e48e300c805e2f80e43e283ab3e2f",
-      "source": "website/assets/art/source/scene-poster-standard-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "ac64766732d6deab585b64310ad81e7b81139740b31b3f5bc40186a9013379d2",
+      "bytes": 41402,
+      "sha256": "e54520f45fa642af35930a3fbc82d1265c4a515b0b2beb8a359c0d1279ad451c",
+      "source": "website/assets/art/source/scene-poster-standard-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "c985ebfb8b8f11862ac231aebacfe1594c66f3ec93eb523e2bf1ffac48fccf0e",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -908,7 +932,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -920,11 +944,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -936,7 +960,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -956,7 +992,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -972,11 +1012,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -1020,7 +1060,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -1032,11 +1080,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -1056,7 +1104,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -1088,11 +1136,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -1124,7 +1172,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -1160,7 +1208,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
@@ -1176,17 +1224,17 @@
     },
     {
       "output": "public/art/scene-mobile.webp",
-      "bytes": 10118,
-      "sha256": "03e78c0ee05cfe580202d98f5605fb04d18bc06ff39d73d644994882b280e9ca",
-      "source": "website/assets/art/source/scene-poster-mobile-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "ac64766732d6deab585b64310ad81e7b81139740b31b3f5bc40186a9013379d2",
+      "bytes": 10140,
+      "sha256": "88d461d05e24836ea23f47e90f61b0232e0ee79d76d7a75625c88b58f8dc1a44",
+      "source": "website/assets/art/source/scene-poster-mobile-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "c985ebfb8b8f11862ac231aebacfe1594c66f3ec93eb523e2bf1ffac48fccf0e",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -1226,7 +1274,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -1238,11 +1286,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -1254,7 +1302,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -1274,7 +1334,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -1290,11 +1354,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -1338,7 +1402,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -1350,11 +1422,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -1374,7 +1446,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -1406,11 +1478,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -1442,7 +1514,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -1478,7 +1550,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
@@ -1504,17 +1576,17 @@
     },
     {
       "output": "public/art/scene-poster-wide.webp",
-      "bytes": 68992,
-      "sha256": "160061017a53cc06b45855dd9782914ec066ff54c1e94cf26f819b7a6ee9feda",
-      "source": "website/assets/art/source/scene-poster-wide-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "0c36b7d82fb2e374d2d7fb9dbe2bf5b31b0c6eaf3cc0ee4c5c48468357666cca",
+      "bytes": 69014,
+      "sha256": "3b7326dc4117a6b7dfa42f9111446e2168a877a7b0ebe3a516b6a9cb68c55d5d",
+      "source": "website/assets/art/source/scene-poster-wide-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "608a034f8c51281fb3dbfe5f44ff6d2a54ed7bd549f289cae8ed81cbbe995286",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -1554,7 +1626,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -1566,11 +1638,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -1582,7 +1654,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -1602,7 +1686,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -1618,11 +1706,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -1666,7 +1754,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -1678,11 +1774,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -1702,7 +1798,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -1734,11 +1830,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -1770,7 +1866,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -1806,7 +1902,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
@@ -1822,17 +1918,17 @@
     },
     {
       "output": "public/art/scene-poster-demo-compact.webp",
-      "bytes": 6010,
-      "sha256": "17f9269442dbb50747d3dea790da4ccbb00a551a5978b8bba81396158a014665",
-      "source": "website/assets/art/source/scene-poster-demo-compact-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "47b6656e16097d5051a6a154c2bf9bc13edcbebd12a22b02d8c00972e4ccaaa9",
+      "bytes": 5946,
+      "sha256": "dafc1cc236c88b70773597a05dc75d98d37996b139c260f69b8eaa1db47f7ab2",
+      "source": "website/assets/art/source/scene-poster-demo-compact-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "86bfd68e029a2dbe21bf753c10c5b1e8391f20cb04092026772ea42990f71e26",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -1872,7 +1968,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -1884,11 +1980,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -1900,7 +1996,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -1920,7 +2028,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -1936,11 +2048,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -1984,7 +2096,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -1996,11 +2116,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -2020,7 +2140,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -2052,11 +2172,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -2088,7 +2208,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -2124,12 +2244,12 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
         "chapter": "experience",
-        "progress": 0.2131856830661304,
+        "progress": 0.1991422640797351,
         "active": true
       },
       "dimensions_px": [
@@ -2140,17 +2260,17 @@
     },
     {
       "output": "public/art/scene-poster-demo-standard.webp",
-      "bytes": 8496,
-      "sha256": "5d0ff47ca081b6a2ff33a91495d9d1b42051a79706448ccb0d8c990b393c8fda",
-      "source": "website/assets/art/source/scene-poster-demo-standard-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "7131b6bf2662eed139da17289cc7313da1591663c7877688da8038ea649b2854",
+      "bytes": 8490,
+      "sha256": "f2ac28f9f4c5a0b8d0c55653162019ffd54238aba6a7a6c6a7c1c444a61314c5",
+      "source": "website/assets/art/source/scene-poster-demo-standard-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "c0705813534f499651e9ff990a6db6f0c0998a819ca027953580e2008c92bc0c",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -2190,7 +2310,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -2202,11 +2322,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -2218,7 +2338,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -2238,7 +2370,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -2254,11 +2390,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -2302,7 +2438,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -2314,11 +2458,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -2338,7 +2482,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -2370,11 +2514,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -2406,7 +2550,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -2442,12 +2586,12 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
         "chapter": "experience",
-        "progress": 0.22831831424893284,
+        "progress": 0.21437432406641643,
         "active": true
       },
       "dimensions_px": [
@@ -2458,17 +2602,17 @@
     },
     {
       "output": "public/art/scene-poster-demo-wide.webp",
-      "bytes": 10210,
-      "sha256": "3f8319daa15970bd9e5edc4be58cae0741a5086f9acf4eb66469eb32cdac5095",
-      "source": "website/assets/art/source/scene-poster-demo-wide-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "42a43b77c9c3581efb80548410c86847b8a54178f0d7eceb96c0aa4a904c3c8d",
+      "bytes": 10170,
+      "sha256": "b21f8585901ea71514901a09a10bcfa14448e23b1625de6210dd60fa5561ecb8",
+      "source": "website/assets/art/source/scene-poster-demo-wide-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "80ca9847e3a8dd302bfbebcd4b258c27705208fc05384169d2bd6c6d990b16d6",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -2508,7 +2652,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -2520,11 +2664,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -2536,7 +2680,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -2556,7 +2712,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -2572,11 +2732,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -2620,7 +2780,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -2632,11 +2800,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -2656,7 +2824,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -2688,11 +2856,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -2724,7 +2892,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -2760,12 +2928,12 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
         "chapter": "experience",
-        "progress": 0.22397830776605945,
+        "progress": 0.20959671620325981,
         "active": true
       },
       "dimensions_px": [
@@ -2776,17 +2944,17 @@
     },
     {
       "output": "public/art/scene-mobile-hero.webp",
-      "bytes": 28956,
-      "sha256": "da55db2603c3bd4fa864a38842e5a3bba3fe2f050c2cbaa0550718abf4617fa3",
-      "source": "website/assets/art/source/scene-poster-mobile-hero-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "1c943beabf28f0ec6eca53ed055392ff58fd44b3694bfc607f438680ae9d7b96",
+      "bytes": 28722,
+      "sha256": "0b1ac1df45b38afa9590f65d387b02987dd7b10cccba90efbeb58f8ef9dd2188",
+      "source": "website/assets/art/source/scene-poster-mobile-hero-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "ed2f394858a2b6016279fa608ff5d2a63985e3d10bf668cf8f0a5cb1dc5d8a08",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -2826,7 +2994,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -2838,11 +3006,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -2854,7 +3022,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -2874,7 +3054,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -2890,11 +3074,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -2938,7 +3122,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -2950,11 +3142,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -2974,7 +3166,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -3006,11 +3198,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -3042,7 +3234,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -3078,7 +3270,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
@@ -3104,17 +3296,17 @@
     },
     {
       "output": "public/art/scene-mobile-court.webp",
-      "bytes": 23308,
-      "sha256": "c053094995e4acdb2b502e445c1a8d47efe3b006bb19655969f0368ffed7dff7",
-      "source": "website/assets/art/source/scene-poster-mobile-court-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "8a58ebd16ec820d7ff904ae9400d13bf4a9812de0e024b41cddbeadc26a96f56",
+      "bytes": 23012,
+      "sha256": "cbdc815fe4f004b86b81a2ebd4b838ce2e05c07143b2bbd0e79b4b1a398d7056",
+      "source": "website/assets/art/source/scene-poster-mobile-court-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "0531f9bf9b2f13fd8e342106aebb193d68ebd4a57f6c1fa849af21489f2461e9",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -3154,7 +3346,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -3166,11 +3358,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -3182,7 +3374,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -3202,7 +3406,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -3218,11 +3426,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -3266,7 +3474,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -3278,11 +3494,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -3302,7 +3518,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -3334,11 +3550,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -3370,7 +3586,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -3406,7 +3622,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
@@ -3432,17 +3648,17 @@
     },
     {
       "output": "public/art/scene-mobile-hoop.webp",
-      "bytes": 20780,
-      "sha256": "7c510a3a1c3599ba7fa257730d79685be5e4df97b4f5cf546f91f75170917124",
-      "source": "website/assets/art/source/scene-poster-mobile-hoop-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "aa14e95131b04dce01e3937e26e107bd910c5ae8a39cb298eb63dbb5379498e9",
+      "bytes": 20344,
+      "sha256": "ec7574d241d3b77688954cc9bf331e1375342a80bcf735881fe06d7beda04d16",
+      "source": "website/assets/art/source/scene-poster-mobile-hoop-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "21604c20134f1b048ecfa6cae1541d05ce239518bc0180b4337a4ff0e4ee0a99",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "0a6804f5c78b3aa75dd8659e05f1b1519e76a696a8887d7d9790671082f6fa9a",
-      "captured_with": "156.0.8078.81; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
+      "capture_record_sha256": "da4809ab63a92685003ec9890cb22f9123e1735e9fc0fcc82c0e909a4179eb5b",
+      "captured_with": "157.0.8103.40; ANGLE (AMD, AMD Radeon(TM) Graphics (0x0000164E) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/animation-clock.ts",
@@ -3482,7 +3698,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/scripts/mobile-presentation.ts",
@@ -3494,11 +3710,11 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -3510,7 +3726,19 @@
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+        },
+        {
+          "path": "src/scripts/shot-feedback.ts",
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
         },
         {
           "path": "scripts/material-data.mjs",
@@ -3530,7 +3758,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+        },
+        {
+          "path": "src/scripts/arrow-drawing.ts",
+          "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
         },
         {
           "path": "src/scripts/court-hardware.ts",
@@ -3546,11 +3778,11 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -3594,7 +3826,15 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+        },
+        {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
+          "path": "src/scripts/demo-state.ts",
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/styles/site.css",
@@ -3606,11 +3846,11 @@
         },
         {
           "path": "src/styles/demo-invitation.css",
-          "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+          "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
         },
         {
           "path": "src/styles/poster-layout.css",
-          "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+          "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
         },
         {
           "path": "src/styles/chapter-rail.css",
@@ -3630,7 +3870,7 @@
         },
         {
           "path": "src/styles/mobile-layout.css",
-          "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+          "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
         },
         {
           "path": "src/styles/mobile-motion.css",
@@ -3662,11 +3902,11 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadPass.astro",
@@ -3698,7 +3938,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/community.ts",
@@ -3734,7 +3974,7 @@
         },
         {
           "path": "scripts/export-scene-poster.mjs",
-          "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+          "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
         }
       ],
       "pose": {
@@ -4069,8 +4309,8 @@
     },
     {
       "output": "public/fonts/noto-sc.woff2",
-      "bytes": 128492,
-      "sha256": "a8e12c69bbf74531207a9932a3e43dbded9fe713b042e135fbdeb65ea2d98038",
+      "bytes": 130304,
+      "sha256": "f38cb37492d2de7a0fcfc06ef4e2c5c84ce16759346dea9a86cdfbac17ebd066",
       "source": "assets/fonts/NotoSansSC-Regular.otf",
       "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
       "upstream_commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
@@ -4179,6 +4419,8 @@
         247,
         8211,
         8212,
+        8220,
+        8221,
         8230,
         8592,
         8593,
@@ -4188,7 +4430,10 @@
         8722,
         12289,
         12290,
+        12300,
+        12301,
         19968,
+        19977,
         19978,
         19979,
         19981,
@@ -4203,7 +4448,6 @@
         20040,
         20043,
         20063,
-        20102,
         20107,
         20108,
         20110,
@@ -4212,6 +4456,7 @@
         20132,
         20135,
         20139,
+        20142,
         20154,
         20165,
         20171,
@@ -4236,6 +4481,7 @@
         20445,
         20449,
         20462,
+        20540,
         20648,
         20801,
         20808,
@@ -4252,6 +4498,7 @@
         20876,
         20877,
         20934,
+        20960,
         20986,
         20987,
         20998,
@@ -4313,6 +4560,7 @@
         21738,
         22120,
         22238,
+        22260,
         22266,
         22269,
         22270,
@@ -4371,6 +4619,7 @@
         24403,
         24405,
         24433,
+        24471,
         24490,
         24515,
         24535,
@@ -4540,12 +4789,12 @@
         32467,
         32473,
         32479,
-        32487,
         32493,
         32500,
         32512,
         32553,
         32593,
+        32602,
         32622,
         32676,
         32763,
@@ -4560,6 +4809,7 @@
         33267,
         33322,
         33410,
+        33539,
         33756,
         33853,
         34013,
@@ -4650,13 +4900,15 @@
         39304,
         39318,
         39564,
+        39640,
         40664,
         65288,
         65289,
         65292,
         65295,
         65306,
-        65307
+        65307,
+        65311
       ],
       "text_sources": [
         {
@@ -4673,7 +4925,7 @@
         },
         {
           "path": "src/components/CourtDiagram.astro",
-          "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+          "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
         },
         {
           "path": "src/components/DownloadChooser.astro",
@@ -4685,7 +4937,7 @@
         },
         {
           "path": "src/components/ExperienceStage.astro",
-          "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+          "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
         },
         {
           "path": "src/components/HeroPoster.astro",
@@ -4741,7 +4993,7 @@
         },
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
         },
         {
           "path": "src/data/court-materials.ts",
@@ -4749,7 +5001,7 @@
         },
         {
           "path": "src/data/demo-court-art.ts",
-          "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+          "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
         },
         {
           "path": "src/data/glass-material.ts",
@@ -4805,7 +5057,7 @@
         },
         {
           "path": "src/scripts/camera-placement.ts",
-          "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+          "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
         },
         {
           "path": "src/scripts/camera-track.ts",
@@ -4828,6 +5080,10 @@
           "sha256": "2f7277aa3cff6423e7be4d53e03c64f01fa4d668f2a6cbaf978997d808d3d36c"
         },
         {
+          "path": "src/scripts/court-geometry.ts",
+          "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+        },
+        {
           "path": "src/scripts/court-hardware.ts",
           "sha256": "618028e499d01fae7f43c7bd8cf3d3c2627780dc9ca3ff7274d87305373ddf69"
         },
@@ -4837,7 +5093,7 @@
         },
         {
           "path": "src/scripts/court-scene.ts",
-          "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+          "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
         },
         {
           "path": "src/scripts/court-textures.ts",
@@ -4849,11 +5105,11 @@
         },
         {
           "path": "src/scripts/demo-invitation.ts",
-          "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+          "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
         },
         {
           "path": "src/scripts/demo-state.ts",
-          "sha256": "f18e27c74a1c0664b44da841fe36b9e06bfae62b5bbde417b7d6a6fb00a45a8d"
+          "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
         },
         {
           "path": "src/scripts/download-chooser.ts",
@@ -4873,7 +5129,7 @@
         },
         {
           "path": "src/scripts/main.ts",
-          "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+          "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
         },
         {
           "path": "src/scripts/mobile-navigation.ts",
@@ -4921,7 +5177,7 @@
         },
         {
           "path": "src/scripts/scene-contract.ts",
-          "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+          "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
         },
         {
           "path": "src/scripts/scene-performance.ts",
@@ -4937,19 +5193,27 @@
         },
         {
           "path": "src/scripts/shaders/court.ts",
-          "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+          "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
         },
         {
           "path": "src/scripts/shot-feedback.ts",
-          "sha256": "7437084f66f5e288c06d9d72693a864c7c268ea50aa4721c58da771666fc9ff4"
+          "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
+        },
+        {
+          "path": "src/scripts/shot-glow.ts",
+          "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
         },
         {
           "path": "src/scripts/shot-motion.ts",
-          "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+          "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
         },
         {
           "path": "src/scripts/shot-timing.ts",
-          "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+          "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
+        },
+        {
+          "path": "src/scripts/shot-visuals.ts",
+          "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
         },
         {
           "path": "src/scripts/story-choreography.ts",
@@ -4966,8 +5230,8 @@
     },
     {
       "output": "public/fonts/noto-poster-black.woff2",
-      "bytes": 8940,
-      "sha256": "d5d69d0b727c54a778a547ed07296bfb10ccb4bd890c41eab862e0a20dd49124",
+      "bytes": 8700,
+      "sha256": "a8a5029d6123b1900bc3a6ca5677a91f79391adc583dcedf0d23bbfa91fc86fd",
       "source": "website/assets/fonts/NotoSansSC-Black.otf",
       "source_sha256": "ccb496022356b7dd14d117538a472ae40feff8f6e8f3fe8bffc5616785d2f3f9",
       "source_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/SubsetOTF/SC/NotoSansSC-Black.otf",
@@ -4977,12 +5241,11 @@
       "font_family": "NotoPoster",
       "font_weight": 900,
       "source_font_weight": 900,
-      "gzip_bytes": 8963,
+      "gzip_bytes": 8723,
       "transformation": "WOFF2 subset of the Chinese hero, scoring, demo, replay, download, community and FAQ headings only; static Black 900 outlines, advances, copyright and license retained",
       "subset_code_points": [
         19968,
         19979,
-        20004,
         20010,
         20040,
         20063,
@@ -5025,7 +5288,6 @@
       "required_glyphs": [
         "U+4E00",
         "U+4E0B",
-        "U+4E24",
         "U+4E2A",
         "U+4E48",
         "U+4E5F",
@@ -5068,7 +5330,7 @@
       "text_sources": [
         {
           "path": "src/data/content.ts",
-          "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495",
+          "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923",
           "fields": [
             "zh.hero.lines",
             "zh.scoring.title",
@@ -5135,7 +5397,7 @@
         },
         {
           "source": "website/public/fonts/noto-sc.woff2",
-          "sha256": "a8e12c69bbf74531207a9932a3e43dbded9fe713b042e135fbdeb65ea2d98038"
+          "sha256": "f38cb37492d2de7a0fcfc06ef4e2c5c84ce16759346dea9a86cdfbac17ebd066"
         },
         {
           "source": "assets/fonts/BarlowCondensed-Medium.ttf",

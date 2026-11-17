@@ -391,7 +391,9 @@ test('replay moment presentation follows the scroll playhead smoothly through ev
     }
     return observe(target);
   };
-  const targets = [0.399, 0.43, 0.599, 0.63, 0.899, 0.93, 0.97];
+  // Leave room for scroll quantization before each event. The four-decimal
+  // progress attribute can otherwise round up across the score change.
+  const targets = [0.396, 0.43, 0.596, 0.63, 0.896, 0.93, 0.97];
   const forward = [];
   for (const target of targets) forward.push(await seek(target));
   const reverse = [];

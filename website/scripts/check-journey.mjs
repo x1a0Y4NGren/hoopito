@@ -872,11 +872,12 @@ async function demo() {
     await expect(host).toHaveAttribute('data-renderer', '3d');
   } else await expect(host).toHaveAttribute('data-renderer', '2d');
   const surface = actual3d ? host : page.locator('[data-demo-court]');
+  await page.locator('[data-demo-points="2"]').click();
   const bounds = await surface.boundingBox();
   await surface.click({
     position: {
       x: bounds.width * 0.5,
-      y: bounds.height * (actual3d ? 0.63 : 0.65),
+      y: bounds.height * 0.4,
     },
   });
   await expect(page.locator('[data-record]')).toBeEnabled();
@@ -895,6 +896,7 @@ async function demo() {
   );
   await screenshot('shot-recorded');
   await page.locator('[data-reset]').click();
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="left"]').click();
   await page.locator('[data-record]').click();
   await expect(page.locator('[data-demo]')).toHaveAttribute(

@@ -1,22 +1,35 @@
 ---
 import { netPath } from '../scripts/shot-timing';
 import { demoCourtArt } from '../data/demo-court-art';
+import { SHOT_VISUALS } from '../scripts/shot-visuals';
+import {
+  BASKET_POINT,
+  COURT_SVG,
+  FREE_THROW_POINT,
+  courtToSvg,
+} from '../scripts/court-geometry';
 interface Props {
   label: string;
 }
 const { label } = Astro.props;
+const basket = courtToSvg(BASKET_POINT);
+const freeThrow = courtToSvg(FREE_THROW_POINT);
 const courtLines = [
-  { id: 'demo-court-boundary', d: 'M28 28H572V532H28ZM206 28V238H394V28' },
-  { id: 'demo-court-free-throw', d: 'M206 238A94 94 0 0 0 394 238' },
+  {
+    id: 'demo-court-boundary',
+    d: `${COURT_SVG.boundary}${COURT_SVG.lane}${COURT_SVG.freeThrowLine}`,
+  },
+  { id: 'demo-court-free-throw', d: COURT_SVG.freeThrowArc },
   {
     id: 'demo-court-free-throw-return',
-    d: 'M206 238A94 94 0 0 1 394 238',
+    d: COURT_SVG.freeThrowReturn,
     dash: '8 9',
   },
   {
     id: 'demo-court-three-point',
-    d: 'M57 28V133A243 243 0 0 0 543 133V28M234 532A66 66 0 0 1 366 532',
+    d: `${COURT_SVG.threePoint}${COURT_SVG.centerArc}`,
   },
+  { id: 'demo-court-restricted', d: COURT_SVG.restrictedArc },
 ];
 ---
 
@@ -78,6 +91,55 @@ const courtLines = [
       <stop offset=".5" stop-color="#dc6d30" />
       <stop offset="1" stop-color="#763213" />
     </radialGradient>
+    <radialGradient id="demo-selection-glow">
+      <stop stop-color="#fff1ca" stop-opacity=".62" />
+      <stop offset=".25" stop-color="#ffb66b" stop-opacity=".42" />
+      <stop offset=".6" stop-color="#ff9a4c" stop-opacity=".16" />
+      <stop offset="1" stop-color="#ff9a4c" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="demo-marker-glow">
+      <stop stop-color="#f5fbff" stop-opacity=".68" />
+      <stop offset=".25" stop-color="#a9d8ff" stop-opacity=".4" />
+      <stop offset=".6" stop-color="#67b7ff" stop-opacity=".16" />
+      <stop offset="1" stop-color="#67b7ff" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="demo-ball-glow">
+      <stop stop-color="#fff4d9" stop-opacity=".42" />
+      <stop offset=".4" stop-color="#ffbb77" stop-opacity=".28" />
+      <stop offset=".7" stop-color="#ff9f50" stop-opacity=".1" />
+      <stop offset="1" stop-color="#ff9f50" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient
+      id="demo-trail-gradient"
+      data-demo-trail-gradient
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#ffa455" stop-opacity="0" />
+      <stop offset=".2" stop-color="#ffb86f" stop-opacity=".12" />
+      <stop offset=".65" stop-color="#ffe0af" stop-opacity=".76" />
+      <stop offset="1" stop-color="#fff8e6" />
+    </linearGradient>
+    <linearGradient
+      id="demo-trail-edge"
+      data-demo-trail-gradient
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#783a13" stop-opacity="0" />
+      <stop offset=".65" stop-color="#783a13" stop-opacity=".55" />
+      <stop offset="1" stop-color="#783a13" stop-opacity=".85" />
+    </linearGradient>
+    <filter
+      id="demo-trail-soft"
+      data-demo-trail-filter
+      filterUnits="userSpaceOnUse"
+      x="0"
+      y="0"
+      width="1"
+      height="1"
+      color-interpolation-filters="sRGB"
+    >
+      <feGaussianBlur data-demo-trail-blur stdDeviation="1.5" />
+    </filter>
     <linearGradient id="court-edge" x1="0" y1="0" x2="1" y2="1">
       <stop stop-color="#e5a170" stop-opacity=".55" />
       <stop offset=".48" stop-color="#e5a170" stop-opacity=".06" />
@@ -119,7 +181,7 @@ const courtLines = [
     opacity="1"
   />
   <rect x="28" y="28" width="544" height="504" fill="url(#court-spotlight)" />
-  <path d="M206 28V238H394V28Z" fill="#915b30" fill-opacity=".05" />
+  <path d={`${COURT_SVG.lane}Z`} fill="#915b30" fill-opacity=".05" />
   <g
     stroke="#6e472a"
     opacity=".18"
@@ -151,9 +213,59 @@ const courtLines = [
       />
     ))}
   </g>
+  {Object.entries(COURT_SVG.regions).map(([region, path]) => (
+    <g pointer-events="none" aria-hidden="true">
+      <path
+        data-demo-region-shade
+        data-region={region}
+        {...{ hidden: '' }}
+        d={
+          region === 'insideArc'
+            ? COURT_SVG.regions.outsideArc
+            : region === 'outsideArc'
+              ? COURT_SVG.regions.insideArc
+              : `${COURT_SVG.boundary}${path}`
+        }
+        fill-rule="evenodd"
+        fill="#000"
+        opacity=".48"
+      />
+      <path
+        data-demo-region-light
+        data-region={region}
+        {...{ hidden: '' }}
+        d={path}
+        fill-rule="evenodd"
+        fill="#ffb76b"
+        opacity=".08"
+      />
+    </g>
+  ))}
+  <g
+    data-demo-free-throw-point
+    {...{ hidden: '' }}
+    transform={`translate(${freeThrow.x} ${freeThrow.y})`}
+    pointer-events="none"
+    aria-hidden="true"
+  >
+    <circle
+      r="9"
+      fill="#ffd59a"
+      fill-opacity=".35"
+      stroke="#ffe0aa"
+      stroke-width="1.8"
+    />
+    <circle
+      r="3"
+      fill="#fff5d9"
+      stroke="#ffb66b"
+      stroke-width="2"
+      vector-effect="non-scaling-stroke"
+    />
+  </g>
   <g
     data-demo-net
-    transform="translate(300 82) scale(1.25)"
+    transform={`translate(${basket.x} ${basket.y}) scale(1.25)`}
     fill="none"
     stroke="#6d5034"
     stroke-opacity=".7"
@@ -182,7 +294,11 @@ const courtLines = [
       );
     })}
   </g>
-  <g data-hoop-fallback pointer-events="none">
+  <g
+    data-hoop-fallback
+    transform={`translate(${basket.x - 300} ${basket.y - 82})`}
+    pointer-events="none"
+  >
     <circle cx="302" cy="86" r="28" fill="url(#demo-hoop-shadow)" />
     <path d="M237 54H364L364.5 57H237.5Z" fill="#42504b" />
     <rect
@@ -250,56 +366,123 @@ const courtLines = [
   </g>
   <g data-demo-selection {...{ hidden: '' }}>
     <circle
+      data-demo-marker-glow
+      r={SHOT_VISUALS.markerHaloPixels}
+      fill="url(#demo-selection-glow)"
+    />
+    <circle
       class="aim-halo"
       r="31"
-      fill="#e7a272"
-      fill-opacity=".055"
-      stroke="#704323"
-      stroke-opacity=".38"
+      fill="none"
+      stroke="#ffc484"
+      stroke-opacity=".36"
+      vector-effect="non-scaling-stroke"
     />
     <circle
       r="20"
-      fill="#e7a272"
-      fill-opacity=".12"
-      stroke="#914418"
-      stroke-opacity=".75"
-      stroke-width="1.4"
+      fill="none"
+      stroke="#72340d"
+      stroke-opacity=".72"
+      stroke-width="4"
+      vector-effect="non-scaling-stroke"
     />
-    <circle r="4" fill="#b45524" />
+    <circle
+      r="20"
+      fill="#ffb36b"
+      fill-opacity=".09"
+      stroke="#ffb66b"
+      stroke-opacity=".96"
+      stroke-width={SHOT_VISUALS.markerStrokePixels}
+      vector-effect="non-scaling-stroke"
+    />
+    <circle
+      r="4"
+      fill="#fff5d9"
+      stroke="#ff9d50"
+      paint-order="stroke"
+      stroke-width={SHOT_VISUALS.markerStrokePixels}
+      vector-effect="non-scaling-stroke"
+    />
     <path
       d="M-30 0H-24M24 0H30M0-30V-24M0 24V30"
-      stroke="#b45524"
-      stroke-width="1.4"
+      stroke="#ffd49e"
+      stroke-width="1.5"
+      vector-effect="non-scaling-stroke"
     />
   </g>
   <g data-demo-marker {...{ hidden: '' }}>
     <circle
+      data-demo-marker-glow
+      r={SHOT_VISUALS.markerHaloPixels}
+      fill="url(#demo-marker-glow)"
+    />
+    <circle
       r="29"
-      fill="#79acdf"
-      fill-opacity=".06"
-      stroke="#386f9b"
-      stroke-opacity=".45"
+      fill="none"
+      stroke="#a7daff"
+      stroke-opacity=".34"
+      vector-effect="non-scaling-stroke"
     />
     <circle
       r="18"
-      fill="#79acdf"
-      fill-opacity=".13"
-      stroke="#386f9b"
-      stroke-width="1.5"
+      fill="#91ceff"
+      fill-opacity=".1"
+      stroke="#92d1ff"
+      stroke-width={SHOT_VISUALS.markerStrokePixels}
+      vector-effect="non-scaling-stroke"
     />
-    <circle r="7" fill="#205e8a" />
-    <path d="M-3 0L-1 3L4-3" fill="none" stroke="#f3f1e5" stroke-width="1.6" />
+    <circle
+      r="7"
+      fill="#fff5d9"
+      stroke="#77c5ff"
+      stroke-width={SHOT_VISUALS.markerStrokePixels}
+      vector-effect="non-scaling-stroke"
+    />
+    <path d="M-3 0L-1 3L4-3" fill="none" stroke="#23658f" stroke-width="1.6" />
   </g>
+  <path
+    data-demo-trail-halo
+    {...{ hidden: '' }}
+    fill="none"
+    stroke="url(#demo-trail-gradient)"
+    stroke-width={SHOT_VISUALS.trailHaloPixels}
+    stroke-opacity=".52"
+    stroke-linecap="round"
+    vector-effect="non-scaling-stroke"
+    filter="url(#demo-trail-soft)"
+  />
+  <path
+    data-demo-trail-edge
+    {...{ hidden: '' }}
+    fill="none"
+    stroke="url(#demo-trail-edge)"
+    stroke-width="4.5"
+    stroke-linecap="round"
+    vector-effect="non-scaling-stroke"
+  />
   <path
     data-demo-trail
     {...{ hidden: '' }}
     fill="none"
-    stroke="#ed9b60"
-    stroke-width="3"
+    stroke="url(#demo-trail-gradient)"
+    stroke-width={SHOT_VISUALS.trailCorePixels}
     stroke-linecap="round"
+    vector-effect="non-scaling-stroke"
   />
   <g data-demo-ball {...{ hidden: '' }}>
-    <circle r="12" fill="url(#demo-ball-color)" />
+    <circle
+      data-demo-ball-glow
+      r={SHOT_VISUALS.ballHaloPixels}
+      fill="url(#demo-ball-glow)"
+    />
+    <circle
+      r="12"
+      fill="url(#demo-ball-color)"
+      stroke="#fff0d0"
+      stroke-opacity=".94"
+      stroke-width="1.5"
+      vector-effect="non-scaling-stroke"
+    />
     <circle r="12" fill="url(#ball-pebbles)" />
     <g fill="none" stroke="#442417" stroke-width="1.35">
       <path d="M-12 0H12M0-12V12M-8-9Q8 0-8 9M8-9Q-8 0 8 9" />

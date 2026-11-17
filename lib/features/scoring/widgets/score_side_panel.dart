@@ -16,6 +16,8 @@ class ScoreSidePanel extends StatelessWidget {
     required this.onScore,
     required this.onMiss,
     this.scoreButtons = const [1, 2, 3],
+    this.enabledScorePoints,
+    this.scoreButtonLabels = const {},
     this.practiceHighlightPoints,
     this.practiceHighlightMiss = false,
     this.scoreEnabled = true,
@@ -39,6 +41,8 @@ class ScoreSidePanel extends StatelessWidget {
   final ValueChanged<int> onScore;
   final VoidCallback onMiss;
   final List<int> scoreButtons;
+  final Set<int>? enabledScorePoints;
+  final Map<int, String> scoreButtonLabels;
   final int? practiceHighlightPoints;
   final bool practiceHighlightMiss;
   final bool scoreEnabled;
@@ -103,13 +107,16 @@ class ScoreSidePanel extends StatelessWidget {
                     side: side,
                     teamLabel: teamLabel ?? name,
                     points: points,
+                    actionLabel: scoreButtonLabels[points],
                     width: actionWidth,
                     height: buttonHeight,
                     color: color,
                     buttonSurface: buttonSurface,
                     ruleColor: editorial.rule,
                     compact: true,
-                    enabled: scoreEnabled,
+                    enabled:
+                        scoreEnabled &&
+                        (enabledScorePoints?.contains(points) ?? true),
                     locationActive: locationPoints == points,
                     locationRemainingSeconds: locationPoints == points
                         ? locationRemainingSeconds
@@ -224,13 +231,16 @@ class ScoreSidePanel extends StatelessWidget {
                           side: side,
                           teamLabel: teamLabel ?? name,
                           points: points,
+                          actionLabel: scoreButtonLabels[points],
                           width: double.infinity,
                           height: buttonHeight,
                           color: color,
                           buttonSurface: buttonSurface,
                           ruleColor: editorial.rule,
                           compact: false,
-                          enabled: scoreEnabled,
+                          enabled:
+                              scoreEnabled &&
+                              (enabledScorePoints?.contains(points) ?? true),
                           locationActive: locationPoints == points,
                           locationRemainingSeconds: locationPoints == points
                               ? locationRemainingSeconds
@@ -383,6 +393,7 @@ class _ScoreAction extends StatefulWidget {
     required this.side,
     required this.teamLabel,
     required this.points,
+    this.actionLabel,
     required this.width,
     required this.height,
     required this.color,
@@ -401,6 +412,7 @@ class _ScoreAction extends StatefulWidget {
   final TeamSide side;
   final String teamLabel;
   final int points;
+  final String? actionLabel;
   final double width;
   final double height;
   final Color color;
@@ -431,7 +443,9 @@ class _ScoreActionState extends State<_ScoreAction> {
     final disabledColor = editorialThemeOf(context).mutedInk;
     final semantic = widget.locationActive && remaining != null
         ? l10n.scoringLocationPendingSemantics(widget.points, remaining, team)
-        : l10n.scoringScoreSemantics(widget.points, team);
+        : widget.actionLabel == null
+        ? l10n.scoringScoreSemantics(widget.points, team)
+        : '$team ${widget.actionLabel}';
     final label = _TeamActionLabel(
       side: widget.side,
       color: widget.color,
@@ -439,7 +453,7 @@ class _ScoreActionState extends State<_ScoreAction> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('+${widget.points}'),
+          Text(widget.actionLabel ?? '+${widget.points}'),
           if (widget.locationActive) ...[
             const SizedBox(width: 4),
             Icon(
@@ -474,7 +488,29 @@ class _ScoreActionState extends State<_ScoreAction> {
               emphasizedBorder: widget.locationActive,
             ),
             onPressed: widget.enabled ? widget.onPressed : null,
-            child: FittedBox(fit: BoxFit.scaleDown, child: label),
+            child: widget.actionLabel == null
+                ? FittedBox(fit: BoxFit.scaleDown, child: label)
+                : LayoutBuilder(
+                    builder: (context, constraints) => FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: _TeamActionLabel(
+                        side: widget.side,
+                        color: widget.color,
+                        child: SizedBox(
+                          width:
+                              (constraints.maxWidth - 11).clamp(72, 140) *
+                              MediaQuery.textScalerOf(context).scale(14) /
+                              14,
+                          child: Text(
+                            widget.actionLabel!,
+                            // Keep the numeric suffix even with wide fallback
+                            // fonts; the surrounding FittedBox fits all lines.
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
           ),
         ),
       ),

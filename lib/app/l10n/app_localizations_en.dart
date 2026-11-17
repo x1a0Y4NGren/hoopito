@@ -135,14 +135,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get v2GuideScore => 'Record scores';
 
   @override
-  String get v2GuideScoreBody => 'Tap either side’s +1, +2 or +3 to score.';
+  String get v2GuideScoreBody =>
+      'Use either side’s scoring buttons for this match. In standard scoring, +1 is a free throw; when counting baskets, +1 is a basket.';
 
   @override
   String get v2GuideLocation => 'Locations and misses';
 
   @override
   String get v2GuideLocationBody =>
-      'Tap the court before scoring, or add a location within 10 seconds afterward. You can record misses too.';
+      'Tap the court, then an available scoring button, or add a location in the highlighted area within 10 seconds after scoring. Misses can be located too; free throws are placed automatically.';
 
   @override
   String get v2GuideUndo => 'Undo and finish';
@@ -2631,7 +2632,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateFallback => 'Using GitHub as a fallback download source';
 
   @override
-  String get pregameGoalScoringMode => 'Scoring mode';
+  String get pregameGoalScoringMode => 'Scoring goal';
 
   @override
   String get pregameGoalModeFree => 'Free scoring';
@@ -2781,7 +2782,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get practiceUndoHint => 'Tap Undo to take back that score.';
 
   @override
-  String get practiceCourtHint => 'Tap the court to pick a shot location.';
+  String get practiceCourtHint =>
+      'Tap inside the three-point line to pick a two-point shot location.';
 
   @override
   String get practiceLocatedScoreHint => 'Location set. Now tap Red’s +2.';
@@ -2856,4 +2858,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get practiceHideHint => 'Hide hint';
+
+  @override
+  String get scoringMethodLabel => 'Scoring method';
+
+  @override
+  String get scoringMethodStandard => 'Standard scoring';
+
+  @override
+  String get scoringMethodBaskets => 'Count baskets';
+
+  @override
+  String get scoringMethodLegacy => 'Custom values (original rules)';
+
+  @override
+  String get scoringThreePointCountsAsTwo => 'Three-pointers count as +2';
+
+  @override
+  String get scoringThreePointCountsAsTwoHelp =>
+      'Off: every basket is +1. On: inside the arc is +1, outside is +2.';
+
+  @override
+  String get scoringFreeThrowButton => 'Free throw +1';
+
+  @override
+  String get scoringFreeThrowAutoLocation =>
+      'Free throw placed at the free-throw line';
+
+  @override
+  String get courtRegionInsideHint =>
+      'Choose a location inside the three-point line';
+
+  @override
+  String get courtRegionOutsideHint =>
+      'Choose a location outside the three-point line';
+
+  @override
+  String get courtRegionAllHint => 'Choose a location on the court';
+
+  @override
+  String get courtRegionFreeThrowHint =>
+      'Free throws are placed at the free-throw line';
+
+  @override
+  String get courtMoveLeft => 'Move location left';
+
+  @override
+  String get courtMoveRight => 'Move location right';
+
+  @override
+  String get courtMoveUp => 'Move location toward the basket';
+
+  @override
+  String get courtMoveDown => 'Move location away from the basket';
+
+  @override
+  String get courtConfirmPoint => 'Confirm current location';
 }

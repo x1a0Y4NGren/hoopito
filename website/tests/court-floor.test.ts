@@ -11,7 +11,7 @@ test('the rear stand contact shadow fades with its support and restores without 
       return resource;
     },
     mapleMap: new THREE.Texture(),
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     assert.equal(typeof floor.setViewCutaway, 'function');
@@ -42,7 +42,7 @@ test('floor paint shares cached world lighting and linear surface detail with th
     },
     mapleMap: new THREE.Texture(),
     detailMap: detail,
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     assert.equal(floor.paintUniforms.uFloorDetail.value, detail);
@@ -119,7 +119,7 @@ test('one continuous floor covers fitted overhead viewports without a visible bo
       return resource;
     },
     mapleMap: new THREE.Texture(),
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     floor.mesh.updateMatrixWorld();
@@ -196,7 +196,7 @@ test('extended wood and painted detail keep the same 1.4-metre world texture per
     },
     mapleMap: maple,
     detailMap: new THREE.Texture(),
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     const position = floor.mesh.geometry.getAttribute('position');
@@ -243,7 +243,7 @@ test('floor expansion preserves the local lighting grid, paint dimensions and ba
       return resource;
     },
     mapleMap: new THREE.Texture(),
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     const position = floor.mesh.geometry.getAttribute('position');
@@ -276,7 +276,7 @@ test('floor expansion preserves the local lighting grid, paint dimensions and ba
     const shadowPosition = contact.getWorldPosition(new THREE.Vector3());
     assert.ok(Math.abs(shadowPosition.x) < 0.000001);
     assert.ok(Math.abs(shadowPosition.y - 0.009) < 0.000001);
-    assert.ok(Math.abs(shadowPosition.z + 7.45) < 0.000001);
+    assert.ok(Math.abs(shadowPosition.z + 7.575) < 0.000001);
   } finally {
     for (const resource of resources) resource.dispose();
   }
@@ -292,7 +292,7 @@ test('density switches one shared floor and paint shading budget without rebuild
     },
     mapleMap: new THREE.Texture(),
     detailMap: new THREE.Texture(),
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     const shader = {
@@ -357,7 +357,7 @@ test('vertex varnish receives the scene lamps and the actual flat world normal f
       return resource;
     },
     mapleMap: new THREE.Texture(),
-    rim: new THREE.Vector3(0, 3.05, -5.3),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
   });
   try {
     floor.mesh.updateMatrixWorld();

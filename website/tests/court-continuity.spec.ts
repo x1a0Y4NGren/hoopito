@@ -191,8 +191,8 @@ for (const density of [1, 1.5]) {
                 .project(camera);
               return bounds.left + ((v.x + 1) * bounds.width) / 2;
             };
-            const floor = screenX(0, -5.3);
-            const rim = screenX(3.05, -5.3);
+            const floor = screenX(0, -5.425);
+            const rim = screenX(3.05, -5.425);
             const board = screenX(3.575, -5.77);
             return {
               width: innerWidth,
@@ -771,6 +771,10 @@ for (const path of ['/', '/en/']) {
         ),
       ).toBeLessThanOrEqual(2);
       await page.mouse.click(client.x, client.y);
+      const twoPoints = page.locator('[data-demo-points="2"]');
+      await expect(page.locator('[data-demo-points="3"]')).toBeDisabled();
+      await expect(twoPoints).toBeEnabled();
+      await twoPoints.click();
       await expect(page.locator('[data-record]')).toBeEnabled();
       await expect(page.locator('[data-blue-score]')).toHaveText('6');
       const selection = await page
@@ -1232,7 +1236,8 @@ test(
     await page.setViewportSize({ width: 1440, height: 1000 });
     await exposeSceneInTest(page);
     await readyExperience(page);
-    const point = { x: 0.37, y: 0.64 };
+    await page.locator('[data-demo-points="2"]').click();
+    const point = { x: 0.37, y: 0.45 };
     const client = await project(page, point);
     await page.mouse.click(client.x, client.y);
     await expect(page.locator('[data-record]')).toBeEnabled();
@@ -1432,7 +1437,8 @@ test(
     const stationary = await draws();
     await page.waitForTimeout(500);
     expect(await draws()).toBe(stationary);
-    const point = await project(page, { x: 0.37, y: 0.64 });
+    await page.locator('[data-demo-points="2"]').click();
+    const point = await project(page, { x: 0.37, y: 0.45 });
     await page.mouse.click(point.x, point.y);
     await expect(page.locator('[data-record]')).toBeEnabled();
     await expect(page.locator('[data-blue-score]')).toHaveText('6');
@@ -1453,7 +1459,8 @@ test(
     await exposeSceneInTest(page);
     const draws = await observeCourtDraws(page);
     await readyExperience(page);
-    const point = { x: 0.37, y: 0.64 };
+    await page.locator('[data-demo-points="2"]').click();
+    const point = { x: 0.37, y: 0.45 };
     const client = await project(page, point);
     await page.mouse.click(client.x, client.y);
     await expect(page.locator('[data-record]')).toBeEnabled();

@@ -291,6 +291,9 @@ class MatchSeriesRepository {
           r['possessionPolicy'] as String? ?? 'manual',
         ),
         customEventTypes: (r['customEventTypes'] as List? ?? []).cast<String>(),
+        scoringConvention: r['scoringConvention'] == null
+            ? null
+            : ScoringConvention.values.byName(r['scoringConvention'] as String),
       ),
       recordingMode: RecordingMode.simple,
       clockMode: ClockMode.values.byName(setup['clockMode'] as String),

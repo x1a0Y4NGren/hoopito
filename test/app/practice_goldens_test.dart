@@ -108,6 +108,9 @@ void main() {
               builder: (context, child) => MediaQuery(
                 data: MediaQuery.of(context).copyWith(
                   textScaler: TextScaler.linear(stage == 'large' ? 2 : 1),
+                  // Golden coverage checks the accessible static state; the
+                  // live court spotlight deliberately repeats while awaiting input.
+                  disableAnimations: true,
                 ),
                 child: child!,
               ),

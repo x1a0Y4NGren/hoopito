@@ -328,7 +328,7 @@ void main() {
       await tester.ensureVisible(find.byKey(const Key('scoring-court')));
       await tester.pump();
       final finalCourt = tester.getRect(find.byKey(const Key('scoring-court')));
-      final finalTapLocal = _courtTap(finalCourt.size, .75, .25);
+      final finalTapLocal = _courtTap(finalCourt.size, .75, .8);
       await tester.tapAt(finalCourt.topLeft + finalTapLocal);
       await _pumpUntil(
         tester,
@@ -343,7 +343,7 @@ void main() {
         (location) => location.eventId == latestScore.id,
       );
       expect(finalLocation.x, closeTo(0.75, 0.001));
-      expect(finalLocation.y, closeTo(0.25, 0.001));
+      expect(finalLocation.y, closeTo(0.8, 0.001));
       expect(finalLocation.isConfirmed, isTrue);
 
       await _tapAction(tester, find.byKey(const Key('scoring-more')));

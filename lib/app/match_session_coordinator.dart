@@ -117,6 +117,8 @@ class MatchSessionCoordinator extends ChangeNotifier {
             60,
         winByTwo: projection.match.ruleTemplateSnapshot.winByTwo,
         scoreButtons: projection.match.ruleTemplateSnapshot.scoreButtons,
+        scoringConvention:
+            projection.match.ruleTemplateSnapshot.scoringConvention,
         foulLimit: projection.match.ruleTemplateSnapshot.foulLimit,
         possessionHintEnabled:
             projection.match.ruleTemplateSnapshot.possessionHintEnabled,

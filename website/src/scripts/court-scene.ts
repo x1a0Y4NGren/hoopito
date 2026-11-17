@@ -1,9 +1,22 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { SHOT_TIMING } from './shot-timing';
-import { sampleShotPose, shotFlightPoint } from './shot-motion';
+import { sampleShotPose } from './shot-motion';
+import {
+  createShotTrail,
+  createShotMarker,
+  createFlightBallGlow,
+} from './shot-glow';
+import { SHOT_VISUALS } from './shot-visuals';
 import { COURT_LIGHTING } from './court-lighting';
 import { isOverheadReadingFrame } from './camera-track';
+import {
+  COURT,
+  courtToWorld,
+  RIM_WORLD,
+  regionHintPresentation,
+} from './court-geometry';
+import type { CourtScoringRegion } from './court-geometry';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -45,51 +58,19 @@ import {
   courtVertex,
   courtPaintVertex,
   courtFragment,
-  trailVertex,
-  trailFragment,
+  courtRegionFragment,
 } from './shaders/court';
 
-const WIDTH = 15;
-const LENGTH = 14;
-const RIM = new THREE.Vector3(0, 3.05, -5.3);
+const WIDTH = COURT.width;
+const LENGTH = COURT.depth;
+const RIM = new THREE.Vector3(...RIM_WORLD);
 const AMBER = new THREE.Color('#FF5A1F');
 const clamp = (value: number) => THREE.MathUtils.clamp(value, 0, 1);
-const worldPoint = (point: CourtPoint) =>
-  new THREE.Vector3(
-    (clamp(point.x) - 0.5) * WIDTH,
-    0.018,
-    (clamp(point.y) - 0.5) * LENGTH,
-  );
-
-/** Tube centres and Frenet tangents share the flight's time parameter. */
-class ShotArc extends THREE.Curve<THREE.Vector3> {
-  constructor(private readonly point: CourtPoint) {
-    super();
-  }
-  getPoint(progress: number, target = new THREE.Vector3()) {
-    return target.fromArray(shotFlightPoint(this.point, progress));
-  }
-  getPointAt(progress: number, target = new THREE.Vector3()) {
-    return this.getPoint(progress, target);
-  }
-  getTangentAt(progress: number, target = new THREE.Vector3()) {
-    return this.getTangent(progress, target);
-  }
-}
-
-function createShotTrail(point: CourtPoint) {
-  return new THREE.Mesh(
-    new THREE.TubeGeometry(new ShotArc(point), 64, 0.022, 6, false),
-    new THREE.ShaderMaterial({
-      uniforms: { uHead: { value: 0 }, uOpacity: { value: 0.86 } },
-      vertexShader: trailVertex,
-      fragmentShader: trailFragment,
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-    }),
-  );
-}
+const worldPoint = (point: CourtPoint) => {
+  const position = courtToWorld({ x: clamp(point.x), y: clamp(point.y) });
+  position[1] = 0.018;
+  return new THREE.Vector3(...position);
+};
 
 /** No imported models or remote assets. The page owns input eligibility and score. */
 export async function createCourtScene(
@@ -119,13 +100,16 @@ export async function createCourtScene(
   let quality: SceneQuality = 'full';
   let frame: StoryFrame = { chapter: 'hero', progress: 0, active: true };
   let cameraPlacement: CameraPlacement | null = null;
+  let scoringRegion: CourtScoringRegion | null = null;
+  let scoringRegionPulse = false;
   const resolveCameraPose = createCameraPoseResolver();
   let appliedCameraPose: ReturnType<typeof resolveCameraPose> | undefined;
   let appliedIntroProgress = NaN;
   let flight: gsap.core.Timeline | undefined;
   const shotContinuation = new ShotContinuation();
   let introduction: gsap.core.Tween | undefined;
-  let trail: THREE.Mesh<THREE.TubeGeometry, THREE.ShaderMaterial> | undefined;
+  let trail: ReturnType<typeof createShotTrail> | undefined;
+  let preparationTrail: ReturnType<typeof createShotTrail> | undefined;
   const monitor = new ActiveFrameMonitor();
   let renderCount = 0;
   let changingUntil = 0;
@@ -209,8 +193,11 @@ export async function createCourtScene(
   let nativeSamples = 0;
   let resolutionQuery: MediaQueryList | undefined;
   let paint: THREE.ShaderMaterial | undefined;
-  let selection: THREE.Group | undefined;
-  let madeMarker: THREE.Group | undefined;
+  let regionHint:
+    THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial> | undefined;
+  let selection: ReturnType<typeof createShotMarker> | undefined;
+  let madeMarker: ReturnType<typeof createShotMarker> | undefined;
+  let flightBallGlow: ReturnType<typeof createFlightBallGlow> | undefined;
   let ball: THREE.Group | undefined;
   let idleBall: THREE.Group | undefined;
   const ballMeshes: THREE.Mesh<
@@ -439,7 +426,11 @@ export async function createCourtScene(
     quality = nextQuality;
     courtFloor?.setQuality(quality);
     if (bloom) bloom.enabled = quality === 'full';
-    if (trail) trail.visible = quality === 'full';
+    trail?.setQuality(quality);
+    preparationTrail?.setQuality(quality);
+    selection?.setQuality(quality);
+    madeMarker?.setQuality(quality);
+    flightBallGlow?.setQuality(quality);
     if (glass) glass.enabled = quality === 'full' && !glass.failed;
     if (quality !== 'full') setGlassMode('css');
     canvas.dataset.quality = quality;
@@ -449,6 +440,24 @@ export async function createCourtScene(
 
   function drawFrame() {
     if (!renderer || !composer) return;
+    const density = renderer.getPixelRatio();
+    canvas.dataset.shotTrail = trail?.visible ? 'visible' : 'hidden';
+    canvas.dataset.shotHalo = quality;
+    canvas.dataset.shotCorePixels = String(SHOT_VISUALS.trailCorePixels);
+    canvas.dataset.shotHead = String(
+      trail?.core.material.uniforms.uHead!.value ?? 0,
+    );
+    canvas.dataset.shotTail = String(
+      trail?.core.material.uniforms.uTail!.value ?? 0,
+    );
+    const hint = currentRegionHint();
+    if (regionHint) {
+      regionHint.visible = hint.regionId > 0;
+      regionHint.material.uniforms.uRegion!.value = hint.regionId;
+      regionHint.material.uniforms.uLightOpacity!.value = hint.lightOpacity;
+    }
+    canvas.dataset.scoringRegion = hint.regionId > 0 ? scoringRegion! : 'none';
+    canvas.dataset.regionPulsing = String(hint.pulsing);
     for (const mesh of ballMeshes) {
       if (!mesh.parent?.visible) continue;
       const distance = camera.position.distanceTo(mesh.parent.position);
@@ -469,6 +478,15 @@ export async function createCourtScene(
         if (mesh.castShadow) renderer.shadowMap.needsUpdate = true;
       }
     }
+    // Reuse the selected sphere LOD for the outline in this same frame.
+    for (const effect of [
+      selection,
+      madeMarker,
+      flightBallGlow,
+      trail,
+      preparationTrail,
+    ])
+      effect?.updateView(camera, viewportWidth, viewportHeight, density);
     const drifting = shouldAnimateAmbient({ ...frame, paused, motionEnabled });
     const offset = ambient.sample(performance.now(), drifting);
     if (drifting)
@@ -514,6 +532,17 @@ export async function createCourtScene(
     options.onGlassChange?.(mode);
   }
 
+  function currentRegionHint() {
+    return regionHintPresentation({
+      region: scoringRegion,
+      pulse: scoringRegionPulse,
+      motionEnabled,
+      paused,
+      reading: frame.active && isOverheadReadingFrame(frame),
+      elapsed: performance.now() / 1000,
+    });
+  }
+
   function render(now: number) {
     animationFrame = 0;
     if (disposed || paused || !ready || !renderer || !composer) return;
@@ -540,6 +569,7 @@ export async function createCourtScene(
     const moving =
       intro.progress < 1 ||
       Boolean(introduction?.isActive() || (flight && !flight.paused())) ||
+      currentRegionHint().pulsing ||
       now < changingUntil;
     const continuous = shouldRenderContinuously({
       ...frame,
@@ -811,6 +841,26 @@ export async function createCourtScene(
     const lines = add(new THREE.Mesh(courtFloor.paintGeometry, paint));
     lines.rotation.x = -Math.PI / 2;
     lines.position.y = 0.012;
+    regionHint = add(
+      new THREE.Mesh(
+        own(new THREE.PlaneGeometry(WIDTH, LENGTH)),
+        own(
+          new THREE.ShaderMaterial({
+            uniforms: { uRegion: { value: 0 }, uLightOpacity: { value: 0.08 } },
+            vertexShader: courtVertex,
+            fragmentShader: courtRegionFragment,
+            transparent: true,
+            depthWrite: false,
+            toneMapped: true,
+          }),
+        ),
+      ),
+    );
+    regionHint.rotation.x = -Math.PI / 2;
+    regionHint.position.y = 0.014;
+    // Compile this material alongside the court; uRegion=0 discards its pixels.
+    // drawFrame hides the mesh as soon as preparation starts drawing.
+    regionHint.visible = true;
     const keyWash = add(
       new THREE.Mesh(
         own(new THREE.PlaneGeometry(4.9, 5.8)),
@@ -917,30 +967,44 @@ export async function createCourtScene(
     ].map(([width, height]) =>
       own(new THREE.SphereGeometry(0.12, width, height)),
     );
-    const createBall = () => {
+    // The flight has its own material: feedback must stay visible without
+    // changing the idle macro ball's physical lighting or leather channels.
+    const compileLeather = ballSurface.onBeforeCompile.bind(ballSurface);
+    const flightBallSurface = own(ballSurface.clone());
+    flightBallSurface.customProgramCacheKey = () => 'hoopito-flight-leather-v1';
+    flightBallSurface.onBeforeCompile = (shader, webgl) => {
+      compileLeather(shader, webgl);
+      shader.fragmentShader = shader.fragmentShader.replace(
+        '#include <emissivemap_fragment>',
+        '#include <emissivemap_fragment>\ntotalEmissiveRadiance = diffuseColor.rgb * 0.82;',
+      );
+    };
+    const createBall = (surface: THREE.MeshStandardMaterial) => {
       const group = add(new THREE.Group());
-      const body = add(new THREE.Mesh(ballGeometries[0]!, ballSurface), group);
+      const body = add(new THREE.Mesh(ballGeometries[0]!, surface), group);
       ballMeshes.push(body);
       body.castShadow = true;
       body.receiveShadow = true;
       return group;
     };
-    idleBall = createBall();
+    idleBall = createBall(ballSurface);
     // Fill the macro foreground depth first instead of shading wood behind it.
     idleBall.renderOrder = -1;
     idleBall.position.set(2.6, 0.123, 4.1);
     idleBall.rotation.set(0.22, -0.38, 0.14);
-    ball = createBall();
+    ball = createBall(flightBallSurface);
+    flightBallGlow = own(createFlightBallGlow(ballMeshes[1]!));
+    add(flightBallGlow, ball);
     ball.visible = false;
     // Its moving projection is decorative; the hardware shadow stays cached throughout a shot.
     ball.traverse((object) => {
       if (object instanceof THREE.Mesh) object.castShadow = false;
     });
 
-    selection = createMarker('#FF5A1F', own);
+    selection = own(createShotMarker('#FF5A1F'));
     add(selection);
     selection.visible = false;
-    madeMarker = createMarker('#65A2FF', own);
+    madeMarker = own(createShotMarker('#65A2FF'));
     add(madeMarker);
     madeMarker.visible = false;
 
@@ -1057,13 +1121,15 @@ export async function createCourtScene(
         throw new DOMException('Scene aborted', 'AbortError');
     };
     // Compile upfront before main reveals the canvas; no frame-blocking asset fetch.
-    const preparationTrail = add(createShotTrail({ x: 0.72, y: 0.65 }));
-    own(preparationTrail.geometry);
-    own(preparationTrail.material);
-    preparationTrail.material.uniforms.uOpacity!.value = 0;
-    preparationTrail.frustumCulled = false;
+    preparationTrail = own(add(createShotTrail({ x: 0.72, y: 0.65 })));
+    preparationTrail.setQuality(quality);
+    preparationTrail.setTime(0.9, 0);
+    // Keep its zero-alpha core/halo in the compile traversal.
+    preparationTrail.visible = true;
     const previousTarget = renderer.getRenderTarget();
     try {
+      // Hidden feedback still needs its direct/composer shader variants ready.
+      ball.visible = selection.visible = madeMarker.visible = true;
       // Warm both opaque and partially cutaway finishes before the first
       // scroll. Fully hidden meshes would skip their alpha shader variants.
       for (const cutaway of [0, 0.5]) {
@@ -1085,6 +1151,7 @@ export async function createCourtScene(
       }
       canvas.dataset.cutawayPrepared = 'true';
     } finally {
+      ball.visible = selection.visible = madeMarker.visible = false;
       if (!disposed) {
         renderer.setRenderTarget(previousTarget);
         updateCamera();
@@ -1163,9 +1230,7 @@ export async function createCourtScene(
             updateCamera();
             const shotProbe = probeFrame.chapter === 'download';
             hardware?.setNetImpact(shotProbe ? 0.8 : 0);
-            preparationTrail.visible = shotProbe && candidate === 'full';
-            preparationTrail.material.uniforms.uHead!.value = 0.9;
-            preparationTrail.material.uniforms.uOpacity!.value = 0.7;
+            preparationTrail.setTime(1.08, shotProbe ? 0.7 : 0);
             if (ball) {
               ball.visible = shotProbe;
               ball.position.fromArray(
@@ -1239,13 +1304,8 @@ export async function createCourtScene(
       monitor.qualityCeiling = quality;
       monitor.reset();
     }
-    scene.remove(preparationTrail);
-    for (const resource of [
-      preparationTrail.geometry,
-      preparationTrail.material,
-    ]) {
-      if (disposables.delete(resource)) resource.dispose();
-    }
+    if (disposables.delete(preparationTrail)) preparationTrail.dispose();
+    preparationTrail = undefined;
     // Warm the selected material branch before the matching poster is removed.
     if (!disposed && !failed) drawFrame();
     if (disposed || failed || options.signal.aborted)
@@ -1277,10 +1337,10 @@ export async function createCourtScene(
 
   function removeTrail() {
     if (!trail) return;
-    scene.remove(trail);
-    trail.geometry.dispose();
-    trail.material.dispose();
+    if (disposables.delete(trail)) trail.dispose();
     trail = undefined;
+    canvas.dataset.shotTrail = 'hidden';
+    canvas.dataset.shotHead = canvas.dataset.shotTail = '0';
   }
 
   function reset() {
@@ -1442,6 +1502,16 @@ export async function createCourtScene(
       if (point) selection.position.copy(worldPoint(point));
       requestRender();
     },
+    setScoringRegion(region, pulse) {
+      if (
+        disposed ||
+        (scoringRegion === region && scoringRegionPulse === pulse)
+      )
+        return;
+      scoringRegion = region;
+      scoringRegionPulse = pulse;
+      requestRender();
+    },
     setMadePoint(point) {
       if (disposed) return;
       if (!shotContinuation.restore(point)) reset();
@@ -1463,8 +1533,8 @@ export async function createCourtScene(
         requestRender();
         return;
       }
-      trail = add(createShotTrail(point));
-      trail.visible = quality === 'full';
+      trail = own(add(createShotTrail(point)));
+      trail.setQuality(quality);
       const flyingBall = ball;
       const marker = madeMarker;
       const flightTrail = trail;
@@ -1489,8 +1559,7 @@ export async function createCourtScene(
           movingShadow.material.uniforms.uOpacity!.value = pose.shadow.opacity;
         }
         if (trail === flightTrail) {
-          flightTrail.material.uniforms.uHead!.value = pose.trailProgress;
-          flightTrail.material.uniforms.uOpacity!.value = pose.trailOpacity;
+          flightTrail.setTime(motion.elapsed, pose.trailOpacity);
           if (pose.recorded) removeTrail();
         }
         if (pose.recorded && !marker.visible) {
@@ -1633,41 +1702,4 @@ function makeLeatherTexture() {
     context.fill();
   }
   return new THREE.CanvasTexture(canvas);
-}
-
-function createMarker(
-  color: string,
-  own: <T extends { dispose(): void }>(resource: T) => T,
-) {
-  const group = new THREE.Group();
-  const surface = own(
-    new THREE.MeshBasicMaterial({
-      color,
-      transparent: true,
-      opacity: 0.95,
-      depthWrite: false,
-      toneMapped: true,
-    }),
-  );
-  const ring = new THREE.Mesh(
-    own(new THREE.RingGeometry(0.32, 0.36, 48)),
-    surface,
-  );
-  ring.rotation.x = -Math.PI / 2;
-  group.add(ring);
-  const dot = new THREE.Mesh(own(new THREE.CircleGeometry(0.06, 20)), surface);
-  dot.rotation.x = -Math.PI / 2;
-  dot.position.y = 0.002;
-  group.add(dot);
-  for (let index = 0; index < 4; index += 1) {
-    const tick = new THREE.Mesh(
-      own(new THREE.BoxGeometry(0.05, 0.012, 0.16)),
-      surface,
-    );
-    const angle = (index * Math.PI) / 2;
-    tick.position.set(Math.sin(angle) * 0.47, 0.004, Math.cos(angle) * 0.47);
-    tick.rotation.y = angle;
-    group.add(tick);
-  }
-  return group;
 }

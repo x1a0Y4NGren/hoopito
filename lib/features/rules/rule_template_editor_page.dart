@@ -4,6 +4,7 @@ import 'package:hoopito/app/l10n/app_localizations.dart';
 import 'package:hoopito/app/l10n/app_localizations_zh.dart';
 import 'package:hoopito/core/data/repositories/rule_template_repository.dart';
 import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/features/rules/widgets/scoring_convention_settings.dart';
 
 class RuleTemplateEditorPage extends StatefulWidget {
   const RuleTemplateEditorPage({
@@ -29,11 +30,15 @@ class _RuleTemplateEditorPageState extends State<RuleTemplateEditorPage> {
   late final TextEditingController _eventTypes;
   late bool _possessionHint;
   late PossessionPolicy _possessionPolicy;
+  ScoringConvention? _scoringConvention;
 
   @override
   void initState() {
     super.initState();
     final template = widget.template;
+    _scoringConvention = template == null
+        ? ScoringConvention.standard
+        : template.scoringConvention;
     _name = TextEditingController(text: template?.name ?? '');
     _target = TextEditingController(
       text: template?.targetScore?.toString() ?? '',
@@ -130,14 +135,23 @@ class _RuleTemplateEditorPageState extends State<RuleTemplateEditorPage> {
                 numeric: true,
               ),
               const SizedBox(height: 12),
-              _FormSectionHeading(label: l10n.ruleScoreButtonsLabel),
+              _FormSectionHeading(label: l10n.scoringMethodLabel),
               const SizedBox(height: 16),
-              _field(
-                key: const Key('rule-score-buttons'),
-                controller: _scoreButtons,
-                label: l10n.ruleScoreButtonsLabel,
-                validator: _validateScoreButtons,
+              ScoringConventionSettings(
+                keyPrefix: 'rule',
+                convention: _scoringConvention,
+                allowLegacy: true,
+                onChanged: (value) =>
+                    setState(() => _scoringConvention = value),
               ),
+              const SizedBox(height: 12),
+              if (_scoringConvention == null)
+                _field(
+                  key: const Key('rule-score-buttons'),
+                  controller: _scoreButtons,
+                  label: l10n.ruleScoreButtonsLabel,
+                  validator: _validateScoreButtons,
+                ),
               _field(
                 key: const Key('rule-event-types'),
                 controller: _eventTypes,
@@ -265,8 +279,10 @@ class _RuleTemplateEditorPageState extends State<RuleTemplateEditorPage> {
       RuleTemplate(
         id: current?.id ?? 'custom-${DateTime.now().microsecondsSinceEpoch}',
         name: _name.text.trim(),
-        scoreButtons: _parseNumbers(_scoreButtons.text).toSet().toList()
-          ..sort(),
+        scoringConvention: _scoringConvention,
+        scoreButtons:
+            _scoringConvention?.scoreButtons ??
+            (_parseNumbers(_scoreButtons.text).toSet().toList()..sort()),
         targetScore: _optionalInt(_target.text),
         timeLimitSeconds: _optionalInt(_timeLimit.text) == null
             ? null

@@ -77,6 +77,8 @@ async function expectRailProportions(page: Page) {
         center: bounds(el).x + bounds(el).width / 2,
         width: bounds(el).width,
         height: bounds(el).height,
+        layoutWidth: parseFloat(getComputedStyle(el).width),
+        layoutHeight: parseFloat(getComputedStyle(el).height),
         dotWidth: parseFloat(getComputedStyle(el, '::before').width),
         dotHeight: parseFloat(getComputedStyle(el, '::before').height),
       })),
@@ -112,8 +114,11 @@ async function expectRailProportions(page: Page) {
   for (const node of geometry.nodes) {
     expect(node.dotWidth).toBe(7);
     expect(node.dotHeight).toBe(7);
-    expect(node.width).toBeGreaterThanOrEqual(48);
-    expect(node.height).toBeGreaterThanOrEqual(48);
+    expect(node.layoutWidth).toBeGreaterThanOrEqual(48);
+    expect(node.layoutHeight).toBeGreaterThanOrEqual(48);
+    // Fractional translations can introduce floating-point error into DOMRect.
+    expect(Math.round(node.width * 1000) / 1000).toBeGreaterThanOrEqual(48);
+    expect(Math.round(node.height * 1000) / 1000).toBeGreaterThanOrEqual(48);
     expect(Math.abs(node.center - geometry.trackCenter)).toBeLessThanOrEqual(
       0.1,
     );
@@ -196,12 +201,7 @@ for (const path of ['/', '/en/']) {
         .querySelector('.chapter-rail-symbol')!
         .getBoundingClientRect();
       return {
-        nodes: nodes.map((r) => ({
-          x: r.x,
-          y: r.y,
-          width: r.width,
-          height: r.height,
-        })),
+        nodes: nodes.map((r) => ({ x: r.x, y: r.y })),
         symbol: symbol.width,
         overflow: document.documentElement.scrollWidth - innerWidth,
         scrollbar: getComputedStyle(document.documentElement).scrollbarWidth,
@@ -212,8 +212,6 @@ for (const path of ['/', '/en/']) {
     expect(geometry.scrollbar).toBe('none');
     await expectRailProportions(page);
     for (const [i, node] of geometry.nodes.entries()) {
-      expect(node.width).toBeGreaterThanOrEqual(48);
-      expect(node.height).toBeGreaterThanOrEqual(48);
       if (i)
         expect(node.y - geometry.nodes[i - 1].y).toBeGreaterThanOrEqual(47.99);
     }
@@ -495,8 +493,6 @@ for (const layout of [
         );
         expect(geometry.rail.bottom).toBeLessThanOrEqual(layout.height - 23);
         geometry.nodes.forEach((node, i) => {
-          expect(node.width).toBeGreaterThanOrEqual(48);
-          expect(node.height).toBeGreaterThanOrEqual(48);
           if (i)
             expect(node.y - geometry.nodes[i - 1].y).toBeGreaterThanOrEqual(
               47.99,

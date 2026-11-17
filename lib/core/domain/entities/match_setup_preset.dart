@@ -63,6 +63,7 @@ class MatchSetupPreset {
         possessionHintEnabled: sourceRules.possessionHintEnabled,
         possessionPolicy: sourceRules.possessionPolicy,
         customEventTypes: List.unmodifiable(sourceRules.customEventTypes),
+        scoringConvention: sourceRules.scoringConvention,
       ),
       timerEnabled: timerEnabled,
       clockMode: clockMode,

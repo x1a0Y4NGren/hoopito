@@ -14,6 +14,7 @@ import 'package:hoopito/core/domain/entities/match_event.dart';
 import 'package:hoopito/core/domain/entities/possession_segment.dart'
     as domain_possession;
 import 'package:hoopito/core/domain/entities/rule_template.dart';
+import 'package:hoopito/core/domain/rules/shot_scoring_policy.dart';
 import 'package:hoopito/core/domain/clock/clock_engine.dart';
 import 'package:hoopito/core/domain/entities/clock_state.dart';
 import 'package:hoopito/core/domain/entities/shot_location.dart' as domain;
@@ -1158,6 +1159,17 @@ class MatchCommandService {
         await _requireActiveMatch(command);
         await _guardInputClock(command);
         _validateRecord(command);
+        await _validateScoringRegion(
+          command,
+          type: command.type,
+          points: command.points,
+          point: command.shotLocation == null
+              ? null
+              : CourtPoint(
+                  x: command.shotLocation!.x,
+                  y: command.shotLocation!.y,
+                ),
+        );
         final existing = await _eventRow(command.eventId);
         if (existing != null) {
           throw CommandValidationFailure(
@@ -1244,6 +1256,12 @@ class MatchCommandService {
           );
         }
         final latestScoringEvent = await _latestScoringEvent(command.matchId);
+        await _validateScoringRegion(
+          command,
+          type: EventKind.values.byName(event.type),
+          points: event.points,
+          point: command.point,
+        );
         if (latestScoringEvent?.id != event.id) {
           throw CommandValidationFailure(
             command: command,
@@ -4212,6 +4230,34 @@ class MatchCommandService {
     }
   }
 
+  Future<void> _validateScoringRegion(
+    MatchCommand command, {
+    required EventKind type,
+    required int points,
+    CourtPoint? point,
+  }) async {
+    final match = await _matchRow(command.matchId);
+    if (match == null) return; // The active-match guard owns this failure.
+    final rules = _ruleTemplateFromMap(_decodeObject(match.ruleTemplateJson));
+    if (rules.scoringConvention == null) return;
+    final policy = ShotScoringPolicy(rules);
+    final valid = switch (type) {
+      EventKind.fieldGoal ||
+      EventKind.score ||
+      EventKind.miss => policy.allowsFieldGoal(points, point),
+      EventKind.freeThrow => points == 0 || points == 1,
+      _ => true,
+    };
+    if (!valid) {
+      throw CommandValidationFailure(
+        command: command,
+        message:
+            'The shot value or location does not match this match’s scoring rules.',
+        projectionMatchId: command.matchId,
+      );
+    }
+  }
+
   static void _validateRecord(RecordMatchEventCommand command) {
     if (command.points < 0) {
       throw CommandValidationFailure(
@@ -4668,6 +4714,9 @@ RuleTemplate _ruleTemplateFromMap(Map<String, Object?> json) {
   return RuleTemplate(
     id: json['id'] as String,
     name: json['name'] as String,
+    scoringConvention: json['scoringConvention'] == null
+        ? null
+        : ScoringConvention.values.byName(json['scoringConvention'] as String),
     scoreButtons: ((json['scoreButtons'] as List<Object?>?) ?? const [])
         .map((value) => (value as num).toInt())
         .toList(growable: false),
@@ -4708,6 +4757,8 @@ Map<String, Object?> _ruleTemplateJson(RuleTemplate template) =>
       'id': template.id,
       'name': template.name,
       'scoreButtons': template.scoreButtons,
+      if (template.scoringConvention != null)
+        'scoringConvention': template.scoringConvention!.name,
       'targetScore': template.targetScore,
       'timeLimitSeconds': template.timeLimitSeconds,
       'winByTwo': template.winByTwo,
@@ -4722,6 +4773,7 @@ RuleTemplate _copyRuleTemplate(RuleTemplate template) {
     id: template.id,
     name: template.name,
     scoreButtons: List.unmodifiable(template.scoreButtons),
+    scoringConvention: template.scoringConvention,
     targetScore: template.targetScore,
     timeLimitSeconds: template.timeLimitSeconds,
     winByTwo: template.winByTwo,

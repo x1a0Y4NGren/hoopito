@@ -12,6 +12,7 @@ import 'package:hoopito/core/data/commands/match_command_service.dart';
 import 'package:hoopito/core/domain/domain_enums.dart';
 import 'package:hoopito/core/domain/rules/rule_engine.dart';
 import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/court_geometry.dart';
 import 'package:hoopito/core/domain/value_objects/team_side.dart';
 import 'package:hoopito/core/settings/scoring_feedback.dart';
 import 'package:hoopito/features/pregame/pregame_controller.dart';
@@ -190,6 +191,9 @@ class _ScoringPageState extends State<ScoringPage>
   bool _pausedPanelScheduled = false;
   Timer? _clockTicker;
   Timer? _supplementTicker;
+  Timer? _freeThrowConfirmationTimer;
+  bool _freeThrowConfirmation = false;
+  bool _appResumed = true;
   final GlobalKey _motionWorkspaceKey = GlobalKey();
   final GlobalKey _courtGeometryKey = GlobalKey();
   late final Map<TeamSide, Map<int, GlobalKey>> _scoreButtonKeys = {
@@ -335,6 +339,7 @@ class _ScoringPageState extends State<ScoringPage>
     _foulStampTimer?.cancel();
     _clockTicker?.cancel();
     _supplementTicker?.cancel();
+    _freeThrowConfirmationTimer?.cancel();
     _detachController();
     super.dispose();
   }
@@ -437,7 +442,12 @@ class _ScoringPageState extends State<ScoringPage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed) _cancelAllMotions();
+    _appResumed = state == AppLifecycleState.resumed;
+    if (!_appResumed) {
+      _cancelAllMotions();
+    } else if (mounted && !_disposed) {
+      setState(() {});
+    }
   }
 
   void _cancelAllMotions({bool invalidateActions = true}) {
@@ -456,6 +466,8 @@ class _ScoringPageState extends State<ScoringPage>
     _foulStampTimer?.cancel();
     _foulStampTimer = null;
     _foulStampSide = null;
+    _freeThrowConfirmationTimer?.cancel();
+    _freeThrowConfirmation = false;
     _disposeErasers();
     if (mounted && !_disposed) setState(() {});
   }
@@ -833,6 +845,11 @@ class _ScoringPageState extends State<ScoringPage>
 
   Widget _buildCourt(BuildContext context, MatchScoringState state) {
     final window = state.locationSupplementWindow;
+    final region = widget.practice?.step == PracticeStep.courtPoint
+        ? CourtRegion.insideArc
+        : window != null && state.ruleTemplate.scoringConvention != null
+        ? _controller.scoringPolicy.regionForPoints(window.points)
+        : null;
     final remaining = _remainingSeconds(window);
     final prompt = state.courtFirstShotDraft != null
         ? _labels(context).chooseScoringSide
@@ -869,13 +886,43 @@ class _ScoringPageState extends State<ScoringPage>
       eraserMarkers: _eraserMarkers.values
           .where((marker) => !marker.isMiss || _showsMissLocations(marker.side))
           .toList(growable: false),
-      locationPrompt: prompt,
+      locationPrompt: _freeThrowConfirmation
+          ? _localizations(context).scoringFreeThrowAutoLocation
+          : region == null || prompt == null
+          ? prompt
+          : '$prompt\n${_regionHint(region)}',
+      activeRegion: _interactionPaused || !_appResumed ? null : region,
+      mode: _interactionPaused || !_appResumed
+          ? CourtViewMode.readOnly
+          : CourtViewMode.editable,
+      reduceMotion:
+          MediaQuery.of(context).disableAnimations ||
+          MediaQuery.of(context).accessibleNavigation ||
+          _motionMode != ScoringMotionMode.standard,
+      highlightFreeThrowLine: _freeThrowConfirmation,
+      freeThrowMarkers: [
+        for (final event in state.events)
+          if (!event.isDeleted &&
+              event.type == EventKind.freeThrow &&
+              event.side != null)
+            FreeThrowCourtMarker(
+              eventId: event.id,
+              side: event.side!,
+              isMiss: event.outcome == ShotOutcome.missed,
+            ),
+      ],
       onPendingLocationChanged: (point) {
         if (widget.practice == null) {
           _controller.updatePendingLocation(point);
         }
       },
       onCourtPointTap: _handleCourtPoint,
+      onCourtSelectionTap: (selection) => _handleCourtPoint(
+        selection.point,
+        freeThrowEligible: selection.freeThrowEligible,
+      ),
+      onInvalidCourtPoint: (_) =>
+          _showActionRejected(_regionHint(region ?? CourtRegion.all)),
     );
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -998,7 +1045,11 @@ class _ScoringPageState extends State<ScoringPage>
       teamLabel: _labels(context).sideName(side),
       score: isBlue ? state.score.blueScore : state.score.redScore,
       fouls: isBlue ? state.blueFouls : state.redFouls,
-      scoreButtons: const [1, 2, 3],
+      scoreButtons: _controller.scoringPolicy.scoreButtons,
+      enabledScorePoints: _controller.enabledScorePoints,
+      scoreButtonLabels: _controller.scoringPolicy.isStandard
+          ? {1: _localizations(context).scoringFreeThrowButton}
+          : const {},
       practiceHighlightPoints:
           (isBlue && widget.practice?.step == PracticeStep.scoreBlueTwo) ||
               (!isBlue && widget.practice?.step == PracticeStep.scoreRedTwo)
@@ -1261,22 +1312,48 @@ class _ScoringPageState extends State<ScoringPage>
     }
   }
 
-  void _handleCourtPoint(CourtPoint point) {
+  String _regionHint(CourtRegion region) {
+    final l10n = _localizations(context);
+    return switch (region) {
+      CourtRegion.insideArc => l10n.courtRegionInsideHint,
+      CourtRegion.outsideArc => l10n.courtRegionOutsideHint,
+      CourtRegion.freeThrowLine => l10n.courtRegionFreeThrowHint,
+      CourtRegion.all => l10n.courtRegionAllHint,
+    };
+  }
+
+  void _handleCourtPoint(CourtPoint point, {bool freeThrowEligible = false}) {
     if (widget.practice != null) {
+      if (!CourtGeometry.contains(CourtRegion.insideArc, point)) {
+        _showActionRejected(_regionHint(CourtRegion.insideArc));
+        return;
+      }
       if (!_practiceAllows(PracticeStep.courtPoint)) return;
       _practiceConsumedStep = PracticeStep.courtPoint;
     }
     final draft = _controller.courtFirstShotDraft;
     if (draft != null) {
-      _controller.updateCourtFirstShot(point: point);
+      _controller.updateCourtFirstShot(
+        point: point,
+        freeThrowEligible: freeThrowEligible,
+      );
       return;
     }
     final window = _controller.locationSupplementWindow;
     if (window != null) {
+      if (!_controller.scoringPolicy.allowsFieldGoal(window.points, point)) {
+        _showActionRejected(
+          _regionHint(_controller.scoringPolicy.regionForPoints(window.points)),
+        );
+        return;
+      }
       unawaited(_attachSupplement(point));
       return;
     }
-    if (!_controller.beginOrMoveCourtFirstShot(point)) {
+    if (!_controller.beginOrMoveCourtFirstShot(
+      point,
+      freeThrowEligible: freeThrowEligible,
+    )) {
       _showActionRejected(_labels(context).actionRejected);
     }
   }
@@ -1380,6 +1457,31 @@ class _ScoringPageState extends State<ScoringPage>
     final labels = _labels(context);
     final l10n = _localizations(context);
     final draft = _controller.courtFirstShotDraft;
+    if (!_controller.enabledScorePoints.contains(points)) {
+      _showActionRejected(labels.actionRejected);
+      return;
+    }
+    if (_controller.scoringPolicy.isStandard && points == 1) {
+      final generation = _actionGeneration;
+      final controller = _controller;
+      try {
+        final accepted = draft == null
+            ? await controller.recordFreeThrowCommitted(side: side, made: true)
+            : await controller.commitCourtFirstFreeThrow(side: side);
+        if (!_isCurrentAction(generation, controller)) return;
+        if (accepted) {
+          _confirmFreeThrow();
+          _notifyCommitted();
+        } else {
+          _showActionRejected(labels.actionRejected);
+        }
+      } on MatchCommandFailure catch (failure) {
+        if (_isCurrentAction(generation, controller)) {
+          _showCommandFailure(failure);
+        }
+      }
+      return;
+    }
     if (draft != null) {
       final generation = _actionGeneration;
       final controller = _controller;
@@ -1490,7 +1592,10 @@ class _ScoringPageState extends State<ScoringPage>
         made: made,
       );
       if (!_isCurrentAction(generation, controller)) return false;
-      if (accepted) _notifyCommitted();
+      if (accepted) {
+        _confirmFreeThrow();
+        _notifyCommitted();
+      }
       return accepted;
     } on MatchCommandFailure catch (failure) {
       if (!_isCurrentAction(generation, controller)) return false;
@@ -2979,6 +3084,14 @@ class _ScoringPageState extends State<ScoringPage>
     if (callback != null) unawaited(Future<void>.sync(callback));
   }
 
+  void _confirmFreeThrow() {
+    _freeThrowConfirmationTimer?.cancel();
+    setState(() => _freeThrowConfirmation = true);
+    _freeThrowConfirmationTimer = Timer(const Duration(milliseconds: 800), () {
+      if (mounted && !_disposed) setState(() => _freeThrowConfirmation = false);
+    });
+  }
+
   AppLocalizations _localizations(BuildContext context) =>
       AppLocalizations.of(context) ?? AppLocalizationsZh();
 
@@ -3059,7 +3172,13 @@ class _ScoringPageState extends State<ScoringPage>
       final result = await controller.retryCommandWithReceipt(failure);
       if (!_isCurrentAction(generation, controller)) return false;
       if (result.accepted) {
-        if (failure.command is! PauseMatchCommand &&
+        final command = failure.command;
+        final isFreeThrow =
+            command is RecordMatchEventCommand &&
+            command.type == EventKind.freeThrow;
+        if (isFreeThrow) _confirmFreeThrow();
+        if (!isFreeThrow &&
+            failure.command is! PauseMatchCommand &&
             failure.command is! ResumeMatchCommand &&
             controller.courtFirstShotDraft != null) {
           controller.cancelCourtFirstShot();

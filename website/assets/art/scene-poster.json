@@ -1,18 +1,18 @@
 {
   "version": 3,
   "source_hash_encoding": "utf8-lf",
-  "captured_at": "2026-11-04T15:06:29.488Z",
+  "captured_at": "2026-11-16T15:12:50.252Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "capture_method": "The actual production page scene observed at its dynamic factory export; no second renderer or authored capture pose.",
-  "browser": "156.0.8078.81",
+  "browser": "157.0.8103.40",
   "compiled_scene": {
-    "path": "_astro/court-scene.C2OTFz9U.js",
-    "sha256": "5be370e8a131a7c8705fa638822bc3dcd5eed2a7d2366ebb9239cf5b4d6e9203"
+    "path": "_astro/court-scene.CtdjJpbp.js",
+    "sha256": "034fa9bad51af0954a4c3d370be25b0422b3e722a2205e002a5b0f0acea43a37"
   },
   "source_inputs": [
     {
       "path": "src/scripts/main.ts",
-      "sha256": "a461255198e3d723b3f0f19b2eca157faeebfd5c216c06c25f5d929deb2451db"
+      "sha256": "f088101692e1815a30ddfb116f250ee5afc188a4160c9516edfa58483c2b3934"
     },
     {
       "path": "src/scripts/animation-clock.ts",
@@ -52,7 +52,7 @@
     },
     {
       "path": "src/data/demo-court-art.ts",
-      "sha256": "3be929ab2e405f2cf3c833c470e7c7fb442d4535da0824cb41d271babb436f85"
+      "sha256": "67a5e238fa16706a2fc645ea7aa61d5c9e6056ab0b4baaadeedc3c10f7586581"
     },
     {
       "path": "src/scripts/mobile-presentation.ts",
@@ -64,11 +64,11 @@
     },
     {
       "path": "src/scripts/court-scene.ts",
-      "sha256": "609364836bd9cb1839daddf75ea789133d5179140257d7fbdd9421274fab8a84"
+      "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
     },
     {
       "path": "src/scripts/camera-placement.ts",
-      "sha256": "a74beccef5ce41bdec4cf899309734a1c32f9d6745a739c7cbd9863ef270ff65"
+      "sha256": "6aa5b27198050bf7b1000937efd9eac43a126c42f5e5c4a02baca9e714e8ee74"
     },
     {
       "path": "src/scripts/camera-track.ts",
@@ -80,7 +80,19 @@
     },
     {
       "path": "src/scripts/shot-motion.ts",
-      "sha256": "492182d31239854e114e4caa972afe4cc1308ab13b7fba15bdfa2e01bd86dba4"
+      "sha256": "e05fd13010e5ae403773bfdea17a49dc9aca2bd6e0a0ee37e679f2d06255ddc2"
+    },
+    {
+      "path": "src/scripts/shot-visuals.ts",
+      "sha256": "35d777a432cd2a6ea42ec57e93b3a920b0de4cb9333c22d5a2dfe78e4e4a071d"
+    },
+    {
+      "path": "src/scripts/shot-glow.ts",
+      "sha256": "1b68bb118473c50fae870dddfcfb21bf0bc49222a4453018d6631ff68028118e"
+    },
+    {
+      "path": "src/scripts/shot-feedback.ts",
+      "sha256": "060281a7c57af6b5d5d8dfbb3961a6b551b59fda13dce2fc05a62bd65a03c625"
     },
     {
       "path": "scripts/material-data.mjs",
@@ -100,7 +112,11 @@
     },
     {
       "path": "src/scripts/demo-invitation.ts",
-      "sha256": "ed5817698af6ceec6536618c9e534fd08a60500baa56cf9219c26466d1d26d97"
+      "sha256": "d4b4ddfe7f497a0e716834ed0a1268f9a94ca1aeda76f0a1d274c4f83a3e4196"
+    },
+    {
+      "path": "src/scripts/arrow-drawing.ts",
+      "sha256": "a45ea4139b4e0c39295880155a48f96a70b402e06205982068a460e853c63d17"
     },
     {
       "path": "src/scripts/court-hardware.ts",
@@ -116,11 +132,11 @@
     },
     {
       "path": "src/scripts/scene-contract.ts",
-      "sha256": "e31e772168be4fc13a958f7edd6b000e8bcf605e6eb813196c6bc6468a7e4250"
+      "sha256": "e6d80a274277fc1465b686afde0b5a658f6b2334d8bc4fa38298d27620e1a46d"
     },
     {
       "path": "src/scripts/shot-timing.ts",
-      "sha256": "1cb037405f44ac90745cf5724e53adc90531cde9b4d78b29845cc9bfe286fd38"
+      "sha256": "cad59ccec5e55a47b6d2ad15ebe15bd223465404c87ed939ed1fa110ceba9d6d"
     },
     {
       "path": "src/scripts/scene-performance.ts",
@@ -164,7 +180,15 @@
     },
     {
       "path": "src/scripts/shaders/court.ts",
-      "sha256": "12e3c18b74fc6f47b21fa75e2defe0c5e162b5693628b1bb5f8f80444e278429"
+      "sha256": "44c034ffe4c69bb4cdcf7da55dafc9b4479b876310cd3d6575d9b97bf3594c1f"
+    },
+    {
+      "path": "src/scripts/court-geometry.ts",
+      "sha256": "444f185e5563435fb04fce97f6612a15fbde04a12e7c497a2b9c2d1d83714841"
+    },
+    {
+      "path": "src/scripts/demo-state.ts",
+      "sha256": "719c7060fd957ad0209e3827288f8a16f4517d3ffa67056142af638b9aa1bf6a"
     },
     {
       "path": "src/styles/site.css",
@@ -176,11 +200,11 @@
     },
     {
       "path": "src/styles/demo-invitation.css",
-      "sha256": "517abe8a135b88bf88ce1976520dd97740d96775dd0c1342171011ad701a4a94"
+      "sha256": "f29ae80eda93a8754fad52b8002131adf23a307f4246f1af54f4f97a070e9686"
     },
     {
       "path": "src/styles/poster-layout.css",
-      "sha256": "98c8f86e597758d7597ef63829bdccc41976e605b77006723cfe9a5eb39bdafa"
+      "sha256": "2bed8d7315b151eae3724294626e94e81736bb3c3b88345543a304920ceb7a40"
     },
     {
       "path": "src/styles/chapter-rail.css",
@@ -200,7 +224,7 @@
     },
     {
       "path": "src/styles/mobile-layout.css",
-      "sha256": "296e5fa132e9af9455de713e79e498b252b11ba80edec4d84ab944755671f4da"
+      "sha256": "df1c4ddb890c069b4164f4787a00f17a6d998d439bd7233c31b168e68f1053ef"
     },
     {
       "path": "src/styles/mobile-motion.css",
@@ -232,11 +256,11 @@
     },
     {
       "path": "src/components/ExperienceStage.astro",
-      "sha256": "db7f1624eb363291d36d837b8b6e98f0b1120466f34b47309eb6a5818a7f0200"
+      "sha256": "007870e3231c07902ce83e5b3ea63439827d10b4df6984fd25aa5b92963e638b"
     },
     {
       "path": "src/components/CourtDiagram.astro",
-      "sha256": "186c1520e7ab7b36b85fb0370184b5c63e751b7c9ac4a3f0c085ec9e069ccbac"
+      "sha256": "d931e0b98201c0e34b2ad0e5efee4439f419e638d25be56e87cc978c283cb19d"
     },
     {
       "path": "src/components/DownloadPass.astro",
@@ -268,7 +292,7 @@
     },
     {
       "path": "src/data/content.ts",
-      "sha256": "2e1dbb55bc15badbafecebcb4fd7ea4d2d0c2b33e888ca1add2354d693f01495"
+      "sha256": "d50bf9a33f0d35801a4a32d1a7de2a5f0becc2d324d0a014c0f7d960ea144923"
     },
     {
       "path": "src/data/community.ts",
@@ -304,14 +328,14 @@
     },
     {
       "path": "scripts/export-scene-poster.mjs",
-      "sha256": "c17c395a89703d48ea95301b192a7e2ecf9095d69875a1d0c4310c0554424624"
+      "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
     }
   ],
   "captures": [
     {
       "id": "compact",
-      "source": "source/scene-poster-compact-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "5bccbe965399c417b994bf5deb9677c1167ac39f0fafde7fa046b357a8e1c73a",
+      "source": "source/scene-poster-compact-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "585e96c087eb665991a1fa963e9dde82daf5dce454d8ca69d3a235856c543771",
       "viewport": {
         "width": 1024,
         "height": 768,
@@ -356,8 +380,8 @@
     },
     {
       "id": "standard",
-      "source": "source/scene-poster-standard-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "ac64766732d6deab585b64310ad81e7b81139740b31b3f5bc40186a9013379d2",
+      "source": "source/scene-poster-standard-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "c985ebfb8b8f11862ac231aebacfe1594c66f3ec93eb523e2bf1ffac48fccf0e",
       "viewport": {
         "width": 1440,
         "height": 900,
@@ -402,8 +426,8 @@
     },
     {
       "id": "mobile",
-      "source": "source/scene-poster-mobile-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "ac64766732d6deab585b64310ad81e7b81139740b31b3f5bc40186a9013379d2",
+      "source": "source/scene-poster-mobile-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "c985ebfb8b8f11862ac231aebacfe1594c66f3ec93eb523e2bf1ffac48fccf0e",
       "viewport": {
         "width": 1440,
         "height": 900,
@@ -448,8 +472,8 @@
     },
     {
       "id": "wide",
-      "source": "source/scene-poster-wide-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "0c36b7d82fb2e374d2d7fb9dbe2bf5b31b0c6eaf3cc0ee4c5c48468357666cca",
+      "source": "source/scene-poster-wide-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "608a034f8c51281fb3dbfe5f44ff6d2a54ed7bd549f289cae8ed81cbbe995286",
       "viewport": {
         "width": 1920,
         "height": 1080,
@@ -463,13 +487,13 @@
       "placement": {
         "region": {
           "left": 549.1875,
-          "top": 2511.65625,
+          "top": 2466.65625,
           "width": 962.546875,
           "height": 440
         },
         "restRegion": {
           "left": 549.1875,
-          "top": 376.90625,
+          "top": 346.90625,
           "width": 962.546875,
           "height": 440
         },
@@ -494,8 +518,8 @@
     },
     {
       "id": "demo-compact",
-      "source": "source/scene-poster-demo-compact-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "47b6656e16097d5051a6a154c2bf9bc13edcbebd12a22b02d8c00972e4ccaaa9",
+      "source": "source/scene-poster-demo-compact-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "86bfd68e029a2dbe21bf753c10c5b1e8391f20cb04092026772ea42990f71e26",
       "viewport": {
         "width": 1024,
         "height": 768,
@@ -503,7 +527,7 @@
       },
       "pose": {
         "chapter": "experience",
-        "progress": 0.2131856830661304,
+        "progress": 0.1991422640797351,
         "active": true
       },
       "placement": {
@@ -540,8 +564,8 @@
     },
     {
       "id": "demo-standard",
-      "source": "source/scene-poster-demo-standard-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "7131b6bf2662eed139da17289cc7313da1591663c7877688da8038ea649b2854",
+      "source": "source/scene-poster-demo-standard-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "c0705813534f499651e9ff990a6db6f0c0998a819ca027953580e2008c92bc0c",
       "viewport": {
         "width": 1440,
         "height": 900,
@@ -549,7 +573,7 @@
       },
       "pose": {
         "chapter": "experience",
-        "progress": 0.22831831424893284,
+        "progress": 0.21437432406641643,
         "active": true
       },
       "placement": {
@@ -586,8 +610,8 @@
     },
     {
       "id": "demo-wide",
-      "source": "source/scene-poster-demo-wide-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "42a43b77c9c3581efb80548410c86847b8a54178f0d7eceb96c0aa4a904c3c8d",
+      "source": "source/scene-poster-demo-wide-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "80ca9847e3a8dd302bfbebcd4b258c27705208fc05384169d2bd6c6d990b16d6",
       "viewport": {
         "width": 1920,
         "height": 1080,
@@ -595,19 +619,19 @@
       },
       "pose": {
         "chapter": "experience",
-        "progress": 0.22397830776605945,
+        "progress": 0.20959671620325981,
         "active": true
       },
       "placement": {
         "region": {
           "left": 549.1875,
-          "top": 376.65625,
+          "top": 346.65625,
           "width": 962.546875,
           "height": 440
         },
         "restRegion": {
           "left": 549.1875,
-          "top": 376.90625,
+          "top": 346.90625,
           "width": 962.546875,
           "height": 440
         },
@@ -632,8 +656,8 @@
     },
     {
       "id": "mobile-hero",
-      "source": "source/scene-poster-mobile-hero-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "1c943beabf28f0ec6eca53ed055392ff58fd44b3694bfc607f438680ae9d7b96",
+      "source": "source/scene-poster-mobile-hero-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "ed2f394858a2b6016279fa608ff5d2a63985e3d10bf668cf8f0a5cb1dc5d8a08",
       "viewport": {
         "width": 2560,
         "height": 1600,
@@ -647,13 +671,13 @@
       "placement": {
         "region": {
           "left": 874,
-          "top": 3941.65625,
+          "top": 3896.65625,
           "width": 951.328125,
           "height": 440
         },
         "restRegion": {
           "left": 874,
-          "top": 636.90625,
+          "top": 606.90625,
           "width": 951.328125,
           "height": 440
         },
@@ -678,8 +702,8 @@
     },
     {
       "id": "mobile-court",
-      "source": "source/scene-poster-mobile-court-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "8a58ebd16ec820d7ff904ae9400d13bf4a9812de0e024b41cddbeadc26a96f56",
+      "source": "source/scene-poster-mobile-court-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "0531f9bf9b2f13fd8e342106aebb193d68ebd4a57f6c1fa849af21489f2461e9",
       "viewport": {
         "width": 2560,
         "height": 1600,
@@ -693,13 +717,13 @@
       "placement": {
         "region": {
           "left": 874,
-          "top": 2028.65625,
+          "top": 1983.65625,
           "width": 951.328125,
           "height": 440
         },
         "restRegion": {
           "left": 874,
-          "top": 636.90625,
+          "top": 606.90625,
           "width": 951.328125,
           "height": 440
         },
@@ -724,8 +748,8 @@
     },
     {
       "id": "mobile-hoop",
-      "source": "source/scene-poster-mobile-hoop-2026-11-04T15-06-17-553Z.webp",
-      "source_sha256": "aa14e95131b04dce01e3937e26e107bd910c5ae8a39cb298eb63dbb5379498e9",
+      "source": "source/scene-poster-mobile-hoop-2026-11-16T15-12-39-475Z.webp",
+      "source_sha256": "21604c20134f1b048ecfa6cae1541d05ce239518bc0180b4337a4ff0e4ee0a99",
       "viewport": {
         "width": 2560,
         "height": 1600,
@@ -739,13 +763,13 @@
       "placement": {
         "region": {
           "left": 874,
-          "top": -2751.34375,
+          "top": -2796.34375,
           "width": 951.328125,
           "height": 440
         },
         "restRegion": {
           "left": 874,
-          "top": 636.90625,
+          "top": 606.90625,
           "width": 951.328125,
           "height": 440
         },

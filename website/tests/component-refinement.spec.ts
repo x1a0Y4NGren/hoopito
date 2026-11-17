@@ -21,7 +21,7 @@ for (const locale of ['zh', 'en']) {
         const titles = [...main.querySelectorAll<HTMLElement>('h1, h2, h3')];
         const controls = [
           ...main.querySelectorAll<HTMLElement>(
-            '.button, .score-feature, .point-presets button, .reset-button, .faq summary',
+            '.button, .score-feature, [data-demo-points], .point-presets button, .reset-button, .faq summary',
           ),
         ];
         return {

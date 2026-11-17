@@ -778,6 +778,7 @@ test('a focused shot control survives a light return but leaves focus and the sc
 }, testInfo) => {
   await open(page, '/#experience');
   await seekReading(page, 'experience', 'end');
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="center"]').click();
   const reset = page.locator('[data-reset]');
   await reset.click();
@@ -1072,6 +1073,7 @@ test('@webgl the central court remains selectable after the scoreboard and actio
   await expect(board).toBeVisible();
   await expect(controls).toBeVisible();
   const court = page.locator('[data-demo-court-host]');
+  await page.locator('[data-demo-points="2"]').click();
   const bounds = await court.boundingBox();
   expect(bounds).not.toBeNull();
   const center = await page.evaluate(

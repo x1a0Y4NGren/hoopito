@@ -181,7 +181,7 @@ test('off-axis overhead keeps the original floor fit while aligning elevated bas
         }
       }
       const hardwareX = [0, 3.05, 3.575].map((y) => {
-        const point = new THREE.Vector3(0, y, -5.3).project(camera);
+        const point = new THREE.Vector3(0, y, -5.425).project(camera);
         return bounds.left + ((point.x + 1) * bounds.width) / 2;
       });
       assert.ok(
@@ -271,6 +271,9 @@ test('projected floor points round trip through the actual camera rather than th
     );
     const camera = cameraFor(pose, viewport);
     for (const point of [
+      { x: 0, y: 0 },
+      { x: 1, y: 1 },
+      { x: 0.001, y: 0.02 },
       { x: 0.25, y: 0.65 },
       { x: 0.5, y: 0.5 },
       { x: 0.75, y: 0.35 },

@@ -12,6 +12,7 @@ import 'package:hoopito/core/domain/entities/player.dart';
 import 'package:hoopito/core/domain/entities/match_setup_preset.dart';
 import 'package:hoopito/core/domain/entities/rule_template.dart';
 import 'package:hoopito/features/pregame/pregame_controller.dart';
+import 'package:hoopito/features/rules/widgets/scoring_convention_settings.dart';
 
 import 'package:hoopito/features/practice/practice_presentation.dart';
 import 'package:hoopito/features/practice/practice_coach.dart';
@@ -439,12 +440,29 @@ class _PregamePageState extends State<PregamePage> {
                                 child: ExpansionTile(
                                   key: const Key('pregame-advanced'),
                                   tilePadding: EdgeInsets.zero,
+                                  expandedCrossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   title: Text(l10n.pregameAdvanced),
                                   initiallyExpanded: state.advancedExpanded,
                                   maintainState: true,
                                   onExpansionChanged:
                                       _controller.setAdvancedExpanded,
                                   children: [
+                                    ScoringConventionSettings(
+                                      keyPrefix: 'pregame',
+                                      convention: state.scoringConvention,
+                                      allowLegacy:
+                                          _controller.selectedRules != null &&
+                                          _controller
+                                                  .selectedRules!
+                                                  .scoringConvention ==
+                                              null,
+                                      onChanged: (value) => setState(() {
+                                        _controller.setScoringConvention(value);
+                                        _clearValidation();
+                                      }),
+                                    ),
+                                    const SizedBox(height: 12),
                                     _goalScoringModeChoices(l10n),
                                     if (state.goalScoringMode ==
                                         GoalScoringMode.target)
@@ -731,7 +749,7 @@ class _PregamePageState extends State<PregamePage> {
         ? state.targetScore
         : null;
     final parts = [
-      '${(rules?.scoreButtons ?? [1, 2, 3]).join(' / ')} ${l10n.pregamePoint}',
+      '${(state.scoringConvention?.scoreButtons ?? rules?.scoreButtons ?? [1, 2, 3]).join(' / ')} ${l10n.pregamePoint}',
       if (target != null) l10n.rulesTarget(target),
     ];
     return '${l10n.v2RulesSummary}: ${parts.join(' · ')}';

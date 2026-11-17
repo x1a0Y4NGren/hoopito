@@ -1,4 +1,6 @@
 import type { CourtPoint } from './scene-contract';
+import { BASKET_POINT, courtToSvg } from './court-geometry.ts';
+import { trailWindow } from './shot-visuals.ts';
 export const SHOT_TIMING = {
   flight: 1.2,
   swish: 0.35,
@@ -20,8 +22,8 @@ export function shotFrame(time: number, point: CourtPoint) {
   const t = Math.max(0, time),
     p = clamp(t / SHOT_TIMING.flight),
     q = 1 - p;
-  const startX = 28 + point.x * 544,
-    startY = 28 + point.y * 504;
+  const { x: startX, y: startY } = courtToSvg(point);
+  const rim = courtToSvg(BASKET_POINT);
   const phase =
     t < SHOT_TIMING.flight
       ? 'flight'
@@ -36,8 +38,11 @@ export function shotFrame(time: number, point: CourtPoint) {
     phase,
     recorded: t >= SHOT_TIMING.mark,
     visible: t < SHOT_TIMING.mark,
-    x: q * q * startX + 2 * q * p * ((startX + 300) / 2) + p * p * 300,
-    y: phase === 'flight' ? q * q * startY + 2 * q * p * 15 + p * p * 82 : 82,
+    x: q * q * startX + 2 * q * p * ((startX + rim.x) / 2) + p * p * rim.x,
+    y:
+      phase === 'flight'
+        ? q * q * startY + 2 * q * p * 15 + p * p * rim.y
+        : rim.y,
     // In the overhead view the ball recedes through the circular opening.
     // Screen-space downward movement would incorrectly turn it into a side view.
     scale: (1 - p * 0.3) * (1 - depth * 0.72),
@@ -46,6 +51,31 @@ export function shotFrame(time: number, point: CourtPoint) {
     trailOpacity:
       phase === 'flight' ? 0.75 : phase === 'swish' ? 0.75 * (1 - fall) : 0,
     arcProgress: p,
+  };
+}
+/** The exact de Casteljau subcurve for the most recent 220ms of flight. */
+export function shotTrailFrame(time: number, point: CourtPoint) {
+  const elapsed = Number.isFinite(time) ? Math.max(0, time) : 0;
+  const { head, tail } = trailWindow(elapsed, SHOT_TIMING.flight);
+  const launch = courtToSvg(point);
+  const rim = courtToSvg(BASKET_POINT);
+  const apex = { x: (launch.x + rim.x) / 2, y: 15 };
+  const mix = (a: typeof launch, b: typeof launch, p: number) => ({
+    x: a.x * (1 - p) + b.x * p,
+    y: a.y * (1 - p) + b.y * p,
+  });
+  // First split at the tail, then split the remaining curve at the head.
+  const a = mix(launch, apex, tail),
+    b = mix(apex, rim, tail);
+  const start = mix(a, b, tail);
+  const progress = (head - tail) / (1 - tail);
+  const control = mix(start, b, progress);
+  const end = mix(control, mix(b, rim, progress), progress);
+  return {
+    path: `M${start.x} ${start.y}Q${control.x} ${control.y} ${end.x} ${end.y}`,
+    start,
+    end,
+    opacity: head > tail ? shotFrame(elapsed, point).trailOpacity : 0,
   };
 }
 export function netPoint(x: number, y: number, impact: number) {

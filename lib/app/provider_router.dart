@@ -1522,6 +1522,11 @@ Future<void> _leaveScoring(
 /// route construct a repository or a second source of state.
 class RuleTemplateRepositoryFallback {
   static List<RuleTemplate> get templates => const [
-    RuleTemplate(id: 'free', name: '自由计分', scoreButtons: [1, 2, 3]),
+    RuleTemplate(
+      id: 'free',
+      name: '自由计分',
+      scoreButtons: [1, 2, 3],
+      scoringConvention: ScoringConvention.standard,
+    ),
   ];
 }

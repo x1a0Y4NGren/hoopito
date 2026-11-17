@@ -43,7 +43,8 @@ async function decodedArt(page: Page) {
   );
 }
 
-async function selectCourt(page: Page, x = 0.4, y = 0.6) {
+async function selectCourt(page: Page, x = 0.4, y = 0.45) {
+  await page.locator('[data-demo-points="2"]').click();
   const court = page.locator('[data-demo-court]');
   await court.scrollIntoViewIfNeeded();
   const client = await court.evaluate(
@@ -130,11 +131,18 @@ for (const path of ['/', '/en/'])
               ...svg.querySelectorAll<SVGCircleElement>(
                 '[data-hoop-fallback] circle[fill="none"]',
               ),
-            ].map((ring) => ({
-              x: ring.cx.baseVal.value,
-              y: ring.cy.baseVal.value,
-              radius: ring.r.baseVal.value,
-            })),
+            ].map((ring) => {
+              const group = ring.closest<SVGGElement>('[data-hoop-fallback]')!;
+              const center = new DOMPoint(
+                ring.cx.baseVal.value,
+                ring.cy.baseVal.value,
+              ).matrixTransform(group.transform.baseVal.consolidate()!.matrix);
+              return {
+                x: center.x,
+                y: center.y,
+                radius: ring.r.baseVal.value,
+              };
+            }),
             ellipses: svg.querySelectorAll('[data-hoop-fallback] ellipse')
               .length,
           },
@@ -143,7 +151,7 @@ for (const path of ['/', '/en/'])
       expect(geometry.playable).toBe(true);
       expect(geometry.net).toEqual({
         x: 300,
-        y: 82,
+        y: expect.closeTo(84.7, 4),
         scaleX: 1.25,
         scaleY: 1.25,
       });
@@ -159,10 +167,10 @@ for (const path of ['/', '/en/'])
         ),
       ).toEqual(['/art/demo-maple-v2.webp', '/art/demo-hoop-v2.webp']);
       for (const art of geometry.art) expect(Number(art.opacity)).toBe(1);
-      expect(geometry.art[1].rim).toEqual({ x: 300, y: 82, radius: 20 });
+      expect(geometry.art[1].rim).toEqual({ x: 300, y: 84.7, radius: 20 });
       expect(geometry.rim.circles).toEqual([
-        { x: 300, y: 82, radius: 20 },
-        { x: 300, y: 82, radius: 20 },
+        { x: 300, y: expect.closeTo(84.7, 4), radius: 20 },
+        { x: 300, y: expect.closeTo(84.7, 4), radius: 20 },
       ]);
       expect(geometry.rim.ellipses).toBe(0);
       await expect(page.locator('[data-hoop-fallback]')).not.toBeVisible();
@@ -225,7 +233,7 @@ for (const failed of ['floor', 'hoop', 'both'])
     });
     if (failed !== 'floor')
       await expect(court).not.toHaveAttribute('data-hoop-ready', 'true');
-    await selectCourt(page, 0.7, 0.55);
+    await selectCourt(page, 0.7, 0.45);
     await page.locator('[data-record]').click();
     await expect(page.locator('[data-blue-score]')).toHaveText('8');
     await expect(page.locator('[data-demo]')).toHaveAttribute(
@@ -265,7 +273,7 @@ test('a delayed hoop never hides its vector fallback before the image is ready',
   }
 });
 
-test('the shared flight reaches the unchanged rim, deforms the recessed net and resets stale feedback', async ({
+test('the shared flight reaches the regulation rim, deforms the recessed net and resets stale feedback', async ({
   page,
 }) => {
   const pause = await installContractClock(page);
@@ -273,6 +281,7 @@ test('the shared flight reaches the unchanged rim, deforms the recessed net and 
   await decodedArt(page);
   await pause();
   await page.clock.runFor(1500);
+  await page.locator('[data-demo-points="2"]').dispatchEvent('click');
   await page.locator('[data-point-preset="center"]').dispatchEvent('click');
   const original = await page.locator('[data-net-weave]').getAttribute('d');
   await page.locator('[data-record]').dispatchEvent('click');
@@ -285,7 +294,7 @@ test('the shared flight reaches the unchanged rim, deforms the recessed net and 
     return { x: matrix.e, y: matrix.f, visible: !el.hasAttribute('hidden') };
   });
   expect(pose.x).toBeCloseTo(300, 0);
-  expect(pose.y).toBeCloseTo(82, 0);
+  expect(pose.y).toBeCloseTo(84.7, 0);
   expect(pose.visible).toBe(true);
   await page.clock.runFor(180);
   const swishPose = await page.locator('[data-demo-ball]').evaluate((el) => {
@@ -297,7 +306,7 @@ test('the shared flight reaches the unchanged rim, deforms the recessed net and 
     };
   });
   expect(swishPose.x).toBeCloseTo(300, 0);
-  expect(swishPose.y).toBeCloseTo(82, 0);
+  expect(swishPose.y).toBeCloseTo(84.7, 0);
   expect(swishPose.scale).toBeLessThan(0.7);
   const deformed = await page.locator('[data-net-weave]').getAttribute('d');
   expect(deformed).not.toBe(original);
@@ -367,6 +376,7 @@ test('background suspension freezes the same net and ball clock and resumes one 
   await decodedArt(page);
   await pause();
   await page.clock.runFor(1000);
+  await page.locator('[data-demo-points="2"]').dispatchEvent('click');
   await page.locator('[data-point-preset="left"]').dispatchEvent('click');
   await page.locator('[data-record]').dispatchEvent('click');
   await page.clock.runFor(400);
@@ -441,7 +451,7 @@ test('high-DPR rendering preserves art registration and complete selectable dime
   try {
     await ready(page, 'http://127.0.0.1:4321/#experience');
     await decodedArt(page);
-    await selectCourt(page, 0.25, 0.65);
+    await selectCourt(page, 0.25, 0.45);
     const host = await page.locator('[data-demo-court-host]').boundingBox();
     expect(host!.width).toBeLessThanOrEqual(288.1);
     expect(host!.width / host!.height).toBeCloseTo(15 / 14, 2);
@@ -510,10 +520,11 @@ test('native touch still selects the generated court and completes the unchanged
   try {
     await ready(page, 'http://127.0.0.1:4321/#experience');
     await decodedArt(page);
+    await page.locator('[data-demo-points="2"]').tap();
     const court = page.locator('[data-demo-court]');
     await court.scrollIntoViewIfNeeded();
     const point = await court.evaluate((el) =>
-      new DOMPoint(28 + 0.35 * 544, 28 + 0.62 * 504)
+      new DOMPoint(28 + 0.35 * 544, 28 + 0.45 * 504)
         .matrixTransform((el as SVGSVGElement).getScreenCTM()!)
         .toJSON(),
     );

@@ -342,6 +342,7 @@ for (const locale of ['zh', 'en'] as const) {
         await page.keyboard.press('Escape');
         await expect(link).toBeFocused();
       }
+      await page.locator('[data-demo-points="2"]').click();
       await page.locator('[data-point-preset="center"]').click();
       await page.locator('[data-record]').click();
       await expect(page.locator('[data-blue-score]')).toHaveText('8');

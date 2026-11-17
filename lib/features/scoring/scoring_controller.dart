@@ -8,9 +8,11 @@ import 'package:hoopito/core/domain/entities/match_detail.dart';
 import 'package:hoopito/core/domain/entities/match_event.dart';
 import 'package:hoopito/core/domain/entities/rule_template.dart';
 import 'package:hoopito/core/domain/rules/rule_engine.dart';
+import 'package:hoopito/core/domain/rules/shot_scoring_policy.dart';
 import 'package:hoopito/core/domain/scoring/score_state.dart';
 import 'package:hoopito/core/domain/scoring/scoring_reducer.dart';
 import 'package:hoopito/core/domain/value_objects/court_point.dart';
+import 'package:hoopito/core/domain/value_objects/court_geometry.dart';
 import 'package:hoopito/core/domain/value_objects/team_side.dart';
 import 'package:hoopito/features/pregame/pregame_controller.dart';
 
@@ -110,24 +112,28 @@ class CourtFirstShotDraft {
     this.side,
     this.outcome = ShotOutcome.made,
     this.points = 1,
+    this.freeThrowEligible = false,
   });
 
   final CourtPoint point;
   final TeamSide? side;
   final ShotOutcome outcome;
   final int points;
+  final bool freeThrowEligible;
 
   CourtFirstShotDraft copyWith({
     CourtPoint? point,
     TeamSide? side,
     ShotOutcome? outcome,
     int? points,
+    bool? freeThrowEligible,
   }) {
     return CourtFirstShotDraft(
       point: point ?? this.point,
       side: side ?? this.side,
       outcome: outcome ?? this.outcome,
       points: points ?? this.points,
+      freeThrowEligible: freeThrowEligible ?? this.freeThrowEligible,
     );
   }
 }
@@ -347,12 +353,26 @@ class ScoringController extends ChangeNotifier {
   bool _exclusiveBusy = false;
   bool _disposed = false;
   final Set<String> _failedWrites = {};
+  final Map<String, CourtFirstShotDraft> _freeThrowDraftCommands = {};
 
   bool get isSaving =>
       _drainingQueue || _exclusiveBusy || _commandQueue.isNotEmpty;
   bool get hasSaveFailure => _failedWrites.isNotEmpty;
 
   MatchScoringState get state => _state;
+
+  ShotScoringPolicy get scoringPolicy => ShotScoringPolicy(_state.ruleTemplate);
+
+  Set<int> get enabledScorePoints {
+    final draft = _state.courtFirstShotDraft;
+    return (draft == null
+            ? scoringPolicy.scoreButtons
+            : scoringPolicy.allowedScorePoints(
+                draft.point,
+                freeThrowEligible: draft.freeThrowEligible,
+              ))
+        .toSet();
+  }
 
   RecordingMode get recordingMode => _state.recordingMode;
 
@@ -403,6 +423,7 @@ class ScoringController extends ChangeNotifier {
         _state.pendingLocation != null) {
       return Future<bool>.value(false);
     }
+    if (!_acceptsScoringCommand(command)) return Future.value(false);
     final service = _commandService;
     if (service == null) {
       return Future<bool>.value(_recordLocalCommand(command));
@@ -417,6 +438,14 @@ class ScoringController extends ChangeNotifier {
   }) async {
     if (_disposed || _ordinaryActionBlocked) return false;
     if (points <= 0) return false;
+    if (scoringPolicy.isStandard && points == 1) {
+      return recordFreeThrowCommitted(
+        side: side,
+        made: true,
+        occurredAt: occurredAt,
+      );
+    }
+    if (!scoringPolicy.allowsFieldGoal(points, null)) return false;
     final service = _commandService;
     if (service == null) {
       return addScore(side: side, points: points);
@@ -475,6 +504,7 @@ class ScoringController extends ChangeNotifier {
     required TeamSide side,
     required bool made,
     int points = 1,
+    DateTime? occurredAt,
   }) {
     final resolvedPoints = made ? points : 0;
     if (made && resolvedPoints <= 0) return Future<bool>.value(false);
@@ -485,9 +515,45 @@ class ScoringController extends ChangeNotifier {
         side: side,
         points: resolvedPoints,
         outcome: made ? ShotOutcome.made : ShotOutcome.missed,
-        occurredAt: _nowUtc().toUtc(),
+        occurredAt: (occurredAt ?? _nowUtc()).toUtc(),
       ),
     );
+  }
+
+  /// Commits an explicitly chosen free throw without discarding a court-first
+  /// draft until the command succeeds. A free throw never owns a shot location.
+  Future<bool> commitCourtFirstFreeThrow({required TeamSide side}) async {
+    final draft = _state.courtFirstShotDraft;
+    if (_disposed ||
+        draft == null ||
+        !scoringPolicy.isStandard ||
+        !enabledScorePoints.contains(1) ||
+        isSaving) {
+      return false;
+    }
+    final command = RecordMatchEventCommand(
+      matchId: _state.matchId,
+      type: EventKind.freeThrow,
+      side: side,
+      points: 1,
+      outcome: ShotOutcome.made,
+      occurredAt: _nowUtc().toUtc(),
+    );
+    _freeThrowDraftCommands[command.commandId] = draft;
+    final service = _commandService;
+    final accepted = service == null
+        ? _recordLocalCommand(command)
+        : await _runExclusive(command, () => service.record(command));
+    if (accepted) _finishFreeThrowDraft(command.commandId);
+    return accepted;
+  }
+
+  void _finishFreeThrowDraft(String commandId) {
+    final draft = _freeThrowDraftCommands.remove(commandId);
+    if (draft != null && identical(draft, _state.courtFirstShotDraft)) {
+      _state = _state.copyWith(clearCourtFirstShotDraft: true);
+      notifyListeners();
+    }
   }
 
   Future<bool> recordPossessionCommitted(TeamSide side, {String? reason}) {
@@ -740,12 +806,33 @@ class ScoringController extends ChangeNotifier {
 
   bool addScore({required TeamSide side, required int points}) {
     if (_disposed) return false;
+    if (points <= 0 ||
+        (_state.ruleTemplate.scoringConvention != null &&
+            !scoringPolicy.scoreButtons.contains(points))) {
+      return false;
+    }
     if (isCommandBacked) {
       unawaited(recordScoreCommitted(side: side, points: points));
       return true;
     }
     if (_ordinaryActionBlocked) {
       return false;
+    }
+
+    if (_state.ruleTemplate.scoringConvention != null) {
+      return _recordLocalCommand(
+        RecordMatchEventCommand(
+          matchId: _state.matchId,
+          eventId: '${_state.matchId}-event-${_state.events.length + 1}',
+          type: scoringPolicy.isStandard && points == 1
+              ? EventKind.freeThrow
+              : EventKind.fieldGoal,
+          side: side,
+          points: points,
+          outcome: ShotOutcome.made,
+          occurredAt: _nowUtc().toUtc(),
+        ),
+      );
     }
 
     final eventId = '${_state.matchId}-event-${_state.events.length + 1}';
@@ -785,6 +872,7 @@ class ScoringController extends ChangeNotifier {
     if (pending == null) {
       return;
     }
+    if (!scoringPolicy.allowsFieldGoal(pending.points, point)) return;
     _state = _state.copyWith(pendingLocation: pending.copyWith(point: point));
     notifyListeners();
   }
@@ -806,7 +894,7 @@ class ScoringController extends ChangeNotifier {
       if (window != null &&
           (expectedEventId == null || expectedEventId == window.eventId)) {
         await attachSupplementLocation(
-          point ?? CourtPoint(x: 0.5, y: 0.58),
+          point ?? _initialLocationPoint(window.points),
           eventId: expectedEventId,
         );
       }
@@ -814,6 +902,7 @@ class ScoringController extends ChangeNotifier {
     }
     if (expectedEventId != null && expectedEventId != pending.eventId) return;
     final confirmedPoint = point ?? pending.point;
+    if (!scoringPolicy.allowsFieldGoal(pending.points, confirmedPoint)) return;
     final window = _state.locationSupplementWindow;
     if (window != null && window.eventId == pending.eventId) {
       await attachSupplementLocation(confirmedPoint);
@@ -881,6 +970,7 @@ class ScoringController extends ChangeNotifier {
       return const ScoringCommandRetryResult(accepted: false);
     }
     final command = failure.command;
+    _finishFreeThrowDraft(command.commandId);
     ShotLocationCommitReceipt? receipt;
     if (command is RecordMatchEventCommand && command.shotLocation != null) {
       receipt = _receiptFromProjection(
@@ -925,7 +1015,7 @@ class ScoringController extends ChangeNotifier {
         eventId: candidate.id,
         side: candidate.side!,
         points: candidate.points,
-        point: CourtPoint(x: 0.5, y: 0.58),
+        point: _initialLocationPoint(candidate.points),
         isExplicit: true,
       ),
     );
@@ -935,6 +1025,11 @@ class ScoringController extends ChangeNotifier {
 
   bool cancelLocateLastUnlocatedShot() => skipPendingLocation();
 
+  CourtPoint _initialLocationPoint(int points) =>
+      scoringPolicy.regionForPoints(points) == CourtRegion.outsideArc
+      ? CourtPoint(x: .5, y: .8)
+      : CourtPoint(x: .5, y: .58);
+
   /// Begins or moves a court-first shot. Repeated taps update the same local
   /// draft until it is committed or cancelled.
   bool beginOrMoveCourtFirstShot(
@@ -942,6 +1037,7 @@ class ScoringController extends ChangeNotifier {
     TeamSide? side,
     ShotOutcome? outcome,
     int? points,
+    bool freeThrowEligible = false,
   }) {
     if (_disposed ||
         _exclusiveBusy ||
@@ -957,6 +1053,7 @@ class ScoringController extends ChangeNotifier {
         side: side ?? existing?.side ?? currentPossession,
         outcome: outcome ?? existing?.outcome ?? ShotOutcome.made,
         points: points ?? existing?.points ?? 1,
+        freeThrowEligible: freeThrowEligible,
       ),
     );
     notifyListeners();
@@ -1014,6 +1111,7 @@ class ScoringController extends ChangeNotifier {
         .where((item) => item.id == window.eventId && !item.isDeleted)
         .firstOrNull;
     if (event == null) return null;
+    if (!scoringPolicy.allowsFieldGoal(event.points, point)) return null;
     if (service == null) {
       final marker = ScoringShotLocation(
         id: '${_state.matchId}-shot-${_state.shotLocations.length + 1}',
@@ -1086,6 +1184,7 @@ class ScoringController extends ChangeNotifier {
     TeamSide? side,
     ShotOutcome? outcome,
     int? points,
+    bool? freeThrowEligible,
   }) {
     if (_disposed || _exclusiveBusy) return;
     final draft = _state.detailedShotDraft;
@@ -1100,6 +1199,9 @@ class ScoringController extends ChangeNotifier {
         side: side ?? draft.side,
         outcome: nextOutcome,
         points: nextPoints,
+        freeThrowEligible:
+            freeThrowEligible ??
+            (point == null ? draft.freeThrowEligible : false),
       ),
     );
     notifyListeners();
@@ -1110,11 +1212,13 @@ class ScoringController extends ChangeNotifier {
     TeamSide? side,
     ShotOutcome? outcome,
     int? points,
+    bool? freeThrowEligible,
   }) => updateDetailedShot(
     point: point,
     side: side,
     outcome: outcome,
     points: points,
+    freeThrowEligible: freeThrowEligible,
   );
 
   Future<bool> commitDetailedShot() async {
@@ -1126,6 +1230,12 @@ class ScoringController extends ChangeNotifier {
     final draft = _state.detailedShotDraft;
     if (draft == null || draft.side == null) return null;
     if (draft.outcome == ShotOutcome.notApplicable) return null;
+    if (!scoringPolicy.allowsFieldGoal(
+      draft.outcome == ShotOutcome.missed ? 0 : draft.points,
+      draft.point,
+    )) {
+      return null;
+    }
     if (_commandService == null) {
       final command = RecordMatchEventCommand(
         matchId: _state.matchId,
@@ -1312,6 +1422,9 @@ class ScoringController extends ChangeNotifier {
             _ => '自由计分',
           },
       scoreButtons: setup?.scoreButtons ?? const [1, 2, 3],
+      scoringConvention: setup == null
+          ? ScoringConvention.standard
+          : setup.scoringConvention,
       foulLimit: setup?.foulLimit,
       possessionHintEnabled: setup?.possessionHintEnabled ?? false,
       customEventTypes: setup?.customEventTypes ?? const [],
@@ -1643,6 +1756,7 @@ class ScoringController extends ChangeNotifier {
 
   bool _recordLocalCommand(RecordMatchEventCommand command) {
     if (_disposed) return false;
+    if (!_acceptsScoringCommand(command)) return false;
     final event = MatchEvent(
       id: command.eventId,
       matchId: command.matchId,
@@ -1723,6 +1837,24 @@ class ScoringController extends ChangeNotifier {
 
   bool get _ordinaryActionBlocked =>
       _state.pendingLocation != null || _state.detailedShotDraft != null;
+
+  bool _acceptsScoringCommand(RecordMatchEventCommand command) {
+    if (_state.ruleTemplate.scoringConvention == null) return true;
+    if (command.type == EventKind.freeThrow) {
+      return (command.points == 0 || command.points == 1) &&
+          command.shotLocation == null;
+    }
+    if (command.type != EventKind.fieldGoal &&
+        command.type != EventKind.score &&
+        command.type != EventKind.miss) {
+      return true;
+    }
+    final input = command.shotLocation;
+    return scoringPolicy.allowsFieldGoal(
+      command.points,
+      input == null ? null : CourtPoint(x: input.x, y: input.y),
+    );
+  }
 
   MatchEvent? get _latestUnlocatedShot {
     final locatedIds = _state.shotLocations.map((item) => item.eventId).toSet();

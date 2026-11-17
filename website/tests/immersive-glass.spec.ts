@@ -105,6 +105,7 @@ test('@webgl interactive court accepts a pointer after its glass controls settle
     'true',
   );
   const court = page.locator('[data-demo-court-host]');
+  await page.locator('[data-demo-points="2"]').click();
   const bounds = await court.boundingBox();
   await page.mouse.click(
     bounds!.x + bounds!.width * 0.5,
@@ -384,6 +385,7 @@ test('mobile scoreboard and action dock retain independently measurable glass su
   });
   expect(layout.actionsTop).toBeGreaterThanOrEqual(layout.presetsBottom);
   expect(layout.notesTop).toBeGreaterThanOrEqual(layout.actionsBottom);
+  await page.locator('[data-demo-points="2"]').click();
   await page.locator('[data-point-preset="center"]').click();
   await page.locator('[data-record]').click();
   await expect(page.locator('[data-blue-score]')).toHaveText('8');

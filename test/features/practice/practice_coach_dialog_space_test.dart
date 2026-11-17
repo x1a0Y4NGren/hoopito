@@ -34,9 +34,10 @@ void main() {
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(
-                data: MediaQuery.of(
-                  context,
-                ).copyWith(padding: const EdgeInsets.symmetric(vertical: 24)),
+                data: MediaQuery.of(context).copyWith(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  disableAnimations: true,
+                ),
                 child: child!,
               ),
               home: ScoringPage(

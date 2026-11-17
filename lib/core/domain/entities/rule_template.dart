@@ -1,12 +1,15 @@
 import 'package:hoopito/core/domain/domain_enums.dart';
+import 'package:hoopito/core/domain/rules/scoring_convention.dart';
 
 export 'package:hoopito/core/domain/domain_enums.dart' show PossessionPolicy;
+export 'package:hoopito/core/domain/rules/scoring_convention.dart';
 
 class RuleTemplate {
   const RuleTemplate({
     required this.id,
     required this.name,
     required this.scoreButtons,
+    this.scoringConvention,
     this.targetScore,
     this.timeLimitSeconds,
     this.winByTwo = false,
@@ -19,6 +22,7 @@ class RuleTemplate {
   final String id;
   final String name;
   final List<int> scoreButtons;
+  final ScoringConvention? scoringConvention;
   final int? targetScore;
   final int? timeLimitSeconds;
   final bool winByTwo;
@@ -33,6 +37,7 @@ class RuleTemplate {
         other.id == id &&
         other.name == name &&
         _listsEqual(other.scoreButtons, scoreButtons) &&
+        other.scoringConvention == scoringConvention &&
         other.targetScore == targetScore &&
         other.timeLimitSeconds == timeLimitSeconds &&
         other.winByTwo == winByTwo &&
@@ -47,6 +52,7 @@ class RuleTemplate {
     id,
     name,
     Object.hashAll(scoreButtons),
+    scoringConvention,
     targetScore,
     timeLimitSeconds,
     winByTwo,

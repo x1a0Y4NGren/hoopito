@@ -44,6 +44,7 @@ class MatchRepository {
           id: 'free',
           name: 'Free scoring',
           scoreButtons: [1, 2, 3],
+          scoringConvention: ScoringConvention.standard,
         ),
         createdAt: createdAt,
       ),
@@ -1185,6 +1186,8 @@ class MatchRepository {
       'possessionHintEnabled': template.possessionHintEnabled,
       'possessionPolicy': template.possessionPolicy.name,
       'customEventTypes': template.customEventTypes,
+      if (template.scoringConvention != null)
+        'scoringConvention': template.scoringConvention!.name,
     };
   }
 
@@ -1207,6 +1210,11 @@ class MatchRepository {
           : PossessionPolicy.values.byName(json['possessionPolicy'] as String),
       customEventTypes: (json['customEventTypes'] as List<Object?>? ?? const [])
           .cast<String>(),
+      scoringConvention: json['scoringConvention'] == null
+          ? null
+          : ScoringConvention.values.byName(
+              json['scoringConvention'] as String,
+            ),
     );
   }
 

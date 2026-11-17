@@ -52,6 +52,7 @@ StartMatchCommand buildStartMatchCommand(
           ? '11 分制'
           : setup.ruleTemplateName ?? setup.ruleTemplateId,
       scoreButtons: List.unmodifiable(setup.scoreButtons),
+      scoringConvention: setup.scoringConvention,
       targetScore: setup.targetScore,
       timeLimitSeconds: regulationSeconds,
       // Legacy snapshots remain readable; every app-created match uses a plain target.
