@@ -121,6 +121,7 @@ test('the real hardware cuts away perimeter and rear support while preserving th
       for (const mesh of ceiling) {
         assert.equal(mesh.material.opacity, 0.25);
         assert.equal(mesh.visible, true);
+        assert.equal(mesh.material.depthWrite, false);
       }
     }
     for (const value of [NaN, -1, Infinity]) {
@@ -260,6 +261,59 @@ test('hardware prebuilds two bounded detail levels and switches only across proj
       true,
       'Cutaway never detaches or removes the animated net',
     );
+  } finally {
+    for (const resource of resources) resource.dispose();
+  }
+});
+
+test('the arena crown exposes a continuous diffuser and leaves the central roof open', () => {
+  const resources: { dispose(): void }[] = [];
+  const hardware = createCourtHardware({
+    own: (resource) => {
+      resources.push(resource);
+      return resource;
+    },
+    metalMap: new THREE.Texture(),
+    glassMap: new THREE.Texture(),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
+  });
+  try {
+    hardware.group.updateMatrixWorld(true);
+    const ceiling = hardware.group.children.filter(
+      (mesh) => mesh.userData.viewRole === 'ceiling',
+    );
+    const ray = new THREE.Raycaster();
+    const up = new THREE.Vector3(0, 1, 0);
+    for (const [x, z] of [
+      [-7, -10.78],
+      [0, -10.78],
+      [7, -10.78],
+      [-9.88, -9.88],
+      [9.88, -9.88],
+      [-10.78, 0],
+      [10.78, 0],
+      [0, 8.78],
+    ] as const) {
+      ray.set(new THREE.Vector3(x, 1, z), up);
+      assert.equal(
+        ray.intersectObjects(ceiling, false)[0]?.object.name,
+        'ceiling-optics',
+        `The crown diffuser is visible at (${x}, ${z})`,
+      );
+    }
+    const courtSide = new THREE.Vector3(0, 4.5, -2);
+    const innerFace = new THREE.Vector3(0, 8.25, -10.56);
+    ray.set(courtSide, innerFace.sub(courtSide).normalize());
+    assert.equal(
+      ray.intersectObjects(ceiling, false)[0]?.object.name,
+      'ceiling-optics',
+      'The inside face of the crown stays visible across the court',
+    );
+
+    ray.set(new THREE.Vector3(0, 1, -3), up);
+    const roof = ray.intersectObjects(ceiling, false)[0];
+    assert.equal(roof?.object.name, 'ceiling-structure');
+    assert.ok(roof.point.y > 8.7, 'The court opens up to the higher roof deck');
   } finally {
     for (const resource of resources) resource.dispose();
   }
