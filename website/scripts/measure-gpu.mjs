@@ -769,7 +769,9 @@ async function measureDocument(
         viewport,
         async () => {
           const layout = await storyLayout(page);
-          await page.locator('.site-header a[href="#' + chapter + '"]').click();
+          await page
+            .locator(`.site-header .nav-story[href="#${chapter}"]`)
+            .click();
           return settle(page, {
             maximumMs: 3500,
             chapter,
@@ -873,7 +875,7 @@ async function measureDocument(
     if (selectedPhases.includes('reverse-story')) {
       // Phase filtering still starts reversal from this build's actual replay anchor.
       if (!selectedPhases.includes('replay-entry')) {
-        await page.locator('.site-header a[href="#replay"]').click();
+        await page.locator('.site-header .nav-story[href="#replay"]').click();
         await settle(page, { maximumMs: 3500, chapter: 'replay' });
       }
       phases['reverse-story'] = await phaseCapture(
@@ -895,7 +897,7 @@ async function measureDocument(
     }
     if (selectedPhases.includes('shot')) {
       // Positioning is a separate workload from the shot, already captured by experience-entry.
-      await page.locator('.site-header a[href="#experience"]').click();
+      await page.locator('.site-header .nav-story[href="#experience"]').click();
       const preparation = await settle(page, {
         maximumMs: 3500,
         chapter: 'experience',
