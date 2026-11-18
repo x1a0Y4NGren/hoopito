@@ -12,6 +12,8 @@ If the harness does not load this file automatically, ask it to read `AGENTS.md`
 
 Follow [CONTRIBUTING.md](CONTRIBUTING.md#分支与提交) for branch names, PR titles, and squash commits. Keep `main` as the maintenance branch and `preview/website` as the protected website preview branch. Use the [verified preview entry](website/README.md#vercel-预览与正式域名) and preserve historical branch and deployment identities.
 
+Keep each PR to one small, independently reviewable feature, fix, or maintenance change. Include the tests, assets and their provenance records, and documentation required for that change in the same PR. Split unrelated changes into separate PRs. When one change depends on another, submit them separately and record the dependency and merge order in the PR description. Follow the [PR scope and description guidance](CONTRIBUTING.md#pull-request-内容).
+
 ## 项目收尾：仅由用户明确触发
 
 只有用户明确要求本轮项目收尾时，才执行 [CONTRIBUTING.md 的项目收尾流程](CONTRIBUTING.md#项目收尾流程)。普通任务完成、单项操作和讨论或修改规则均不触发收尾。AOCI 写入、交接、收尾提交和归档须有对应授权。用户暂停或撤销后立即停止收尾。
