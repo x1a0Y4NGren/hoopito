@@ -33,4 +33,23 @@
     opacity: 0;
     max-width: none;
   }
+
+  /* Keep the chapter label legible as the court plate's lit crown passes it. */
+  :is(.scoring, .experience, .replay) .chapter-kicker {
+    position: relative;
+    isolation: isolate;
+  }
+  :is(.scoring, .experience, .replay) .chapter-kicker::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -10px -20px;
+    background: radial-gradient(
+      ellipse at left center,
+      rgb(8 12 15 / 96%) 35%,
+      rgb(8 12 15 / 68%) 55%,
+      transparent 75%
+    );
+    pointer-events: none;
+  }
 }

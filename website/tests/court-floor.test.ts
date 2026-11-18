@@ -2,6 +2,46 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import * as THREE from 'three';
 
+test('the continuous maple darkens outside the playable boundary without tinting the paint', async () => {
+  const { createCourtFloor } = await import('../src/scripts/court-floor.ts');
+  const resources = new Set<{ dispose(): void }>();
+  const floor = createCourtFloor({
+    own: (resource) => {
+      resources.add(resource);
+      return resource;
+    },
+    mapleMap: new THREE.Texture(),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
+  });
+  try {
+    const geometry = floor.mesh.geometry;
+    assert.ok(floor.mesh.material.vertexColors);
+    assert.equal(floor.paintGeometry.hasAttribute('color'), false);
+    const colors = geometry.getAttribute('color');
+    const middleRow = 39 * 65;
+    // The sideline falls between x=7.4375 and x=7.875 on the existing grid.
+    const playable = colors.getX(middleRow + 49);
+    const firstOutside = colors.getX(middleRow + 50);
+    const apron = colors.getX(middleRow + 53);
+    assert.ok(playable >= 0.96 && playable <= 1.04);
+    assert.ok(firstOutside >= 0.96 && firstOutside <= 1.04);
+    assert.ok(apron >= 0.78 && apron <= 0.91);
+    assert.ok(colors.getZ(middleRow + 53) > apron);
+    // The floor tile retains small, smooth tone changes across the playing area.
+    assert.notEqual(colors.getX(middleRow + 25), colors.getX(middleRow + 40));
+    for (let index = 0; index < colors.count; index++) {
+      for (const value of [
+        colors.getX(index),
+        colors.getY(index),
+        colors.getZ(index),
+      ])
+        assert.ok(Number.isFinite(value) && value >= 0.78 && value <= 1.04);
+    }
+  } finally {
+    for (const resource of resources) resource.dispose();
+  }
+});
+
 test('the rear stand contact shadow fades with its support and restores without altering the floor', async () => {
   const { createCourtFloor } = await import('../src/scripts/court-floor.ts');
   const resources = new Set<{ dispose(): void }>();

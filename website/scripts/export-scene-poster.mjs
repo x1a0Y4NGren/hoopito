@@ -48,6 +48,7 @@ for (const path of [
   'src/scripts/demo-invitation.ts',
   'src/scripts/arrow-drawing.ts',
   'src/scripts/court-hardware.ts',
+  'src/scripts/court-arena.ts',
   'src/scripts/court-floor.ts',
   'src/scripts/court-textures.ts',
   'src/scripts/scene-contract.ts',
