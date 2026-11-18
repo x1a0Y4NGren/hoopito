@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { REAR_ACCESS_PORTALS } from './court-arena.ts';
 import type { SceneQuality } from './scene-contract.ts';
 
 type ResourceOwner = <T extends { dispose(): void }>(resource: T) => T;
@@ -313,20 +314,18 @@ export function createCourtHardware({
 
   // Large architectural pieces share finishes and use the same geometry
   // at both detail levels. Save the close-detail geometry for the basket.
-  const architecture = 'arena-structure';
-  batches.set(architecture, {
-    material: own(
-      new THREE.MeshStandardMaterial({
-        color: '#39434A',
-        roughness: 0.78,
-        metalness: 0.18,
-      }),
-    ),
-    parts: [],
-    farParts: [],
-    castShadow: false,
-    viewRole: 'perimeter',
-  });
+  const architecture = finish(
+    'arena-structure',
+    {
+      color: '#58616B',
+      emissive: '#505964',
+      emissiveIntensity: 0.23,
+      roughness: 0.76,
+      metalness: 0.18,
+    },
+    false,
+    'perimeter',
+  );
   const ceilingStructure = finish(
     'ceiling-structure',
     {
@@ -357,7 +356,9 @@ export function createCourtHardware({
   const acoustic = finish(
     'acoustic-panels',
     {
-      color: '#384248',
+      color: '#303E49',
+      emissive: '#475C6A',
+      emissiveIntensity: 0.14,
       roughness: 0.98,
       metalness: 0,
     },
@@ -478,11 +479,73 @@ export function createCourtHardware({
       block([0.29, 0.042, 0.29], [x, 8.58, z], ceilingStructure);
     }
 
-  // Rear wall ribs and copper guidance lights remain readable behind the hero ball.
-  for (let x = -12; x <= 12; x += 1.5) {
-    block([0.64, 5.7, 0.085], [x, 3.85, -13.29], acoustic, 0.004);
-    block([0.045, 7.2, 0.14], [x + 0.68, 3.9, -13.19], architecture, 0.006);
+  // A deeper column line frames upper acoustic fields and lower impact panels.
+  const {
+    centers,
+    width: portalWidth,
+    height: portalHeight,
+    wallFaceZ,
+  } = REAR_ACCESS_PORTALS;
+  for (const x of [-12.64, -6.52, -2.08, 2.08, 6.52, 12.64]) {
+    block([0.48, 9.29, 0.52], [x, 4.645, wallFaceZ + 0.13], architecture);
+    block([0.55, 0.58, 0.57], [x, 0.29, wallFaceZ + 0.14], acoustic);
   }
+  for (const [x, width] of [
+    [-11.23, 2.25],
+    [-8.59, 2.86],
+    [-4.32, 3.78],
+    [0, 3.54],
+    [4.32, 3.78],
+    [8.59, 2.86],
+    [11.23, 2.25],
+  ] as const) {
+    block([width, 2.83, 0.15], [x, 6.06, wallFaceZ + 0.06], acoustic);
+    block([width, 1.35, 0.22], [x, 3.858, wallFaceZ + 0.06], acoustic);
+    block([width, 0.048, 0.24], [x, 4.577, wallFaceZ + 0.065], architecture);
+  }
+  for (const [x, width] of [
+    [-11.13, 2.08],
+    [-4.1, 3.81],
+    [0, 3.57],
+    [4.1, 3.81],
+    [11.13, 2.08],
+  ] as const) {
+    block([width, 1.64, 0.26], [x, 1.33, wallFaceZ + 0.065], acoustic);
+    block([width, 0.23, 0.24], [x, 0.117, wallFaceZ + 0.05], architecture);
+  }
+  for (const x of centers) {
+    const jambX = portalWidth / 2;
+    const leafZ = wallFaceZ - 0.62;
+    for (const side of [-1, 1]) {
+      block(
+        [0.17, portalHeight, 0.22],
+        [x + side * jambX, portalHeight / 2, wallFaceZ + 0.105],
+        architecture,
+      );
+      block(
+        [0.14, portalHeight, 0.69],
+        [x + side * (jambX - 0.038), portalHeight / 2, wallFaceZ - 0.275],
+        acoustic,
+      );
+      block([1.018, 2.39, 0.078], [x + side * 0.523, 1.235, leafZ], acoustic);
+      block(
+        [0.39, 0.057, 0.056],
+        [x + side * 0.32, 1.04, leafZ + 0.065],
+        architecture,
+      );
+      block(
+        [1.012, 0.215, 0.036],
+        [x + side * 0.523, 0.179, leafZ + 0.05],
+        architecture,
+      );
+    }
+    block([2.45, 0.2, 0.32], [x, 2.76, wallFaceZ + 0.12], architecture);
+    block([2.2, 0.17, 0.7], [x, 2.64, wallFaceZ - 0.253], acoustic);
+    block([2.084, 0.165, 0.08], [x, 2.52, leafZ], architecture);
+    block([2.1, 0.055, 0.66], [x, 0.029, wallFaceZ - 0.25], architecture);
+    block([1.7, 0.036, 0.025], [x, 2.647, wallFaceZ + 0.265], warmStrip);
+  }
+
   for (const x of [-11.3, 11.3]) {
     block([0.12, 0.018, 17], [x, 0.028, -0.5], warmStrip, 0.003);
     // Retracted courtside seating: low silhouettes, without high-cost remote detail.

@@ -24,6 +24,8 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
 import { CopyShader } from 'three/addons/shaders/CopyShader.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { REAR_ACCESS_PORTALS } from './court-arena';
 import { createCourtHardware } from './court-hardware';
 import { createCourtFloor } from './court-floor';
 import { loadCourtTextures } from './court-textures';
@@ -773,18 +775,105 @@ export async function createCourtScene(
 
     // Continuous flooring, acoustic walls and ceiling luminaires establish an indoor court.
     // The floor has no exposed miniature-model edge in the pullback or overhead shots.
-    // Matte acoustic walls carry the ambient base finish; no view-dependent BRDF
-    // is visible here. Their contour lights remain separate emissive geometry.
-    const wall = own(new THREE.MeshBasicMaterial({ color: '#18232C' }));
+    // Bake a soft wall wash once so the structure reads below the ceiling lights.
+    // The left side stays subdued behind the opening title.
+    const wall = own(
+      new THREE.MeshBasicMaterial({ color: '#2A343B', vertexColors: true }),
+    );
     const shellLight = own(emissiveAmber.clone());
     shellLight.emissiveIntensity = 0.65;
     shellSurfaces.push(wall, shellLight);
     arenaShell.name = 'arena-cutaway-shell';
     add(arenaShell);
-    box([27, 9, 0.24], [0, 4.4, -13.5], wall, arenaShell);
-    box([0.22, 8.8, 36], [-13.5, 4.3, 2], wall, arenaShell);
-    box([0.22, 8.8, 36], [13.5, 4.3, 2], wall, arenaShell);
-    box([26.8, 0.034, 0.045], [0, 0.48, -13.34], shellLight, arenaShell);
+    const wallSpans = [
+      -13.5,
+      ...REAR_ACCESS_PORTALS.centers.flatMap((center) => [
+        center - REAR_ACCESS_PORTALS.width / 2,
+        center + REAR_ACCESS_PORTALS.width / 2,
+      ]),
+      13.5,
+    ];
+    const solidWallSpans = [0, 2, 4].map(
+      (index) => [wallSpans[index]!, wallSpans[index + 1]!] as const,
+    );
+    const joinedBoxes = (
+      sections: ReadonlyArray<{
+        size: [number, number, number];
+        center: [number, number, number];
+      }>,
+      finish: THREE.Material,
+    ) => {
+      const segments = sections.map(({ size, center }) =>
+        new THREE.BoxGeometry(...size).translate(...center),
+      );
+      const joined = mergeGeometries(segments);
+      segments.forEach((segment) => segment.dispose());
+      if (!joined)
+        throw new Error('Arena wall sections must share geometry attributes');
+      return add(new THREE.Mesh(own(joined), finish), arenaShell);
+    };
+    const wallTop = 8.9;
+    const wallBottom = -0.1;
+    const doorwayTop = REAR_ACCESS_PORTALS.height;
+    const wallZ = REAR_ACCESS_PORTALS.wallFaceZ - 0.12;
+    const backWall = joinedBoxes(
+      [
+        {
+          size: [27, wallTop - doorwayTop, 0.24],
+          center: [0, (wallTop + doorwayTop) / 2, wallZ],
+        },
+        ...solidWallSpans.map(([left, right]) => ({
+          size: [right - left, doorwayTop - wallBottom, 0.24] as [
+            number,
+            number,
+            number,
+          ],
+          center: [
+            (left + right) / 2,
+            (doorwayTop + wallBottom) / 2,
+            wallZ,
+          ] as [number, number, number],
+        })),
+      ],
+      wall,
+    );
+    const walls = [
+      backWall,
+      box([0.22, 8.8, 36], [-13.5, 4.3, 2], wall, arenaShell),
+      box([0.22, 8.8, 36], [13.5, 4.3, 2], wall, arenaShell),
+    ];
+    for (const mesh of walls) {
+      const position = mesh.geometry.getAttribute('position');
+      const colors = new Float32Array(position.count * 3);
+      for (let index = 0; index < position.count; index++) {
+        const x = mesh.position.x + position.getX(index);
+        const y = mesh.position.y + position.getY(index);
+        const across = THREE.MathUtils.clamp((x + 13.5) / 27, 0, 1);
+        const height = THREE.MathUtils.clamp(y / 8.8, 0, 1);
+        const wash = 0.42 + 0.16 * height + 0.18 * across;
+        colors.set([wash, wash, wash], index * 3);
+      }
+      mesh.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    }
+    // Stop the low accent at each access bay and clear the background behind
+    // the glass board in the basket close-up.
+    const guideSpans = [
+      [-13.35, wallSpans[1]!],
+      [wallSpans[2]!, -2.55],
+      [2.55, wallSpans[3]!],
+      [wallSpans[4]!, 13.35],
+    ] as const;
+    joinedBoxes(
+      guideSpans.map(([left, right]) => ({
+        size: [right - left, 0.029, 0.045],
+        center: [
+          (left + right) / 2,
+          0.48,
+          REAR_ACCESS_PORTALS.wallFaceZ + 0.04,
+        ],
+      })),
+      shellLight,
+    );
     arenaShell.traverse((part) => {
       if (part instanceof THREE.Mesh) part.castShadow = false;
     });
