@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { COURT } from './court-geometry.ts';
 import type { SceneQuality } from './scene-contract';
 
 import {
@@ -13,6 +14,25 @@ export { sampleFloorLighting } from './court-lighting.ts';
 
 type Owner = <T extends { dispose(): void }>(resource: T) => T;
 
+// The stained apron and its brass-toned inlay are part of the same floor pass.
+// World metres keep them registered beyond the court at every camera angle.
+const apronFragment = /* glsl */ `
+  vec3 arenaFloorAlbedo(vec3 maple) {
+    vec2 courtHalfSize = vec2(${(COURT.width / 2).toFixed(3)}, ${(COURT.depth / 2).toFixed(3)});
+    vec2 edge = abs(vFloorPosition.xz) - courtHalfSize;
+    float distanceFromCourt = max(edge.x, edge.y);
+    float stain = smoothstep(0.28, 0.98, distanceFromCourt);
+    float beyondApron = smoothstep(2.20, 2.80, distanceFromCourt);
+    vec3 stainedMaple = maple * mix(vec3(0.69, 0.75, 0.83), vec3(0.76, 0.79, 0.85), beyondApron);
+    vec3 albedo = mix(maple, stainedMaple, stain);
+    float width = max(fwidth(distanceFromCourt), 0.0001);
+    float offset = abs(distanceFromCourt - 1.34);
+    float inlay = clamp((0.035 - offset) / width + 0.5, 0.0, 1.0)
+                - clamp((-0.035 - offset) / width + 0.5, 0.0, 1.0);
+    return mix(albedo, maple * vec3(0.89, 0.79, 0.64), inlay * stain * 0.75);
+  }
+`;
+
 /** One mesh: retain the fine court grid and extend only its outermost border. */
 function createFloorGeometry() {
   const extent = 256;
@@ -22,6 +42,7 @@ function createFloorGeometry() {
   const geometry = new THREE.PlaneGeometry(extent, extent, columns, rows);
   const position = geometry.getAttribute('position');
   const uv = geometry.getAttribute('uv');
+  const colors = new Float32Array(position.count * 3);
   for (let vertex = 0; vertex < position.count; vertex++) {
     const column = vertex % (columns + 1);
     const row = Math.floor(vertex / (columns + 1));
@@ -45,7 +66,21 @@ function createFloorGeometry() {
       (x + reference.width / 2) / reference.width,
       (y + reference.length / 2) / reference.length,
     );
+    const z = reference.centerZ - y;
+    const outside = Math.max(
+      Math.abs(x) - COURT.width / 2,
+      Math.abs(z) - COURT.depth / 2,
+    );
+    const apron = THREE.MathUtils.smoothstep(outside, 0.4, 1.2);
+    // Low-frequency variation breaks repetition without a second texture read.
+    // The original maple texture still supplies board joints and fine grain.
+    const maple =
+      1 + 0.018 * Math.sin(x * 1.9) + 0.013 * Math.sin(x * 0.8 + z * 0.42);
+    colors[vertex * 3] = THREE.MathUtils.lerp(maple, 0.81, apron);
+    colors[vertex * 3 + 1] = THREE.MathUtils.lerp(maple, 0.85, apron);
+    colors[vertex * 3 + 2] = THREE.MathUtils.lerp(maple, 0.88, apron);
   }
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   return geometry;
 }
 
@@ -126,10 +161,11 @@ export function createCourtFloor({
     new THREE.MeshBasicMaterial({
       color: '#C6BBAC',
       map: mapleMap,
+      vertexColors: true,
       toneMapped: true,
     }),
   );
-  surface.customProgramCacheKey = () => 'hoopito-cached-maple-light-v4';
+  surface.customProgramCacheKey = () => 'hoopito-cached-maple-light-v6';
   surface.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, paintUniforms);
     shader.vertexShader = shader.vertexShader
@@ -158,12 +194,13 @@ ${floorVarnishVertexGLSL}`,
       .replace(
         '#include <common>',
         `#include <common>
-${floorSurfaceGLSL}`,
+${floorSurfaceGLSL}
+${apronFragment}`,
       )
       .replace(
         '#include <opaque_fragment>',
         `
-        outgoingLight = floorSurface(diffuseColor.rgb);
+        outgoingLight = floorSurface(arenaFloorAlbedo(diffuseColor.rgb));
         #include <opaque_fragment>`,
       );
   };
