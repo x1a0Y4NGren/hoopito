@@ -147,7 +147,7 @@ export const floorVarnishVertexGLSL = /* glsl */ `
     float key = pow(max(dot(uFloorFlatNormal, keyHalf), 0.0), 18.0) * specular.x;
     float amber = pow(max(dot(uFloorFlatNormal, amberHalf), 0.0), 18.0) * specular.y;
     float fresnel = pow(1.0 - max(dot(uFloorFlatNormal, viewDirection), 0.0), 5.0);
-    return min((uFloorKeyColor * key + uFloorAmberColor * amber) * (0.035 + 0.06 * fresnel), vec3(0.24)) * uFloorLight;
+    return min((uFloorKeyColor * key + uFloorAmberColor * amber) * (0.039 + 0.065 * fresnel), vec3(0.24)) * uFloorLight;
   }
 `;
 
@@ -189,7 +189,7 @@ export const floorSurfaceGLSL = /* glsl */ `
     float fresnel = pow(1.0 - max(dot(normal, viewDirection), 0.0), 5.0);
     float key = floorLobe(uFloorKeyPosition, normal, viewDirection, roughness) * vFloorSpecular.x;
     float amber = floorLobe(uFloorAmberPosition, normal, viewDirection, roughness) * vFloorSpecular.y;
-    return min((uFloorKeyColor * key + uFloorAmberColor * amber) * (0.035 + 0.06 * fresnel), vec3(0.24)) * uFloorLight;
+    return min((uFloorKeyColor * key + uFloorAmberColor * amber) * (0.039 + 0.065 * fresnel), vec3(0.24)) * uFloorLight;
   }
   vec3 floorSurface(vec3 albedo) {
     // Uniform quality branching skips the data texture, normal reconstruction
