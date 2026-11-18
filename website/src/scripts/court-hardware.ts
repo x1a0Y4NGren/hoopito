@@ -71,28 +71,30 @@ export function createCourtHardware({
     return name;
   };
   const steel = finish('painted-steel', {
-    color: '#566168',
+    color: '#64737B',
     map: metalMap,
     bumpMap: metalMap,
     bumpScale: 0.0014,
-    roughness: 0.63,
+    roughness: 0.55,
     metalness: 0.22,
   });
   const brushed = finish('brushed-fasteners', {
-    color: '#B4BDC0',
+    color: '#C3CBCB',
     map: metalMap,
     bumpMap: metalMap,
     bumpScale: 0.0008,
-    roughness: 0.31,
-    metalness: 0.92,
+    roughness: 0.34,
+    metalness: 0.87,
   });
   const padding = finish(
     'padded-protection',
     {
-      color: '#242B30',
+      color: '#394750',
+      emissive: '#324653',
+      emissiveIntensity: 0.12,
       bumpMap: metalMap,
-      bumpScale: 0.004,
-      roughness: 0.91,
+      bumpScale: 0.0012,
+      roughness: 0.94,
       metalness: 0,
     },
     true,
@@ -149,21 +151,29 @@ export function createCourtHardware({
   const glassEdge = finish(
     'glass-edge',
     {
-      color: '#719C9C',
-      roughness: 0.18,
+      color: '#91BDB8',
+      emissive: '#3C686B',
+      emissiveIntensity: 0.18,
+      roughness: 0.22,
       metalness: 0.08,
       transparent: true,
-      opacity: 0.56,
+      opacity: 0.72,
       depthWrite: false,
     },
     false,
   );
   // The front board frame shares the original finishes; only the stand owns
   // these clones. Their texture references remain owned by the scene caller.
-  function rearFinish(name: string, source: string) {
+  function rearFinish(
+    name: string,
+    source: string,
+    parameters: THREE.MeshStandardMaterialParameters,
+  ) {
     const original = batches.get(source)!;
+    const material = (original.material as THREE.MeshStandardMaterial).clone();
+    material.setValues(parameters);
     batches.set(name, {
-      material: own(original.material.clone()),
+      material: own(material),
       parts: [],
       farParts: [],
       castShadow: original.castShadow,
@@ -171,8 +181,16 @@ export function createCourtHardware({
     });
     return name;
   }
-  const rearSteel = rearFinish('rear-painted-steel', steel);
-  const rearBrushed = rearFinish('rear-brushed-fasteners', brushed);
+  const rearSteel = rearFinish('rear-painted-steel', steel, {
+    color: '#5B6D78',
+    emissive: '#4A5963',
+    emissiveIntensity: 0.14,
+    roughness: 0.49,
+  });
+  const rearBrushed = rearFinish('rear-brushed-fasteners', brushed, {
+    color: '#9BAAB0',
+    roughness: 0.41,
+  });
 
   // Construction parts never reach the renderer. Dispose these local staging
   // geometries after merging; only the final geometry belongs to the scene owner.
@@ -437,51 +455,122 @@ export function createCourtHardware({
   const backZ = rim.z - 2.15;
   const boardZ = rim.z - 0.47;
   const boardY = rim.y + 0.525;
-  block([1.46, 0.14, 1.35], [rim.x, 0.045, backZ], rearSteel, 0.04);
-  block([1.23, 0.38, 1.08], [rim.x, 0.3, backZ + 0.07], padding, 0.09);
-  block([0.3, 3.88, 0.3], [rim.x, 2.03, backZ - 0.2], rearSteel, 0.037);
-  block([0.45, 1.57, 0.43], [rim.x, 1.03, backZ - 0.17], padding, 0.063);
-  for (const y of [0.57, 1.47]) {
-    block([0.454, 0.047, 0.022], [rim.x, y, backZ + 0.054], rearSteel, 0.005);
-    block(
-      [0.054, 0.057, 0.03],
-      [rim.x + 0.15, y, backZ + 0.071],
-      rearBrushed,
-      0.009,
-    );
-  }
-  for (const dx of [-0.55, 0.55]) {
-    for (const dz of [-0.49, 0.49])
+  block([1.46, 0.074, 1.35], [rim.x, 0.037, backZ], rearSteel, 0.026);
+  block([1.4, 0.047, 1.29], [rim.x, 0.089, backZ], rearBrushed, 0.012);
+  block([1.33, 0.141, 1.225], [rim.x, 0.167, backZ], rearSteel, 0.029);
+  block([1.212, 0.304, 1.076], [rim.x, 0.343, backZ + 0.063], padding, 0.073);
+  block([1.035, 0.168, 0.028], [rim.x, 0.34, backZ + 0.604], padding, 0.012);
+  for (const dx of [-0.628, 0.628]) {
+    for (const dz of [-0.496, 0.496]) {
       cylinder(
-        0.026,
-        0.026,
-        0.029,
-        [rim.x + dx, 0.13, backZ + dz],
+        0.017,
+        0.017,
+        0.012,
+        [rim.x + dx, 0.235, backZ + dz],
         rearBrushed,
         undefined,
         6,
       );
+    }
   }
-  for (const dx of [-0.19, 0.19]) {
-    pipe(
-      [
-        new THREE.Vector3(rim.x + dx, 3.53, backZ - 0.2),
-        new THREE.Vector3(rim.x + dx, 3.96, backZ + 0.36),
-        new THREE.Vector3(rim.x + dx, 3.97, boardZ - 0.63),
-        new THREE.Vector3(rim.x + dx, boardY, boardZ - 0.095),
-      ],
-      0.076,
+
+  // Extrude the side profile across the stand, narrowing it into the board shoe.
+  const profile = new THREE.Shape();
+  profile.moveTo(0.39, 0.39);
+  profile.lineTo(0.39, 0.56);
+  profile.lineTo(0.05, rim.y + 0.18);
+  profile.lineTo(-0.56, rim.y + 0.94);
+  profile.lineTo(-0.72, rim.y + 0.965);
+  profile.lineTo(-1.59, boardY + 0.085);
+  profile.lineTo(-1.59, boardY - 0.145);
+  profile.lineTo(-0.64, rim.y + 0.613);
+  profile.lineTo(-0.52, rim.y + 0.545);
+  profile.lineTo(-0.27, rim.y + 0.134);
+  profile.lineTo(0.04, 0.42);
+  profile.closePath();
+  const standWidth = 0.34;
+  const cantilever = (bevelSegments: number) => {
+    const geometry = new THREE.ExtrudeGeometry(profile, {
+      depth: standWidth,
+      bevelThickness: 0.023,
+      bevelSize: 0.019,
+      bevelSegments,
+    });
+    const vertices = geometry.getAttribute('position');
+    for (let index = 0; index < vertices.count; index++) {
+      const alongArm = THREE.MathUtils.smoothstep(
+        -vertices.getX(index),
+        0.4,
+        1.59,
+      );
+      const upMast = THREE.MathUtils.smoothstep(
+        vertices.getY(index),
+        0.5,
+        boardY - 0.175,
+      );
+      const sectionWidth = 1 - 0.32 * alongArm - 0.07 * upMast;
+      vertices.setZ(
+        index,
+        (vertices.getZ(index) - standWidth / 2) * sectionWidth,
+      );
+    }
+    geometry.computeVertexNormals();
+    return geometry.rotateY(Math.PI / 2);
+  };
+  place(
+    [cantilever(2), cantilever(1)],
+    rearSteel,
+    new THREE.Vector3(rim.x, 0, backZ),
+  );
+
+  // The removable upright pad and its bindings follow the slope of the steel.
+  const padMount = new THREE.Matrix4()
+    .makeRotationX(0.115)
+    .setPosition(rim.x, 1.165, backZ - 0.157);
+  block([0.493, 1.46, 0.485], [0, 0, 0], padding, 0.065, padMount);
+  block([0.419, 1.35, 0.063], [0, 0, 0.23], padding, 0.028, padMount);
+  for (const side of [-1, 1]) {
+    block(
+      [0.014, 1.248, 0.022],
+      [side * 0.219, 0, 0.235],
       rearSteel,
+      0.005,
+      padMount,
     );
+  }
+  for (const y of [-0.515, 0.515]) {
+    block([0.074, 0.032, 0.018], [0.184, y, 0.264], rearSteel, 0.006, padMount);
+    block([0.034, 0.041, 0.02], [0.18, y, 0.272], rearBrushed, 0.007, padMount);
+  }
+
+  for (const dx of [-0.118, 0.118]) {
     beam(
-      new THREE.Vector3(rim.x + dx, 2.75, backZ - 0.15),
-      new THREE.Vector3(rim.x + dx, 3.91, boardZ - 0.74),
-      0.029,
+      new THREE.Vector3(rim.x + dx, rim.y - 0.43, backZ + 0.08),
+      new THREE.Vector3(rim.x + dx, boardY + 0.12, backZ + 0.86),
+      0.022,
       rearBrushed,
     );
-    cylinder(0.088, 0.088, 0.08, [rim.x + dx, 3.55, backZ - 0.2], rearBrushed);
   }
-  block([0.63, 0.58, 0.065], [rim.x, boardY, boardZ - 0.057], rearSteel, 0.022);
+  block([0.65, 0.58, 0.065], [rim.x, boardY, boardZ - 0.057], rearSteel, 0.018);
+  block(
+    [0.472, 0.404, 0.045],
+    [rim.x, boardY, boardZ - 0.106],
+    rearBrushed,
+    0.013,
+  );
+  for (const dx of [-0.199, 0.199]) {
+    for (const dy of [-0.151, 0.151]) {
+      cylinder(
+        0.017,
+        0.017,
+        0.018,
+        [rim.x + dx, boardY + dy, boardZ - 0.133],
+        rearBrushed,
+        new THREE.Euler(Math.PI / 2, 0, 0),
+        6,
+      );
+    }
+  }
   block([1.8, 1.05, 0.023], [rim.x, boardY, boardZ], 'glass-panel', 0.009);
   for (const dx of [-0.917, 0.917]) {
     block([0.031, 1.109, 0.053], [rim.x + dx, boardY, boardZ], steel, 0.009);
@@ -501,6 +590,12 @@ export function createCourtHardware({
       0.003,
     );
   }
+  block(
+    [1.8, 0.047, 0.058],
+    [rim.x, boardY - 0.574, boardZ + 0.005],
+    steel,
+    0.011,
+  );
   for (const dx of [-0.845, 0.845]) {
     for (const dy of [-0.464, 0.464]) {
       block(
@@ -510,10 +605,19 @@ export function createCourtHardware({
         0.011,
       );
       cylinder(
+        0.022,
+        0.022,
+        0.009,
+        [rim.x + dx, boardY + dy, boardZ + 0.027],
+        steel,
+        new THREE.Euler(Math.PI / 2, 0, 0),
+        12,
+      );
+      cylinder(
         0.014,
         0.014,
         0.02,
-        [rim.x + dx, boardY + dy, boardZ + 0.033],
+        [rim.x + dx, boardY + dy, boardZ + 0.037],
         steel,
         new THREE.Euler(Math.PI / 2, 0, 0),
         6,
