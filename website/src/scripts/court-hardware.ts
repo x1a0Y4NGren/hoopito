@@ -742,8 +742,8 @@ export function createCourtHardware({
 
   const nylon = own(
     new THREE.MeshStandardMaterial({
-      color: '#F0E7D4',
-      roughness: 0.86,
+      color: '#EEE6D6',
+      roughness: 0.88,
       metalness: 0,
     }),
   );
@@ -839,10 +839,25 @@ export function createCourtHardware({
       const adjacent = (index + (row % 2 ? 1 : -1) + 12) % 12;
       rope(nodes[row - 1]![index]!, knot);
       rope(nodes[row - 1]![adjacent]!, knot);
+      const outward = new THREE.Vector3(
+        knot.x - rim.x,
+        0,
+        knot.z - rim.z,
+      ).normalize();
+      const tangent = new THREE.Vector3(outward.z, 0, -outward.x);
+      const wrap = new THREE.CatmullRomCurve3(
+        Array.from({ length: 9 }, (_, point) => {
+          const along = point / 8;
+          const turn = along * Math.PI * 2;
+          return new THREE.Vector3(0, (along - 0.5) * 0.01, 0)
+            .addScaledVector(outward, Math.cos(turn) * 0.0035)
+            .addScaledVector(tangent, Math.sin(turn) * 0.0035);
+        }),
+      );
       place(
         [
-          new THREE.SphereGeometry(0.0052, 6, 4),
-          new THREE.OctahedronGeometry(0.0052),
+          new THREE.TubeGeometry(wrap, 8, 0.0022, 5, false),
+          new THREE.OctahedronGeometry(0.0052).scale(0.93, 1.46, 0.93),
         ],
         'nylon-net',
         knot,
@@ -850,13 +865,31 @@ export function createCourtHardware({
     }
   }
   const lowerLoop = new THREE.CatmullRomCurve3(nodes.at(-1)!, true);
-  place(
-    [
-      new THREE.TubeGeometry(lowerLoop, 60, 0.0032, 6, true),
-      new THREE.TubeGeometry(lowerLoop, 30, 0.0032, 4, true),
-    ],
-    'nylon-net',
-    new THREE.Vector3(),
+  const hemTurns = 18;
+  const hemSegments = hemTurns * 6;
+  const netBatch = batches.get('nylon-net')!;
+  for (const phase of [0, Math.PI]) {
+    const cord = new THREE.CatmullRomCurve3(
+      Array.from({ length: hemSegments }, (_, point) => {
+        const along = point / hemSegments;
+        const turn = along * hemTurns * Math.PI * 2 + phase;
+        const center = lowerLoop.getPoint(along);
+        const outward = new THREE.Vector3(
+          center.x - rim.x,
+          0,
+          center.z - rim.z,
+        ).normalize();
+        center.y += Math.sin(turn) * 0.0019;
+        return center.addScaledVector(outward, Math.cos(turn) * 0.0019);
+      }),
+      true,
+    );
+    netBatch.parts.push(
+      new THREE.TubeGeometry(cord, hemSegments, 0.00235, 5, true),
+    );
+  }
+  netBatch.farParts.push(
+    new THREE.TubeGeometry(lowerLoop, 30, 0.0032, 4, true),
   );
 
   const levels: {

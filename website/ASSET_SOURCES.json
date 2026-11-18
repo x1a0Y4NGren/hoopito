@@ -540,12 +540,12 @@
     },
     {
       "output": "public/art/scene-poster-compact.webp",
-      "bytes": 22986,
-      "sha256": "522f62e5ab59e62a87acf731d675a7cba950b4c6e603fbb3a231d043847146c6",
-      "source": "website/assets/art/source/scene-poster-compact-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "9f053930e368e9fd4020c6b491c3b2044fd417a88494beb8f11ee365b74914fd",
+      "bytes": 23006,
+      "sha256": "224f5919e17ee6438a439b835bac1956edee24837284646d23c10bffc1cbab24",
+      "source": "website/assets/art/source/scene-poster-compact-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "01efec6ca82bc0ab68d323ad956a8937010c1c32bf77d7fef40ee0539852765e",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -658,7 +658,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -882,12 +882,12 @@
     },
     {
       "output": "public/art/scene-poster-standard.webp",
-      "bytes": 41694,
-      "sha256": "80e983e9d9ce341adf1e151c27529fc1e0c22ff9a850fb9241432858e3d281d8",
-      "source": "website/assets/art/source/scene-poster-standard-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "5634d0512eef769dc56ca41b3c5563ed51d590e9079bdaacfb28044b8ff3b17f",
+      "bytes": 41614,
+      "sha256": "cf486318a26ea2e3a528e83e9bacdc8f493b6cdba2277e178206a860d8a9d0f0",
+      "source": "website/assets/art/source/scene-poster-standard-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "027ff927cf114fbaf8bf88caeb141cd98d4957b3dbde12afef373debca775710",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -1000,7 +1000,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -1224,12 +1224,12 @@
     },
     {
       "output": "public/art/scene-mobile.webp",
-      "bytes": 10574,
-      "sha256": "a4f3b50287afdb13c3e4248e1157c86b653a08e876e4b505a0ece12410fcf3b4",
-      "source": "website/assets/art/source/scene-poster-mobile-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "5634d0512eef769dc56ca41b3c5563ed51d590e9079bdaacfb28044b8ff3b17f",
+      "bytes": 10584,
+      "sha256": "20d7ca7e8890620bd6a7daa9bf057db9d01b425600a1a0d49a3820d1095cc81f",
+      "source": "website/assets/art/source/scene-poster-mobile-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "027ff927cf114fbaf8bf88caeb141cd98d4957b3dbde12afef373debca775710",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -1342,7 +1342,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -1576,12 +1576,12 @@
     },
     {
       "output": "public/art/scene-poster-wide.webp",
-      "bytes": 69102,
-      "sha256": "9c11e1c41458339f868425ec63d2679ff1b7d3d8dd78c724adb3d96364a90925",
-      "source": "website/assets/art/source/scene-poster-wide-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "4d357353d54a63a131d2e256aa0c6860947b630bbd640a2f86edb7f857fa93ca",
+      "bytes": 69506,
+      "sha256": "b9824d927e990b52a955489c3f2f0b8c656905811eb0eee52ae64ba8a652ffe0",
+      "source": "website/assets/art/source/scene-poster-wide-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "edf89446cdd24ffa1cc34ee5bfe1d5c318f129620e400299005b0a5084c3d90f",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -1694,7 +1694,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -1918,12 +1918,12 @@
     },
     {
       "output": "public/art/scene-poster-demo-compact.webp",
-      "bytes": 5888,
-      "sha256": "7e98347afaaa56af270f1df0afecc98fcead05ccd30a05387f8c95a69c70361b",
-      "source": "website/assets/art/source/scene-poster-demo-compact-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "51131fc3e5e6d90ce802d47549fc846508e715e80c61b3c399a7b90ff6e2074b",
+      "bytes": 5806,
+      "sha256": "3db03c976ff9cd0f6188e7f34e50c93731ed6b4cf91d561e92ee6e53a4f0dbe3",
+      "source": "website/assets/art/source/scene-poster-demo-compact-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "0a0c99f1a257ca48c479103f0d7160549a61c61ab7181297fa2c3ab153c075aa",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -2036,7 +2036,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -2260,12 +2260,12 @@
     },
     {
       "output": "public/art/scene-poster-demo-standard.webp",
-      "bytes": 8136,
-      "sha256": "bc69eebe9ea0ff48d8f5146d427d223809a0a0756826b30972e86eb13d4ff7b3",
-      "source": "website/assets/art/source/scene-poster-demo-standard-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "2fd75d3026da455525e5932ed3bd21ed25e2ce29dd41f8293f68528911f732c3",
+      "bytes": 8328,
+      "sha256": "9fae62181b5a58dc06a9e5a17ba60e18f003ac6a2976a9ed1b0887d9915b2c56",
+      "source": "website/assets/art/source/scene-poster-demo-standard-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "37099fa8d820d8176ba96a6afd72c49797c93b64043b90a1925ed4f4adaa28d2",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -2378,7 +2378,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -2602,12 +2602,12 @@
     },
     {
       "output": "public/art/scene-poster-demo-wide.webp",
-      "bytes": 11536,
-      "sha256": "1a0ad9527f4f2bcea303d8e9b648269e689405eca3d232646116dc3120762929",
-      "source": "website/assets/art/source/scene-poster-demo-wide-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "0824cf1972fd034cedda887517ccfae33efe2495c5defa85891bff9d0c51c50e",
+      "bytes": 11484,
+      "sha256": "f78e56eb0f5b99722a9b17016cc914b93be72f1a6184ea3e920d352faa877bc2",
+      "source": "website/assets/art/source/scene-poster-demo-wide-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "d303ec85431c87acba9261613d50fa49e0ab916c7cbe2e9fab9ac5d0afd8ddd8",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -2720,7 +2720,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -2944,12 +2944,12 @@
     },
     {
       "output": "public/art/scene-mobile-hero.webp",
-      "bytes": 29460,
-      "sha256": "55af27a97d876a88b394b60ecbdd57a0d50146e4caf9c5272894bac9bcb96ec7",
-      "source": "website/assets/art/source/scene-poster-mobile-hero-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "b9ccaabe97c982df48a9516deb21c062cbe34c4f7e480553bb2b1811637102c8",
+      "bytes": 29066,
+      "sha256": "6dd4ca933de8caf480c3d148b571633a33b6d3c02c464d277880cfdaf7c0ea14",
+      "source": "website/assets/art/source/scene-poster-mobile-hero-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "521d1eeae4c3b8ca18f3a4b3dd56167f68fc5fb434e72ee5c1a5948570d7da7b",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -3062,7 +3062,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -3296,12 +3296,12 @@
     },
     {
       "output": "public/art/scene-mobile-court.webp",
-      "bytes": 23118,
-      "sha256": "2a8833efd4144af4412d19b6918e254fa24b43c74d50f04309c1fa82af6fecc0",
-      "source": "website/assets/art/source/scene-poster-mobile-court-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "cb5b45681b0de2a1e98e4f6234ad90490d84b49bf968afdf91fae1ea89ec1ac2",
+      "bytes": 23090,
+      "sha256": "9e9a519aac66fda065e5fcd97f2acbe2648eda152168da8db3b611dbc23ec706",
+      "source": "website/assets/art/source/scene-poster-mobile-court-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "25c236942b154e11c8b2895731863b13680bbfaddfd359b6d8d4f036a782a2c1",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -3414,7 +3414,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -3648,12 +3648,12 @@
     },
     {
       "output": "public/art/scene-mobile-hoop.webp",
-      "bytes": 21488,
-      "sha256": "fd18a63f6fc8f5a94f2ce438a0d6586b54ee848ac1eb982c8acd8ff517c57f0f",
-      "source": "website/assets/art/source/scene-poster-mobile-hoop-2026-11-18T13-02-18-126Z.webp",
-      "source_sha256": "f4addaeb26a4887a54f489a33a63735b783651b6a151b9e98b94416b8f62006f",
+      "bytes": 21900,
+      "sha256": "333cd177bfa1675b339ba07bd3792836046815fc5aca808277895fa3209afa34",
+      "source": "website/assets/art/source/scene-poster-mobile-hoop-2026-11-18T13-03-40-638Z.webp",
+      "source_sha256": "6c510b6a3ddc6ad7763791dabbe4f187ea15ccdcfb30fc7c44a0d0be756cd2dd",
       "capture_record": "website/assets/art/scene-poster.json",
-      "capture_record_sha256": "2def39a98ac9bbe7d44cb5c29b1972dc735378bbeab7f01338ea74bd35c1eff0",
+      "capture_record_sha256": "52ed41ef4a0dac44dbfc64856c79421a889890908b311b5e0427f602c08a7780",
       "captured_with": "157.0.8103.40; ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002820) Direct3D11 vs_5_0 ps_5_0, D3D11); three.js r186",
       "source_inputs": [
         {
@@ -3766,7 +3766,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-floor.ts",
@@ -5085,7 +5085,7 @@
         },
         {
           "path": "src/scripts/court-hardware.ts",
-          "sha256": "65852a165369e79a8b0a3fc9c1d6dede090fb45d1c582edd84afe75b1afd2f92"
+          "sha256": "8aa81b6562ff01c0bb705fd4385d67854bd18eefe34ea9854ebfcc7bee19ee74"
         },
         {
           "path": "src/scripts/court-lighting.ts",
