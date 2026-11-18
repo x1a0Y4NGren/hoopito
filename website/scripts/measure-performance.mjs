@@ -240,7 +240,11 @@ try {
           images: [...document.querySelectorAll('img')]
             .filter((image) => {
               const bounds = image.getBoundingClientRect();
-              return bounds.top < innerHeight && bounds.bottom > 0;
+              return (
+                Boolean(image.currentSrc || image.getAttribute('src')) &&
+                bounds.top < innerHeight &&
+                bounds.bottom > 0
+              );
             })
             .map((image) => ({
               source: new URL(image.currentSrc || image.src).pathname,
@@ -266,7 +270,7 @@ try {
         );
         const heroArtBytes = requests
           .filter((resource) =>
-            /\/art\/(?:scene-mobile\.|arena-(?:tall|wide)-|basketball-)/.test(
+            /\/art\/(?:scene-mobile(?:-[a-z-]+)?\.|arena-(?:tall|wide)-|basketball-)/.test(
               resource.path,
             ),
           )
