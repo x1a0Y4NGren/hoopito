@@ -110,15 +110,14 @@ export function createCourtHardware({
   const lens = finish(
     'ceiling-optics',
     {
-      color: '#FFF7E7',
-      roughness: 0.17,
+      color: '#F3E0C8',
+      roughness: 0.38,
       metalness: 0,
-      emissive: '#FFF1D7',
-      emissiveIntensity: 1.8,
+      emissive: '#FFE2BB',
+      emissiveIntensity: 0.57,
       bumpMap: glassMap,
       bumpScale: 0.0003,
       transparent: true,
-      depthWrite: false,
     },
     false,
     'ceiling',
@@ -312,9 +311,8 @@ export function createCourtHardware({
     );
   }
 
-  // Suspended indoor luminaires and acoustic architecture, rather than streetlight poles.
-  // The ceiling details use simple boxes: the near basket keeps the fine hardware budget.
-  // Remote silhouettes use boxes and hexagonal rods; near hardware retains bevels.
+  // Large architectural pieces share finishes and use the same geometry
+  // at both detail levels. Save the close-detail geometry for the basket.
   const architecture = 'arena-structure';
   batches.set(architecture, {
     material: own(
@@ -329,31 +327,29 @@ export function createCourtHardware({
     castShadow: false,
     viewRole: 'perimeter',
   });
-  const ceilingStructure = 'ceiling-structure';
-  batches.set(ceilingStructure, {
-    material: own(
-      new THREE.MeshStandardMaterial({
-        color: '#39434A',
-        roughness: 0.78,
-        metalness: 0.18,
-        transparent: true,
-        depthWrite: false,
-      }),
-    ),
-    parts: [],
-    farParts: [],
-    castShadow: false,
-    viewRole: 'ceiling',
-  });
+  const ceilingStructure = finish(
+    'ceiling-structure',
+    {
+      color: '#383F46',
+      emissive: '#505761',
+      emissiveIntensity: 0.19,
+      roughness: 0.64,
+      metalness: 0.31,
+      transparent: true,
+    },
+    false,
+    'ceiling',
+  );
   const ceilingMetal = finish(
     'ceiling-metal',
     {
-      color: '#B4BDC0',
+      color: '#A8A094',
       map: metalMap,
-      roughness: 0.31,
-      metalness: 0.92,
+      emissive: '#786553',
+      emissiveIntensity: 0.16,
+      roughness: 0.48,
+      metalness: 0.65,
       transparent: true,
-      depthWrite: false,
     },
     false,
     'ceiling',
@@ -380,54 +376,108 @@ export function createCourtHardware({
     false,
     'perimeter',
   );
-  for (const z of [-10, -3, 5]) {
-    block([26.7, 0.19, 0.17], [0, 8.85, z], ceilingStructure, 0.012);
-    block([26.7, 0.095, 0.095], [0, 8.25, z], ceilingStructure, 0.009);
-    for (let bay = -12; bay <= 12; bay += 3) {
-      beam(
-        new THREE.Vector3(bay, 8.25, z),
-        new THREE.Vector3(bay + 1.5, 8.85, z),
-        0.027,
-        ceilingStructure,
-      );
-      beam(
-        new THREE.Vector3(bay + 1.5, 8.85, z),
-        new THREE.Vector3(bay + 3, 8.25, z),
-        0.027,
-        ceilingStructure,
-      );
-    }
-    for (const x of [-6.4, 0, 6.4]) {
-      // Shallow graphite housing, satin bezel, segmented opal diffuser, and hanger rods.
-      block([2.15, 0.13, 0.48], [x, 7.85, z], ceilingStructure, 0.025);
-      block([2.02, 0.03, 0.43], [x, 7.776, z], ceilingMetal, 0.012);
-      block([1.94, 0.012, 0.365], [x, 7.754, z], lens, 0.008);
-      for (const direction of [-1, 1]) {
-        cylinder(
-          0.012,
-          0.012,
-          0.84,
-          [x + direction * 0.8, 8.29, z],
-          ceilingStructure,
-          undefined,
-          8,
-        );
-        block(
-          [0.008, 0.018, 0.43],
-          [x + direction * 1.01, 7.755, z],
-          ceilingStructure,
-          0.002,
-        );
-      }
-      for (let segment = -4; segment <= 4; segment += 1)
-        block(
-          [0.012, 0.014, 0.37],
-          [x + segment * 0.193, 7.744, z],
-          ceilingStructure,
-          0.002,
-        );
-    }
+  // A continuous cross-section wraps each chamfer without overlapping joints.
+  // Profiles start on the outer face and run down, inward and back up.
+  function crownRing(
+    profile: readonly [inset: number, y: number][],
+    batch: string,
+  ) {
+    const loops = profile.map(([inset, y]) => {
+      const x = 11.3 - inset;
+      const rear = -11.3 + inset;
+      const front = 9.3 - inset;
+      const chamfer = 2.1 - (2 - Math.SQRT2) * inset;
+      return [
+        [-x + chamfer, y, rear],
+        [x - chamfer, y, rear],
+        [x, y, rear + chamfer],
+        [x, y, front - chamfer],
+        [x - chamfer, y, front],
+        [-x + chamfer, y, front],
+        [-x, y, front - chamfer],
+        [-x, y, rear + chamfer],
+      ];
+    });
+    const positions: number[] = [];
+    const uvs: number[] = [];
+    loops.forEach((loop, band) => {
+      const next = loops[(band + 1) % loops.length]!;
+      loop.forEach((start, edge) => {
+        const end = (edge + 1) % loop.length;
+        positions.push(...start, ...loop[end]!, ...next[end]!);
+        positions.push(...start, ...next[end]!, ...next[edge]!);
+        const u0 = edge / loop.length;
+        const u1 = (edge + 1) / loop.length;
+        const v0 = band / loops.length;
+        const v1 = (band + 1) / loops.length;
+        uvs.push(u0, v0, u1, v0, u1, v1, u0, v0, u1, v1, u0, v1);
+      });
+    });
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute(
+      'position',
+      new THREE.Float32BufferAttribute(positions, 3),
+    );
+    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    geometry.computeVertexNormals();
+    place(geometry, batch, new THREE.Vector3());
   }
+  crownRing(
+    [
+      [0.08, 8.58],
+      [0, 8.5],
+      [0, 8.22],
+      [0.055, 8.15],
+      [0.53, 8.15],
+      [0.69, 8.3],
+      [0.69, 8.51],
+      [0.6, 8.58],
+    ],
+    ceilingStructure,
+  );
+  crownRing(
+    [
+      [0.43, 8.16],
+      [0.43, 8.142],
+      [0.46, 8.125],
+      [0.64, 8.125],
+      [0.74, 8.19],
+      [0.74, 8.3],
+      [0.69, 8.3],
+      [0.6, 8.16],
+    ],
+    lens,
+  );
+  crownRing(
+    [
+      [0.65, 8.403],
+      [0.65, 8.377],
+      [0.703, 8.377],
+      [0.703, 8.403],
+    ],
+    ceilingMetal,
+  );
+
+  // The crown hangs below a separate roof deck with transverse girders
+  // and secondary purlins. Leave open air between the crown and the roof.
+  block([27, 0.18, 33.5], [0, 9.42, 3.25], ceilingStructure);
+  for (const z of [-11.55, -6.1, -0.35, 5.4, 11.15, 16.5]) {
+    block([26.86, 0.31, 0.36], [0, 9.18, z], ceilingStructure);
+    block([26.86, 0.038, 0.39], [0, 9.03, z], ceilingMetal);
+  }
+  for (const x of [-10.96, -5.7, 0, 5.7, 10.96])
+    block([0.19, 0.21, 32.8], [x, 8.98, 3.15], ceilingStructure);
+  for (const x of [-11.03, 11.03])
+    for (const z of [-6.1, -0.35, 5.4]) {
+      block([0.12, 0.47, 0.16], [x, 8.79, z], ceilingMetal);
+      block([0.31, 0.043, 0.31], [x, 8.58, z], ceilingStructure);
+    }
+  for (const x of [-5.7, 5.7])
+    for (const z of [-11.03, 9.03]) {
+      block([0.13, 0.45, 0.13], [x, 8.78, z], ceilingMetal);
+      block([0.29, 0.042, 0.29], [x, 8.58, z], ceilingStructure);
+    }
+
   // Rear wall ribs and copper guidance lights remain readable behind the hero ball.
   for (let x = -12; x <= 12; x += 1.5) {
     block([0.64, 5.7, 0.085], [x, 3.85, -13.29], acoustic, 0.004);
@@ -981,6 +1031,7 @@ export function createCourtHardware({
       for (const mesh of ceilingMeshes) {
         mesh.visible = opacity > 0.001;
         mesh.material.opacity = opacity;
+        mesh.material.depthWrite = opacity === 1;
       }
     },
     setViewCutaway(value) {
