@@ -56,3 +56,42 @@ test('the plinth steps inward inside its original floor contact footprint', (t) 
   assert.ok(floorEdge - trimEdge > 0.02);
   assert.ok(trimEdge - shoulderEdge > 0.02);
 });
+
+test('the near net has two continuous cords around its hem', (t) => {
+  const { group } = useHardware(t);
+  const net = group.getObjectByName(
+    'nylon-net',
+  ) as THREE.Mesh<THREE.BufferGeometry>;
+  const { geometry } = net;
+  const index = geometry.index;
+  assert.ok(index);
+  const positions = geometry.getAttribute('position');
+  const point = new THREE.Vector3();
+  const bounds = new THREE.Box3();
+  const hemY = rim.y - 0.033 - 0.53;
+  const isHem = () =>
+    bounds.max.x - bounds.min.x > 0.25 &&
+    bounds.max.z - bounds.min.z > 0.25 &&
+    bounds.min.y > hemY - 0.008 &&
+    bounds.max.y < hemY + 0.008;
+  let rings = 0;
+  let highest = -1;
+  // Each merged indexed construction part starts with a new vertex range.
+  for (let face = 0; face < index.count; face += 3) {
+    const vertices = [
+      index.getX(face),
+      index.getX(face + 1),
+      index.getX(face + 2),
+    ];
+    if (Math.min(...vertices) > highest && face !== 0) {
+      if (isHem()) rings++;
+      bounds.makeEmpty();
+    }
+    for (const vertex of vertices) {
+      highest = Math.max(highest, vertex);
+      bounds.expandByPoint(point.fromBufferAttribute(positions, vertex));
+    }
+  }
+  if (isHem()) rings++;
+  assert.equal(rings, 2);
+});
