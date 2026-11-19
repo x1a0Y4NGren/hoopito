@@ -12,7 +12,7 @@ If the harness does not load this file automatically, ask it to read `AGENTS.md`
 
 Follow [CONTRIBUTING.md](CONTRIBUTING.md#分支与提交) for branch names, PR titles, and squash commits. Keep `main` as the maintenance branch and `preview/website` as the protected website preview branch. Use the [verified preview entry](website/README.md#vercel-预览与正式域名) and preserve historical branch and deployment identities.
 
-Keep each PR to one small, independently reviewable feature, fix, or maintenance change. Include the tests, assets and their provenance records, and documentation required for that change in the same PR. Split unrelated changes into separate PRs. When one change depends on another, submit them separately and record the dependency and merge order in the PR description. Follow the [PR scope and description guidance](CONTRIBUTING.md#pull-request-内容).
+Keep each PR focused on one independently reviewable goal. Group related components when they serve that goal and can be reviewed and verified together. Include any required tests, assets and their provenance records, and documentation. Put unrelated changes in separate PRs. When one PR depends on another, record the dependency and merge order in the PR description. Follow the [PR scope and description guidance](CONTRIBUTING.md#pull-request-内容).
 
 ## 项目收尾：仅由用户明确触发
 
