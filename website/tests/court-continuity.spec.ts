@@ -1356,22 +1356,40 @@ test(
     }
     expect(poses.at(-1)!.intro).toBe(1);
     expect(await draws()).toBeGreaterThan(initialDraws);
-    const finalPose = poses.at(-1)!;
-    // The introduction ends independently of the continuous, tiny reading drift.
-    // Native draws must continue while the opening tween stays complete.
-    await page.clock.runFor(300);
+    await assertBackgroundIdentity(page);
+  },
+);
+
+test(
+  'completed opening keeps drawing ambient hero drift within two CSS pixels',
+  webgl,
+  async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== 'chromium',
+      'Real WebGL draw submissions run in Chromium.',
+    );
+    // Sample actual reading frames after the opening. Advancing every
+    // synthetic RAF here couples an ambient check to software GL throughput.
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await exposeSceneInTest(page, true);
+    const draws = await observeCourtDraws(page);
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-scene', '3d');
+    const canvas = page.locator('#court-canvas');
     await expect(canvas).toHaveAttribute('data-rendering', 'ambient');
-    expect((await read()).intro).toBe(1);
+    const openingProgress = () =>
+      page.evaluate(() => Reflect.get(window, '__openingProgress')() as number);
+    await expect.poll(openingProgress).toBe(1);
+    await expect(canvas).toHaveAttribute('data-chapter', 'hero');
+    const readingStart = await project(page, { x: 0.5, y: 0.8 });
     const settledDraws = await draws();
-    await page.clock.runFor(500);
-    expect(await draws()).toBeGreaterThan(settledDraws);
-    const readingPose = await read();
-    expect(readingPose.intro).toBe(1);
+    await page.waitForTimeout(500);
+    await expect.poll(draws).toBeGreaterThan(settledDraws);
+    await expect(canvas).toHaveAttribute('data-rendering', 'ambient');
+    expect(await openingProgress()).toBe(1);
+    const readingEnd = await project(page, { x: 0.5, y: 0.8 });
     expect(
-      Math.hypot(
-        readingPose.point!.x - finalPose.point!.x,
-        readingPose.point!.y - finalPose.point!.y,
-      ),
+      Math.hypot(readingEnd.x - readingStart.x, readingEnd.y - readingStart.y),
     ).toBeLessThanOrEqual(2);
     await assertBackgroundIdentity(page);
   },
