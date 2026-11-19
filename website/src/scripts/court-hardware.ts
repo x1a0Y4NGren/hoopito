@@ -546,22 +546,99 @@ export function createCourtHardware({
     block([1.7, 0.036, 0.025], [x, 2.647, wallFaceZ + 0.265], warmStrip);
   }
 
-  for (const x of [-11.3, 11.3]) {
-    block([0.12, 0.018, 17], [x, 0.028, -0.5], warmStrip, 0.003);
-    // Retracted courtside seating: low silhouettes, without high-cost remote detail.
-    for (let row = 0; row < 3; row += 1) {
+  const banks = [
+    [-12.54, -8.26],
+    [-7.12, -2.62],
+    [-1.48, 3.09],
+    [4.23, 8.8],
+  ] as const;
+  const firstTread = 10.34;
+  const tread = 0.68;
+  const riser = 0.35;
+  for (const side of [-1, 1]) {
+    for (const z of [-12.9, -8.1, -2.47, 3.24, 9.15, 14.4]) {
+      block([0.61, 9.29, 0.46], [side * 13.14, 4.645, z], architecture);
+      block([0.67, 0.53, 0.53], [side * 13.1, 0.265, z], acoustic);
+    }
+    for (const [rear, front] of banks) {
+      const z = (rear + front) / 2;
+      const span = front - rear;
+      block([0.2, 3.85, span], [side * 13.32, 5.37, z], acoustic);
+      block([0.24, 0.046, span], [side * 13.3, 4.28, z], architecture);
       block(
-        [0.64, 0.09, 11.8],
-        [x + Math.sign(x) * row * 0.56, 0.26 + row * 0.22, -1.9],
+        [0.06, 0.016, span - 0.16],
+        [side * (firstTread - 0.29), 0.022, z],
+        warmStrip,
+      );
+      for (let row = 0; row < 4; row++) {
+        const x = firstTread + row * tread;
+        const height = (row + 1) * riser;
+        block(
+          [tread, height, span],
+          [side * (x + tread / 2), height / 2, z],
+          architecture,
+        );
+        block(
+          [0.12, 0.047, span],
+          [side * (x + 0.058), height - 0.028, z],
+          acoustic,
+        );
+        block(
+          [0.113, 0.045, span - 0.28],
+          [side * (x + 0.475), height + 0.186, z],
+          architecture,
+        );
+        for (const offset of [-0.27, 0.27])
+          block(
+            [0.11, 0.18, 0.185],
+            [side * (x + 0.475), height + 0.09, z + span * offset],
+            architecture,
+          );
+        for (let seat = 0; seat < 8; seat++) {
+          const seatZ = rear + (span * (seat + 0.5)) / 8;
+          block(
+            [0.37, 0.065, 0.445],
+            [side * (x + 0.403), height + 0.229, seatZ],
+            acoustic,
+          );
+          place(
+            new THREE.BoxGeometry(0.077, 0.3, 0.435),
+            acoustic,
+            new THREE.Vector3(side * (x + 0.588), height + 0.369, seatZ),
+            new THREE.Euler(0, 0, -side * 0.16),
+          );
+        }
+      }
+    }
+    for (const z of [-7.69, -2.05, 3.66]) {
+      for (let step = 0; step < 8; step++) {
+        const x = firstTread + ((step + 0.5) * tread) / 2;
+        const height = ((step + 1) * riser) / 2;
+        block([tread / 2, height, 1.12], [side * x, height / 2, z], acoustic);
+        block(
+          [0.052, 0.034, 1.12],
+          [side * (x - 0.147), height - 0.018, z],
+          architecture,
+        );
+      }
+      const railX = firstTread + tread / 4;
+      const railY = riser / 2 + 0.82;
+      beam(
+        new THREE.Vector3(side * railX, railY, z),
+        new THREE.Vector3(side * (railX + 3.5 * tread), railY + 3.5 * riser, z),
+        0.032,
         architecture,
-        0.015,
       );
-      block(
-        [0.095, 0.24, 11.8],
-        [x + Math.sign(x) * (row * 0.56 + 0.27), 0.42 + row * 0.22, -1.9],
-        acoustic,
-        0.018,
-      );
+      for (const step of [0, 3, 7])
+        block(
+          [0.045, 0.82, 0.045],
+          [
+            side * (railX + (step * tread) / 2),
+            (riser * (step + 1)) / 2 + 0.41,
+            z,
+          ],
+          architecture,
+        );
     }
   }
 
