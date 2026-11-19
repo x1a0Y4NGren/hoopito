@@ -319,6 +319,42 @@ test('the arena crown exposes a continuous diffuser and leaves the central roof 
   }
 });
 
+test('each rear entrance exposes two door leaves behind its jambs', () => {
+  const resources: { dispose(): void }[] = [];
+  const hardware = createCourtHardware({
+    own: (resource) => {
+      resources.push(resource);
+      return resource;
+    },
+    metalMap: new THREE.Texture(),
+    glassMap: new THREE.Texture(),
+    rim: new THREE.Vector3(0, 3.05, -5.425),
+  });
+  try {
+    hardware.group.updateMatrixWorld(true);
+    const perimeter = hardware.group.children.filter(
+      (mesh) => mesh.userData.viewRole === 'perimeter',
+    );
+    const backward = new THREE.Vector3(0, 0, -1);
+    const ray = new THREE.Raycaster();
+    const frontHit = (x: number) => {
+      ray.set(new THREE.Vector3(x, 1.37, -12.6), backward);
+      return ray.intersectObjects(perimeter, false)[0];
+    };
+    for (const center of [-8.4, 8.4]) {
+      const jamb = frontHit(center + 1.15);
+      assert.equal(jamb?.object.name, 'arena-structure');
+      for (const side of [-1, 1]) {
+        const leaf = frontHit(center + side * 0.55);
+        assert.equal(leaf?.object.name, 'acoustic-panels');
+        assert.ok(leaf.point.z < jamb.point.z - 0.5);
+      }
+    }
+  } finally {
+    for (const resource of resources) resource.dispose();
+  }
+});
+
 test('powder coat, brushed fittings and pads use visibly different physical finishes', () => {
   const resources: { dispose(): void }[] = [];
   const hardware = createCourtHardware({

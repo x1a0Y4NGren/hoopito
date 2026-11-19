@@ -1,13 +1,13 @@
 {
   "version": 3,
   "source_hash_encoding": "utf8-lf",
-  "captured_at": "2026-11-18T13:05:07.177Z",
+  "captured_at": "2026-11-18T13:06:26.499Z",
   "generated_by": "node scripts/export-scene-poster.mjs",
   "capture_method": "The actual production page scene observed at its dynamic factory export; no second renderer or authored capture pose.",
   "browser": "157.0.8103.40",
   "compiled_scene": {
-    "path": "_astro/court-scene.BkvFyNHY.js",
-    "sha256": "de6c2437f340e6d9de303359e0336a229e8290be703b4c0e407fd4dcddd98290"
+    "path": "_astro/court-scene.6sYtKGvg.js",
+    "sha256": "32fa78d2da4604413c05eafb03c4f8750b239e77ca10b3dd721194990c64d7f6"
   },
   "source_inputs": [
     {
@@ -64,7 +64,7 @@
     },
     {
       "path": "src/scripts/court-scene.ts",
-      "sha256": "da034ffe703d2efc0d9689bfe0eaaad6cdc2741de660cba7cfcfc3507077243a"
+      "sha256": "b980eec2ccc0459857d31c7eca2b661850dc926a51ce2fc3307e7cbfc1939f00"
     },
     {
       "path": "src/scripts/camera-placement.ts",
@@ -120,7 +120,11 @@
     },
     {
       "path": "src/scripts/court-hardware.ts",
-      "sha256": "f58c535660fb11968d3c7c0a0be19bc5c52495aec9059b5b8ab866fbce0c3433"
+      "sha256": "73b046c38411700ccc6a0a42aa37f3526726883a503ec049818d63dd2349fc46"
+    },
+    {
+      "path": "src/scripts/court-arena.ts",
+      "sha256": "206385d1ec2353b5c3f795744a85c99011c506d0a5ad6c74657b63a144611cf2"
     },
     {
       "path": "src/scripts/court-floor.ts",
@@ -328,14 +332,14 @@
     },
     {
       "path": "scripts/export-scene-poster.mjs",
-      "sha256": "b56e392eb3cd7a88f470d0babb9ad715f3bfeb738a25b5af0c8f95fc683eac0c"
+      "sha256": "605cdd4e323c265c1da92f23b56e7f37ff5001b4003e6b9cb33e91502dde659b"
     }
   ],
   "captures": [
     {
       "id": "compact",
-      "source": "source/scene-poster-compact-2026-11-18T13-04-55-996Z.webp",
-      "source_sha256": "27e0c211653bacb27f5dbde8e6e9b4a5c16f7c84dd8336b18fdd1c836aef0b7b",
+      "source": "source/scene-poster-compact-2026-11-18T13-06-15-742Z.webp",
+      "source_sha256": "cb570a67deb0e4dfaf33b383d878805f5be8e89524ca925fd3340b72380834e8",
       "viewport": {
         "width": 1024,
         "height": 768,
@@ -380,8 +384,8 @@
     },
     {
       "id": "standard",
-      "source": "source/scene-poster-standard-2026-11-18T13-04-55-996Z.webp",
-      "source_sha256": "d821b18a0dcf42fb11c1dff607475e59c70e5ed1d7d39e158ca6c73f621ebf70",
+      "source": "source/scene-poster-standard-2026-11-18T13-06-15-742Z.webp",
+      "source_sha256": "f59a798c1fa47b4191160fa69d7dc1003d6700382b9d329c570bb232839e9be2",
       "viewport": {
         "width": 1440,
         "height": 900,
@@ -426,8 +430,8 @@
     },
     {
       "id": "mobile",
-      "source": "source/scene-poster-mobile-2026-11-18T13-04-55-996Z.webp",
-      "source_sha256": "d821b18a0dcf42fb11c1dff607475e59c70e5ed1d7d39e158ca6c73f621ebf70",
+      "source": "source/scene-poster-mobile-2026-11-18T13-06-15-742Z.webp",
+      "source_sha256": "f59a798c1fa47b4191160fa69d7dc1003d6700382b9d329c570bb232839e9be2",
       "viewport": {
         "width": 1440,
         "height": 900,
@@ -472,8 +476,8 @@
     },
     {
       "id": "wide",
-      "source": "source/scene-poster-wide-2026-11-18T13-04-55-996Z.webp",
-      "source_sha256": "f670f83037ac3b9f87d3e24d95152aabb474616f6f7bbf82ddf07fe1bac40736",
+      "source": "source/scene-poster-wide-2026-11-18T13-06-15-742Z.webp",
+      "source_sha256": "3e1e36b2a0444be5702f05fb2e40e5907cb45d637f60b06f2b9792b69cc3bbf4",
       "viewport": {
         "width": 1920,
         "height": 1080,
@@ -518,7 +522,7 @@
     },
     {
       "id": "demo-compact",
-      "source": "source/scene-poster-demo-compact-2026-11-18T13-04-55-996Z.webp",
+      "source": "source/scene-poster-demo-compact-2026-11-18T13-06-15-742Z.webp",
       "source_sha256": "0a0c99f1a257ca48c479103f0d7160549a61c61ab7181297fa2c3ab153c075aa",
       "viewport": {
         "width": 1024,
@@ -564,7 +568,7 @@
     },
     {
       "id": "demo-standard",
-      "source": "source/scene-poster-demo-standard-2026-11-18T13-04-55-996Z.webp",
+      "source": "source/scene-poster-demo-standard-2026-11-18T13-06-15-742Z.webp",
       "source_sha256": "37099fa8d820d8176ba96a6afd72c49797c93b64043b90a1925ed4f4adaa28d2",
       "viewport": {
         "width": 1440,
@@ -610,7 +614,7 @@
     },
     {
       "id": "demo-wide",
-      "source": "source/scene-poster-demo-wide-2026-11-18T13-04-55-996Z.webp",
+      "source": "source/scene-poster-demo-wide-2026-11-18T13-06-15-742Z.webp",
       "source_sha256": "d303ec85431c87acba9261613d50fa49e0ab916c7cbe2e9fab9ac5d0afd8ddd8",
       "viewport": {
         "width": 1920,
@@ -656,8 +660,8 @@
     },
     {
       "id": "mobile-hero",
-      "source": "source/scene-poster-mobile-hero-2026-11-18T13-04-55-996Z.webp",
-      "source_sha256": "37cc2dd31822068b2df4ee333829bedf3fb0e94b248cb5d94313f029330b4701",
+      "source": "source/scene-poster-mobile-hero-2026-11-18T13-06-15-742Z.webp",
+      "source_sha256": "7a2906a117c29e5236a379f376dad10e2ee68bb40f5db4cc325a086d01a0a0bc",
       "viewport": {
         "width": 2560,
         "height": 1600,
@@ -702,8 +706,8 @@
     },
     {
       "id": "mobile-court",
-      "source": "source/scene-poster-mobile-court-2026-11-18T13-04-55-996Z.webp",
-      "source_sha256": "e3ac6c7c8c4c6521dc2067761c4dab2383811c359422593fbe8c7755dbf8eb52",
+      "source": "source/scene-poster-mobile-court-2026-11-18T13-06-15-742Z.webp",
+      "source_sha256": "ffc0de24bb5dcd3862bcf7c0822b4bde093ccae278bf5e1d123ef01eaead59a8",
       "viewport": {
         "width": 2560,
         "height": 1600,
@@ -748,8 +752,8 @@
     },
     {
       "id": "mobile-hoop",
-      "source": "source/scene-poster-mobile-hoop-2026-11-18T13-04-55-996Z.webp",
-      "source_sha256": "6c510b6a3ddc6ad7763791dabbe4f187ea15ccdcfb30fc7c44a0d0be756cd2dd",
+      "source": "source/scene-poster-mobile-hoop-2026-11-18T13-06-15-742Z.webp",
+      "source_sha256": "3f3cb78f3e0c851b786e54d299403c8b993b9929ba683e2adde321fe72345555",
       "viewport": {
         "width": 2560,
         "height": 1600,
